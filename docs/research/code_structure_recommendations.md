@@ -1,136 +1,130 @@
 # Freerouting Code Structure Recommendations
 
-**Document status:** Living plan  
+**Document status:** Implementation plan for branch `refactor/restructure`  
 **Date:** August 2026  
 **Target:** Freerouting (Java 25 / Gradle 9)  
-**Companion docs:** [`docs/architecture.md`](../architecture.md), [`docs/issues/soc-gui-separation-and-accessibility-plan.md`](../issues/soc-gui-separation-and-accessibility-plan.md), [`docs/settings.md`](../settings.md)
+**Companions:** [`docs/architecture.md`](../architecture.md) (package map and accepted GUI/headless debt), [`docs/settings.md`](../settings.md), [`docs/gui/accessibility-contract.md`](../gui/accessibility-contract.md)
 
-This is a sequenced engineering plan, not a backlog of every class over 600 lines. Work is ordered by risk and by shared abstractions that remove duplication. Routing behavior stays frozen unless a phase explicitly says otherwise.
-
-The 2026 naming and packaging campaign is **done** (identifier cleanup, `gui.workspace`, KiCad DRC DTOs, `analytics` / `core.library` / `management.jobs|sessions`, `*Algo` → role names). Do not re-run it. The invariants below are what that campaign still requires of later structure work.
+This is the work list for one branch and one final pull request. Routing, DRC, and scoring behavior stay frozen unless a phase explicitly changes a construction policy. Do not re-run the 2026 naming campaign. Do not split a class because it is large.
 
 ---
 
 ## How to use this plan
 
-1. Execute phases in order. Later phases assume earlier consolidations exist.
-2. Each phase has an exit gate. Do not start the next phase until the gate is green.
-3. Do not split a class because it is large. Split when two independent reasons-to-change are tangled, or when a second caller needs the same collaborator.
-4. Do not put GUI types under `board` or `autoroute`. ArchUnit already forbids that (`ModuleBoundariesArchTest`).
-5. Do not convert `RouterSettings` (or nested settings) to records. `SettingsMerger` requires nullable reference fields with no Java-default initializers.
+1. Implement phases **0–5** on `refactor/restructure` in order. Each phase has a gate; do not start the next until it is green.
+2. Phases **6–8 are not in this PR.** They are follow-ups (see [Later work](#later-work-not-this-pr)).
+3. Do not put GUI types under `board` or `autoroute` (`ModuleBoundariesArchTest`).
+4. Do not convert `RouterSettings` (or nested settings) to records. `SettingsMerger` requires nullable reference fields with no Java-default initializers.
+5. Do not create phase-specific branches or interim PRs.
 
 ---
 
-## Current facts (August 2026)
+## What this PR actually changes
 
-Verified against `src/main/java` (excluding `src_v19/`):
-
-| Claim in the old catalog | Actual state |
+| In this PR | Not in this PR |
 |---|---|
-| `board` has 63 classes | **52** Java files in `app.freerouting.board` |
-| `autoroute` is a flat mix including events | **48** files in `autoroute`; events already live in `autoroute.events` |
-| `GuiBoardManager` / `HeadlessBoardManager` belong in `board.session` | `GuiBoardManager` is in `gui.workspace`; `HeadlessBoardManager` is in `management` |
-| `AngleRestriction` is in `geometry.planar` | It is `board.AngleRestriction` |
-| `PullTightAlgo`, `OptViaAlgo`, `CalcShape`, `PolylinePullTight`, `MazeSearchAlgo` | Already renamed/replaced: `TraceTightener*`, `ViaOptimizer`, `MazeSearchEngine` |
-| `ItemInfoPrintable` | Nested type: `ItemInfoPrinter.Printable` |
-| Generic `Storable` | Three nested interfaces: `UndoableObjects.Storable`, `ShapeTree.Storable`, `PlanarDelaunayTriangulation.Storable` |
-| `Component` is an `Item` | `Component` does **not** extend `Item`. Item leaves are `DrillItem` (`Pin`, `Via`), `Trace` (`PolylineTrace`), `ObstacleArea` (`ConductionArea`, `ViaObstacleArea`, `ComponentObstacleArea`), `BoardOutline`, `ComponentOutline` |
-| `TileShape` permits `Circle`; `Point` permits `FloatPoint` | `Circle` implements `ConvexShape`, not `TileShape`. `FloatPoint` is **not** a `Point` (documented inaccuracy of doubles) |
-| Split `RouterSettings` into optimizer/scoring records | `OptimizerSettings`, `FanoutSettings`, and `ScoringSettings` **already exist** |
-| `core` is only `Freerouting` + scoring | `Freerouting.java` is the top-level entry point. `core` holds jobs, sessions, scoring, library |
-| Headless and GUI both select v1.9 vs current | Headless `RoutingJobSchedulerActionThread` **always** uses `BatchAutorouter`. Only the GUI thread still instantiates `BatchAutorouterV19` |
-| 62 files >600 LOC, ~71k lines | **62 files, 66,219 lines** (accurate enough as a heat map, not as a split list) |
+| Retire `BatchAutorouterV19` and the GUI algorithm combo | JPMS, `BoardLength`, geometry `*Math` splits |
+| Shared 3-stage `RoutingPipeline` used by GUI and headless | `JobService` extraction (MCP already calls REST over HTTP) |
+| Optimizer factory that **preserves** today’s GUI vs headless construction | Folding or deleting `BatchOptimizerMultiThreaded` (needs a DRC audit) |
+| Finish per-family angle-mode factories (no cross-package adapter bag) | Virtual threads, BVH rewrite, parallel sector routing |
+| Subpackages `board.searchtree`, `board.optimize`, `autoroute.{pipeline,maze,expansion,drill,path}` | GUI presenter split of `GuiBoardManager` / `BoardFrame` |
+| Seal `Point`, `TileShape`, `RegularTileShape`; `NamedAlgorithm` only as far as subclasses allow | Sealing `Item`; streaming Specctra parser |
 
-`NamedAlgorithm` is already the strategy base for `BatchAutorouter`, `BatchFanout`, and `BatchOptimizer`. `BatchOptimizerMultiThreaded` extends `BatchOptimizer`. `BatchAutorouterThread` is a **per-pass parallel worker**, not a second pipeline orchestrator — do not merge it with the GUI/headless job threads.
+---
+
+## Baseline (August 2026)
+
+- `board`: 52 Java files. `autoroute`: 48 files, with events already in `autoroute.events`.
+- `GuiBoardManager` lives in `gui.workspace`. `HeadlessBoardManager` lives in `management`.
+- `NamedAlgorithm` is the strategy base for `BatchAutorouter`, `BatchFanout`, and `BatchOptimizer`. `BatchOptimizerMultiThreaded` extends `BatchOptimizer`. `BatchAutorouterThread` is a **per-pass parallel worker**, not a job orchestrator.
+- Angle-mode factories **already exist** for three of four families (`TraceTightener.getInstance`, `FoundConnectionLocator.getInstance`, `SearchTreeManager` autoroute-tree construction). The missing one is room-neighbour dispatch in `AutorouteEngine.calculateDoors`.
+- Two GUI/headless construction drifts remain:
+  1. GUI may instantiate `BatchAutorouterV19`; headless always uses `BatchAutorouter`.
+  2. GUI may instantiate `BatchOptimizerMultiThreaded` when `featureFlags.multiThreading` and `optimizer.maxThreads > 1`; headless always uses `new BatchOptimizer(job)` even though defaults set `maxThreads` to `CPU−1`.
+
+Do not “fix” drift 2 in this PR by turning MT on for API jobs.
 
 ---
 
 ## Principles
 
-**Prefer façades and factories over file-splitting.** The codebase already encodes angle mode as parallel class families. Wiring them behind `AngleRestriction` is higher leverage than extracting `IntOctagonIntersectionMath`.
+**Prefer completing existing factories over new façades.** A single `AngleModeAdapters` type that returns search trees, tighteners, locators, and room neighbours would couple `board.searchtree`, `board.optimize`, and `autoroute.path` and fight the Phase 4 package split.
 
-**Keep hot geometry types cohesive.** `IntOctagon`, `Simplex`, `IntBox`, `Polyline`, and `TileShape` are the inner loop. Static `*Math` helper dumps add hops without shrinking the conceptual surface.
+**Three routing stages, not four.** Fanout → auto-route → optimize. SES/job-artifact writes are `BoardUpdatedEvent` listeners in the adapters, not a pipeline stage. Timeout monitoring stays in the headless adapter; the pipeline only honors cooperative `StoppableThread` stop.
 
-**One pipeline, two adapters.** Fanout → auto-route → optimize → export is implemented twice (GUI `AutorouterAndRouteOptimizerThread` and headless `RoutingJobSchedulerActionThread`). Extract the stage sequence once; keep Swing painting and job-timeout monitoring in adapters.
+**Keep hot geometry types cohesive.** `IntOctagon`, `Simplex`, `IntBox`, `Polyline`, `TileShape` stay whole.
 
-**CPU work stays on platform threads.** Maze search, shove, and pull-tight are compute-bound and mutate a shared `RoutingBoard`. Virtual threads help blocking I/O (analytics HTTP, optional request handling), not autoroute passes.
+**CPU work stays on platform threads.** Virtual threads are for blocking I/O, not maze/optimizer pools.
 
-**Package moves follow extracted types.** Moving 50 files before the new collaborators exist is a rename campaign, not a structure improvement.
+**Package moves follow extracted types.** Move files after the pipeline and factories exist so imports move once.
+
+**Do not invert `ShapeSearchTree.completeShape`.** That method already lives on the board search tree and talks to autoroute expansion rooms. Leave the `board` → `autoroute` dependency; Phase 4 must not try to “fix” it.
 
 ---
 
-## Invariants from the completed naming campaign
+## Invariants (still binding)
 
-These are still binding. Full package glossary and settings ladder live in [`docs/architecture.md`](../architecture.md) and [`docs/settings.md`](../settings.md).
+Full glossary: [`docs/architecture.md`](../architecture.md). Settings ladder: [`docs/settings.md`](../settings.md).
 
-### Names and families to keep
+### Names and families
 
 | Keep | Do not |
 |---|---|
-| `BoardManager`, `HeadlessBoardManager`, `GuiBoardManager` (hosts the workspace; does not *become* the workspace) | Rename `GuiBoardManager` away, or put `Session` in GUI type names |
+| `BoardManager`, `HeadlessBoardManager`, `GuiBoardManager` (hosts the workspace) | Rename `GuiBoardManager` away, or put `Session` in GUI type names |
 | `BatchAutorouter`, `BatchFanout`, `BatchOptimizer`, `NamedAlgorithm` | Rename `NamedAlgorithm` to `RoutingStage` (`core.RoutingStage` already exists) |
-| `BasicBoard`, `Item`, `ShapeSearchTree`, `RouterSettings`, `DesignRulesChecker`, `AirLine`, `InteractiveState`, `core.library.Package` | Rename `BasicBoard` → `Board` or explode these types as a naming exercise |
-| `gui.workspace` for the desktop editor | Name that package `gui.editor` (collides conceptually with `gui.interactive`) |
-| Parser `NetClass` / `Unit` homonyms next to `rules.NetClass` / `board.Unit` | “Fix” the homonyms by merging parser and domain types |
+| `BasicBoard`, `Item`, `ShapeSearchTree`, `RouterSettings`, `DesignRulesChecker`, `AirLine`, `InteractiveState`, `core.library.Package` | Rename `BasicBoard` → `Board` as a naming exercise |
+| `gui.workspace` | Rename that package `gui.editor` |
+| Parser `NetClass` / `Unit` beside `rules.NetClass` / `board.Unit` | Merge parser types into domain types |
 
-`BatchAutorouterV19` was kept through the naming campaign. **This plan retires it in Phase 0** so GUI matches headless.
+`BatchAutorouterV19` is retired in Phase 0.
 
-### Session vs workspace
-
-| Term | Meaning |
-|---|---|
-| **Session** | API/job container (`core.Session`, `/v1/sessions`). At most one session is **primary** (`Session.isPrimary`) for the desktop. |
-| **Workspace** | Desktop editor surface bound to that primary session (`gui.workspace`, `WorkspaceSettings`, `WorkspaceContract`). |
+**Session** = API/job container (`core.Session`, `/v1/sessions`); at most one is **primary**. **Workspace** = desktop editor bound to that session (`gui.workspace`).
 
 ### Wire and persistence
 
-- Do not change HTTP paths (`/v1/jobs/{jobId}/drc`, `/v1/mcp`), JSON `@SerializedName` keys, `freerouting.json` `gui` block, `--router.*`, or `FREEROUTING__ROUTER__*` env names.
+- Do not change HTTP paths, JSON `@SerializedName` keys, the `freerouting.json` `gui` block, `--router.*`, or `FREEROUTING__ROUTER__*` names.
+- Keep the JSON key `algorithm`. Unknown values, including `freerouting-router-v19`, **warn and fall back** to `ALGORITHM_CURRENT` (headless already does this). Do not require old GUI combo entries to round-trip.
 - Do not expand acronyms in identifiers: API, MCP, DSN, SES, DRC, EDT, SMD.
-- User-facing schema *titles* (OpenAPI): publish the new name in the current minor; drop the old name in the **next** minor. Python client follows in that window. Internal Java names have no compatibility window.
-- `KiCadBoardJson` is board interchange. `KiCadDrcReport` (and related types in `io.kicad`) is the KiCad DRC report schema. Same prefix, different classes. Keep every DRC JSON field name.
-- `.frb` Java-serialization FQCNs **will break** on package moves. That is accepted. Keep load/save *code*; do not add `resolveClass` shims.
+- `KiCadBoardJson` ≠ `KiCadDrcReport`. Keep every KiCad DRC JSON field name.
+- Package moves **break `.frb` Java-serialization FQCNs**. That is accepted. Keep load/save code; no `resolveClass` shims.
 
 ### Settings and i18n
 
-- GUI source priority is **65**. Sources 0–60 **seed** `WorkspaceSettings` at board load; after a GUI edit, live `WorkspaceSettings` wins. API jobs do not register this source. See `docs/settings.md`.
-- `WorkspaceSettings` must remain a subclass of `GuiSettingsSource` so `SettingsMerger.addOrReplaceSources` replaces the placeholder by subtype, not a second priority-65 entry.
-- Keep Java field `GlobalSettings.guiSettings` and JSON `"gui"`; the field type is `GuiApplicationSettings`.
-- Class-based i18n: `new TextManager(this.getClass(), locale)` loads `class.getName()` bundles. Moving a class without its `*.properties` compiles and ships missing UI strings. `TextManager` stays in `util`; `Common_*.properties` stay at the `app.freerouting` resource root.
+- GUI source priority **65**: sources 0–60 seed `WorkspaceSettings` at load; after a GUI edit, live settings win. API jobs do not register this source.
+- `WorkspaceSettings` must remain a subclass of `GuiSettingsSource`.
+- Keep field `GlobalSettings.guiSettings` and JSON `"gui"` (type `GuiApplicationSettings`).
+- `new TextManager(this.getClass(), locale)` loads `class.getName()` bundles. Move `*.properties` with the class. `TextManager` stays in `util`; `Common_*.properties` stay at the `app.freerouting` resource root.
 
-### ArchUnit when packages move
+### ArchUnit
 
-- Update FQCNs and `resideInAnyPackage` prefixes in `ModuleBoundariesArchTest` (especially `gui.workspace`, worker threads, `analytics..` GUI isolation).
-- `management.jobs`, `management.sessions`, and `core.library` already match existing `management..` / `core..` prefixes.
+- Update FQCNs and `resideInAnyPackage` prefixes when packages move (`gui.workspace` workers, `analytics..` GUI isolation).
+- `management.jobs`, `management.sessions`, `core.library` already match `management..` / `core..`.
 - `SpecctraPackageArchTest` still forbids GUI/management imports from `io.specctra`.
 - Do not add `analytics` to `PIPELINE_SUPPORT_PACKAGES`.
+- Accepted debt stays as in `docs/architecture.md`: `ItemInfoPrinter` shape, incomplete-connections in `drc`, D26 `gui.workspace` → `gui.rendering`.
 
 ---
 
-## Shared patterns to encode (do these instead of 62 decompositions)
+## Shared patterns (encode these)
 
-### 1. Angle-mode strategy (highest structural leverage)
+### 1. Angle-mode: four factories, not one bag
 
-Three independent class families already specialize the same three modes (`NONE`, `FORTYFIVE_DEGREE`, `NINETY_DEGREE`):
+| Family | 90° | 45° | Any-angle | Factory today |
+|---|---|---|---|---|
+| Autoroute search tree | `ShapeSearchTree90Degree` | `ShapeSearchTree45Degree` | `ShapeSearchTree` | `SearchTreeManager` (autoroute tree only; **default tree is always 45° bounding**) |
+| Pull-tight | `TraceTightener90` | `TraceTightener45` | `TraceTightenerAnyAngle` | `TraceTightener.getInstance` |
+| Path reconstruction | `FoundConnectionLocator45Degree` | `FoundConnectionLocator45Degree` | `FoundConnectionLocatorAnyAngle` | `FoundConnectionLocator.getInstance` |
+| Room doors | `SortedOrthogonalRoomNeighbours` | `Sorted45DegreeRoomNeighbours` | `SortedRoomNeighbours` | **Inline `instanceof` in `AutorouteEngine.calculateDoors`** |
 
-| Concern | 90° | 45° | Any-angle |
-|---|---|---|---|
-| Spatial index | `ShapeSearchTree90Degree` | `ShapeSearchTree45Degree` | `ShapeSearchTree` |
-| Room doors | `SortedOrthogonalRoomNeighbours` | `Sorted45DegreeRoomNeighbours` | `SortedRoomNeighbours` |
-| Pull-tight | `TraceTightener90` | `TraceTightener45` | `TraceTightenerAnyAngle` |
-| Path reconstruction | (orthogonal path uses 45° locator where applicable) | `FoundConnectionLocator45Degree` | `FoundConnectionLocatorAnyAngle` |
+Phase 3 adds `SortedRoomNeighbours.complete(room, engine)` (or equivalent) next to the other `getInstance` methods and deletes the `instanceof ShapeSearchTree*` switch. Do not move tree/tightener/locator construction into a new type.
 
-**Do:** Introduce a single factory (working name `AngleModeAdapters`) keyed by `board.AngleRestriction` that returns the existing subclasses. Call sites stop switching on angle in four packages.
-
-**Do not:** Split each neighbour/tightener class into `*Calculator` / `*Sorter` files. That duplicates the hierarchy instead of collapsing the switches.
-
-### 2. Routing pipeline (remove GUI/headless drift)
+### 2. Routing pipeline
 
 ```mermaid
 flowchart LR
     FAN["Fanout<br/>BatchFanout"] --> AR["Auto-route<br/>BatchAutorouter"]
     AR --> OPT["Optimize<br/>BatchOptimizer"]
-    OPT --> EXP["Export SES / job artifacts"]
-    subgraph adapters [Adapters only]
+    subgraph adapters [Adapters — not pipeline stages]
       GUI["GuiRoutingJobWorker"]
       HD["RoutingJobSchedulerActionThread"]
     end
@@ -138,258 +132,220 @@ flowchart LR
     HD --> FAN
 ```
 
-**Do:** Extract a headless `RoutingPipeline` (or `RoutingJobRunner`) that sequences the four stages, applies stop/timeout, and fires existing `autoroute.events`. GUI worker becomes: start pipeline + EDT progress + overlay paint. Headless worker becomes: start pipeline + timeout monitor + artifact write.
+`RoutingPipeline` (working name; must not collide with `core.RoutingStage`) lives in `autoroute` (after Phase 4: `autoroute.pipeline`). It sequences the three stages, forwards existing `autoroute.events`, and stops when the thread is requested to stop.
 
-**Do not:** Invent `JobArtifactExporter` / `AutorouterExecutionLifecycle` as 100-line wrappers around existing methods.
+Adapters own:
 
-### 3. Optimizer: one class, a thread-count parameter
+- GUI: EDT progress, overlay `draw(Graphics)`, incremental SES into the job (today’s `BoardUpdatedEvent` listener).
+- Headless: timeout monitor, artifact write, `RoutingJobState`.
 
-`BatchOptimizerMultiThreaded` already subclasses `BatchOptimizer`. The remaining work is a **safety decision**, not a rename.
+Rename `AutorouterAndRouteOptimizerThread` → `GuiRoutingJobWorker` and update `InteractiveActionThread.getAutorouterAndRouteOptimizerInstance`.
 
-- Gate with full `DesignRulesChecker.getAllClearanceViolations()` (not `BoardStatistics.clearanceViolations.totalCount`).
-- `maxThreads == 1` must be bit-identical to today’s single-threaded path.
-- If races cannot be confined to isolated copies of the board, delete the multi-threaded subclass and `OptimizeRouteTask`. If they can, fold the pool into `BatchOptimizer` and drop the extra type.
+Do not touch `BatchAutorouterThread`.
 
-### 4. Algorithm plug-in surface
+### 3. Optimizer construction (preserve drift)
 
-Keep `NamedAlgorithm` / `NamedAlgorithmType`. Delete the v1.9 **implementation** and the GUI algorithm combo once headless and GUI both construct only `BatchAutorouter`. Future experimental routers still implement `NamedAlgorithm`; they do not need a shipped v1.9 fork.
+```java
+// Shared factory — GUI path (feature flag + maxThreads)
+static BatchOptimizer createForGui(RoutingJob job) { ... }
 
-### 5. Sealed types — only on actually closed trees
+// Headless path stays single-threaded until a later DRC audit
+static BatchOptimizer createForHeadless(RoutingJob job) {
+  return new BatchOptimizer(job);
+}
+```
 
-Correct first candidates:
+If `optimizer.enabled` is false, the pipeline skips the stage. Do not enable MT for API/CLI jobs in this PR.
+
+### 4. Sealed types — closed trees only
 
 ```java
 public sealed abstract class Point permits IntPoint, RationalPoint { ... }
 
-public sealed abstract class TileShape
-    permits RegularTileShape, Simplex { ... }
+public sealed abstract class TileShape permits RegularTileShape, Simplex { ... }
 
-public sealed abstract class RegularTileShape
-    permits IntBox, IntOctagon { ... }
-
-public sealed abstract class NamedAlgorithm
-    permits BatchAutorouter, BatchFanout, BatchOptimizer { ... }
+public sealed abstract class RegularTileShape permits IntBox, IntOctagon { ... }
 ```
 
-`Item` can be sealed later with `permits DrillItem, Trace, ObstacleArea, BoardOutline, ComponentOutline`. Do **not** list `Pin`, `Via`, `Component`, or `Circle` in those `permits` clauses.
+`FloatPoint` is not a `Point`. `Circle` is a `ConvexShape`, not a `TileShape`. Do not seal `Item` in this PR.
 
-### 6. Settings stay merger-shaped
-
-`RouterSettings` is already an aggregate of `FanoutSettings`, `OptimizerSettings`, `ScoringSettings`, plus remaining autoroute fields. Further nesting is optional and must preserve:
-
-- nullable boxed fields, no field initializers
-- `ReflectionUtil.copyFields()` / `applyNewValuesFrom`
-- JSON `@SerializedName` compatibility
-
-Records and “flat 80-field object → four records” are the wrong move.
-
-### 7. API: services, not four controllers
-
-`JobControllerV1` is large because it is a JAX-RS façade. Extract `JobService` / artifact and DRC helpers used by both REST and MCP. Keep `/v1/` URI versioning. MCP stays on `/v1/mcp` plus `initialize` capability negotiation — do not version MCP by cloning controllers.
-
-### 8. Spatial index: measure, then recycle, then consider layout
-
-`ShapeSearchTree` extends the `datastructures.ShapeTree` / `MinAreaTree` design. A BVH rewrite is a research project, not a phase. First: allocation profiles on a >500-net fixture; then leaf recycling across maze attempts; only then a contiguous bounding-box layout if the profiler still shows node-pointer overhead as the limiter.
+`NamedAlgorithm`: permit `BatchAutorouter`, `BatchFanout`, `BatchOptimizer`. Because `BatchOptimizerMultiThreaded` remains, `BatchOptimizer` must be **`non-sealed`**.
 
 ---
 
-## Explicitly out of scope (unnecessary or harmful as stated)
+## Out of scope (harmful or already decided)
 
-| Old proposal | Why it is dropped or deferred |
+| Proposal | Why not |
 |---|---|
-| JPMS `module-info.java` per domain package | Single fat JAR + Gson/Jersey/settings reflection. Boundaries are already ArchUnit. jlink already uses an explicit `--add-modules` list. |
-| `BoardLength` value type in hot paths | Boxing/indirection on every clearance query until Valhalla. Keep `int` database units; convert only at I/O and settings edges (`copperToEdgeClearanceUm`). |
-| Records for `BoardStatistics`, `ViaRule`, `NetClass`, `ExpansionRoom` | Mutable, identity-bearing, or incrementally filled. Use records for true DTOs (`Score` snapshots, API payloads) only. |
-| Rename `BasicBoard` → `Board`, `RoutingBoard` → `TransactionalRoutingBoard` | High churn, no new seam. Those names are locked (see invariants). |
-| Rename `Simplex` → `ConvexPolytope` | Established domain term in this tree; the math nit is not worth the diff. |
-| Move `FRLogger` to `util.logging` | Cosmetic. Leave it. |
-| `board.session` containing GUI/headless managers | Violates GUI/headless ArchUnit rules. Managers stay in `gui.workspace` and `management`. |
-| Split `IntOctagon` / `Simplex` / `IntBox` / `Polyline` into `*Math` classes | Cohesion loss on the hottest types. |
-| Split all 62 files >600 LOC | LOC is a heat map. Many files are one algorithm. |
-| Parallel spatial sector routing | Shared search trees + clearance; expected races. Research only after the optimizer audit. |
-| Streaming Specctra SAX rewrite | Unproven 50% heap claim. Parser tests exist; rewrite only if load profiles demand it. |
-| Virtual threads for maze/optimizer pools | Wrong tool for CPU-bound mutation. |
-| Parameter-object campaign (`RoutingTargetContext` everywhere) | Do it when a signature is already changing, not as a repo-wide rewrite. |
-| `List.copyOf()` on `Polyline` corners in inner loops | Extra allocation. Encapsulate; do not copy on every query. |
+| JPMS per domain package | Fat JAR + reflection; ArchUnit already enforces boundaries |
+| `BoardLength` in hot paths | Boxing until Valhalla; convert only at I/O/settings edges |
+| Records for `BoardStatistics`, `ViaRule`, `NetClass`, `ExpansionRoom` | Mutable / identity-bearing |
+| `board.session` holding GUI/headless managers | ArchUnit violation |
+| Split `IntOctagon` / `Simplex` / `Polyline` | Cohesion loss on inner-loop types |
+| Split every file ≥600 LOC | Heat map, not a work list |
+| `JobService` for MCP reuse | MCP tools already HTTP-call `/v1/*` via `mcp_server.target_api_base_url` |
+| Cross-package `AngleModeAdapters` | Couples packages the split is trying to separate |
+| Export as pipeline stage 4 | Event listener in adapters |
+| Virtual threads for maze/optimizer | CPU-bound mutation of a shared board |
+| `List.copyOf()` on `Polyline` corners in inner loops | Extra allocation |
 
 ---
 
-## Target package sketch (after Phase 4, not before)
+## Target packages (after Phase 4)
 
-Stay compatible with ArchUnit: `board` / `autoroute` / `geometry` / `rules` / `drc` remain GUI-free.
+`board`, `autoroute`, `geometry`, `rules`, `drc` remain GUI-free.
 
 ```text
 board/
-  (model stays here: Item, Pin, Via, Trace, areas, BasicBoard, RoutingBoard)
+  Item, Pin, Via, Trace, areas, outline, BasicBoard, RoutingBoard,
+  ForcedPadRouter, ForcedViaInserter, DrillItemMover, AngleRestriction, …
   searchtree/   ShapeSearchTree, ShapeSearchTree45Degree, ShapeSearchTree90Degree,
                 SearchTreeManager, ShapeTraceEntries
   optimize/     TraceTightener*, TraceShover, ViaOptimizer
 autoroute/
-  events/       already present — keep
-  pipeline/     BatchAutorouter, BatchFanout, BatchOptimizer, NamedAlgorithm,
-                RoutingPipeline (new)
+  events/       keep
+  pipeline/     BatchAutorouter, BatchFanout, BatchOptimizer*, NamedAlgorithm,
+                RoutingPipeline, BatchAutorouterThread
   maze/         MazeSearchEngine, AutorouteEngine, AutorouteControl, maze elements
   expansion/    *ExpansionRoom, *Door, Sorted*RoomNeighbours, ExpandableObject
   drill/        DrillPage, DrillPageArray, ExpansionDrill
   path/         FoundConnectionLocator*, FoundConnectionInserter, Connection
 ```
 
-`HeadlessBoardManager` stays in `management`. `GuiBoardManager` stays in `gui.workspace`. Do not create `app.freerouting.server` unless the API hosting types actually leave `api`/`management` for a real reason.
+`HeadlessBoardManager` stays in `management`. `GuiBoardManager` stays in `gui.workspace`. Do not invent `app.freerouting.server`.
 
 ---
 
-## Phased plan
+## Phases (this PR)
 
-Dates are not committed. Each phase is a PR series with a named gate.
+### Phase 0 — One autorouter
 
-### Phase 0 — Align algorithm surface (low risk)
-
-**Goal:** One shipped autorouter; GUI matches headless.
+**Goal:** GUI matches headless: always `BatchAutorouter`.
 
 **Tasks:**
 
-- [ ] Confirm no supported workflow requires `RouterSettings.ALGORITHM_V19` (CLI, API, GUI, tests).
-- [ ] Delete `BatchAutorouterV19` and GUI `instanceof` branches in `AutorouterAndRouteOptimizerThread`.
-- [ ] Remove the algorithm combo from `WindowAutorouteParameter` (and related i18n keys).
-- [ ] Keep `NamedAlgorithm`; default `RouterSettings.algorithm` to `ALGORITHM_CURRENT`.
-- [ ] Update `RoutableLayersSafetyCheckTest` and any fixture that constructed V19.
+- [ ] Delete `BatchAutorouterV19` and all `instanceof` / constructor branches in `AutorouterAndRouteOptimizerThread`.
+- [ ] Remove the algorithm combo from `WindowAutorouteParameter` and i18n keys `algorithmCurrent` / `algorithmV19`.
+- [ ] Keep `RouterSettings.algorithm` and `ALGORITHM_V19` as a recognized **fallback token**: warn, then use `ALGORITHM_CURRENT` (same as headless today).
+- [ ] Keep `NamedAlgorithm`.
+- [ ] Update `RoutableLayersSafetyCheckTest`, `DialogInteractionHandlersTest`, rewrite TSV rows for the deleted class, and any fixture that constructed V19.
 
-**Gate:** `gradlew.bat test` (fast set) green; GUI no longer offers v1.9; headless behavior unchanged.
+**Gate:** `gradlew.bat test` (fast set). No v1.9 combo in the GUI. Loading a settings file with `"algorithm": "freerouting-router-v19"` still runs the current router.
 
-### Phase 1 — Shared routing pipeline (medium risk, no maze edits)
+### Phase 1 — Shared routing pipeline
 
-**Goal:** One stage sequencer for GUI and headless.
-
-**Tasks:**
-
-- [ ] Extract `RoutingPipeline` that runs fanout → `BatchAutorouter` → `BatchOptimizer` (thread-count as today) → export hook.
-- [ ] Rewrite `RoutingJobSchedulerActionThread` to call it (timeout monitor stays here).
-- [ ] Rename `AutorouterAndRouteOptimizerThread` → `GuiRoutingJobWorker` and thin it to pipeline + EDT + `draw(Graphics)` overlay.
-- [ ] Do not touch `BatchAutorouterThread` (pass worker).
-
-**Gate:** `Dac2020Bm01RoutingTest` plus one GUI-headless comparison on the same fixture (completion %, via count, full DRC count). No new clearance violations via `DesignRulesChecker.getAllClearanceViolations()`.
-
-### Phase 2 — Optimizer unification (high value, gated)
-
-**Goal:** One optimizer type with a safe `maxThreads`.
+**Goal:** One sequencer; adapters keep UI, timeout, and SES listeners.
 
 **Tasks:**
 
-- [ ] Stress `Issue508-DAC2020_bm01` … `bm05`, `Issue159`, `Issue093` at `maxThreads` 1, 2, 4, 8.
-- [ ] Compare full DRC, completion, and determinism (`maxThreads=1` vs current `BatchOptimizer`).
-- [ ] **If safe:** fold `BatchOptimizerMultiThreaded` into `BatchOptimizer`; delete `OptimizeRouteTask` if inlined.
-- [ ] **If unsafe:** delete the multi-threaded path and force `maxThreads=1`; document in settings.
+- [ ] Add `RoutingPipeline` that runs fanout → `BatchAutorouter` → optimizer (if enabled).
+- [ ] GUI optimizer via `createForGui`; headless via `createForHeadless` (always `BatchOptimizer`).
+- [ ] Rewrite `RoutingJobSchedulerActionThread` to call the pipeline (timeout monitor stays here).
+- [ ] Rename `AutorouterAndRouteOptimizerThread` → `GuiRoutingJobWorker`; update `InteractiveActionThread` factory and `draw` dispatch.
+- [ ] Do not touch `BatchAutorouterThread`.
 
-**Gate:** Written audit in `logs/` (gitignored) plus a regression test that fails on DRC increase. Settings docs updated if `maxThreads` meaning changes.
+**Gate:** `Dac2020Bm01RoutingTest`. Same fixture, GUI vs headless with **default-like optimizer threading** (headless ST): completion %, via count, and `DesignRulesChecker.getAllClearanceViolations()` must not regress.
 
-### Phase 3 — Angle-mode factory (medium risk)
+### Phase 2 — Optimizer factory only
 
-**Goal:** Collapse four switch-on-angle sites without rewriting geometry.
-
-**Tasks:**
-
-- [ ] Add `AngleModeAdapters` (name TBD) selecting search tree, room-neighbour class, tightener, and connection locator.
-- [ ] Replace duplicated `switch (angleRestriction)` / `instanceof` construction.
-- [ ] Add a unit test that each `AngleRestriction` maps to the same concrete types as today.
-
-**Gate:** Golden fixtures at 45° and 90° (existing angle-restricted boards) match pre-change completion and DRC. No maze heuristic changes.
-
-### Phase 4 — Package splits of already-identified clusters (medium churn)
-
-**Goal:** Subpackages listed in the sketch, after the factory exists so imports move once.
+**Goal:** One construction site per adapter; **no** MT fold/delete.
 
 **Tasks:**
 
-- [ ] Move search-tree types to `board.searchtree`.
-- [ ] Move tighteners / shove / via optimizer to `board.optimize`.
+- [ ] Put `createForGui` / `createForHeadless` on `BatchOptimizer` (or a tiny package-private factory next to it).
+- [ ] Delete duplicated algorithm-id warning / listener-registration blocks in the GUI thread.
+- [ ] Document the headless-always-ST policy in `docs/settings.md` (`optimizer.maxThreads` applies to the GUI path and to `BatchAutorouterThread` pass parallelism, not to headless optimizer workers).
+
+**Gate:** Fast tests green. A unit test asserts `createForHeadless` returns `BatchOptimizer` (not the MT subclass) even when `maxThreads > 1`.
+
+### Phase 3 — Room-neighbour factory
+
+**Goal:** `AutorouteEngine.calculateDoors` no longer switches on search-tree type.
+
+**Tasks:**
+
+- [ ] Add a static factory on `SortedRoomNeighbours` (or a package-private dispatcher in `autoroute`) that chooses orthogonal / 45° / any-angle `calculate`.
+- [ ] Leave `TraceTightener.getInstance`, `FoundConnectionLocator.getInstance`, and `SearchTreeManager` as they are.
+- [ ] Unit-test the mapping: `ShapeSearchTree90Degree` → orthogonal, `ShapeSearchTree45Degree` → 45°, else any-angle.
+
+**Gate:** Existing 45°/90° fixtures unchanged (completion + full DRC). No maze heuristic edits.
+
+### Phase 4 — Package splits
+
+**Goal:** Subpackages in the sketch. Logic-free moves.
+
+**Tasks:**
+
+- [ ] Move search-tree types to `board.searchtree`, tighteners/shove/via optimizer to `board.optimize`.
 - [ ] Split `autoroute` into `pipeline`, `maze`, `expansion`, `drill`, `path`; leave `events`.
-- [ ] Move matching `*.properties` with any relocated class (`TextManager(this.getClass())`).
-- [ ] Update ArchUnit FQCNs/prefixes and `docs/architecture.md` glossary. Accept `.frb` FQCN breakage; no serialization shims.
+- [ ] Move matching `*.properties` with relocated classes.
+- [ ] Update ArchUnit strings and the `docs/architecture.md` glossary / mermaid. Accept `.frb` FQCN breakage.
 
-**Gate:** `ModuleBoundariesArchTest` and `SpecctraPackageArchTest` green; `spotlessCheck` + Checkstyle; `python scripts/i18n/extract-context.py --check`. No logic diffs.
+**Gate:** `ModuleBoundariesArchTest` and `SpecctraPackageArchTest` green; `spotlessCheck` + Checkstyle; `python scripts/i18n/extract-context.py --check`. `git diff` is moves + import/FQCN updates only.
 
-### Phase 5 — Sealed hierarchies and exhaustive switches (low–medium)
+### Phase 5 — Sealed geometry (and NamedAlgorithm if cheap)
 
-**Goal:** Compiler-enforced completeness on closed trees.
-
-**Tasks:**
-
-- [ ] Seal `Point`, `TileShape`, `RegularTileShape`, `NamedAlgorithm` with the permits lists above.
-- [ ] Convert remaining type-switch `default: throw` on those types to exhaustive switches.
-- [ ] Optionally seal `Item` once Phase 4 imports are stable.
-
-**Gate:** Compile with no new `default` holes; tests green. Do not seal `FloatPoint` into `Point`.
-
-### Phase 6 — API/MCP and I/O façades (low algorithmic risk)
-
-**Goal:** Thinner HTTP/MCP types; parser stays grammar-faithful.
+**Goal:** Exhaustive switches on closed geometry trees.
 
 **Tasks:**
 
-- [ ] Extract job lifecycle/artifact/DRC helpers from `JobControllerV1` for reuse by MCP tool execution.
-- [ ] Keep `/v1/` and single `/v1/mcp`; document additive-change policy (already the right REST/MCP split).
-- [ ] Optional: extract tokenizer vs scope dispatch from `SpecctraDsnStreamReader` **without** a streaming rewrite.
-- [ ] Virtual threads only for analytics HTTP and similar blocking I/O, behind existing aggregators.
+- [ ] Seal `Point`, `TileShape`, `RegularTileShape` with the permits lists above.
+- [ ] Replace `default: throw` on those types with exhaustive switches.
+- [ ] Optionally seal `NamedAlgorithm` with `BatchOptimizer` **non-sealed**. Skip if it forces noisy modifiers for no call-site gain.
+- [ ] Do not seal `Item`.
 
-**Gate:** Existing API and parser tests; MCP `tools/list` still matches OpenAPI.
-
-### Phase 7 — GUI presenters (medium, after SoC plan)
-
-**Goal:** Shrink `GuiBoardManager` / `BoardFrame` by moving **UI construction**, not board mutation.
-
-**Tasks:**
-
-- [ ] Follow [`soc-gui-separation-and-accessibility-plan.md`](../issues/soc-gui-separation-and-accessibility-plan.md); do not regress D26 or workspace↔interactive rules.
-- [ ] Extract menu/toolbar builders and parameter-dialog presenters (`WindowAutorouteParameter`, `WindowRouteParameter`) that bind to `WorkspaceSettings` getters/setters.
-- [ ] Leave `.frb` load/save on `GuiBoardManager` until a dedicated serializer is required by a second caller.
-
-**Gate:** `@Tag("gui")` / `testGui` as applicable; `WorkspaceSettings` remains the priority-65 live source.
-
-### Phase 8 — Performance research (opt-in, evidence first)
-
-**Goal:** Allocate less in maze expansion without changing path choice.
-
-**Tasks:**
-
-- [ ] Profile `ShapeSearchTree` / expansion-room churn on a >500-net board; record peak heap vs cumulative allocation (see AGENTS.md memory glossary).
-- [ ] If leaf churn dominates: recycle `TreeLeaf` / incomplete rooms per attempt.
-- [ ] If temporary `Line`/`Point` churn dominates: stack locals in the hottest collision predicates only.
-- [ ] Revisit BVH / parallel sectors only with a written profiler note. No default rewrite.
-
-**Gate:** Same fixture DRC and completion; peak heap not worse; first-mismatch compare vs v2.3.0 if maze code moved.
+**Gate:** Compile + fast tests. No new incomplete switches.
 
 ---
 
-## Heat map (files ≥ 600 LOC)
+## Later work (not this PR)
 
-Use this to pick **where to look**, not what to split. Counts from August 2026:
+### Follow-up A — Optimizer DRC audit
 
-| Area | Files ≥600 | Notes |
-|---|---|---|
-| GUI / workspace / rendering | 14 | Phase 1 + 7. `Route` is interactive, not maze. |
-| Autoroute | 10 | Phase 1–4. Leave `BatchAutorouterThread` as pass worker. |
-| Board / items / trees / tighteners | 15 | Phase 3–4. Do not split `IntOctagon` peers here. |
-| Geometry | 8 | Generally **do not split**. |
-| I/O parsers | 7 | Phase 6 tokenizer/dispatch only. |
-| API / settings / DRC / analytics / core | 8 | Phase 2/6; settings already nested. |
+Stress GUI MT vs ST on `Issue508-DAC2020_bm01`…`bm05`, `Issue159`, `Issue093` at `maxThreads` 1, 2, 4, 8 using `DesignRulesChecker.getAllClearanceViolations()`. Then either fold `BatchOptimizerMultiThreaded` into `BatchOptimizer` or delete MT and force `maxThreads = 1` for optimization. Only after that may headless use the GUI construction policy.
 
-Highest-value large files that **do** deserve collaborators (not 8-way splits):
+### Follow-up B — API/I/O thinning
 
-| File | LOC | Extract *what* |
-|---|---|---|
-| `GuiBoardManager` | 3312 | UI wiring after pipeline extract; not board model |
-| `BatchAutorouter` | 2152 | Pass scheduler already conceptually separate from maze; keep plane-net policy here until Issue 093 is understood |
-| `MazeSearchEngine` | 1936 | Only after AngleModeAdapters; avoid heuristic churn |
-| `AutorouterAndRouteOptimizerThread` | 942 | Replace with pipeline adapter (Phase 1) |
-| `JobControllerV1` | 1421 | `JobService`, not four resource classes |
-| `DesignRulesChecker` | 821 | Detector methods or package-private helpers; keep one public entry `getAllClearanceViolations()` |
-| `RouterSettings` | 958 | Do not explode; leftover autoroute fields may join a nested `AutorouteSettings` **only** if merger tests stay green |
+Thin `JobControllerV1` only if an **in-process** second caller appears. Optional tokenizer vs scope split in `SpecctraDsnStreamReader` without a streaming rewrite. Virtual threads only for analytics HTTP.
+
+### Follow-up C — GUI presenters
+
+Extract menu/toolbar builders and parameter-dialog presenters. Bind through `WorkspaceSettings` getters/setters. Do not regress D26 or `gui.workspace` ↛ `gui.interactive`. Leave `.frb` I/O on `GuiBoardManager` until a second caller needs it. Accessibility: [`docs/gui/accessibility-contract.md`](../gui/accessibility-contract.md).
+
+### Follow-up D — Allocation research
+
+Profile `ShapeSearchTree` / expansion-room churn on a >500-net board. Record **peak heap**, not cumulative allocation. Recycle leaves or stack-allocate hot predicates only with a profiler note. No default BVH or sector-parallel rewrite.
 
 ---
 
-## Cross-cutting quality gates (every phase)
+## Heat map (where to look, not what to split)
 
-On Windows, from the repo root:
+August 2026, files ≥600 LOC:
+
+| Area | Files | This PR |
+|---|---|---|
+| GUI / workspace / rendering | 14 | Rename/thin the routing worker only |
+| Autoroute | 10 | Pipeline + neighbour factory + package split |
+| Board / trees / tighteners | 15 | Package split only |
+| Geometry | 8 | Seal; do not split |
+| I/O parsers | 7 | Out |
+| API / settings / DRC / analytics | 8 | Settings doc note in Phase 2 only |
+
+| File | This PR does |
+|---|---|
+| `AutorouterAndRouteOptimizerThread` (942) | Become `GuiRoutingJobWorker` over `RoutingPipeline` |
+| `BatchAutorouter` (2152) | Stay; plane-net policy stays here (Issue 093) |
+| `MazeSearchEngine` (1936) | Stay; no heuristic edits |
+| `JobControllerV1` (1421) | Stay |
+| `GuiBoardManager` (3312) | Stay |
+| `RouterSettings` (958) | Stay; no extra nested `AutorouteSettings` |
+| `DesignRulesChecker` (821) | Stay; keep `getAllClearanceViolations()` as the public entry |
+
+---
+
+## Quality gates (every phase)
+
+From the repo root on Windows:
 
 ```text
 gradlew.bat spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes
@@ -401,35 +357,8 @@ When Java or translations change:
 python scripts/i18n/extract-context.py --check
 ```
 
-Routing-touching phases additionally:
-
-- `Dac2020Bm01RoutingTest` (smoke)
-- Full DRC via `DesignRulesChecker.getAllClearanceViolations()`
-- No `src_v19/` edits except optional trace logging
-- Do not run `spotlessApply` as a cleanup sweep
+Routing-touching phases: `Dac2020Bm01RoutingTest`, full DRC via `DesignRulesChecker.getAllClearanceViolations()`, no `src_v19/` edits, no `spotlessApply` sweep. Inspect `git diff --stat` and `git diff --check`. Never auto-stage.
 
 ---
 
-## Mapping from the old catalog
-
-| Old item | Disposition |
-|---|---|
-| Decompose `board` into model/spatial/optimize/session | **Revise:** searchtree + optimize only; no `board.session` |
-| Six `autoroute` subpackages | **Keep** as Phase 4, after pipeline + angle factory |
-| Split 62 monoliths | **Drop** as a program; use heat map + phases |
-| Rename/decompose GUI routing thread | **Keep**, but share `RoutingPipeline` with headless |
-| Remove `BatchAutorouterV19` | **Keep** as Phase 0 (also fixes GUI/headless inconsistency) |
-| Unify optimizers | **Keep** as Phase 2 with a real DRC audit |
-| API/MCP versioning | **Keep** the conclusion; little code |
-| Sealed `Item` / `TileShape` / `Point` | **Keep** with corrected permits (Phase 5) |
-| `BoardLength` records | **Drop** from near-term |
-| Virtual threads everywhere | **Narrow** to blocking I/O |
-| BVH `ShapeSearchTree` | **Defer** to Phase 8 research |
-| Zero-allocation maze | **Defer** to Phase 8, local hot spots only |
-| Parallel spatial routing | **Out** until optimizer concurrency is settled |
-| Streaming DSN parser | **Out** unless profiles justify |
-| JPMS | **Out** |
-
----
-
-*This document is the structural roadmap referenced from `docs/architecture.md`. Update it when a phase completes or a gate changes the decision (especially Phase 2 optimizer keep/delete).*
+*Update this file when a phase gate changes a decision. Architecture glossary updates belong in the same Phase 4 commit as the package moves.*
