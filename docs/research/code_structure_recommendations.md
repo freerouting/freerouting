@@ -11,7 +11,7 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 
 ## How to use this plan
 
-1. Implement phases **0–7** on `refactor/restructure` in order. Each phase has a gate; do not start the next until it is green.
+1. Implement phases **0–8** on `refactor/restructure` in order. Each phase has a gate; do not start the next until it is green.
 2. The [Later work](#later-work-not-this-pr) section is not in this PR.
 3. Do not put GUI types under `board` or `autoroute` (`ModuleBoundariesArchTest`).
 4. Do not convert `RouterSettings` (or nested settings) to records. `SettingsMerger` requires nullable reference fields with no Java-default initializers.
@@ -27,14 +27,18 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 | Shared 3-stage `RoutingPipeline` used by GUI and headless | `JobService` extraction (MCP already calls REST over HTTP) |
 | Optimizer factory that **preserves** today’s GUI vs headless construction | Folding or deleting `BatchOptimizerMultiThreaded` (needs a separate DRC/parity audit) |
 | Finish per-family angle-mode factories (no cross-package adapter bag) | Virtual threads, BVH rewrite, parallel sector routing |
-| Subpackages `board.searchtree`, `board.optimize`, `autoroute.{pipeline,maze,expansion,drill,path}` | Full GUI presenter split of `GuiBoardManager` / `BoardFrame` |
+| Subpackages `board.searchtree`, `board.optimize`, `autoroute.{pipeline,maze,expansion,drill,path}` | Further `gui.workspace`, root `gui`, and `board` package subdivision (Phase 8 planning) |
 | Seal `Point`, `TileShape`, `RegularTileShape`, and `NamedAlgorithm` | Sealing `Item`; streaming Specctra parser |
 
 ---
 
 ## Baseline (August 2026)
 
-- `board`: 52 Java files. `autoroute`: 48 files, with events already in `autoroute.events`.
+- `board`: 49 direct Java files. The package scan also found 78 direct files in root `gui`,
+  43 in `gui.workspace`, 22 in `settings`, 38 in `io.specctra.parser`, 34 in
+  `geometry.planar`, and 27 in `gui.interactive`.
+- `autoroute.pipeline`: 16 direct files after the Phase 7 orchestration extraction; no other
+  production package outside the Phase 8 scope exceeds 20 direct Java files.
 - `GuiBoardManager` lives in `gui.workspace`. `HeadlessBoardManager` lives in `management`.
 - `NamedAlgorithm` is the strategy base for `BatchAutorouter` and `BatchOptimizer`. `BatchOptimizerMultiThreaded` extends `BatchOptimizer`; `BatchFanout` is a separate pipeline stage. `BatchAutorouterThread` is a **per-pass parallel worker**, not a job orchestrator.
 - Angle-mode factories **already exist** for three of four families (`TraceTightener.getInstance`, `FoundConnectionLocator.getInstance`, `SearchTreeManager` autoroute-tree construction). The missing one is room-neighbour dispatch in `AutorouteEngine.calculateDoors`.
@@ -467,6 +471,104 @@ and final-best-board selection. `BatchAutorouter` remains the public `NamedAlgor
 architecture rules before code moves. Any implemented split must preserve stage order, optimizer
 construction policy, stop propagation, event delivery, algorithm IDs, and routing/DRC behavior.
 
+### Phase 8 — GUI and board package subdivision
+
+**Goal:** Reduce the number of direct Java files in the `gui.workspace`, root `gui`, and `board`
+packages below 20 per package by introducing cohesive subpackages. This phase is a package
+boundary exercise, not a line-count exercise: hot geometry hierarchies, interactive state
+machines, and shared fixture namespaces remain intact when a split would create artificial
+coupling.
+
+**Status reconciliation:** Phases 0–5 are complete. The implementation tasks in Phases 6 and 7
+are complete for the increments described in those sections. Their remaining unchecked items are
+validation/re-evaluation gates and intentionally remain open; they must not be marked complete
+merely because the extraction code exists.
+
+**Inventory and target layout:**
+
+- `app.freerouting.gui.workspace` — 43 direct files:
+  - `gui.workspace` compatibility façade — 3: `GuiBoardManager`, `WorkspaceContract`,
+    `WorkspaceSettings`.
+  - `gui.workspace.controllers` — 11: `EditorStateController`, `GuiBoardAnalysisController`,
+    `GuiBoardEventBridge`, `GuiBoardHistoryController`, `GuiBoardInteractionController`,
+    `GuiBoardLayerController`, `GuiBoardLegacyEditActions`, `GuiBoardPresentationController`,
+    `GuiBoardRoutingActions`, `GuiBoardRoutingSettings`, `GuiBoardSessionModeController`.
+  - `gui.workspace.session` — 8: `EditorEvent`, `EditorStateHandle`, `EditorStateKind`,
+    `GuiBoardSessionState`, `InteractiveActionThread`, `LoadGeneration`, `RunGeneration`,
+    `WorkspaceGeneration`.
+  - `gui.workspace.ports` — 9: `BoardLoadPort`, `BoardReplacement`, `BoardReplacementPort`,
+    `GuiBoardPersistence`, `RouteControlPort`, `RouteProgressPort`, `SettingsSnapshotPort`,
+    `WorkspacePort`, `WorkspacePortAdapter`.
+  - `gui.workspace.progress` — 12: `BatchProgress`, `ClearanceViolations`, `EdtExecutor`,
+    `GuiRoutingJobWorker`, `InteractiveCommand`, `RatsNest`, `RatsNestItemInfo`,
+    `RatsNestItemType`, `RouteCompletion`, `RouteProgress`, `RouterSettingsSnapshot`,
+    `ScreenMessages`.
+  - Keep the three compatibility-critical public types in the root package unless a separate
+    API/FQCN decision is approved. Preserve `WorkspaceSettings` as the live GUI settings source
+    and keep concrete editor states in `gui.interactive`.
+
+- Root `app.freerouting.gui` — 78 direct files:
+  - `gui.windows.board` — 16 board/information windows.
+  - `gui.windows.routing` — 16 routing, rules, clearance, via, and autoroute windows.
+  - `gui.menus` — 18 board menus and popup menus.
+  - `gui.board` — 15 board shell and frame classes, including `BoardFrame`,
+    `BoardLoadCoordinator`, `BoardExportActions`, `BoardWindowLayout`, and `BoardPanel`.
+  - `gui.controls` — 7 reusable controls and labels.
+  - `gui.support` — 6 GUI defaults, text, and progress support classes.
+  - Audit public callers, Swing resource bundles, EDT ownership, and window lifecycle before
+    moving `BoardFrame` or any window class. Keep façade methods and accessibility contracts
+    stable while updating imports and ArchUnit package prefixes.
+
+- `app.freerouting.board` — 49 direct files:
+  - `board.model.items` — 13 board item, connectivity, area, pin, trace, and via types.
+  - `board.model.structure` — 10 layer, outline, fixed-state, shape-entry, and unit types.
+  - `board.trace` — 4: `PolylineTrace`, `PolylineTraceGeometry`,
+    `PolylineTraceNormalization`, `PolylineTraceSearchTreeAdapter`.
+  - `board.facade` — 8 board façade, repository, connectivity, snapshot, search, and undo types.
+  - `board.state` — 6 board comparison, observer, changed-area, communication, and coordinate
+    transformation types.
+  - `board.actions` — 8 board mutation, forced-routing, item-ID, inspection, selection, and
+    component-move types.
+  - Treat this as the highest-risk group. Audit package-private access, search-tree ownership,
+    `board` → `autoroute` dependencies, serialization fields, observer callbacks, and all
+    `BasicBoard`/`RoutingBoard` callers before moving the core façades.
+
+The scan also identified packages that are intentionally outside this phase:
+`settings` (22), `geometry.planar` (34), `gui.interactive` (27), and test
+`app.freerouting.fixtures` (29). The geometry and interactive packages are cohesive hierarchies
+or state machines; the fixture package is a shared test namespace. Revisit them only through a
+separate plan with focused dependency evidence.
+
+**Actionable sequence:**
+
+1. Build a class-to-target-package matrix from the inventory above. Record package-private,
+   protected, public, reflection, serialization, i18n, and ArchUnit dependencies before any move.
+2. Move `gui.workspace` first. Preserve the root compatibility façade, `WorkspaceSettings`
+   singleton/reset behavior, `WorkspaceContract`, EDT execution, and the
+   `gui.workspace` → `gui.interactive` boundary.
+3. Move root `gui` windows and menus next. Keep board-shell orchestration, Swing listeners,
+   resource bundles, accessibility behavior, and window disposal ownership explicit.
+4. Move `board` model and service groups last. Preserve search-tree insertion/removal,
+   snapshot/undo behavior, observer delivery, item identity, and routing/DRC behavior.
+5. After each group, update imports, tests, ArchUnit rules, architecture documentation, and
+   i18n context only when Java or translation sources actually move.
+6. Keep every proposed target package below 20 direct Java files. Do not split a package when
+   the only result is a new cycle or a façade that merely relocates fragile coupling.
+
+**Validation and exit criteria:**
+
+- `compileJava`, `compileTestJava`, focused workspace/GUI/board tests, and relevant routing
+  smoke tests pass after each group.
+- `ModuleBoundariesArchTest` and `SpecctraPackageArchTest` remain green; no GUI types enter
+  `board` or `autoroute`.
+- Board moves require full DRC through `DesignRulesChecker.getAllClearanceViolations()`,
+  serialization/undo characterization, and no routing completion or performance regression.
+- Run `gradlew.bat spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`,
+  `python scripts/i18n/extract-context.py --check` when applicable, `git diff --check`, and a
+  direct-package file-count rescan before marking Phase 8 complete.
+- Do not modify `src_v19/`, run `spotlessApply`, or silently change public compatibility/FQCN
+  decisions.
+
 ---
 
 ## Later work (not this PR)
@@ -540,8 +642,8 @@ deferred files remain unchanged.
 
 1. Re-evaluate the reduced Phase 7 router façade and remaining pipeline classes without changing
    public algorithm IDs or serialized compatibility surfaces.
-2. Characterize remaining GUI item-selection and menu/toolbar seams around `GuiBoardManager` and
-   `BoardFrame`, preserving EDT behavior and the existing workspace façade.
+2. Execute Phase 8 in order: `gui.workspace`, root `gui`, then `board`, preserving EDT behavior,
+   the workspace façade, board serialization, and routing/DRC parity.
 3. Design the Specctra parser/domain boundary before touching `SpecctraDsnStreamReader`, `Network`, or
    `Structure`; do not mechanically split generated scanner code.
 4. Revisit `BasicBoard`, `RoutingBoard`, and `PolylineTrace` only after characterization coverage
