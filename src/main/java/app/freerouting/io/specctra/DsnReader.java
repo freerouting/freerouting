@@ -3,8 +3,11 @@ package app.freerouting.io.specctra;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
+import app.freerouting.board.BoardOutline;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.Pin;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.parser.DsnFile;
@@ -55,7 +58,8 @@ public final class DsnReader {
    * @param designName optional caller-supplied filename (without path) to use in log messages; when
    *     {@code null} or blank the pcb-name token from the DSN header is used
    * @return one of {@link BoardReadResult.Success}, {@link BoardReadResult.OutlineMissing}, {@link
-   *     BoardReadResult.ParseError}, or {@link BoardReadResult.IoError}
+   *     BoardReadResult.InvalidGeometry}, {@link BoardReadResult.ParseError}, or {@link
+   *     BoardReadResult.IoError}
    */
   public static BoardReadResult readBoard(
       InputStream inputStream,
@@ -136,6 +140,10 @@ public final class DsnReader {
       if (par.autorouteSettings == null) {
         DsnFile.adjustPlaneAutorouteSettings(board);
       }
+      BoardReadResult.InvalidGeometry invalidGeometry = validateGeometry(board);
+      if (invalidGeometry != null) {
+        return invalidGeometry;
+      }
       List<String> warnings = par.getWarnings();
       if (!warnings.isEmpty()) {
         FRLogger.warn(
@@ -160,6 +168,48 @@ public final class DsnReader {
     } else {
       return new BoardReadResult.ParseError("(pcb", "DSN structure parsing failed");
     }
+  }
+
+  /**
+   * Checks the invariant required by the router: every loaded electrical terminal must lie in one
+   * of the PCB boundary paths. Disconnected boundary paths are valid, so a pin is accepted when it
+   * is inside any path.
+   */
+  private static BoardReadResult.InvalidGeometry validateGeometry(BasicBoard board) {
+    if (board == null) {
+      return null;
+    }
+    BoardOutline outline = board.getOutline();
+    if (outline == null || outline.shapeCount() == 0) {
+      return null;
+    }
+
+    int pinsOutsideBoundary = 0;
+    for (Pin pin : board.getPins()) {
+      Point pinCenter = pin.getCenter();
+      if (pinCenter == null || !isInsideAnyBoundary(outline, pinCenter)) {
+        pinsOutsideBoundary++;
+      }
+    }
+    if (pinsOutsideBoundary == 0) {
+      return null;
+    }
+
+    return new BoardReadResult.InvalidGeometry(
+        "(placement)",
+        "The DSN contains "
+            + pinsOutsideBoundary
+            + " pin(s) outside all PCB boundary paths; every pin must be inside a boundary before "
+            + "routing can start.");
+  }
+
+  private static boolean isInsideAnyBoundary(BoardOutline outline, Point point) {
+    for (int i = 0; i < outline.shapeCount(); i++) {
+      if (!outline.getShape(i).isOutside(point)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

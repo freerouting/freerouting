@@ -139,6 +139,7 @@ class DsnReaderTest {
         switch (result) {
           case BoardReadResult.Success _ -> "success";
           case BoardReadResult.OutlineMissing _ -> "outline";
+          case BoardReadResult.InvalidGeometry _ -> "geometry";
           case BoardReadResult.ParseError _ -> "parse";
           case BoardReadResult.IoError _ -> "io";
         };
