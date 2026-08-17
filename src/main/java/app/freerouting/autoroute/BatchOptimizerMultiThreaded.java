@@ -344,11 +344,12 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
             + ", via count: "
             + bestRouteResult.viaCount()
             + ", trace length: "
-            + boardStatisticsAfter.traces.totalLength
+            + boardStatisticsAfter.traces.totalWeightedLength
             + ", via count delta: "
             + (boardStatisticsBefore.items.viaCount - bestRouteResult.viaCount())
             + ", trace length delta: "
-            + (boardStatisticsBefore.traces.totalLength - boardStatisticsAfter.traces.totalLength)
+            + (boardStatisticsBefore.traces.totalWeightedLength
+                - boardStatisticsAfter.traces.totalWeightedLength)
             + ".");
 
     FRLogger.traceExit(optimizationPassId);

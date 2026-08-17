@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.logger.FRLogger;
 
 /** Task for optimizing a single route item in a multi-threaded routing pass. */
@@ -41,8 +42,11 @@ public class OptimizeRouteTask implements Runnable {
       return;
     }
 
+    BatchOptimizer workerOptimizer = new BatchOptimizer(this.job);
+    workerOptimizer.minCumulativeTraceLength =
+        new BoardStatistics(this.board, null, false).traces.totalWeightedLength;
     optimizationResult =
-        new BatchOptimizer(this.job).optRouteItem(itemToOptimize, withPreferredDirections, true);
+        workerOptimizer.optRouteItem(itemToOptimize, withPreferredDirections, true);
 
     boolean winningCandidate = optimizer.isWinningCandidate(this);
 
