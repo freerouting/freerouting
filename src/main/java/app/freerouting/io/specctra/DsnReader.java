@@ -3,7 +3,9 @@ package app.freerouting.io.specctra;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
+import app.freerouting.board.Component;
 import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.Pin;
 import app.freerouting.datastructures.IdentificationNumberGenerator;
 import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
@@ -132,6 +134,11 @@ public final class DsnReader {
     closeQuietly(inputStream);
 
     if (readOk) {
+      String pinBoundaryError = validatePinLocations(board);
+      if (pinBoundaryError != null) {
+        FRLogger.warn("DSN file '" + effectiveDesignName + "' was rejected: " + pinBoundaryError);
+        return new BoardReadResult.ParseError("(pcb/structure/placement)", pinBoundaryError);
+      }
       // Apply power-plane autoroute settings if the DSN had no (autoroute ...) scope
       if (par.autorouteSettings == null) {
         DsnFile.adjustPlaneAutorouteSettings(board);
@@ -160,6 +167,43 @@ public final class DsnReader {
     } else {
       return new BoardReadResult.ParseError("(pcb", "DSN structure parsing failed");
     }
+  }
+
+  /**
+   * Validates the routable pin locations against the absolute PCB domain from the DSN.
+   *
+   * <p>Specctra defines the {@code pcb} boundary as the design's absolute bounding domain. A placed
+   * pin outside that domain cannot be routed by this board model. Rejecting the malformed design
+   * here prevents the autorouter from repeatedly processing connections with no legal search space.
+   */
+  private static String validatePinLocations(BasicBoard board) {
+    if (board == null || board.boundingBox == null) {
+      return null;
+    }
+
+    int pinCount = 0;
+    int outsidePinCount = 0;
+    for (Pin pin : board.getPins()) {
+      Component component = board.components.get(pin.getComponentNo());
+      if (component == null || !component.isPlaced()) {
+        continue;
+      }
+      pinCount++;
+      if (!board.contains(pin.getCenter())) {
+        outsidePinCount++;
+      }
+    }
+
+    if (outsidePinCount == 0) {
+      return null;
+    }
+
+    return "The design contains "
+        + outsidePinCount
+        + " of "
+        + pinCount
+        + " placed pins outside the PCB boundary. Ensure the exported DSN boundary covers "
+        + "every placed board region.";
   }
 
   /**

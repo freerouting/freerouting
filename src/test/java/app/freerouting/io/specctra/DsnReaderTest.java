@@ -125,7 +125,20 @@ class DsnReaderTest {
         "KiCad DSN files with multiple (path pcb ...) boundary shapes must load");
     RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
     assertNotNull(board.getOutline());
+    assertEquals(2, board.getOutline().shapeCount());
     assertTrue(board.components.count() > 0, "board must contain placed components");
+  }
+
+  @Test
+  void readBoardRejectsIssue632PinsOutsidePcbBoundary() {
+    InputStream in = DsnTestFixtures.openResource("Issue632-MiniAutoPilot/Mini Auto Pilot.dsn");
+    BoardReadResult result =
+        DsnReader.readBoard(in, null, null, "Issue632-MiniAutoPilot/Mini Auto Pilot.dsn");
+
+    BoardReadResult.ParseError error = assertInstanceOf(BoardReadResult.ParseError.class, result);
+    assertEquals("(pcb/structure/placement)", error.location());
+    assertTrue(error.detail().contains("348 of 378 placed pins"));
+    assertTrue(error.detail().contains("outside the PCB boundary"));
   }
 
   // Sealed-switch exhaustiveness check (compile-time guarantee)

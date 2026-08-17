@@ -7,6 +7,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
@@ -84,19 +85,30 @@ public final class RoutingJobScheduler {
                           // load the board from the input into a RoutingBoard object
                           if (isDsn || isJson) {
                             try {
+                              BoardReadResult boardReadResult;
                               HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
                               if (isDsn) {
-                                boardManager.loadFromSpecctraDsn(
-                                    job.input.getData(),
-                                    null,
-                                    new ItemIdentificationNumberGenerator());
+                                boardReadResult =
+                                    boardManager.loadFromSpecctraDsn(
+                                        job.input.getData(),
+                                        null,
+                                        new ItemIdentificationNumberGenerator());
                               } else {
-                                boardManager.loadFromKiCadJson(
-                                    job.input.getData(),
-                                    null,
-                                    new ItemIdentificationNumberGenerator());
+                                boardReadResult =
+                                    boardManager.loadFromKiCadJson(
+                                        job.input.getData(),
+                                        null,
+                                        new ItemIdentificationNumberGenerator());
                               }
                               job.board = boardManager.getRoutingBoard();
+
+                              boolean boardReadSucceeded =
+                                  boardReadResult instanceof BoardReadResult.Success
+                                      || boardReadResult instanceof BoardReadResult.OutlineMissing;
+                              if (!boardReadSucceeded || job.board == null) {
+                                job.state = RoutingJobState.TERMINATED;
+                                continue;
+                              }
 
                               var settingsMerger = globalSettings.settingsMergerProtype.clone();
 
