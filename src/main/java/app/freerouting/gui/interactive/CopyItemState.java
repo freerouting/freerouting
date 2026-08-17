@@ -6,14 +6,14 @@ import app.freerouting.board.Item;
 import app.freerouting.board.ObstacleArea;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Via;
-import app.freerouting.core.Package;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Package;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.rendering.BoardRenderer;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -42,13 +42,13 @@ public final class CopyItemState extends InteractiveState {
     this.itemList = new LinkedList<>();
 
     startPosition = location.round();
-    currentLayer = boardHandling.getInteractiveSettings().getLayer();
+    currentLayer = boardHandling.getWorkspaceSettings().getLayer();
     layerChanged = false;
     currentPosition = startPosition;
     previousPosition = currentPosition;
-    for (Item currItem : itemList) {
-      if (currItem instanceof DrillItem || currItem instanceof ObstacleArea) {
-        Item newItem = currItem.copy(0);
+    for (Item currentItem : itemList) {
+      if (currentItem instanceof DrillItem || currentItem instanceof ObstacleArea) {
+        Item newItem = currentItem.copy(0);
         this.itemList.add(newItem);
       }
     }
@@ -108,8 +108,8 @@ public final class CopyItemState extends InteractiveState {
     currentPosition = newPosition.round();
     if (!currentPosition.equals(previousPosition)) {
       Vector translateVector = currentPosition.differenceBy(previousPosition);
-      for (Item currItem : itemList) {
-        currItem.translateBy(translateVector);
+      for (Item currentItem : itemList) {
+        currentItem.translateBy(translateVector);
       }
       previousPosition = currentPosition;
       hdlg.repaint();
@@ -139,11 +139,11 @@ public final class CopyItemState extends InteractiveState {
     RoutingBoard board = hdlg.getRoutingBoard();
     if (layerChanged) {
       // create new via padstacks
-      for (Item currOb : itemList) {
-        if (currOb instanceof Via currVia) {
+      for (Item currentObject : itemList) {
+        if (currentObject instanceof Via currentVia) {
           Padstack newPadstack =
-              changePadstackLayers(currVia.getPadstack(), currentLayer, board, padstackPairs);
-          currVia.setPadstack(newPadstack);
+              changePadstackLayers(currentVia.getPadstack(), currentLayer, board, padstackPairs);
+          currentVia.setPadstack(newPadstack);
         }
       }
     }
@@ -154,18 +154,18 @@ public final class CopyItemState extends InteractiveState {
     Map<Integer, Integer> cmpNoPairs = new TreeMap<>();
 
     Vector translateVector = currentPosition.differenceBy(startPosition);
-    for (Item currItem : itemList) {
-      int currCmpNo = currItem.getComponentNo();
-      if (currCmpNo > 0) {
+    for (Item currentItem : itemList) {
+      int currentCmpNo = currentItem.getComponentId();
+      if (currentCmpNo > 0) {
         // This item belongs to a component
         int newCmpNo;
-        Integer currKey = currCmpNo;
-        if (cmpNoPairs.containsKey(currKey)) {
+        Integer currentKey = currentCmpNo;
+        if (cmpNoPairs.containsKey(currentKey)) {
           // the new component for this pin is already created
-          Integer currValue = cmpNoPairs.get(currKey);
-          newCmpNo = currValue;
+          Integer currentValue = cmpNoPairs.get(currentKey);
+          newCmpNo = currentValue;
         } else {
-          Component oldComponent = board.components.get(currCmpNo);
+          Component oldComponent = board.components.get(currentCmpNo);
           if (oldComponent == null) {
             FRLogger.warn("CopyItemState: component not found");
             continue;
@@ -177,7 +177,7 @@ public final class CopyItemState extends InteractiveState {
             Package.Pin[] newPinArr = new Package.Pin[oldComponent.getPackage().pinCount()];
             for (int i = 0; i < newPinArr.length; i++) {
               Package.Pin oldPin = oldComponent.getPackage().getPin(i);
-              Padstack oldPadstack = board.library.padstacks.get(oldPin.padstackNo);
+              Padstack oldPadstack = board.library.padstacks.get(oldPin.padstackId);
               if (oldPadstack == null) {
                 FRLogger.warn("CopyItemState.insert: package padstack not found");
                 return;
@@ -187,7 +187,7 @@ public final class CopyItemState extends InteractiveState {
               newPinArr[i] =
                   new Package.Pin(
                       oldPin.name,
-                      newPadstack.no,
+                      newPadstack.id,
                       oldPin.relativeLocation,
                       oldPin.rotationInDegree);
             }
@@ -201,22 +201,22 @@ public final class CopyItemState extends InteractiveState {
                   oldComponent.getRotationInDegree(),
                   oldComponent.placedOnFront(),
                   newPackage);
-          newCmpNo = newComponent.no;
-          cmpNoPairs.put(currCmpNo, newCmpNo);
+          newCmpNo = newComponent.id;
+          cmpNoPairs.put(currentCmpNo, newCmpNo);
         }
-        currItem.assignComponentNo(newCmpNo);
+        currentItem.assignComponentId(newCmpNo);
       }
     }
     boolean allItemsInserted = true;
     boolean firstTime = true;
-    for (Item currItem : itemList) {
-      if (currItem.board != null && currItem.clearanceViolationCount() == 0) {
+    for (Item currentItem : itemList) {
+      if (currentItem.board != null && currentItem.clearanceViolationCount() == 0) {
         if (firstTime) {
           // make the current situation restorable by undo
           board.generateSnapshot();
           firstTime = false;
         }
-        board.insertItem(currItem.copy(0));
+        board.insertItem(currentItem.copy(0));
       } else {
         allItemsInserted = false;
       }
@@ -243,9 +243,9 @@ public final class CopyItemState extends InteractiveState {
     if (itemList == null) {
       return;
     }
-    for (Item currItem : itemList) {
+    for (Item currentItem : itemList) {
       BoardRenderer.drawOverlayItem(
-          currItem,
+          currentItem,
           graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),

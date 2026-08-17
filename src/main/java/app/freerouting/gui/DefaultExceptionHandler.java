@@ -3,8 +3,8 @@ package app.freerouting.gui;
 import static javax.swing.JOptionPane.OK_OPTION;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import javax.swing.JFrame;

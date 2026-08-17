@@ -28,7 +28,7 @@ class StrictDrcEnforcementTest {
       if ((item instanceof Trace || item instanceof Via)
           && item.netCount() > 0
           && !item.clearanceViolations().isEmpty()) {
-        return item.getNetNo(0);
+        return item.getNetNumber(0);
       }
     }
     return -1;
@@ -37,29 +37,29 @@ class StrictDrcEnforcementTest {
   @Test
   void ripsNewItemsWhenTheyCarryViolations() throws Exception {
     RoutingBoard board = DsnTestFixtures.loadBoard(FIXTURE);
-    int netNo = violatingNet(board);
-    assumeTrue(netNo > 0, "fixture must contain a violating routed net");
+    int netNumber = violatingNet(board);
+    assumeTrue(netNumber > 0, "fixture must contain a violating routed net");
     // DSN-imported wiring is fixed; freshly routed items never are. Unfix so the rip
     // behaves as it does for router-inserted items.
     for (Item item : board.getItems()) {
-      if ((item instanceof Trace || item instanceof Via) && item.containsNet(netNo)) {
+      if ((item instanceof Trace || item instanceof Via) && item.containsNet(netNumber)) {
         item.setFixedState(app.freerouting.board.FixedState.UNFIXED);
       }
     }
     long tracesBefore =
         board.getItems().stream()
-            .filter(it -> it instanceof Trace && it.containsNet(netNo))
+            .filter(it -> it instanceof Trace && it.containsNet(netNumber))
             .count();
     assumeTrue(tracesBefore > 0);
 
     // Treat the whole net's wiring as "newly inserted" (max id 0): the rip must fire.
-    AutorouteAttemptResult result = BatchAutorouter.enforceStrictDrc(board, netNo, 0);
+    AutorouteAttemptResult result = BatchAutorouter.enforceStrictDrc(board, netNumber, 0);
 
     assertTrue(result != null, "violating connection must be rejected");
     assertEquals(AutorouteAttemptState.FAILED, result.state);
     long tracesAfter =
         board.getItems().stream()
-            .filter(it -> it instanceof Trace && it.containsNet(netNo))
+            .filter(it -> it instanceof Trace && it.containsNet(netNumber))
             .count();
     assertTrue(tracesAfter < tracesBefore, "violating wiring must have been removed");
   }
@@ -67,13 +67,13 @@ class StrictDrcEnforcementTest {
   @Test
   void keepsConnectionsWhoseNewItemsAreClean() throws Exception {
     RoutingBoard board = DsnTestFixtures.loadBoard(FIXTURE);
-    int netNo = violatingNet(board);
-    assumeTrue(netNo > 0);
-    int maxId = board.communication.idNoGenerator.maxGeneratedNo();
+    int netNumber = violatingNet(board);
+    assumeTrue(netNumber > 0);
+    int maxId = board.communication.idGenerator.maxGeneratedId();
     BoardStatistics before = new BoardStatistics(board);
 
     // Nothing is newer than maxId, so nothing may be ripped regardless of violations.
-    assertNull(BatchAutorouter.enforceStrictDrc(board, netNo, maxId));
+    assertNull(BatchAutorouter.enforceStrictDrc(board, netNumber, maxId));
     BoardStatistics after = new BoardStatistics(board);
     assertEquals(before.clearanceViolations.totalCount, after.clearanceViolations.totalCount);
   }

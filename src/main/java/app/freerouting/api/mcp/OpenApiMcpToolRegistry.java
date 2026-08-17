@@ -648,11 +648,11 @@ public final class OpenApiMcpToolRegistry {
       return newObj;
     } else if (element.isJsonArray()) {
       JsonArray arr = element.getAsJsonArray();
-      JsonArray newArr = new JsonArray();
+      JsonArray newArray = new JsonArray();
       for (JsonElement item : arr) {
-        newArr.add(resolveRefs(item, componentsSchemas, visited));
+        newArray.add(resolveRefs(item, componentsSchemas, visited));
       }
-      return newArr;
+      return newArray;
     }
     return element;
   }

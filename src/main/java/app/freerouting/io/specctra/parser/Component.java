@@ -4,7 +4,7 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.ObstacleArea;
 import app.freerouting.board.Pin;
-import app.freerouting.core.Package;
+import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
@@ -51,95 +51,101 @@ public class Component extends ScopeKeyword {
     return componentPlacement;
   }
 
-  public static void writeScope(WriteScopeParameter par, app.freerouting.board.Component component)
+  public static void writeScope(
+      WriteScopeParameter scopeParameter, app.freerouting.board.Component component)
       throws IOException {
-    par.file.startScope();
-    par.file.write("place ");
-    par.file.newLine();
-    par.identifierType.write(component.name, par.file);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("place ");
+    scopeParameter.file.newLine();
+    scopeParameter.identifierType.write(component.name, scopeParameter.file);
     if (component.isPlaced()) {
-      double[] coor = par.coordinateTransform.boardToDsn(component.getLocation().toFloat());
+      double[] coor =
+          scopeParameter.coordinateTransform.boardToDsn(component.getLocation().toFloat());
       for (int i = 0; i < coor.length; i++) {
-        par.file.write(" ");
-        par.file.write(String.valueOf(coor[i]));
+        scopeParameter.file.write(" ");
+        scopeParameter.file.write(String.valueOf(coor[i]));
       }
       if (component.placedOnFront()) {
-        par.file.write(" front ");
+        scopeParameter.file.write(" front ");
       } else {
-        par.file.write(" back ");
+        scopeParameter.file.write(" back ");
       }
       int rotation = (int) Math.round(component.getRotationInDegree());
-      par.file.write(String.valueOf(rotation));
+      scopeParameter.file.write(String.valueOf(rotation));
     }
     if (component.positionFixed) {
-      par.file.newLine();
-      par.file.write(" (lock_type position)");
+      scopeParameter.file.newLine();
+      scopeParameter.file.write(" (lock_type position)");
     }
     int pinCount = component.getPackage().pinCount();
     for (int i = 0; i < pinCount; i++) {
-      writePinInfo(par, component, i);
+      writePinInfo(scopeParameter, component, i);
     }
-    writeKeepoutInfos(par, component);
-    par.file.endScope();
+    writeKeepoutInfos(scopeParameter, component);
+    scopeParameter.file.endScope();
   }
 
   private static void writePinInfo(
-      WriteScopeParameter par, app.freerouting.board.Component component, int pinNo)
+      WriteScopeParameter scopeParameter, app.freerouting.board.Component component, int pinIndex)
       throws IOException {
     if (!component.isPlaced()) {
       return;
     }
-    Package.Pin packagePin = component.getPackage().getPin(pinNo);
+    Package.Pin packagePin = component.getPackage().getPin(pinIndex);
     if (packagePin == null) {
       FRLogger.warn("Component.write_pin_info: package pin not found at '" + component.name + "'");
       return;
     }
-    Pin componentPin = par.board.getPin(component.no, pinNo);
+    Pin componentPin = scopeParameter.board.getPin(component.id, pinIndex);
     if (componentPin == null) {
       FRLogger.warn(
           "Component.write_pin_info: component pin not found at '" + component.name + "'");
       return;
     }
-    String clClassName = par.board.rules.clearanceMatrix.getName(componentPin.clearanceClassNo());
+    String clClassName =
+        scopeParameter.board.rules.clearanceMatrix.getName(componentPin.clearanceClassIndex());
     if (clClassName == null) {
       FRLogger.warn(
           "Component.write_pin_info: clearance class  name not found at '" + component.name + "'");
       return;
     }
-    par.file.newLine();
-    par.file.write("(pin ");
-    par.identifierType.write(packagePin.name, par.file);
-    par.file.write(" (clearanceClass ");
-    par.identifierType.write(clClassName, par.file);
-    par.file.write("))");
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(pin ");
+    scopeParameter.identifierType.write(packagePin.name, scopeParameter.file);
+    scopeParameter.file.write(" (clearanceClass ");
+    scopeParameter.identifierType.write(clClassName, scopeParameter.file);
+    scopeParameter.file.write("))");
   }
 
   private static void writeKeepoutInfos(
-      WriteScopeParameter par, app.freerouting.board.Component component) throws IOException {
+      WriteScopeParameter scopeParameter, app.freerouting.board.Component component)
+      throws IOException {
     if (!component.isPlaced()) {
       return;
     }
-    Package.Keepout[] currKeepoutArr;
+    Package.Keepout[] currentKeepoutArr;
     String keepoutType;
     for (int j = 0; j < 3; j++) {
       if (j == 0) {
-        currKeepoutArr = component.getPackage().keepoutArr;
+        currentKeepoutArr = component.getPackage().keepouts;
         keepoutType = "(keepout ";
       } else if (j == 1) {
-        currKeepoutArr = component.getPackage().viaKeepoutArr;
+        currentKeepoutArr = component.getPackage().viaKeepouts;
         keepoutType = "(via_keepout ";
       } else {
-        currKeepoutArr = component.getPackage().placeKeepoutArr;
+        currentKeepoutArr = component.getPackage().placeKeepoutArr;
         keepoutType = "(place_keepout ";
       }
-      for (int i = 0; i < currKeepoutArr.length; i++) {
-        Package.Keepout currKeepout = currKeepoutArr[i];
-        ObstacleArea currObstacleArea = getKeepout(par.board, component.no, currKeepout.name);
-        if (currObstacleArea == null || currObstacleArea.clearanceClassNo() == 0) {
+      for (int i = 0; i < currentKeepoutArr.length; i++) {
+        Package.Keepout currentKeepout = currentKeepoutArr[i];
+        ObstacleArea currentObstacleArea =
+            getKeepout(scopeParameter.board, component.id, currentKeepout.name);
+        if (currentObstacleArea == null || currentObstacleArea.clearanceClassIndex() == 0) {
           continue;
         }
         String clClassName =
-            par.board.rules.clearanceMatrix.getName(currObstacleArea.clearanceClassNo());
+            scopeParameter.board.rules.clearanceMatrix.getName(
+                currentObstacleArea.clearanceClassIndex());
         if (clClassName == null) {
           FRLogger.warn(
               "Component.write_keepout_infos: clearance class name not found at '"
@@ -147,26 +153,27 @@ public class Component extends ScopeKeyword {
                   + "'");
           return;
         }
-        par.file.newLine();
-        par.file.write(keepoutType);
-        par.identifierType.write(currKeepout.name, par.file);
-        par.file.write(" (clearanceClass ");
-        par.identifierType.write(clClassName, par.file);
-        par.file.write("))");
+        scopeParameter.file.newLine();
+        scopeParameter.file.write(keepoutType);
+        scopeParameter.identifierType.write(currentKeepout.name, scopeParameter.file);
+        scopeParameter.file.write(" (clearanceClass ");
+        scopeParameter.identifierType.write(clClassName, scopeParameter.file);
+        scopeParameter.file.write("))");
       }
     }
   }
 
-  private static ObstacleArea getKeepout(BasicBoard board, int componentNo, String name) {
+  private static ObstacleArea getKeepout(BasicBoard board, int componentId, String name) {
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem.getComponentNo() == componentNo && currItem instanceof ObstacleArea currArea) {
-        if (currArea.name != null && currArea.name.equals(name)) {
-          return currArea;
+      if (currentItem.getComponentId() == componentId
+          && currentItem instanceof ObstacleArea currentArea) {
+        if (currentArea.name != null && currentArea.name.equals(name)) {
+          return currentArea;
         }
       }
     }
@@ -244,29 +251,29 @@ public class Component extends ScopeKeyword {
         if (nextToken == LOCK_TYPE) {
           positionFixed = readLockType(scanner);
         } else if (nextToken == PIN) {
-          ComponentPlacement.ItemClearanceInfo currPinInfo = readItemClearanceInfo(scanner);
-          if (currPinInfo == null) {
+          ComponentPlacement.ItemClearanceInfo currentPinInfo = readItemClearanceInfo(scanner);
+          if (currentPinInfo == null) {
             return null;
           }
-          pinInfos.put(currPinInfo.name, currPinInfo);
+          pinInfos.put(currentPinInfo.name, currentPinInfo);
         } else if (nextToken == KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo currKeepoutInfo = readItemClearanceInfo(scanner);
-          if (currKeepoutInfo == null) {
+          ComponentPlacement.ItemClearanceInfo currentKeepoutInfo = readItemClearanceInfo(scanner);
+          if (currentKeepoutInfo == null) {
             return null;
           }
-          keepoutInfos.put(currKeepoutInfo.name, currKeepoutInfo);
+          keepoutInfos.put(currentKeepoutInfo.name, currentKeepoutInfo);
         } else if (nextToken == VIA_KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo currKeepoutInfo = readItemClearanceInfo(scanner);
-          if (currKeepoutInfo == null) {
+          ComponentPlacement.ItemClearanceInfo currentKeepoutInfo = readItemClearanceInfo(scanner);
+          if (currentKeepoutInfo == null) {
             return null;
           }
-          viaKeepoutInfos.put(currKeepoutInfo.name, currKeepoutInfo);
+          viaKeepoutInfos.put(currentKeepoutInfo.name, currentKeepoutInfo);
         } else if (nextToken == PLACE_KEEPOUT) {
-          ComponentPlacement.ItemClearanceInfo currKeepoutInfo = readItemClearanceInfo(scanner);
-          if (currKeepoutInfo == null) {
+          ComponentPlacement.ItemClearanceInfo currentKeepoutInfo = readItemClearanceInfo(scanner);
+          if (currentKeepoutInfo == null) {
             return null;
           }
-          placeKeepoutInfos.put(currKeepoutInfo.name, currKeepoutInfo);
+          placeKeepoutInfos.put(currentKeepoutInfo.name, currentKeepoutInfo);
         } else if (nextToken == Keyword.PN
             || (nextToken instanceof String && "PN".equalsIgnoreCase((String) nextToken))) {
           partNumber = DsnFile.readStringScope(scanner);
@@ -352,13 +359,13 @@ public class Component extends ScopeKeyword {
 
   /** Overwrites the function read_scope in ScopeKeyword. */
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     try {
-      ComponentPlacement componentPlacement = readScope(par.scanner);
+      ComponentPlacement componentPlacement = readScope(scopeParameter.scanner);
       if (componentPlacement == null) {
         return false;
       }
-      par.placementList.add(componentPlacement);
+      scopeParameter.placementList.add(componentPlacement);
     } catch (IOException e) {
       FRLogger.error("Component.read_scope: IO error scanning file", e);
       return false;

@@ -13,7 +13,7 @@ public abstract class Vector implements Serializable {
   /** Standard implementation of the zero vector. */
   public static final IntVector ZERO = new IntVector(0, 0);
 
-  /** Creates a Vector (p_x, p_y) in the plane. */
+  /** Creates a Vector (x, y) in the plane. */
   public static Vector getInstance(int x, int y) {
     IntVector result = new IntVector(x, y);
     if (Math.abs(x) > Limits.CRIT_INT || Math.abs(y) > Limits.CRIT_INT) {
@@ -23,8 +23,8 @@ public abstract class Vector implements Serializable {
   }
 
   /**
-   * Creates a 2-dimensional Vector from the 3 input values. If p_z != 0 it correspondents to the
-   * Vector in the plane with rational number coordinates (p_x / p_z, p_y / p_z).
+   * Creates a 2-dimensional Vector from the 3 input values. If z != 0 it correspondents to the
+   * Vector in the plane with rational number coordinates (x / z, y / z).
    */
   public static Vector getInstance(BigInteger x, BigInteger y, BigInteger z) {
     if (z.signum() < 0) {
@@ -34,7 +34,7 @@ public abstract class Vector implements Serializable {
       z = z.negate();
     }
     if (x.mod(z).signum() == 0) {
-      // p_x and p_y can be divided by p_z
+      // x and y can be divided by z
       x = x.divide(z);
       y = y.divide(z);
       z = BigInteger.ONE;
@@ -55,7 +55,7 @@ public abstract class Vector implements Serializable {
   /** Returns the Vector such that this plus this.negate() is zero. */
   public abstract Vector negate();
 
-  /** Adds p_other to this vector. */
+  /** Adds other to this vector. */
   public abstract Vector add(Vector other);
 
   abstract Vector add(IntVector other);
@@ -63,8 +63,8 @@ public abstract class Vector implements Serializable {
   abstract Vector add(RationalVector other);
 
   /**
-   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if
-   * this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
+   * Let L be the line from the Zero Vector to other. The function returns Side.ON_THE_LEFT, if this
+   * Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   public abstract Side sideOf(Vector other);
@@ -85,9 +85,9 @@ public abstract class Vector implements Serializable {
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other
-   * {@literal >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and
-   * Signum.ZERO, if the scalar product is equal 0.
+   * The function returns Signum.POSITIVE, if the scalar product of this vector and other {@literal
+   * >} 0, Signum.NEGATIVE, if the scalar product Vector is {@literal <} 0, and Signum.ZERO, if the
+   * scalar product is equal 0.
    */
   public abstract Signum projection(Vector other);
 
@@ -95,7 +95,7 @@ public abstract class Vector implements Serializable {
 
   abstract Signum projection(RationalVector other);
 
-  /** Returns an approximation of the scalar product of this vector with p_other by a double. */
+  /** Returns an approximation of the scalar product of this vector with other by a double. */
   public abstract double scalarProduct(Vector other);
 
   abstract double scalarProduct(IntVector other);
@@ -105,7 +105,7 @@ public abstract class Vector implements Serializable {
   /** Approximates the coordinates of this vector by float coordinates. */
   public abstract FloatPoint toFloat();
 
-  /** Turns this vector by p_factor times 90 degree. */
+  /** Turns this vector by factor times 90 degree. */
   public abstract Vector turn90Degree(int factor);
 
   /** Mirrors this vector at the x axis. */
@@ -122,8 +122,7 @@ public abstract class Vector implements Serializable {
   }
 
   /**
-   * Returns an approximation of the cosinus of the angle between this vector and p_other by a
-   * double.
+   * Returns an approximation of the cosinus of the angle between this vector and other by a double.
    */
   public double cosAngle(Vector other) {
     double result = this.scalarProduct(other);
@@ -131,7 +130,7 @@ public abstract class Vector implements Serializable {
     return result;
   }
 
-  /** Returns an approximation of the signed angle between this vector and p_other. */
+  /** Returns an approximation of the signed angle between this vector and other. */
   public double angleApprox(Vector other) {
     double result = Math.acos(cosAngle(other));
     if (this.sideOf(other) == Side.ON_THE_LEFT) {
@@ -146,7 +145,7 @@ public abstract class Vector implements Serializable {
     return other.angleApprox(this);
   }
 
-  /** Returns an approximation vector of this vector with the same direction and length p_length. */
+  /** Returns an approximation vector of this vector with the same direction and length length. */
   public abstract Vector changeLengthApprox(double length);
 
   abstract Direction toNormalizedDirection();

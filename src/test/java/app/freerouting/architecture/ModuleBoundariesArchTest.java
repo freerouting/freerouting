@@ -38,7 +38,8 @@ class ModuleBoundariesArchTest {
     "app.freerouting.debug..",
     "app.freerouting.util..",
     "app.freerouting.io..",
-    "app.freerouting.core.."
+    "app.freerouting.core..",
+    "app.freerouting.analytics.."
   };
 
   private JavaClasses importMainClasses() {
@@ -79,7 +80,8 @@ class ModuleBoundariesArchTest {
             "app.freerouting.gui..",
             "app.freerouting.gui.interactive..",
             "app.freerouting.api..",
-            "app.freerouting.management..")
+            "app.freerouting.management..",
+            "app.freerouting.analytics..")
         .check(classes);
   }
 
@@ -89,10 +91,11 @@ class ModuleBoundariesArchTest {
 
     noClasses()
         .that()
-        .resideInAnyPackage("app.freerouting.api..", "app.freerouting.management..")
+        .resideInAnyPackage(
+            "app.freerouting.api..", "app.freerouting.management..", "app.freerouting.analytics..")
         .should()
         .dependOnClassesThat()
-        .haveFullyQualifiedName("app.freerouting.gui.session.GuiBoardManager")
+        .haveFullyQualifiedName("app.freerouting.gui.workspace.GuiBoardManager")
         .orShould()
         .dependOnClassesThat()
         .haveFullyQualifiedName("app.freerouting.gui.interactive.InteractiveState")
@@ -119,7 +122,8 @@ class ModuleBoundariesArchTest {
 
     noClasses()
         .that()
-        .resideInAnyPackage("app.freerouting.api..", "app.freerouting.management..")
+        .resideInAnyPackage(
+            "app.freerouting.api..", "app.freerouting.management..", "app.freerouting.analytics..")
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage("app.freerouting.gui..", "app.freerouting.gui.rendering..")
@@ -135,7 +139,7 @@ class ModuleBoundariesArchTest {
         .resideInAPackage("app.freerouting.core..")
         .should()
         .dependOnClassesThat()
-        .haveFullyQualifiedName("app.freerouting.gui.session.GuiBoardManager")
+        .haveFullyQualifiedName("app.freerouting.gui.workspace.GuiBoardManager")
         .orShould()
         .dependOnClassesThat()
         .haveFullyQualifiedName("app.freerouting.gui.interactive.InteractiveState")
@@ -232,7 +236,7 @@ class ModuleBoundariesArchTest {
 
   /**
    * R4 (strict): gui subpackages must be free of dependency cycles. Trivially green until Phases
-   * 8-10 introduce gui.interactive/gui.session/gui.rendering; must stay green after Phase 9
+   * 8-10 introduce gui.interactive/gui.workspace/gui.rendering; must stay green after Phase 9
    * (D27/D30).
    */
   @Test
@@ -246,38 +250,38 @@ class ModuleBoundariesArchTest {
         .check(classes);
   }
 
-  /** D27/D30: the session facade must never name concrete interactive states. */
+  /** D27/D30: the workspace facade must never name concrete interactive states. */
   @Test
-  void guiSessionMustNotDependOnConcreteInteractiveStates() {
+  void guiWorkspaceMustNotDependOnConcreteInteractiveStates() {
     JavaClasses classes = importMainClasses();
     noClasses()
         .that()
-        .resideInAnyPackage("app.freerouting.gui.session..")
+        .resideInAnyPackage("app.freerouting.gui.workspace..")
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage("app.freerouting.gui.interactive..")
-        .because("session owns opaque handles; views bootstrap concrete states (D27/D30)")
+        .because("workspace owns opaque handles; views bootstrap concrete states (D27/D30)")
         .check(classes);
   }
 
-  /** Background session workers may publish events, but must not reach Swing or window owners. */
+  /** Background workspace workers may publish events, but must not reach Swing or window owners. */
   @Test
-  void guiSessionWorkersMustUseSessionPortsForPresentation() {
+  void guiWorkspaceWorkersMustUseWorkspacePortsForPresentation() {
     JavaClasses classes = importMainClasses();
     noClasses()
         .that()
-        .haveFullyQualifiedName("app.freerouting.gui.session.InteractiveActionThread")
+        .haveFullyQualifiedName("app.freerouting.gui.workspace.InteractiveActionThread")
         .or()
-        .haveFullyQualifiedName("app.freerouting.gui.session.AutorouterAndRouteOptimizerThread")
+        .haveFullyQualifiedName("app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread")
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(
             "javax.swing..",
             "app.freerouting.gui.BoardFrame",
             "app.freerouting.gui.BoardPanel",
-            "app.freerouting.gui.session.GuiBoardManager")
+            "app.freerouting.gui.workspace.GuiBoardManager")
         .because(
-            "background workers must publish session events; only the EDT adapter may reach Swing"
+            "background workers must publish workspace events; only the EDT adapter may reach Swing"
                 + " or window-owned GUI state")
         .check(classes);
   }

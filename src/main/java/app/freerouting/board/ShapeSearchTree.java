@@ -43,7 +43,7 @@ public class ShapeSearchTree extends MinAreaTree {
   private static final int DRILL_HOLE_CLEARANCE_MARGIN = 10;
 
   /** Used in objects of class EntrySortedByClearance. */
-  private static int lastGeneratedIdNo;
+  private static int lastGeneratedEntryId;
 
   /**
    * The clearance class number for which the shapes of this tree is compensated. If
@@ -55,9 +55,9 @@ public class ShapeSearchTree extends MinAreaTree {
   protected final BasicBoard board;
 
   /**
-   * Creates a new ShapeSearchTree. p_compensated_clearance_class_no is the clearance class number
-   * for which the shapes of this tree is compensated. If p_compensated_clearance_class_no = 0, the
-   * shapes are not compensated.
+   * Creates a new ShapeSearchTree. compensatedClearanceClassNo is the clearance class number for
+   * which the shapes of this tree is compensated. If compensatedClearanceClassNo = 0, the shapes
+   * are not compensated.
    */
   ShapeSearchTree(
       ShapeBoundingDirections directions, BasicBoard board, int compensatedClearanceClassNo) {
@@ -88,39 +88,39 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Return the clearance compensation value of p_clearance_class_no to the clearance compensation
-   * class of this search tree with on layer p_layer. Returns 0, if no clearance compensation is
-   * used for this tree.
+   * Return the clearance compensation value of clearanceClassIndex to the clearance compensation
+   * class of this search tree with on layer layer. Returns 0, if no clearance compensation is used
+   * for this tree.
    */
-  public int clearanceCompensationValue(int clearanceClassNo, int layer) {
-    if (clearanceClassNo <= 0) {
+  public int clearanceCompensationValue(int clearanceClassIndex, int layer) {
+    if (clearanceClassIndex <= 0) {
       return 0;
     }
     int result =
         board.rules.clearanceMatrix.getValue(
-                clearanceClassNo, this.compensatedClearanceClassNo, layer, false)
+                clearanceClassIndex, this.compensatedClearanceClassNo, layer, false)
             - board.rules.clearanceMatrix.clearanceCompensationValue(
                 this.compensatedClearanceClassNo, layer);
     return Math.max(result, 0);
   }
 
   /**
-   * Changes the tree entries from p_keep_at_start_count + 1 to newShapeCount - 1 - keepAtEndCount
-   * to p_changed_entries. Special implementation for change_trace for performance reasons
+   * Changes the tree entries from keepAtStartCount + 1 to newShapeCount - 1 - keepAtEndCount to
+   * changedEntries. Special implementation for change_trace for performance reasons
    */
   void changeEntries(
       PolylineTrace obj, Polyline newPolyline, int keepAtStartCount, int keepAtEndCount) {
-    // calculate the shapes of p_new_polyline from keepAtStartCount to
+    // calculate the shapes of newPolyline from keepAtStartCount to
     // newShapeCount - keepAtEndCount - 1;
     int compensatedHalfWidth =
         obj.getHalfWidth()
-            + this.clearanceCompensationValue(obj.clearanceClassNo(), obj.getLayer());
+            + this.clearanceCompensationValue(obj.clearanceClassIndex(), obj.getLayer());
     TileShape[] changedShapes =
         this.offsetShapes(
             newPolyline,
             compensatedHalfWidth,
             keepAtStartCount,
-            newPolyline.arr.length - 1 - keepAtEndCount);
+            newPolyline.lines.length - 1 - keepAtEndCount);
     int oldShapeCount = obj.treeShapeCount(this);
     int newShapeCount = changedShapes.length + keepAtStartCount + keepAtEndCount;
     Leaf[] newLeafArr = new Leaf[newShapeCount];
@@ -155,8 +155,8 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Merges the tree entries from p_from_trace in front of p_to_trace. Special implementation for
-   * combine trace for performance reasons.
+   * Merges the tree entries from fromTrace in front of toTrace. Special implementation for combine
+   * trace for performance reasons.
    */
   void mergeEntriesInFront(
       PolylineTrace fromTrace,
@@ -165,8 +165,8 @@ public class ShapeSearchTree extends MinAreaTree {
       int fromEntryNo,
       int toEntryNo) {
     boolean changeOrder = fromTrace.firstCorner().equals(toTrace.firstCorner());
-    // remove the last or first tree entry from p_from_trace and the
-    // first tree entry from p_to_trace, because they will be replaced by
+    // remove the last or first tree entry from fromTrace and the
+    // first tree entry from toTrace, because they will be replaced by
     // the new link entries.
     int fromShapeCountMinus1 = fromTrace.tileShapeCount() - 1;
     int removeNo;
@@ -183,15 +183,16 @@ public class ShapeSearchTree extends MinAreaTree {
         this.offsetShapes(
             joinedPolyline,
             toTrace.getHalfWidth()
-                + this.clearanceCompensationValue(toTrace.clearanceClassNo(), toTrace.getLayer()),
+                + this.clearanceCompensationValue(
+                    toTrace.clearanceClassIndex(), toTrace.getLayer()),
             fromEntryNo,
             toEntryNo);
     int newShapeCount = fromTraceEntries.length + linkShapes.length + toTraceEntries.length - 2;
     Leaf[] newLeafArr = new Leaf[newShapeCount];
     int oldToShapeCount = toTraceEntries.length;
     TileShape[] newPrecalculatedTreeShapes = new TileShape[newShapeCount];
-    // transfer the tree entries except the last or first from p_from_trace to
-    // p_to_trace
+    // transfer the tree entries except the last or first from fromTrace to
+    // toTrace
     for (int i = 0; i < fromShapeCountMinus1; i++) {
       int fromNo;
       if (changeOrder) {
@@ -205,31 +206,31 @@ public class ShapeSearchTree extends MinAreaTree {
       newLeafArr[i].shapeIndexInObject = i;
     }
     for (int i = 1; i < oldToShapeCount; i++) {
-      int currInd = fromShapeCountMinus1 + linkShapes.length + i - 1;
-      newPrecalculatedTreeShapes[currInd] = toTrace.getTreeShape(this, i);
-      newLeafArr[currInd] = toTraceEntries[i];
-      newLeafArr[currInd].shapeIndexInObject = currInd;
+      int currentInd = fromShapeCountMinus1 + linkShapes.length + i - 1;
+      newPrecalculatedTreeShapes[currentInd] = toTrace.getTreeShape(this, i);
+      newLeafArr[currentInd] = toTraceEntries[i];
+      newLeafArr[currentInd].shapeIndexInObject = currentInd;
     }
 
     // correct the precalculated tree shapes first, because it is used in
     // this.insert
     for (int i = 0; i < linkShapes.length; i++) {
-      int currInd = fromShapeCountMinus1 + i;
-      newPrecalculatedTreeShapes[currInd] = linkShapes[i];
+      int currentInd = fromShapeCountMinus1 + i;
+      newPrecalculatedTreeShapes[currentInd] = linkShapes[i];
     }
     toTrace.setPrecalculatedTreeShapes(newPrecalculatedTreeShapes, this);
 
     // create the new link entries
     for (int i = 0; i < linkShapes.length; i++) {
-      int currInd = fromShapeCountMinus1 + i;
-      newLeafArr[currInd] = insert(toTrace, currInd);
+      int currentInd = fromShapeCountMinus1 + i;
+      newLeafArr[currentInd] = insert(toTrace, currentInd);
     }
 
     toTrace.setSearchTreeEntries(newLeafArr, this);
   }
 
   /**
-   * Merges the tree entries from p_from_trace to the end of p_to_trace. Special implementation for
+   * Merges the tree entries from fromTrace to the end of toTrace. Special implementation for
    * combine trace for performance reasons.
    */
   void mergeEntriesAtEnd(
@@ -241,8 +242,8 @@ public class ShapeSearchTree extends MinAreaTree {
     boolean changeOrder = fromTrace.lastCorner().equals(toTrace.lastCorner());
     Leaf[] fromTraceEntries = fromTrace.getSearchTreeEntries(this);
     Leaf[] toTraceEntries = toTrace.getSearchTreeEntries(this);
-    // remove the last or first tree entry from p_from_trace and the
-    // last tree entry from p_to_trace, because they will be replaced by
+    // remove the last or first tree entry from fromTrace and the
+    // last tree entry from toTrace, because they will be replaced by
     // the new link entries.
     int toShapeCountMinus1 = toTrace.tileShapeCount() - 1;
     removeLeaf(toTraceEntries[toShapeCountMinus1]);
@@ -257,59 +258,59 @@ public class ShapeSearchTree extends MinAreaTree {
         this.offsetShapes(
             joinedPolyline,
             toTrace.getHalfWidth()
-                + this.clearanceCompensationValue(toTrace.clearanceClassNo(), toTrace.getLayer()),
+                + this.clearanceCompensationValue(
+                    toTrace.clearanceClassIndex(), toTrace.getLayer()),
             fromEntryNo,
             toEntryNo);
     int newShapeCount = fromTraceEntries.length + linkShapes.length + toTraceEntries.length - 2;
     Leaf[] newLeafArr = new Leaf[newShapeCount];
     TileShape[] newPrecalculatedTreeShapes = new TileShape[newShapeCount];
     // transfer the tree entries except the last from the old shapes
-    // of p_to_trace to the new shapes of p_to_trace
+    // of toTrace to the new shapes of toTrace
     for (int i = 0; i < toShapeCountMinus1; i++) {
       newPrecalculatedTreeShapes[i] = toTrace.getTreeShape(this, i);
       newLeafArr[i] = toTraceEntries[i];
     }
 
     for (int i = 1; i < fromTraceEntries.length; i++) {
-      int currInd = toShapeCountMinus1 + linkShapes.length + i - 1;
+      int currentInd = toShapeCountMinus1 + linkShapes.length + i - 1;
       int fromNo;
       if (changeOrder) {
         fromNo = fromTraceEntries.length - i - 1;
       } else {
         fromNo = i;
       }
-      newPrecalculatedTreeShapes[currInd] = fromTrace.getTreeShape(this, fromNo);
-      newLeafArr[currInd] = fromTraceEntries[fromNo];
-      newLeafArr[currInd].object = toTrace;
-      newLeafArr[currInd].shapeIndexInObject = currInd;
+      newPrecalculatedTreeShapes[currentInd] = fromTrace.getTreeShape(this, fromNo);
+      newLeafArr[currentInd] = fromTraceEntries[fromNo];
+      newLeafArr[currentInd].object = toTrace;
+      newLeafArr[currentInd].shapeIndexInObject = currentInd;
     }
 
     // correct the precalculated tree shapes first, because it is used in
     // this.insert
     for (int i = 0; i < linkShapes.length; i++) {
-      int currInd = toShapeCountMinus1 + i;
-      newPrecalculatedTreeShapes[currInd] = linkShapes[i];
+      int currentInd = toShapeCountMinus1 + i;
+      newPrecalculatedTreeShapes[currentInd] = linkShapes[i];
     }
     toTrace.setPrecalculatedTreeShapes(newPrecalculatedTreeShapes, this);
 
     // create the new link entries
     for (int i = 0; i < linkShapes.length; i++) {
-      int currInd = toShapeCountMinus1 + i;
-      newLeafArr[currInd] = insert(toTrace, currInd);
+      int currentInd = toShapeCountMinus1 + i;
+      newLeafArr[currentInd] = insert(toTrace, currentInd);
     }
     toTrace.setSearchTreeEntries(newLeafArr, this);
   }
 
   /**
-   * Transfers tree entries from p_from_trace to p_start and p_end_piece after a middle piece was
-   * cut out. Special implementation for ShapeTraceEntries.fast_cutout_trace for performance
-   * reasons.
+   * Transfers tree entries from fromTrace to start and endPiece after a middle piece was cut out.
+   * Special implementation for ShapeTraceEntries.fast_cutout_trace for performance reasons.
    */
   void reuseEntriesAfterCutout(
       PolylineTrace fromTrace, PolylineTrace startPiece, PolylineTrace endPiece) {
-    Leaf[] startPieceLeafArr = new Leaf[startPiece.polyline().arr.length - 2];
+    Leaf[] startPieceLeafArr = new Leaf[startPiece.polyline().lines.length - 2];
     Leaf[] fromTraceEntries = fromTrace.getSearchTreeEntries(this);
-    // transfer the entries at the start of p_from_trace to p_start_piece.
+    // transfer the entries at the start of fromTrace to startPiece.
     for (int i = 0; i < startPieceLeafArr.length - 1; i++) {
       startPieceLeafArr[i] = fromTraceEntries[i];
       startPieceLeafArr[i].object = startPiece;
@@ -321,7 +322,7 @@ public class ShapeSearchTree extends MinAreaTree {
 
     // create the last tree entry of the start piece.
 
-    Leaf[] endPieceLeafArr = new Leaf[endPiece.polyline().arr.length - 2];
+    Leaf[] endPieceLeafArr = new Leaf[endPiece.polyline().lines.length - 2];
 
     // create the first tree entry of the end piece.
     endPieceLeafArr[0] = insert(endPiece, 0);
@@ -339,8 +340,8 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Puts all items in the tree overlapping with p_shape on layer p_layer into p_obstacles. If
-   * p_layer {@literal <} 0, the layer is ignored.
+   * Puts all items in the tree overlapping with shape on layer layer into obstacles. If layer
+   * {@literal <} 0, the layer is ignored.
    */
   public void overlappingObjects(
       ConvexShape shape, int layer, int[] ignoreNetNos, Set<SearchTreeObject> obstacles) {
@@ -354,8 +355,8 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Returns all SearchTreeObjects on layer p_layer, which overlap with p_shape. If p_layer
-   * {@literal <} 0, the layer is ignored
+   * Returns all SearchTreeObjects on layer layer, which overlap with shape. If layer {@literal <}
+   * 0, the layer is ignored
    */
   public Set<SearchTreeObject> overlappingObjects(ConvexShape shape, int layer) {
     Set<SearchTreeObject> result = new TreeSet<>();
@@ -364,8 +365,8 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_obstacles. If
-   * p_layer {@literal <} 0, the layer is ignored.
+   * Puts all tree entries overlapping with shape on layer layer into the list obstacles. If layer
+   * {@literal <} 0, the layer is ignored.
    */
   public void overlappingTreeEntries(
       ConvexShape shape, int layer, Collection<TreeEntry> treeEntries) {
@@ -373,9 +374,9 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_obstacles. If
-   * p_layer {@literal <} 0, the layer is ignored. treeEntries with object containing a net number
-   * of p_ignore_net_nos are ignored.
+   * Puts all tree entries overlapping with shape on layer layer into the list obstacles. If layer
+   * {@literal <} 0, the layer is ignored. treeEntries with object containing a net number of
+   * ignoreNetNos are ignored.
    */
   public void overlappingTreeEntries(
       ConvexShape shape, int layer, int[] ignoreNetNos, Collection<TreeEntry> treeEntries) {
@@ -383,12 +384,12 @@ public class ShapeSearchTree extends MinAreaTree {
       return;
     }
     if (treeEntries == null) {
-      FRLogger.warn("ShapeSearchTree.overlaps: p_obstacle_entries is null");
+      FRLogger.warn("ShapeSearchTree.overlaps: obstacleEntries is null");
       return;
     }
     RegularTileShape bounds = shape.boundingShape(boundingDirections);
     if (bounds == null) {
-      FRLogger.warn("ShapeSearchTree.overlaps: p_shape not bounded");
+      FRLogger.warn("ShapeSearchTree.overlaps: shape not bounded");
       return;
     }
     Collection<Leaf> tmpList = this.overlaps(bounds);
@@ -424,39 +425,39 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Looks up all entries in the search tree, so that inserting an item with shape p_shape, net
-   * number p_net_no, clearance type p_cl_type and layer p_layer would produce a clearance
-   * violation, and puts them into the set p_obstacle_entries. The elements in p_obstacle_entries
-   * are of type TreeEntry. if p_layer < 0, the layer is ignored. Used only internally, because the
-   * clearance compensation is not taken into account.
+   * Looks up all entries in the search tree, so that inserting an item with shape shape, net number
+   * netNumber, clearance type clearanceClassIndex and layer layer would produce a clearance
+   * violation, and puts them into the set obstacleEntries. The elements in obstacleEntries are of
+   * type TreeEntry. if layer < 0, the layer is ignored. Used only internally, because the clearance
+   * compensation is not taken into account.
    */
   void overlappingTreeEntriesWithClearance(
       ConvexShape shape,
       int layer,
       int[] ignoreNetNos,
-      int clType,
+      int clearanceClassIndex,
       Collection<TreeEntry> obstacleEntries) {
     if (shape == null) {
       return;
     }
     if (obstacleEntries == null) {
-      FRLogger.warn("ShapeSearchTree.overlaps_with_clearance: p_obstacle_entries is null");
+      FRLogger.warn("ShapeSearchTree.overlaps_with_clearance: obstacleEntries is null");
       return;
     }
     ClearanceMatrix clMatrix = board.rules.clearanceMatrix;
     RegularTileShape bounds = shape.boundingShape(boundingDirections);
     if (bounds == null) {
-      FRLogger.warn("ShapeSearchTree.overlaps_with_clearance: p_shape is not bounded");
+      FRLogger.warn("ShapeSearchTree.overlaps_with_clearance: shape is not bounded");
       bounds = board.getBoundingBox();
     }
-    int maxClearance = (int) (1.2 * clMatrix.maxValue(clType, layer));
+    int maxClearance = (int) (1.2 * clMatrix.maxValue(clearanceClassIndex, layer));
     // search with the bounds enlarged by the maximum clearance to
     // get all candidates for overlap
     // a factor less than sqr2 has evtl. be added because
     // enlarging is not symmetric.
     RegularTileShape offsetBounds = (RegularTileShape) bounds.offset(maxClearance);
     Collection<Leaf> tmpList = overlaps(offsetBounds);
-    // sort the found items by its clearances tp p_cl_type on layer p_layer
+    // sort the found items by its clearances tp clearanceClassIndex on layer layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
 
     for (Leaf currentLeaf : tmpList) {
@@ -472,7 +473,7 @@ public class ShapeSearchTree extends MinAreaTree {
       }
       if (!ignoreItem) {
         int currentClearance =
-            clMatrix.getValue(clType, currentItem.clearanceClassNo(), layer, true);
+            clMatrix.getValue(clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
         EntrySortedByClearance sortedOb = new EntrySortedByClearance(currentLeaf, currentClearance);
         sortedItems.add(sortedOb);
       }
@@ -483,7 +484,7 @@ public class ShapeSearchTree extends MinAreaTree {
       int tmpHalfClearance = tmpEntry.clearance / 2;
       if (tmpHalfClearance != currentHalfClearance) {
         currentHalfClearance = tmpHalfClearance;
-        currentOffsetShape = (TileShape) shape.enlarge(currentHalfClearance);
+        currentOffsetShape = (ConvexShape) shape.enlarge(currentHalfClearance);
       }
       TileShape tmpShape =
           tmpEntry.leaf.object.getTreeShape(this, tmpEntry.leaf.shapeIndexInObject);
@@ -497,36 +498,38 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Returns all objects of class TreeEntry, which overlap with p_shape on layer p_layer inclusive
-   * clearance. p_clearance_class is the index in the clearance matrix, which describes the required
-   * clearance restrictions to other items. If p_layer {@literal <} 0, the layer is ignored.
+   * Returns all objects of class TreeEntry, which overlap with shape on layer layer inclusive
+   * clearance. clearanceClassIndex is the index in the clearance matrix, which describes the
+   * required clearance restrictions to other items. If layer {@literal <} 0, the layer is ignored.
    */
   public Collection<TreeEntry> overlappingTreeEntriesWithClearance(
-      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClass) {
+      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
     Collection<TreeEntry> result = new LinkedList<>();
     if (this.isClearanceCompensationUsed()) {
       this.overlappingTreeEntries(shape, layer, ignoreNetNos, result);
     } else {
-      this.overlappingTreeEntriesWithClearance(shape, layer, ignoreNetNos, clearanceClass, result);
+      this.overlappingTreeEntriesWithClearance(
+          shape, layer, ignoreNetNos, clearanceClassIndex, result);
     }
     return result;
   }
 
   /**
-   * Puts all items in the tree overlapping with p_shape on layer p_layer into p_obstacles, if
-   * p_obstacles != null. If p_layer {@literal <} 0, the layer is ignored.
+   * Puts all items in the tree overlapping with shape on layer layer into obstacles, if obstacles
+   * != null. If layer {@literal <} 0, the layer is ignored.
    */
   public void overlappingObjectsWithClearance(
       ConvexShape shape,
       int layer,
       int[] ignoreNetNos,
-      int clType,
+      int clearanceClassIndex,
       Set<SearchTreeObject> obstacles) {
     Collection<TreeEntry> treeEntries = new LinkedList<>();
     if (this.isClearanceCompensationUsed()) {
       overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
     } else {
-      overlappingTreeEntriesWithClearance(shape, layer, ignoreNetNos, clType, treeEntries);
+      overlappingTreeEntriesWithClearance(
+          shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
     }
     if (obstacles == null) {
       return;
@@ -537,19 +540,19 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Returns items, which overlap with p_shape on layer p_layer inclusive clearance.
-   * p_clearance_class is the index in the clearance matrix, which describes the required clearance
-   * restrictions to other items. The function may also return items, which are nearly overlapping,
-   * but do not overlap with exact calculation. If p_layer {@literal <} 0, the layer is ignored.
+   * Returns items, which overlap with shape on layer layer inclusive clearance. clearanceClassIndex
+   * is the index in the clearance matrix, which describes the required clearance restrictions to
+   * other items. The function may also return items, which are nearly overlapping, but do not
+   * overlap with exact calculation. If layer {@literal <} 0, the layer is ignored.
    */
   public Set<Item> overlappingItemsWithClearance(
-      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClass) {
+      ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
     Set<SearchTreeObject> overlaps = new TreeSet<>();
 
-    this.overlappingObjectsWithClearance(shape, layer, ignoreNetNos, clearanceClass, overlaps);
+    this.overlappingObjectsWithClearance(shape, layer, ignoreNetNos, clearanceClassIndex, overlaps);
     Set<Item> result = new TreeSet<>();
-    for (SearchTreeObject currObject : overlaps) {
-      if (currObject instanceof Item item) {
+    for (SearchTreeObject currentObject : overlaps) {
+      if (currentObject instanceof Item item) {
         result.add(item);
       }
     }
@@ -557,21 +560,21 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Calculates a new incomplete room with a maximal TileShape contained in the shape of p_room,
-   * which may overlap only with items of the input net on the input layer.
-   * p_room.get_contained_shape() will be contained in the shape of the result room. If that is not
-   * possible, several rooms are returned with shapes, which intersect with
-   * p_room.get_contained_shape(). The result room is not yet complete, because its doors are not
-   * yet calculated. If p_ignore_shape != null, objects of type CompleteFreeSpaceExpansionRoom,
-   * whose intersection with the shape of p_room is contained in p_ignore_shape, are ignored.
+   * Calculates a new incomplete room with a maximal TileShape contained in the shape of room, which
+   * may overlap only with items of the input net on the input layer. room.getContainedShape() will
+   * be contained in the shape of the result room. If that is not possible, several rooms are
+   * returned with shapes, which intersect with room.getContainedShape(). The result room is not yet
+   * complete, because its doors are not yet calculated. If ignoreShape != null, objects of type
+   * CompleteFreeSpaceExpansionRoom, whose intersection with the shape of room is contained in
+   * ignoreShape, are ignored.
    */
   public Collection<IncompleteFreeSpaceExpansionRoom> completeShape(
       IncompleteFreeSpaceExpansionRoom room,
-      int netNo,
+      int netNumber,
       SearchTreeObject ignoreObject,
       TileShape ignoreShape) {
     if (room.getContainedShape() == null) {
-      FRLogger.warn("ShapeSearchTree.complete_shape: p_shape_to_be_contained != null expected");
+      FRLogger.warn("ShapeSearchTree.completeShape: shapeToBeContained != null expected");
       return new LinkedList<>();
     }
     if (this.root == null) {
@@ -596,16 +599,16 @@ public class ShapeSearchTree extends MinAreaTree {
     List<Leaf> overlappingLeaves = new LinkedList<>();
     ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
     nodeStack.push(this.root);
-    TreeNode currNode;
+    TreeNode currentNode;
     int roomLayer = room.getLayer();
 
-    while ((currNode = nodeStack.pop()) != null) {
-      if (currNode.boundingShape.intersects(boundingShape)) {
-        if (currNode instanceof Leaf leaf) {
+    while ((currentNode = nodeStack.pop()) != null) {
+      if (currentNode.boundingShape.intersects(boundingShape)) {
+        if (currentNode instanceof Leaf leaf) {
           overlappingLeaves.add(leaf);
         } else {
-          nodeStack.push(((InnerNode) currNode).firstChild);
-          nodeStack.push(((InnerNode) currNode).secondChild);
+          nodeStack.push(((InnerNode) currentNode).firstChild);
+          nodeStack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
@@ -616,37 +619,38 @@ public class ShapeSearchTree extends MinAreaTree {
     // provides a stable visit order.
     Collections.sort(overlappingLeaves);
 
-    for (Leaf currLeaf : overlappingLeaves) {
-      SearchTreeObject currObject = (SearchTreeObject) currLeaf.object;
-      int shapeIndex = currLeaf.shapeIndexInObject;
-      if (currObject.isTraceObstacle(netNo)
-          && currObject.shapeLayer(shapeIndex) == roomLayer
-          && currObject != ignoreObject) {
+    for (Leaf currentLeaf : overlappingLeaves) {
+      SearchTreeObject currentObject = (SearchTreeObject) currentLeaf.object;
+      int shapeIndex = currentLeaf.shapeIndexInObject;
+      if (currentObject.isTraceObstacle(netNumber)
+          && currentObject.shapeLayer(shapeIndex) == roomLayer
+          && currentObject != ignoreObject) {
 
-        TileShape currObjectShape = currObject.getTreeShape(this, shapeIndex);
+        TileShape currentObjectShape = currentObject.getTreeShape(this, shapeIndex);
         Collection<IncompleteFreeSpaceExpansionRoom> newResult = new LinkedList<>();
         RegularTileShape newBoundingShape = IntOctagon.EMPTY;
 
-        for (IncompleteFreeSpaceExpansionRoom currIncompleteRoom : result) {
+        for (IncompleteFreeSpaceExpansionRoom currentIncompleteRoom : result) {
           boolean somethingChanged = false;
-          TileShape intersection = currIncompleteRoom.getShape().intersection(currObjectShape);
+          TileShape intersection =
+              currentIncompleteRoom.getShape().intersection(currentObjectShape);
           if (intersection.dimension() == 2) {
             boolean ignoreExpansionRoom =
-                currObject instanceof CompleteFreeSpaceExpansionRoom
+                currentObject instanceof CompleteFreeSpaceExpansionRoom
                     && ignoreShape != null
                     && ignoreShape.contains(intersection);
             FRLogger.trace(
                 "COMPLETE_SHAPE_DECISION"
                     + ", net="
-                    + netNo
+                    + netNumber
                     + ", layer="
                     + roomLayer
                     + ", action="
                     + (ignoreExpansionRoom ? "IGNORE" : "RESTRAIN")
                     + ", obstacle_type="
-                    + currObject.getClass().getSimpleName()
+                    + currentObject.getClass().getSimpleName()
                     + ", obstacle_bounds="
-                    + currObjectShape.boundingBox()
+                    + currentObjectShape.boundingBox()
                     + ", overlap_bounds="
                     + intersection.boundingBox()
                     + ", ignore_bounds="
@@ -655,7 +659,7 @@ public class ShapeSearchTree extends MinAreaTree {
             if (!ignoreExpansionRoom) {
               somethingChanged = true;
               Collection<IncompleteFreeSpaceExpansionRoom> newRooms =
-                  restrainShape(currIncompleteRoom, currObjectShape);
+                  restrainShape(currentIncompleteRoom, currentObjectShape);
               newResult.addAll(newRooms);
               // Keep v1.9 semantics: the bounding shape must include all accumulated rooms.
               for (IncompleteFreeSpaceExpansionRoom tmpRoom : newResult) {
@@ -666,10 +670,10 @@ public class ShapeSearchTree extends MinAreaTree {
             }
           }
           if (!somethingChanged) {
-            newResult.add(currIncompleteRoom);
+            newResult.add(currentIncompleteRoom);
             newBoundingShape =
                 newBoundingShape.union(
-                    currIncompleteRoom.getShape().boundingShape(this.boundingDirections));
+                    currentIncompleteRoom.getShape().boundingShape(this.boundingDirections));
           }
         }
         result = newResult;
@@ -680,20 +684,20 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Restrains the shape of p_incomplete_room to a TileShape, which does not intersect with the
-   * interior of p_obstacle_shape. p_incomplete_room.get_contained_shape() must be contained in the
-   * shape of the result room. If that is not possible, several rooms are returned with shapes,
-   * which intersect with p_incomplete_room.get_contained_shape().
+   * Restrains the shape of incompleteRoom to a TileShape, which does not intersect with the
+   * interior of obstacleShape. incompleteRoom.getContainedShape() must be contained in the shape of
+   * the result room. If that is not possible, several rooms are returned with shapes, which
+   * intersect with incompleteRoom.getContainedShape().
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrainShape(
       IncompleteFreeSpaceExpansionRoom incompleteRoom, TileShape obstacleShape) {
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
-    // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
+    // Search the edge line of obstacleShape, so that shapeToBeContained
     // are on the right side of this line, and that the line segment
-    // intersects with the interior of p_shape.
+    // intersects with the interior of shape.
     // If there are more than 1 such lines take the line which is
-    // furthest away from p_points_to_be_contained.
-    // Then intersect p_shape with the halfplane defined by the
+    // furthest away from pointsToBeContained.
+    // Then intersect shape with the halfplane defined by the
     // opposite of this line.
 
     // Always convert to Simplex to match v1.9 semantics - the comment below explains why:
@@ -709,7 +713,7 @@ public class ShapeSearchTree extends MinAreaTree {
     }
     TileShape roomShape = incompleteRoom.getShape();
     if (shapeToBeContained == null || shapeToBeContained.isEmpty()) {
-      FRLogger.trace("ShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
+      FRLogger.trace("ShapeSearchTree.restrain_shape: shapeToBeContained is empty");
       return result;
     }
     int layer = incompleteRoom.getLayer();
@@ -717,18 +721,18 @@ public class ShapeSearchTree extends MinAreaTree {
     double cutLineDistance = -1;
 
     for (int i = 0; i < obstacleSimplex.borderLineCount(); i++) {
-      LineSegment currLineSegment = new LineSegment(obstacleSimplex, i);
-      if (roomShape.isIntersectedInteriorBy(currLineSegment)) {
-        // otherwise currObject may not touch the intersection
-        // of p_shape with the half_plane defined by the cutLine.
+      LineSegment currentLineSegment = new LineSegment(obstacleSimplex, i);
+      if (roomShape.isIntersectedInteriorBy(currentLineSegment)) {
+        // otherwise currentObject may not touch the intersection
+        // of shape with the half_plane defined by the cutLine.
         // That may lead to problems when creating the ExpansionRooms.
-        Line currLine = obstacleSimplex.borderLine(i);
+        Line currentLine = obstacleSimplex.borderLine(i);
 
-        double currMinDistance = shapeToBeContained.distanceToTheLeft(currLine);
+        double currentMinDistance = shapeToBeContained.distanceToTheLeft(currentLine);
 
-        if (currMinDistance > cutLineDistance) {
-          cutLineDistance = currMinDistance;
-          cutLine = currLine.opposite();
+        if (currentMinDistance > cutLineDistance) {
+          cutLineDistance = currentMinDistance;
+          cutLine = currentLine.opposite();
         }
       }
     }
@@ -742,28 +746,28 @@ public class ShapeSearchTree extends MinAreaTree {
         result.add(new IncompleteFreeSpaceExpansionRoom(resultPiece, layer, shapeToBeContained));
       }
     } else {
-      // There is no cut line, so that all p_shape_to_be_contained is
+      // There is no cut line, so that all shapeToBeContained is
       // completely on the right side of that line. Search a cut line, so that
-      // at least part of p_shape_to_be_contained is on the right side.
+      // at least part of shapeToBeContained is on the right side.
       if (shapeToBeContained.dimension() < 1) {
-        // There is already a completed expansion room around p_shape_to_be_contained.
+        // There is already a completed expansion room around shapeToBeContained.
         return result;
       }
 
       for (int i = 0; i < obstacleSimplex.borderLineCount(); i++) {
-        LineSegment currLineSegment = new LineSegment(obstacleSimplex, i);
-        if (roomShape.isIntersectedInteriorBy(currLineSegment)) {
-          Line currLine = obstacleSimplex.borderLine(i);
-          if (shapeToBeContained.sideOf(currLine) == Side.COLLINEAR) {
-            // currLine intersects with the interior of p_shape_to_be_contained
-            cutLine = currLine.opposite();
+        LineSegment currentLineSegment = new LineSegment(obstacleSimplex, i);
+        if (roomShape.isIntersectedInteriorBy(currentLineSegment)) {
+          Line currentLine = obstacleSimplex.borderLine(i);
+          if (shapeToBeContained.sideOf(currentLine) == Side.COLLINEAR) {
+            // currentLine intersects with the interior of shapeToBeContained
+            cutLine = currentLine.opposite();
             break;
           }
         }
       }
 
       if (cutLine == null) {
-        // cut line not found, parts or the whole of p_shape may be already
+        // cut line not found, parts or the whole of shape may be already
         // occupied from somewhere else.
         return result;
       }
@@ -798,7 +802,7 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Reduces the first or last shape of p_trace at a tie pin, so that the autorouter algorithm can
+   * Reduces the first or last shape of trace at a tie pin, so that the autorouter algorithm can
    * find a connection for a different net.
    */
   public void reduceTraceShapeAtTiePin(Pin tiePin, PolylineTrace trace) {
@@ -833,16 +837,16 @@ public class ShapeSearchTree extends MinAreaTree {
   }
 
   /**
-   * Changes the shape with index p_shape_no of this item to p_new_shape and updates the entry in
-   * the tree.
+   * Changes the shape with index shapeIndex of this item to newShape and updates the entry in the
+   * tree.
    */
-  void changeItemShape(Item item, int shapeNo, TileShape newShape) {
+  void changeItemShape(Item item, int shapeIndex, TileShape newShape) {
     Leaf[] oldEntries = item.getSearchTreeEntries(this);
     Leaf[] newLeafArr = new Leaf[oldEntries.length];
     TileShape[] newPrecalculatedTreeShapes = new TileShape[oldEntries.length];
-    removeLeaf(oldEntries[shapeNo]);
+    removeLeaf(oldEntries[shapeIndex]);
     for (int i = 0; i < newPrecalculatedTreeShapes.length; i++) {
-      if (i == shapeNo) {
+      if (i == shapeIndex) {
         newPrecalculatedTreeShapes[i] = newShape;
 
       } else {
@@ -851,7 +855,7 @@ public class ShapeSearchTree extends MinAreaTree {
       }
     }
     item.setPrecalculatedTreeShapes(newPrecalculatedTreeShapes, this);
-    newLeafArr[shapeNo] = insert(item, shapeNo);
+    newLeafArr[shapeIndex] = insert(item, shapeIndex);
     item.setSearchTreeEntries(newLeafArr, this);
   }
 
@@ -861,31 +865,32 @@ public class ShapeSearchTree extends MinAreaTree {
     }
     TileShape[] result = new TileShape[drillItem.tileShapeCount()];
     for (int i = 0; i < result.length; i++) {
-      Shape currShape = drillItem.getShape(i);
-      if (currShape == null) {
-        currShape = drillHoleObstacle(drillItem);
+      Shape currentShape = drillItem.getShape(i);
+      if (currentShape == null) {
+        currentShape = drillHoleObstacle(drillItem);
       }
-      if (currShape == null) {
+      if (currentShape == null) {
         result[i] = null;
       } else {
-        TileShape currTileShape;
+        TileShape currentTileShape;
         if (this.board.rules.getTraceAngleRestriction() == AngleRestriction.NINETY_DEGREE) {
-          currTileShape = currShape.boundingBox();
+          currentTileShape = currentShape.boundingBox();
         } else if (this.board.rules.getTraceAngleRestriction()
             == AngleRestriction.FORTYFIVE_DEGREE) {
-          currTileShape = currShape.boundingOctagon();
+          currentTileShape = currentShape.boundingOctagon();
         } else {
-          currTileShape = currShape.boundingTile();
+          currentTileShape = currentShape.boundingTile();
         }
         int offsetWidth =
-            this.clearanceCompensationValue(drillItem.clearanceClassNo(), drillItem.shapeLayer(i));
-        offsetWidth += drillHoleClearanceDelta(drillItem, currShape, drillItem.shapeLayer(i));
-        if (currTileShape == null) {
+            this.clearanceCompensationValue(
+                drillItem.clearanceClassIndex(), drillItem.shapeLayer(i));
+        offsetWidth += drillHoleClearanceDelta(drillItem, currentShape, drillItem.shapeLayer(i));
+        if (currentTileShape == null) {
           FRLogger.warn("ShapeSearchTree.calculate_tree_shapes: shape is null");
         } else {
-          currTileShape = (TileShape) currTileShape.enlarge(offsetWidth);
+          currentTileShape = (TileShape) currentTileShape.enlarge(offsetWidth);
         }
-        result[i] = currTileShape;
+        result[i] = currentTileShape;
       }
     }
     return result;
@@ -907,12 +912,13 @@ public class ShapeSearchTree extends MinAreaTree {
 
     Collection<TileShape> treeShapeList = new LinkedList<>();
     for (int i = 0; i < convexShapes.length; i++) {
-      TileShape currConvexShape = convexShapes[i];
+      TileShape currentConvexShape = convexShapes[i];
       int offsetWidth =
-          this.clearanceCompensationValue(obstacleArea.clearanceClassNo(), obstacleArea.getLayer());
-      currConvexShape = (TileShape) currConvexShape.enlarge(offsetWidth);
-      TileShape[] currTreeShapes = currConvexShape.divideIntoSections(maxTreeShapeWidth);
-      treeShapeList.addAll(Arrays.asList(currTreeShapes));
+          this.clearanceCompensationValue(
+              obstacleArea.clearanceClassIndex(), obstacleArea.getLayer());
+      currentConvexShape = (TileShape) currentConvexShape.enlarge(offsetWidth);
+      TileShape[] currentTreeShapes = currentConvexShape.divideIntoSections(maxTreeShapeWidth);
+      treeShapeList.addAll(Arrays.asList(currentTreeShapes));
     }
     TileShape[] obstacleResult = new TileShape[treeShapeList.size()];
     Iterator<TileShape> it = treeShapeList.iterator();
@@ -933,13 +939,13 @@ public class ShapeSearchTree extends MinAreaTree {
         return new TileShape[0];
       }
       Collection<TileShape> treeShapeList = new LinkedList<>();
-      for (int layerNo = 0; layerNo < this.board.layerStructure.arr.length; layerNo++) {
+      for (int layerIndex = 0; layerIndex < this.board.layerStructure.layers.length; layerIndex++) {
         for (int i = 0; i < convexShapes.length; i++) {
-          TileShape currConvexShape = convexShapes[i];
+          TileShape currentConvexShape = convexShapes[i];
           int offsetWidth =
-              this.clearanceCompensationValue(boardOutline.clearanceClassNo(), layerNo);
-          currConvexShape = (TileShape) currConvexShape.enlarge(offsetWidth);
-          treeShapeList.add(currConvexShape);
+              this.clearanceCompensationValue(boardOutline.clearanceClassIndex(), layerIndex);
+          currentConvexShape = (TileShape) currentConvexShape.enlarge(offsetWidth);
+          treeShapeList.add(currentConvexShape);
         }
       }
       result = new TileShape[treeShapeList.size()];
@@ -949,24 +955,24 @@ public class ShapeSearchTree extends MinAreaTree {
       }
     } else {
       // Only the line shapes of the outline are inserted as obstacles into the tree.
-      result = new TileShape[boardOutline.lineCount() * this.board.layerStructure.arr.length];
+      result = new TileShape[boardOutline.lineCount() * this.board.layerStructure.layers.length];
       int halfWidth = boardOutline.getHalfWidth();
-      Line[] currLineArr = new Line[3];
-      int currNo = 0;
-      for (int layerNo = 0; layerNo < this.board.layerStructure.arr.length; layerNo++) {
-        for (int shapeNo = 0; shapeNo < boardOutline.shapeCount(); shapeNo++) {
-          PolylineShape currOutlineShape = boardOutline.getShape(shapeNo);
-          int borderLineCount = currOutlineShape.borderLineCount();
-          currLineArr[0] = currOutlineShape.borderLine(borderLineCount - 1);
+      Line[] currentLineArr = new Line[3];
+      int currentNo = 0;
+      for (int layerIndex = 0; layerIndex < this.board.layerStructure.layers.length; layerIndex++) {
+        for (int shapeIndex = 0; shapeIndex < boardOutline.shapeCount(); shapeIndex++) {
+          PolylineShape currentOutlineShape = boardOutline.getShape(shapeIndex);
+          int borderLineCount = currentOutlineShape.borderLineCount();
+          currentLineArr[0] = currentOutlineShape.borderLine(borderLineCount - 1);
           for (int i = 0; i < borderLineCount; i++) {
-            currLineArr[1] = currOutlineShape.borderLine(i);
-            currLineArr[2] = currOutlineShape.borderLine((i + 1) % borderLineCount);
-            Polyline tmpPolyline = new Polyline(currLineArr);
+            currentLineArr[1] = currentOutlineShape.borderLine(i);
+            currentLineArr[2] = currentOutlineShape.borderLine((i + 1) % borderLineCount);
+            Polyline tmpPolyline = new Polyline(currentLineArr);
             int cmpValue =
-                this.clearanceCompensationValue(boardOutline.clearanceClassNo(), layerNo);
-            result[currNo] = tmpPolyline.offsetShape(halfWidth + cmpValue, 0);
-            ++currNo;
-            currLineArr[0] = currLineArr[1];
+                this.clearanceCompensationValue(boardOutline.clearanceClassIndex(), layerIndex);
+            result[currentNo] = tmpPolyline.offsetShape(halfWidth + cmpValue, 0);
+            ++currentNo;
+            currentLineArr[0] = currentLineArr[1];
           }
         }
       }
@@ -980,7 +986,7 @@ public class ShapeSearchTree extends MinAreaTree {
     }
     int offsetWidth =
         trace.getHalfWidth()
-            + this.clearanceCompensationValue(trace.clearanceClassNo(), trace.getLayer());
+            + this.clearanceCompensationValue(trace.clearanceClassIndex(), trace.getLayer());
     TileShape[] result = new TileShape[trace.tileShapeCount()];
     for (int i = 0; i < result.length; i++) {
       result[i] = this.offsetShape(trace.polyline(), offsetWidth, i);
@@ -1046,7 +1052,7 @@ public class ShapeSearchTree extends MinAreaTree {
             : BoardRules.defaultClearanceClass();
     int copperClearance =
         this.board.rules.clearanceMatrix.getValue(
-            drillItem.clearanceClassNo(), clearanceClass, layer, false);
+            drillItem.clearanceClassIndex(), clearanceClass, layer, false);
     return Math.max(
         0,
         (int)
@@ -1082,30 +1088,31 @@ public class ShapeSearchTree extends MinAreaTree {
     if (roomList.size() != 1) {
       return roomList;
     }
-    IncompleteFreeSpaceExpansionRoom currRoom = roomList.iterator().next();
-    IntBox roomBoundingBox = currRoom.getShape().boundingBox();
+    IncompleteFreeSpaceExpansionRoom currentRoom = roomList.iterator().next();
+    IntBox roomBoundingBox = currentRoom.getShape().boundingBox();
     if (2 * roomBoundingBox.height() <= boardBoundingBox.height()
         || 2 * roomBoundingBox.width() <= boardBoundingBox.width()) {
       return roomList;
     }
     double maxSectionWidth = 0.5 * Math.max(boardBoundingBox.height(), boardBoundingBox.width());
-    TileShape[] sectionArr = currRoom.getShape().divideIntoSections(maxSectionWidth);
+    TileShape[] sectionArr = currentRoom.getShape().divideIntoSections(maxSectionWidth);
     Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
-    for (TileShape currSection : sectionArr) {
-      TileShape currShapeToBeContained = currSection.intersection(currRoom.getContainedShape());
-      IncompleteFreeSpaceExpansionRoom currSectionRoom =
+    for (TileShape currentSection : sectionArr) {
+      TileShape currentShapeToBeContained =
+          currentSection.intersection(currentRoom.getContainedShape());
+      IncompleteFreeSpaceExpansionRoom currentSectionRoom =
           new IncompleteFreeSpaceExpansionRoom(
-              currSection, currRoom.getLayer(), currShapeToBeContained);
-      result.add(currSectionRoom);
+              currentSection, currentRoom.getLayer(), currentShapeToBeContained);
+      result.add(currentSectionRoom);
     }
     return result;
   }
 
   boolean validateEntries(Item item) {
-    Leaf[] currTreeEntries = item.getSearchTreeEntries(this);
-    for (int i = 0; i < currTreeEntries.length; i++) {
-      Leaf currLeaf = currTreeEntries[i];
-      if (currLeaf.shapeIndexInObject != i) {
+    Leaf[] currentTreeEntries = item.getSearchTreeEntries(this);
+    for (int i = 0; i < currentTreeEntries.length; i++) {
+      Leaf currentLeaf = currentTreeEntries[i];
+      if (currentLeaf.shapeIndexInObject != i) {
         FRLogger.warn("tree entry inconsistent for Item");
         return false;
       }
@@ -1113,22 +1120,24 @@ public class ShapeSearchTree extends MinAreaTree {
     return true;
   }
 
-  /** Created for sorting Items according to their clearance to p_cl_type on layer p_layer. */
+  /**
+   * Created for sorting Items according to their clearance to clearanceClassIndex on layer layer.
+   */
   private static class EntrySortedByClearance implements Comparable<EntrySortedByClearance> {
 
-    private final int entryIdNo;
+    private final int entryId;
     Leaf leaf;
     int clearance;
 
     EntrySortedByClearance(Leaf leaf, int clearance) {
       this.leaf = leaf;
       this.clearance = clearance;
-      if (lastGeneratedIdNo == Integer.MAX_VALUE) {
-        lastGeneratedIdNo = 0;
+      if (lastGeneratedEntryId == Integer.MAX_VALUE) {
+        lastGeneratedEntryId = 0;
       } else {
-        ++lastGeneratedIdNo;
+        ++lastGeneratedEntryId;
       }
-      entryIdNo = lastGeneratedIdNo;
+      entryId = lastGeneratedEntryId;
     }
 
     @Override
@@ -1136,7 +1145,7 @@ public class ShapeSearchTree extends MinAreaTree {
       if (clearance != other.clearance) {
         return Signum.asInt(clearance - other.clearance);
       }
-      return entryIdNo - other.entryIdNo;
+      return entryId - other.entryId;
     }
   }
 }

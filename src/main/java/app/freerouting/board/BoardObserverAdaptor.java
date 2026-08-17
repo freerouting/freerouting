@@ -5,11 +5,11 @@ public class BoardObserverAdaptor implements BoardObservers {
 
   private boolean active;
 
-  /** Tell the observers the deletion p_object. */
+  /** Tell the observers the deletion object. */
   @Override
   public void notifyDeleted(Item item) {}
 
-  /** Notify the observers, that they can synchronize the changes on p_object. */
+  /** Notify the observers, that they can synchronize the changes on object. */
   @Override
   public void notifyChanged(Item item) {}
 

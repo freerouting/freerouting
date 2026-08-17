@@ -21,7 +21,7 @@ public class ExpansionDrill implements ExpandableObject {
   /** Array of dimension lastLayer - firstLayer + 1. */
   public final CompleteExpansionRoom[] roomArr;
 
-  private final MazeSearchElement[] mazeSearchInfoArr;
+  private final MazeSearchElement[] mazeSearchElements;
 
   /** The shape of the drill. */
   private final TileShape shape;
@@ -34,9 +34,9 @@ public class ExpansionDrill implements ExpandableObject {
     this.lastLayer = lastLayer;
     int layerCount = lastLayer - firstLayer + 1;
     roomArr = new CompleteExpansionRoom[layerCount];
-    mazeSearchInfoArr = new MazeSearchElement[layerCount];
-    for (int i = 0; i < mazeSearchInfoArr.length; i++) {
-      mazeSearchInfoArr[i] = new MazeSearchElement();
+    mazeSearchElements = new MazeSearchElement[layerCount];
+    for (int i = 0; i < mazeSearchElements.length; i++) {
+      mazeSearchElements[i] = new MazeSearchElement();
     }
   }
 
@@ -53,13 +53,13 @@ public class ExpansionDrill implements ExpandableObject {
       CompleteExpansionRoom foundRoom = null;
       Iterator<SearchTreeObject> it = overlaps.iterator();
       while (it.hasNext()) {
-        SearchTreeObject currOb = it.next();
-        if (!(currOb instanceof CompleteExpansionRoom currRoom)) {
+        SearchTreeObject currentObject = it.next();
+        if (!(currentObject instanceof CompleteExpansionRoom currentRoom)) {
           it.remove();
           continue;
         }
-        if (currRoom.getLayer() == i) {
-          foundRoom = currRoom;
+        if (currentRoom.getLayer() == i) {
+          foundRoom = currentRoom;
           it.remove();
           break;
         }
@@ -101,25 +101,25 @@ public class ExpansionDrill implements ExpandableObject {
 
   @Override
   public int mazeSearchElementCount() {
-    return this.mazeSearchInfoArr.length;
+    return this.mazeSearchElements.length;
   }
 
   @Override
   public MazeSearchElement getMazeSearchElement(int index) {
-    return this.mazeSearchInfoArr[index];
+    return this.mazeSearchElements[index];
   }
 
   @Override
   public void reset() {
-    for (MazeSearchElement currInfo : mazeSearchInfoArr) {
-      currInfo.reset();
+    for (MazeSearchElement currentInfo : mazeSearchElements) {
+      currentInfo.reset();
     }
   }
 
   @Override
-  public int getIdNo() {
+  public int getId() {
     // Stable hash of location and layers
-    return 31 * (31 * location.getIdNo() + firstLayer) + lastLayer;
+    return 31 * (31 * location.getId() + firstLayer) + lastLayer;
   }
 
   /** Emits the shape of this drill for an optional diagnostic consumer. */

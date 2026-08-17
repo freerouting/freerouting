@@ -4,7 +4,7 @@ import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.Nets;
 import app.freerouting.rules.ViaRule;
 import java.awt.Graphics;
@@ -30,26 +30,26 @@ public class MakeSpaceState extends DragState {
       layerActiveArr[i] = true;
     }
     int[] routeNetNoArr = new int[1];
-    routeNetNoArr[0] = Nets.hidden_net_no;
+    routeNetNoArr[0] = Nets.hidden_net_number;
     route =
         new Route(
             location.round(),
-            hdlg.getInteractiveSettings().getLayer(),
+            hdlg.getWorkspaceSettings().getLayer(),
             shoveTraceWidthArr,
             layerActiveArr,
             routeNetNoArr,
             0,
             ViaRule.EMPTY,
             true,
-            hdlg.getInteractiveSettings().getTracePullTightRegionWidth(),
-            hdlg.getInteractiveSettings().getTracePullTightAccuracy(),
+            hdlg.getWorkspaceSettings().getTracePullTightRegionWidth(),
+            hdlg.getWorkspaceSettings().getTracePullTightAccuracy(),
             null,
             null,
             hdlg.getRoutingBoard(),
             false,
             false,
             false,
-            hdlg.getInteractiveSettings().getHighlightRoutingObstacle());
+            hdlg.getWorkspaceSettings().getHighlightRoutingObstacle());
   }
 
   @Override
@@ -78,7 +78,7 @@ public class MakeSpaceState extends DragState {
 
   @Override
   public InteractiveState buttonReleased() {
-    int deleteNetNo = Nets.hidden_net_no;
+    int deleteNetNo = Nets.hidden_net_number;
     BasicBoard board = hdlg.getRoutingBoard();
     board.removeItems(board.getConnectableItems(deleteNetNo));
     if (this.observersActivated) {

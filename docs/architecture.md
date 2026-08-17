@@ -19,15 +19,16 @@ flowchart TD
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["**gui + gui.session + gui.interactive**\nSwing desktop"]
+        GUI["**gui + gui.workspace + gui.interactive**\nSwing desktop"]
         RENDER["**gui.rendering**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
-        MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
+        MCP["**api.mcp**\nMCP JSON-RPC + SSE + WS"]
     end
 
     subgraph services ["Shared Services"]
         direction LR
-        MGMT["**management**\nScheduler · analytics"]
+        MGMT["**management**\nScheduler · sessions"]
+        ANALYTICS["**analytics**\nMetrics · telemetry"]
         CORE["**core**\nJobs · sessions · stats"]
         CFG["**settings**\nConfig merging"]
     end
@@ -83,9 +84,9 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.session`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
+| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
-| MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
+| MCP server protocol bridge | `app.freerouting.api.mcp` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 
@@ -99,23 +100,23 @@ Architectural boundaries are codified in `src/test/java/app/freerouting/architec
   - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
 - **Strict boundaries (continued):**
   - `gui.interactive` concrete state classes should not be used outside the GUI layer.
-  - `gui.session` owns the opaque editor-state handles, events, commands, manager, settings, messages,
+  - `gui.workspace` owns the opaque editor-state handles, events, commands, manager, settings, messages,
     and action threads; it must not depend on `gui.interactive`.
   - `board` and `autoroute` must not depend on `gui.rendering`; rendering is GUI-owned.
   - Pipeline/support packages must not depend on Swing or non-geometry AWT UI types.
   - `io.specctra.parser` internals must not be depended on outside `io.specctra` public I/O entry points.
 
-The only intentional GUI boundary exception is the documented D26 `gui.session` →
+The only intentional GUI boundary exception is the documented D26 `gui.workspace` →
 `gui.rendering` dependency used by `GuiBoardManager` for its graphics context state. These
 boundaries are strict ArchUnit rules; no frozen violation store is required.
 
 ## Accepted architectural debt
 
-- `board.ObjectInfoPanel` remains a presentation-shaped writer API; converting it to DTOs is
+- `board.ItemInfoPrinter` remains a presentation-shaped writer API; converting it to DTOs is
   outside this initiative.
 - Incomplete-connection computation remains under `drc`; the package name is broader than
   clearance checking by design.
-- `gui.session` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
+- `gui.workspace` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
   moving that state fully into views is outside this initiative.
 
 ## Package Glossary
@@ -157,13 +158,13 @@ headless mode without creating top-level windows.
 
 ### `app.freerouting.gui.interactive`
 
-Concrete GUI editor states and their controller implementation. States implement the session-owned
+Concrete GUI editor states and their controller implementation. States implement the workspace-owned
 opaque handle/command contracts; views register the controller and bootstrap the initial route-menu
 state.
 
-### `app.freerouting.gui.session`
+### `app.freerouting.gui.workspace`
 
-The GUI board session boundary: `GuiBoardManager`, `GuiSessionContract`, `InteractiveSettings`,
+The GUI board workspace boundary: `GuiBoardManager`, `WorkspaceContract`, `WorkspaceSettings`,
 `ScreenMessages`, action threads, ratsnest/violation presentation façades, opaque
 `EditorStateHandle`/`EditorStateKind`, `EditorEvent`, and `InteractiveCommand`. This package owns no
 concrete editor state and has no dependency on `gui.interactive`; GUI views perform initial-state
@@ -173,17 +174,21 @@ registration.
 
 HTTP API controllers, filters, and server-facing request handling. The concrete REST endpoints live in `api.v1`, MCP server infrastructure lives in `api.mcp`, supporting DTOs are in `api.dto`, authentication in `api.security`, and developer-only mocks in `api.dev`.
 
+### `app.freerouting.analytics`
+
+Analytics telemetry and metrics dispatch (`FRAnalytics`, `BigQueryClient`, `SegmentClient`, and event DTOs).
+
 ### `app.freerouting.management`
 
-Headless board management (using `BoardManager` and `HeadlessBoardManager`), session management, job scheduling, analytics, Gson adapters, and service-layer coordination. The analytics code lives in `management.analytics`, and the JSON helpers live in `util.gson`.
+Headless board management (using `BoardManager` and `HeadlessBoardManager`), board loading (`BoardLoader`), job scheduling (`management.jobs`), and session lifecycle management (`management.sessions`).
 
 ### `app.freerouting.core`
 
-Shared application data such as routing jobs, sessions, scoring, and statistics. The board statistics helpers live in `core.scoring`.
+Shared application data such as routing jobs, sessions, scoring (`core.scoring`), and board library definitions (`core.library`).
 
 ### `app.freerouting.settings`
 
-Runtime configuration objects and settings sources that define application and routing behavior.
+Application configuration, defaults, and the priority-based `SettingsMerger`.
 
 ### `app.freerouting.datastructures`
 
@@ -210,7 +215,8 @@ Several implementation areas live one level below the top-level package grouping
 
 - `app.freerouting.geometry.planar` contains the actual planar primitives and helper classes; start with [Point.java](src/main/java/app/freerouting/geometry/planar/Point.java) and [Shape.java](src/main/java/app/freerouting/geometry/planar/Shape.java).
 - `app.freerouting.io.specctra` contains DSN and SES import/export; parser internals live in `parser/`. Start with [DsnReader.java](src/main/java/app/freerouting/io/specctra/DsnReader.java), [DsnWriter.java](src/main/java/app/freerouting/io/specctra/DsnWriter.java), [SesReader.java](src/main/java/app/freerouting/io/specctra/SesReader.java), and [SesWriter.java](src/main/java/app/freerouting/io/specctra/SesWriter.java).
-- `app.freerouting.management.analytics` and `app.freerouting.management.gson` contain analytics clients and Gson adapters; start with [FRAnalytics.java](src/main/java/app/freerouting/management/analytics/FRAnalytics.java) and [GsonProvider.java](src/main/java/app/freerouting/management/gson/GsonProvider.java).
+- `app.freerouting.analytics` contains analytics telemetry and dispatch; start with [FRAnalytics.java](src/main/java/app/freerouting/analytics/FRAnalytics.java).
+- `app.freerouting.util.gson` contains Gson adapters and JSON provider helpers; start with [GsonProvider.java](src/main/java/app/freerouting/util/gson/GsonProvider.java).
 - `app.freerouting.core.scoring` contains board statistics and scoring helpers; start with [BoardStatistics.java](src/main/java/app/freerouting/core/scoring/BoardStatistics.java).
 - `app.freerouting.api.v1`, `app.freerouting.api.dto`, `app.freerouting.api.security`, and `app.freerouting.api.dev` contain the public controllers, payloads, authentication, and mocked endpoints; start with [JobControllerV1.java](src/main/java/app/freerouting/api/v1/JobControllerV1.java), [BoardFilePayload.java](src/main/java/app/freerouting/api/dto/BoardFilePayload.java), and [ApiKeyValidationService.java](src/main/java/app/freerouting/api/security/ApiKeyValidationService.java).
 - `app.freerouting.autoroute.events` contains routing event callbacks; start with [BoardUpdatedEvent.java](src/main/java/app/freerouting/autoroute/events/BoardUpdatedEvent.java).
@@ -290,12 +296,12 @@ The optimizer changes the board more conservatively than the autorouter. Its job
 
 ### GUI and Interaction Path
 
-The interactive editor is split between `gui`, `gui.session`, and `gui.interactive`.
+The interactive editor is split between `gui`, `gui.workspace`, and `gui.interactive`.
 
 - `gui` contains the visible application components.
-- `gui.session` contains the opaque session facade and board-session services.
+- `gui.workspace` contains the opaque workspace facade and board-workspace services.
 - `gui.interactive` contains the concrete state machine and its inverted controller.
-- Views construct the controller and bootstrap `RouteMenuState`; session code never names a concrete state.
+- Views construct the controller and bootstrap `RouteMenuState`; workspace code never names a concrete state.
 
 When diagnosing user interaction, rendering, or editor state, begin here.
 

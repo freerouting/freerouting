@@ -45,7 +45,7 @@ types.
 | Term | Meaning | Code |
 |---|---|---|
 | **Session** | API/job container (caller, host, queued jobs). HTTP `/v1/sessions`. | `core.Session`, `management.sessions.SessionManager`, `api.v1.SessionControllerV1` |
-| **Primary session** | The one session the desktop may show and drive. At most one. | `Session.isPrimary` (today `isGuiSession`, `transient`) |
+| **Primary session** | The one session the desktop may show and drive. At most one. | `Session.isPrimary` (today `isPrimary`, `transient`) |
 | **Workspace** | Desktop editor surface bound to the primary session. | Package `gui.workspace` (today `gui.session`) |
 
 Do not put `Session` in GUI type names. Do not name the GUI package
@@ -77,6 +77,13 @@ Do not put `Session` in GUI type names. Do not name the GUI package
 | `api.v1.McpControllerV1` | `api.mcp.McpControllerV1` (HTTP paths unchanged) |
 | `core.Session.isGuiSession` | `isPrimary` |
 | `WorkspaceContract.getInteractiveSettings()` | `getWorkspaceSettings()` |
+| `board.CalcFromSide` | `board.ShapeEntrySide` |
+| `board.CalcShapeAndFromSide` | `board.ShapeAndEntrySide` |
+| `board.ForcedPadAlgo` | `board.ForcedPadRouter` |
+| `board.ForcedViaAlgo` | `board.ForcedViaInserter` |
+| `board.MoveDrillItemAlgo` | `board.DrillItemMover` |
+| `board.OptViaAlgo` | `board.ViaOptimizer` |
+| `gui.GUIDefaultsFile` | `gui.GuiDefaultsFile` |
 
 Keep: `GuiBoardManager`, `HeadlessBoardManager`, `BoardManager`,
 `BatchAutorouter` / `BatchOptimizer` / `BatchFanout` / `BatchAutorouterV19`,
@@ -94,8 +101,7 @@ Keep: `GuiBoardManager`, `HeadlessBoardManager`, `BoardManager`,
 |---|---|---|
 | `gui.session` | `gui.workspace` | Entire package (~31 production types) + tests + `ScreenMessages_*.properties` + `GuiBoardManager_*.properties` |
 | `management.analytics` | `app.freerouting.analytics` | Client, BigQuery, DTOs |
-| `util.TextManager` | `i18n.TextManager` | Class only; no `TextManager_*.properties` exist |
-| `app.freerouting.Common_*.properties` | `app.freerouting.i18n.Common_*.properties` | Update hard-coded bundle `"app.freerouting.Common"` → `"app.freerouting.i18n.Common"` |
+| `util.TextManager` | `util.TextManager` | Retained in `util` (text formatting & helpers); `Common_*.properties` at `app.freerouting` |
 | *(new)* `core.library` | `BoardLibrary`, `Package`, `Packages`, `Padstack`, `Padstacks`, `LogicalPart`, `LogicalParts` |
 | *(new)* `management.jobs` | `RoutingJobScheduler`, `RoutingJobSchedulerActionThread`, `ThreadActionListener` |
 | *(new)* `management.sessions` | `SessionManager` |
@@ -136,7 +142,7 @@ register this source.
 - `src_v19/`.
 
 OpenAPI schema *title* for the DRC report: publish **`KiCadDrcReport`** in
-this minor; changelog that `DrcReport` as a schema name goes away in the
+this minor; changelog that old schema name `DrcReport` goes away in the
 **next minor**. Do not freeze the old title.
 
 ---
@@ -200,11 +206,11 @@ Update in the **same phase** that changes the name:
 
 | File | Why |
 |---|---|
-| `AGENTS.md` | `InteractiveSettings` singleton, merger priority 50, `GuiSettings` subtype, `gui.session` |
+| `AGENTS.md` | `WorkspaceSettings` singleton, merger priority 65, `GuiSettingsSource` subtype, `gui.session` |
 | `docs/architecture.md` | Package glossary, mermaid (`api.v1.McpControllerV1`, `management`, `core`) |
 | `docs/settings.md` | Priority table row 50 → 65; class names |
 | `docs/API/API_v1.md` / `docs/API/MCP.md` | MCP controller package; DRC schema title |
-| `docs/issues/soc-gui-separation-and-accessibility-plan.md` | Live invariants that name `InteractiveSettings` / `gui.session` / priority 50 |
+| `docs/issues/soc-gui-separation-and-accessibility-plan.md` | Live invariants that name `WorkspaceSettings` / `gui.session` / priority 65 |
 | This plan | Already the spec; do not leave it contradicting the code |
 
 Issue archaeology under `docs/issues/` may keep old names as history.
@@ -242,18 +248,26 @@ imports from `io.specctra`.
 
 Branch: `refactor/naming-phase-1-gui-settings`
 
+**Progress checklist**
+
+- [x] Implement Q1 seed-then-live settings precedence at GUI priority 65.
+- [x] Rename `GuiSettings` types and remove the four dead compatibility shells.
+- [x] Update references, Javadocs, architecture strings, and normative documentation.
+- [x] Add/extend settings integration tests and run the Phase 1 quality gates.
+- [ ] Create the phase branch from the epic and merge the reviewed Phase 1 PR into the epic.
+
 **1a. Q1 (first commit on the epic / this branch)**
 
 - Keep `GuiSettingsSource` / current class priority **65**.
 - Override `setSettings(RouterSettings)` on the live GUI source (today
-  `InteractiveSettings`, later `WorkspaceSettings`) so non-null
+  `WorkspaceSettings`, later `WorkspaceSettings`) so non-null
   `tracePullTightAccuracy` and `automaticNeckdown` copy onto the live
   fields. Today `setSettings` only stores the snapshot on the superclass
   and `getSettings()` overlays constructor defaults (500 / true), which
   can ignore CLI.
 - At board load, keep copying `merger.merge()` into the live source (already
-  `BoardFrame.attachParsedBoard` → `interactiveSettings.setSettings(mergedSettings)`).
-- Extend `SettingsMergerGuiIntegrationTest`: CLI sets
+  `BoardFrame.attachParsedBoard` → `workspaceSettings.setSettings(mergedSettings)`).
+- Extend `WorkspaceSettingsMergerTest`: CLI sets
   `tracePullTightAccuracy` to a non-default; after bind+merge, GUI shows
   that value; after `setTracePullTightAccuracy`, merge uses the GUI value
   and not CLI.
@@ -265,7 +279,7 @@ Branch: `refactor/naming-phase-1-gui-settings`
 - `settings.GuiSettings` → `GuiApplicationSettings` (keep field
   `GlobalSettings.guiSettings` and JSON `"gui"`).
 - `settings.sources.GuiSettings` → `GuiSettingsSource`.
-- `InteractiveSettings` still extends the source type; do **not** rename it
+- `WorkspaceSettings` still extends the source type; do **not** rename it
   yet (Phase 2).
 
 **1c. Deletes**
@@ -279,8 +293,8 @@ Grep for remaining references (including `@deprecated` javadoc links).
 Update `SettingsMerger` javadoc (`GuiSettings` → `GuiSettingsSource`,
 priority 65).
 
-**Tests:** `SettingsMergerGuiIntegrationTest`, `JsonFileSettingsTest` if it
-touches `GuiSettings`, `GuiStartupHeadlessTest`, architecture tests.
+**Tests:** `WorkspaceSettingsMergerTest`, `JsonFileSettingsTest` if it
+touches `GuiApplicationSettings`, `GuiStartupHeadlessTest`, architecture tests.
 
 **Not in this phase:** `gui.session` package move, `WorkspaceSettings`.
 
@@ -289,6 +303,15 @@ touches `GuiSettings`, `GuiStartupHeadlessTest`, architecture tests.
 ### Phase 2 — workspace package + WorkspaceSettings + primary session
 
 Branch: `refactor/naming-phase-2-workspace`
+
+**Progress checklist**
+
+- [x] Move `gui.session` to `gui.workspace` and apply the workspace type/accessor renames.
+- [x] Rename `InteractiveSettings` to `WorkspaceSettings` while preserving the GUI settings invariants.
+- [x] Move matching resources and tests; update mocks and ArchUnit references.
+- [x] Update AGENTS.md, architecture, and SoC documentation.
+- [x] Run workspace/session tests, architecture tests, `testGui`, and the i18n context check.
+- [ ] Review and merge the Phase 2 changes into the epic.
 
 IDE move entire `app.freerouting.gui.session` → `app.freerouting.gui.workspace`.
 Then rename:
@@ -316,7 +339,7 @@ to `.../gui/workspace/` (class names unchanged, package path must match
 **Tests:** move `src/test/java/app/freerouting/gui/session/` →
 `gui/workspace/` and rename test classes that contain `InteractiveSettings`
 or `GuiSession` (`InteractiveSettingsSingletonTest` →
-`WorkspaceSettingsSingletonTest`, `InteractiveSettingsPropertyChangeTest`,
+`WorkspaceSettingsSingletonTest`, `InteractiveSettingsPropertyChangeTest` → `WorkspaceSettingsPropertyChangeTest`,
 `GuiSessionPortTest` → `WorkspacePortTest`, `SettingsMergerGuiIntegrationTest`
 stays or becomes `WorkspaceSettingsMergerTest`).
 
@@ -338,6 +361,16 @@ to `isPrimary` or drop the field (it is `transient` and not API JSON).
 
 Branch: `refactor/naming-phase-3-kicad-mcp`
 
+**Progress checklist**
+
+- [x] Create the phase branch from the updated epic.
+- [x] Move and rename the KiCad DRC DTOs while preserving all wire field names.
+- [x] Update `DesignRulesChecker`, OpenAPI schema naming, and the MCP controller package.
+- [x] Preserve `/v1/mcp` and `/v1/jobs/{jobId}/drc` paths and document the schema-title transition.
+- [x] Update DRC, MCP, CLI, and reflection-based tests.
+- [x] Schedule the Python client follow-up for the next minor release.
+- [x] Run Phase 3 quality gates and merge the PR into the epic.
+
 Move/rename in `io.kicad` (beside `KiCadBoardJson`, no `io.kicad.drc`
 subpackage):
 
@@ -352,7 +385,7 @@ return type becomes `KiCadDrcReport`. `drc` keeps `DesignRulesChecker`,
 
 OpenAPI: schema title **`KiCadDrcReport`** (explicit `@Schema(name = "KiCadDrcReport")`
 on the type if Swagger infers the simple name). Changelog: old schema name
-`DrcReport` removed next minor. HTTP path unchanged.
+`KiCadDrcReport` removed next minor. HTTP path unchanged.
 
 Move `api.v1.McpControllerV1` → `api.mcp.McpControllerV1`. Update
 `McpApplication`, `OpenApiResource`, `McpEndpointsTest` reflection FQCN.
@@ -364,13 +397,23 @@ HTTP `/v1/mcp` unchanged.
 `McpEndpointsTest`, `Freerouting` DRC CLI path.
 
 **Python client:** schedule the schema-title follow-up in this minor so the
-next minor can drop `DrcReport`.
+next minor can drop `KiCadDrcReport`.
 
 ---
 
 ### Phase 4 — remaining package splits
 
 Branch: `refactor/naming-phase-4-packages`
+
+**Progress checklist**
+
+- [x] Create the phase branch from the updated epic.
+- [x] Move analytics to `app.freerouting.analytics` and update GUI-isolation rules.
+- [x] Move library types/resources to `core.library`, keeping `Package` unchanged.
+- [x] Retain `TextManager` and common bundles in `util` / root.
+- [x] Move job and session management types/tests to their new packages (`management.jobs`, `management.sessions`).
+- [x] Update ArchUnit rules, architecture documentation, and package-local tests.
+- [x] Run Phase 4 quality gates and merge the PR into the epic.
 
 Do as **one PR if the diff stays reviewable**, otherwise split in this order:
 
@@ -400,6 +443,15 @@ Do as **one PR if the diff stays reviewable**, otherwise split in this order:
 
 Branch: `refactor/naming-phase-5-curr`
 
+**Progress checklist**
+
+- [x] Create the phase branch from the updated epic.
+- [x] Rename `curr*` locals in the `board` package and run the BM01 smoke test.
+- [x] Rename `curr*` locals in `autoroute` and run the BM01 smoke test.
+- [x] Rename `curr*` locals in `gui`.
+- [x] Rename remaining `curr*` locals without changing types or packages.
+- [x] Review routing-sensitive diffs, run quality gates, and merge the PR into the epic.
+
 IDE structural search, **one top-level package per commit** if the diff is
 large (`board`, then `autoroute`, then `gui`, then the rest).
 
@@ -422,6 +474,17 @@ No type/package renames in this phase. Smoke
 
 Branch: `refactor/naming-phase-6-identifiers` (or several PRs on that branch)
 
+**Progress checklist**
+
+- [x] Create the phase branch from the updated epic.
+- [x] Convert identifiers in GUI, settings, API, analytics, management, and i18n.
+- [x] Convert identifiers in `drc`, `rules`, `io`, and `core`.
+- [x] Convert non-algorithm `board` identifiers.
+- [x] Last, convert `autoroute` and shove/pull-tight/via algorithm identifiers.
+- [x] Verify no snake_case Java identifiers or `p_` parameters remain outside `src_v19/`.
+- [x] Preserve acronyms, wire names, CLI/JSON keys, and behavior; run BM01 and all gates.
+- [x] Review and merge the Phase 6 PR(s) into the epic.
+
 End state: no `snake_case` Java identifiers and no `p_` parameter prefixes in
 `src/main/java` and `src/test/java`.
 
@@ -436,6 +499,204 @@ Slices:
 
 Do not expand API, MCP, DSN, SES, DRC, EDT, SMD. Do not rename JSON/CLI
 keys. Do not mix with type/package PRs.
+
+---
+
+### Phase 7 — Functional class renames
+
+Branch: `refactor/naming-phase-7-classes`
+
+**Progress checklist**
+
+- [x] Rename `CalcFromSide` → `ShapeEntrySide`.
+- [x] Rename `CalcShapeAndFromSide` → `ShapeAndEntrySide`.
+- [x] Rename `ForcedPadAlgo` → `ForcedPadRouter`.
+- [x] Rename `ForcedViaAlgo` → `ForcedViaInserter`.
+- [x] Rename `MoveDrillItemAlgo` → `DrillItemMover`.
+- [x] Rename `OptViaAlgo` → `ViaOptimizer`.
+- [x] Rename `GUIDefaultsFile` → `GuiDefaultsFile` and `GUIDefaultsScanner` → `GuiDefaultsScanner`.
+- [x] Run quality gates and verify BM01 test suite.
+
+---
+
+### Phase 8 — Net, layer, and clearance abbreviation expansion
+
+Branch: `refactor/naming-phase-8-abbreviations`
+
+**Progress checklist**
+
+- [x] Expand `netNo` / `currentNetNo` → `netNumber`, `netNoArr` → `netNumbers`.
+- [x] Expand `layerNo` / `currentLayerNo` → `layerIndex` (0-based) and `layerNumber` (1-based / display).
+- [x] Expand `clearanceClassNo` → `clearanceClassIndex`.
+- [x] Expand `currentOb` → `currentObject` / `currentObstacle`.
+- [x] Update getters/methods: `getNetNo()` → `getNetNumber()`, `maxNetNo()` → `maxNetNumber()`, `containsNet(int netNumber)`.
+- [x] Run quality gates and verify full unit test suite.
+
+---
+
+### Phase 9 — Parameter naming polish
+
+Branch: `refactor/naming-phase-9-parameters`
+
+**Progress checklist**
+
+- [x] Specctra scope parameter: `WriteScopeParameter par` → `WriteScopeParameter scopeParameter` and `ReadScopeParameter par` → `ReadScopeParameter scopeParameter`.
+- [x] Object equality: `public boolean equals(Object obj)` → `public boolean equals(Object other)`.
+- [x] Geometry parameters: `Point p` → `Point point`, `Line l` → `Line line`, `TileShape s` → `TileShape shape`.
+- [x] Single letter & index parameters: `int no` → `int index` / `int pinNumber` / `int cornerIndex`.
+- [x] Run full test suite and quality gates.
+
+---
+
+### Phase 10 — Array naming modernization (*Arr -> plural nouns)
+
+Branch: `refactor/naming-phase-10-arrays`
+
+**Progress checklist**
+
+- [x] Core library & rules fields (`LayerStructure.layers`, `Nets.nets`, `Package.pins`, `Padstacks.padstacks`).
+- [x] Geometry fields & methods (`Polyline.lines`, `Simplex.lines`, `Polygon.corners`).
+- [x] Autoroute & settings array fields (`AutorouteControl.viaRadii`, `traceCosts`).
+- [x] Specctra parser array fields (`pins`, `keepouts`, `classNames`).
+- [x] Local array variables across `/src/` (`lines`, `points`, `corners`, `shapes`, `items`).
+- [x] Run full test suite (`./gradlew check`) and quality gates.
+
+---
+
+### Phase 11 — Algorithmic engine class naming modernization (`*Algo` -> Domain role classes)
+
+Branch: `refactor/naming-phase-11-algo-classes`
+
+**Progress checklist**
+
+- [x] Rename `PullTightAlgo` / `PullTightAlgo45` / `PullTightAlgo90` / `PullTightAlgoAnyAngle` → `TraceTightener` / `TraceTightener45` / `TraceTightener90` / `TraceTightenerAnyAngle`.
+- [x] Rename `ShoveTraceAlgo` → `TraceShover`.
+- [x] Rename `MazeSearchAlgo` → `MazeSearchEngine`.
+- [x] Rename `MazeShoveTraceAlgo` → `MazeTraceShover`.
+- [x] Rename `InsertFoundConnectionAlgo` → `FoundConnectionInserter`.
+- [x] Rename `LocateFoundConnectionAlgo` / `LocateFoundConnectionAlgo45Degree` / `LocateFoundConnectionAlgoAnyAngle` → `FoundConnectionLocator` / `FoundConnectionLocator45Degree` / `FoundConnectionLocatorAnyAngle`.
+- [x] Update all call sites, imports, and references.
+- [x] Run full test suite and quality gates.
+
+---
+
+### Phase 12 — Clearance class index standardization (`clType` / `clearanceType` / `clClass` -> `clearanceClassIndex`)
+
+Branch: `refactor/naming-phase-12-clearance-index`
+
+**Progress checklist**
+
+- [x] Standardize `int clType`, `int clearanceType`, `int clClass` parameters in `app.freerouting.board` to `clearanceClassIndex`.
+- [x] Standardize parameters and fields in `app.freerouting.autoroute` to `clearanceClassIndex`.
+- [x] Standardize parameters in `app.freerouting.drc` and `app.freerouting.rules` to `clearanceClassIndex`.
+- [x] Standardize local variables (`currentClType`, `ignoreClType`) to `currentClearanceClassIndex`, `ignoreClearanceClassIndex`.
+- [x] Run full test suite and quality gates.
+
+---
+
+### Phase 13 — ID & Index Standardization (`IdGenerator`, `ItemIdGenerator`, `*Id`, `*Index`)
+
+Branch: `refactor/naming-phase-13-id-and-indices`
+
+**Key Improvements:**
+- Rename `IdentificationNumberGenerator` ➔ `IdGenerator` (in `datastructures`) and `ItemIdentificationNumberGenerator` ➔ `ItemIdGenerator` (in `board`).
+- In `IdGenerator`: rename `newNo()` ➔ `newId()`, `maxGeneratedNo()` ➔ `maxGeneratedId()`. Clean up internal casing (`c_max_id_no` ➔ `MAX_ID`, `lastGeneratedIdNo` ➔ `lastGeneratedId`).
+- References to unique item/component/group identifiers standardized to `Id` (not `No` or `IdNumber`):
+  - `Item`: `idNo` / `getIdNo()` ➔ `id` / `getId()`, `copy(int id)`
+  - `Item` / `Pin`: `componentNo` / `getComponentNo()` ➔ `componentId` / `getComponentId()`
+  - `Item`: `groupNo` / `getGroupNo()` ➔ `groupId` / `getGroupId()`
+  - `Component`: `no` ➔ `id`
+  - `Package`: `no` ➔ `id`
+  - `Padstack`: `no` ➔ `id`
+  - `Communication`: `idNoGenerator` ➔ `idGenerator`
+  - `ReadScopeParameter`: `itemIdNoGenerator` ➔ `idGenerator`
+- Position/Array indices standardized to `Index`:
+  - `Pin`: `pinNo` / `getPinNo()` ➔ `pinIndex` / `getPinIndex()` (0-based package pin array index)
+  - Geometric indices: `cornerNo` ➔ `cornerIndex`, `shapeNo` ➔ `shapeIndex`, `lineNo` ➔ `lineIndex`
+  - Search/Graph indices: `doorNo` ➔ `doorIndex`, `sectionNo` ➔ `sectionIndex`, `treeIdNo` ➔ `treeId` / `entryId`
+
+**Progress checklist**
+
+- [x] Rename `IdentificationNumberGenerator` ➔ `IdGenerator` and `ItemIdentificationNumberGenerator` ➔ `ItemIdGenerator` with `newId()`, `maxGeneratedId()`, and clean internal naming (`MAX_ID`, `lastGeneratedId`).
+- [x] Standardize Item, Component, Group, Package, and Padstack IDs to `id` / `getId()` / `componentId` / `groupId`.
+- [x] Standardize Pin array index in components/packages to `pinIndex` / `getPinIndex()`.
+- [x] Standardize geometric and search indices (`cornerIndex`, `shapeIndex`, `lineIndex`, `doorIndex`, `sectionIndex`, `treeId`, `entryId`).
+- [x] Update `Communication.idGenerator`, `ReadScopeParameter.idGenerator`, and all readers/parsers/controllers.
+- [x] Run full test suite (`./gradlew check`) and quality gates (`spotlessCheck`, `checkstyle*`).
+
+---
+
+### Phase 14 — Interface & boundary clarity
+
+Branch: `refactor/naming-phase-14-interfaces`
+
+**Progress checklist**
+
+- [x] Rename `app.freerouting.board.ObjectInfoPanel` interface → `app.freerouting.board.ItemInfoPrinter` (decoupling from UI JPanel confusion).
+- [x] Rename `ObjectInfoPanel.Printable` → `ItemInfoPrinter.Printable` (or `ItemInfoPrintable`).
+- [x] Ensure `ReadScopeParameter` and board/controller classes use `idGenerator` for the `IdGenerator` field name.
+- [x] Update all implementing classes (`PrintInfoWindow`, `BoardPrintInfo`, `Window*InfoTextPane`, etc.) and callers across `board/`, `core/library/`, `drc/`, `gui/`.
+- [x] Run full test suite and quality gates.
+
+---
+
+### Phase 15 — Java modernization & switch expressions
+
+Branch: `refactor/naming-phase-15-java-modernization`
+
+**Progress checklist**
+
+- [x] Convert verbose `switch` statements to modern arrow switch expressions (`case A -> ...`) across `geometry.planar`, `io.specctra`, `drc`, `gui`, `core`.
+- [x] Convert simple immutable data carriers to Java records (`ExpansionCostFactor`, `AirLineInfo`).
+- [x] Modernize collection instantiation with `List.copyOf()`, `Set.copyOf()`, `List.of()` where immutable collections are created.
+- [x] Run full test suite and quality gates.
+
+---
+
+### Phase 16 — Comprehensive Javadoc review & documentation update
+
+Branch: `refactor/naming-phase-16-javadoc-and-docs-update`
+
+**Progress checklist**
+
+- [x] Complete Javadoc review and update across all packages (`geometry.planar`, `board`, `autoroute`, `drc`, `rules`, `core`, `gui`, `io.specctra`, `settings`, `api`):
+  - [x] Replace stale `snake_case` method and field references in Javadocs and source comments (e.g. `normalize_traces()`, `is_tail()`, `bounding_octagon()`, `get_direction()`, `start_point()`, `end_point()`, `edge_line_count()`, `border_line_count()`, `net_no`, `cl_type`, etc.).
+  - [x] Update all class/interface name references in Javadocs to reflect renamed types (`ItemInfoPrinter`, `TileShape`, `RegularTileShape`, `Simplex`, `Circle`, `ExpansionRoom`, `CompleteFreeSpaceExpansionRoom`, etc.).
+  - [x] Ensure `@param`, `@return`, and `@throws` tags match updated camelCase parameter names (`printer`, `idGenerator`, `clearanceClassIndex`, `layerIndex`, `componentId`, etc.).
+- [x] Complete documentation review and update in `docs/`:
+  - [x] Update `docs/architecture.md` (Mermaid system diagram, package glossary, and component references).
+  - [x] Update `docs/settings.md`, `docs/developer.md`, `docs/command_line_arguments.md`, `docs/integrations.md`, `docs/self-hosting.md`.
+  - [x] Update `AGENTS.md` and related agent instructions if needed.
+- [x] Verify `python scripts/i18n/extract-context.py --check`.
+- [x] Run full verification suite (`./gradlew check`).
+
+---
+
+### Phase 17 — Comprehensive codebase review & forward-looking improvement catalog
+
+Branch: `refactor/naming-phase-17-codebase-review`
+
+**Objectives & deliverables**
+
+Perform a systematic, whole-codebase review to catalogue concrete future modernization and architectural refactoring opportunities across five key dimensions:
+
+1. **Package Architecture & Structure**:
+   - Evaluate package boundaries, high-level cohesion, and coupling.
+   - Further subpackaging opportunities (e.g., in `board/`, `autoroute/`, `gui/`).
+2. **Class Names & Domain Locations**:
+   - Identify classes whose names or package locations could be refined for domain clarity, cohesion, or separation of concerns.
+3. **Methods, Parameters, and Fields**:
+   - Signature consistency, parameter types, nullable vs Optional vs primitive representations, eliminating remaining legacy idioms.
+4. **Design Patterns & Modern Java Syntax/Language Features**:
+   - Opportunities for modern Java 25 features (sealed classes, pattern matching, records, streams, immutability, builder/factory patterns).
+5. **Performance, Memory, and Maintenance Opportunities**:
+   - Algorithmic efficiencies, spatial index optimizations, allocation reduction, GC throughput, and maintainability enhancements.
+
+**Progress checklist**
+
+- [x] Systematic scan of all domain packages (`geometry.planar`, `board`, `autoroute`, `drc`, `rules`, `core`, `settings`, `api`, `gui`, `io.specctra`).
+- [x] Generate comprehensive review report document in `docs/research/future-codebase-improvements.md`.
+- [x] Incorporate summary and prioritization into project roadmap documentation.
 
 ---
 
@@ -477,5 +738,5 @@ windows/menus packages, DRC *behavior* extraction.
 - OpenAPI shows `KiCadDrcReport`; `/v1/mcp` and `/v1/jobs/{id}/drc` unchanged.
 - `spotlessCheck`, Checkstyle, `git diff --check`, `extract-context.py --check`
   green on the epic.
-- Epic PR to `master` lists D8: drop schema name `DrcReport` in the **next
+- Epic PR to `master` lists D8: drop old schema name `DrcReport` in the **next
   minor**; Python client follow-up owned by the same maintainer.

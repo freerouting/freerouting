@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -15,7 +15,7 @@ public class PopupMenuDisplay extends JPopupMenu {
   public PopupMenuDisplay(BoardFrame boardFrame) {
     this.boardPanel = boardFrame.boardPanel;
 
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     JMenuItem popupCenterDisplayMenuitem = new JMenuItem();
     popupCenterDisplayMenuitem.setText(tm.getText("center_display"));

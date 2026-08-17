@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.sources.TestingSettings;
@@ -14,18 +15,17 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Sub-Issue 08 – Integration tests: headless path is fully independent of {@link
- * app.freerouting.gui.session.InteractiveSettings}.
+ * WorkspaceSettings}.
  *
  * <p>Verifies that a complete routing job runs end-to-end in headless mode without ever accessing
- * {@link app.freerouting.gui.session.InteractiveSettings}. This complements {@code
- * GuiStartupHeadlessTest} (in the {@code interactive} package), which covers the GUI initialisation
- * invariants.
+ * {@link WorkspaceSettings}. This complements {@code GuiStartupHeadlessTest} (in the {@code
+ * interactive} package), which covers the GUI initialisation invariants.
  *
  * <p>Key assertions:
  *
  * <ul>
  *   <li>{@link HeadlessBoardManager} never touches GUI-session state (it does not implement {@code
- *       app.freerouting.gui.session.GuiSessionContract}).
+ *       app.freerouting.gui.workspace.WorkspaceContract}).
  *   <li>The routing job reaches a terminal state (COMPLETED, CANCELLED, or TERMINATED).
  *   <li>The completed job's board is non-null, confirming the engine produced results.
  * </ul>
@@ -44,13 +44,13 @@ class HeadlessCompleteRoutingTest extends RoutingFixtureTest {
   /**
    * Runs a complete routing job on a real DSN file in headless mode and verifies that the job
    * reaches a terminal state without any {@link NullPointerException} or {@link
-   * IllegalStateException} caused by {@code interactiveSettings} access.
+   * IllegalStateException} caused by {@code workspaceSettings} access.
    *
    * <p>The pass and item counts are bounded to keep test duration short while still exercising the
    * full routing pipeline including net ordering, expansion, and via-insertion stages.
    */
   @Test
-  void headlessRoutingCompletesWithoutInteractiveSettingsAccess() {
+  void headlessRoutingCompletesWithoutWorkspaceSettingsAccess() {
     TestingSettings testSettings = new TestingSettings();
     testSettings.setMaxPasses(3);
     testSettings.setMaxItems(50);

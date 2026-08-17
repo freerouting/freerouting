@@ -18,7 +18,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
     implements CompleteExpansionRoom, SearchTreeObject {
 
   /** Identification number for implementing the Comparable interface. */
-  private final int idNo;
+  private final int id;
 
   /** The array of entries in the SearchTree. Consists of just one element. */
   private ShapeTree.Leaf[] treeEntries;
@@ -29,10 +29,10 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   private boolean roomIsNetDependent;
 
   /** Creates a new instance of CompleteFreeSpaceExpansionRoom. */
-  public CompleteFreeSpaceExpansionRoom(TileShape shape, int layer, int idNo) {
+  public CompleteFreeSpaceExpansionRoom(TileShape shape, int layer, int id) {
     super(shape, layer);
     targetDoors = new LinkedList<>();
-    this.idNo = idNo;
+    this.id = id;
   }
 
   @Override
@@ -44,7 +44,7 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   public int compareTo(Object other) {
     int result;
     if (other instanceof FreeSpaceExpansionRoom) {
-      result = ((CompleteFreeSpaceExpansionRoom) other).idNo - this.idNo;
+      result = ((CompleteFreeSpaceExpansionRoom) other).id - this.id;
     } else {
       result = -1;
     }
@@ -72,12 +72,12 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   @Override
-  public boolean isObstacle(int netNo) {
+  public boolean isObstacle(int netNumber) {
     return true;
   }
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
+  public boolean isTraceObstacle(int netNumber) {
     return true;
   }
 
@@ -95,8 +95,8 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   }
 
   @Override
-  public int getIdNo() {
-    return idNo;
+  public int getId() {
+    return id;
   }
 
   /** Returns the list doors to target items of this room. */
@@ -128,19 +128,19 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
 
   /** Calculates the doors to the start and destination items of the autoroute algorithm. */
   public void calculateTargetDoors(
-      ShapeTree.TreeEntry ownNetObject, int netNo, ShapeSearchTree autorouteSearchTree) {
+      ShapeTree.TreeEntry ownNetObject, int netNumber, ShapeSearchTree autorouteSearchTree) {
     this.setNetDependent();
 
-    if (ownNetObject.object instanceof Connectable currObject) {
-      if (currObject.containsNet(netNo)) {
-        TileShape currConnectionShape =
-            currObject.getTraceConnectionShape(
+    if (ownNetObject.object instanceof Connectable currentObject) {
+      if (currentObject.containsNet(netNumber)) {
+        TileShape currentConnectionShape =
+            currentObject.getTraceConnectionShape(
                 autorouteSearchTree, ownNetObject.shapeIndexInObject);
-        if (currConnectionShape != null && this.getShape().intersects(currConnectionShape)) {
-          Item currItem = (Item) currObject;
+        if (currentConnectionShape != null && this.getShape().intersects(currentConnectionShape)) {
+          Item currentItem = (Item) currentObject;
           TargetItemExpansionDoor newTargetDoor =
               new TargetItemExpansionDoor(
-                  currItem, ownNetObject.shapeIndexInObject, this, autorouteSearchTree);
+                  currentItem, ownNetObject.shapeIndexInObject, this, autorouteSearchTree);
           this.addTargetDoor(newTargetDoor);
         }
       }
@@ -164,16 +164,16 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   public boolean validate(AutorouteEngine autorouteEngine) {
     boolean result = true;
     Collection<ShapeTree.TreeEntry> overlappingObjects = new LinkedList<>();
-    int[] netNoArr = new int[1];
-    netNoArr[0] = autorouteEngine.getNetNo();
+    int[] netNumbers = new int[1];
+    netNumbers[0] = autorouteEngine.getNetNumber();
     autorouteEngine.autorouteSearchTree.overlappingTreeEntries(
-        this.getShape(), this.getLayer(), netNoArr, overlappingObjects);
+        this.getShape(), this.getLayer(), netNumbers, overlappingObjects);
     for (ShapeTree.TreeEntry currentEntry : overlappingObjects) {
       if (currentEntry.object == this) {
         continue;
       }
       SearchTreeObject currentObject = (SearchTreeObject) currentEntry.object;
-      if (!currentObject.isTraceObstacle(autorouteEngine.getNetNo())) {
+      if (!currentObject.isTraceObstacle(autorouteEngine.getNetNumber())) {
         continue;
       }
       if (currentObject.shapeLayer(currentEntry.shapeIndexInObject) != getLayer()) {
@@ -201,8 +201,8 @@ public class CompleteFreeSpaceExpansionRoom extends FreeSpaceExpansionRoom
   @Override
   public void resetDoors() {
     super.resetDoors();
-    for (ExpandableObject currDoor : this.targetDoors) {
-      currDoor.reset();
+    for (ExpandableObject currentDoor : this.targetDoors) {
+      currentDoor.reset();
     }
   }
 }

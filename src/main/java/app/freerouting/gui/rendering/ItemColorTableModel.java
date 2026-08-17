@@ -17,37 +17,37 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
   // Create the default color table for the layers
   /** ItemColorTableModel. */
   public ItemColorTableModel(LayerStructure layerStructure, Locale locale) {
-    super(layerStructure.arr.length, locale);
+    super(layerStructure.layers.length, locale);
 
-    int rowCount = layerStructure.arr.length;
+    int rowCount = layerStructure.layers.length;
     final int itemTypeCount = ColumnNames.values().length - 1;
     int signalLayerNo = 0;
     for (int layer = 0; layer < rowCount; layer++) {
-      boolean isSignalLayer = layerStructure.arr[layer].isSignal;
+      boolean isSignalLayer = layerStructure.layers[layer].isSignal;
       data[layer] = new Object[itemTypeCount + 1];
-      Object[] currRow = data[layer];
-      currRow[0] = layerStructure.arr[layer].name;
+      Object[] currentRow = data[layer];
+      currentRow[0] = layerStructure.layers[layer].name;
       if (layer == 0) {
         // F.Cu
-        currRow[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);
-        currRow[ColumnNames.TRACES.ordinal()] = new Color(200, 52, 52);
-        currRow[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(0, 150, 0);
-        currRow[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
-        currRow[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(150, 50, 0);
+        currentRow[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);
+        currentRow[ColumnNames.TRACES.ordinal()] = new Color(200, 52, 52);
+        currentRow[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(0, 150, 0);
+        currentRow[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
+        currentRow[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(150, 50, 0);
       } else if (layer == rowCount - 1) {
         // B.Cu
-        currRow[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);
-        currRow[ColumnNames.TRACES.ordinal()] = new Color(77, 127, 196);
-        currRow[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(100, 100, 0);
-        currRow[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
-        currRow[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(160, 80, 0);
+        currentRow[ColumnNames.PINS.ordinal()] = new Color(227, 183, 46);
+        currentRow[ColumnNames.TRACES.ordinal()] = new Color(77, 127, 196);
+        currentRow[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(100, 100, 0);
+        currentRow[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
+        currentRow[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(160, 80, 0);
       } else {
         // Inner layers like In1.Cu, In2.Cu, etc.
         if (isSignalLayer) {
           // currently 6 different default colors for traces on the inner layers
           final int differentInnerColors = 6;
           int remainder = signalLayerNo % differentInnerColors;
-          currRow[ColumnNames.TRACES.ordinal()] =
+          currentRow[ColumnNames.TRACES.ordinal()] =
               switch (remainder % differentInnerColors) {
                 case 1 -> new Color(127, 200, 127);
                 case 2 -> new Color(206, 125, 44);
@@ -57,17 +57,17 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
                 default -> new Color(40, 204, 217);
               };
         } else { // power layer
-          currRow[ColumnNames.TRACES.ordinal()] = Color.BLACK;
+          currentRow[ColumnNames.TRACES.ordinal()] = Color.BLACK;
         }
-        currRow[ColumnNames.PINS.ordinal()] = new Color(255, 150, 0);
-        currRow[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(0, 200, 60);
-        currRow[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
-        currRow[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(150, 50, 0);
+        currentRow[ColumnNames.PINS.ordinal()] = new Color(255, 150, 0);
+        currentRow[ColumnNames.CONDUCTION_AREAS.ordinal()] = new Color(0, 200, 60);
+        currentRow[ColumnNames.KEEPOUTS.ordinal()] = new Color(26, 196, 210);
+        currentRow[ColumnNames.PLACE_KEEPOUTS.ordinal()] = new Color(150, 50, 0);
       }
-      currRow[ColumnNames.VIAS.ordinal()] = new Color(227, 183, 46);
-      currRow[ColumnNames.FIXED_VIAS.ordinal()] = currRow[ColumnNames.VIAS.ordinal()];
-      currRow[ColumnNames.FIXED_TRACES.ordinal()] = currRow[ColumnNames.TRACES.ordinal()];
-      currRow[ColumnNames.VIA_KEEPOUTS.ordinal()] = new Color(236, 236, 236);
+      currentRow[ColumnNames.VIAS.ordinal()] = new Color(227, 183, 46);
+      currentRow[ColumnNames.FIXED_VIAS.ordinal()] = currentRow[ColumnNames.VIAS.ordinal()];
+      currentRow[ColumnNames.FIXED_TRACES.ordinal()] = currentRow[ColumnNames.TRACES.ordinal()];
+      currentRow[ColumnNames.VIA_KEEPOUTS.ordinal()] = new Color(236, 236, 236);
       if (isSignalLayer) {
         ++signalLayerNo;
       }
@@ -235,9 +235,9 @@ public class ItemColorTableModel extends ColorTableModel implements Serializable
     precalculatedItemColors = new Color[ColumnNames.values().length - 1][];
     for (int i = 0; i < precalculatedItemColors.length; i++) {
       precalculatedItemColors[i] = new Color[data.length];
-      Color[] currRow = precalculatedItemColors[i];
+      Color[] currentRow = precalculatedItemColors[i];
       for (int j = 0; j < data.length; j++) {
-        currRow[j] = (Color) getValueAt(j, i + 1);
+        currentRow[j] = (Color) getValueAt(j, i + 1);
       }
     }
     this.itemColorsPrecalculated = true;

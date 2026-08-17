@@ -7,14 +7,14 @@ import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Item;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.Via;
-import app.freerouting.core.BoardLibrary;
+import app.freerouting.core.library.BoardLibrary;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.gui.rendering.BoardRenderer;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.awt.Color;
@@ -61,18 +61,18 @@ public final class MoveItemState extends InteractiveState {
     // make the situation restorable by undo
     routingBoard.generateSnapshot();
 
-    for (Item currItem : itemList) {
-      routingBoard.removeItem(currItem);
+    for (Item currentItem : itemList) {
+      routingBoard.removeItem(currentItem);
     }
     this.netItemsList = new LinkedList<>();
     this.itemList = new TreeSet<>();
 
-    for (Item currItem : itemList) {
-      // Copy the items in p_item_list, because otherwise the undo algorithm will not
+    for (Item currentItem : itemList) {
+      // Copy the items in itemList, because otherwise the undo algorithm will not
       // work.
-      Item copiedItem = currItem.copy(0);
-      for (int i = 0; i < currItem.netCount(); i++) {
-        addToNetItemsList(copiedItem, currItem.getNetNo(i));
+      Item copiedItem = currentItem.copy(0);
+      for (int i = 0; i < currentItem.netCount(); i++) {
+        addToNetItemsList(copiedItem, currentItem.getNetNumber(i));
       }
       this.itemList.add(copiedItem);
     }
@@ -95,71 +95,72 @@ public final class MoveItemState extends InteractiveState {
           tm.getText("move_component_failed_because_no_item_selected"));
       return null;
     }
-    // extend p_item_list to full components
+    // extend itemList to full components
     Set<Item> allItems = new TreeSet<>();
     Set<Component> componentList = new TreeSet<>();
     BasicBoard routingBoard = boardHandling.getRoutingBoard();
     Component gridSnapComponent = null;
-    for (Item currItem : itemList) {
-      if (currItem.getComponentNo() > 0) {
-        Component currComponent = routingBoard.components.get(currItem.getComponentNo());
-        if (currComponent == null) {
+    for (Item currentItem : itemList) {
+      if (currentItem.getComponentId() > 0) {
+        Component currentComponent = routingBoard.components.get(currentItem.getComponentId());
+        if (currentComponent == null) {
           FRLogger.warn("MoveComponentState.get_instance inconsistent component number");
           return null;
         }
         if (gridSnapComponent == null
-            && (boardHandling.getInteractiveSettings().getHorizontalComponentGrid() > 0
-                || boardHandling.getInteractiveSettings().getVerticalComponentGrid() > 0)) {
-          gridSnapComponent = currComponent;
+            && (boardHandling.getWorkspaceSettings().getHorizontalComponentGrid() > 0
+                || boardHandling.getWorkspaceSettings().getVerticalComponentGrid() > 0)) {
+          gridSnapComponent = currentComponent;
         }
-        if (!componentList.contains(currComponent)) {
-          Collection<Item> componentItems = routingBoard.getComponentItems(currComponent.no);
-          for (Item currComponentItem : componentItems) {
-            componentList.add(currComponent);
-            allItems.add(currComponentItem);
+        if (!componentList.contains(currentComponent)) {
+          Collection<Item> componentItems = routingBoard.getComponentItems(currentComponent.id);
+          for (Item currentComponentItem : componentItems) {
+            componentList.add(currentComponent);
+            allItems.add(currentComponentItem);
           }
         }
       } else {
-        allItems.add(currItem);
+        allItems.add(currentItem);
       }
     }
     boolean moveOk = true;
     Set<Item> fixedItems = new TreeSet<>();
     Set<Item> obstacleItems = new TreeSet<>();
     Set<Item> addItems = new TreeSet<>();
-    for (Item currItem : allItems) {
-      if (currItem.isUserFixed()) {
+    for (Item currentItem : allItems) {
+      if (currentItem.isUserFixed()) {
         boardHandling.screenMessages.setStatusMessage(
             tm.getText("some_items_cannot_be_moved_because_they_are_fixed"));
         moveOk = false;
-        obstacleItems.add(currItem);
-        fixedItems.add(currItem);
-      } else if (currItem.isConnected()) {
+        obstacleItems.add(currentItem);
+        fixedItems.add(currentItem);
+      } else if (currentItem.isConnected()) {
         // Check if the whole connected set is inside the selected items,
         // and add the items of the connected set to the move list in this case.
         // Conduction areas are ignored, because otherwise components with
         // pins contacted to a plane could never be moved.
         boolean itemMovable = true;
-        Collection<Item> contacts = currItem.getConnectedSet(-1, true);
+        Collection<Item> contacts = currentItem.getConnectedSet(-1, true);
         {
-          for (Item currContact : contacts) {
-            if (currContact instanceof ConductionArea) {
+          for (Item currentContact : contacts) {
+            if (currentContact instanceof ConductionArea) {
 
               continue;
             }
-            if (currContact.isUserFixed()) {
+            if (currentContact.isUserFixed()) {
               itemMovable = false;
-              fixedItems.add(currContact);
-            } else if (currContact.getComponentNo() != 0) {
-              Component currComponent = routingBoard.components.get(currContact.getComponentNo());
-              if (!componentList.contains(currComponent)) {
+              fixedItems.add(currentContact);
+            } else if (currentContact.getComponentId() != 0) {
+              Component currentComponent =
+                  routingBoard.components.get(currentContact.getComponentId());
+              if (!componentList.contains(currentComponent)) {
                 itemMovable = false;
               }
             }
             if (itemMovable) {
-              addItems.add(currContact);
+              addItems.add(currentContact);
             } else {
-              obstacleItems.add(currContact);
+              obstacleItems.add(currentContact);
             }
           }
         }
@@ -192,17 +193,17 @@ public final class MoveItemState extends InteractiveState {
         boardHandling);
   }
 
-  private void addToNetItemsList(Item item, int netNo) {
-    for (NetItems currItems : this.netItemsList) {
-      if (currItems.netNo == netNo) {
-        // list for p_net_no exists already
-        currItems.items.add(item);
+  private void addToNetItemsList(Item item, int netNumber) {
+    for (NetItems currentItems : this.netItemsList) {
+      if (currentItems.netNumber == netNumber) {
+        // list for netNumber exists already
+        currentItems.items.add(item);
         return;
       }
     }
-    Collection<Item> newItemList = hdlg.getRoutingBoard().getConnectableItems(netNo);
+    Collection<Item> newItemList = hdlg.getRoutingBoard().getConnectableItems(netNumber);
     newItemList.add(item);
-    NetItems newNetItems = new NetItems(netNo, newItemList);
+    NetItems newNetItems = new NetItems(netNumber, newItemList);
     this.netItemsList.add(newNetItems);
   }
 
@@ -220,24 +221,24 @@ public final class MoveItemState extends InteractiveState {
 
   @Override
   public InteractiveState complete() {
-    for (Item currItem : this.itemList) {
-      if (currItem.clearanceViolationCount() > 0) {
+    for (Item currentItem : this.itemList) {
+      if (currentItem.clearanceViolationCount() > 0) {
         hdlg.screenMessages.setStatusMessage(tm.getText("insertion_failed_because_of_obstacles"));
         return this;
       }
     }
     BasicBoard routingBoard = hdlg.getRoutingBoard();
-    for (Item currItem : this.itemList) {
-      routingBoard.insertItem(currItem);
+    for (Item currentItem : this.itemList) {
+      routingBoard.insertItem(currentItem);
     }
 
     // let the observers synchronize the moving
-    for (Component currComponent : this.componentList) {
-      routingBoard.communication.observers.notifyMoved(currComponent);
+    for (Component currentComponent : this.componentList) {
+      routingBoard.communication.observers.notifyMoved(currentComponent);
     }
 
-    for (NetItems currNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currNetItems.netNo);
+    for (NetItems currentNetItems : this.netItemsList) {
+      this.hdlg.updateRatsnest(currentNetItems.netNumber);
     }
     hdlg.screenMessages.setStatusMessage(tm.getText("move_completed"));
     hdlg.repaint();
@@ -247,15 +248,15 @@ public final class MoveItemState extends InteractiveState {
   @Override
   public InteractiveState cancel() {
     hdlg.getRoutingBoard().undo(null);
-    for (NetItems currNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currNetItems.netNo);
+    for (NetItems currentNetItems : this.netItemsList) {
+      this.hdlg.updateRatsnest(currentNetItems.netNumber);
     }
     return this.returnState;
   }
 
   @Override
   public InteractiveState mouseWheelMoved(int rotation) {
-    if (hdlg.getInteractiveSettings().getZoomWithWheel()) {
+    if (hdlg.getWorkspaceSettings().getZoomWithWheel()) {
       super.mouseWheelMoved(rotation);
     } else {
       this.rotate(-rotation);
@@ -272,17 +273,17 @@ public final class MoveItemState extends InteractiveState {
         translateVector = adjustToPlacementGrid(translateVector);
       }
       Components components = hdlg.getRoutingBoard().components;
-      for (Component currComponent : this.componentList) {
-        components.move(currComponent.no, translateVector);
+      for (Component currentComponent : this.componentList) {
+        components.move(currentComponent.id, translateVector);
       }
       this.clearanceViolations = new LinkedList<>();
-      for (Item currItem : this.itemList) {
-        currItem.translateBy(translateVector);
-        this.clearanceViolations.addAll(currItem.clearanceViolations());
+      for (Item currentItem : this.itemList) {
+        currentItem.translateBy(translateVector);
+        this.clearanceViolations.addAll(currentItem.clearanceViolations());
       }
       previousPosition = currentPosition;
-      for (NetItems currNetItems : this.netItemsList) {
-        this.hdlg.updateRatsnest(currNetItems.netNo, currNetItems.items);
+      for (NetItems currentNetItems : this.netItemsList) {
+        this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
       }
       hdlg.repaint();
     }
@@ -294,8 +295,8 @@ public final class MoveItemState extends InteractiveState {
         newComponentLocation
             .toFloat()
             .roundToGrid(
-                hdlg.getInteractiveSettings().getHorizontalComponentGrid(),
-                hdlg.getInteractiveSettings().getVerticalComponentGrid());
+                hdlg.getWorkspaceSettings().getHorizontalComponentGrid(),
+                hdlg.getWorkspaceSettings().getVerticalComponentGrid());
     Vector adjustment = roundedComponentLocation.differenceBy(newComponentLocation);
     Vector result = vector.add(adjustment);
     this.currentPosition = this.previousPosition.translateBy(result).toFloat().round();
@@ -308,16 +309,16 @@ public final class MoveItemState extends InteractiveState {
       return;
     }
     Components components = hdlg.getRoutingBoard().components;
-    for (Component currComponent : this.componentList) {
-      components.turn90Degree(currComponent.no, factor, currentPosition);
+    for (Component currentComponent : this.componentList) {
+      components.turn90Degree(currentComponent.id, factor, currentPosition);
     }
     this.clearanceViolations = new LinkedList<>();
-    for (Item currItem : this.itemList) {
-      currItem.turn90Degree(factor, currentPosition);
-      this.clearanceViolations.addAll(currItem.clearanceViolations());
+    for (Item currentItem : this.itemList) {
+      currentItem.turn90Degree(factor, currentPosition);
+      this.clearanceViolations.addAll(currentItem.clearanceViolations());
     }
-    for (NetItems currNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currNetItems.netNo, currNetItems.items);
+    for (NetItems currentNetItems : this.netItemsList) {
+      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
     }
     hdlg.repaint();
   }
@@ -328,17 +329,17 @@ public final class MoveItemState extends InteractiveState {
       return;
     }
     Components components = hdlg.getRoutingBoard().components;
-    for (Component currComponent : this.componentList) {
-      components.rotate(currComponent.no, angleInDegree, this.currentPosition);
+    for (Component currentComponent : this.componentList) {
+      components.rotate(currentComponent.id, angleInDegree, this.currentPosition);
     }
     this.clearanceViolations = new LinkedList<>();
     FloatPoint floatPosition = this.currentPosition.toFloat();
-    for (Item currItem : this.itemList) {
-      currItem.rotateApprox(angleInDegree, floatPosition);
-      this.clearanceViolations.addAll(currItem.clearanceViolations());
+    for (Item currentItem : this.itemList) {
+      currentItem.rotateApprox(angleInDegree, floatPosition);
+      this.clearanceViolations.addAll(currentItem.clearanceViolations());
     }
-    for (NetItems currNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currNetItems.netNo, currNetItems.items);
+    for (NetItems currentNetItems : this.netItemsList) {
+      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
     }
     hdlg.repaint();
   }
@@ -358,15 +359,15 @@ public final class MoveItemState extends InteractiveState {
     LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
     BoardLibrary boardLibrary = hdlg.getRoutingBoard().library;
     boolean placementSideChangable = true;
-    for (Item currItem : itemList) {
-      if (currItem instanceof Via via) {
+    for (Item currentItem : itemList) {
+      if (currentItem instanceof Via via) {
         if (boardLibrary.getMirroredViaPadstack(via.getPadstack()) == null) {
           placementSideChangable = false;
           break;
         }
-      } else if (currItem.firstLayer() == currItem.lastLayer()) {
-        int newLayerNo = hdlg.getLayerCount() - currItem.firstLayer() - 1;
-        if (!layerStructure.arr[newLayerNo].isSignal) {
+      } else if (currentItem.firstLayer() == currentItem.lastLayer()) {
+        int newLayerNo = hdlg.getLayerCount() - currentItem.firstLayer() - 1;
+        if (!layerStructure.layers[newLayerNo].isSignal) {
           placementSideChangable = false;
           break;
         }
@@ -378,16 +379,16 @@ public final class MoveItemState extends InteractiveState {
     }
 
     Components components = hdlg.getRoutingBoard().components;
-    for (Component currComponent : this.componentList) {
-      components.changeSide(currComponent.no, currentPosition);
+    for (Component currentComponent : this.componentList) {
+      components.changeSide(currentComponent.id, currentPosition);
     }
     this.clearanceViolations = new LinkedList<>();
-    for (Item currItem : this.itemList) {
-      currItem.changePlacementSide(currentPosition);
-      this.clearanceViolations.addAll(currItem.clearanceViolations());
+    for (Item currentItem : this.itemList) {
+      currentItem.changePlacementSide(currentPosition);
+      this.clearanceViolations.addAll(currentItem.clearanceViolations());
     }
-    for (NetItems currNetItems : this.netItemsList) {
-      this.hdlg.updateRatsnest(currNetItems.netNo, currNetItems.items);
+    for (NetItems currentNetItems : this.netItemsList) {
+      this.hdlg.updateRatsnest(currentNetItems.netNumber, currentNetItems.items);
     }
     hdlg.repaint();
   }
@@ -395,10 +396,10 @@ public final class MoveItemState extends InteractiveState {
   /** Resets the rotation of the moved components. */
   public void resetRotation() {
     Component componentToReset = null;
-    for (Component currComponent : this.componentList) {
+    for (Component currentComponent : this.componentList) {
       if (componentToReset == null) {
-        componentToReset = currComponent;
-      } else if (componentToReset.getRotationInDegree() != currComponent.getRotationInDegree()) {
+        componentToReset = currentComponent;
+      } else if (componentToReset.getRotationInDegree() != currentComponent.getRotationInDegree()) {
         hdlg.screenMessages.setStatusMessage(
             tm.getText("unable_to_reset_components_with_different_rotations"));
         return;
@@ -418,17 +419,17 @@ public final class MoveItemState extends InteractiveState {
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState keyTyped(char keyChar) {
-    InteractiveState currReturnState = this;
+    InteractiveState currentReturnState = this;
     switch (keyChar) {
       case '+' -> turn90Degree(1);
       case '*' -> turn90Degree(2);
       case '-' -> turn90Degree(3);
       case '/' -> changePlacementSide();
-      case 'r' -> hdlg.getInteractiveSettings().setZoomWithWheel(false);
-      case 'z' -> hdlg.getInteractiveSettings().setZoomWithWheel(true);
-      default -> currReturnState = super.keyTyped(keyChar);
+      case 'r' -> hdlg.getWorkspaceSettings().setZoomWithWheel(false);
+      case 'z' -> hdlg.getWorkspaceSettings().setZoomWithWheel(true);
+      default -> currentReturnState = super.keyTyped(keyChar);
     }
-    return currReturnState;
+    return currentReturnState;
   }
 
   @Override
@@ -446,24 +447,24 @@ public final class MoveItemState extends InteractiveState {
     if (this.itemList == null) {
       return;
     }
-    for (Item currItem : this.itemList) {
-      BoardRenderer.drawOverlayItem(currItem, graphics, hdlg.graphicsContext);
+    for (Item currentItem : this.itemList) {
+      BoardRenderer.drawOverlayItem(currentItem, graphics, hdlg.graphicsContext);
     }
     if (this.clearanceViolations != null) {
       Color drawColor = hdlg.graphicsContext.getViolationsColor();
-      for (ClearanceViolation currViolation : this.clearanceViolations) {
-        hdlg.graphicsContext.fillArea(currViolation.shape, graphics, drawColor, 1);
+      for (ClearanceViolation currentViolation : this.clearanceViolations) {
+        hdlg.graphicsContext.fillArea(currentViolation.shape, graphics, drawColor, 1);
       }
     }
   }
 
   private static class NetItems {
 
-    final int netNo;
+    final int netNumber;
     final Collection<Item> items;
 
-    NetItems(int netNo, Collection<Item> items) {
-      this.netNo = netNo;
+    NetItems(int netNumber, Collection<Item> items) {
+      this.netNumber = netNumber;
       this.items = items;
     }
   }

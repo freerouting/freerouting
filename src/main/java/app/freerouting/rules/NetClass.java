@@ -1,7 +1,7 @@
 package app.freerouting.rules;
 
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 /** Describes routing rules for individual nets. */
-public class NetClass implements Serializable, ObjectInfoPanel.Printable {
+public class NetClass implements Serializable, ItemInfoPrinter.Printable {
 
   private final ClearanceMatrix clearanceMatrix;
   private final LayerStructure boardLayerStructure;
@@ -45,10 +45,10 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
     this.name = name;
     this.boardLayerStructure = layerStructure;
     this.clearanceMatrix = clearanceMatrix;
-    this.traceHalfWidthArr = new int[layerStructure.arr.length];
-    this.activeRoutingLayerArr = new boolean[layerStructure.arr.length];
-    for (int i = 0; i < layerStructure.arr.length; i++) {
-      this.activeRoutingLayerArr[i] = layerStructure.arr[i].isSignal;
+    this.traceHalfWidthArr = new int[layerStructure.layers.length];
+    this.activeRoutingLayerArr = new boolean[layerStructure.layers.length];
+    for (int i = 0; i < layerStructure.layers.length; i++) {
+      this.activeRoutingLayerArr[i] = layerStructure.layers[i].isSignal;
     }
     this.isIgnoredByAutorouter = ignoredByAutorouter;
   }
@@ -93,7 +93,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   /** Gets the trace half-width used for routing on the input layer. */
   public int getTraceHalfWidth(int layer) {
     if (layer < 0 || layer >= traceHalfWidthArr.length) {
-      FRLogger.warn(" NetClass.get_trace_half_width: p_layer out of range");
+      FRLogger.warn(" NetClass.get_trace_half_width: layer out of range");
       return 0;
     }
     return traceHalfWidthArr[layer];
@@ -210,44 +210,44 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("net_class_2") + " ");
-    window.appendBold(this.name);
-    window.appendBold(":");
-    window.append(" " + tm.getText("traceClearanceClass") + " ");
+    printer.appendBold(tm.getText("net_class_2") + " ");
+    printer.appendBold(this.name);
+    printer.appendBold(":");
+    printer.append(" " + tm.getText("traceClearanceClass") + " ");
     String clearanceName = clearanceMatrix.getName(this.traceClearanceClass);
-    window.append(
+    printer.append(
         clearanceName,
         tm.getText("trace_clearance_class_2"),
         clearanceMatrix.getRow(this.traceClearanceClass));
     if (this.shoveFixed) {
-      window.append(", " + tm.getText("shoveFixed"));
+      printer.append(", " + tm.getText("shoveFixed"));
     }
-    window.append(", " + tm.getText("viaRule") + " ");
-    window.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
+    printer.append(", " + tm.getText("viaRule") + " ");
+    printer.append(viaRule.name, tm.getText("via_rule_2"), viaRule);
     if (traceWidthIsLayerDependent()) {
       for (int i = 0; i < traceHalfWidthArr.length; i++) {
-        window.newline();
-        window.indent();
-        window.append(tm.getText("traceWidth") + " ");
-        window.append(2 * traceHalfWidthArr[i]);
-        window.append(" " + tm.getText("on_layer") + " ");
-        window.append(this.boardLayerStructure.arr[i].name);
+        printer.newline();
+        printer.indent();
+        printer.append(tm.getText("traceWidth") + " ");
+        printer.append(2 * traceHalfWidthArr[i]);
+        printer.append(" " + tm.getText("on_layer") + " ");
+        printer.append(this.boardLayerStructure.layers[i].name);
       }
     } else {
-      window.append(", " + tm.getText("traceWidth") + " ");
-      window.append(2 * traceHalfWidthArr[0]);
+      printer.append(", " + tm.getText("traceWidth") + " ");
+      printer.append(2 * traceHalfWidthArr[0]);
     }
-    window.newline();
+    printer.newline();
   }
 
   /** Returns true if the trace width of this class is not equal on all layers. */
   public boolean traceWidthIsLayerDependent() {
     int compareValue = traceHalfWidthArr[0];
     for (int i = 1; i < traceHalfWidthArr.length; i++) {
-      if (this.boardLayerStructure.arr[i].isSignal) {
+      if (this.boardLayerStructure.layers[i].isSignal) {
         if (traceHalfWidthArr[i] != compareValue) {
           return true;
         }
@@ -263,7 +263,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
       return false;
     }
     int firstInnerLayerNo = 1;
-    while (!this.boardLayerStructure.arr[firstInnerLayerNo].isSignal) {
+    while (!this.boardLayerStructure.layers[firstInnerLayerNo].isSignal) {
       ++firstInnerLayerNo;
     }
     if (firstInnerLayerNo >= traceHalfWidthArr.length - 1) {
@@ -271,7 +271,7 @@ public class NetClass implements Serializable, ObjectInfoPanel.Printable {
     }
     int compareWidth = traceHalfWidthArr[firstInnerLayerNo];
     for (int i = firstInnerLayerNo + 1; i < traceHalfWidthArr.length - 1; i++) {
-      if (this.boardLayerStructure.arr[i].isSignal) {
+      if (this.boardLayerStructure.layers[i].isSignal) {
         if (traceHalfWidthArr[i] != compareWidth) {
           return true;
         }

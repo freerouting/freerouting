@@ -56,7 +56,7 @@ public class OptimizeRouteTask implements Runnable {
             + " of "
             + optimizer.getNumTasks()
             + " for item #"
-            + itemToOptimize.getIdNo()
+            + itemToOptimize.getId()
             + " on pass "
             + passNo
             + " in "

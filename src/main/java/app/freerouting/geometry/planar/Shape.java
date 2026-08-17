@@ -21,41 +21,41 @@ public interface Shape extends Area {
   /** Returns the gravity point of this shape. */
   FloatPoint centreOfGravity();
 
-  /** Returns true, if p_point is not contained in the inside or the boundary of the shape. */
+  /** Returns true, if point is not contained in the inside or the boundary of the shape. */
   boolean isOutside(Point point);
 
-  /** Returns true, if p_point is contained in this shape, but not on the border. */
+  /** Returns true, if point is contained in this shape, but not on the border. */
   boolean containsInside(Point point);
 
-  /** Returns true, if p_point lies exact on the boundary of the shape. */
+  /** Returns true, if point lies exact on the boundary of the shape. */
   boolean containsOnBorder(Point point);
 
   /**
-   * Returns the distance between p_point and its nearest point on the shape. 0, if p_point is
-   * contained in this shape
+   * Returns the distance between point and its nearest point on the shape. 0, if point is contained
+   * in this shape
    */
   double distance(FloatPoint point);
 
   /** Return a bounding TileShape of this shape. */
   TileShape boundingTile();
 
-  /** Returns the bounding RegularTileShape with the fixed directions p_dirs. */
+  /** Returns the bounding RegularTileShape with the fixed directions dirs. */
   RegularTileShape boundingShape(ShapeBoundingDirections dirs);
 
-  /** Returns the distance between p_point and its nearest point on the border of the shape. */
+  /** Returns the distance between point and its nearest point on the border of the shape. */
   double borderDistance(FloatPoint point);
 
   /** Returns the smallest distance from the centre of gravity to the border of the shape. */
   double smallestRadius();
 
   /**
-   * Returns the offset shape of this shape by offsetting the boundary by p_distance to the outside.
+   * Returns the offset shape of this shape by offsetting the boundary by distance to the outside.
    * The result instance may be of a different class than this instance. (For example an enlarged
    * IntBox is an IntOctagon).
    */
   Shape enlarge(double offset);
 
-  /** Checks, if this shape and p_other have a nonempty intersection. */
+  /** Checks, if this shape and other have a nonempty intersection. */
   boolean intersects(Shape other);
 
   /** Auxiliary function to implement the same function with parameter type Shape. */
@@ -71,8 +71,8 @@ public interface Shape extends Area {
   boolean intersects(Circle other);
 
   /**
-   * Cuts out the parts of p_polyline in the interior of this shape and returns a list of the
-   * remaining pieces of p_polyline. Pieces completely contained in the border of this shape are not
+   * Cuts out the parts of polyline in the interior of this shape and returns a list of the
+   * remaining pieces of polyline. Pieces completely contained in the border of this shape are not
    * returned.
    */
   Polyline[] cutout(Polyline polyline);

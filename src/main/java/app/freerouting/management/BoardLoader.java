@@ -1,6 +1,6 @@
 package app.freerouting.management;
 
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
@@ -40,14 +40,12 @@ public final class BoardLoader {
     try {
       if (job.input.format == FileFormat.KICAD_DESIGN_JSON) {
         HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-        boardManager.loadFromKiCadJson(
-            job.input.getData(), null, new ItemIdentificationNumberGenerator());
+        boardManager.loadFromKiCadJson(job.input.getData(), null, new ItemIdGenerator());
         job.board = boardManager.getRoutingBoard();
         return job.board != null;
       } else {
         HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-        boardManager.loadFromSpecctraDsn(
-            job.input.getData(), null, new ItemIdentificationNumberGenerator());
+        boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
         job.board = boardManager.getRoutingBoard();
         return job.board != null;
       }

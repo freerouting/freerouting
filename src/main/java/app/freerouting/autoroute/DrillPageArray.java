@@ -27,7 +27,7 @@ public class DrillPageArray {
   /** The height of a single page in this array. */
   private final int pageHeight;
 
-  private final DrillPage[][] pageArr;
+  private final DrillPage[][] pages;
 
   /** Creates a new instance of DrillPageArray. */
   public DrillPageArray(RoutingBoard board, int maxPageWidth) {
@@ -38,7 +38,7 @@ public class DrillPageArray {
     this.rowCount = (int) Math.ceil(height / maxPageWidth);
     this.pageWidth = (int) Math.ceil(length / columnCount);
     this.pageHeight = (int) Math.ceil(height / rowCount);
-    this.pageArr = new DrillPage[rowCount][columnCount];
+    this.pages = new DrillPage[rowCount][columnCount];
     for (int j = 0; j < this.rowCount; j++) {
       for (int i = 0; i < this.columnCount; i++) {
         int llX = bounds.ll.x + i * pageWidth;
@@ -55,7 +55,7 @@ public class DrillPageArray {
         } else {
           urY = llY + pageHeight;
         }
-        pageArr[j][i] = new DrillPage(new IntBox(llX, llY, urX, urY), board);
+        pages[j][i] = new DrillPage(new IntBox(llX, llY, urX, urY), board);
       }
     }
   }
@@ -66,8 +66,8 @@ public class DrillPageArray {
    */
   public void invalidate(TileShape shape) {
     Collection<DrillPage> overlaps = overlappingPages(shape);
-    for (DrillPage currPage : overlaps) {
-      currPage.invalidate();
+    for (DrillPage currentPage : overlaps) {
+      currentPage.invalidate();
     }
   }
 
@@ -85,10 +85,10 @@ public class DrillPageArray {
 
     for (int j = minJ; j < maxJ; j++) {
       for (int i = minI; i < maxI; i++) {
-        DrillPage currPage = this.pageArr[j][i];
-        TileShape intersection = shape.intersection(currPage.shape);
+        DrillPage currentPage = this.pages[j][i];
+        TileShape intersection = shape.intersection(currentPage.shape);
         if (intersection.dimension() > 1) {
-          result.add(this.pageArr[j][i]);
+          result.add(this.pages[j][i]);
         }
       }
     }
@@ -97,10 +97,10 @@ public class DrillPageArray {
 
   /** Resets all drill pages for autorouting the next connection. */
   public void reset() {
-    for (int j = 0; j < pageArr.length; j++) {
-      DrillPage[] currRow = pageArr[j];
-      for (int i = 0; i < currRow.length; i++) {
-        currRow[i].reset();
+    for (int j = 0; j < pages.length; j++) {
+      DrillPage[] currentRow = pages[j];
+      for (int i = 0; i < currentRow.length; i++) {
+        currentRow[i].reset();
       }
     }
   }
@@ -110,10 +110,10 @@ public class DrillPageArray {
     if (sink == null || intensity <= 0) {
       return;
     }
-    for (int j = 0; j < pageArr.length; j++) {
-      DrillPage[] currRow = pageArr[j];
-      for (int i = 0; i < currRow.length; i++) {
-        currRow[i].emitDiagnostics(sink, intensity);
+    for (int j = 0; j < pages.length; j++) {
+      DrillPage[] currentRow = pages[j];
+      for (int i = 0; i < currentRow.length; i++) {
+        currentRow[i].emitDiagnostics(sink, intensity);
       }
     }
   }

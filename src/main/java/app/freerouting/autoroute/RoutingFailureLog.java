@@ -37,7 +37,7 @@ public class RoutingFailureLog implements Serializable {
     }
 
     failures.compute(
-        item.getIdNo(),
+        item.getId(),
         (key, existing) -> {
           if (existing == null) {
             existing = new ItemFailureInfo(item);
@@ -58,7 +58,7 @@ public class RoutingFailureLog implements Serializable {
       return false;
     }
 
-    ItemFailureInfo info = failures.get(item.getIdNo());
+    ItemFailureInfo info = failures.get(item.getId());
     return info != null && info.shouldGiveUp();
   }
 
@@ -96,7 +96,7 @@ public class RoutingFailureLog implements Serializable {
     if (item == null) {
       return 0;
     }
-    ItemFailureInfo info = failures.get(item.getIdNo());
+    ItemFailureInfo info = failures.get(item.getId());
     return info != null ? info.failureCount : 0;
   }
 
@@ -108,7 +108,7 @@ public class RoutingFailureLog implements Serializable {
   /** Information about routing failures for a specific item. */
   public static class ItemFailureInfo implements Serializable {
     public final Item item;
-    public final int netNo;
+    public final int netNumber;
     public int failureCount;
     public AutorouteAttemptState lastFailureState;
     public String lastFailureReason;
@@ -117,7 +117,7 @@ public class RoutingFailureLog implements Serializable {
     /** Creates failure tracking info for an item. */
     public ItemFailureInfo(Item item) {
       this.item = item;
-      this.netNo = item.netCount() > 0 ? item.getNetNo(0) : -1;
+      this.netNumber = item.netCount() > 0 ? item.getNetNumber(0) : -1;
       this.failureCount = 0;
       this.lastFailureState = null;
       this.lastFailureReason = "";
@@ -152,7 +152,7 @@ public class RoutingFailureLog implements Serializable {
     public String toString() {
       return item.getClass().getSimpleName()
           + " (net #"
-          + netNo
+          + netNumber
           + ", "
           + failureCount
           + " failures)";

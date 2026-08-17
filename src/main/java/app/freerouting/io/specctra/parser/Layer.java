@@ -19,10 +19,10 @@ public class Layer {
   public final Collection<String> netNames;
 
   /**
-   * Creates a new instance of Layer. p_no is the physical layer number starting with 0 at the
-   * component side and ending at the solder side. If p_is_signal, the layer is a signal layer,
+   * Creates a new instance of Layer. no is the physical layer number starting with 0 at the
+   * component side and ending at the solder side. If isSignal, the layer is a signal layer,
    * otherwise it is a powerground layer. For Layer objects describing more than 1 layer the number
-   * is -1. p_net_names is a list of nets for this layer, if the layer is a power plane.
+   * is -1. netNames is a list of nets for this layer, if the layer is a power plane.
    */
   public Layer(String name, int no, boolean isSignal, Collection<String> netNames) {
     this.name = name;
@@ -32,8 +32,8 @@ public class Layer {
   }
 
   /**
-   * Creates a new instance of Layer. p_no is the physical layer number starting with 0 at the
-   * component side and ending at the solder side. If p_is_signal, the layer is a signal layer,
+   * Creates a new instance of Layer. no is the physical layer number starting with 0 at the
+   * component side and ending at the solder side. If isSignal, the layer is a signal layer,
    * otherwise it is a powerground layer. For Layer objects describing more than 1 layer the number
    * is -1.
    */
@@ -45,22 +45,22 @@ public class Layer {
   }
 
   /** Writes a layer scope in the structure scope. */
-  public static void writeScope(WriteScopeParameter par, int layerNo, boolean writeRule)
-      throws IOException {
-    par.file.startScope();
-    par.file.write("layer ");
-    app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[layerNo];
-    par.identifierType.write(boardLayer.name, par.file);
-    par.file.newLine();
-    par.file.write("(type ");
+  public static void writeScope(
+      WriteScopeParameter scopeParameter, int layerIndex, boolean writeRule) throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("layer ");
+    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
+    scopeParameter.identifierType.write(boardLayer.name, scopeParameter.file);
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(type ");
     if (boardLayer.isSignal) {
-      par.file.write("signal)");
+      scopeParameter.file.write("signal)");
     } else {
-      par.file.write("power)");
+      scopeParameter.file.write("power)");
     }
     if (writeRule) {
-      Rule.writeDefaultRule(par, layerNo);
+      Rule.writeDefaultRule(scopeParameter, layerIndex);
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 }

@@ -1,11 +1,11 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ClearanceMatrix;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -44,7 +44,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   /** Creates a new instance of ClearanceMatrixWindow. */
   public WindowClearanceMatrix(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -62,7 +62,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
     rulesClearanceLayerComboBox =
-        new ComboBoxLayer(boardHandling.getRoutingBoard().layerStructure, boardFrame.get_locale());
+        new ComboBoxLayer(boardHandling.getRoutingBoard().layerStructure, boardFrame.getLocale());
     northPanel.add(this.rulesClearanceLayerComboBox);
     rulesClearanceLayerComboBox.addActionListener(new ComboBoxListener());
     rulesClearanceLayerComboBox.addActionListener(
@@ -108,6 +108,46 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     this.add(mainPanel);
     this.pack();
+  }
+
+  static boolean isLegalClassName(String value) {
+    if (value == null || value.isEmpty()) {
+      return false;
+    }
+    for (String reservedNameChar : reserved_name_chars) {
+      if (value.contains(reservedNameChar)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  static Float parseClearanceTableValue(Object value) {
+    if (value instanceof Number number) {
+      return number.floatValue();
+    }
+    if (value instanceof String stringValue) {
+      try {
+        return Float.parseFloat(stringValue);
+      } catch (Exception e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  static void applyClearanceValue(
+      ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerIndex, int boardValue) {
+    if (layerIndex == ComboBoxLayer.ALL_LAYER_INDEX) {
+      matrix.setValue(rowClassNo, columnClassNo, boardValue);
+      matrix.setValue(columnClassNo, rowClassNo, boardValue);
+    } else if (layerIndex == ComboBoxLayer.INNER_LAYER_INDEX) {
+      matrix.setInnerValue(rowClassNo, columnClassNo, boardValue);
+      matrix.setInnerValue(columnClassNo, rowClassNo, boardValue);
+    } else {
+      matrix.setValue(rowClassNo, columnClassNo, layerIndex, boardValue);
+      matrix.setValue(columnClassNo, rowClassNo, layerIndex, boardValue);
+    }
   }
 
   /** Recalculates all displayed values. */
@@ -166,7 +206,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     result.add(scrollPane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if ("de".equalsIgnoreCase(boardFrame.get_locale().getLanguage())) {
+    if ("de".equalsIgnoreCase(boardFrame.getLocale().getLanguage())) {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bugLabel =
           new JLabel(
@@ -227,7 +267,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
               JOptionPane.showConfirmDialog(this, message, null, JOptionPane.YES_NO_OPTION);
           if (removeClearanceClassDialog == JOptionPane.YES_OPTION) {
             Collection<Item> boardItems = routingBoard.getItems();
-            routingBoard.rules.changeClearanceClassNo(i, j, boardItems);
+            routingBoard.rules.changeClearanceClassIndex(i, j, boardItems);
             if (!routingBoard.rules.removeClearanceClass(i, boardItems)) {
               FRLogger.warn(
                   "WindowClearanceMatrix.prune_clearance_matrix error removing clearance class");
@@ -254,46 +294,6 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
     this.mainPanel.add(this.centerPanel, BorderLayout.CENTER);
     this.pack();
     this.boardFrame.refreshWindows();
-  }
-
-  static boolean isLegalClassName(String value) {
-    if (value == null || value.isEmpty()) {
-      return false;
-    }
-    for (String reservedNameChar : reserved_name_chars) {
-      if (value.contains(reservedNameChar)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  static Float parseClearanceTableValue(Object value) {
-    if (value instanceof Number number) {
-      return number.floatValue();
-    }
-    if (value instanceof String stringValue) {
-      try {
-        return Float.parseFloat(stringValue);
-      } catch (Exception e) {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  static void applyClearanceValue(
-      ClearanceMatrix matrix, int rowClassNo, int columnClassNo, int layerNo, int boardValue) {
-    if (layerNo == ComboBoxLayer.ALL_LAYER_INDEX) {
-      matrix.setValue(rowClassNo, columnClassNo, boardValue);
-      matrix.setValue(columnClassNo, rowClassNo, boardValue);
-    } else if (layerNo == ComboBoxLayer.INNER_LAYER_INDEX) {
-      matrix.setInnerValue(rowClassNo, columnClassNo, boardValue);
-      matrix.setInnerValue(columnClassNo, rowClassNo, boardValue);
-    } else {
-      matrix.setValue(rowClassNo, columnClassNo, layerNo, boardValue);
-      matrix.setValue(columnClassNo, rowClassNo, layerNo, boardValue);
-    }
   }
 
   private int maxNameLength() {
@@ -378,8 +378,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
         return;
       }
       Number numberValue = parsedValue;
-      int currRow = row;
-      int currColumn = col - 1;
+      int currentRow = row;
+      int currentColumn = col - 1;
 
       // check, if there are items on the board assigned to clearance class i or j.
 
@@ -389,15 +389,15 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       boolean itemsAlreadyAssignedColumn = false;
       Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
       for (; ; ) {
-        Item currItem = (Item) itemList.readObject(it);
-        if (currItem == null) {
+        Item currentItem = (Item) itemList.readObject(it);
+        if (currentItem == null) {
           break;
         }
-        int currItemClassNo = currItem.clearanceClassNo();
-        if (currItemClassNo == currRow) {
+        int currentItemClassNo = currentItem.clearanceClassIndex();
+        if (currentItemClassNo == currentRow) {
           itemsAlreadyAssignedRow = true;
         }
-        if (currItemClassNo == currColumn) {
+        if (currentItemClassNo == currentColumn) {
           itemsAlreadyAssignedColumn = true;
         }
       }
@@ -405,16 +405,16 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       boolean itemsAlreadyAssigned = itemsAlreadyAssignedRow && itemsAlreadyAssignedColumn;
       if (itemsAlreadyAssigned) {
         String message;
-        if (currRow == currColumn) {
+        if (currentRow == currentColumn) {
           message =
               tm.getText(
-                  "clearance_class_already_assigned_single", clearanceMatrix.getName(currRow));
+                  "clearance_class_already_assigned_single", clearanceMatrix.getName(currentRow));
         } else {
           message =
               tm.getText(
                   "clearance_class_already_assigned_pair",
-                  clearanceMatrix.getName(currRow),
-                  clearanceMatrix.getName(currColumn));
+                  clearanceMatrix.getName(currentRow),
+                  clearanceMatrix.getName(currentColumn));
         }
         int clearanceClassAlreadyAssignedDialog =
             JOptionPane.showConfirmDialog(
@@ -432,8 +432,8 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
       int boardValue =
           (int)
               Math.round(boardHandling.coordinateTransform.userToBoard(numberValue.doubleValue()));
-      int layerNo = rulesClearanceLayerComboBox.getSelectedLayer().index;
-      applyClearanceValue(clearanceMatrix, currRow, currColumn, layerNo, boardValue);
+      int layerIndex = rulesClearanceLayerComboBox.getSelectedLayer().index;
+      applyClearanceValue(clearanceMatrix, currentRow, currentColumn, layerIndex, boardValue);
       if (itemsAlreadyAssigned) {
         // force reinserting all item into the searck tree, because their tree shapes may have
         // changed
@@ -470,11 +470,11 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
             if (clearanceMatrix.isLayerDependent(i, j)) {
               this.data[i][j + 1] = -1;
             } else {
-              float currTableValue =
+              float currentTableValue =
                   (float)
                       boardHandling.coordinateTransform.boardToUser(
                           clearanceMatrix.getValue(i, j, 0, false));
-              this.data[i][j + 1] = currTableValue;
+              this.data[i][j + 1] = currentTableValue;
             }
           } else if (layer == ComboBoxLayer.INNER_LAYER_INDEX) {
             // all layers
@@ -482,18 +482,18 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
             if (clearanceMatrix.isInnerLayerDependent(i, j)) {
               this.data[i][j + 1] = -1;
             } else {
-              float currTableValue =
+              float currentTableValue =
                   (float)
                       boardHandling.coordinateTransform.boardToUser(
                           clearanceMatrix.getValue(i, j, 1, false));
-              this.data[i][j + 1] = currTableValue;
+              this.data[i][j + 1] = currentTableValue;
             }
           } else {
-            float currTableValue =
+            float currentTableValue =
                 (float)
                     boardHandling.coordinateTransform.boardToUser(
                         clearanceMatrix.getValue(i, j, layer, false));
-            this.data[i][j + 1] = currTableValue;
+            this.data[i][j + 1] = currentTableValue;
           }
         }
       }

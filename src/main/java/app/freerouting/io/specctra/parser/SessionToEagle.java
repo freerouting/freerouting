@@ -3,7 +3,7 @@ package app.freerouting.io.specctra.parser;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Pin;
 import app.freerouting.board.Unit;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntBox;
@@ -134,7 +134,7 @@ public class SessionToEagle {
 
     // Activate all layers in Eagle.
 
-    for (int i = 0; i < this.board.layerStructure.arr.length; i++) {
+    for (int i = 0; i < this.board.layerStructure.layers.length; i++) {
       this.outFile.write("LAYER " + this.getEagleLayerString(i) + ";\n");
     }
 
@@ -235,26 +235,26 @@ public class SessionToEagle {
     if (componentPlacement == null) {
       return false;
     }
-    for (ComponentPlacement.ComponentLocation currLocation : componentPlacement.locations) {
+    for (ComponentPlacement.ComponentLocation currentLocation : componentPlacement.locations) {
       this.outFile.write("ROTATE =");
-      int rotation = (int) Math.round(currLocation.rotation);
+      int rotation = (int) Math.round(currentLocation.rotation);
       String rotationString;
-      if (currLocation.isFront) {
+      if (currentLocation.isFront) {
         rotationString = "R" + rotation;
       } else {
         rotationString = "MR" + rotation;
       }
       this.outFile.write(rotationString);
       this.outFile.write(" '");
-      this.outFile.write(currLocation.name);
+      this.outFile.write(currentLocation.name);
       this.outFile.write("';\n");
       this.outFile.write("move '");
-      this.outFile.write(currLocation.name);
+      this.outFile.write(currentLocation.name);
       this.outFile.write("' (");
-      double xcoordinate = currLocation.coor[0] / this.sessionFileScaleDenominator;
+      double xcoordinate = currentLocation.coor[0] / this.sessionFileScaleDenominator;
       this.outFile.write(String.valueOf(xcoordinate));
       this.outFile.write(" ");
-      double ycoordinate = currLocation.coor[1] / this.sessionFileScaleDenominator;
+      double ycoordinate = currentLocation.coor[1] / this.sessionFileScaleDenominator;
       this.outFile.write(String.valueOf(ycoordinate));
       this.outFile.write(");\n");
     }
@@ -527,11 +527,11 @@ public class SessionToEagle {
     return true;
   }
 
-  private String getEagleLayerString(int layerNo) {
-    if (layerNo < 0 || layerNo >= specctraLayerStructure.arr.length) {
+  private String getEagleLayerString(int layerIndex) {
+    if (layerIndex < 0 || layerIndex >= specctraLayerStructure.layers.length) {
       return "0";
     }
-    String[] namePieces = this.specctraLayerStructure.arr[layerNo].name.split("#", 2);
+    String[] namePieces = this.specctraLayerStructure.layers[layerIndex].name.split("#", 2);
     return namePieces[0];
   }
 
@@ -544,11 +544,11 @@ public class SessionToEagle {
     return true;
   }
 
-  private boolean processSwappedPins(int componentNo) throws IOException {
-    Collection<Pin> componentPins = this.board.getComponentPins(componentNo);
+  private boolean processSwappedPins(int componentId) throws IOException {
+    Collection<Pin> componentPins = this.board.getComponentPins(componentId);
     boolean componentHasSwappedPins = false;
-    for (Pin currPin : componentPins) {
-      if (currPin.getChangedTo() != currPin) {
+    for (Pin currentPin : componentPins) {
+      if (currentPin.getChangedTo() != currentPin) {
         componentHasSwappedPins = true;
         break;
       }
@@ -558,16 +558,16 @@ public class SessionToEagle {
     }
     PinInfo[] pinInfoArr = new PinInfo[componentPins.size()];
     int i = 0;
-    for (Pin currPin : componentPins) {
-      pinInfoArr[i] = new PinInfo(currPin);
+    for (Pin currentPin : componentPins) {
+      pinInfoArr[i] = new PinInfo(currentPin);
       ++i;
     }
     for (i = 0; i < pinInfoArr.length; i++) {
-      PinInfo currPinInfo = pinInfoArr[i];
-      if (currPinInfo.currChangedTo != currPinInfo.pin.getChangedTo()) {
+      PinInfo currentPinInfo = pinInfoArr[i];
+      if (currentPinInfo.currentChangedTo != currentPinInfo.pin.getChangedTo()) {
         PinInfo otherPinInfo = null;
         for (int j = i + 1; j < pinInfoArr.length; j++) {
-          if (pinInfoArr[j].pin.getChangedTo() == currPinInfo.pin) {
+          if (pinInfoArr[j].pin.getChangedTo() == currentPinInfo.pin) {
             otherPinInfo = pinInfoArr[j];
           }
         }
@@ -578,17 +578,17 @@ public class SessionToEagle {
                   + "'");
           return false;
         }
-        writePinSwap(currPinInfo.pin, otherPinInfo.pin);
-        currPinInfo.currChangedTo = otherPinInfo.pin;
-        otherPinInfo.currChangedTo = currPinInfo.pin;
+        writePinSwap(currentPinInfo.pin, otherPinInfo.pin);
+        currentPinInfo.currentChangedTo = otherPinInfo.pin;
+        otherPinInfo.currentChangedTo = currentPinInfo.pin;
       }
     }
     return true;
   }
 
   private void writePinSwap(Pin pin1, Pin pin2) throws IOException {
-    int layerNo = Math.max(pin1.firstLayer(), pin2.firstLayer());
-    String layerName = board.layerStructure.arr[layerNo].name;
+    int layerIndex = Math.max(pin1.firstLayer(), pin2.firstLayer());
+    String layerName = board.layerStructure.layers[layerIndex].name;
 
     this.outFile.write("CHANGE LAYER ");
     this.outFile.write(layerName);
@@ -601,28 +601,28 @@ public class SessionToEagle {
 
     this.outFile.write("PINSWAP ");
     this.outFile.write(" (");
-    double currCoor = location1[0];
-    this.outFile.write(String.valueOf(currCoor));
+    double currentCoor = location1[0];
+    this.outFile.write(String.valueOf(currentCoor));
     this.outFile.write(" ");
-    currCoor = location1[1];
-    this.outFile.write(String.valueOf(currCoor));
+    currentCoor = location1[1];
+    this.outFile.write(String.valueOf(currentCoor));
     this.outFile.write(") (");
-    currCoor = location2[0];
-    this.outFile.write(String.valueOf(currCoor));
+    currentCoor = location2[0];
+    this.outFile.write(String.valueOf(currentCoor));
     this.outFile.write(" ");
-    currCoor = location2[1];
-    this.outFile.write(String.valueOf(currCoor));
+    currentCoor = location2[1];
+    this.outFile.write(String.valueOf(currentCoor));
     this.outFile.write(");\n");
   }
 
   private static class PinInfo {
 
     final Pin pin;
-    Pin currChangedTo;
+    Pin currentChangedTo;
 
     PinInfo(Pin pin) {
       this.pin = pin;
-      currChangedTo = pin;
+      currentChangedTo = pin;
     }
   }
 }

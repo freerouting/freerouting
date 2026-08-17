@@ -90,15 +90,15 @@ public class MazeListElement implements Comparable<MazeListElement> {
       return 1;
     }
     // Tie-break 2: door id
-    int id1 = this.door.getIdNo();
-    int id2 = other.door.getIdNo();
+    int id1 = this.door.getId();
+    int id2 = other.door.getId();
     if (id1 < id2) {
       return -1;
     }
     if (id1 > id2) {
       return 1;
     }
-    // Tie-break 3: sectionNo
+    // Tie-break 3: sectionIndex
     if (this.sectionNoOfDoor < other.sectionNoOfDoor) {
       return -1;
     }

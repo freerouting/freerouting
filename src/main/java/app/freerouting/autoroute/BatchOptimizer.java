@@ -50,8 +50,8 @@ public class BatchOptimizer extends NamedAlgorithm {
   }
 
   static boolean containsOnlyUnfixedTraces(Collection<Item> itemList) {
-    for (Item currItem : itemList) {
-      if (currItem.isUserFixed() || !(currItem instanceof Trace)) {
+    for (Item currentItem : itemList) {
+      if (currentItem.isUserFixed() || !(currentItem instanceof Trace)) {
         return false;
       }
     }
@@ -291,11 +291,11 @@ public class BatchOptimizer extends NamedAlgorithm {
                 + "). Stopping optimizer.");
         break;
       }
-      Item currItem = sortedRouteItems.next();
-      if (currItem == null) {
+      Item currentItem = sortedRouteItems.next();
+      if (currentItem == null) {
         break;
       }
-      ItemRouteResult result = optRouteItem(currItem, withPreferredDirections, false);
+      ItemRouteResult result = optRouteItem(currentItem, withPreferredDirections, false);
       this.totalItemsOptimized++;
       if (result.improved()) {
         consecutiveFailures = 0;
@@ -352,7 +352,7 @@ public class BatchOptimizer extends NamedAlgorithm {
   }
 
   /**
-   * Try to improve the route by re-routing the connections containing p_item.
+   * Try to improve the route by re-routing the connections containing item.
    *
    * @param item the item to be re-routed
    * @param withPreferredDirections if true, the preferred directions are used for the traces
@@ -364,7 +364,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // check if item.board is a RoutingBoard
     if (!(item.board instanceof RoutingBoard routingBoard)) {
       job.logWarning("The item to be optimized is not on a RoutingBoard.");
-      return new ItemRouteResult(item.getIdNo());
+      return new ItemRouteResult(item.getId());
     }
 
     // calculate the statistics for the board before the routing
@@ -380,29 +380,29 @@ public class BatchOptimizer extends NamedAlgorithm {
     rippedItems.add(item);
 
     // add the contacts of the traces to the ripped items if it's a trace
-    if (item instanceof Trace currTrace) {
+    if (item instanceof Trace currentTrace) {
       // add also the fork items, especially because not all fork items may be
       // returned by ReadSortedRouteItems because of matching end points.
-      Set<Item> currContactList = currTrace.getStartContacts();
+      Set<Item> currentContactList = currentTrace.getStartContacts();
       for (int i = 0; i < 2; i++) {
-        if (containsOnlyUnfixedTraces(currContactList)) {
-          rippedItems.addAll(currContactList);
+        if (containsOnlyUnfixedTraces(currentContactList)) {
+          rippedItems.addAll(currentContactList);
         }
-        currContactList = currTrace.getEndContacts();
+        currentContactList = currentTrace.getEndContacts();
       }
     }
 
     Set<Item> rippedConnections = new TreeSet<>();
     // add all the connections of the items to be re-routed
-    for (Item currItem : rippedItems) {
-      rippedConnections.addAll(currItem.getConnectionItems(Item.StopConnectionOption.NONE));
+    for (Item currentItem : rippedItems) {
+      rippedConnections.addAll(currentItem.getConnectionItems(Item.StopConnectionOption.NONE));
     }
 
     // check if the connections contain user fixed items, which should not be
     // re-routed
-    for (Item currItem : rippedConnections) {
-      if (currItem.isUserFixed()) {
-        return new ItemRouteResult(item.getIdNo());
+    for (Item currentItem : rippedConnections) {
+      if (currentItem.isUserFixed()) {
+        return new ItemRouteResult(item.getId());
       }
     }
 
@@ -414,7 +414,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // remove the items to be re-routed
     routingBoard.removeItems(rippedConnections);
     for (int i = 0; i < item.netCount(); i++) {
-      routingBoard.combineTraces(item.getNetNo(i));
+      routingBoard.combineTraces(item.getNetNumber(i));
     }
 
     // calculate the ripup costs
@@ -451,7 +451,7 @@ public class BatchOptimizer extends NamedAlgorithm {
     // check if the board was improved
     ItemRouteResult result =
         new ItemRouteResult(
-            item.getIdNo(),
+            item.getId(),
             boardStatisticsBefore.items.viaCount,
             boardStatisticsAfter.items.viaCount,
             this.minCumulativeTraceLength,
@@ -539,29 +539,31 @@ public class BatchOptimizer extends NamedAlgorithm {
 
     Item next() {
       Item result = null;
-      FloatPoint currMinCoor = new FloatPoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
-      int currMinLayer = Integer.MAX_VALUE;
+      FloatPoint currentMinCoor = new FloatPoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
+      int currentMinLayer = Integer.MAX_VALUE;
       Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
       for (; ; ) {
-        UndoableObjects.Storable currItem = board.itemList.readObject(it);
-        if (currItem == null) {
+        UndoableObjects.Storable currentItem = board.itemList.readObject(it);
+        if (currentItem == null) {
           break;
         }
-        if (currItem instanceof Via currVia) {
-          if (!currVia.isUserFixed()) {
-            FloatPoint currViaCenter = currVia.getCenter().toFloat();
-            int currViaMinLayer = currVia.firstLayer();
-            if (currViaCenter.x > minItemCoor.x
-                || currViaCenter.x == minItemCoor.x
-                    && (currViaCenter.y > minItemCoor.y
-                        || currViaCenter.y == minItemCoor.y && currViaMinLayer > minItemLayer)) {
-              if (currViaCenter.x < currMinCoor.x
-                  || currViaCenter.x == currMinCoor.x
-                      && (currViaCenter.y < currMinCoor.y
-                          || currViaCenter.y == currMinCoor.y && currViaMinLayer < currMinLayer)) {
-                currMinCoor = currViaCenter;
-                currMinLayer = currViaMinLayer;
-                result = currVia;
+        if (currentItem instanceof Via currentVia) {
+          if (!currentVia.isUserFixed()) {
+            FloatPoint currentViaCenter = currentVia.getCenter().toFloat();
+            int currentViaMinLayer = currentVia.firstLayer();
+            if (currentViaCenter.x > minItemCoor.x
+                || currentViaCenter.x == minItemCoor.x
+                    && (currentViaCenter.y > minItemCoor.y
+                        || currentViaCenter.y == minItemCoor.y
+                            && currentViaMinLayer > minItemLayer)) {
+              if (currentViaCenter.x < currentMinCoor.x
+                  || currentViaCenter.x == currentMinCoor.x
+                      && (currentViaCenter.y < currentMinCoor.y
+                          || currentViaCenter.y == currentMinCoor.y
+                              && currentViaMinLayer < currentMinLayer)) {
+                currentMinCoor = currentViaCenter;
+                currentMinLayer = currentViaMinLayer;
+                result = currentVia;
               }
             }
           }
@@ -570,14 +572,14 @@ public class BatchOptimizer extends NamedAlgorithm {
       // Read traces last to prefer vias to traces at the same location
       it = board.itemList.startReadObject();
       for (; ; ) {
-        UndoableObjects.Storable currItem = board.itemList.readObject(it);
-        if (currItem == null) {
+        UndoableObjects.Storable currentItem = board.itemList.readObject(it);
+        if (currentItem == null) {
           break;
         }
-        if (currItem instanceof Trace currTrace) {
-          if (!currTrace.isShoveFixed()) {
-            FloatPoint firstCorner = currTrace.firstCorner().toFloat();
-            FloatPoint lastCorner = currTrace.lastCorner().toFloat();
+        if (currentItem instanceof Trace currentTrace) {
+          if (!currentTrace.isShoveFixed()) {
+            FloatPoint firstCorner = currentTrace.firstCorner().toFloat();
+            FloatPoint lastCorner = currentTrace.lastCorner().toFloat();
             FloatPoint compareCorner;
             if (firstCorner.x < lastCorner.x
                 || firstCorner.x == lastCorner.x && firstCorner.y < lastCorner.y) {
@@ -585,35 +587,36 @@ public class BatchOptimizer extends NamedAlgorithm {
             } else {
               compareCorner = firstCorner;
             }
-            int currTraceLayer = currTrace.getLayer();
+            int currentTraceLayer = currentTrace.getLayer();
             if (compareCorner.x > minItemCoor.x
                 || compareCorner.x == minItemCoor.x
                     && (compareCorner.y > minItemCoor.y
-                        || compareCorner.y == minItemCoor.y && currTraceLayer > minItemLayer)) {
-              if (compareCorner.x < currMinCoor.x
-                  || compareCorner.x == currMinCoor.x
-                      && (compareCorner.y < currMinCoor.y
-                          || compareCorner.y == currMinCoor.y && currTraceLayer < currMinLayer)) {
+                        || compareCorner.y == minItemCoor.y && currentTraceLayer > minItemLayer)) {
+              if (compareCorner.x < currentMinCoor.x
+                  || compareCorner.x == currentMinCoor.x
+                      && (compareCorner.y < currentMinCoor.y
+                          || compareCorner.y == currentMinCoor.y
+                              && currentTraceLayer < currentMinLayer)) {
                 boolean isConnectedToVia = false;
-                Set<Item> traceContacts = currTrace.getNormalContacts();
-                for (Item currContact : traceContacts) {
-                  if (currContact instanceof Via && !currContact.isUserFixed()) {
+                Set<Item> traceContacts = currentTrace.getNormalContacts();
+                for (Item currentContact : traceContacts) {
+                  if (currentContact instanceof Via && !currentContact.isUserFixed()) {
                     isConnectedToVia = true;
                     break;
                   }
                 }
                 if (!isConnectedToVia) {
-                  currMinCoor = compareCorner;
-                  currMinLayer = currTraceLayer;
-                  result = currTrace;
+                  currentMinCoor = compareCorner;
+                  currentMinLayer = currentTraceLayer;
+                  result = currentTrace;
                 }
               }
             }
           }
         }
       }
-      minItemCoor = currMinCoor;
-      minItemLayer = currMinLayer;
+      minItemCoor = currentMinCoor;
+      minItemLayer = currentMinLayer;
       return result;
     }
 

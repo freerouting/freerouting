@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveSettings;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.NetClass;
 import app.freerouting.settings.RouterSettings;
@@ -19,17 +19,17 @@ class DialogInteractionHandlersTest {
 
   @Test
   void routingSettingsCheckboxAndRadioInteractionsInvokeExpectedSetters() {
-    InteractiveSettings interactiveSettings = mock(InteractiveSettings.class);
+    WorkspaceSettings workspaceSettings = mock(WorkspaceSettings.class);
     GuiBoardManager boardManager = mock(GuiBoardManager.class);
 
-    WindowRouteParameter.applyStitchRouteSelection(interactiveSettings, true);
-    WindowRouteParameter.applyPushAndShoveSelection(interactiveSettings, false);
+    WindowRouteParameter.applyStitchRouteSelection(workspaceSettings, true);
+    WindowRouteParameter.applyPushAndShoveSelection(workspaceSettings, false);
     WindowRouteParameter.applyIgnoreConductionSelection(boardManager, true);
     WindowRouteParameter.applyClearanceCompensationSelection(boardManager, false);
     WindowRouteParameter.applyPinExitEdgeToTurnDistance(boardManager, 125.5f);
 
-    verify(interactiveSettings).setStitchRoute(true);
-    verify(interactiveSettings).setPushEnabled(false);
+    verify(workspaceSettings).setStitchRoute(true);
+    verify(workspaceSettings).setPushEnabled(false);
     verify(boardManager).setIgnoreConduction(true);
     verify(boardManager).setClearanceCompensation(false);
     verify(boardManager).setPinEdgeToTurnDist(125.5f);

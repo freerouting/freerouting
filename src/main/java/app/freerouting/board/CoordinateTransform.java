@@ -67,7 +67,7 @@ public class CoordinateTransform implements Serializable {
     } else if (shape instanceof PolylineShape polylineShape) {
       result = boardToUser(polylineShape, locale);
     } else {
-      FRLogger.warn("CoordinateTransform.board_to_user not yet implemented for p_shape");
+      FRLogger.warn("CoordinateTransform.board_to_user not yet implemented for shape");
       result = null;
     }
     return result;

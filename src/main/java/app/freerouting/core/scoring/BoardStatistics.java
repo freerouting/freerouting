@@ -104,7 +104,8 @@ public class BoardStatistics implements Serializable {
    * Creates board statistics with optional clearance and connection (incomplete) analysis.
    *
    * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} — use
-   *     when a {@link app.freerouting.gui.session.RatsNest} will be created immediately after load
+   *     when a {@link app.freerouting.gui.workspace.RatsNest} will be created immediately after
+   *     load
    */
   public BoardStatistics(
       BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {
@@ -150,22 +151,22 @@ public class BoardStatistics implements Serializable {
     this.items.otherCount = 0;
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
       this.items.totalCount++;
-      if (currItem instanceof Trace) {
+      if (currentItem instanceof Trace) {
         this.items.traceCount++;
-      } else if (currItem instanceof Via) {
+      } else if (currentItem instanceof Via) {
         this.items.viaCount++;
-      } else if (currItem instanceof ConductionArea) {
+      } else if (currentItem instanceof ConductionArea) {
         this.items.conductionAreaCount++;
-      } else if (currItem instanceof Pin) {
+      } else if (currentItem instanceof Pin) {
         this.items.pinCount++;
-      } else if (currItem instanceof DrillItem) {
+      } else if (currentItem instanceof DrillItem) {
         this.items.drillItemCount++;
-      } else if (currItem instanceof ComponentOutline) {
+      } else if (currentItem instanceof ComponentOutline) {
         this.items.componentOutlineCount++;
       } else {
         this.items.otherCount++;
@@ -179,7 +180,7 @@ public class BoardStatistics implements Serializable {
     this.pads.totalCount = board.getPins().size();
 
     // Nets
-    this.nets.totalCount = board.rules.nets.maxNetNo();
+    this.nets.totalCount = board.rules.nets.maxNetNumber();
     this.nets.classCount = board.rules.netClasses.count();
 
     // Traces
@@ -216,7 +217,7 @@ public class BoardStatistics implements Serializable {
           this.traces.totalSegmentCount += cornerCount - 1;
         }
 
-        for (Line line : polyline.arr) {
+        for (Line line : polyline.lines) {
           FloatPoint a = line.a.toFloat();
           FloatPoint b = line.b.toFloat();
           float length = (float) Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
@@ -236,20 +237,20 @@ public class BoardStatistics implements Serializable {
     int defaultClearanceClass = BoardRules.defaultClearanceClass();
     Iterator<UndoableObjects.UndoableObjectNode> it2 = board.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currItem = board.itemList.readObject(it2);
-      if (currItem == null) {
+      UndoableObjects.Storable currentItem = board.itemList.readObject(it2);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof Trace currTrace) {
-        FixedState fixedState = currTrace.getFixedState();
+      if (currentItem instanceof Trace currentTrace) {
+        FixedState fixedState = currentTrace.getFixedState();
         if (fixedState == FixedState.UNFIXED || fixedState == FixedState.SHOVE_FIXED) {
           double weightedTraceLength =
-              currTrace.getLength()
-                  * (currTrace.getHalfWidth()
+              currentTrace.getLength()
+                  * (currentTrace.getHalfWidth()
                       + board.clearanceValue(
-                          currTrace.clearanceClassNo(),
+                          currentTrace.clearanceClassIndex(),
                           defaultClearanceClass,
-                          currTrace.getLayer()));
+                          currentTrace.getLayer()));
           if (fixedState == FixedState.SHOVE_FIXED) {
             // to produce less violations with pin exit directions.
             weightedTraceLength /= 2;
@@ -288,14 +289,14 @@ public class BoardStatistics implements Serializable {
           // Now classify each bend by angle
           for (int i = 1; i < cornerCount - 1; i++) {
             FloatPoint prev = polyline.corner(i - 1).toFloat();
-            FloatPoint curr = polyline.corner(i).toFloat();
+            FloatPoint current = polyline.corner(i).toFloat();
             FloatPoint next = polyline.corner(i + 1).toFloat();
 
             // Calculate vectors for the two segments
-            double dx1 = curr.x - prev.x;
-            double dy1 = curr.y - prev.y;
-            double dx2 = next.x - curr.x;
-            double dy2 = next.y - curr.y;
+            double dx1 = current.x - prev.x;
+            double dy1 = current.y - prev.y;
+            double dx2 = next.x - current.x;
+            double dy2 = next.y - current.y;
 
             // Calculate the angle between the two segments
             double angle = Math.abs(Math.toDegrees(Math.atan2(dy2, dx2) - Math.atan2(dy1, dx1)));
@@ -384,8 +385,8 @@ public class BoardStatistics implements Serializable {
     for (Pin pin : smdPins) {
       if (pin.netCount() > 0) {
         total++;
-        int netNo = pin.getNetNo(0);
-        if (pin.getUnconnectedSet(netNo).isEmpty()) {
+        int netNumber = pin.getNetNumber(0);
+        if (pin.getUnconnectedSet(netNumber).isEmpty()) {
           alreadyConnected++;
         }
         if (isPinEscaped(pin)) {

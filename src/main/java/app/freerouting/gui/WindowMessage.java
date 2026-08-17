@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
-import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -68,7 +68,7 @@ public final class WindowMessage extends WindowBase {
   }
 
   /**
-   * Calls a confirm dialog. Returns true, if the user confirmed the action or if p_message is null.
+   * Calls a confirm dialog. Returns true, if the user confirmed the action or if message is null.
    */
   public static boolean confirm(String message) {
     return confirm(message, JOptionPane.YES_OPTION);

@@ -19,23 +19,23 @@ class ItemSearchTreesInfo {
   }
 
   /**
-   * Returns the tree entries for the tree with identification number p_tree_no, or null, if for
-   * this tree no entries of this item are inserted.
+   * Returns the tree entries for the tree with identification number treeNo, or null, if for this
+   * tree no entries of this item are inserted.
    */
   public ShapeTree.Leaf[] getTreeEntries(ShapeTree tree) {
-    for (SearchTreeInfo currTreeInfo : this.treeList) {
-      if (currTreeInfo.tree == tree) {
-        return currTreeInfo.entryArr;
+    for (SearchTreeInfo currentTreeInfo : this.treeList) {
+      if (currentTreeInfo.tree == tree) {
+        return currentTreeInfo.entryArr;
       }
     }
     return null;
   }
 
-  /** Sets the item tree entries for the tree with identification number p_tree_no. */
+  /** Sets the item tree entries for the tree with identification number treeNo. */
   public void setTreeEntries(ShapeTree.Leaf[] treeEntries, ShapeTree tree) {
-    for (SearchTreeInfo currTreeInfo : this.treeList) {
-      if (currTreeInfo.tree == tree) {
-        currTreeInfo.entryArr = treeEntries;
+    for (SearchTreeInfo currentTreeInfo : this.treeList) {
+      if (currentTreeInfo.tree == tree) {
+        currentTreeInfo.entryArr = treeEntries;
         return;
       }
     }
@@ -45,23 +45,23 @@ class ItemSearchTreesInfo {
   }
 
   /**
-   * Returns the precalculated tiles shapes for the tree with identification number p_tree_no, or
-   * null, if the tile shapes of this tree are not yet precalculated.
+   * Returns the precalculated tiles shapes for the tree with identification number treeNo, or null,
+   * if the tile shapes of this tree are not yet precalculated.
    */
   public TileShape[] getPrecalculatedTreeShapes(ShapeTree tree) {
-    for (SearchTreeInfo currTreeInfo : this.treeList) {
-      if (currTreeInfo.tree == tree) {
-        return currTreeInfo.precalculatedTreeShapes;
+    for (SearchTreeInfo currentTreeInfo : this.treeList) {
+      if (currentTreeInfo.tree == tree) {
+        return currentTreeInfo.precalculatedTreeShapes;
       }
     }
     return null;
   }
 
-  /** Sets the item tree entries for the tree with identification number p_tree_no. */
+  /** Sets the item tree entries for the tree with identification number treeNo. */
   public void setPrecalculatedTreeShapes(TileShape[] tileShapes, ShapeTree tree) {
-    for (SearchTreeInfo currTreeInfo : this.treeList) {
-      if (currTreeInfo.tree == tree) {
-        currTreeInfo.precalculatedTreeShapes = tileShapes;
+    for (SearchTreeInfo currentTreeInfo : this.treeList) {
+      if (currentTreeInfo.tree == tree) {
+        currentTreeInfo.precalculatedTreeShapes = tileShapes;
         return;
       }
     }
@@ -72,9 +72,9 @@ class ItemSearchTreesInfo {
 
   /** Clears the stored information about the precalculated tree shapes for all search trees. */
   public void clearPrecalculatedTreeShapes() {
-    for (SearchTreeInfo currTreeInfo : this.treeList) {
+    for (SearchTreeInfo currentTreeInfo : this.treeList) {
 
-      currTreeInfo.precalculatedTreeShapes = null;
+      currentTreeInfo.precalculatedTreeShapes = null;
     }
   }
 

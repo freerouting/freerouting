@@ -2,7 +2,7 @@ package app.freerouting.gui;
 
 import app.freerouting.board.Item;
 import app.freerouting.drc.AirLine;
-import app.freerouting.gui.session.RatsNest;
+import app.freerouting.gui.workspace.RatsNest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +14,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
   /** Creates a new instance of IncompletesWindow. */
   public WindowIncompletes(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("incompletes"));
     this.listEmptyMessage.setText(tm.getText("routeCompleted"));
@@ -41,10 +41,10 @@ public class WindowIncompletes extends WindowObjectListWithFilter {
     }
     Set<Item> selectedItems = new TreeSet<>();
     for (int i = 0; i < selectedIncompletes.size(); i++) {
-      AirLineInfo currInfo = (AirLineInfo) selectedIncompletes.get(i);
-      AirLine currAirline = currInfo.airline;
-      selectedItems.add(currAirline.fromItem);
-      selectedItems.add(currAirline.toItem);
+      AirLineInfo currentInfo = (AirLineInfo) selectedIncompletes.get(i);
+      AirLine currentAirline = currentInfo.airline();
+      selectedItems.add(currentAirline.fromItem);
+      selectedItems.add(currentAirline.toItem);
     }
     boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
     boardFrame.boardPanel.boardHandling.zoomSelection();

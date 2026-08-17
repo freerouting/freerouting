@@ -1,7 +1,7 @@
 package app.freerouting.io.specctra.parser;
 
 import app.freerouting.board.Item;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 import java.util.Collection;
@@ -94,9 +94,9 @@ public class Package {
           } else if (nextToken == Keyword.SIDE) {
             isFront = readPlacementSide(scanner);
           } else if (nextToken == Keyword.OUTLINE) {
-            Shape currShape = Shape.readScope(scanner, layerStructure);
-            if (currShape != null) {
-              outline.add(currShape);
+            Shape currentShape = Shape.readScope(scanner, layerStructure);
+            if (currentShape != null) {
+              outline.add(currentShape);
             }
             // overread closing bracket
             nextToken = scanner.nextToken();
@@ -149,68 +149,72 @@ public class Package {
     }
   }
 
-  public static void writeScope(WriteScopeParameter par, app.freerouting.core.Package boardPackage)
+  public static void writeScope(
+      WriteScopeParameter scopeParameter, app.freerouting.core.library.Package boardPackage)
       throws IOException {
-    par.file.startScope();
-    par.file.write("image ");
-    par.identifierType.write(boardPackage.name, par.file);
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("image ");
+    scopeParameter.identifierType.write(boardPackage.name, scopeParameter.file);
     // write the placement side of the package
-    par.file.newLine();
-    par.file.write("(side ");
+    scopeParameter.file.newLine();
+    scopeParameter.file.write("(side ");
     if (boardPackage.isFront) {
-      par.file.write("front)");
+      scopeParameter.file.write("front)");
     } else {
-      par.file.write("back)");
+      scopeParameter.file.write("back)");
     }
     // write the pins of the package
     for (int i = 0; i < boardPackage.pinCount(); i++) {
-      app.freerouting.core.Package.Pin currPin = boardPackage.getPin(i);
-      par.file.newLine();
-      par.file.write("(pin ");
-      Padstack currPadstack = par.board.library.padstacks.get(currPin.padstackNo);
-      par.identifierType.write(currPadstack.name, par.file);
-      par.file.write(" ");
-      par.identifierType.write(currPin.name, par.file);
-      double[] relCoor = par.coordinateTransform.boardToDsn(currPin.relativeLocation);
+      app.freerouting.core.library.Package.Pin currentPin = boardPackage.getPin(i);
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(pin ");
+      Padstack currentPadstack = scopeParameter.board.library.padstacks.get(currentPin.padstackId);
+      scopeParameter.identifierType.write(currentPadstack.name, scopeParameter.file);
+      scopeParameter.file.write(" ");
+      scopeParameter.identifierType.write(currentPin.name, scopeParameter.file);
+      double[] relCoor = scopeParameter.coordinateTransform.boardToDsn(currentPin.relativeLocation);
       for (int j = 0; j < relCoor.length; j++) {
-        par.file.write(" ");
-        par.file.write(String.valueOf(relCoor[j]));
+        scopeParameter.file.write(" ");
+        scopeParameter.file.write(String.valueOf(relCoor[j]));
       }
-      int rotation = (int) Math.round(currPin.rotationInDegree);
+      int rotation = (int) Math.round(currentPin.rotationInDegree);
       if (rotation != 0) {
-        par.file.write("(rotate ");
-        par.file.write(String.valueOf(rotation));
-        par.file.write(")");
+        scopeParameter.file.write("(rotate ");
+        scopeParameter.file.write(String.valueOf(rotation));
+        scopeParameter.file.write(")");
       }
-      par.file.write(")");
+      scopeParameter.file.write(")");
     }
     // write the keepouts belonging to  the package.
-    for (int i = 0; i < boardPackage.keepoutArr.length; i++) {
-      writePackageKeepout(boardPackage.keepoutArr[i], par, false);
+    for (int i = 0; i < boardPackage.keepouts.length; i++) {
+      writePackageKeepout(boardPackage.keepouts[i], scopeParameter, false);
     }
-    for (int i = 0; i < boardPackage.viaKeepoutArr.length; i++) {
-      writePackageKeepout(boardPackage.viaKeepoutArr[i], par, true);
+    for (int i = 0; i < boardPackage.viaKeepouts.length; i++) {
+      writePackageKeepout(boardPackage.viaKeepouts[i], scopeParameter, true);
     }
     // write the package outline.
     if (boardPackage.outline != null) {
       for (int i = 0; i < boardPackage.outline.length; i++) {
-        par.file.startScope();
-        par.file.write("outline");
-        Shape currOutline =
-            par.coordinateTransform.boardToDsnRel(boardPackage.outline[i], Layer.SIGNAL);
-        currOutline.writeScope(par.file, par.identifierType);
-        par.file.endScope();
+        scopeParameter.file.startScope();
+        scopeParameter.file.write("outline");
+        Shape currentOutline =
+            scopeParameter.coordinateTransform.boardToDsnRel(boardPackage.outline[i], Layer.SIGNAL);
+        currentOutline.writeScope(scopeParameter.file, scopeParameter.identifierType);
+        scopeParameter.file.endScope();
       }
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
   private static void writePackageKeepout(
-      app.freerouting.core.Package.Keepout keepout, WriteScopeParameter par, boolean isViaKeepout)
+      app.freerouting.core.library.Package.Keepout keepout,
+      WriteScopeParameter scopeParameter,
+      boolean isViaKeepout)
       throws IOException {
     Layer keepoutLayer;
     if (keepout.layer >= 0) {
-      app.freerouting.board.Layer boardLayer = par.board.layerStructure.arr[keepout.layer];
+      app.freerouting.board.Layer boardLayer =
+          scopeParameter.board.layerStructure.layers[keepout.layer];
       keepoutLayer = new Layer(boardLayer.name, keepout.layer, boardLayer.isSignal);
     } else {
       keepoutLayer = Layer.SIGNAL;
@@ -224,21 +228,21 @@ public class Package {
       boundaryShape = keepout.area.getBorder();
       holes = keepout.area.getHoles();
     }
-    par.file.startScope();
+    scopeParameter.file.startScope();
     if (isViaKeepout) {
-      par.file.write("via_keepout");
+      scopeParameter.file.write("via_keepout");
     } else {
-      par.file.write("keepout");
+      scopeParameter.file.write("keepout");
     }
-    Shape dsnShape = par.coordinateTransform.boardToDsn(boundaryShape, keepoutLayer);
+    Shape dsnShape = scopeParameter.coordinateTransform.boardToDsn(boundaryShape, keepoutLayer);
     if (dsnShape != null) {
-      dsnShape.writeScope(par.file, par.identifierType);
+      dsnShape.writeScope(scopeParameter.file, scopeParameter.identifierType);
     }
     for (int j = 0; j < holes.length; j++) {
-      Shape dsnHole = par.coordinateTransform.boardToDsn(holes[j], keepoutLayer);
-      dsnHole.writeHoleScope(par.file, par.identifierType);
+      Shape dsnHole = scopeParameter.coordinateTransform.boardToDsn(holes[j], keepoutLayer);
+      dsnHole.writeHoleScope(scopeParameter.file, scopeParameter.identifierType);
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
   /** Reads the information of a single pin in a package. */
@@ -347,36 +351,37 @@ public class Package {
     return result;
   }
 
-  /** Writes the placements of p_package to a Specctra dsn-file. */
+  /** Writes the placements of package to a Specctra dsn-file. */
   public static void writePlacementScope(
-      WriteScopeParameter par, app.freerouting.core.Package boardPackage) throws IOException {
-    Collection<Item> boardItems = par.board.getItems();
+      WriteScopeParameter scopeParameter, app.freerouting.core.library.Package boardPackage)
+      throws IOException {
+    Collection<Item> boardItems = scopeParameter.board.getItems();
     boolean componentFound = false;
-    for (int i = 1; i <= par.board.components.count(); i++) {
-      app.freerouting.board.Component currComponent = par.board.components.get(i);
-      if (currComponent.getPackage() == boardPackage) {
+    for (int i = 1; i <= scopeParameter.board.components.count(); i++) {
+      app.freerouting.board.Component currentComponent = scopeParameter.board.components.get(i);
+      if (currentComponent.getPackage() == boardPackage) {
         // check, if not all items of the component are deleted
         boolean undeletedItemFound = false;
-        for (Item currItem : boardItems) {
-          if (currItem.getComponentNo() == currComponent.no) {
+        for (Item currentItem : boardItems) {
+          if (currentItem.getComponentId() == currentComponent.id) {
             undeletedItemFound = true;
             break;
           }
         }
-        if (undeletedItemFound || !currComponent.isPlaced()) {
+        if (undeletedItemFound || !currentComponent.isPlaced()) {
           if (!componentFound) {
             // write the scope header
-            par.file.startScope();
-            par.file.write("component ");
-            par.identifierType.write(boardPackage.name, par.file);
+            scopeParameter.file.startScope();
+            scopeParameter.file.write("component ");
+            scopeParameter.identifierType.write(boardPackage.name, scopeParameter.file);
             componentFound = true;
           }
-          Component.writeScope(par, currComponent);
+          Component.writeScope(scopeParameter, currentComponent);
         }
       }
     }
     if (componentFound) {
-      par.file.endScope();
+      scopeParameter.file.endScope();
     }
   }
 

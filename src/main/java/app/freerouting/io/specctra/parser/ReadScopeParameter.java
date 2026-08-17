@@ -7,7 +7,7 @@ import app.freerouting.board.Communication;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.io.CoordinateTransform;
@@ -28,7 +28,7 @@ public class ReadScopeParameter {
   final BoardParserCallback boardHandling;
   final NetList netlist = new NetList();
   final BoardObservers observers;
-  final IdentificationNumberGenerator itemIdNoGenerator;
+  final IdGenerator idGenerator;
 
   /**
    * Warnings collected during DSN parsing (e.g. skipped wires, missing padstacks, degenerate
@@ -95,16 +95,14 @@ public class ReadScopeParameter {
    *
    * @param scanner the token scanner over the DSN input stream
    * @param observers nullable; for host-system embedding
-   * @param itemIdNoGenerator nullable; for host-system embedding
+   * @param idGenerator nullable; for host-system embedding
    */
   public ReadScopeParameter(
-      IJFlexScanner scanner,
-      BoardObservers observers,
-      IdentificationNumberGenerator itemIdNoGenerator) {
+      IJFlexScanner scanner, BoardObservers observers, IdGenerator idGenerator) {
     this.scanner = scanner;
     boardHandling = new MinimalBoardManager();
     this.observers = observers;
-    this.itemIdNoGenerator = itemIdNoGenerator;
+    this.idGenerator = idGenerator;
   }
 
   /**

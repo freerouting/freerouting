@@ -35,38 +35,38 @@ public class PolylineTrace extends Trace implements Serializable {
       Polyline polyline,
       int layer,
       int halfWidth,
-      int[] netNoArr,
-      int clearanceType,
-      int idNo,
-      int groupNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int id,
+      int groupId,
       FixedState fixedState,
       BasicBoard board) {
-    super(layer, halfWidth, netNoArr, clearanceType, idNo, groupNo, fixedState, board);
-    if (polyline.arr.length < 3) {
-      FRLogger.warn("PolylineTrace: p_polyline.arr.length >= 3 expected");
+    super(layer, halfWidth, netNumbers, clearanceClassIndex, id, groupId, fixedState, board);
+    if (polyline.lines.length < 3) {
+      FRLogger.warn("PolylineTrace: polyline.lines.length >= 3 expected");
     }
     lines = polyline;
   }
 
   @Override
-  public Item copy(int idNo) {
-    int[] currNetNoArr = new int[this.netCount()];
-    for (int i = 0; i < currNetNoArr.length; i++) {
-      currNetNoArr[i] = getNetNo(i);
+  public Item copy(int id) {
+    int[] currentNetNumbers = new int[this.netCount()];
+    for (int i = 0; i < currentNetNumbers.length; i++) {
+      currentNetNumbers[i] = getNetNumber(i);
     }
     return new PolylineTrace(
         lines,
         getLayer(),
         getHalfWidth(),
-        currNetNoArr,
-        clearanceClassNo(),
-        idNo,
-        getComponentNo(),
+        currentNetNumbers,
+        clearanceClassIndex(),
+        id,
+        getComponentId(),
         getFixedState(),
         board);
   }
 
-  /** Checks, if this trace is on layer p_layer. */
+  /** Checks, if this trace is on layer layer. */
   @Override
   public boolean isOnLayer(int layer) {
     return getLayer() == layer;
@@ -87,7 +87,7 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   @Override
   public Point lastCorner() {
-    return lines.corner(lines.arr.length - 2);
+    return lines.corner(lines.lines.length - 2);
   }
 
   /**
@@ -95,7 +95,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * one.
    */
   public int cornerCount() {
-    return lines.arr.length - 1;
+    return lines.lines.length - 1;
   }
 
   @Override
@@ -122,7 +122,7 @@ public class PolylineTrace extends Trace implements Serializable {
   /** Returns the count of tile shapes of this polyline. */
   @Override
   public int tileShapeCount() {
-    return Math.max(lines.arr.length - 2, 0);
+    return Math.max(lines.lines.length - 2, 0);
   }
 
   @Override
@@ -185,7 +185,7 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   private boolean combineAtStart(boolean ignoreAreas) {
     boolean debugNet49 =
-        this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+        this.netNumbers != null && this.netNumbers.length > 0 && this.netNumbers[0] == 49;
     Point startCorner = firstCorner();
     Collection<Item> contacts = getNormalContacts(startCorner, false);
     if (ignoreAreas) {
@@ -195,7 +195,7 @@ public class PolylineTrace extends Trace implements Serializable {
     if (debugNet49) {
       FRLogger.trace(
           "compare_trace_combine_at_start_net49 thisId="
-              + this.getIdNo()
+              + this.getId()
               + ", thisFixed="
               + this.getFixedState()
               + ", start="
@@ -205,7 +205,7 @@ public class PolylineTrace extends Trace implements Serializable {
       for (Item c : contacts) {
         FRLogger.trace(
             "  contact id="
-                + c.getIdNo()
+                + c.getId()
                 + ", type="
                 + c.getClass().getSimpleName()
                 + ", fixed="
@@ -221,8 +221,8 @@ public class PolylineTrace extends Trace implements Serializable {
     PolylineTrace otherTrace = null;
     boolean traceFound = false;
     boolean reverseOrder = false;
-    for (Item currOb : contacts) {
-      if (currOb instanceof PolylineTrace trace) {
+    for (Item currentObject : contacts) {
+      if (currentObject instanceof PolylineTrace trace) {
         otherTrace = trace;
         if (otherTrace.getLayer() == getLayer()
             && otherTrace.netsEqual(this)
@@ -263,15 +263,15 @@ public class PolylineTrace extends Trace implements Serializable {
 
     board.itemList.saveForUndo(this);
     // create the lines of the joined polyline
-    Line[] thisLines = lines.arr;
+    Line[] thisLines = lines.lines;
     Line[] otherLines;
     if (reverseOrder) {
-      otherLines = new Line[otherTrace.lines.arr.length];
+      otherLines = new Line[otherTrace.lines.lines.length];
       for (int i = 0; i < otherLines.length; i++) {
-        otherLines[i] = otherTrace.lines.arr[otherLines.length - 1 - i].opposite();
+        otherLines[i] = otherTrace.lines.lines[otherLines.length - 1 - i].opposite();
       }
     } else {
-      otherLines = otherTrace.lines.arr;
+      otherLines = otherTrace.lines.lines;
     }
     boolean skipLine = otherLines[otherLines.length - 2].isEqualOrOpposite(thisLines[1]);
     int newLineCount = thisLines.length + otherLines.length - 2;
@@ -292,7 +292,7 @@ public class PolylineTrace extends Trace implements Serializable {
     boolean hasTreeEntries =
         (this.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()) != null)
             && (otherTrace.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()) != null);
-    if (joinedPolyline.arr.length != newLineCount || !hasTreeEntries) {
+    if (joinedPolyline.lines.length != newLineCount || !hasTreeEntries) {
       // consecutive parallel lines were skipped at the join location OR a trace
       // lacks search-tree entries — combine without performance optimization
       board.searchTreeManager.remove(this);
@@ -312,7 +312,7 @@ public class PolylineTrace extends Trace implements Serializable {
       otherTrace.clearSearchTreeEntries();
       this.lines = joinedPolyline;
     }
-    if (this.lines.arr.length < 3) {
+    if (this.lines.lines.length < 3) {
       board.removeItem(this);
     }
     board.removeItem(otherTrace);
@@ -331,7 +331,7 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   private boolean combineAtEnd(boolean ignoreAreas) {
     boolean debugNet49 =
-        this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+        this.netNumbers != null && this.netNumbers.length > 0 && this.netNumbers[0] == 49;
     Point endCorner = lastCorner();
     Collection<Item> contacts = getNormalContacts(endCorner, false);
     if (ignoreAreas) {
@@ -341,7 +341,7 @@ public class PolylineTrace extends Trace implements Serializable {
     if (debugNet49) {
       FRLogger.trace(
           "compare_trace_combine_at_end_net49 thisId="
-              + this.getIdNo()
+              + this.getId()
               + ", thisFixed="
               + this.getFixedState()
               + ", end="
@@ -351,7 +351,7 @@ public class PolylineTrace extends Trace implements Serializable {
       for (Item c : contacts) {
         FRLogger.trace(
             "  contact id="
-                + c.getIdNo()
+                + c.getId()
                 + ", type="
                 + c.getClass().getSimpleName()
                 + ", fixed="
@@ -367,8 +367,8 @@ public class PolylineTrace extends Trace implements Serializable {
     PolylineTrace otherTrace = null;
     boolean traceFound = false;
     boolean reverseOrder = false;
-    for (Item currOb : contacts) {
-      if (currOb instanceof PolylineTrace trace) {
+    for (Item currentObject : contacts) {
+      if (currentObject instanceof PolylineTrace trace) {
         otherTrace = trace;
         if (otherTrace.getLayer() == getLayer()
             && otherTrace.netsEqual(this)
@@ -393,15 +393,15 @@ public class PolylineTrace extends Trace implements Serializable {
 
     board.itemList.saveForUndo(this);
     // create the lines of the joined polyline
-    Line[] thisLines = lines.arr;
+    Line[] thisLines = lines.lines;
     Line[] otherLines;
     if (reverseOrder) {
-      otherLines = new Line[otherTrace.lines.arr.length];
+      otherLines = new Line[otherTrace.lines.lines.length];
       for (int i = 0; i < otherLines.length; i++) {
-        otherLines[i] = otherTrace.lines.arr[otherLines.length - 1 - i].opposite();
+        otherLines[i] = otherTrace.lines.lines[otherLines.length - 1 - i].opposite();
       }
     } else {
-      otherLines = otherTrace.lines.arr;
+      otherLines = otherTrace.lines.lines;
     }
     boolean skipLine = thisLines[thisLines.length - 2].isEqualOrOpposite(otherLines[1]);
     int newLineCount = thisLines.length + otherLines.length - 2;
@@ -422,7 +422,7 @@ public class PolylineTrace extends Trace implements Serializable {
     boolean hasTreeEntries =
         (this.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()) != null)
             && (otherTrace.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()) != null);
-    if (joinedPolyline.arr.length != newLineCount || !hasTreeEntries) {
+    if (joinedPolyline.lines.length != newLineCount || !hasTreeEntries) {
       // consecutive parallel lines were skipped at the join location OR a trace
       // lacks search-tree entries — combine without performance optimization
       board.searchTreeManager.remove(this);
@@ -442,7 +442,7 @@ public class PolylineTrace extends Trace implements Serializable {
       otherTrace.clearSearchTreeEntries();
       this.lines = joinedPolyline;
     }
-    if (this.lines.arr.length < 3) {
+    if (this.lines.lines.length < 3) {
       board.removeItem(this);
     }
     board.removeItem(otherTrace);
@@ -456,8 +456,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * Looks up traces intersecting with this trace and splits them at the intersection points. In
    * case of an overlaps, the traces are split at their first and their last common point. Returns
    * the pieces resulting from splitting. Found cycles are removed. If nothing is split, the result
-   * will contain just this Trace. If p_clip_shape != null, the split may be restricted to
-   * p_clip_shape.
+   * will contain just this Trace. If clipShape != null, the split may be restricted to clipShape.
    */
   @Override
   public Collection<PolylineTrace> split(IntOctagon clipShape) {
@@ -469,18 +468,18 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     boolean ownTraceSplit = false;
     ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
-    for (int i = 0; i < this.lines.arr.length - 2; i++) {
+    for (int i = 0; i < this.lines.lines.length - 2; i++) {
       if (clipShape != null) {
-        LineSegment currSegment = new LineSegment(this.lines, i + 1);
-        if (!clipShape.intersects(currSegment.boundingBox())) {
+        LineSegment currentSegment = new LineSegment(this.lines, i + 1);
+        if (!clipShape.intersects(currentSegment.boundingBox())) {
           continue;
         }
       }
-      TileShape currShape = this.getTreeShape(defaultTree, i);
-      LineSegment currLineSegment = new LineSegment(this.lines, i + 1);
+      TileShape currentShape = this.getTreeShape(defaultTree, i);
+      LineSegment currentLineSegment = new LineSegment(this.lines, i + 1);
       Collection<ShapeSearchTree.TreeEntry> overlappingTreeEntries = new LinkedList<>();
       // look for intersecting traces with the i-th line segment
-      defaultTree.overlappingTreeEntries(currShape, getLayer(), overlappingTreeEntries);
+      defaultTree.overlappingTreeEntries(currentShape, getLayer(), overlappingTreeEntries);
       Iterator<ShapeSearchTree.TreeEntry> it = overlappingTreeEntries.iterator();
       while (it.hasNext()) {
         if (!this.isOnTheBoard()) {
@@ -514,15 +513,15 @@ public class PolylineTrace extends Trace implements Serializable {
         if (foundItem instanceof PolylineTrace foundTrace) {
           LineSegment foundLineSegment =
               new LineSegment(foundTrace.lines, foundEntry.shapeIndexInObject + 1);
-          Line[] intersectingLines = foundLineSegment.intersection(currLineSegment);
+          Line[] intersectingLines = foundLineSegment.intersection(currentLineSegment);
           Collection<PolylineTrace> splitPieces = new LinkedList<>();
 
           boolean debugNet49 =
-              this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+              this.netNumbers != null && this.netNumbers.length > 0 && this.netNumbers[0] == 49;
           if (debugNet49 && intersectingLines.length > 0) {
             FRLogger.trace(
                 "compare_trace_split_found_trace net=49, this_id="
-                    + this.getIdNo()
+                    + this.getId()
                     + ", this_seg="
                     + i
                     + ", this_first="
@@ -530,7 +529,7 @@ public class PolylineTrace extends Trace implements Serializable {
                     + ", this_last="
                     + this.lastCorner()
                     + ", found_id="
-                    + foundTrace.getIdNo()
+                    + foundTrace.getId()
                     + ", found_seg="
                     + foundEntry.shapeIndexInObject
                     + ", found_first="
@@ -546,14 +545,15 @@ public class PolylineTrace extends Trace implements Serializable {
 
           if (foundTrace != this) {
             for (int j = 0; j < intersectingLines.length; j++) {
-              int lineNo = foundEntry.shapeIndexInObject + 1;
-              PolylineTrace[] currSplitPieces = foundTrace.split(lineNo, intersectingLines[j]);
-              if (currSplitPieces != null) {
+              int lineIndex = foundEntry.shapeIndexInObject + 1;
+              PolylineTrace[] currentSplitPieces =
+                  foundTrace.split(lineIndex, intersectingLines[j]);
+              if (currentSplitPieces != null) {
 
                 for (int k = 0; k < 2; k++) {
-                  if (currSplitPieces[k] != null) {
+                  if (currentSplitPieces[k] != null) {
                     foundTraceSplit = true;
-                    if (this.netNoArr.length > 0 && this.netNoArr[0] == 94) {
+                    if (this.netNumbers.length > 0 && this.netNumbers[0] == 94) {
                       FRLogger.trace(
                           "PolylineTrace.split",
                           "compare_trace_found_trace_split",
@@ -562,9 +562,9 @@ public class PolylineTrace extends Trace implements Serializable {
                               + " with intersection "
                               + intersectingLines[j],
                           "Net #"
-                              + this.netNoArr[0]
+                              + this.netNumbers[0]
                               + ",Trace #"
-                              + foundTrace.getIdNo()
+                              + foundTrace.getId()
                               + ",Layer #"
                               + foundTrace.getLayer(),
                           new Point[] {
@@ -574,13 +574,14 @@ public class PolylineTrace extends Trace implements Serializable {
                             lines.corner(i + 1)
                           });
                     }
-                    splitPieces.add(currSplitPieces[k]);
+                    splitPieces.add(currentSplitPieces[k]);
                   }
                 }
                 if (foundTraceSplit) {
                   // reread the overlapping tree entries and reset the iterator,
                   // because the board has changed
-                  defaultTree.overlappingTreeEntries(currShape, getLayer(), overlappingTreeEntries);
+                  defaultTree.overlappingTreeEntries(
+                      currentShape, getLayer(), overlappingTreeEntries);
                   it = overlappingTreeEntries.iterator();
                   break;
                 }
@@ -592,17 +593,17 @@ public class PolylineTrace extends Trace implements Serializable {
           }
           // now try splitting the own trace
 
-          intersectingLines = currLineSegment.intersection(foundLineSegment);
+          intersectingLines = currentLineSegment.intersection(foundLineSegment);
           for (int j = 0; j < intersectingLines.length; j++) {
-            PolylineTrace[] currSplitPieces = split(i + 1, intersectingLines[j]);
-            if (currSplitPieces != null) {
+            PolylineTrace[] currentSplitPieces = split(i + 1, intersectingLines[j]);
+            if (currentSplitPieces != null) {
               ownTraceSplit = true;
               // this trace was split itself into 2.
-              if (currSplitPieces[0] != null) {
-                result.addAll(currSplitPieces[0].split(clipShape));
+              if (currentSplitPieces[0] != null) {
+                result.addAll(currentSplitPieces[0].split(clipShape));
               }
-              if (currSplitPieces[1] != null) {
-                result.addAll(currSplitPieces[1].split(clipShape));
+              if (currentSplitPieces[1] != null) {
+                result.addAll(currentSplitPieces[1].split(clipShape));
               }
               break;
             }
@@ -613,15 +614,17 @@ public class PolylineTrace extends Trace implements Serializable {
             Iterator<PolylineTrace> it2 = splitPieces.iterator();
             for (int j = 0; j < 2; j++) {
               while (it2.hasNext()) {
-                PolylineTrace currPiece = it2.next();
+                PolylineTrace currentPiece = it2.next();
                 boolean debugThis =
-                    this.netNoArr != null && this.netNoArr.length > 0 && this.netNoArr[0] == 49;
+                    this.netNumbers != null
+                        && this.netNumbers.length > 0
+                        && this.netNumbers[0] == 49;
                 Point pieceFirst =
-                    debugThis && currPiece.isOnTheBoard() ? currPiece.firstCorner() : null;
+                    debugThis && currentPiece.isOnTheBoard() ? currentPiece.firstCorner() : null;
                 Point pieceLast =
-                    debugThis && currPiece.isOnTheBoard() ? currPiece.lastCorner() : null;
-                int pieceId = currPiece.getIdNo();
-                boolean removedAsCycle = board.removeIfCycle(currPiece);
+                    debugThis && currentPiece.isOnTheBoard() ? currentPiece.lastCorner() : null;
+                int pieceId = currentPiece.getId();
+                boolean removedAsCycle = board.removeIfCycle(currentPiece);
                 if (debugThis && removedAsCycle) {
                   FRLogger.trace(
                       "compare_trace_split_cycle_removed net=49, pass="
@@ -633,7 +636,7 @@ public class PolylineTrace extends Trace implements Serializable {
                           + ", piece_last="
                           + pieceLast
                           + ", this_id="
-                          + this.getIdNo());
+                          + this.getId());
                 }
               }
 
@@ -645,17 +648,17 @@ public class PolylineTrace extends Trace implements Serializable {
           if (ownTraceSplit) {
             break;
           }
-        } else if (foundItem instanceof DrillItem currDrillItem) {
-          Point splitPoint = currDrillItem.getCenter();
-          if (currLineSegment.contains(splitPoint)) {
-            Direction splitLineDirection = currLineSegment.getLine().direction().turn45Degree(2);
+        } else if (foundItem instanceof DrillItem currentDrillItem) {
+          Point splitPoint = currentDrillItem.getCenter();
+          if (currentLineSegment.contains(splitPoint)) {
+            Direction splitLineDirection = currentLineSegment.getLine().direction().turn45Degree(2);
             Line splitLine = new Line(splitPoint, splitLineDirection);
             split(i + 1, splitLine);
           }
         } else if (!this.isUserFixed() && (foundItem instanceof ConductionArea)) {
           boolean ignoreAreas = false;
-          if (this.netNoArr.length > 0) {
-            Net currentNet = this.board.rules.nets.get(this.netNoArr[0]);
+          if (this.netNumbers.length > 0) {
+            Net currentNet = this.board.rules.nets.get(this.netNumbers[0]);
             if (currentNet != null && currentNet.getNetClass() != null) {
               ignoreAreas = currentNet.getNetClass().getIgnoreCyclesWithAreas();
             }
@@ -677,24 +680,24 @@ public class PolylineTrace extends Trace implements Serializable {
       result.add(this);
     }
     if (result.size() > 1) {
-      for (Item currItem : result) {
-        board.additionalUpdateAfterChange(currItem);
+      for (Item currentItem : result) {
+        board.additionalUpdateAfterChange(currentItem);
       }
     }
     return result;
   }
 
   /**
-   * Splits this trace into two at p_point. Returns the 2 pieces of the split trace, or null if
-   * nothing was split because for example p_point is not located on a line segment of the
-   * p_polyline of this trace.
+   * Splits this trace into two at point. Returns the 2 pieces of the split trace, or null if
+   * nothing was split because for example point is not located on a line segment of the polyline of
+   * this trace.
    */
   @Override
   public Trace[] split(Point point) {
-    for (int i = 0; i < this.lines.arr.length - 2; i++) {
-      LineSegment currLineSegment = new LineSegment(this.lines, i + 1);
-      if (currLineSegment.contains(point)) {
-        Direction splitLineDirection = currLineSegment.getLine().direction().turn45Degree(2);
+    for (int i = 0; i < this.lines.lines.length - 2; i++) {
+      LineSegment currentLineSegment = new LineSegment(this.lines, i + 1);
+      if (currentLineSegment.contains(point)) {
+        Direction splitLineDirection = currentLineSegment.getLine().direction().turn45Degree(2);
         Line splitLine = new Line(point, splitLineDirection);
         Trace[] result = split(i + 1, splitLine);
         if (result != null) {
@@ -706,22 +709,22 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /**
-   * Splits this trace at the line with number p_line_no into two by inserting p_endline as
-   * concluding line of the first split piece and as the start line of the second split piece.
-   * Returns the 2 pieces of the split trace, or null, if nothing was split.
+   * Splits this trace at the line with number lineIndex into two by inserting endline as concluding
+   * line of the first split piece and as the start line of the second split piece. Returns the 2
+   * pieces of the split trace, or null, if nothing was split.
    */
-  private PolylineTrace[] split(int lineNo, Line newEndLine) {
+  private PolylineTrace[] split(int lineIndex, Line newEndLine) {
     if (!this.isOnTheBoard()) {
       return null;
     }
     // Guard: if this trace cannot be deleted (e.g. USER_FIXED / protect), splitting would leave
-    // the original on the board AND insert duplicate pieces. The outer normalize_traces loop
+    // the original on the board AND insert duplicate pieces. The outer normalizeTraces loop
     // would then keep finding the same "changed" state and never converge. Return null so the
     // caller knows the split is not possible.
     if (isDeletionForbidden()) {
       return null;
     }
-    Polyline[] splitPolylines = lines.split(lineNo, newEndLine);
+    Polyline[] splitPolylines = lines.split(lineIndex, newEndLine);
     if (splitPolylines == null) {
       return null;
     }
@@ -729,7 +732,7 @@ public class PolylineTrace extends Trace implements Serializable {
       FRLogger.warn("PolylineTrace.split: array of length 2 expected for splitPolylines");
       return null;
     }
-    if (splitInsideDrillPadProhibited(lineNo, newEndLine)) {
+    if (splitInsideDrillPadProhibited(lineIndex, newEndLine)) {
       return null;
     }
     board.removeItem(this);
@@ -739,45 +742,45 @@ public class PolylineTrace extends Trace implements Serializable {
             splitPolylines[0],
             getLayer(),
             getHalfWidth(),
-            netNoArr,
-            clearanceClassNo(),
+            netNumbers,
+            clearanceClassIndex(),
             getFixedState());
     result[1] =
         board.insertTraceWithoutCleaning(
             splitPolylines[1],
             getLayer(),
             getHalfWidth(),
-            netNoArr,
-            clearanceClassNo(),
+            netNumbers,
+            clearanceClassIndex(),
             getFixedState());
     return result;
   }
 
   /**
-   * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the
-   * pad of a pin. In this case the trace will be split only, if the intersection is at the center
-   * of the pin. Extending the function to vias led to broken connection problems when the
-   * autorouter connected to a trace.
+   * Checks, if the intersection of the lineIndex-th line of this trace with line is inside the pad
+   * of a pin. In this case the trace will be split only, if the intersection is at the center of
+   * the pin. Extending the function to vias led to broken connection problems when the autorouter
+   * connected to a trace.
    */
-  private boolean splitInsideDrillPadProhibited(int lineNo, Line line) {
+  private boolean splitInsideDrillPadProhibited(int lineIndex, Line line) {
     if (this.board == null) {
       return false;
     }
-    Point intersection = this.lines.arr[lineNo].intersection(line);
+    Point intersection = this.lines.lines[lineIndex].intersection(line);
     Collection<Item> overlapItems = this.board.pickItems(intersection, this.getLayer(), null);
     boolean padFound = false;
-    for (Item currItem : overlapItems) {
-      if (!currItem.sharesNet(this)) {
+    for (Item currentItem : overlapItems) {
+      if (!currentItem.sharesNet(this)) {
         continue;
       }
-      if (currItem instanceof Pin currDrillItem) {
-        if (currDrillItem.getCenter().equals(intersection)) {
+      if (currentItem instanceof Pin currentDrillItem) {
+        if (currentDrillItem.getCenter().equals(intersection)) {
           return false; // split always at the center of a drill item.
         }
         padFound = true;
-      } else if (currItem instanceof Trace currTrace) {
-        if (currTrace != this && currTrace.firstCorner().equals(intersection)
-            || currTrace.lastCorner().equals(intersection)) {
+      } else if (currentItem instanceof Trace currentTrace) {
+        if (currentTrace != this && currentTrace.firstCorner().equals(intersection)
+            || currentTrace.lastCorner().equals(intersection)) {
           return false;
         }
       }
@@ -787,7 +790,7 @@ public class PolylineTrace extends Trace implements Serializable {
 
   /**
    * Splits this trace and overlapping traces, and combines this trace. Returns true, if something
-   * was changed. If p_clip_shape != null, splitting is restricted to p_clip_shape.
+   * was changed. If clipShape != null, splitting is restricted to clipShape.
    *
    * @param clipShape the shape to clip the trace to
    * @return true, if something was changed
@@ -799,35 +802,34 @@ public class PolylineTrace extends Trace implements Serializable {
   private boolean normalize(IntOctagon clipShape, int normalizationDepth) {
     if (normalizationDepth > MAX_NORMALIZATION_DEPTH) {
       // Return false (no further change at this depth level) rather than throwing an exception.
-      // The outer normalize_traces() loop treats a false return as "nothing changed" for this
-      // trace,
+      // The outer normalizeTraces() loop treats a false return as "nothing changed" for this trace,
       // which is safe: the trace geometry may be slightly sub-optimal (extra corners), but it
       // remains
-      // structurally valid, its endpoint contacts are preserved and remove_tails() will not touch
+      // structurally valid, its endpoint contacts are preserved and removeTails() will not touch
       // it.
       // Throwing here was causing two problems:
-      //   1. Noisy WARN log in InsertFoundConnectionAlgo every routing pass for complex plane nets.
+      //   1. Noisy WARN log in FoundConnectionInserter every routing pass for complex plane nets.
       //   2. Intermediate trace fragments created during deep-recursion split/combine were left in
       // an
       //      inconsistent state, causing them to be misidentified as tails and removed by
-      // remove_tails(),
+      // removeTails(),
       //      which in turn forced GND routing to re-attempt the same connection on every subsequent
       // pass.
       FRLogger.debug(
           "PolylineTrace.normalize: max normalization depth ("
               + MAX_NORMALIZATION_DEPTH
               + ") reached for trace #"
-              + this.getIdNo()
+              + this.getId()
               + " on net "
-              + (this.netCount() > 0 ? this.netNoArr[0] : -1)
+              + (this.netCount() > 0 ? this.netNumbers[0] : -1)
               + " — stopping recursion, trace kept as-is.");
       return false;
     }
 
     boolean debugNet49 =
-        this.netNoArr != null
-            && this.netNoArr.length > 0
-            && this.netNoArr[0] == 49
+        this.netNumbers != null
+            && this.netNumbers.length > 0
+            && this.netNumbers[0] == 49
             && normalizationDepth == 0;
 
     boolean observersActivated = false;
@@ -846,7 +848,7 @@ public class PolylineTrace extends Trace implements Serializable {
           "compare_trace_normalize_net49 depth="
               + normalizationDepth
               + ", thisId="
-              + this.getIdNo()
+              + this.getId()
               + ", thisOnBoard="
               + this.isOnTheBoard()
               + ", thisFirst="
@@ -858,7 +860,7 @@ public class PolylineTrace extends Trace implements Serializable {
       for (PolylineTrace piece : splitPieces) {
         FRLogger.trace(
             "compare_trace_normalize_net49  piece id="
-                + piece.getIdNo()
+                + piece.getId()
                 + ", onBoard="
                 + piece.isOnTheBoard()
                 + ", first="
@@ -867,44 +869,44 @@ public class PolylineTrace extends Trace implements Serializable {
                 + piece.lastCorner());
       }
     }
-    for (PolylineTrace currSplitTrace : splitPieces) {
-      if (currSplitTrace.isOnTheBoard()) {
-        boolean traceCombined = currSplitTrace.combine();
+    for (PolylineTrace currentSplitTrace : splitPieces) {
+      if (currentSplitTrace.isOnTheBoard()) {
+        boolean traceCombined = currentSplitTrace.combine();
         if (debugNet49) {
           FRLogger.trace(
               "compare_trace_normalize_net49  after_combine id="
-                  + currSplitTrace.getIdNo()
+                  + currentSplitTrace.getId()
                   + ", onBoard="
-                  + currSplitTrace.isOnTheBoard()
+                  + currentSplitTrace.isOnTheBoard()
                   + ", combined="
                   + traceCombined
                   + ", first="
-                  + (currSplitTrace.isOnTheBoard() ? currSplitTrace.firstCorner() : "N/A")
+                  + (currentSplitTrace.isOnTheBoard() ? currentSplitTrace.firstCorner() : "N/A")
                   + ", last="
-                  + (currSplitTrace.isOnTheBoard() ? currSplitTrace.lastCorner() : "N/A"));
+                  + (currentSplitTrace.isOnTheBoard() ? currentSplitTrace.lastCorner() : "N/A"));
         }
-        if (currSplitTrace.cornerCount() == 2
-            && currSplitTrace.firstCorner().equals(currSplitTrace.lastCorner())) {
+        if (currentSplitTrace.cornerCount() == 2
+            && currentSplitTrace.firstCorner().equals(currentSplitTrace.lastCorner())) {
           // remove trace with only 1 corner — only if deletion is allowed.
           // USER_FIXED traces cannot be removed; skipping silently prevents an infinite loop in
-          // normalize_traces (where 'result=true' would cause the outer while to spin forever).
-          if (!currSplitTrace.isDeletionForbidden()) {
-            board.removeItem(currSplitTrace);
+          // normalizeTraces (where 'result=true' would cause the outer while to spin forever).
+          if (!currentSplitTrace.isDeletionForbidden()) {
+            board.removeItem(currentSplitTrace);
             result = true;
           } else {
-            int netNo = currSplitTrace.netCount() > 0 ? currSplitTrace.netNoArr[0] : -1;
+            int netNumber = currentSplitTrace.netCount() > 0 ? currentSplitTrace.netNumbers[0] : -1;
             // A degenerate user-fixed trace (first==last corner) cannot be removed because
             // deletion is forbidden. This is expected for boards with malformed DSN geometry
             // (e.g. bad EDA export). The user was already warned at load time; suppress here.
             FRLogger.debug(
                 "PolylineTrace.normalize: skipping removal of degenerate user-fixed trace #"
-                    + currSplitTrace.getIdNo()
+                    + currentSplitTrace.getId()
                     + " on net "
-                    + netNo
+                    + netNumber
                     + " (first==last corner)");
           }
         } else if (traceCombined) {
-          currSplitTrace.normalize(clipShape, normalizationDepth + 1);
+          currentSplitTrace.normalize(clipShape, normalizationDepth + 1);
           result = true;
         }
       }
@@ -920,7 +922,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * was changed.
    */
   @Override
-  public boolean pullTight(PullTightAlgo pullTightAlgo) {
+  public boolean pullTight(TraceTightener pullTightAlgo) {
     if (!this.isOnTheBoard()) {
       // This trace may have been deleted in a trace split for example
       return false;
@@ -934,8 +936,8 @@ public class PolylineTrace extends Trace implements Serializable {
     if (pullTightAlgo.onlyNetNoArr.length > 0 && !this.netsEqual(pullTightAlgo.onlyNetNoArr)) {
       return false;
     }
-    if (this.netNoArr.length > 0) {
-      if (!this.board.rules.nets.get(this.netNoArr[0]).getNetClass().getPullTight()) {
+    if (this.netNumbers.length > 0) {
+      if (!this.board.rules.nets.get(this.netNumbers[0]).getNetClass().getPullTight()) {
         return false;
       }
     }
@@ -944,8 +946,8 @@ public class PolylineTrace extends Trace implements Serializable {
             lines,
             getLayer(),
             getHalfWidth(),
-            netNoArr,
-            clearanceClassNo(),
+            netNumbers,
+            clearanceClassIndex(),
             this.touchingPinsAtEndCorners());
     if (newLines != lines) {
       change(newLines);
@@ -985,12 +987,12 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     int[] optNetNoArr;
     if (ownNetOnly) {
-      optNetNoArr = this.netNoArr;
+      optNetNoArr = this.netNumbers;
     } else {
       optNetNoArr = new int[0];
     }
-    PullTightAlgo pullTightAlgo =
-        PullTightAlgo.getInstance(
+    TraceTightener pullTightAlgo =
+        TraceTightener.getInstance(
             (RoutingBoard) this.board,
             optNetNoArr,
             null,
@@ -1010,12 +1012,12 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     int[] optNetNoArr;
     if (ownNetOnly) {
-      optNetNoArr = this.netNoArr;
+      optNetNoArr = this.netNumbers;
     } else {
       optNetNoArr = new int[0];
     }
-    PullTightAlgo pullTightAlgo =
-        PullTightAlgo.getInstance(
+    TraceTightener pullTightAlgo =
+        TraceTightener.getInstance(
             (RoutingBoard) this.board,
             optNetNoArr,
             null,
@@ -1030,11 +1032,11 @@ public class PolylineTrace extends Trace implements Serializable {
   @Override
   public TileShape getTraceConnectionShape(ShapeSearchTree searchTree, int index) {
     if (index < 0 || index >= this.tileShapeCount()) {
-      FRLogger.warn("PolylineTrace.get_trace_connection_shape p_index out of range");
+      FRLogger.warn("PolylineTrace.get_trace_connection_shape index out of range");
       return null;
     }
-    LineSegment currLineSegment = new LineSegment(this.lines, index + 1);
-    return currLineSegment.toSimplex().simplify();
+    LineSegment currentLineSegment = new LineSegment(this.lines, index + 1);
+    return currentLineSegment.toSimplex().simplify();
   }
 
   @Override
@@ -1047,7 +1049,7 @@ public class PolylineTrace extends Trace implements Serializable {
     return true;
   }
 
-  /** Changes the geometry of this trace to p_new_polyline. */
+  /** Changes the geometry of this trace to newPolyline. */
   void change(Polyline newPolyline) {
     if (!this.isOnTheBoard()) {
       // Just change the polyline of this trace.
@@ -1067,12 +1069,12 @@ public class PolylineTrace extends Trace implements Serializable {
     // for performance reasons there is some effort to reuse
     // ShapeTree entries of the old trace in the changed trace
 
-    // look for the first line in p_new_polyline different from
+    // look for the first line in newPolyline different from
     // the lines of the existing trace
-    int lastIndex = Math.min(newPolyline.arr.length, lines.arr.length);
+    int lastIndex = Math.min(newPolyline.lines.length, lines.lines.length);
     int indexOfFirstDifferentLine = lastIndex;
     for (int i = 0; i < lastIndex; i++) {
-      if (newPolyline.arr[i] != lines.arr[i]) {
+      if (newPolyline.lines[i] != lines.lines[i]) {
         indexOfFirstDifferentLine = i;
         break;
       }
@@ -1080,12 +1082,12 @@ public class PolylineTrace extends Trace implements Serializable {
     if (indexOfFirstDifferentLine == lastIndex) {
       return; // both polylines are equal, no change necessary
     }
-    // look for the last line in p_new_polyline different from
+    // look for the last line in newPolyline different from
     // the lines of the existing trace
     int indexOfLastDifferentLine = -1;
     for (int i = 1; i <= lastIndex; i++) {
-      if (newPolyline.arr[newPolyline.arr.length - i] != lines.arr[lines.arr.length - i]) {
-        indexOfLastDifferentLine = newPolyline.arr.length - i;
+      if (newPolyline.lines[newPolyline.lines.length - i] != lines.lines[lines.lines.length - i]) {
+        indexOfLastDifferentLine = newPolyline.lines.length - i;
         break;
       }
     }
@@ -1093,7 +1095,7 @@ public class PolylineTrace extends Trace implements Serializable {
       return; // both polylines are equal, no change necessary
     }
     int keepAtStartCount = Math.max(indexOfFirstDifferentLine - 2, 0);
-    int keepAtEndCount = Math.max(newPolyline.arr.length - indexOfLastDifferentLine - 3, 0);
+    int keepAtEndCount = Math.max(newPolyline.lines.length - indexOfLastDifferentLine - 3, 0);
     board.searchTreeManager.changeEntries(this, newPolyline, keepAtStartCount, keepAtEndCount);
     lines = newPolyline;
 
@@ -1120,8 +1122,8 @@ public class PolylineTrace extends Trace implements Serializable {
   /**
    * Checks that the connection restrictions to the contact pins are satisfied.
    *
-   * <p>If p_at_start, the start of this trace is checked, else the end. Returns false if a pin is
-   * at that end where the connection is checked and the connection is not ok.
+   * <p>If atStart, the start of this trace is checked, else the end. Returns false if a pin is at
+   * that end where the connection is checked and the connection is not ok.
    */
   @Override
   public boolean checkConnectionToPin(boolean atStart) {
@@ -1138,8 +1140,8 @@ public class PolylineTrace extends Trace implements Serializable {
       contactList = this.getEndContacts();
     }
     Pin contactPin = null;
-    for (Item currContact : contactList) {
-      if (currContact instanceof Pin pin) {
+    for (Item currentContact : contactList) {
+      if (currentContact instanceof Pin pin) {
         contactPin = pin;
         break;
       }
@@ -1166,9 +1168,9 @@ public class PolylineTrace extends Trace implements Serializable {
       return true;
     }
     Pin.TraceExitRestriction matchingExitRestriction = null;
-    for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
-      if (currExitRestriction.direction.equals(traceEndDirection)) {
-        matchingExitRestriction = currExitRestriction;
+    for (Pin.TraceExitRestriction currentExitRestriction : traceExitRestrictions) {
+      if (currentExitRestriction.direction.equals(traceEndDirection)) {
+        matchingExitRestriction = currentExitRestriction;
         break;
       }
     }
@@ -1180,16 +1182,16 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
     double endLineLength = endCorner.toFloat().distance(prevEndCorner.toFloat());
-    double currClearance =
+    double currentClearance =
         board.clearanceValue(
-            this.clearanceClassNo(), contactPin.clearanceClassNo(), this.getLayer());
-    double addWidth = Math.max(edgeToTurnDist, currClearance + 1);
+            this.clearanceClassIndex(), contactPin.clearanceClassIndex(), this.getLayer());
+    double addWidth = Math.max(edgeToTurnDist, currentClearance + 1);
     double preserveLength = matchingExitRestriction.minLength + this.getHalfWidth() + addWidth;
     return preserveLength <= endLineLength;
   }
 
   /**
-   * Tries to correct a connection restriction of this trace. If p_at_start, the start of the trace
+   * Tries to correct a connection restriction of this trace. If atStart, the start of the trace
    * polygon is corrected, else the end. Returns true, if this trace was changed.
    */
   public boolean correctConnectionToPin(boolean atStart, AngleRestriction angleRestriction) {
@@ -1207,8 +1209,8 @@ public class PolylineTrace extends Trace implements Serializable {
       contactList = this.getEndContacts();
     }
     Pin contactPin = null;
-    for (Item currContact : contactList) {
-      if (currContact instanceof Pin pin) {
+    for (Item currentContact : contactList) {
+      if (currentContact instanceof Pin pin) {
         contactPin = pin;
         break;
       }
@@ -1229,10 +1231,10 @@ public class PolylineTrace extends Trace implements Serializable {
     if (edgeToTurnDist < 0) {
       return false;
     }
-    double currClearance =
+    double currentClearance =
         board.clearanceValue(
-            this.clearanceClassNo(), contactPin.clearanceClassNo(), this.getLayer());
-    double addWidth = Math.max(edgeToTurnDist, currClearance + 1);
+            this.clearanceClassIndex(), contactPin.clearanceClassIndex(), this.getLayer());
+    double addWidth = Math.max(edgeToTurnDist, currentClearance + 1);
     TileShape offsetPinShape =
         (TileShape) ((TileShape) pinShape).offset(this.getHalfWidth() + addWidth);
     if (angleRestriction == AngleRestriction.NINETY_DEGREE || offsetPinShape.isIntBox()) {
@@ -1246,7 +1248,7 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     int[] latestEntryTuple = entries[entries.length - 1];
     FloatPoint traceEntryLocationApprox =
-        tracePolyline.arr[latestEntryTuple[0]].intersectionApprox(
+        tracePolyline.lines[latestEntryTuple[0]].intersectionApprox(
             offsetPinShape.borderLine(latestEntryTuple[1]));
     // calculate the nearest legal pin exit point to traceEntryLocationApprox
     double minExitCornerDistance = Double.MAX_VALUE;
@@ -1256,79 +1258,79 @@ public class PolylineTrace extends Trace implements Serializable {
     FloatPoint nearestExitCorner = null;
     final double tolerance = 1;
     Point pinCenter = contactPin.getCenter();
-    for (Pin.TraceExitRestriction currExitRestriction : traceExitRestrictions) {
-      int currIntersectingBorderLineNo =
-          offsetPinShape.intersectingBorderLineNo(pinCenter, currExitRestriction.direction);
-      Line currPinExitRay = new Line(pinCenter, currExitRestriction.direction);
-      FloatPoint currExitCorner =
-          currPinExitRay.intersectionApprox(
-              offsetPinShape.borderLine(currIntersectingBorderLineNo));
-      double currExitCornerDistance = currExitCorner.distanceSquare(traceEntryLocationApprox);
+    for (Pin.TraceExitRestriction currentExitRestriction : traceExitRestrictions) {
+      int currentIntersectingBorderLineNo =
+          offsetPinShape.intersectingBorderLineNo(pinCenter, currentExitRestriction.direction);
+      Line currentPinExitRay = new Line(pinCenter, currentExitRestriction.direction);
+      FloatPoint currentExitCorner =
+          currentPinExitRay.intersectionApprox(
+              offsetPinShape.borderLine(currentIntersectingBorderLineNo));
+      double currentExitCornerDistance = currentExitCorner.distanceSquare(traceEntryLocationApprox);
       boolean newNearestCornerFound = false;
-      if (currExitCornerDistance + tolerance < minExitCornerDistance) {
+      if (currentExitCornerDistance + tolerance < minExitCornerDistance) {
         newNearestCornerFound = true;
-      } else if (currExitCornerDistance < minExitCornerDistance + tolerance) {
+      } else if (currentExitCornerDistance < minExitCornerDistance + tolerance) {
         // the distances are near equal, compare to the previous corners of
-        // p_trace_polyline
+        // tracePolyline
         for (int i = 1; i < tracePolyline.cornerCount(); i++) {
-          FloatPoint currTraceCorner = tracePolyline.cornerApprox(i);
-          double currTraceCornerDistance = currTraceCorner.distanceSquare(currExitCorner);
-          double oldTraceCornerDistance = currTraceCorner.distanceSquare(nearestExitCorner);
-          if (currTraceCornerDistance + tolerance < oldTraceCornerDistance) {
+          FloatPoint currentTraceCorner = tracePolyline.cornerApprox(i);
+          double currentTraceCornerDistance = currentTraceCorner.distanceSquare(currentExitCorner);
+          double oldTraceCornerDistance = currentTraceCorner.distanceSquare(nearestExitCorner);
+          if (currentTraceCornerDistance + tolerance < oldTraceCornerDistance) {
             newNearestCornerFound = true;
             break;
-          } else if (currTraceCornerDistance > oldTraceCornerDistance + tolerance) {
+          } else if (currentTraceCornerDistance > oldTraceCornerDistance + tolerance) {
             break;
           }
         }
       }
       if (newNearestCornerFound) {
-        minExitCornerDistance = currExitCornerDistance;
-        nearestPinExitRay = currPinExitRay;
-        nearestBorderLineNo = currIntersectingBorderLineNo;
-        pinExitDirection = currExitRestriction.direction;
-        nearestExitCorner = currExitCorner;
+        minExitCornerDistance = currentExitCornerDistance;
+        nearestPinExitRay = currentPinExitRay;
+        nearestBorderLineNo = currentIntersectingBorderLineNo;
+        pinExitDirection = currentExitRestriction.direction;
+        nearestExitCorner = currentExitCorner;
       }
     }
 
     // append the polygon piece around the border of the pin shape.
 
-    Line[] currLines;
+    Line[] currentLines;
 
     int cornerCount = offsetPinShape.borderLineCount();
     int clockWiseSideDiff = (nearestBorderLineNo - latestEntryTuple[1] + cornerCount) % cornerCount;
     int counterClockWiseSideDiff =
         (latestEntryTuple[1] - nearestBorderLineNo + cornerCount) % cornerCount;
-    int currBorderLineNo = nearestBorderLineNo;
+    int currentBorderLineNo = nearestBorderLineNo;
     if (counterClockWiseSideDiff <= clockWiseSideDiff) {
-      currLines = new Line[counterClockWiseSideDiff + 3];
+      currentLines = new Line[counterClockWiseSideDiff + 3];
       for (int i = 0; i <= counterClockWiseSideDiff; i++) {
-        currLines[i + 1] = offsetPinShape.borderLine(currBorderLineNo);
-        currBorderLineNo = (currBorderLineNo + 1) % cornerCount;
+        currentLines[i + 1] = offsetPinShape.borderLine(currentBorderLineNo);
+        currentBorderLineNo = (currentBorderLineNo + 1) % cornerCount;
       }
     } else {
-      currLines = new Line[clockWiseSideDiff + 3];
+      currentLines = new Line[clockWiseSideDiff + 3];
       for (int i = 0; i <= clockWiseSideDiff; i++) {
-        currLines[i + 1] = offsetPinShape.borderLine(currBorderLineNo);
-        currBorderLineNo = (currBorderLineNo - 1 + cornerCount) % cornerCount;
+        currentLines[i + 1] = offsetPinShape.borderLine(currentBorderLineNo);
+        currentBorderLineNo = (currentBorderLineNo - 1 + cornerCount) % cornerCount;
       }
     }
-    currLines[0] = nearestPinExitRay;
-    currLines[currLines.length - 1] = tracePolyline.arr[latestEntryTuple[0]];
+    currentLines[0] = nearestPinExitRay;
+    currentLines[currentLines.length - 1] = tracePolyline.lines[latestEntryTuple[0]];
 
-    Polyline borderPolyline = new Polyline(currLines);
+    Polyline borderPolyline = new Polyline(currentLines);
     if (!this.board.checkPolylineTrace(
         borderPolyline,
         this.getLayer(),
         this.getHalfWidth(),
-        this.netNoArr,
-        this.clearanceClassNo())) {
+        this.netNumbers,
+        this.clearanceClassIndex())) {
       return false;
     }
 
-    Line[] cutLines = new Line[tracePolyline.arr.length - latestEntryTuple[0] + 1];
-    cutLines[0] = currLines[currLines.length - 2];
-    System.arraycopy(tracePolyline.arr, latestEntryTuple[0], cutLines, 1, cutLines.length - 1);
+    Line[] cutLines = new Line[tracePolyline.lines.length - latestEntryTuple[0] + 1];
+    cutLines[0] = currentLines[currentLines.length - 2];
+    System.arraycopy(tracePolyline.lines, latestEntryTuple[0], cutLines, 1, cutLines.length - 1);
     Polyline cutPolyline = new Polyline(cutLines);
     Polyline changedPolyline;
     if (cutPolyline.firstCorner().equals(cutPolyline.lastCorner())) {
@@ -1342,25 +1344,25 @@ public class PolylineTrace extends Trace implements Serializable {
     this.change(changedPolyline);
 
     // create a shoveFixed exit line.
-    currLines = new Line[3];
-    currLines[0] = new Line(pinCenter, pinExitDirection.turn45Degree(2));
-    currLines[1] = nearestPinExitRay;
-    currLines[2] = offsetPinShape.borderLine(nearestBorderLineNo);
-    Polyline exitLineSegment = new Polyline(currLines);
+    currentLines = new Line[3];
+    currentLines[0] = new Line(pinCenter, pinExitDirection.turn45Degree(2));
+    currentLines[1] = nearestPinExitRay;
+    currentLines[2] = offsetPinShape.borderLine(nearestBorderLineNo);
+    Polyline exitLineSegment = new Polyline(currentLines);
     this.board.insertTrace(
         exitLineSegment,
         this.getLayer(),
         this.getHalfWidth(),
-        this.netNoArr,
-        this.clearanceClassNo(),
+        this.netNumbers,
+        this.clearanceClassIndex(),
         FixedState.SHOVE_FIXED);
     return true;
   }
 
   /**
    * Looks, if another pin connection restriction fits better than the current connection
-   * restriction and changes this trace in this case. If p_at_start, the start of the trace polygon
-   * is changed, else the end. Returns true, if this trace was changed.
+   * restriction and changes this trace in this case. If atStart, the start of the trace polygon is
+   * changed, else the end. Returns true, if this trace was changed.
    */
   public boolean swapConnectionToPin(boolean atStart) {
     Polyline tracePolyline;
@@ -1375,26 +1377,26 @@ public class PolylineTrace extends Trace implements Serializable {
     if (contactList.size() != 1) {
       return false;
     }
-    Item currContact = contactList.iterator().next();
-    if (!(currContact.getFixedState() == FixedState.SHOVE_FIXED
-        && (currContact instanceof PolylineTrace contactTrace))) {
+    Item currentContact = contactList.iterator().next();
+    if (!(currentContact.getFixedState() == FixedState.SHOVE_FIXED
+        && (currentContact instanceof PolylineTrace contactTrace))) {
       return false;
     }
     Polyline contactPolyline = contactTrace.polyline();
-    Line contactLastLine = contactPolyline.arr[contactPolyline.arr.length - 2];
+    Line contactLastLine = contactPolyline.lines[contactPolyline.lines.length - 2];
     // look, if this trace has a sharp angle with the contact trace.
-    Line firstLine = tracePolyline.arr[1];
+    Line firstLine = tracePolyline.lines[1];
     // check for sharp angle
     boolean checkSwap =
         contactLastLine.direction().projection(firstLine.direction()) == Signum.NEGATIVE;
     if (!checkSwap) {
       double halfWidth = this.getHalfWidth();
-      if (tracePolyline.arr.length > 3
+      if (tracePolyline.lines.length > 3
           && tracePolyline.cornerApprox(0).distanceSquare(tracePolyline.cornerApprox(1))
               <= halfWidth * halfWidth) {
         // check also for sharp angle with the second line
         checkSwap =
-            contactLastLine.direction().projection(tracePolyline.arr[2].direction())
+            contactLastLine.direction().projection(tracePolyline.lines[2].direction())
                 == Signum.NEGATIVE;
       }
     }
@@ -1402,8 +1404,8 @@ public class PolylineTrace extends Trace implements Serializable {
       return false;
     }
     Pin contactPin = null;
-    Collection<Item> currContacts = contactTrace.getStartContacts();
-    for (Item tmpContact : currContacts) {
+    Collection<Item> currentContacts = contactTrace.getStartContacts();
+    for (Item tmpContact : currentContacts) {
       if (tmpContact instanceof Pin pin) {
         contactPin = pin;
         break;
@@ -1417,7 +1419,7 @@ public class PolylineTrace extends Trace implements Serializable {
         contactPin.calcNearestExitRestrictionDirection(
             combinedPolyline, this.getHalfWidth(), this.getLayer());
     if (nearestPinExitDirection == null
-        || nearestPinExitDirection.equals(contactPolyline.arr[1].direction())) {
+        || nearestPinExitDirection.equals(contactPolyline.lines[1].direction())) {
       return false; // direction would not be changed
     }
     contactTrace.setFixedState(this.getFixedState());

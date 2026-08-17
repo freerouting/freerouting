@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import javax.swing.JMenuItem;
 
@@ -15,7 +15,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
   PopupMenuDynamicRoute(BoardFrame boardFrame) {
     super(boardFrame);
 
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     final LayerStructure layerStructure = boardPanel.boardHandling.getRoutingBoard().layerStructure;
 
@@ -35,19 +35,19 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay {
 
     this.add(popupCancelMenuitem, 1);
 
-    if (layerStructure.arr.length > 0) {
+    if (layerStructure.layers.length > 0) {
       this.changeLayerMenu = new PopupMenuChangeLayer(boardFrame);
       this.add(changeLayerMenu, 0);
     } else {
       this.changeLayerMenu = null;
     }
 
-    Layer currLayer =
-        layerStructure.arr[boardPanel.boardHandling.getInteractiveSettings().getLayer()];
-    disableLayerItem(layerStructure.getSignalLayerNo(currLayer));
+    Layer currentLayer =
+        layerStructure.layers[boardPanel.boardHandling.getWorkspaceSettings().getLayer()];
+    disableLayerItem(layerStructure.getSignalLayerNo(currentLayer));
   }
 
-  /** Disables the p_no-th item in the changeLayerMenu. */
+  /** Disables the no-th item in the changeLayerMenu. */
   void disableLayerItem(int no) {
     if (this.changeLayerMenu != null) {
       this.changeLayerMenu.disableItem(no);

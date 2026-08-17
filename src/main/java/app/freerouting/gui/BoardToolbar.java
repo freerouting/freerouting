@@ -3,18 +3,18 @@ package app.freerouting.gui;
 import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
-import app.freerouting.gui.session.EditorStateHandle;
-import app.freerouting.gui.session.EditorStateKind;
-import app.freerouting.gui.session.InteractiveActionThread;
+import app.freerouting.gui.workspace.EditorStateHandle;
+import app.freerouting.gui.workspace.EditorStateKind;
+import app.freerouting.gui.workspace.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.RoutingJobScheduler;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.RoutingJobScheduler;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import java.awt.BorderLayout;
@@ -100,7 +100,7 @@ class BoardToolbar extends JPanel {
         .addDebugStateListener(
             isPaused -> SwingUtilities.invokeLater(this::updateDebugButtonsState));
 
-    GuiTextManager tm = new GuiTextManager(this.getClass(), boardFrame.get_locale());
+    GuiTextManager tm = new GuiTextManager(this.getClass(), boardFrame.getLocale());
 
     this.setLayout(new BorderLayout());
 
@@ -191,7 +191,7 @@ class BoardToolbar extends JPanel {
           if (merger != null) {
             var mergedSettings = merger.merge();
             guiRoutingJob.setSettings(mergedSettings);
-            var interactiveSettings = boardFrame.boardPanel.boardHandling.getInteractiveSettings();
+            var interactiveSettings = boardFrame.boardPanel.boardHandling.getWorkspaceSettings();
             if (interactiveSettings != null) {
               interactiveSettings.setSettings(guiRoutingJob.routerSettings);
             }
@@ -200,7 +200,7 @@ class BoardToolbar extends JPanel {
           // RouterSettings has layers == null (layer count 0).  Re-apply board-
           // specific optimisations so the layer arrays are populated from the actual board
           // before the autorouter reads them (fixes Issue #676 / "get_layer_active out of
-          // range [0..-1]" warnings and MazeSearchAlgo exceptions on LibrePCB DSN files).
+          // range [0..-1]" warnings and MazeSearchEngine exceptions on LibrePCB DSN files).
           app.freerouting.board.RoutingBoard routingBoard =
               boardFrame.boardPanel.boardHandling.getRoutingBoard();
           if (routingBoard != null) {
@@ -692,20 +692,11 @@ class BoardToolbar extends JPanel {
 
   public void setUnitSelectionPanelValue(Unit unit) {
     switch (unit) {
-      case MIL:
-        this.unitSelectionPanel.setSelectedValue("unit_mil");
-        break;
-      case INCH:
-        this.unitSelectionPanel.setSelectedValue("unit_inch");
-        break;
-      case MM:
-        this.unitSelectionPanel.setSelectedValue("unit_mm");
-        break;
-      case UM:
-        this.unitSelectionPanel.setSelectedValue("unit_um");
-        break;
-      default:
-        break;
+      case MIL -> this.unitSelectionPanel.setSelectedValue("unit_mil");
+      case INCH -> this.unitSelectionPanel.setSelectedValue("unit_inch");
+      case MM -> this.unitSelectionPanel.setSelectedValue("unit_mm");
+      case UM -> this.unitSelectionPanel.setSelectedValue("unit_um");
+      default -> {}
     }
   }
 
@@ -833,7 +824,7 @@ class BoardToolbar extends JPanel {
       return;
     }
 
-    GuiTextManager tm = new GuiTextManager(this.getClass(), boardFrame.get_locale());
+    GuiTextManager tm = new GuiTextManager(this.getClass(), boardFrame.getLocale());
     if (isShiftDown) {
       tm.setText(varsNextButton, "debug_fast_forward");
       tm.setText(varsPreviousButton, "debug_rewind");

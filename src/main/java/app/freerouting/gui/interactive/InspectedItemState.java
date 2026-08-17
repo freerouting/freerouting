@@ -5,8 +5,8 @@ import app.freerouting.board.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.WindowObjectInfo;
 import app.freerouting.gui.rendering.BoardRenderer;
-import app.freerouting.gui.session.ClearanceViolations;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.ClearanceViolations;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
@@ -75,17 +75,17 @@ public final class InspectedItemState extends InteractiveState {
   public InteractiveState extentToWholeNets() {
 
     // collect all net numbers of the selected items
-    Set<Integer> currNetNoSet = new TreeSet<>();
-    for (Item currItem : itemList) {
-      if (currItem instanceof Connectable) {
-        for (int i = 0; i < currItem.netCount(); i++) {
-          currNetNoSet.add(currItem.getNetNo(i));
+    Set<Integer> currentNetNoSet = new TreeSet<>();
+    for (Item currentItem : itemList) {
+      if (currentItem instanceof Connectable) {
+        for (int i = 0; i < currentItem.netCount(); i++) {
+          currentNetNoSet.add(currentItem.getNetNumber(i));
         }
       }
     }
     Set<Item> newSelectedItems = new TreeSet<>();
-    for (int currNetNo : currNetNoSet) {
-      newSelectedItems.addAll(hdlg.getRoutingBoard().getConnectableItems(currNetNo));
+    for (int currentNetNumber : currentNetNoSet) {
+      newSelectedItems.addAll(hdlg.getRoutingBoard().getConnectableItems(currentNetNumber));
     }
     this.itemList = newSelectedItems;
     if (newSelectedItems.isEmpty()) {
@@ -100,15 +100,15 @@ public final class InspectedItemState extends InteractiveState {
   public InteractiveState extentToWholeComponents() {
 
     // collect all group numbers of the selected items
-    Set<Integer> currGroupNoSet = new TreeSet<>();
-    for (Item currItem : itemList) {
-      if (currItem.getComponentNo() > 0) {
-        currGroupNoSet.add(currItem.getComponentNo());
+    Set<Integer> currentGroupNoSet = new TreeSet<>();
+    for (Item currentItem : itemList) {
+      if (currentItem.getComponentId() > 0) {
+        currentGroupNoSet.add(currentItem.getComponentId());
       }
     }
     Set<Item> newSelectedItems = new TreeSet<>(itemList);
-    for (int currGroupNo : currGroupNoSet) {
-      newSelectedItems.addAll(hdlg.getRoutingBoard().getComponentItems(currGroupNo));
+    for (int currentGroupNo : currentGroupNoSet) {
+      newSelectedItems.addAll(hdlg.getRoutingBoard().getComponentItems(currentGroupNo));
     }
     if (newSelectedItems.isEmpty()) {
       return this.returnState;
@@ -121,9 +121,9 @@ public final class InspectedItemState extends InteractiveState {
   /** Select also all items belonging to any connected set of the current selected items. */
   public InteractiveState extentToWholeConnectedSets() {
     Set<Item> newSelectedItems = new TreeSet<>();
-    for (Item currItem : this.itemList) {
-      if (currItem instanceof Connectable) {
-        newSelectedItems.addAll(currItem.getConnectedSet(-1));
+    for (Item currentItem : this.itemList) {
+      if (currentItem instanceof Connectable) {
+        newSelectedItems.addAll(currentItem.getConnectedSet(-1));
       }
     }
     if (newSelectedItems.isEmpty()) {
@@ -138,9 +138,9 @@ public final class InspectedItemState extends InteractiveState {
   /** Select also all items belonging to any connection of the current selected items. */
   public InteractiveState extentToWholeConnections() {
     Set<Item> newSelectedItems = new TreeSet<>();
-    for (Item currItem : this.itemList) {
-      if (currItem instanceof Connectable) {
-        newSelectedItems.addAll(currItem.getConnectionItems());
+    for (Item currentItem : this.itemList) {
+      if (currentItem instanceof Connectable) {
+        newSelectedItems.addAll(currentItem.getConnectionItems());
       }
     }
     if (newSelectedItems.isEmpty()) {
@@ -185,8 +185,8 @@ public final class InspectedItemState extends InteractiveState {
     if (clearanceViolations == null) {
       clearanceViolations = new ClearanceViolations(this.itemList);
       Integer violationCount = clearanceViolations.list.size();
-      String currMessage = violationCount + " " + tm.getText("clearance_violations_found");
-      hdlg.screenMessages.setStatusMessage(currMessage);
+      String currentMessage = violationCount + " " + tm.getText("clearance_violations_found");
+      hdlg.screenMessages.setStatusMessage(currentMessage);
     } else {
       clearanceViolations = null;
       hdlg.screenMessages.setStatusMessage("");
@@ -196,7 +196,7 @@ public final class InspectedItemState extends InteractiveState {
 
   /** Removes items not selected by the current interactive filter from the selected item list. */
   public InteractiveState filter() {
-    itemList = hdlg.getInteractiveSettings().getItemSelectionFilter().filter(itemList);
+    itemList = hdlg.getWorkspaceSettings().getItemSelectionFilter().filter(itemList);
     InteractiveState result = this;
     if (itemList.isEmpty()) {
       result = this.returnState;
@@ -226,9 +226,9 @@ public final class InspectedItemState extends InteractiveState {
       return;
     }
 
-    for (Item currItem : itemList) {
+    for (Item currentItem : itemList) {
       BoardRenderer.drawOverlayItem(
-          currItem,
+          currentItem,
           graphics,
           hdlg.graphicsContext,
           hdlg.graphicsContext.getHighlightColor(),

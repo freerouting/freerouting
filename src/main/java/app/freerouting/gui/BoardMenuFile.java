@@ -2,9 +2,9 @@ package app.freerouting.gui;
 
 import static app.freerouting.Freerouting.globalSettings;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -30,7 +30,7 @@ public class BoardMenuFile extends JMenu {
 
   /** Creates a new instance of BoardFileMenu. */
   public BoardMenuFile(BoardFrame boardFrame) {
-    tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     setText(tm.getText("file"));
 
@@ -96,24 +96,6 @@ public class BoardMenuFile extends JMenu {
   }
 
   /**
-   * Registers a listener notified when a file is selected for opening.
-   *
-   * @param listener the listener to register
-   */
-  public void addOpenEventListener(Consumer<File> listener) {
-    openEventListeners.add(listener);
-  }
-
-  /**
-   * Registers a listener notified when a file is selected for saving.
-   *
-   * @param listener the listener to register
-   */
-  public void addSaveAsEventListener(Consumer<File> listener) {
-    saveAsEventListeners.add(listener);
-  }
-
-  /**
    * Shows a file chooser for opening a design file (GUI layer owns file picking; SoC plan Phase 4).
    *
    * @param defaultDirectory the directory to open the chooser in; may be null
@@ -144,5 +126,23 @@ public class BoardMenuFile extends JMenu {
 
     fileChooser.showOpenDialog(parent);
     return fileChooser.getSelectedFile();
+  }
+
+  /**
+   * Registers a listener notified when a file is selected for opening.
+   *
+   * @param listener the listener to register
+   */
+  public void addOpenEventListener(Consumer<File> listener) {
+    openEventListeners.add(listener);
+  }
+
+  /**
+   * Registers a listener notified when a file is selected for saving.
+   *
+   * @param listener the listener to register
+   */
+  public void addSaveAsEventListener(Consumer<File> listener) {
+    saveAsEventListeners.add(listener);
   }
 }

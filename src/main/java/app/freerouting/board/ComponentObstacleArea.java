@@ -9,8 +9,8 @@ import java.util.Locale;
 public class ComponentObstacleArea extends ObstacleArea {
 
   /**
-   * Creates a new instance of ComponentObstacleArea If p_is_obstacle is false, the new instance is
-   * not regarded as obstacle and used only for displaying on the screen.
+   * Creates a new instance of ComponentObstacleArea If isObstacle is false, the new instance is not
+   * regarded as obstacle and used only for displaying on the screen.
    */
   ComponentObstacleArea(
       Area area,
@@ -18,9 +18,9 @@ public class ComponentObstacleArea extends ObstacleArea {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int clearanceType,
-      int idNo,
-      int componentNo,
+      int clearanceClassIndex,
+      int id,
+      int componentId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
@@ -31,25 +31,25 @@ public class ComponentObstacleArea extends ObstacleArea {
         rotationInDegree,
         sideChanged,
         new int[0],
-        clearanceType,
-        idNo,
-        componentNo,
+        clearanceClassIndex,
+        id,
+        componentId,
         name,
         fixedState,
         board);
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     return new ComponentObstacleArea(
         getRelativeArea(),
         getLayer(),
         getTranslation(),
         getRotationInDegree(),
         getSideChanged(),
-        clearanceClassNo(),
-        idNo,
-        getComponentNo(),
+        clearanceClassIndex(),
+        id,
+        getComponentId(),
         this.name,
         getFixedState(),
         board);
@@ -59,11 +59,11 @@ public class ComponentObstacleArea extends ObstacleArea {
   public boolean isObstacle(Item other) {
     return other != this
         && other instanceof ComponentObstacleArea
-        && other.getComponentNo() != this.getComponentNo();
+        && other.getComponentId() != this.getComponentId();
   }
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
+  public boolean isTraceObstacle(int netNumber) {
     return false;
   }
 
@@ -77,18 +77,18 @@ public class ComponentObstacleArea extends ObstacleArea {
 
   /** IsFront. */
   public boolean isFront() {
-    Component component = board.components.get(this.getComponentNo());
+    Component component = board.components.get(this.getComponentId());
     return component == null || component.placedOnFront();
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("component_keepout"));
-    this.printShapeInfo(window, locale);
-    this.printClearanceInfo(window, locale);
-    this.printClearanceViolationInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("component_keepout"));
+    this.printShapeInfo(printer, locale);
+    this.printClearanceInfo(printer, locale);
+    this.printClearanceViolationInfo(printer, locale);
+    printer.newline();
   }
 }

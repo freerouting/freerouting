@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -15,7 +15,7 @@ public final class BoardMenuOther extends JMenu {
   /** Creates a new instance of BoardMenuOther. */
   private BoardMenuOther(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
-    tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    tm = new TextManager(this.getClass(), boardFrame.getLocale());
   }
 
   /** Returns a new other menu for the board frame. */

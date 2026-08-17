@@ -45,16 +45,16 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
   }
 
   @Override
-  public int getIdNo() {
-    return (this.item.getIdNo() << 10) | this.indexInItem;
+  public int getId() {
+    return (this.item.getId() << 10) | this.indexInItem;
   }
 
   /** Checks if this room already has a 1-dimensional door to other. */
   @Override
   public boolean doorExists(ExpansionRoom other) {
     if (doors != null) {
-      for (ExpansionDoor currDoor : this.doors) {
-        if (currDoor.firstRoom == other || currDoor.secondRoom == other) {
+      for (ExpansionDoor currentDoor : this.doors) {
+        if (currentDoor.firstRoom == other || currentDoor.secondRoom == other) {
           return true;
         }
       }
@@ -112,8 +112,8 @@ public class ObstacleExpansionRoom implements CompleteExpansionRoom {
 
   @Override
   public void resetDoors() {
-    for (ExpandableObject currDoor : this.doors) {
-      currDoor.reset();
+    for (ExpandableObject currentDoor : this.doors) {
+      currentDoor.reset();
     }
   }
 

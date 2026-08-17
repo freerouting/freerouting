@@ -31,14 +31,14 @@ public class ComponentOutline extends Item implements Serializable {
       boolean isFront,
       Vector translation,
       double rotationInDegree,
-      int idNo,
-      int componentNo,
+      int id,
+      int componentId,
       boolean isCourtyard,
       boolean isFabrication,
       boolean isClosed,
       FixedState fixedState,
       BasicBoard board) {
-    super(new int[0], 0, idNo, componentNo, fixedState, board);
+    super(new int[0], 0, id, componentId, fixedState, board);
     this.relativeArea = area;
     this.isFront = isFront;
     this.translation = translation;
@@ -49,14 +49,14 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     return new ComponentOutline(
         this.relativeArea,
         this.isFront,
         this.translation,
         this.rotationInDegree,
-        idNo,
-        this.getComponentNo(),
+        id,
+        this.getComponentId(),
         this.isCourtyard,
         this.isFabrication,
         this.isClosed,
@@ -216,7 +216,7 @@ public class ComponentOutline extends Item implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {}
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {}
 
   @Override
   public boolean write(ObjectOutputStream stream) {

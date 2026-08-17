@@ -82,11 +82,11 @@ public abstract class PrintableShape {
 
   static class Polygon extends PrintableShape {
 
-    public final FloatPoint[] cornerArr;
+    public final FloatPoint[] corners;
 
     public Polygon(FloatPoint[] corners, Locale locale) {
       super(locale);
-      cornerArr = corners;
+      this.corners = corners;
     }
 
     @Override
@@ -95,7 +95,7 @@ public abstract class PrintableShape {
 
       return tm.getText("polygon")
           + ": "
-          + Arrays.stream(cornerArr)
+          + Arrays.stream(corners)
               .map(c -> c.toString(this.locale))
               .collect(Collectors.joining(", "));
     }

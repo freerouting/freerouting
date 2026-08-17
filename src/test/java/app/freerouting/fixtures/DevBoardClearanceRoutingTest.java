@@ -24,7 +24,7 @@ class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
     assertTrue(boardEdgeClassNo >= 0, "Expected board_edge clearance class to be created.");
     assertEquals(
         boardEdgeClassNo,
-        job.board.getOutline().clearanceClassNo(),
+        job.board.getOutline().clearanceClassIndex(),
         "Board outline should be assigned to the board_edge clearance class.");
 
     int expectedBoardUnits =

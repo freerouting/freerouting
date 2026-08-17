@@ -1,7 +1,7 @@
 package app.freerouting.drc;
 
 import app.freerouting.board.Item;
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.util.TextManager;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 /** Information of a clearance violation between 2 items. */
-public class ClearanceViolation implements ObjectInfoPanel.Printable {
+public class ClearanceViolation implements ItemInfoPrinter.Printable {
 
   /** The first item of the clearance violation. */
   public final Item firstItem;
@@ -94,29 +94,29 @@ public class ClearanceViolation implements ObjectInfoPanel.Printable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("clearance_violation_2"));
-    window.append(" " + tm.getText("at") + " ");
-    window.append(shape.centreOfGravity());
-    window.append(", " + tm.getText("width") + " ");
-    window.append(2 * this.shape.smallestRadius());
-    window.append(", " + tm.getText("layer") + " ");
-    window.append(firstItem.board.layerStructure.arr[this.layer].name);
-    window.append(", " + tm.getText("between"));
-    window.newline();
-    window.indent();
-    firstItem.printInfo(window, locale);
-    window.indent();
-    secondItem.printInfo(window, locale);
-    window.newline();
-    window.indent();
+    printer.appendBold(tm.getText("clearance_violation_2"));
+    printer.append(" " + tm.getText("at") + " ");
+    printer.append(shape.centreOfGravity());
+    printer.append(", " + tm.getText("width") + " ");
+    printer.append(2 * this.shape.smallestRadius());
+    printer.append(", " + tm.getText("layer") + " ");
+    printer.append(firstItem.board.layerStructure.layers[this.layer].name);
+    printer.append(", " + tm.getText("between"));
+    printer.newline();
+    printer.indent();
+    firstItem.printInfo(printer, locale);
+    printer.indent();
+    secondItem.printInfo(printer, locale);
+    printer.newline();
+    printer.indent();
     String clearanceViolationInfoExpectedClearance =
         tm.getText(
             "clearanceViolationInfoExpectedClearance",
             "%.4f".formatted(this.expectedClearance / 10000.0),
             "%.4f".formatted(this.actualClearance / 10000.0));
-    window.append(clearanceViolationInfoExpectedClearance);
+    printer.append(clearanceViolationInfoExpectedClearance);
   }
 }

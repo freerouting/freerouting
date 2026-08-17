@@ -22,7 +22,7 @@ public class ItemSelectionFilter implements Serializable {
     this.values[SelectableChoices.BOARD_OUTLINE.ordinal()] = false;
   }
 
-  /** Creates a new filter with only p_item_type selected. */
+  /** Creates a new filter with only itemType selected. */
   public ItemSelectionFilter(SelectableChoices itemType) {
     this.values = new boolean[SelectableChoices.values().length];
     values[itemType.ordinal()] = true;
@@ -30,7 +30,7 @@ public class ItemSelectionFilter implements Serializable {
     values[SelectableChoices.UNFIXED.ordinal()] = true;
   }
 
-  /** Creates a new filter with only p_item_types selected. */
+  /** Creates a new filter with only itemTypes selected. */
   public ItemSelectionFilter(SelectableChoices[] itemTypes) {
     this.values = new boolean[SelectableChoices.values().length];
     for (int i = 0; i < itemTypes.length; i++) {
@@ -63,9 +63,9 @@ public class ItemSelectionFilter implements Serializable {
   /** Filters a collection of items with this filter. */
   public Set<Item> filter(Set<Item> items) {
     Set<Item> result = new TreeSet<>();
-    for (Item currItem : items) {
-      if (currItem.isSelectedByFilter(this)) {
-        result.add(currItem);
+    for (Item currentItem : items) {
+      if (currentItem.isSelectedByFilter(this)) {
+        result.add(currentItem);
       }
     }
     return result;

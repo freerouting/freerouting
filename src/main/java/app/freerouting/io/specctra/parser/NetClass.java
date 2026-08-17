@@ -100,12 +100,12 @@ public class NetClass {
             } else if (nextToken == Keyword.VIA_RULE) {
               viaRule = DsnFile.readStringScope(scanner);
             } else if (nextToken == Keyword.CIRCUIT) {
-              Circuit.ReadScopeResult currRule = Circuit.readScope(scanner);
-              if (currRule != null) {
-                maxTraceLength = currRule.maxLength;
-                minTraceLength = currRule.minLength;
-                useVia.addAll(currRule.useVia);
-                useLayer.addAll(currRule.useLayer);
+              Circuit.ReadScopeResult currentRule = Circuit.readScope(scanner);
+              if (currentRule != null) {
+                maxTraceLength = currentRule.maxLength;
+                minTraceLength = currentRule.minLength;
+                useVia.addAll(currentRule.useVia);
+                useLayer.addAll(currentRule.useLayer);
               }
             } else if (nextToken == Keyword.CLEARANCE_CLASS) {
               traceClearanceClass = DsnFile.readStringScope(scanner);

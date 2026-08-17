@@ -72,9 +72,9 @@ public class GraphicsContext implements Serializable {
     itemColorTable = new ItemColorTableModel(layerStructure, locale);
     otherColorTable = new OtherColorTableModel(locale);
     colorIntensityTable = new ColorIntensityTable();
-    layerVisibilityArr = new double[layerStructure.arr.length];
+    layerVisibilityArr = new double[layerStructure.layers.length];
     for (int i = 0; i < layerVisibilityArr.length; i++) {
-      if (layerStructure.arr[i].isSignal) {
+      if (layerStructure.layers[i].isSignal) {
         layerVisibilityArr[i] = 1.00;
       } else {
         layerVisibilityArr[i] = 0.25;
@@ -107,13 +107,13 @@ public class GraphicsContext implements Serializable {
   }
 
   static void setTranslucency(Graphics2D g2, double factor) {
-    AlphaComposite currAlphaComposite;
+    AlphaComposite currentAlphaComposite;
     if (factor >= 0) {
-      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) factor);
+      currentAlphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) factor);
     } else {
-      currAlphaComposite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -factor);
+      currentAlphaComposite = AlphaComposite.getInstance(AlphaComposite.DST_OVER, (float) -factor);
     }
-    g2.setComposite(currAlphaComposite);
+    g2.setComposite(currentAlphaComposite);
   }
 
   private static void restoreGraphics2dState(
@@ -312,7 +312,7 @@ public class GraphicsContext implements Serializable {
     g2.draw(rectangle);
   }
 
-  /** Draws the boundary of p_shape. */
+  /** Draws the boundary of shape. */
   public void drawBoundary(
       Shape shape, double drawHalfWidth, Color color, Graphics g, double translucencyFactor) {
     if (shape instanceof PolylineShape) {
@@ -324,10 +324,10 @@ public class GraphicsContext implements Serializable {
       System.arraycopy(drawCorners, 0, closedDrawCorners, 0, drawCorners.length);
       closedDrawCorners[closedDrawCorners.length - 1] = drawCorners[0];
       this.draw(closedDrawCorners, drawHalfWidth, color, g, translucencyFactor);
-    } else if (shape instanceof Circle currCircle) {
+    } else if (shape instanceof Circle currentCircle) {
       this.drawCircle(
-          currCircle.center.toFloat(),
-          currCircle.radius,
+          currentCircle.center.toFloat(),
+          currentCircle.radius,
           drawHalfWidth,
           color,
           g,
@@ -335,7 +335,7 @@ public class GraphicsContext implements Serializable {
     }
   }
 
-  /** Draws the boundary of p_area. */
+  /** Draws the boundary of area. */
   public void drawBoundary(
       Area area, double drawHalfWidth, Color color, Graphics g, double translucencyFactor) {
     drawBoundary(area.getBorder(), drawHalfWidth, color, g, translucencyFactor);
@@ -571,21 +571,21 @@ public class GraphicsContext implements Serializable {
       return;
     }
     GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-    for (Ellipse currEllipse : ellipseArr) {
-      Point2D center = coordinateTransform.boardToScreen(currEllipse.center);
-      double biggerRadius = coordinateTransform.boardToScreen(currEllipse.biggerRadius);
+    for (Ellipse currentEllipse : ellipseArr) {
+      Point2D center = coordinateTransform.boardToScreen(currentEllipse.center);
+      double biggerRadius = coordinateTransform.boardToScreen(currentEllipse.biggerRadius);
       if (!pointNearRectangle(
           center.getX(), center.getY(), g.getClip().getBounds(), biggerRadius)) {
         continue;
       }
-      double smallerRadius = coordinateTransform.boardToScreen(currEllipse.smallerRadius);
+      double smallerRadius = coordinateTransform.boardToScreen(currentEllipse.smallerRadius);
       Ellipse2D drawEllipse =
           new Ellipse2D.Double(
               center.getX() - biggerRadius,
               center.getY() - smallerRadius,
               2 * biggerRadius,
               2 * smallerRadius);
-      double rotation = coordinateTransform.boardToScreenAngle(currEllipse.rotation);
+      double rotation = coordinateTransform.boardToScreenAngle(currentEllipse.rotation);
       AffineTransform affineTransform = new AffineTransform();
       affineTransform.rotate(rotation, center.getX(), center.getY());
       java.awt.Shape rotatedEllipse = affineTransform.createTransformedShape(drawEllipse);
@@ -598,7 +598,7 @@ public class GraphicsContext implements Serializable {
     g2.fill(drawPath);
   }
 
-  /** Checks, if the distance of the point with coordinates p_x, p_y to p_rect is at most p_dist. */
+  /** Checks, if the distance of the point with coordinates x, y to rect is at most dist. */
   private boolean pointNearRectangle(double x, double y, Rectangle rect, double dist) {
     if (x < rect.x - dist) {
       return false;
@@ -612,7 +612,7 @@ public class GraphicsContext implements Serializable {
     return y <= rect.y + rect.height + dist;
   }
 
-  /** Fill the interior of the polygon shape represented by p_points. */
+  /** Fill the interior of the polygon shape represented by points. */
   public void fillShape(FloatPoint[] points, Graphics g, Color color, double translucencyFactor) {
     if (color == null) {
       return;
@@ -620,9 +620,9 @@ public class GraphicsContext implements Serializable {
     Graphics2D g2 = (Graphics2D) g;
     Polygon drawPolygon = new Polygon();
     for (int i = 0; i < points.length; i++) {
-      Point2D currCorner = coordinateTransform.boardToScreen(points[i]);
+      Point2D currentCorner = coordinateTransform.boardToScreen(points[i]);
       drawPolygon.addPoint(
-          (int) Math.round(currCorner.getX()), (int) Math.round(currCorner.getY()));
+          (int) Math.round(currentCorner.getX()), (int) Math.round(currentCorner.getY()));
     }
     g2.setColor(color);
     setTranslucency(g2, translucencyFactor);
@@ -642,11 +642,11 @@ public class GraphicsContext implements Serializable {
     GeneralPath drawPath = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
     for (int j = 0; j < pointLists.length; j++) {
       Polygon drawPolygon = new Polygon();
-      FloatPoint[] currPointList = pointLists[j];
-      for (int i = 0; i < currPointList.length; i++) {
-        Point2D currCorner = coordinateTransform.boardToScreen(currPointList[i]);
+      FloatPoint[] currentPointList = pointLists[j];
+      for (int i = 0; i < currentPointList.length; i++) {
+        Point2D currentCorner = coordinateTransform.boardToScreen(currentPointList[i]);
         drawPolygon.addPoint(
-            (int) Math.round(currCorner.getX()), (int) Math.round(currCorner.getY()));
+            (int) Math.round(currentCorner.getX()), (int) Math.round(currentCorner.getY()));
       }
       drawPath.append(drawPolygon, false);
     }
@@ -679,19 +679,19 @@ public class GraphicsContext implements Serializable {
 
       FloatPoint[][] drawPolygons = new FloatPoint[holes.length + 1][];
       for (int j = 0; j < drawPolygons.length; j++) {
-        PolylineShape currDrawShape;
+        PolylineShape currentDrawShape;
         if (j == 0) {
-          currDrawShape = border;
+          currentDrawShape = border;
         } else {
-          currDrawShape = (PolylineShape) holes[j - 1];
+          currentDrawShape = (PolylineShape) holes[j - 1];
         }
-        drawPolygons[j] = new FloatPoint[currDrawShape.borderLineCount() + 1];
-        FloatPoint[] currDrawPolygon = drawPolygons[j];
-        for (int i = 0; i < currDrawPolygon.length - 1; i++) {
-          currDrawPolygon[i] = currDrawShape.cornerApprox(i);
+        drawPolygons[j] = new FloatPoint[currentDrawShape.borderLineCount() + 1];
+        FloatPoint[] currentDrawPolygon = drawPolygons[j];
+        for (int i = 0; i < currentDrawPolygon.length - 1; i++) {
+          currentDrawPolygon[i] = currentDrawShape.cornerApprox(i);
         }
         // close the polygon
-        currDrawPolygon[currDrawPolygon.length - 1] = currDrawPolygon[0];
+        currentDrawPolygon[currentDrawPolygon.length - 1] = currentDrawPolygon[0];
       }
       fillArea(drawPolygons, g, color, translucencyFactor);
     }
@@ -699,9 +699,9 @@ public class GraphicsContext implements Serializable {
       TileShape[] tiles = area.splitToConvex();
       for (int i = 0; i < tiles.length; i++) {
         FloatPoint[] corners = new FloatPoint[tiles[i].borderLineCount() + 1];
-        TileShape currTile = tiles[i];
+        TileShape currentTile = tiles[i];
         for (int j = 0; j < corners.length - 1; j++) {
-          corners[j] = currTile.cornerApprox(j);
+          corners[j] = currentTile.cornerApprox(j);
         }
         corners[corners.length - 1] = corners[0];
         draw(corners, 1, Color.white, g, 0.7);
@@ -895,9 +895,9 @@ public class GraphicsContext implements Serializable {
   }
 
   /** Sets the layer, which will be excluded from automatic layer dimming. */
-  public void setFullyVisibleLayer(int layerNo) {
-    fullyVisibleLayer = layerNo;
-    if (layerNo != -1) {
+  public void setFullyVisibleLayer(int layerIndex) {
+    fullyVisibleLayer = layerIndex;
+    if (layerIndex != -1) {
       fullyVisibleVirtualLayer = -1;
     }
   }
@@ -987,29 +987,29 @@ public class GraphicsContext implements Serializable {
    * Gets the visibility factor of the input layer. The result is between 0 and 1. If the result is
    * 0, the layer is invisible, if the result is 1, the layer is fully visible.
    */
-  public double getLayerVisibility(int layerNo) {
+  public double getLayerVisibility(int layerIndex) {
     double result;
     if (fullyVisibleVirtualLayer != -1) {
-      result = this.autoLayerDimFactor * layerVisibilityArr[layerNo];
-    } else if (layerNo == this.fullyVisibleLayer) {
-      result = layerVisibilityArr[layerNo];
+      result = this.autoLayerDimFactor * layerVisibilityArr[layerIndex];
+    } else if (layerIndex == this.fullyVisibleLayer) {
+      result = layerVisibilityArr[layerIndex];
     } else {
-      result = this.autoLayerDimFactor * layerVisibilityArr[layerNo];
+      result = this.autoLayerDimFactor * layerVisibilityArr[layerIndex];
     }
     return result;
   }
 
   /** Gets the visibility factor of the input layer without the automatic layer dimming. */
-  public double getRawLayerVisibility(int layerNo) {
-    return layerVisibilityArr[layerNo];
+  public double getRawLayerVisibility(int layerIndex) {
+    return layerVisibilityArr[layerIndex];
   }
 
   /**
    * Gets the visibility factor of the input layer. The value is expected between 0 and 1. If the
    * value is 0, the layer is invisible, if the value is 1, the layer is fully visible.
    */
-  public void setLayerVisibility(int layerNo, double value) {
-    layerVisibilityArr[layerNo] = Math.max(0, Math.min(value, 1));
+  public void setLayerVisibility(int layerIndex, double value) {
+    layerVisibilityArr[layerIndex] = Math.max(0, Math.min(value, 1));
   }
 
   public void setLayerVisibilityArr(double[] layerVisibilityArr) {

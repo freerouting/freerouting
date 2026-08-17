@@ -70,7 +70,7 @@ class MazeListElementTest {
     }
 
     @Override
-    public int getIdNo() {
+    public int getId() {
       return id;
     }
   }

@@ -8,7 +8,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.TileShape;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.BoardRules;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -61,10 +61,11 @@ public final class TileConstructionState extends CornerItemConstructionState {
       edgeLines[cornerCount - 1] = new Line(prevCorner, firstCorner);
       TileShape obstacleShape = TileShape.getInstance(edgeLines);
       RoutingBoard board = hdlg.getRoutingBoard();
-      int layer = hdlg.getInteractiveSettings().getLayer();
-      int clClass = BoardRules.clearanceClassNone();
+      int layer = hdlg.getWorkspaceSettings().getLayer();
+      int clearanceClassIndex = BoardRules.clearanceClassNone();
 
-      constructionSucceeded = board.checkShape(obstacleShape, layer, new int[0], clClass);
+      constructionSucceeded =
+          board.checkShape(obstacleShape, layer, new int[0], clearanceClassIndex);
       if (constructionSucceeded) {
         // insert the new shape as keepout
         this.observersActivated = !hdlg.getRoutingBoard().observersActive();
@@ -72,7 +73,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
           hdlg.getRoutingBoard().startNotifyObservers();
         }
         board.generateSnapshot();
-        board.insertObstacle(obstacleShape, layer, clClass, FixedState.UNFIXED);
+        board.insertObstacle(obstacleShape, layer, clearanceClassIndex, FixedState.UNFIXED);
         if (this.observersActivated) {
           hdlg.getRoutingBoard().endNotifyObservers();
           this.observersActivated = false;
@@ -89,21 +90,21 @@ public final class TileConstructionState extends CornerItemConstructionState {
 
   /** Skips concave corners at the end of the corner list. */
   private void removeConcaveCorners() {
-    IntPoint[] cornerArr = new IntPoint[cornerList.size()];
+    IntPoint[] corners = new IntPoint[cornerList.size()];
     Iterator<IntPoint> it = cornerList.iterator();
-    for (int i = 0; i < cornerArr.length; i++) {
-      cornerArr[i] = it.next();
+    for (int i = 0; i < corners.length; i++) {
+      corners[i] = it.next();
     }
 
-    int newLength = cornerArr.length;
+    int newLength = corners.length;
     if (newLength < 3) {
       return;
     }
-    IntPoint lastCorner = cornerArr[newLength - 1];
-    IntPoint currCorner = cornerArr[newLength - 2];
+    IntPoint lastCorner = corners[newLength - 1];
+    IntPoint currentCorner = corners[newLength - 2];
     while (newLength > 2) {
-      IntPoint prevCorner = cornerArr[newLength - 3];
-      Side lastCornerSide = lastCorner.sideOf(prevCorner, currCorner);
+      IntPoint prevCorner = corners[newLength - 3];
+      Side lastCornerSide = lastCorner.sideOf(prevCorner, currentCorner);
       if (lastCornerSide == Side.ON_THE_LEFT) {
         // side is ok, nothing to skip
         break;
@@ -111,7 +112,7 @@ public final class TileConstructionState extends CornerItemConstructionState {
       if (this.hdlg.getRoutingBoard().rules.getTraceAngleRestriction()
           != AngleRestriction.FORTYFIVE_DEGREE) {
         // skip concave corner
-        cornerArr[newLength - 2] = lastCorner;
+        corners[newLength - 2] = lastCorner;
       }
       --newLength;
       // In 45 degree case just skip last corner as nothing like the following
@@ -122,19 +123,19 @@ public final class TileConstructionState extends CornerItemConstructionState {
         // prevent generating a non orthogonal line by changing the previous corner
         IntPoint prevPrevCorner = null;
         if (newLength >= 3) {
-          prevPrevCorner = cornerArr[newLength - 3];
+          prevPrevCorner = corners[newLength - 3];
         }
         if (prevPrevCorner != null && prevPrevCorner.x == prevCorner.x) {
-          cornerArr[newLength - 2] = new IntPoint(prevCorner.x, lastCorner.y);
+          corners[newLength - 2] = new IntPoint(prevCorner.x, lastCorner.y);
         } else {
-          cornerArr[newLength - 2] = new IntPoint(lastCorner.x, prevCorner.y);
+          corners[newLength - 2] = new IntPoint(lastCorner.x, prevCorner.y);
         }
       }
-      currCorner = prevCorner;
+      currentCorner = prevCorner;
     }
-    if (newLength < cornerArr.length) {
+    if (newLength < corners.length) {
       // something skipped, update cornerList
-      cornerList = new LinkedList<>(Arrays.asList(cornerArr).subList(0, newLength));
+      cornerList = new LinkedList<>(Arrays.asList(corners).subList(0, newLength));
     }
   }
 
@@ -147,26 +148,26 @@ public final class TileConstructionState extends CornerItemConstructionState {
     if (cornerList.size() < 4) {
       return;
     }
-    IntPoint[] cornerArr = new IntPoint[cornerList.size()];
+    IntPoint[] corners = new IntPoint[cornerList.size()];
     Iterator<IntPoint> it = cornerList.iterator();
-    for (int i = 0; i < cornerArr.length; i++) {
-      cornerArr[i] = it.next();
+    for (int i = 0; i < corners.length; i++) {
+      corners[i] = it.next();
     }
-    int newLength = cornerArr.length;
+    int newLength = corners.length;
 
-    IntPoint firstCorner = cornerArr[0];
-    IntPoint secondCorner = cornerArr[1];
+    IntPoint firstCorner = corners[0];
+    IntPoint secondCorner = corners[1];
     while (newLength > 3) {
-      IntPoint lastCorner = cornerArr[newLength - 1];
+      IntPoint lastCorner = corners[newLength - 1];
       if (lastCorner.sideOf(secondCorner, firstCorner) != Side.ON_THE_LEFT) {
         break;
       }
       --newLength;
     }
 
-    if (newLength != cornerArr.length) {
+    if (newLength != corners.length) {
       // recalculate the cornerList
-      cornerList = new LinkedList<>(Arrays.asList(cornerArr).subList(0, newLength));
+      cornerList = new LinkedList<>(Arrays.asList(corners).subList(0, newLength));
       addCornerForSnapAngle();
     }
   }

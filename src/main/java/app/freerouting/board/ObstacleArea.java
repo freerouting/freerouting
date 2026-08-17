@@ -35,7 +35,7 @@ public class ObstacleArea extends Item implements Serializable {
   private boolean sideChanged;
 
   /**
-   * Creates a new relativeArea item which may belong to several nets. p_name is null, if the
+   * Creates a new relativeArea item which may belong to several nets. name is null, if the
    * ObstacleArea does not belong to a component.
    */
   ObstacleArea(
@@ -44,14 +44,14 @@ public class ObstacleArea extends Item implements Serializable {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int[] netNoArr,
-      int clearanceType,
-      int idNo,
-      int cmpNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int id,
+      int componentId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNoArr, clearanceType, idNo, cmpNo, fixedState, board);
+    super(netNumbers, clearanceClassIndex, id, componentId, fixedState, board);
     this.relativeArea = area;
     this.layer = layer;
     this.translation = translation;
@@ -61,8 +61,8 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   /**
-   * Creates a new relativeArea item without net. p_name is null, if the ObstacleArea does not
-   * belong to a component.
+   * Creates a new relativeArea item without net. name is null, if the ObstacleArea does not belong
+   * to a component.
    */
   ObstacleArea(
       Area area,
@@ -70,9 +70,9 @@ public class ObstacleArea extends Item implements Serializable {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int clearanceType,
-      int idNo,
-      int groupNo,
+      int clearanceClassIndex,
+      int id,
+      int groupId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
@@ -83,18 +83,18 @@ public class ObstacleArea extends Item implements Serializable {
         rotationInDegree,
         sideChanged,
         new int[0],
-        clearanceType,
-        idNo,
-        groupNo,
+        clearanceClassIndex,
+        id,
+        groupId,
         name,
         fixedState,
         board);
   }
 
   @Override
-  public Item copy(int idNo) {
-    int[] copiedNetNos = new int[netNoArr.length];
-    System.arraycopy(netNoArr, 0, copiedNetNos, 0, netNoArr.length);
+  public Item copy(int id) {
+    int[] copiedNetNos = new int[netNumbers.length];
+    System.arraycopy(netNumbers, 0, copiedNetNos, 0, netNumbers.length);
     return new ObstacleArea(
         relativeArea,
         layer,
@@ -102,9 +102,9 @@ public class ObstacleArea extends Item implements Serializable {
         rotationInDegree,
         sideChanged,
         copiedNetNos,
-        clearanceClassNo(),
-        idNo,
-        getComponentNo(),
+        clearanceClassIndex(),
+        id,
+        getComponentId(),
         name,
         getFixedState(),
         board);
@@ -192,7 +192,7 @@ public class ObstacleArea extends Item implements Serializable {
   public TileShape getTileShape(int no) {
     TileShape[] tileShapes = this.splitToConvex();
     if (tileShapes == null || no < 0 || no >= tileShapes.length) {
-      FRLogger.warn("ConvexObstacle.get_tile_shape: p_no out of range");
+      FRLogger.warn("ConvexObstacle.get_tile_shape: no out of range");
       return null;
     }
     return tileShapes[no];
@@ -274,41 +274,41 @@ public class ObstacleArea extends Item implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("keepout"));
-    int cmpNo = this.getComponentNo();
+    printer.appendBold(tm.getText("keepout"));
+    int cmpNo = this.getComponentId();
     if (cmpNo > 0) {
-      window.append(" " + tm.getText("of_component") + " ");
+      printer.append(" " + tm.getText("of_component") + " ");
       Component component = board.components.get(cmpNo);
-      window.append(component.name, tm.getText("component_info"), component);
+      printer.append(component.name, tm.getText("component_info"), component);
     }
-    this.printShapeInfo(window, locale);
-    this.printItemInfo(window, locale);
-    window.newline();
+    this.printShapeInfo(printer, locale);
+    this.printItemInfo(printer, locale);
+    printer.newline();
   }
 
   /** Used in the implementation of print_info for this class and derived classes. */
-  protected final void printShapeInfo(ObjectInfoPanel window, Locale locale) {
+  protected final void printShapeInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.append(" " + tm.getText("at") + " ");
+    printer.append(" " + tm.getText("at") + " ");
     FloatPoint center = this.getArea().getBorder().centreOfGravity();
-    window.append(center);
+    printer.append(center);
     Integer holeCount = this.relativeArea.getHoles().length;
     if (holeCount > 0) {
-      window.append(" " + tm.getText("with") + " ");
+      printer.append(" " + tm.getText("with") + " ");
       NumberFormat nf = NumberFormat.getInstance(locale);
-      window.append(nf.format(holeCount));
+      printer.append(nf.format(holeCount));
       if (holeCount == 1) {
-        window.append(" " + tm.getText("hole"));
+        printer.append(" " + tm.getText("hole"));
       } else {
-        window.append(" " + tm.getText("holes"));
+        printer.append(" " + tm.getText("holes"));
       }
     }
-    window.append(" " + tm.getText("on_layer") + " ");
-    window.append(this.board.layerStructure.arr[this.getLayer()].name);
+    printer.append(" " + tm.getText("on_layer") + " ");
+    printer.append(this.board.layerStructure.layers[this.getLayer()].name);
   }
 
   TileShape[] splitToConvex() {

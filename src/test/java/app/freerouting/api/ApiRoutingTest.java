@@ -103,11 +103,11 @@ class ApiRoutingTest {
    * </ol>
    *
    * <p>The test verifies that the entire pipeline completes without any NPE or {@code
-   * IllegalStateException} triggered by null {@code interactiveSettings} access in the headless
+   * IllegalStateException} triggered by null {@code workspaceSettings} access in the headless
    * routing engine.
    */
   @Test
-  void apiRoutingCompletesWithoutInteractiveSettingsNpe() throws Exception {
+  void apiRoutingCompletesWithoutWorkspaceSettingsNpe() throws Exception {
     // ── Step 1: Create a session ──────────────────────────────────────────────
     HttpRequest createSessionReq =
         authenticatedRequest(baseUri.resolve("/v1/sessions/create"))

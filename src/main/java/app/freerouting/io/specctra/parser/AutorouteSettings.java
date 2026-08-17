@@ -18,7 +18,7 @@ public final class AutorouteSettings {
 
   static RouterSettings readScope(IJFlexScanner scanner, LayerStructure layerStructure) {
     RouterSettings result = new RouterSettings();
-    result.setLayerCount(layerStructure.arr.length);
+    result.setLayerCount(layerStructure.layers.length);
     boolean withAutoroute = true;
     boolean withPostroute = true;
     Object nextToken = null;
@@ -88,8 +88,8 @@ public final class AutorouteSettings {
               + "'");
       return null;
     }
-    int layerNo = layerStructure.getNo((String) nextToken);
-    if (layerNo < 0) {
+    int layerIndex = layerStructure.getNo((String) nextToken);
+    if (layerIndex < 0) {
       FRLogger.warn(
           "AutorouteSettings.read_layer_rule: layer not found at '"
               + scanner.getScopeIdentifier()
@@ -117,7 +117,7 @@ public final class AutorouteSettings {
       }
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.ACTIVE) {
-          settings.setLayerActive(layerNo, DsnFile.readOnOffScope(scanner));
+          settings.setLayerActive(layerIndex, DsnFile.readOnOffScope(scanner));
         } else if (nextToken == Keyword.PREFERRED_DIRECTION) {
           try {
             boolean prefDirIsHorizontal = true;
@@ -131,7 +131,7 @@ public final class AutorouteSettings {
                       + "'");
               return null;
             }
-            settings.setPreferredDirectionIsHorizontal(layerNo, prefDirIsHorizontal);
+            settings.setPreferredDirectionIsHorizontal(layerIndex, prefDirIsHorizontal);
             nextToken = scanner.nextToken();
             if (nextToken != Keyword.CLOSED_BRACKET) {
               FRLogger.warn(
@@ -145,9 +145,10 @@ public final class AutorouteSettings {
             return null;
           }
         } else if (nextToken == Keyword.PREFERRED_DIRECTION_TRACE_COSTS) {
-          settings.setPreferredDirectionTraceCosts(layerNo, DsnFile.readFloatScope(scanner));
+          settings.setPreferredDirectionTraceCosts(layerIndex, DsnFile.readFloatScope(scanner));
         } else if (nextToken == Keyword.AGAINST_PREFERRED_DIRECTION_TRACE_COSTS) {
-          settings.setAgainstPreferredDirectionTraceCosts(layerNo, DsnFile.readFloatScope(scanner));
+          settings.setAgainstPreferredDirectionTraceCosts(
+              layerIndex, DsnFile.readFloatScope(scanner));
         } else {
           ScopeKeyword.skipScope(scanner);
         }
@@ -207,11 +208,11 @@ public final class AutorouteSettings {
     }
     file.write(")");
     file.newLine();
-    for (int i = 0; i < layerStructure.arr.length; i++) {
-      final Layer currLayer = layerStructure.arr[i];
+    for (int i = 0; i < layerStructure.layers.length; i++) {
+      final Layer currentLayer = layerStructure.layers[i];
       file.startScope();
       file.write("layer_rule ");
-      identifierType.write(currLayer.name, file);
+      identifierType.write(currentLayer.name, file);
       file.newLine();
       file.write("(active ");
       if (settings.getLayerActive(i)) {

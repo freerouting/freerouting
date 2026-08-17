@@ -1,8 +1,8 @@
 package app.freerouting.gui;
 
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveSettings;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -31,7 +31,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
   /** Creates a new instance of WindowMoveParameter. */
   public WindowMoveParameter(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
     this.boardHandling = boardFrame.boardPanel.boardHandling;
 
     this.setTitle(tm.getText("title"));
@@ -53,15 +53,14 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(horizontalGridLabel, gridbagConstraints);
     mainPanel.add(horizontalGridLabel);
 
-    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
     numberFormat.setMaximumFractionDigits(7);
     this.horizontalGridField = new JFormattedTextField(numberFormat);
     this.horizontalGridField.setColumns(5);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(horizontalGridField, gridbagConstraints);
     mainPanel.add(horizontalGridField);
-    setHorizontalGridField(
-        this.boardHandling.getInteractiveSettings().getHorizontalComponentGrid());
+    setHorizontalGridField(this.boardHandling.getWorkspaceSettings().getHorizontalComponentGrid());
     horizontalGridField.addKeyListener(new HorizontalGridFieldKeyListener());
     horizontalGridField.addFocusListener(new HorizontalGridFieldFocusListener());
 
@@ -75,7 +74,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(verticalGridField, gridbagConstraints);
     mainPanel.add(verticalGridField);
-    setVerticalGridField(this.boardHandling.getInteractiveSettings().getVerticalComponentGrid());
+    setVerticalGridField(this.boardHandling.getWorkspaceSettings().getVerticalComponentGrid());
     verticalGridField.addKeyListener(new VerticalGridFieldKeyListener());
     verticalGridField.addFocusListener(new VerticalGridFieldFocusListener());
 
@@ -109,7 +108,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     ButtonGroup buttonGroup = new ButtonGroup();
     buttonGroup.add(settingsControlsZoomRadiobutton);
     buttonGroup.add(settingsControlsRotateRadiobutton);
-    if (this.boardHandling.getInteractiveSettings().getZoomWithWheel()) {
+    if (this.boardHandling.getWorkspaceSettings().getZoomWithWheel()) {
       settingsControlsZoomRadiobutton.setSelected(true);
     } else {
       settingsControlsRotateRadiobutton.setSelected(true);
@@ -126,8 +125,8 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     this.pack();
     this.setResizable(false);
 
-    // Subscribe to the InteractiveSettings singleton so this window stays in sync.
-    InteractiveSettings is = this.boardHandling.getInteractiveSettings();
+    // Subscribe to the WorkspaceSettings singleton so this window stays in sync.
+    WorkspaceSettings is = this.boardHandling.getWorkspaceSettings();
     if (is != null) {
       is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
     }
@@ -167,10 +166,10 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
           inputValue = 0;
         }
         boardHandling
-            .getInteractiveSettings()
+            .getWorkspaceSettings()
             .setHorizontalComponentGrid(
                 (int) Math.round(boardHandling.coordinateTransform.userToBoard(inputValue)));
-        setHorizontalGridField(boardHandling.getInteractiveSettings().getHorizontalComponentGrid());
+        setHorizontalGridField(boardHandling.getWorkspaceSettings().getHorizontalComponentGrid());
       } else {
         keyInputCompleted = false;
       }
@@ -183,7 +182,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
         // restore the text field.
-        setHorizontalGridField(boardHandling.getInteractiveSettings().getHorizontalComponentGrid());
+        setHorizontalGridField(boardHandling.getWorkspaceSettings().getHorizontalComponentGrid());
         keyInputCompleted = true;
       }
     }
@@ -208,10 +207,10 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
           inputValue = 0;
         }
         boardHandling
-            .getInteractiveSettings()
+            .getWorkspaceSettings()
             .setVerticalComponentGrid(
                 (int) Math.round(boardHandling.coordinateTransform.userToBoard(inputValue)));
-        setVerticalGridField(boardHandling.getInteractiveSettings().getVerticalComponentGrid());
+        setVerticalGridField(boardHandling.getWorkspaceSettings().getVerticalComponentGrid());
       } else {
         keyInputCompleted = false;
       }
@@ -224,7 +223,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
         // restore the text field.
-        setVerticalGridField(boardHandling.getInteractiveSettings().getVerticalComponentGrid());
+        setVerticalGridField(boardHandling.getWorkspaceSettings().getVerticalComponentGrid());
         keyInputCompleted = true;
       }
     }
@@ -237,7 +236,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      boardHandling.getInteractiveSettings().setZoomWithWheel(true);
+      boardHandling.getWorkspaceSettings().setZoomWithWheel(true);
     }
   }
 
@@ -245,7 +244,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      boardHandling.getInteractiveSettings().setZoomWithWheel(false);
+      boardHandling.getWorkspaceSettings().setZoomWithWheel(false);
     }
   }
 }

@@ -3,9 +3,9 @@ package app.freerouting.api.v1;
 import static app.freerouting.Freerouting.globalSettings;
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
+import app.freerouting.analytics.BigQueryClient;
+import app.freerouting.analytics.dto.Payload;
 import app.freerouting.constants.Constants;
-import app.freerouting.management.analytics.BigQueryClient;
-import app.freerouting.management.analytics.dto.Payload;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -22,8 +22,7 @@ import jakarta.ws.rs.core.Response;
 
 /**
  * JAX-RS controller that receives analytics event payloads from Freerouting client libraries and
- * writes them to BigQuery via the singleton {@link
- * app.freerouting.management.analytics.BigQueryClient}.
+ * writes them to BigQuery via the singleton {@link BigQueryClient}.
  *
  * <h2>Endpoints</h2>
  *

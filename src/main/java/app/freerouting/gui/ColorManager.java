@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.gui.rendering.GraphicsContext;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -31,7 +31,7 @@ public class ColorManager extends BoardSavableSubWindow {
 
   /** Creates a new instance of ColorManager. */
   public ColorManager(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
     GraphicsContext graphicsContext = boardFrame.boardPanel.boardHandling.graphicsContext;
 
     this.setTitle(tm.getText("colorManager"));
@@ -45,20 +45,20 @@ public class ColorManager extends BoardSavableSubWindow {
     layersColorTable = new JTable(graphicsContext.itemColorTable);
     layersColorTable.setPreferredScrollableViewportSize(
         new Dimension(tableWidth, itemColorTableHeight));
-    JScrollPane itemScrollPane = initColorTable(layersColorTable, boardFrame.get_locale());
+    JScrollPane itemScrollPane = initColorTable(layersColorTable, boardFrame.getLocale());
     panel.add(itemScrollPane, BorderLayout.NORTH);
 
     generalColorTable = new JTable(graphicsContext.otherColorTable);
     generalColorTable.setPreferredScrollableViewportSize(
         new Dimension(tableWidth, textfieldHeight));
-    JScrollPane otherScrollPane = initColorTable(generalColorTable, boardFrame.get_locale());
+    JScrollPane otherScrollPane = initColorTable(generalColorTable, boardFrame.getLocale());
     panel.add(otherScrollPane, BorderLayout.SOUTH);
     getContentPane().add(panel, BorderLayout.CENTER);
     this.pack();
     this.setResizable(false);
   }
 
-  /** Initializes p_color_table and return the created scrollPane of the color table. */
+  /** Initializes colorTable and return the created scrollPane of the color table. */
   private static JScrollPane initColorTable(JTable colorTable, Locale locale) {
     // Create the scroll pane and add the table to it.
     JScrollPane scrollPane = new JScrollPane(colorTable);
@@ -111,7 +111,7 @@ public class ColorManager extends BoardSavableSubWindow {
         _ -> FRAnalytics.buttonClicked("colorEditorButton", colorEditorButton.getText()));
   }
 
-  /** Reassigns the table model variables because they may have changed in p_graphics_context. */
+  /** Reassigns the table model variables because they may have changed in graphicsContext. */
   public void setTableModels(GraphicsContext graphicsContext) {
     this.layersColorTable.setModel(graphicsContext.itemColorTable);
     this.generalColorTable.setModel(graphicsContext.otherColorTable);

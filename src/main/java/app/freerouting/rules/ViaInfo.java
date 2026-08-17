@@ -1,7 +1,7 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.ObjectInfoPanel;
-import app.freerouting.core.Padstack;
+import app.freerouting.board.ItemInfoPrinter;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.Locale;
@@ -10,24 +10,24 @@ import java.util.Locale;
  * Information about a combination of a via padstack, via clearance class, and drill-to-SMD setting
  * used in interactive and automatic routing.
  */
-public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, Serializable {
+public class ViaInfo implements Comparable<ViaInfo>, ItemInfoPrinter.Printable, Serializable {
 
   private final BoardRules boardRules;
   private String name;
   private Padstack padstack;
-  private int clearanceClass;
+  private int clearanceClassIndex;
   private boolean attachSmdAllowed;
 
   /** Creates a via definition. */
   public ViaInfo(
       String name,
       Padstack padstack,
-      int clearanceClass,
+      int clearanceClassIndex,
       boolean drillToSmdAllowed,
       BoardRules boardRules) {
     this.name = name;
     this.padstack = padstack;
-    this.clearanceClass = clearanceClass;
+    this.clearanceClassIndex = clearanceClassIndex;
     this.attachSmdAllowed = drillToSmdAllowed;
     this.boardRules = boardRules;
   }
@@ -57,14 +57,14 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
     this.padstack = padstack;
   }
 
-  /** Returns the clearance class used by this via definition. */
-  public int getClearanceClass() {
-    return clearanceClass;
+  /** Returns the clearance class index used by this via definition. */
+  public int getClearanceClassIndex() {
+    return clearanceClassIndex;
   }
 
-  /** Sets the clearance class used by this via definition. */
-  public void setClearanceClass(int clearanceClass) {
-    this.clearanceClass = clearanceClass;
+  /** Sets the clearance class index used by this via definition. */
+  public void setClearanceClassIndex(int clearanceClassIndex) {
+    this.clearanceClassIndex = clearanceClassIndex;
   }
 
   /** Returns whether this via may attach to an SMD pad. */
@@ -83,26 +83,26 @@ public class ViaInfo implements Comparable<ViaInfo>, ObjectInfoPanel.Printable, 
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("via") + " ");
-    window.appendBold(this.name);
-    window.appendBold(": ");
-    window.append(tm.getText("padstack") + " ");
-    window.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
-    window.append(", " + tm.getText("clearanceClass") + " ");
-    String currName = boardRules.clearanceMatrix.getName(this.clearanceClass);
-    window.append(
-        currName,
+    printer.appendBold(tm.getText("via") + " ");
+    printer.appendBold(this.name);
+    printer.appendBold(": ");
+    printer.append(tm.getText("padstack") + " ");
+    printer.append(this.padstack.name, tm.getText("padstack_info"), this.padstack);
+    printer.append(", " + tm.getText("clearanceClass") + " ");
+    String currentName = boardRules.clearanceMatrix.getName(this.clearanceClassIndex);
+    printer.append(
+        currentName,
         tm.getText("clearance_class_2"),
-        boardRules.clearanceMatrix.getRow(this.clearanceClass));
-    window.append(", " + tm.getText("attach_smd") + " ");
+        boardRules.clearanceMatrix.getRow(this.clearanceClassIndex));
+    printer.append(", " + tm.getText("attach_smd") + " ");
     if (attachSmdAllowed) {
-      window.append(" " + tm.getText("on"));
+      printer.append(" " + tm.getText("on"));
     } else {
-      window.append(" " + tm.getText("off"));
+      printer.append(" " + tm.getText("off"));
     }
-    window.newline();
+    printer.newline();
   }
 }

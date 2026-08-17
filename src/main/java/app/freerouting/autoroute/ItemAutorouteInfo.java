@@ -57,10 +57,10 @@ public class ItemAutorouteInfo {
     } else if (expansionRoomArr.length != currentShapeCount) {
       // Item's tree shape count has changed (e.g., trace modified during routing)
       // Resize the array and preserve existing rooms
-      ObstacleExpansionRoom[] newArr = new ObstacleExpansionRoom[currentShapeCount];
+      ObstacleExpansionRoom[] newArray = new ObstacleExpansionRoom[currentShapeCount];
       int copyLength = Math.min(expansionRoomArr.length, currentShapeCount);
-      System.arraycopy(expansionRoomArr, 0, newArr, 0, copyLength);
-      expansionRoomArr = newArr;
+      System.arraycopy(expansionRoomArr, 0, newArray, 0, copyLength);
+      expansionRoomArr = newArray;
     }
 
     if (index < 0 || index >= expansionRoomArr.length) {
@@ -81,9 +81,9 @@ public class ItemAutorouteInfo {
   /** Resets the expansion rooms for autorouting the next connection. */
   public void resetDoors() {
     if (expansionRoomArr != null) {
-      for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
-        if (currRoom != null) {
-          currRoom.resetDoors();
+      for (ObstacleExpansionRoom currentRoom : expansionRoomArr) {
+        if (currentRoom != null) {
+          currentRoom.resetDoors();
         }
       }
     }
@@ -94,9 +94,9 @@ public class ItemAutorouteInfo {
     if (sink == null || intensity <= 0 || expansionRoomArr == null) {
       return;
     }
-    for (ObstacleExpansionRoom currRoom : expansionRoomArr) {
-      if (currRoom != null) {
-        currRoom.emitDiagnostic(sink, intensity);
+    for (ObstacleExpansionRoom currentRoom : expansionRoomArr) {
+      if (currentRoom != null) {
+        currentRoom.emitDiagnostic(sink, intensity);
       }
     }
   }

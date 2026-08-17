@@ -4,7 +4,7 @@ import app.freerouting.board.FixedState;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolygonShape;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.BoardRules;
 import java.util.Iterator;
 
@@ -34,13 +34,13 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
     int cornerCount = cornerList.size();
     boolean constructionSucceeded = cornerCount > 2;
     if (constructionSucceeded) {
-      IntPoint[] cornerArr = new IntPoint[cornerCount];
+      IntPoint[] corners = new IntPoint[cornerCount];
       Iterator<IntPoint> it = cornerList.iterator();
       for (int i = 0; i < cornerCount; i++) {
-        cornerArr[i] = it.next();
+        corners[i] = it.next();
       }
-      PolygonShape obstacleShape = new PolygonShape(cornerArr);
-      int clClass = BoardRules.clearanceClassNone();
+      PolygonShape obstacleShape = new PolygonShape(corners);
+      int clearanceClassIndex = BoardRules.clearanceClassNone();
       if (obstacleShape.splitToConvex() == null) {
         // shape is invalid, maybe it has selfintersections
         constructionSucceeded = false;
@@ -48,7 +48,10 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
         constructionSucceeded =
             hdlg.getRoutingBoard()
                 .checkShape(
-                    obstacleShape, hdlg.getInteractiveSettings().getLayer(), new int[0], clClass);
+                    obstacleShape,
+                    hdlg.getWorkspaceSettings().getLayer(),
+                    new int[0],
+                    clearanceClassIndex);
       }
       if (constructionSucceeded) {
         this.observersActivated = !hdlg.getRoutingBoard().observersActive();
@@ -59,8 +62,8 @@ public final class PolygonShapeConstructionState extends CornerItemConstructionS
         hdlg.getRoutingBoard()
             .insertObstacle(
                 obstacleShape,
-                hdlg.getInteractiveSettings().getLayer(),
-                clClass,
+                hdlg.getWorkspaceSettings().getLayer(),
+                clearanceClassIndex,
                 FixedState.UNFIXED);
         hdlg.getRoutingBoard().endNotifyObservers();
         if (this.observersActivated) {

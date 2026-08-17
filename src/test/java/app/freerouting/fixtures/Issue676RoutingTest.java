@@ -28,8 +28,8 @@ import org.junit.jupiter.api.Test;
  * {@code isLayerActive == null} (layer count zero). The subsequent {@code AutorouteControl}
  * constructor iterates over the board's real layer count (e.g. 2), calls {@code
  * get_layer_active(0/1)}, and hits the range-guard warning {@code "[0..-1]"}. {@code
- * MazeSearchAlgo.get_instance()} then receives an all-false {@code layerActive} array and throws an
- * exception.
+ * MazeSearchEngine.get_instance()} then receives an all-false {@code layerActive} array and throws
+ * an exception.
  *
  * <h2>Fix</h2>
  *
@@ -88,7 +88,7 @@ class Issue676RoutingTest extends RoutingFixtureTest {
 
   /**
    * End-to-end routing test: the board must route (or at least start routing) without any {@code
-   * MazeSearchAlgo.get_instance} exception, confirming that the layer arrays are properly
+   * MazeSearchEngine.get_instance} exception, confirming that the layer arrays are properly
    * initialised before the autorouter runs.
    */
   @Test
@@ -119,7 +119,7 @@ class Issue676RoutingTest extends RoutingFixtureTest {
         "After routing, routerSettings.getLayerCount() must still be 2.");
 
     // The board should have at least attempted to route (i.e. the autorouter did not fail
-    // immediately on every net with MazeSearchAlgo.get_instance exception).
+    // immediately on every net with MazeSearchEngine.get_instance exception).
     assertNotNull(job.board, "Board must not be null after routing.");
   }
 

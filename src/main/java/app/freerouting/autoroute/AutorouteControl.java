@@ -3,7 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.Item;
 import app.freerouting.board.Pin;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
@@ -39,13 +39,13 @@ public class AutorouteControl {
    */
   final int[] compensatedTraceHalfWidth;
 
-  final double[] viaRadiusArr;
+  final double[] viaRadii;
 
   /** The additional costs to min_normal via_cost for inserting a via between 2 layers. */
   final ViaCost[] addViaCosts;
 
   /** The currently used clearance class for traces in the autoroute algorithm. */
-  public int traceClearanceClassNo;
+  public int traceClearanceClassIndex;
 
   /** True, if layer change by inserting of vias is allowed. */
   public boolean viasAllowed;
@@ -75,17 +75,17 @@ public class AutorouteControl {
   /** Normally true, if the autorouter contains no fanout pass. */
   public boolean removeUnconnectedVias;
 
+  /** The possible (partial) vias, which can be used by the autorouter. */
+  public ViaRule viaRule;
+
   /** The currently used net number in the autoroute algorithm. */
-  int netNo;
+  int netNumber;
 
   /** The currently used clearance class for vias in the autoroute algorithm. */
   int viaClearanceClass;
 
-  /** The possible (partial) vias, which can be used by the autorouter. */
-  public ViaRule viaRule;
-
   /** The array of possible via ranges used by the autorouter. */
-  ViaMask[] viaInfoArr;
+  ViaMask[] viaInfos;
 
   /** The lower bound for the first layer of vias. */
   int viaLowerBound;
@@ -114,32 +114,32 @@ public class AutorouteControl {
   double minCheapViaCost;
 
   /** Creates a new instance of AutorouteControl for the input net. */
-  public AutorouteControl(RoutingBoard board, int netNo, RouterSettings settings) {
-    this(board, settings, settings.getTraceCostArr());
-    initNet(netNo, board, settings.getViaCosts());
+  public AutorouteControl(RoutingBoard board, int netNumber, RouterSettings settings) {
+    this(board, settings, settings.getTraceCosts());
+    initNet(netNumber, board, settings.getViaCosts());
   }
 
   /** Creates a new instance of AutorouteControl for the input net. */
   public AutorouteControl(
       RoutingBoard board,
-      int netNo,
+      int netNumber,
       RouterSettings settings,
       int viaCosts,
-      ExpansionCostFactor[] traceCostArr) {
-    this(board, settings, traceCostArr);
-    initNet(netNo, board, viaCosts);
+      ExpansionCostFactor[] traceCosts) {
+    this(board, settings, traceCosts);
+    initNet(netNumber, board, viaCosts);
   }
 
   /** Creates a new instance of AutorouteControl. */
   private AutorouteControl(
-      RoutingBoard board, RouterSettings settings, ExpansionCostFactor[] traceCostsArr) {
+      RoutingBoard board, RouterSettings settings, ExpansionCostFactor[] traceCosts) {
     this.settings = settings;
     layerCount = board.getLayerCount();
     traceHalfWidth = new int[layerCount];
     compensatedTraceHalfWidth = new int[layerCount];
     layerActive = new boolean[layerCount];
     viasAllowed = settings.getViasAllowed();
-    viaRadiusArr = new double[layerCount];
+    viaRadii = new double[layerCount];
     addViaCosts = new ViaCost[layerCount];
     this.bendCosts = new double[layerCount];
     for (int i = 0; i < layerCount; i++) {
@@ -149,10 +149,10 @@ public class AutorouteControl {
     for (int i = 0; i < layerCount; i++) {
       addViaCosts[i] = new ViaCost(layerCount);
       boolean activeSetting = settings.getLayerActive(i);
-      if (!board.layerStructure.arr[i].isSignal && activeSetting) {
+      if (!board.layerStructure.layers[i].isSignal && activeSetting) {
         FRLogger.warn(
             "Layer '"
-                + board.layerStructure.arr[i].name
+                + board.layerStructure.layers[i].name
                 + "' is a dedicated power plane and cannot be routed. "
                 + "Forcing active state to false.");
         layerActive[i] = false;
@@ -176,7 +176,7 @@ public class AutorouteControl {
         addViaCosts[i].toLayer[j] = 0;
       }
     }
-    traceCosts = traceCostsArr;
+    this.traceCosts = traceCosts;
     attachSmdAllowed = false;
     viaLowerBound = 0;
     viaUpperBound = layerCount;
@@ -186,90 +186,8 @@ public class AutorouteControl {
     ripupPassNo = 1;
   }
 
-  private void initNet(int netNo, RoutingBoard board, int viaCosts) {
-    this.netNo = netNo;
-    Net currentNet = board.rules.nets.get(netNo);
-    NetClass currNetClass;
-    if (currentNet != null) {
-      currNetClass = currentNet.getNetClass();
-      traceClearanceClassNo = currNetClass.getTraceClearanceClass();
-      viaRule = currNetClass.getViaRule();
-    } else {
-      traceClearanceClassNo = 1;
-      viaRule = board.rules.viaRules.firstElement();
-      currNetClass = null;
-    }
-    for (int i = 0; i < layerCount; i++) {
-      if (netNo > 0) {
-        traceHalfWidth[i] = board.rules.getTraceHalfWidth(netNo, i);
-      } else {
-        traceHalfWidth[i] = board.rules.getTraceHalfWidth(1, i);
-      }
-      compensatedTraceHalfWidth[i] =
-          traceHalfWidth[i]
-              + board.rules.clearanceMatrix.clearanceCompensationValue(traceClearanceClassNo, i);
-      if (currNetClass != null && !currNetClass.isActiveRoutingLayer(i)) {
-        layerActive[i] = false;
-      }
-    }
-    rebuildViaInfo(board, viaCosts, netNo);
-  }
-
-  /** Rebuilds via info masks and costs for the specified board, via costs, and net. */
-  public void rebuildViaInfo(RoutingBoard board, int viaCosts, int netNo) {
-    if (viaRule.viaCount() > 0) {
-      this.viaClearanceClass = viaRule.getVia(0).getClearanceClass();
-    } else {
-      this.viaClearanceClass = 1;
-    }
-    this.viaInfoArr = new ViaMask[viaRule.viaCount()];
-    this.attachSmdAllowed = false;
-    for (int i = 0; i < viaRule.viaCount(); i++) {
-      ViaInfo currVia = viaRule.getVia(i);
-      if (currVia.attachSmdAllowed()) {
-        this.attachSmdAllowed = true;
-      }
-      Padstack currViaPadstack = currVia.getPadstack();
-      int fromLayer = currViaPadstack.fromLayer();
-      int toLayer = currViaPadstack.toLayer();
-      for (int j = fromLayer; j <= toLayer; j++) {
-        ConvexShape currShape = currViaPadstack.getShape(j);
-        double currRadius;
-        if (currShape != null) {
-          currRadius = 0.5 * currShape.maxWidth();
-        } else {
-          currRadius = 0;
-        }
-        this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], currRadius);
-      }
-      viaInfoArr[i] = new ViaMask(fromLayer, toLayer, currVia.attachSmdAllowed());
-    }
-
-    boolean pureSmdNet = isPureSmdNet(board, netNo);
-    if (!this.attachSmdAllowed && layerCount > 1 && pureSmdNet) {
-      // Pure SMD nets must still be able to escape their component layer, even if the DSN marks
-      // every padstack as attach-off. This only relaxes the routing gate for same-net fanout;
-      // cross-net DRC remains governed by the padstack's attach flag.
-      this.attachSmdAllowed = true;
-    }
-
-    for (int j = 0; j < this.layerCount; j++) {
-      this.viaRadiusArr[j] = Math.max(this.viaRadiusArr[j], traceHalfWidth[j]);
-      this.maxViaRadius = Math.max(this.maxViaRadius, this.viaRadiusArr[j]);
-    }
-    double viaCostFactor = this.maxViaRadius;
-    viaCostFactor = Math.max(viaCostFactor, 1);
-    if (pureSmdNet) {
-      // Pure SMD boards need a much cheaper via escape to avoid exhausting the local pad channel
-      // before the search commits to a layer change.
-      viaCostFactor *= 0.1;
-    }
-    minNormalViaCost = viaCosts * viaCostFactor;
-    minCheapViaCost = 0.8 * minNormalViaCost;
-  }
-
-  private static boolean isPureSmdNet(RoutingBoard board, int netNo) {
-    Collection<Item> netItems = board.getConnectableItems(netNo);
+  private static boolean isPureSmdNet(RoutingBoard board, int netNumber) {
+    Collection<Item> netItems = board.getConnectableItems(netNumber);
     if (netItems.isEmpty()) {
       return false;
     }
@@ -283,21 +201,90 @@ public class AutorouteControl {
     return true;
   }
 
-  /** Horizontal and vertical costs for traces on a board layer. */
-  public static class ExpansionCostFactor {
-
-    /** The horizontal expansion cost factor on a layer of the board. */
-    public final double horizontal;
-
-    /** The vertical expansion cost factor on a layer of the board. */
-    public final double vertical;
-
-    /** Constructs an ExpansionCostFactor with specified horizontal and vertical costs. */
-    public ExpansionCostFactor(double horizontal, double vertical) {
-      this.horizontal = horizontal;
-      this.vertical = vertical;
+  private void initNet(int netNumber, RoutingBoard board, int viaCosts) {
+    this.netNumber = netNumber;
+    Net currentNet = board.rules.nets.get(netNumber);
+    NetClass currentNetClass;
+    if (currentNet != null) {
+      currentNetClass = currentNet.getNetClass();
+      traceClearanceClassIndex = currentNetClass.getTraceClearanceClass();
+      viaRule = currentNetClass.getViaRule();
+    } else {
+      traceClearanceClassIndex = 1;
+      viaRule = board.rules.viaRules.firstElement();
+      currentNetClass = null;
     }
+    for (int i = 0; i < layerCount; i++) {
+      if (netNumber > 0) {
+        traceHalfWidth[i] = board.rules.getTraceHalfWidth(netNumber, i);
+      } else {
+        traceHalfWidth[i] = board.rules.getTraceHalfWidth(1, i);
+      }
+      compensatedTraceHalfWidth[i] =
+          traceHalfWidth[i]
+              + board.rules.clearanceMatrix.clearanceCompensationValue(traceClearanceClassIndex, i);
+      if (currentNetClass != null && !currentNetClass.isActiveRoutingLayer(i)) {
+        layerActive[i] = false;
+      }
+    }
+    rebuildViaInfo(board, viaCosts, netNumber);
   }
+
+  /** Rebuilds via info masks and costs for the specified board, via costs, and net. */
+  public void rebuildViaInfo(RoutingBoard board, int viaCosts, int netNumber) {
+    if (viaRule.viaCount() > 0) {
+      this.viaClearanceClass = viaRule.getVia(0).getClearanceClassIndex();
+    } else {
+      this.viaClearanceClass = 1;
+    }
+    this.viaInfos = new ViaMask[viaRule.viaCount()];
+    this.attachSmdAllowed = false;
+    for (int i = 0; i < viaRule.viaCount(); i++) {
+      ViaInfo currentVia = viaRule.getVia(i);
+      if (currentVia.attachSmdAllowed()) {
+        this.attachSmdAllowed = true;
+      }
+      Padstack currentViaPadstack = currentVia.getPadstack();
+      int fromLayer = currentViaPadstack.fromLayer();
+      int toLayer = currentViaPadstack.toLayer();
+      for (int j = fromLayer; j <= toLayer; j++) {
+        ConvexShape currentShape = currentViaPadstack.getShape(j);
+        double currentRadius;
+        if (currentShape != null) {
+          currentRadius = 0.5 * currentShape.maxWidth();
+        } else {
+          currentRadius = 0;
+        }
+        this.viaRadii[j] = Math.max(this.viaRadii[j], currentRadius);
+      }
+      viaInfos[i] = new ViaMask(fromLayer, toLayer, currentVia.attachSmdAllowed());
+    }
+
+    boolean pureSmdNet = isPureSmdNet(board, netNumber);
+    if (!this.attachSmdAllowed && layerCount > 1 && pureSmdNet) {
+      // Pure SMD nets must still be able to escape their component layer, even if the DSN marks
+      // every padstack as attach-off. This only relaxes the routing gate for same-net fanout;
+      // cross-net DRC remains governed by the padstack's attach flag.
+      this.attachSmdAllowed = true;
+    }
+
+    for (int j = 0; j < this.layerCount; j++) {
+      this.viaRadii[j] = Math.max(this.viaRadii[j], traceHalfWidth[j]);
+      this.maxViaRadius = Math.max(this.maxViaRadius, this.viaRadii[j]);
+    }
+    double viaCostFactor = this.maxViaRadius;
+    viaCostFactor = Math.max(viaCostFactor, 1);
+    if (pureSmdNet) {
+      // Pure SMD boards need a much cheaper via escape to avoid exhausting the local pad channel
+      // before the search commits to a layer change.
+      viaCostFactor *= 0.1;
+    }
+    minNormalViaCost = viaCosts * viaCostFactor;
+    minCheapViaCost = 0.8 * minNormalViaCost;
+  }
+
+  /** Horizontal and vertical costs for traces on a board layer. */
+  public record ExpansionCostFactor(double horizontal, double vertical) {}
 
   /** Array of via costs from one layer to the other layers. */
   static final class ViaCost {

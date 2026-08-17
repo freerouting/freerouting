@@ -1,7 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.NetClass;
 import java.awt.Color;
@@ -58,16 +58,17 @@ public class StitchRouteState extends RouteState {
     drawPoints[1] = hdlg.getCurrentMousePosition();
     Color drawColor = hdlg.graphicsContext.getHighlightColor();
     double displayWidth =
-        hdlg.getTraceHalfwidth(route.netNoArr[0], hdlg.getInteractiveSettings().getLayer());
+        hdlg.getTraceHalfwidth(route.netNumbers[0], hdlg.getWorkspaceSettings().getLayer());
     int clearanceDrawWidth = 50;
     double radiusWithClearance = displayWidth;
     NetClass defaultNetClass = hdlg.getRoutingBoard().rules.getDefaultNetClass();
-    int clClass =
+    int clearanceClassIndex =
         defaultNetClass.defaultItemClearanceClasses.get(
             DefaultItemClearanceClasses.ItemClass.TRACE);
     radiusWithClearance +=
         hdlg.getRoutingBoard()
-            .clearanceValue(clClass, clClass, hdlg.getInteractiveSettings().getLayer());
+            .clearanceValue(
+                clearanceClassIndex, clearanceClassIndex, hdlg.getWorkspaceSettings().getLayer());
     hdlg.graphicsContext.draw(drawPoints, displayWidth, drawColor, graphics, 0.5);
     // draw the clearance boundary around the end point
     hdlg.graphicsContext.drawCircle(

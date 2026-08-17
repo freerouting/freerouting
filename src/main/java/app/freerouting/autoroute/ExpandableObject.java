@@ -30,5 +30,5 @@ public interface ExpandableObject {
   void reset();
 
   /** Returns a unique identification number for this object to allow deterministic sorting. */
-  int getIdNo();
+  int getId();
 }

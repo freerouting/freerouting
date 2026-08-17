@@ -7,7 +7,7 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
@@ -59,7 +59,7 @@ public final class KiCadJsonWriter {
 
     // 1. Layers
     for (int i = 0; i < board.getLayerCount(); i++) {
-      app.freerouting.board.Layer layer = board.layerStructure.arr[i];
+      app.freerouting.board.Layer layer = board.layerStructure.layers[i];
       KiCadBoardJson.LayerJson layerJson = new KiCadBoardJson.LayerJson();
       layerJson.index = i;
       layerJson.name = layer.name;
@@ -68,7 +68,7 @@ public final class KiCadJsonWriter {
     }
 
     // 2. Nets
-    for (int i = 1; i <= board.rules.nets.maxNetNo(); i++) {
+    for (int i = 1; i <= board.rules.nets.maxNetNumber(); i++) {
       Net net = board.rules.nets.get(i);
       if (net == null) {
         continue;
@@ -89,9 +89,9 @@ public final class KiCadJsonWriter {
       }
       KiCadBoardJson.NetClassJson ncJson = new KiCadBoardJson.NetClassJson();
       ncJson.name = netClass.getName();
-      int clearanceClassNo = netClass.getTraceClearanceClass();
+      int clearanceClassIndex = netClass.getTraceClearanceClass();
       ncJson.clearance =
-          board.rules.clearanceMatrix.getValue(clearanceClassNo, clearanceClassNo, 0, false)
+          board.rules.clearanceMatrix.getValue(clearanceClassIndex, clearanceClassIndex, 0, false)
               / scaleFactor;
       ncJson.traceWidth = (2 * netClass.getTraceHalfWidth(0)) / scaleFactor;
 
@@ -110,7 +110,7 @@ public final class KiCadJsonWriter {
       }
       ncJson.viaDrill = ncJson.viaDiameter * 0.5;
 
-      for (int n = 1; n <= board.rules.nets.maxNetNo(); n++) {
+      for (int n = 1; n <= board.rules.nets.maxNetNumber(); n++) {
         Net net = board.rules.nets.get(n);
         if (net != null && net.getNetClass() == netClass) {
           ncJson.netNames.add(net.name);
@@ -123,9 +123,9 @@ public final class KiCadJsonWriter {
     BoardOutline outline = board.getOutline();
     if (outline != null) {
       boardJson.outline = new KiCadBoardJson.OutlineJson();
-      int clearanceClassNo = outline.clearanceClassNo();
+      int clearanceClassIndex = outline.clearanceClassIndex();
       boardJson.outline.clearance =
-          board.rules.clearanceMatrix.getValue(clearanceClassNo, clearanceClassNo, 0, false)
+          board.rules.clearanceMatrix.getValue(clearanceClassIndex, clearanceClassIndex, 0, false)
               / scaleFactor;
       for (int i = 0; i < outline.shapeCount(); i++) {
         PolylineShape polyShape = outline.getShape(i);
@@ -148,13 +148,13 @@ public final class KiCadJsonWriter {
         traceJson.layerIndex = polyTrace.getLayer();
         traceJson.width = (2 * polyTrace.getHalfWidth()) / scaleFactor;
         if (polyTrace.netCount() > 0) {
-          int netNo = polyTrace.getNetNo(0);
-          Net net = board.rules.nets.get(netNo);
+          int netNumber = polyTrace.getNetNumber(0);
+          Net net = board.rules.nets.get(netNumber);
           if (net != null) {
             traceJson.netName = net.name;
           }
         }
-        for (Point pt : polyTrace.polyline().cornerArr()) {
+        for (Point pt : polyTrace.polyline().corners()) {
           traceJson.points.add(
               new KiCadBoardJson.Point2D(
                   pt.toFloat().x / scaleFactor, -pt.toFloat().y / scaleFactor));
@@ -169,8 +169,8 @@ public final class KiCadJsonWriter {
       KiCadBoardJson.ViaJson viaJson = new KiCadBoardJson.ViaJson();
       viaJson.id = viaId++;
       if (via.netCount() > 0) {
-        int netNo = via.getNetNo(0);
-        Net net = board.rules.nets.get(netNo);
+        int netNumber = via.getNetNumber(0);
+        Net net = board.rules.nets.get(netNumber);
         if (net != null) {
           viaJson.netName = net.name;
         }
@@ -208,8 +208,8 @@ public final class KiCadJsonWriter {
       KiCadBoardJson.ConductionAreaJson areaJson = new KiCadBoardJson.ConductionAreaJson();
       areaJson.id = areaId++;
       if (area.netCount() > 0) {
-        int netNo = area.getNetNo(0);
-        Net net = board.rules.nets.get(netNo);
+        int netNumber = area.getNetNumber(0);
+        Net net = board.rules.nets.get(netNumber);
         if (net != null) {
           areaJson.netName = net.name;
         }

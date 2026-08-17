@@ -7,7 +7,7 @@ import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.BoardRules;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -54,10 +54,9 @@ public final class CircleConstructionState extends InteractiveState {
   public InteractiveState complete() {
     IntPoint center = this.circleCenter.round();
     int radius = (int) Math.round(this.circleRadius);
-    int layer = hdlg.getInteractiveSettings().getLayer();
-    int clClass;
+    int layer = hdlg.getWorkspaceSettings().getLayer();
     RoutingBoard board = hdlg.getRoutingBoard();
-    clClass = BoardRules.clearanceClassNone();
+    int clearanceClassIndex = BoardRules.clearanceClassNone();
     boolean constructionSucceeded = this.circleRadius > 0;
     ConvexShape obstacleShape = null;
     if (constructionSucceeded) {
@@ -70,7 +69,8 @@ public final class CircleConstructionState extends InteractiveState {
           == AngleRestriction.FORTYFIVE_DEGREE) {
         obstacleShape = obstacleShape.boundingOctagon();
       }
-      constructionSucceeded = board.checkShape(obstacleShape, layer, new int[0], clClass);
+      constructionSucceeded =
+          board.checkShape(obstacleShape, layer, new int[0], clearanceClassIndex);
     }
     if (constructionSucceeded) {
       hdlg.screenMessages.setStatusMessage(tm.getText("keepout_successful_completed"));
@@ -81,7 +81,7 @@ public final class CircleConstructionState extends InteractiveState {
         hdlg.getRoutingBoard().startNotifyObservers();
       }
       board.generateSnapshot();
-      board.insertObstacle(obstacleShape, layer, clClass, FixedState.UNFIXED);
+      board.insertObstacle(obstacleShape, layer, clearanceClassIndex, FixedState.UNFIXED);
       if (this.observersActivated) {
         hdlg.getRoutingBoard().endNotifyObservers();
         this.observersActivated = false;

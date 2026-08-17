@@ -3,8 +3,8 @@ package app.freerouting.gui;
 import app.freerouting.board.Component;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.core.Package;
-import app.freerouting.core.Packages;
+import app.freerouting.core.library.Package;
+import app.freerouting.core.library.Packages;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +17,7 @@ public class WindowPackages extends WindowObjectListWithFilter {
   /** Creates a new instance of PackagesWindow. */
   public WindowPackages(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("packages"));
   }
@@ -46,19 +46,19 @@ public class WindowPackages extends WindowObjectListWithFilter {
     RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     Set<Item> boardInstances = new TreeSet<>();
     Collection<Item> boardItems = routingBoard.getItems();
-    for (Item currItem : boardItems) {
-      if (currItem.getComponentNo() > 0) {
-        Component currComponent = routingBoard.components.get(currItem.getComponentNo());
-        Package currPackage = currComponent.getPackage();
+    for (Item currentItem : boardItems) {
+      if (currentItem.getComponentId() > 0) {
+        Component currentComponent = routingBoard.components.get(currentItem.getComponentId());
+        Package currentPackage = currentComponent.getPackage();
         boolean packageMatches = false;
         for (int i = 0; i < selectedPackages.size(); i++) {
-          if (currPackage == selectedPackages.get(i)) {
+          if (currentPackage == selectedPackages.get(i)) {
             packageMatches = true;
             break;
           }
         }
         if (packageMatches) {
-          boardInstances.add(currItem);
+          boardInstances.add(currentItem);
         }
       }
     }

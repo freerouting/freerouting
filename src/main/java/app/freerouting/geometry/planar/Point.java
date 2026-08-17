@@ -10,8 +10,8 @@ public abstract class Point implements Serializable {
   public static final IntPoint ZERO = new IntPoint(0, 0);
 
   /**
-   * Creates an IntPoint from p_x and p_y. If p_x or p_y is too big for an IntPoint, a RationalPoint
-   * is created.
+   * Creates an IntPoint from x and y. If x or y is too big for an IntPoint, a RationalPoint is
+   * created.
    */
   public static Point getInstance(int x, int y) {
     IntPoint result = new IntPoint(x, y);
@@ -30,7 +30,7 @@ public abstract class Point implements Serializable {
       z = z.negate();
     }
     if (x.mod(z).signum() == 0) {
-      // p_x and p_y can be divided by p_z
+      // x and y can be divided by z
       x = x.divide(z);
       y = y.divide(z);
       z = BigInteger.ONE;
@@ -45,14 +45,14 @@ public abstract class Point implements Serializable {
     return new RationalPoint(x, y, z);
   }
 
-  /** Returns the translation of this point by p_vector. */
+  /** Returns the translation of this point by vector. */
   public abstract Point translateBy(Vector vector);
 
   abstract Point translateBy(IntVector vector);
 
   abstract Point translateBy(RationalVector vector);
 
-  /** Returns the difference vector of this point and p_other. */
+  /** Returns the difference vector of this point and other. */
   public abstract Vector differenceBy(Point other);
 
   abstract Vector differenceBy(IntPoint other);
@@ -63,7 +63,7 @@ public abstract class Point implements Serializable {
   public abstract FloatPoint toFloat();
 
   /** Returns a unique ID for this point for deterministic tie-breaking. */
-  public abstract int getIdNo();
+  public abstract int getId();
 
   /** Returns true, if this Point is a RationalPoint with denominator z = 0. */
   public abstract boolean isInfinite();
@@ -74,16 +74,16 @@ public abstract class Point implements Serializable {
   /** Creates the smallest Octagon with integer coordinates containing this point. */
   public abstract IntOctagon surroundingOctagon();
 
-  /** Returns true, if this point lies in the interior or on the border of p_box. */
+  /** Returns true, if this point lies in the interior or on the border of box. */
   public abstract boolean isContainedIn(IntBox box);
 
   /** Returns the side of a line on which this point lies. */
   public abstract Side sideOf(Line line);
 
   /**
-   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to
-   * p_2; Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2; and
-   * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
+   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from 1 to 2;
+   * Side.ON_THE_RIGHT, if this Point is on the right of the line from 1 to 2; and Side.COLLINEAR,
+   * if this Point is collinear with 1 and 2.
    */
   public Side sideOf(Point p1, Point p2) {
     Vector v1 = differenceBy(p1);
@@ -91,12 +91,12 @@ public abstract class Point implements Serializable {
     return v1.sideOf(v2);
   }
 
-  /** Returns the nearest point to this point on p_line. */
+  /** Returns the nearest point to this point on line. */
   public abstract Point perpendicularProjection(Line line);
 
   /**
-   * Calculates the perpendicular direction from this point to p_line. Returns Direction. NULL, if
-   * this point lies on p_line.
+   * Calculates the perpendicular direction from this point to line. Returns Direction. NULL, if
+   * this point lies on line.
    */
   public Direction perpendicularDirection(Line line) {
     Side side = this.sideOf(line);
@@ -113,7 +113,7 @@ public abstract class Point implements Serializable {
   }
 
   /**
-   * Returns 1, if this Point has a strict bigger x coordinate than p_other, 0, if the x coordinates
+   * Returns 1, if this Point has a strict bigger x coordinate than other, 0, if the x coordinates
    * are equal, and -1 otherwise.
    */
   public abstract int compareX(Point other);
@@ -123,7 +123,7 @@ public abstract class Point implements Serializable {
   abstract int compareX(RationalPoint other);
 
   /**
-   * Returns 1, if this Point has a strict bigger y coordinate than p_other, 0, if the y coordinates
+   * Returns 1, if this Point has a strict bigger y coordinate than other, 0, if the y coordinates
    * are equal, and -1 otherwise.
    */
   public abstract int compareY(Point other);
@@ -133,8 +133,8 @@ public abstract class Point implements Serializable {
   abstract int compareY(RationalPoint other);
 
   /**
-   * The function returns compare_x (p_other), if the result is not 0. Otherwise, it returns
-   * compare_y (p_other).
+   * The function returns compare_x (other), if the result is not 0. Otherwise, it returns compare_y
+   * (other).
    */
   @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
   public int compareXY(Point other) {
@@ -145,21 +145,21 @@ public abstract class Point implements Serializable {
     return result;
   }
 
-  /** Turns this point by p_factor times 90 degree around p_pole. */
+  /** Turns this point by factor times 90 degree around pole. */
   public Point turn90Degree(int factor, Point pole) {
     Vector v = this.differenceBy(pole);
     v = v.turn90Degree(factor);
     return pole.translateBy(v);
   }
 
-  /** Mirrors this point at the vertical line through p_pole. */
+  /** Mirrors this point at the vertical line through pole. */
   public Point mirrorVertical(Point pole) {
     Vector v = this.differenceBy(pole);
     v = v.mirrorAtYAxis();
     return pole.translateBy(v);
   }
 
-  /** Mirrors this point at the horizontal line through p_pole. */
+  /** Mirrors this point at the horizontal line through pole. */
   public Point mirrorHorizontal(Point pole) {
     Vector v = this.differenceBy(pole);
     v = v.mirrorAtXAxis();

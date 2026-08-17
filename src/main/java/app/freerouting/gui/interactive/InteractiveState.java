@@ -2,10 +2,10 @@ package app.freerouting.gui.interactive;
 
 import app.freerouting.board.LayerStructure;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.EditorStateHandle;
-import app.freerouting.gui.session.EditorStateKind;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveCommand;
+import app.freerouting.gui.workspace.EditorStateHandle;
+import app.freerouting.gui.workspace.EditorStateKind;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.InteractiveCommand;
 import app.freerouting.util.TextManager;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;

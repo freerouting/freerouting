@@ -1,8 +1,9 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.Pin;
 import app.freerouting.board.PrintableShape;
 import app.freerouting.board.Trace;
@@ -10,7 +11,6 @@ import app.freerouting.board.Via;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -36,7 +36,7 @@ import javax.swing.text.StyledDocument;
  * Window displaying text information for a list of objects implementing the
  * ObjectInfoWindow.Printable interface.
  */
-public final class WindowObjectInfo extends BoardTemporarySubWindow implements ObjectInfoPanel {
+public final class WindowObjectInfo extends BoardTemporarySubWindow implements ItemInfoPrinter {
 
   private static final int MAX_WINDOW_HEIGHT = 500;
   private static final int SCROLLBAR_ADD = 30;
@@ -53,13 +53,13 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
   /** Creates a new instance of ItemInfoWindow. */
   private WindowObjectInfo(BoardFrame boardFrame, CoordinateTransform coordinateTransform) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
     this.coordinateTransform = coordinateTransform;
 
     // create the text pane
     this.textPane = new JTextPane();
     this.textPane.setEditable(false);
-    this.numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+    this.numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
     this.numberFormat.setMaximumFractionDigits(4);
 
     // set document and text styles
@@ -86,9 +86,9 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
   }
 
   /**
-   * Displays a new ObjectInfoWindow with information about the items in p_item_list.
-   * p_coordinate_transform is for transforming board to user coordinates, and p_location is the
-   * location of the window.
+   * Displays a new ObjectInfoWindow with information about the items in itemList.
+   * coordinateTransform is for transforming board to user coordinates, and location is the location
+   * of the window.
    */
   public static void display(
       Collection<Item> itemList,
@@ -101,19 +101,19 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
     Integer viaCount = 0;
     Integer traceCount = 0;
     double cumulativeTraceLength = 0;
-    for (WindowObjectInfo.Printable currObject : itemList) {
-      currObject.printInfo(newInstance, boardFrame.get_locale());
-      if (currObject instanceof Pin) {
+    for (WindowObjectInfo.Printable currentObject : itemList) {
+      currentObject.printInfo(newInstance, boardFrame.getLocale());
+      if (currentObject instanceof Pin) {
         ++pinCount;
-      } else if (currObject instanceof Via) {
+      } else if (currentObject instanceof Via) {
         ++viaCount;
-      } else if (currObject instanceof Trace trace) {
+      } else if (currentObject instanceof Trace trace) {
         ++traceCount;
         cumulativeTraceLength += trace.getLength();
       }
     }
     newInstance.appendBold(newInstance.tm.getText("summary") + " ");
-    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
     if (pinCount > 0) {
       newInstance.append(numberFormat.format(pinCount));
       if (pinCount == 1) {
@@ -159,9 +159,9 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
   }
 
   /**
-   * Displays a new ObjectInfoWindow with information about the objects in p_object_list.
-   * p_coordinate_transform is for transforming board to user coordinates, and p_location is the
-   * location of the window.
+   * Displays a new ObjectInfoWindow with information about the objects in objectList.
+   * coordinateTransform is for transforming board to user coordinates, and location is the location
+   * of the window.
    */
   public static WindowObjectInfo display(
       String title,
@@ -173,8 +173,8 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
     if (objectList.isEmpty()) {
       newWindow.append(newWindow.tm.getText("listEmpty"));
     }
-    for (Printable currObject : objectList) {
-      currObject.printInfo(newWindow, boardFrame.get_locale());
+    for (Printable currentObject : objectList) {
+      currentObject.printInfo(newWindow, boardFrame.getLocale());
     }
     newWindow.pack();
     Dimension size = newWindow.getSize();
@@ -188,7 +188,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
     return newWindow;
   }
 
-  /** Appends p_string to the text pane. Returns false, if that was not possible. */
+  /** Appends string to the text pane. Returns false, if that was not possible. */
   private boolean appendStyledText(String string, String style) {
 
     StyledDocument document = textPane.getStyledDocument();
@@ -224,14 +224,14 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
     return append(numberFormat.format(formattedValue));
   }
 
-  /** Appends p_string to the text pane. Returns false, if that was not possible. */
+  /** Appends string to the text pane. Returns false, if that was not possible. */
   @Override
   public boolean append(String string) {
     return appendStyledText(string, "normal");
   }
 
   /**
-   * Appends p_value to the text pane after transforming it to the user coordinate system. Returns
+   * Appends value to the text pane after transforming it to the user coordinate system. Returns
    * false, if that was not possible.
    */
   @Override
@@ -241,18 +241,18 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
   }
 
   /**
-   * Appends p_point to the text pane after transforming to the user coordinate system. Returns
-   * false, if that was not possible.
+   * Appends point to the text pane after transforming to the user coordinate system. Returns false,
+   * if that was not possible.
    */
   @Override
   public boolean append(FloatPoint point) {
     FloatPoint transformedPoint = this.coordinateTransform.boardToUser(point);
-    return append(transformedPoint.toString(boardFrame.get_locale()));
+    return append(transformedPoint.toString(boardFrame.getLocale()));
   }
 
   /**
-   * Appends p_shape to the text pane after transforming to the user coordinate system. Returns
-   * false, if that was not possible.
+   * Appends shape to the text pane after transforming to the user coordinate system. Returns false,
+   * if that was not possible.
    */
   @Override
   public boolean append(Shape shape, Locale locale) {
@@ -291,8 +291,8 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
   }
 
   /**
-   * Appends a button for creating a new ObjectInfoWindow with the information of p_items to the
-   * text pane. Returns false, if that was not possible.
+   * Appends a button for creating a new ObjectInfoWindow with the information of items to the text
+   * pane. Returns false, if that was not possible.
    */
   @Override
   public boolean appendItems(String buttonName, String windowTitle, Collection<Item> items) {
@@ -301,7 +301,7 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
   }
 
   /**
-   * Appends a button for creating a new ObjectInfoWindow with the information of p_objects to the
+   * Appends a button for creating a new ObjectInfoWindow with the information of objects to the
    * text pane. Returns false, if that was not possible.
    */
   @Override
@@ -340,9 +340,9 @@ public final class WindowObjectInfo extends BoardTemporarySubWindow implements O
 
   @Override
   public void dispose() {
-    for (WindowObjectInfo currSubwindow : this.subwindows) {
-      if (currSubwindow != null) {
-        currSubwindow.dispose();
+    for (WindowObjectInfo currentSubwindow : this.subwindows) {
+      if (currentSubwindow != null) {
+        currentSubwindow.dispose();
       }
     }
     super.dispose();

@@ -69,7 +69,7 @@ public class IdentifierType {
   /** Looks, if string does not contain reserved characters or blanks. */
   private boolean isLegal(String string) {
     if (string == null) {
-      FRLogger.warn("IdentifierType.is_legal: p_string is null");
+      FRLogger.warn("IdentifierType.is_legal: string is null");
       return false;
     }
     for (int i = 0; i < reservedChars.length; i++) {

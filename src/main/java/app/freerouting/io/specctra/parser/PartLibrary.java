@@ -1,7 +1,7 @@
 package app.freerouting.io.specctra.parser;
 
 import app.freerouting.board.Component;
-import app.freerouting.core.LogicalParts;
+import app.freerouting.core.library.LogicalParts;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
 import java.util.Collection;
@@ -21,72 +21,72 @@ public class PartLibrary extends ScopeKeyword {
     super("part_library");
   }
 
-  public static void writeScope(WriteScopeParameter par) throws IOException {
-    LogicalParts logicalParts = par.board.library.logicalParts;
+  public static void writeScope(WriteScopeParameter scopeParameter) throws IOException {
+    LogicalParts logicalParts = scopeParameter.board.library.logicalParts;
     if (logicalParts.count() <= 0) {
       return;
     }
-    par.file.startScope();
-    par.file.write("part_library");
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("part_library");
 
     // write the logical part mappings
 
     for (int i = 1; i <= logicalParts.count(); i++) {
-      app.freerouting.core.LogicalPart currPart = logicalParts.get(i);
-      par.file.startScope();
-      par.file.write("logical_part_mapping ");
-      par.identifierType.write(currPart.name, par.file);
-      par.file.newLine();
-      par.file.write("(comp");
-      for (int j = 1; j <= par.board.components.count(); j++) {
-        Component currComponent = par.board.components.get(j);
-        if (currComponent.getLogicalPart() == currPart) {
-          par.file.write(" ");
-          par.file.write(currComponent.name);
+      app.freerouting.core.library.LogicalPart currentPart = logicalParts.get(i);
+      scopeParameter.file.startScope();
+      scopeParameter.file.write("logical_part_mapping ");
+      scopeParameter.identifierType.write(currentPart.name, scopeParameter.file);
+      scopeParameter.file.newLine();
+      scopeParameter.file.write("(comp");
+      for (int j = 1; j <= scopeParameter.board.components.count(); j++) {
+        Component currentComponent = scopeParameter.board.components.get(j);
+        if (currentComponent.getLogicalPart() == currentPart) {
+          scopeParameter.file.write(" ");
+          scopeParameter.file.write(currentComponent.name);
         }
       }
-      par.file.write(")");
-      par.file.endScope();
+      scopeParameter.file.write(")");
+      scopeParameter.file.endScope();
     }
 
     // write the logical parts.
 
     for (int i = 1; i <= logicalParts.count(); i++) {
-      app.freerouting.core.LogicalPart currPart = logicalParts.get(i);
+      app.freerouting.core.library.LogicalPart currentPart = logicalParts.get(i);
 
-      par.file.startScope();
-      par.file.write("logicalPart ");
-      par.identifierType.write(currPart.name, par.file);
-      par.file.newLine();
-      for (int j = 0; j < currPart.pinCount(); j++) {
-        par.file.newLine();
-        app.freerouting.core.LogicalPart.PartPin currPin = currPart.getPin(j);
-        par.file.write("(pin ");
-        par.identifierType.write(currPin.pinName, par.file);
-        par.file.write(" 0 ");
-        par.identifierType.write(currPin.gateName, par.file);
-        par.file.write(" ");
-        final int gateSwapCode = currPin.gateSwapCode;
-        par.file.write(String.valueOf(gateSwapCode));
-        par.file.write(" ");
-        par.identifierType.write(currPin.gatePinName, par.file);
-        par.file.write(" ");
-        int gatePinSwapCode = currPin.gatePinSwapCode;
-        par.file.write(String.valueOf(gatePinSwapCode));
-        par.file.write(")");
+      scopeParameter.file.startScope();
+      scopeParameter.file.write("logicalPart ");
+      scopeParameter.identifierType.write(currentPart.name, scopeParameter.file);
+      scopeParameter.file.newLine();
+      for (int j = 0; j < currentPart.pinCount(); j++) {
+        scopeParameter.file.newLine();
+        app.freerouting.core.library.LogicalPart.PartPin currentPin = currentPart.getPin(j);
+        scopeParameter.file.write("(pin ");
+        scopeParameter.identifierType.write(currentPin.pinName, scopeParameter.file);
+        scopeParameter.file.write(" 0 ");
+        scopeParameter.identifierType.write(currentPin.gateName, scopeParameter.file);
+        scopeParameter.file.write(" ");
+        final int gateSwapCode = currentPin.gateSwapCode;
+        scopeParameter.file.write(String.valueOf(gateSwapCode));
+        scopeParameter.file.write(" ");
+        scopeParameter.identifierType.write(currentPin.gatePinName, scopeParameter.file);
+        scopeParameter.file.write(" ");
+        int gatePinSwapCode = currentPin.gatePinSwapCode;
+        scopeParameter.file.write(String.valueOf(gatePinSwapCode));
+        scopeParameter.file.write(")");
       }
-      par.file.endScope();
+      scopeParameter.file.endScope();
     }
-    par.file.endScope();
+    scopeParameter.file.endScope();
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("PartLibrary.read_scope: IO error scanning file", e);
         return false;
@@ -94,7 +94,7 @@ public class PartLibrary extends ScopeKeyword {
       if (nextToken == null) {
         FRLogger.warn(
             "PartLibrary.read_scope: unexpected end of file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -104,19 +104,19 @@ public class PartLibrary extends ScopeKeyword {
       }
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == LOGICAL_PART_MAPPING) {
-          LogicalPartMapping nextMapping = readLogicalPartMapping(par.scanner);
+          LogicalPartMapping nextMapping = readLogicalPartMapping(scopeParameter.scanner);
           if (nextMapping == null) {
             return false;
           }
-          par.logicalPartMappings.add(nextMapping);
+          scopeParameter.logicalPartMappings.add(nextMapping);
         } else if (nextToken == LOGICAL_PART) {
-          LogicalPart nextPart = readLogicalPart(par.scanner);
+          LogicalPart nextPart = readLogicalPart(scopeParameter.scanner);
           if (nextPart == null) {
             return false;
           }
-          par.logicalParts.add(nextPart);
+          scopeParameter.logicalParts.add(nextPart);
         } else {
-          skipScope(par.scanner);
+          skipScope(scopeParameter.scanner);
         }
       }
     }
@@ -220,11 +220,11 @@ public class PartLibrary extends ScopeKeyword {
       boolean readOk = true;
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == PIN) {
-          PartPin currPartPin = readPartPin(scanner);
-          if (currPartPin == null) {
+          PartPin currentPartPin = readPartPin(scanner);
+          if (currentPartPin == null) {
             return null;
           }
-          partPins.add(currPartPin);
+          partPins.add(currentPartPin);
         } else {
           skipScope(scanner);
         }

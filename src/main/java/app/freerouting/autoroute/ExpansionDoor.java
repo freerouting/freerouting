@@ -151,14 +151,14 @@ public class ExpansionDoor implements ExpandableObject {
     Point secondCorner = null;
     int cornerCount = doorShape.borderLineCount();
     for (int i = 0; i < cornerCount; i++) {
-      Point currCorner = doorShape.corner(i);
-      if (!firstRoomShape.containsInside(currCorner)
-          && !secondRoomShape.containsInside(currCorner)) {
-        // currCorner is on the border of both room shapes.
+      Point currentCorner = doorShape.corner(i);
+      if (!firstRoomShape.containsInside(currentCorner)
+          && !secondRoomShape.containsInside(currentCorner)) {
+        // currentCorner is on the border of both room shapes.
         if (firstCorner == null) {
-          firstCorner = currCorner;
-        } else if (!firstCorner.equals(currCorner)) {
-          secondCorner = currCorner;
+          firstCorner = currentCorner;
+        } else if (!firstCorner.equals(currentCorner)) {
+          secondCorner = currentCorner;
           break;
         }
       }
@@ -173,16 +173,16 @@ public class ExpansionDoor implements ExpandableObject {
   @Override
   public void reset() {
     if (sectionArr != null) {
-      for (MazeSearchElement currSection : sectionArr) {
-        currSection.reset();
+      for (MazeSearchElement currentSection : sectionArr) {
+        currentSection.reset();
       }
     }
   }
 
   @Override
-  public int getIdNo() {
-    int id1 = firstRoom.getIdNo();
-    int id2 = secondRoom.getIdNo();
+  public int getId() {
+    int id1 = firstRoom.getId();
+    int id2 = secondRoom.getId();
     // Use a stable combination of room IDs. Note: min/max ensures order-independence.
     return Math.min(id1, id2) * 31 + Math.max(id1, id2);
   }

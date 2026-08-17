@@ -1,7 +1,7 @@
 package app.freerouting.io.specctra;
 
 import app.freerouting.board.BasicBoard;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.io.specctra.parser.AutorouteSettings;
 import app.freerouting.io.specctra.parser.Library;
@@ -14,10 +14,9 @@ import java.io.OutputStream;
 
 /**
  * Writes board design rules to a Specctra {@code .rules} file without any dependency on {@link
- * app.freerouting.gui.session.GuiBoardManager}.
+ * app.freerouting.gui.workspace.GuiBoardManager}.
  *
- * <p>Replaces the write path previously found in {@link
- * app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
+ * <p>This class is the public write entry point for Specctra rules files.
  */
 public final class RulesWriter {
 
@@ -36,7 +35,7 @@ public final class RulesWriter {
   public static void write(BasicBoard board, OutputStream out, String designName)
       throws IOException {
     IndentFileWriter outputFile = new IndentFileWriter(out);
-    WriteScopeParameter par =
+    WriteScopeParameter scopeParameter =
         new WriteScopeParameter(
             board,
             null,
@@ -44,35 +43,42 @@ public final class RulesWriter {
             board.communication.specctraParserInfo.stringQuote,
             board.communication.coordinateTransform,
             false);
-    writeRules(par, designName);
+    writeRules(scopeParameter, designName);
     outputFile.flush();
   }
 
   // -------------------------------------------------------------------------
-  // Private helpers (migrated from RulesFile)
+  // Private helpers for rules-file writing.
   // -------------------------------------------------------------------------
 
-  private static void writeRules(WriteScopeParameter par, String designName) throws IOException {
-    par.file.startScope();
-    par.file.write("rules PCB ");
-    par.file.write(designName);
-    Structure.writeSnapAngle(par.file, par.board.rules.getTraceAngleRestriction());
-    if (par.autorouteSettings != null) {
+  private static void writeRules(WriteScopeParameter scopeParameter, String designName)
+      throws IOException {
+    scopeParameter.file.startScope();
+    scopeParameter.file.write("rules PCB ");
+    scopeParameter.file.write(designName);
+    Structure.writeSnapAngle(
+        scopeParameter.file, scopeParameter.board.rules.getTraceAngleRestriction());
+    if (scopeParameter.autorouteSettings != null) {
       AutorouteSettings.writeScope(
-          par.file, par.autorouteSettings, par.board.layerStructure, par.identifierType);
+          scopeParameter.file,
+          scopeParameter.autorouteSettings,
+          scopeParameter.board.layerStructure,
+          scopeParameter.identifierType);
     }
     // write the default rule using 0 as default layer
-    Rule.writeDefaultRule(par, 0);
+    Rule.writeDefaultRule(scopeParameter, 0);
     // write the via padstacks
-    for (int i = 1; i <= par.board.library.padstacks.count(); i++) {
-      Padstack currPadstack = par.board.library.padstacks.get(i);
-      if (par.board.library.getViaPadstack(currPadstack.name) != null) {
-        Library.writePadstackScope(par, currPadstack);
+    for (int i = 1; i <= scopeParameter.board.library.padstacks.count(); i++) {
+      Padstack currentPadstack = scopeParameter.board.library.padstacks.get(i);
+      if (scopeParameter.board.library.getViaPadstack(currentPadstack.name) != null) {
+        Library.writePadstackScope(scopeParameter, currentPadstack);
       }
     }
-    Network.writeViaInfos(par.board.rules, par.file, par.identifierType);
-    Network.writeViaRules(par.board.rules, par.file, par.identifierType);
-    Network.writeNetClasses(par);
-    par.file.endScope();
+    Network.writeViaInfos(
+        scopeParameter.board.rules, scopeParameter.file, scopeParameter.identifierType);
+    Network.writeViaRules(
+        scopeParameter.board.rules, scopeParameter.file, scopeParameter.identifierType);
+    Network.writeNetClasses(scopeParameter);
+    scopeParameter.file.endScope();
   }
 }

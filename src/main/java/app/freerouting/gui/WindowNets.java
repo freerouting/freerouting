@@ -1,14 +1,14 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
-import app.freerouting.board.ObjectInfoPanel;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.PrintableShape;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Shape;
-import app.freerouting.gui.session.RatsNest;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.gui.workspace.RatsNest;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.NetClasses;
@@ -51,7 +51,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   /** Creates a new instance of NetsWindow. */
   public WindowNets(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -83,11 +83,11 @@ public class WindowNets extends WindowObjectListWithFilter {
     infoScrollPane.setPreferredSize(new Dimension(150, 80));
     this.centerPanel.add(infoScrollPane, BorderLayout.SOUTH);
 
-    JPanel currButtonPanel = new JPanel();
-    this.southPanel.add(currButtonPanel, BorderLayout.NORTH);
+    JPanel currentButtonPanel = new JPanel();
+    this.southPanel.add(currentButtonPanel, BorderLayout.NORTH);
 
     final JButton rulesNetsAssignClassButton = new JButton(tm.getText("assign_class"));
-    currButtonPanel.add(rulesNetsAssignClassButton);
+    currentButtonPanel.add(rulesNetsAssignClassButton);
     rulesNetsAssignClassButton.setToolTipText(tm.getText("assign_class_tooltip"));
     rulesNetsAssignClassButton.addActionListener(new AssignClassListener());
     rulesNetsAssignClassButton.addActionListener(
@@ -186,7 +186,7 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
     for (Object obj : selectedNets) {
       if (obj instanceof Net net) {
-        net.printInfo(this.infoPane, boardFrame.get_locale());
+        net.printInfo(this.infoPane, boardFrame.getLocale());
       }
     }
     this.infoPane.setCaretPosition(0);
@@ -197,7 +197,7 @@ public class WindowNets extends WindowObjectListWithFilter {
   protected void fillList() {
     Nets nets = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.nets;
     List<Net> netList = new java.util.ArrayList<>();
-    for (int i = 0; i < nets.maxNetNo(); i++) {
+    for (int i = 0; i < nets.maxNetNumber(); i++) {
       Net net = nets.get(i + 1);
       if (net != null) {
         netList.add(net);
@@ -230,16 +230,16 @@ public class WindowNets extends WindowObjectListWithFilter {
     RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
     Set<Item> selectedItems = new TreeSet<>();
     Collection<Item> boardItems = routingBoard.getItems();
-    for (Item currItem : boardItems) {
+    for (Item currentItem : boardItems) {
       boolean itemMatches = false;
-      for (int currNetNo : selectedNetNumbers) {
-        if (currItem.containsNet(currNetNo)) {
+      for (int currentNetNumber : selectedNetNumbers) {
+        if (currentItem.containsNet(currentNetNumber)) {
           itemMatches = true;
           break;
         }
       }
       if (itemMatches) {
-        selectedItems.add(currItem);
+        selectedItems.add(currentItem);
       }
     }
     boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
@@ -279,12 +279,12 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
   }
 
-  private class NetInfoTextPane extends JTextPane implements ObjectInfoPanel {
+  private class NetInfoTextPane extends JTextPane implements ItemInfoPrinter {
     private final NumberFormat numberFormat;
 
     public NetInfoTextPane() {
       this.setEditable(false);
-      this.numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+      this.numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
       this.numberFormat.setMaximumFractionDigits(4);
 
       StyledDocument document = this.getStyledDocument();
@@ -334,7 +334,7 @@ public class WindowNets extends WindowObjectListWithFilter {
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
       FloatPoint transformedPoint = coordinateTransform.boardToUser(point);
-      return append(transformedPoint.toString(boardFrame.get_locale()));
+      return append(transformedPoint.toString(boardFrame.getLocale()));
     }
 
     @Override
@@ -349,8 +349,8 @@ public class WindowNets extends WindowObjectListWithFilter {
     }
 
     @Override
-    public boolean append(String buttonName, String windowTitle, ObjectInfoPanel.Printable object) {
-      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>();
+    public boolean append(String buttonName, String windowTitle, ItemInfoPrinter.Printable object) {
+      Collection<ItemInfoPrinter.Printable> objectList = new LinkedList<>();
       objectList.add(object);
       return appendObjects(buttonName, windowTitle, objectList);
     }
@@ -367,13 +367,13 @@ public class WindowNets extends WindowObjectListWithFilter {
 
     @Override
     public boolean appendItems(String buttonName, String windowTitle, Collection<Item> items) {
-      Collection<ObjectInfoPanel.Printable> objectList = new LinkedList<>(items);
+      Collection<ItemInfoPrinter.Printable> objectList = new LinkedList<>(items);
       return appendObjects(buttonName, windowTitle, objectList);
     }
 
     @Override
     public boolean appendObjects(
-        String buttonName, String windowTitle, Collection<ObjectInfoPanel.Printable> objects) {
+        String buttonName, String windowTitle, Collection<ItemInfoPrinter.Printable> objects) {
       JButton objectInfoButton = new JButton();
       objectInfoButton.setText(buttonName);
       objectInfoButton.setBorderPainted(false);
@@ -385,7 +385,7 @@ public class WindowNets extends WindowObjectListWithFilter {
       objectInfoButton.addActionListener(
           e -> {
             Collection<WindowObjectInfo.Printable> infoObjects = new LinkedList<>();
-            for (ObjectInfoPanel.Printable p : objects) {
+            for (ItemInfoPrinter.Printable p : objects) {
               if (p instanceof WindowObjectInfo.Printable wp) {
                 infoObjects.add(wp);
               }

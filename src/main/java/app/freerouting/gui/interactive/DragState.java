@@ -4,7 +4,7 @@ import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -49,16 +49,16 @@ public abstract class DragState extends InteractiveState {
 
   private static DragCandidate findItemToMove(FloatPoint location, GuiBoardManager boardHandling) {
     int tryCount = 1;
-    if (boardHandling.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+    if (boardHandling.getWorkspaceSettings().getSelectOnAllVisibleLayers()) {
       tryCount += boardHandling.getLayerCount();
     }
-    int currLayer = boardHandling.getInteractiveSettings().getLayer();
-    int pickLayer = currLayer;
+    int currentLayer = boardHandling.getWorkspaceSettings().getLayer();
+    int pickLayer = currentLayer;
     boolean itemFound = false;
 
     for (int i = 0; i < tryCount; i++) {
       if (i == 0
-          || pickLayer != currLayer
+          || pickLayer != currentLayer
               && (boardHandling.graphicsContext.getLayerVisibility(pickLayer)) > 0) {
         Collection<Item> foundItems =
             boardHandling
@@ -66,7 +66,7 @@ public abstract class DragState extends InteractiveState {
                 .pickItems(
                     location.round(),
                     pickLayer,
-                    boardHandling.getInteractiveSettings().getItemSelectionFilter());
+                    boardHandling.getWorkspaceSettings().getItemSelectionFilter());
         DragCandidate candidate = selectItemToMove(foundItems, boardHandling);
         itemFound |= candidate.itemFound();
         if (candidate.item() != null) {
@@ -83,24 +83,22 @@ public abstract class DragState extends InteractiveState {
       Collection<Item> foundItems, GuiBoardManager boardHandling) {
     Item itemToMove = null;
     boolean itemFound = false;
-    for (Item currItem : foundItems) {
+    for (Item currentItem : foundItems) {
       itemFound = true;
-      if (currItem instanceof Trace) {
+      if (currentItem instanceof Trace) {
         continue; // traces are not moved
       }
-      if (!boardHandling.getInteractiveSettings().getDragComponentsEnabled()
-          && currItem.getComponentNo() != 0) {
+      if (!boardHandling.getWorkspaceSettings().getDragComponentsEnabled()
+          && currentItem.getComponentId() != 0) {
         continue;
       }
-      itemToMove = currItem;
-      if (currItem instanceof DrillItem) {
+      itemToMove = currentItem;
+      if (currentItem instanceof DrillItem) {
         break; // drill items are preferred
       }
     }
     return new DragCandidate(itemToMove, itemFound);
   }
-
-  private record DragCandidate(Item item, boolean itemFound) {}
 
   /**
    * Moves the state-managed item or route to the given location.
@@ -129,4 +127,6 @@ public abstract class DragState extends InteractiveState {
   public InteractiveState complete() {
     return this.buttonReleased();
   }
+
+  private record DragCandidate(Item item, boolean itemFound) {}
 }

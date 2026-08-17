@@ -6,7 +6,7 @@ import app.freerouting.board.MoveComponent;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Vector;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -85,8 +85,8 @@ public class DragItemState extends DragState {
         this.somethingDragged = true;
       }
       if (!moveComponent.insert(
-          hdlg.getInteractiveSettings().getTracePullTightRegionWidth(),
-          hdlg.getInteractiveSettings().getTracePullTightAccuracy())) {
+          hdlg.getWorkspaceSettings().getTracePullTightRegionWidth(),
+          hdlg.getWorkspaceSettings().getTracePullTightAccuracy())) {
         // an insert error occurred, end the drag state
         return this.returnState;
       }
@@ -104,21 +104,21 @@ public class DragItemState extends DragState {
     }
     if (somethingDragged) {
       // Update the incompletes for the nets of the moved items.
-      if (itemToMove.getComponentNo() == 0) {
+      if (itemToMove.getComponentId() == 0) {
         for (int i = 0; i < itemToMove.netCount(); i++) {
-          hdlg.updateRatsnest(itemToMove.getNetNo(i));
+          hdlg.updateRatsnest(itemToMove.getNetNumber(i));
         }
       } else {
         Collection<Item> movedItems =
-            hdlg.getRoutingBoard().getComponentItems(itemToMove.getComponentNo());
+            hdlg.getRoutingBoard().getComponentItems(itemToMove.getComponentId());
         Set<Integer> changedNets = new TreeSet<>();
-        for (Item currMovedItem : movedItems) {
-          for (int i = 0; i < currMovedItem.netCount(); i++) {
-            changedNets.add(currMovedItem.getNetNo(i));
+        for (Item currentMovedItem : movedItems) {
+          for (int i = 0; i < currentMovedItem.netCount(); i++) {
+            changedNets.add(currentMovedItem.getNetNumber(i));
           }
         }
-        for (Integer currNetNo : changedNets) {
-          hdlg.updateRatsnest(currNetNo);
+        for (Integer currentNetNumber : changedNets) {
+          hdlg.updateRatsnest(currentNetNumber);
         }
       }
     } else {

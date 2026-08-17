@@ -2,7 +2,7 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.ExpansionDrill;
 import app.freerouting.autoroute.ItemAutorouteInfo;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Shape;
@@ -50,28 +50,28 @@ public class Via extends DrillItem implements Serializable {
   public Via(
       Padstack padstack,
       Point center,
-      int[] netNoArr,
-      int clearanceType,
-      int idNo,
-      int groupNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int id,
+      int groupId,
       FixedState fixedState,
       boolean attachAllowed,
       BasicBoard board) {
-    super(center, netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    super(center, netNumbers, clearanceClassIndex, id, groupId, fixedState, board);
     this.padstack = padstack;
     this.attachAllowed = attachAllowed;
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     Via copy =
         new Via(
             padstack,
             getCenter(),
-            netNoArr,
-            clearanceClassNo(),
-            idNo,
-            getComponentNo(),
+            netNumbers,
+            clearanceClassIndex(),
+            id,
+            getComponentId(),
             getFixedState(),
             attachAllowed,
             board);
@@ -117,12 +117,12 @@ public class Via extends DrillItem implements Serializable {
       for (int i = 0; i < this.precalculatedShapes.length; i++) {
         int padstackLayer = i + this.firstLayer();
         Vector translateVector = getCenter().differenceBy(Point.ZERO);
-        Shape currShape = padstack.getShape(padstackLayer);
+        Shape currentShape = padstack.getShape(padstackLayer);
 
-        if (currShape == null) {
+        if (currentShape == null) {
           this.precalculatedShapes[i] = null;
         } else {
-          this.precalculatedShapes[i] = (Shape) currShape.translateBy(translateVector);
+          this.precalculatedShapes[i] = (Shape) currentShape.translateBy(translateVector);
         }
       }
     }
@@ -168,13 +168,13 @@ public class Via extends DrillItem implements Serializable {
       return true;
     }
     Iterator<Item> it = contactList.iterator();
-    Item currContactItem = it.next();
-    int firstContactFirstLayer = currContactItem.firstLayer();
-    int firstContactLastLayer = currContactItem.lastLayer();
+    Item currentContactItem = it.next();
+    int firstContactFirstLayer = currentContactItem.firstLayer();
+    int firstContactLastLayer = currentContactItem.lastLayer();
     while (it.hasNext()) {
-      currContactItem = it.next();
-      if (currContactItem.firstLayer() != firstContactFirstLayer
-          || currContactItem.lastLayer() != firstContactLastLayer) {
+      currentContactItem = it.next();
+      if (currentContactItem.firstLayer() != firstContactFirstLayer
+          || currentContactItem.lastLayer() != firstContactLastLayer) {
         return false;
       }
     }
@@ -199,9 +199,10 @@ public class Via extends DrillItem implements Serializable {
   public ExpansionDrill getAutorouteDrillInfo(ShapeSearchTree autorouteTree) {
     if (this.autorouteDrillInfo == null) {
       ItemAutorouteInfo viaAutorouteInfo = this.getAutorouteInfo();
-      TileShape currDrillShape = TileShape.getInstance(this.getCenter());
+      TileShape currentDrillShape = TileShape.getInstance(this.getCenter());
       this.autorouteDrillInfo =
-          new ExpansionDrill(currDrillShape, this.getCenter(), this.firstLayer(), this.lastLayer());
+          new ExpansionDrill(
+              currentDrillShape, this.getCenter(), this.firstLayer(), this.lastLayer());
       int viaLayerCount = this.lastLayer() - this.firstLayer() + 1;
       for (int i = 0; i < viaLayerCount; i++) {
         this.autorouteDrillInfo.roomArr[i] = viaAutorouteInfo.getExpansionRoom(i, autorouteTree);
@@ -232,24 +233,24 @@ public class Via extends DrillItem implements Serializable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("via"));
-    window.append(" " + tm.getText("at") + " ");
-    window.append(this.getCenter().toFloat());
-    window.append(", " + tm.getText("padstack"));
-    window.append(padstack.name, tm.getText("padstack_info"), padstack);
-    this.printConnectableItemInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("via"));
+    printer.append(" " + tm.getText("at") + " ");
+    printer.append(this.getCenter().toFloat());
+    printer.append(", " + tm.getText("padstack"));
+    printer.append(padstack.name, tm.getText("padstack_info"), padstack);
+    this.printConnectableItemInfo(printer, locale);
+    printer.newline();
   }
 
   @Override
   public String getHoverInfo(Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    String fromLayer = this.board.layerStructure.arr[this.firstLayer()].name;
-    String toLayer = this.board.layerStructure.arr[this.lastLayer()].name;
+    String fromLayer = this.board.layerStructure.layers[this.firstLayer()].name;
+    String toLayer = this.board.layerStructure.layers[this.lastLayer()].name;
     String padstackName = padstack.name;
     String connInfo = this.getConnectableItemHoverInfo(locale);
 

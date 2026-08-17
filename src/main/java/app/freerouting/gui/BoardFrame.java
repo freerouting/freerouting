@@ -1,20 +1,21 @@
 package app.freerouting.gui;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BoardObserverAdaptor;
 import app.freerouting.board.BoardObservers;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.rendering.TutorialBoardPalette;
-import app.freerouting.gui.session.BoardReplacement;
-import app.freerouting.gui.session.EditorStateHandle;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.LoadGeneration;
-import app.freerouting.gui.session.RatsNest;
-import app.freerouting.gui.session.ScreenMessages;
+import app.freerouting.gui.workspace.BoardReplacement;
+import app.freerouting.gui.workspace.EditorStateHandle;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.LoadGeneration;
+import app.freerouting.gui.workspace.RatsNest;
+import app.freerouting.gui.workspace.ScreenMessages;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadJsonReader;
@@ -24,9 +25,8 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
 import app.freerouting.logger.LogEntryType;
-import app.freerouting.management.RoutingJobScheduler;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.RoutingJobScheduler;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
@@ -71,18 +71,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 /** Graphical frame containing the Menu, Toolbar, Canvas and Status bar. */
 public class BoardFrame extends WindowBase {
 
-  private static final String TUTORIAL_BOARD_FILENAME = "tutorial_board.dsn";
-
-  public static volatile BoardFrame activeFrame;
-
   /** The windows above stored in an array. */
   static final int SUBWINDOW_COUNT = 24;
 
   static final String GUI_DEFAULTS_FILE_NAME = "gui_defaults.par";
   static final String GUI_DEFAULTS_FILE_BACKUP_NAME = "gui_defaults.par.bak";
-
-  /** The current routing job (design) being edited. */
-  public RoutingJob routingJob;
+  private static final String TUTORIAL_BOARD_FILENAME = "tutorial_board.dsn";
+  public static volatile BoardFrame activeFrame;
 
   /** The menubar of this frame. */
   public final BoardMenuBar menubar;
@@ -111,6 +106,9 @@ public class BoardFrame extends WindowBase {
   private final List<Consumer<RoutingBoard>> boardSavedEventListeners = new ArrayList<>();
   private final BoardObservers boardObservers;
   private final String freeroutingVersion;
+
+  /** The current routing job (design) being edited. */
+  public RoutingJob routingJob;
 
   /** The panel with the graphical representation of the board. */
   BoardPanel boardPanel;
@@ -421,6 +419,35 @@ public class BoardFrame extends WindowBase {
     this.pack();
   }
 
+  private static BoardReadResult parseBoardFromBytes(
+      byte[] fileContent, FileFormat format, String filename) {
+    try (InputStream inputStream = new ByteArrayInputStream(fileContent)) {
+      if (format == FileFormat.DSN) {
+        return DsnReader.readBoard(inputStream, null, new ItemIdGenerator(), filename);
+      }
+      if (format == FileFormat.KICAD_DESIGN_JSON) {
+        try (java.io.Reader reader =
+            new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+          return KiCadJsonReader.readBoard(reader, null, new ItemIdGenerator());
+        }
+      }
+      throw new IllegalArgumentException("Unsupported format for async load: " + format);
+    } catch (Exception e) {
+      FRLogger.error("Failed to parse board file", e);
+      return new BoardReadResult.IoError(new IOException("Failed to parse board file", e));
+    }
+  }
+
+  private static boolean canAttachParsedBoard(BoardReadResult readResult) {
+    if (readResult instanceof BoardReadResult.Success) {
+      return true;
+    }
+    if (readResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
+      return outlineMissing.board() != null;
+    }
+    return false;
+  }
+
   /**
    * Loads a RoutingBoard natively (e.g. from an API session) without file transfer overhead,
    * rendering it instantly in the GUI for real-time monitoring.
@@ -451,7 +478,7 @@ public class BoardFrame extends WindowBase {
     if (this.settingsMerger != null) {
       var mergedSettings = this.settingsMerger.merge();
       this.routingJob.setSettings(mergedSettings);
-      var interactiveSettings = boardPanel.boardHandling.getInteractiveSettings();
+      var interactiveSettings = boardPanel.boardHandling.getWorkspaceSettings();
       if (interactiveSettings != null) {
         interactiveSettings.setSettings(this.routingJob.routerSettings);
       }
@@ -535,26 +562,6 @@ public class BoardFrame extends WindowBase {
     return boardPanel != null
         && boardPanel.boardHandling != null
         && boardPanel.boardHandling.getSessionPort().isCurrent(generation);
-  }
-
-  private static BoardReadResult parseBoardFromBytes(
-      byte[] fileContent, FileFormat format, String filename) {
-    try (InputStream inputStream = new ByteArrayInputStream(fileContent)) {
-      if (format == FileFormat.DSN) {
-        return DsnReader.readBoard(
-            inputStream, null, new ItemIdentificationNumberGenerator(), filename);
-      }
-      if (format == FileFormat.KICAD_DESIGN_JSON) {
-        try (java.io.Reader reader =
-            new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-          return KiCadJsonReader.readBoard(reader, null, new ItemIdentificationNumberGenerator());
-        }
-      }
-      throw new IllegalArgumentException("Unsupported format for async load: " + format);
-    } catch (Exception e) {
-      FRLogger.error("Failed to parse board file", e);
-      return new BoardReadResult.IoError(new IOException("Failed to parse board file", e));
-    }
   }
 
   private void ensureGeneralSettingsVisibleDuringLoad() {
@@ -770,7 +777,7 @@ public class BoardFrame extends WindowBase {
         }
         mergedSettings.applyBoardSpecificOptimizations(board);
         this.routingJob.setSettings(mergedSettings);
-        var interactiveSettings = boardPanel.boardHandling.getInteractiveSettings();
+        var interactiveSettings = boardPanel.boardHandling.getWorkspaceSettings();
         if (interactiveSettings != null) {
           interactiveSettings.setSettings(mergedSettings);
         }
@@ -782,16 +789,6 @@ public class BoardFrame extends WindowBase {
     }
 
     return readResult instanceof BoardReadResult.OutlineMissing;
-  }
-
-  private static boolean canAttachParsedBoard(BoardReadResult readResult) {
-    if (readResult instanceof BoardReadResult.Success) {
-      return true;
-    }
-    if (readResult instanceof BoardReadResult.OutlineMissing outlineMissing) {
-      return outlineMissing.board() != null;
-    }
-    return false;
   }
 
   private void showBoardLoadError(BoardReadResult readResult) {
@@ -922,7 +919,7 @@ public class BoardFrame extends WindowBase {
         defaultsFileFound = false;
       }
       if (defaultsFileFound) {
-        boolean readOk = GUIDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
+        boolean readOk = GuiDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
         if (!readOk) {
           screenMessages.setStatusMessage(tm.getText("error_gui_defaults_read_failed"));
         }
@@ -960,11 +957,11 @@ public class BoardFrame extends WindowBase {
       if (format == FileFormat.KICAD_DESIGN_JSON) {
         readResult =
             boardPanel.boardHandling.loadFromKiCadJson(
-                inputStream, this.boardObservers, new ItemIdentificationNumberGenerator());
+                inputStream, this.boardObservers, new ItemIdGenerator());
       } else {
         readResult =
             boardPanel.boardHandling.loadFromSpecctraDsn(
-                inputStream, this.boardObservers, new ItemIdentificationNumberGenerator());
+                inputStream, this.boardObservers, new ItemIdGenerator());
       }
 
       // If the file was read successfully, initialize the windows
@@ -989,7 +986,7 @@ public class BoardFrame extends WindowBase {
         if (this.settingsMerger != null) {
           var mergedSettings = this.settingsMerger.merge();
           this.routingJob.setSettings(mergedSettings);
-          var interactiveSettings = boardPanel.boardHandling.getInteractiveSettings();
+          var interactiveSettings = boardPanel.boardHandling.getWorkspaceSettings();
           if (interactiveSettings != null) {
             interactiveSettings.setSettings(this.routingJob.routerSettings);
           }
@@ -1109,7 +1106,7 @@ public class BoardFrame extends WindowBase {
         }
 
         if (defaultsFileFound) {
-          boolean readOk = GUIDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
+          boolean readOk = GuiDefaultsFile.read(this, boardPanel.boardHandling, inputStream);
           if (!readOk) {
             screenMessages.setStatusMessage(tm.getText("error_gui_defaults_read_failed"));
           }
@@ -1302,26 +1299,14 @@ public class BoardFrame extends WindowBase {
     fileChooser.addChoosableFileFilter(jsonSessionFilter);
 
     // Set the file filter based on the output file format
-    switch (output.format) {
-      case SES:
-        fileChooser.setFileFilter(sesFilter);
-        break;
-      case FRB:
-        fileChooser.setFileFilter(frbFilter);
-        break;
-      case SCR:
-        fileChooser.setFileFilter(scrFilter);
-        break;
-      case DSN:
-        fileChooser.setFileFilter(dsnFilter);
-        break;
-      case KICAD_SESSION_JSON:
-        fileChooser.setFileFilter(jsonSessionFilter);
-        break;
-      default:
-        fileChooser.setFileFilter(sesFilter);
-        break;
-    }
+    fileChooser.setFileFilter(
+        switch (output.format) {
+          case FRB -> frbFilter;
+          case SCR -> scrFilter;
+          case DSN -> dsnFilter;
+          case KICAD_SESSION_JSON -> jsonSessionFilter;
+          default -> sesFilter;
+        });
 
     // Set the default file name based on the output file name
     if (!output.getFilename().isEmpty()) {
@@ -1411,11 +1396,11 @@ public class BoardFrame extends WindowBase {
   Point absolutePanelLocation() {
     int x = this.scrollPane.getX();
     int y = this.scrollPane.getY();
-    Container currParent = this.scrollPane.getParent();
-    while (currParent != null) {
-      x += currParent.getX();
-      y += currParent.getY();
-      currParent = currParent.getParent();
+    Container currentParent = this.scrollPane.getParent();
+    while (currentParent != null) {
+      x += currentParent.getX();
+      y += currentParent.getY();
+      currentParent = currentParent.getParent();
     }
     return new Point(x, y);
   }
@@ -1446,9 +1431,9 @@ public class BoardFrame extends WindowBase {
         this.permanentSubwindows[i] = null;
       }
     }
-    for (BoardTemporarySubWindow currSubwindow : this.temporarySubwindows) {
-      if (currSubwindow != null) {
-        currSubwindow.boardFrameDisposed();
+    for (BoardTemporarySubWindow currentSubwindow : this.temporarySubwindows) {
+      if (currentSubwindow != null) {
+        currentSubwindow.boardFrameDisposed();
       }
     }
     if (boardPanel.boardHandling != null) {
@@ -1589,8 +1574,7 @@ public class BoardFrame extends WindowBase {
   }
 
   /** Returns the locale used for language-dependent output. */
-  // CHECKSTYLE.SUPPRESS: MethodName for +1 lines
-  public Locale get_locale() {
+  public Locale getLocale() {
     return this.locale;
   }
 
@@ -1848,9 +1832,9 @@ public class BoardFrame extends WindowBase {
           permanentSubwindows[i].parentIconified();
         }
       }
-      for (BoardSubWindow currSubwindow : temporarySubwindows) {
-        if (currSubwindow != null) {
-          currSubwindow.parentIconified();
+      for (BoardSubWindow currentSubwindow : temporarySubwindows) {
+        if (currentSubwindow != null) {
+          currentSubwindow.parentIconified();
         }
       }
     }
@@ -1862,9 +1846,9 @@ public class BoardFrame extends WindowBase {
           permanentSubwindow.parentDeiconified();
         }
       }
-      for (BoardSubWindow currSubwindow : temporarySubwindows) {
-        if (currSubwindow != null) {
-          currSubwindow.parentDeiconified();
+      for (BoardSubWindow currentSubwindow : temporarySubwindows) {
+        if (currentSubwindow != null) {
+          currentSubwindow.parentDeiconified();
         }
       }
     }

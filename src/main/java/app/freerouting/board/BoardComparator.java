@@ -1,5 +1,7 @@
 package app.freerouting.board;
 
+import app.freerouting.core.library.Package;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
@@ -20,18 +22,6 @@ import java.util.TreeSet;
 
 /** BoardComparator. */
 public class BoardComparator {
-
-  /** Type. */
-  public static class ComparisonResult {
-    public final boolean areEqual;
-    public final String report;
-
-    /** ComparisonResult. */
-    public ComparisonResult(boolean areEqual, String report) {
-      this.areEqual = areEqual;
-      this.report = report;
-    }
-  }
 
   /** Compares two routing boards for parity. */
   public static ComparisonResult compare(
@@ -90,16 +80,16 @@ public class BoardComparator {
     } else {
       report.append(String.format("[+] Layer counts match: %d\n", layersCount1));
       for (int i = 0; i < layersCount1; i++) {
-        String name1 = board1.layerStructure.arr[i].name;
-        String name2 = board2.layerStructure.arr[i].name;
+        String name1 = board1.layerStructure.layers[i].name;
+        String name2 = board2.layerStructure.layers[i].name;
         if (!name1.equalsIgnoreCase(name2)) {
           equal = false;
           report.append(
               String.format(
                   "[-] Layer %d name mismatch: Board 1 = '%s', Board 2 = '%s'\n", i, name1, name2));
         }
-        boolean isSignal1 = board1.layerStructure.arr[i].isSignal;
-        boolean isSignal2 = board2.layerStructure.arr[i].isSignal;
+        boolean isSignal1 = board1.layerStructure.layers[i].isSignal;
+        boolean isSignal2 = board2.layerStructure.layers[i].isSignal;
         if (isSignal1 != isSignal2) {
           equal = false;
           report.append(
@@ -197,13 +187,13 @@ public class BoardComparator {
     Map<String, Pin> pinMap1 = new HashMap<>();
     Map<String, Pin> pinMap2 = new HashMap<>();
     for (Pin p : pins1) {
-      Component comp = board1.components.get(p.getComponentNo());
+      Component comp = board1.components.get(p.getComponentId());
       if (comp != null) {
         pinMap1.put(comp.name + "." + p.name(), p);
       }
     }
     for (Pin p : pins2) {
-      Component comp = board2.components.get(p.getComponentNo());
+      Component comp = board2.components.get(p.getComponentId());
       if (comp != null) {
         pinMap2.put(comp.name + "." + p.name(), p);
       }
@@ -304,7 +294,7 @@ public class BoardComparator {
       }
       String netName1 = "";
       if (pt1.netCount() > 0) {
-        Net net = board1.rules.nets.get(pt1.getNetNo(0));
+        Net net = board1.rules.nets.get(pt1.getNetNumber(0));
         if (net != null) {
           netName1 = net.name;
         }
@@ -325,7 +315,7 @@ public class BoardComparator {
         }
         String netName2 = "";
         if (pt2.netCount() > 0) {
-          Net net = board2.rules.nets.get(pt2.getNetNo(0));
+          Net net = board2.rules.nets.get(pt2.getNetNumber(0));
           if (net != null) {
             netName2 = net.name;
           }
@@ -362,7 +352,7 @@ public class BoardComparator {
         if (t2 instanceof PolylineTrace pt2) {
           String netName2 = "";
           if (pt2.netCount() > 0) {
-            Net net = board2.rules.nets.get(pt2.getNetNo(0));
+            Net net = board2.rules.nets.get(pt2.getNetNumber(0));
             if (net != null) {
               netName2 = net.name;
             }
@@ -397,12 +387,12 @@ public class BoardComparator {
     for (Via v1 : vias1) {
       String netName1 = "";
       if (v1.netCount() > 0) {
-        Net net = board1.rules.nets.get(v1.getNetNo(0));
+        Net net = board1.rules.nets.get(v1.getNetNumber(0));
         if (net != null) {
           netName1 = net.name;
         }
       }
-      app.freerouting.core.Padstack pad1 = v1.getPadstack();
+      Padstack pad1 = v1.getPadstack();
       int firstLayer1 = 0;
       while (firstLayer1 < board1.getLayerCount() && pad1.getShape(firstLayer1) == null) {
         firstLayer1++;
@@ -434,7 +424,7 @@ public class BoardComparator {
         }
         String netName2 = "";
         if (v2.netCount() > 0) {
-          Net net = board2.rules.nets.get(v2.getNetNo(0));
+          Net net = board2.rules.nets.get(v2.getNetNumber(0));
           if (net != null) {
             netName2 = net.name;
           }
@@ -442,7 +432,7 @@ public class BoardComparator {
         if (!netName1.equalsIgnoreCase(netName2)) {
           continue;
         }
-        app.freerouting.core.Padstack pad2 = v2.getPadstack();
+        Padstack pad2 = v2.getPadstack();
         int firstLayer2 = 0;
         while (firstLayer2 < board2.getLayerCount() && pad2.getShape(firstLayer2) == null) {
           firstLayer2++;
@@ -481,7 +471,7 @@ public class BoardComparator {
         Via v2 = vias2.get(i);
         String netName2 = "";
         if (v2.netCount() > 0) {
-          Net net = board2.rules.nets.get(v2.getNetNo(0));
+          Net net = board2.rules.nets.get(v2.getNetNumber(0));
           if (net != null) {
             netName2 = net.name;
           }
@@ -661,7 +651,7 @@ public class BoardComparator {
 
   private static Map<String, Net> buildNetMap(RoutingBoard board) {
     Map<String, Net> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    for (int i = 1; i <= board.rules.nets.maxNetNo(); i++) {
+    for (int i = 1; i <= board.rules.nets.maxNetNumber(); i++) {
       Net net = board.rules.nets.get(i);
       if (net != null) {
         map.put(net.name, net);
@@ -673,7 +663,7 @@ public class BoardComparator {
   private static Set<String> collectPadstackNames(RoutingBoard board) {
     Set<String> names = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     for (int i = 1; i <= board.library.padstacks.count(); i++) {
-      app.freerouting.core.Padstack padstack = board.library.padstacks.get(i);
+      Padstack padstack = board.library.padstacks.get(i);
       if (padstack != null) {
         names.add(padstack.name);
       }
@@ -684,7 +674,7 @@ public class BoardComparator {
   private static Set<String> collectPackageKeys(RoutingBoard board) {
     Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     for (int i = 1; i <= board.library.packages.count(); i++) {
-      app.freerouting.core.Package pkg = board.library.packages.get(i);
+      Package pkg = board.library.packages.get(i);
       if (pkg != null) {
         keys.add(packageKey(pkg));
       }
@@ -692,7 +682,7 @@ public class BoardComparator {
     return keys;
   }
 
-  private static String packageKey(app.freerouting.core.Package pkg) {
+  private static String packageKey(Package pkg) {
     return pkg.name + (pkg.isFront ? ":front" : ":back");
   }
 
@@ -727,20 +717,32 @@ public class BoardComparator {
     boolean forwardMatch = true;
     boolean reverseMatch = true;
     for (int i = 0; i < count; i++) {
-      Point pt1 = poly1.cornerArr()[i];
+      Point pt1 = poly1.corners()[i];
       // Check forward
-      Point pt2F = poly2.cornerArr()[i];
+      Point pt2F = poly2.corners()[i];
       if (Math.abs(pt1.toFloat().x * scale1 - pt2F.toFloat().x * scale2) > epsilonMm
           || Math.abs(pt1.toFloat().y * scale1 - pt2F.toFloat().y * scale2) > epsilonMm) {
         forwardMatch = false;
       }
       // Check reverse
-      Point pt2R = poly2.cornerArr()[count - 1 - i];
+      Point pt2R = poly2.corners()[count - 1 - i];
       if (Math.abs(pt1.toFloat().x * scale1 - pt2R.toFloat().x * scale2) > epsilonMm
           || Math.abs(pt1.toFloat().y * scale1 - pt2R.toFloat().y * scale2) > epsilonMm) {
         reverseMatch = false;
       }
     }
     return forwardMatch || reverseMatch;
+  }
+
+  /** Type. */
+  public static class ComparisonResult {
+    public final boolean areEqual;
+    public final String report;
+
+    /** ComparisonResult. */
+    public ComparisonResult(boolean areEqual, String report) {
+      this.areEqual = areEqual;
+      this.report = report;
+    }
   }
 }

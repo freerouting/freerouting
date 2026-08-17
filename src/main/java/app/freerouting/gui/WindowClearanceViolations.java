@@ -4,8 +4,8 @@ import app.freerouting.board.BoardOutline;
 import app.freerouting.board.ComponentObstacleArea;
 import app.freerouting.board.ConductionArea;
 import app.freerouting.board.Item;
+import app.freerouting.board.ItemInfoPrinter;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.board.ObjectInfoPanel;
 import app.freerouting.board.ObstacleArea;
 import app.freerouting.board.Pin;
 import app.freerouting.board.Trace;
@@ -13,8 +13,8 @@ import app.freerouting.board.Via;
 import app.freerouting.board.ViaObstacleArea;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.ClearanceViolations;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.ClearanceViolations;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.util.List;
@@ -29,7 +29,7 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
   /** Creates a new instance of clearance violations window. */
   public WindowClearanceViolations(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
     this.listEmptyMessage.setText(tm.getText("listEmptyMessage"));
@@ -42,11 +42,11 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     ClearanceViolations clearanceViolations =
         new ClearanceViolations(boardHandling.getRoutingBoard().getItems());
     SortedSet<ViolationInfo> sortedSet = new TreeSet<>();
-    for (ClearanceViolation currViolation : clearanceViolations.list) {
-      sortedSet.add(new ViolationInfo(currViolation));
+    for (ClearanceViolation currentViolation : clearanceViolations.list) {
+      sortedSet.add(new ViolationInfo(currentViolation));
     }
-    for (ViolationInfo currViolation : sortedSet) {
-      this.addToList(currViolation);
+    for (ViolationInfo currentViolation : sortedSet) {
+      this.addToList(currentViolation);
     }
     this.list.setVisibleRowCount(Math.min(sortedSet.size(), DEFAULT_TABLE_SIZE));
 
@@ -65,9 +65,9 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     }
     Set<Item> selectedItems = new TreeSet<>();
     for (int i = 0; i < selectedViolations.size(); i++) {
-      ClearanceViolation currViolation = ((ViolationInfo) selectedViolations.get(i)).violation;
-      selectedItems.add(currViolation.firstItem);
-      selectedItems.add(currViolation.secondItem);
+      ClearanceViolation currentViolation = ((ViolationInfo) selectedViolations.get(i)).violation;
+      selectedItems.add(currentViolation.firstItem);
+      selectedItems.add(currentViolation.secondItem);
     }
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
     boardHandling.selectItems(selectedItems);
@@ -80,10 +80,10 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
     if (item instanceof Pin) {
       result = tm.getText("pin");
     } else if (item instanceof Via via) {
-      Net currentNet = item.board.rules.nets.get(via.getNetNo(0));
+      Net currentNet = item.board.rules.nets.get(via.getNetNumber(0));
       result = tm.getText("via_with_net_label", currentNet.name);
     } else if (item instanceof Trace trace) {
-      Net currentNet = item.board.rules.nets.get(trace.getNetNo(0));
+      Net currentNet = item.board.rules.nets.get(trace.getNetNumber(0));
       result = tm.getText("trace_with_net_label", currentNet.name);
     } else if (item instanceof ConductionArea) {
       result = tm.getText("conductionArea");
@@ -125,13 +125,13 @@ public class WindowClearanceViolations extends WindowObjectListWithFilter {
           "%.4f".formatted(delta),
           itemInfo(violation.firstItem),
           itemInfo(violation.secondItem),
-          location.toString(boardFrame.get_locale()),
-          layerStructure.arr[violation.layer].name);
+          location.toString(boardFrame.getLocale()),
+          layerStructure.layers[violation.layer].name);
     }
 
     @Override
-    public void printInfo(ObjectInfoPanel window, Locale locale) {
-      this.violation.printInfo(window, locale);
+    public void printInfo(ItemInfoPrinter printer, Locale locale) {
+      this.violation.printInfo(printer, locale);
     }
 
     @Override

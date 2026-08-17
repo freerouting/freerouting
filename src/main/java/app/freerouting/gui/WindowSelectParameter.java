@@ -1,13 +1,13 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.gui.rendering.GraphicsContext;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveSettings;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -25,18 +25,6 @@ import javax.swing.JToggleButton;
 /** Window for the handling of the interactive selection parameters. */
 public class WindowSelectParameter extends BoardSavableSubWindow {
 
-  private final BoardFrame boardFrame;
-  private final GuiBoardManager boardHandling;
-  private final JToggleButton[] settingsSelectLayerNameArr;
-  private final JCheckBox[] settingsSelectLayerEyeArr;
-
-  private final JToggleButton[] settingsVirtualLayerNameArr;
-  private final JCheckBox[] settingsVirtualLayerEyeArr;
-
-  private final JCheckBox[] settingsSelectItemSelectionChoices;
-  private final JToggleButton settingsSelectAllVisibleButton;
-  private final JToggleButton settingsSelectCurrentOnlyButton;
-
   /**
    * Resource-bundle keys for the six virtual layers, in order: F.Silk, B.Silk, F.CY, B.CY, F.Fab,.
    * B.Fab
@@ -45,13 +33,23 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     "F_Silkscreen", "B_Silkscreen", "F_Courtyard", "B_Courtyard", "F_Fab", "B_Fab"
   };
 
+  private final BoardFrame boardFrame;
+  private final GuiBoardManager boardHandling;
+  private final JToggleButton[] settingsSelectLayerNameArr;
+  private final JCheckBox[] settingsSelectLayerEyeArr;
+  private final JToggleButton[] settingsVirtualLayerNameArr;
+  private final JCheckBox[] settingsVirtualLayerEyeArr;
+  private final JCheckBox[] settingsSelectItemSelectionChoices;
+  private final JToggleButton settingsSelectAllVisibleButton;
+  private final JToggleButton settingsSelectCurrentOnlyButton;
+
   /** Creates a new instance of SelectWindow. */
   public WindowSelectParameter(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
     this.boardHandling = boardFrame.boardPanel.boardHandling;
     final GraphicsContext gc = this.boardHandling.graphicsContext;
 
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -135,7 +133,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     lc.gridy = 0;
 
     LayerStructure layerStructure = this.boardHandling.getRoutingBoard().layerStructure;
-    int layerCount = layerStructure.arr.length;
+    int layerCount = layerStructure.layers.length;
 
     this.settingsSelectLayerNameArr = new JToggleButton[layerCount];
     this.settingsSelectLayerEyeArr = new JCheckBox[layerCount];
@@ -144,12 +142,12 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     // 1. Signal Layers
     for (int i = 0; i < layerCount; i++) {
-      Layer currLayer = layerStructure.arr[i];
-      final int layerNo = layerStructure.getNo(currLayer);
+      Layer currentLayer = layerStructure.layers[i];
+      final int layerIndex = layerStructure.getNo(currentLayer);
 
       // Eye visibility toggle
       JCheckBox eyeCb = new JCheckBox();
-      eyeCb.setToolTipText(tm.getText("layer_eye_tooltip", currLayer.name));
+      eyeCb.setToolTipText(tm.getText("layer_eye_tooltip", currentLayer.name));
       eyeCb.setSelected(gc.getRawLayerVisibility(i) > 0.0);
       eyeCb.addActionListener(new LayerEyeListener(i));
       settingsSelectLayerEyeArr[i] = eyeCb;
@@ -159,14 +157,14 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
       final JLabel swatch = createSwatch(traceColor);
 
       // Active layer selection button
-      JToggleButton btn = new JToggleButton(currLayer.name);
-      btn.setToolTipText(tm.getText("layer_button_tooltip", currLayer.name));
+      JToggleButton btn = new JToggleButton(currentLayer.name);
+      btn.setToolTipText(tm.getText("layer_button_tooltip", currentLayer.name));
       btn.setEnabled(true);
       btn.setMargin(new Insets(2, 5, 2, 5));
-      if (!currLayer.isSignal) {
+      if (!currentLayer.isSignal) {
         btn.setToolTipText(tm.getText("disabled_layer_tooltip"));
       }
-      btn.addActionListener(new CurrentLayerListener(i, layerNo));
+      btn.addActionListener(new CurrentLayerListener(i, layerIndex));
       btn.addActionListener(_ -> FRAnalytics.buttonClicked("settingsSelectLayerNameArr", null));
       settingsSelectLayerNameArr[i] = btn;
       layerSelectionGroup.add(btn);
@@ -247,8 +245,8 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.pack();
     this.setResizable(false);
 
-    // Subscribe to the InteractiveSettings singleton so this window stays in sync.
-    InteractiveSettings is = this.boardHandling.getInteractiveSettings();
+    // Subscribe to the WorkspaceSettings singleton so this window stays in sync.
+    WorkspaceSettings is = this.boardHandling.getWorkspaceSettings();
     if (is != null) {
       is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
     }
@@ -271,7 +269,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   /** Refreshes the displayed values in this window. */
   @Override
   public void refresh() {
-    InteractiveSettings is = this.boardHandling.getInteractiveSettings();
+    WorkspaceSettings is = this.boardHandling.getWorkspaceSettings();
     if (is.getSelectOnAllVisibleLayers()) {
       settingsSelectAllVisibleButton.setSelected(true);
     } else {
@@ -321,17 +319,17 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
   private class CurrentLayerListener implements ActionListener {
     public final int signalLayerNo;
-    public final int layerNo;
+    public final int layerIndex;
 
-    public CurrentLayerListener(int signalLayerNo, int layerNo) {
+    public CurrentLayerListener(int signalLayerNo, int layerIndex) {
       this.signalLayerNo = signalLayerNo;
-      this.layerNo = layerNo;
+      this.layerIndex = layerIndex;
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
       if (settingsSelectLayerNameArr[signalLayerNo].isSelected()) {
-        boardHandling.setCurrentLayer(layerNo);
+        boardHandling.setCurrentLayer(layerIndex);
       } else {
         boardHandling.graphicsContext.setFullyVisibleLayer(-1);
       }
@@ -392,14 +390,14 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
   private class AllVisibleListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evt) {
-      boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(true);
+      boardHandling.getWorkspaceSettings().setSelectOnAllVisibleLayers(true);
     }
   }
 
   private class CurrentOnlyListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evt) {
-      boardHandling.getInteractiveSettings().setSelectOnAllVisibleLayers(false);
+      boardHandling.getWorkspaceSettings().setSelectOnAllVisibleLayers(false);
     }
   }
 

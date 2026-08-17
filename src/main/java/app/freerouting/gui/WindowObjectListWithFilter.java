@@ -21,7 +21,7 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   /** Creates a new instance of ObjectListWindowWithFilter. */
   protected WindowObjectListWithFilter(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.inputPanel = new JPanel();
     this.southPanel.add(inputPanel, BorderLayout.SOUTH);
@@ -54,15 +54,15 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
             });
   }
 
-  /** Adds p_object to the list only if its name matches the filter. */
+  /** Adds object to the list only if its name matches the filter. */
   @Override
   protected void addToList(Object object) {
-    String currFilterString = this.filterString.getText().trim();
+    String currentFilterString = this.filterString.getText().trim();
     boolean objectMatches;
-    if (currFilterString.isEmpty()) {
+    if (currentFilterString.isEmpty()) {
       objectMatches = true;
     } else {
-      objectMatches = object.toString().toLowerCase().contains(currFilterString.toLowerCase());
+      objectMatches = object.toString().toLowerCase().contains(currentFilterString.toLowerCase());
     }
     if (objectMatches) {
       super.addToList(object);
@@ -83,8 +83,8 @@ public abstract class WindowObjectListWithFilter extends WindowObjectList {
   @Override
   public boolean read(ObjectInputStream objectStream) {
     try {
-      String currString = (String) objectStream.readObject();
-      this.filterString.setText(currString);
+      String currentString = (String) objectStream.readObject();
+      this.filterString.setText(currentString);
     } catch (Exception _) {
       FRLogger.warn("WindowObjectListWithFilter.read: read failed");
     }

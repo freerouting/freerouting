@@ -3,17 +3,17 @@ package app.freerouting.gui.interactive;
 import app.freerouting.autoroute.AutorouteControl;
 import app.freerouting.autoroute.AutorouteEngine;
 import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
+import app.freerouting.autoroute.FoundConnectionInserter;
+import app.freerouting.autoroute.FoundConnectionLocator;
 import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
-import app.freerouting.autoroute.InsertFoundConnectionAlgo;
-import app.freerouting.autoroute.LocateFoundConnectionAlgo;
-import app.freerouting.autoroute.MazeSearchAlgo;
+import app.freerouting.autoroute.MazeSearchEngine;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.gui.rendering.AutorouteDiagnosticRenderer;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
@@ -24,8 +24,8 @@ import java.util.TreeSet;
 public final class ExpandTestState extends InteractiveState {
 
   private boolean inAutoroute;
-  private MazeSearchAlgo mazeSearchAlgo;
-  private LocateFoundConnectionAlgo autorouteResult;
+  private MazeSearchEngine mazeSearchAlgo;
+  private FoundConnectionLocator autorouteResult;
   private AutorouteControl controlSettings;
   private AutorouteEngine autorouteEngine;
 
@@ -80,7 +80,7 @@ public final class ExpandTestState extends InteractiveState {
       result = this;
       // hdlg.get_routing_board().autoroute_data().validate();
     } else if (Character.isDigit(keyChar)) {
-      // next 10^p_key_char expansions
+      // next 10^keyChar expansions
       int d = Character.digit(keyChar, 10);
       final int maxCount = (int) Math.pow(10, d);
       if (inAutoroute) {
@@ -93,13 +93,13 @@ public final class ExpandTestState extends InteractiveState {
           }
         }
       } else {
-        int currCount = 0;
+        int currentCount = 0;
         IncompleteFreeSpaceExpansionRoom nextRoom =
             this.autorouteEngine.getFirstIncompleteExpansionRoom();
-        while (nextRoom != null && currCount < maxCount) {
+        while (nextRoom != null && currentCount < maxCount) {
           completeExpansionRoom(nextRoom);
           nextRoom = this.autorouteEngine.getFirstIncompleteExpansionRoom();
-          ++currCount;
+          ++currentCount;
         }
       }
       result = this;
@@ -140,16 +140,16 @@ public final class ExpandTestState extends InteractiveState {
   private void init(FloatPoint location) {
     // look if an autoroute can be started at the input location
     RoutingBoard board = hdlg.getRoutingBoard();
-    int layer = hdlg.getInteractiveSettings().getLayer();
+    int layer = hdlg.getWorkspaceSettings().getLayer();
     Collection<Item> foundItems = board.pickItems(location.round(), layer, null);
     Item routeItem = null;
     int routeNetNo = 0;
-    for (Item currOb : foundItems) {
-      if (currOb instanceof Connectable) {
-        Item currItem = currOb;
-        if (currItem.netCount() == 1 && currItem.getNetNo(0) > 0) {
-          routeItem = currItem;
-          routeNetNo = currItem.getNetNo(0);
+    for (Item currentObject : foundItems) {
+      if (currentObject instanceof Connectable) {
+        Item currentItem = currentObject;
+        if (currentItem.netCount() == 1 && currentItem.getNetNumber(0) > 0) {
+          routeItem = currentItem;
+          routeNetNo = currentItem.getNetNumber(0);
           break;
         }
       }
@@ -165,7 +165,7 @@ public final class ExpandTestState extends InteractiveState {
             * hdlg.getCurrentRoutingJob().routerSettings.getStartRipupCosts();
     this.controlSettings.viasAllowed = false;
     this.autorouteEngine =
-        new AutorouteEngine(board, this.controlSettings.traceClearanceClassNo, false);
+        new AutorouteEngine(board, this.controlSettings.traceClearanceClassIndex, false);
     this.autorouteEngine.initConnection(routeNetNo, null, null);
     if (routeItem == null) {
       // create an expansion room in the empty space
@@ -181,17 +181,18 @@ public final class ExpandTestState extends InteractiveState {
     if (!routeDestSet.isEmpty()) {
       hdlg.screenMessages.setStatusMessage("app.freerouting.autoroute test started");
       this.mazeSearchAlgo =
-          MazeSearchAlgo.getInstance(routeStartSet, routeDestSet, autorouteEngine, controlSettings);
+          MazeSearchEngine.getInstance(
+              routeStartSet, routeDestSet, autorouteEngine, controlSettings);
       this.inAutoroute = this.mazeSearchAlgo != null;
     }
   }
 
   private void completeAutoroute() {
-    MazeSearchAlgo.Result searchResult = this.mazeSearchAlgo.findConnection();
+    MazeSearchEngine.Result searchResult = this.mazeSearchAlgo.findConnection();
     if (searchResult != null) {
       SortedSet<Item> rippedItemList = new TreeSet<>();
       this.autorouteResult =
-          LocateFoundConnectionAlgo.getInstance(
+          FoundConnectionLocator.getInstance(
               searchResult,
               controlSettings,
               this.autorouteEngine.autorouteSearchTree,
@@ -200,12 +201,12 @@ public final class ExpandTestState extends InteractiveState {
               null);
       hdlg.getRoutingBoard().generateSnapshot();
       SortedSet<Item> rippedConnections = new TreeSet<>();
-      for (Item currRippedItem : rippedItemList) {
-        rippedConnections.addAll(currRippedItem.getConnectionItems(Item.StopConnectionOption.VIA));
+      for (Item currentRippedItem : rippedItemList) {
+        rippedConnections.addAll(
+            currentRippedItem.getConnectionItems(Item.StopConnectionOption.VIA));
       }
       hdlg.getRoutingBoard().removeItems(rippedConnections);
-      InsertFoundConnectionAlgo.getInstance(
-          autorouteResult, hdlg.getRoutingBoard(), controlSettings);
+      FoundConnectionInserter.getInstance(autorouteResult, hdlg.getRoutingBoard(), controlSettings);
     }
   }
 

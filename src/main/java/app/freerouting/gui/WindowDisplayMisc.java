@@ -1,9 +1,9 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.rendering.ScreenTransform;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -35,7 +35,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
 
   /** Creates a new instance of DisplayMiscWindow. */
   public WindowDisplayMisc(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.panel = boardFrame.boardPanel;
     this.setTitle(tm.getText("title"));
@@ -251,12 +251,12 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     appearanceMiscHorizontalMirrorCheckbox.setSelected(
         panel.boardHandling.graphicsContext.coordinateTransform.isMirrorTopBottom());
 
-    int currSliderValue =
+    int currentSliderValue =
         (int)
             Math.round(
                 MAX_SLIDER_VALUE
                     * (1 - panel.boardHandling.graphicsContext.getAutoLayerDimFactor()));
-    autoLayerDimSlider.setValue(currSliderValue);
+    autoLayerDimSlider.setValue(currentSliderValue);
   }
 
   private class SmallCursorListener implements ActionListener {

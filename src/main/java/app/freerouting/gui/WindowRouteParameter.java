@@ -1,12 +1,12 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.board.BoardOutline;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Trace;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveSettings;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.rules.BoardRules;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -80,7 +80,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.guiBoardManager = boardFrame.boardPanel.boardHandling;
     this.manualRuleWindow = new WindowManualRules(boardFrame);
 
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -317,7 +317,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(pinExitEdgeToTurnLabel, gridbagConstraints);
     mainPanel.add(pinExitEdgeToTurnLabel);
 
-    NumberFormat numberFormat = NumberFormat.getNumberInstance(boardFrame.get_locale());
+    NumberFormat numberFormat = NumberFormat.getNumberInstance(boardFrame.getLocale());
     numberFormat.setMaximumFractionDigits(3);
     numberFormat.setGroupingUsed(false);
     this.edgeToTurnDistField = new JFormattedTextField(numberFormat);
@@ -346,7 +346,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     mainPanel.add(pullTightRegionLabel);
     gridbagConstraints.insets = new Insets(1, 10, 1, 10);
 
-    NumberFormat userUnitFormat = NumberFormat.getNumberInstance(boardFrame.get_locale());
+    NumberFormat userUnitFormat = NumberFormat.getNumberInstance(boardFrame.getLocale());
     userUnitFormat.setMaximumFractionDigits(3);
     userUnitFormat.setGroupingUsed(false);
 
@@ -391,7 +391,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(clearanceCompensationCheckBox, gridbagConstraints);
     mainPanel.add(clearanceCompensationCheckBox, gridbagConstraints);
 
-    NumberFormat compFormat = NumberFormat.getNumberInstance(boardFrame.get_locale());
+    NumberFormat compFormat = NumberFormat.getNumberInstance(boardFrame.getLocale());
     compFormat.setMaximumFractionDigits(3);
     compFormat.setGroupingUsed(false);
 
@@ -460,7 +460,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.pack();
     this.setResizable(false);
 
-    InteractiveSettings is = this.guiBoardManager.getInteractiveSettings();
+    WorkspaceSettings is = this.guiBoardManager.getWorkspaceSettings();
     if (is != null) {
       is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
     }
@@ -470,9 +470,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    * Applies the stitch route selection to the given interactive settings. Used by unit tests to
    * verify the stitch route behavior.
    */
-  public static void applyStitchRouteSelection(
-      InteractiveSettings interactiveSettings, boolean value) {
-    interactiveSettings.setStitchRoute(value);
+  public static void applyStitchRouteSelection(WorkspaceSettings workspaceSettings, boolean value) {
+    workspaceSettings.setStitchRoute(value);
   }
 
   /**
@@ -480,8 +479,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
    * verify the push and shove behavior.
    */
   public static void applyPushAndShoveSelection(
-      InteractiveSettings interactiveSettings, boolean value) {
-    interactiveSettings.setPushEnabled(value);
+      WorkspaceSettings workspaceSettings, boolean value) {
+    workspaceSettings.setPushEnabled(value);
   }
 
   /**
@@ -576,13 +575,13 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         settingsRoutingSnapAngleNoneButton.setSelected(true);
       }
 
-      if (this.guiBoardManager.getInteractiveSettings().getIsStitchRoute()) {
+      if (this.guiBoardManager.getWorkspaceSettings().getIsStitchRoute()) {
         settingsRoutingStitchButton.setSelected(true);
       } else {
         settingsRoutingDynamicButton.setSelected(true);
       }
 
-      if (this.guiBoardManager.getInteractiveSettings().getManualRuleSelection()) {
+      if (this.guiBoardManager.getWorkspaceSettings().getManualRuleSelection()) {
         settingsRoutingManualButton.setSelected(true);
         if (this.manualRuleWindow != null) {
           this.manualRuleWindow.setVisible(true);
@@ -592,17 +591,17 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
 
       this.settingsRoutingShoveCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().getPushEnabled());
+          this.guiBoardManager.getWorkspaceSettings().getPushEnabled());
       this.settingsRoutingDragComponentCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().getDragComponentsEnabled());
+          this.guiBoardManager.getWorkspaceSettings().getDragComponentsEnabled());
       this.settingsRoutingViaSnapToSmdCenterCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().getViaSnapToSmdCenter());
+          this.guiBoardManager.getWorkspaceSettings().getViaSnapToSmdCenter());
       this.settingsRoutingIgnoreConductionCheckBox.setSelected(
           this.guiBoardManager.getRoutingBoard().rules.getIgnoreConduction());
       this.settingsRoutingHighlightRoutingObstacleCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().getHighlightRoutingObstacle());
+          this.guiBoardManager.getWorkspaceSettings().getHighlightRoutingObstacle());
       this.settingsRoutingNeckdownCheckBox.setSelected(
-          this.guiBoardManager.getInteractiveSettings().getAutomaticNeckdown());
+          this.guiBoardManager.getWorkspaceSettings().getAutomaticNeckdown());
 
       double edgeToTurnDist = this.guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
       this.edgeToTurnDistField.setValue(
@@ -610,7 +609,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       this.settingsRoutingRestrictPinExitDirectionsCheckBox.setSelected(edgeToTurnDist > 0);
 
       int regionSliderValue =
-          this.guiBoardManager.getInteractiveSettings().getTracePullTightRegionWidth()
+          this.guiBoardManager.getWorkspaceSettings().getTracePullTightRegionWidth()
               / c_region_scale_factor;
       regionSliderValue = Math.min(regionSliderValue, c_region_max_slider_value);
       regionSlider.setValue(regionSliderValue);
@@ -634,7 +633,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
               1, this.guiBoardManager.getRoutingBoard().rules.clearanceMatrix.getClassCount() - 1);
       double compensation = 0;
       if (clearanceClass >= 1) {
-        int layer = this.guiBoardManager.getInteractiveSettings().getLayer();
+        int layer = this.guiBoardManager.getWorkspaceSettings().getLayer();
         compensation =
             this.guiBoardManager
                 .getRoutingBoard()
@@ -649,7 +648,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       int accuracySliderValue =
           c_accuracy_max_slider_value
-              - this.guiBoardManager.getInteractiveSettings().getTracePullTightAccuracy()
+              - this.guiBoardManager.getWorkspaceSettings().getTracePullTightAccuracy()
                   / c_accuracy_scale_factor
               + 1;
       accuracySlider.setValue(accuracySliderValue);
@@ -696,7 +695,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     }
     regionSlider.setValue(sliderValue);
     regionWidthField.setValue(this.guiBoardManager.coordinateTransform.boardToUser(newTidyWidth));
-    guiBoardManager.getInteractiveSettings().setCurrentPullTightRegionWidth(newTidyWidth);
+    guiBoardManager.getWorkspaceSettings().setCurrentPullTightRegionWidth(newTidyWidth);
   }
 
   private void updateDynamicTooltips() {
@@ -704,7 +703,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.edgeToTurnDistField.setToolTipText(
         tm.getText("pin_pad_to_turn_gap_tooltip_current", formatUserDistance(edgeToTurnDist)));
 
-    int regionWidth = this.guiBoardManager.getInteractiveSettings().getTracePullTightRegionWidth();
+    int regionWidth = this.guiBoardManager.getWorkspaceSettings().getTracePullTightRegionWidth();
     String regionTooltip;
     if (regionWidth >= Integer.MAX_VALUE) {
       regionTooltip = tm.getText("pull_tight_region_tooltip_whole_board");
@@ -729,7 +728,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
             1, this.guiBoardManager.getRoutingBoard().rules.clearanceMatrix.getClassCount() - 1);
     double compensation = 0;
     if (clearanceClass >= 1) {
-      int layer = this.guiBoardManager.getInteractiveSettings().getLayer();
+      int layer = this.guiBoardManager.getWorkspaceSettings().getLayer();
       compensation =
           this.guiBoardManager
               .getRoutingBoard()
@@ -795,8 +794,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       Collection<Trace> traceList = guiBoardManager.getRoutingBoard().getTraces();
       boolean freeAngleTracesFound = false;
-      for (Trace currTrace : traceList) {
-        if (currTrace instanceof PolylineTrace trace) {
+      for (Trace currentTrace : traceList) {
+        if (currentTrace instanceof PolylineTrace trace) {
           if (!trace.polyline().isOrthogonal()) {
             freeAngleTracesFound = true;
             break;
@@ -804,8 +803,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
       }
       if (freeAngleTracesFound) {
-        String currMessage = tm.getText("change_snap_angle_90");
-        if (!WindowMessage.confirm(currMessage)) {
+        String currentMessage = tm.getText("change_snap_angle_90");
+        if (!WindowMessage.confirm(currentMessage)) {
           refresh();
           return;
         }
@@ -824,8 +823,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       }
       Collection<Trace> traceList = guiBoardManager.getRoutingBoard().getTraces();
       boolean freeAngleTracesFound = false;
-      for (Trace currTrace : traceList) {
-        if (currTrace instanceof PolylineTrace trace) {
+      for (Trace currentTrace : traceList) {
+        if (currentTrace instanceof PolylineTrace trace) {
           if (!trace.polyline().isMultipleOf45Degree()) {
             freeAngleTracesFound = true;
             break;
@@ -833,8 +832,8 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         }
       }
       if (freeAngleTracesFound) {
-        String currMessage = tm.getText("change_snap_angle_45");
-        if (!WindowMessage.confirm(currMessage)) {
+        String currentMessage = tm.getText("change_snap_angle_45");
+        if (!WindowMessage.confirm(currentMessage)) {
           refresh();
           return;
         }
@@ -858,7 +857,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updatingControls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings().setStitchRoute(false);
+      guiBoardManager.getWorkspaceSettings().setStitchRoute(false);
     }
   }
 
@@ -869,7 +868,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (updatingControls) {
         return;
       }
-      guiBoardManager.getInteractiveSettings().setStitchRoute(true);
+      guiBoardManager.getWorkspaceSettings().setStitchRoute(true);
     }
   }
 
@@ -878,7 +877,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent evt) {
       manualRuleWindow.setVisible(false);
-      guiBoardManager.getInteractiveSettings().setManualTracewidthSelection(false);
+      guiBoardManager.getWorkspaceSettings().setManualTracewidthSelection(false);
     }
   }
 
@@ -894,7 +893,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         firstTime = false;
       }
       manualRuleWindow.setVisible(true);
-      guiBoardManager.getInteractiveSettings().setManualTracewidthSelection(true);
+      guiBoardManager.getWorkspaceSettings().setManualTracewidthSelection(true);
     }
   }
 
@@ -906,7 +905,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       guiBoardManager
-          .getInteractiveSettings()
+          .getWorkspaceSettings()
           .setPushEnabled(settingsRoutingShoveCheckBox.isSelected());
       refresh();
     }
@@ -920,7 +919,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       guiBoardManager
-          .getInteractiveSettings()
+          .getWorkspaceSettings()
           .setViaSnapToSmdCenter(settingsRoutingViaSnapToSmdCenterCheckBox.isSelected());
     }
   }
@@ -944,7 +943,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       guiBoardManager
-          .getInteractiveSettings()
+          .getWorkspaceSettings()
           .setHighlightRoutingObstacle(
               settingsRoutingHighlightRoutingObstacleCheckBox.isSelected());
     }
@@ -958,7 +957,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       guiBoardManager
-          .getInteractiveSettings()
+          .getWorkspaceSettings()
           .setDragComponentsEnabled(settingsRoutingDragComponentCheckBox.isSelected());
       refresh();
     }
@@ -972,7 +971,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
         return;
       }
       guiBoardManager
-          .getInteractiveSettings()
+          .getWorkspaceSettings()
           .setAutomaticNeckdown(settingsRoutingNeckdownCheckBox.isSelected());
     }
   }
@@ -1145,7 +1144,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       int sliderValue = accuracySlider.getValue();
       int newAccuracy = (c_accuracy_max_slider_value - sliderValue + 1) * c_accuracy_scale_factor;
       accuracyValueField.setValue(guiBoardManager.coordinateTransform.boardToUser(newAccuracy));
-      guiBoardManager.getInteractiveSettings().setTracePullTightAccuracy(newAccuracy);
+      guiBoardManager.getWorkspaceSettings().setTracePullTightAccuracy(newAccuracy);
     }
   }
 

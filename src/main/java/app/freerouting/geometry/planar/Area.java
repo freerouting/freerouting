@@ -18,7 +18,7 @@ public interface Area {
    */
   int dimension();
 
-  /** Checks, if this area is completely contained in p_box. */
+  /** Checks, if this area is completely contained in box. */
   boolean isContainedIn(IntBox box);
 
   /** Returns the border shape of this area. */
@@ -40,30 +40,30 @@ public interface Area {
   IntOctagon boundingOctagon();
 
   /**
-   * Returns true, if p_point is contained in this area, but not inside a hole. Being on the border
-   * is not defined for FloatPoints because of numerical inaccuracy.
+   * Returns true, if point is contained in this area, but not inside a hole. Being on the border is
+   * not defined for FloatPoints because of numerical inaccuracy.
    */
   boolean contains(FloatPoint point);
 
-  /** Returns true, if p_point is inside or on the border of this area, but not inside a hole. */
+  /** Returns true, if point is inside or on the border of this area, but not inside a hole. */
   boolean contains(Point point);
 
-  /** Calculates an approximation of the nearest point of the shape to p_from_point. */
+  /** Calculates an approximation of the nearest point of the shape to fromPoint. */
   FloatPoint nearestPointApprox(FloatPoint fromPoint);
 
-  /** Turns this area by p_factor times 90 degree around p_pole. */
+  /** Turns this area by factor times 90 degree around pole. */
   Area turn90Degree(int factor, IntPoint pole);
 
-  /** Rotates the area around p_pole by p_angle. The result may be not exact. */
+  /** Rotates the area around pole by angle. The result may be not exact. */
   Area rotateApprox(double angle, FloatPoint pole);
 
-  /** Returns the affine translation of the area by p_vector. */
+  /** Returns the affine translation of the area by vector. */
   Area translateBy(Vector vector);
 
-  /** Mirrors this area at the horizontal line through p_pole. */
+  /** Mirrors this area at the horizontal line through pole. */
   Area mirrorHorizontal(IntPoint pole);
 
-  /** Mirrors this area at the vertical line through p_pole. */
+  /** Mirrors this area at the vertical line through pole. */
   Area mirrorVertical(IntPoint pole);
 
   /** Returns an approximation of the corners of this area. */

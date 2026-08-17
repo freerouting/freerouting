@@ -37,13 +37,13 @@ public class PlaceControl extends ScopeKeyword {
 
   /** Reads the flip_style. */
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     boolean flipStyleRotateFirst = false;
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
       } catch (IOException e) {
         FRLogger.error("PlaceControl.read_scope: IO error scanning file", e);
         return false;
@@ -51,7 +51,7 @@ public class PlaceControl extends ScopeKeyword {
       if (nextToken == null) {
         FRLogger.warn(
             "PlaceControl.read_scope: unexpected end of file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -61,12 +61,12 @@ public class PlaceControl extends ScopeKeyword {
       }
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == FLIP_STYLE) {
-          flipStyleRotateFirst = readFlipStyleRotateFirst(par.scanner);
+          flipStyleRotateFirst = readFlipStyleRotateFirst(scopeParameter.scanner);
         }
       }
     }
     if (flipStyleRotateFirst) {
-      par.boardHandling.getRoutingBoard().components.setFlipStyleRotateFirst(true);
+      scopeParameter.boardHandling.getRoutingBoard().components.setFlipStyleRotateFirst(true);
     }
     return true;
   }

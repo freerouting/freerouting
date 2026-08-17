@@ -1,7 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import javax.swing.JPopupMenu;
 
 /** State for dynamic interactive routing, which is routing while moving the mouse pointer. */
@@ -25,8 +25,8 @@ public class DynamicRouteState extends RouteState {
       hdlg.getRoutingBoard().endNotifyObservers();
       this.observersActivated = false;
     }
-    for (int currNetNo : this.route.netNoArr) {
-      hdlg.updateRatsnest(currNetNo);
+    for (int currentNetNumber : this.route.netNumbers) {
+      hdlg.updateRatsnest(currentNetNumber);
     }
     return this.returnState;
   }
@@ -34,13 +34,13 @@ public class DynamicRouteState extends RouteState {
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState keyTyped(char keyChar) {
-    InteractiveState currReturnState = this;
+    InteractiveState currentReturnState = this;
     if (keyChar == 's') {
       hdlg.generateSnapshot();
     } else {
-      currReturnState = super.keyTyped(keyChar);
+      currentReturnState = super.keyTyped(keyChar);
     }
-    return currReturnState;
+    return currentReturnState;
   }
 
   @Override

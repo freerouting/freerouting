@@ -1,6 +1,6 @@
 package app.freerouting.board;
 
-import app.freerouting.core.Package;
+import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
@@ -23,8 +23,8 @@ public class Components implements Serializable {
 
   /**
    * Inserts a component into the list. The items of the component have to be inserted separately
-   * into the board. If p_on_front is false, the component will be placed on the back side, and
-   * p_package_back is used instead of p_package_front.
+   * into the board. If onFront is false, the component will be placed on the back side, and
+   * packageBack is used instead of packageFront.
    */
   public Component add(
       String name,
@@ -54,7 +54,7 @@ public class Components implements Serializable {
 
   /**
    * Adds a component to this object. The items of the component have to be inserted separately into
-   * the board. If p_on_front is false, the component will be placed on the back side. The component
+   * the board. If onFront is false, the component will be placed on the back side. The component
    * name is generated internally.
    */
   public Component add(Point location, double rotation, boolean onFront, Package componentPackage) {
@@ -72,22 +72,22 @@ public class Components implements Serializable {
 
   /** Returns the component with the input name or null, if no such component exists. */
   public Component get(String name) {
-    for (Component curr : componentArr) {
-      if (curr.name.equals(name)) {
-        return curr;
+    for (Component current : componentArr) {
+      if (current.name.equals(name)) {
+        return current;
       }
     }
     return null;
   }
 
   /**
-   * Returns the component with the input component number or null, if no such component exists.
-   * Component numbers are from 1 to component count
+   * Returns the component with the input component ID or null, if no such component exists.
+   * Component IDs are from 1 to component count.
    */
-  public Component get(int componentNo) {
-    Component result = componentArr.elementAt(componentNo - 1);
-    if (result != null && result.no != componentNo) {
-      FRLogger.warn("Components.get: inconsistent component number");
+  public Component get(int componentId) {
+    Component result = componentArr.elementAt(componentId - 1);
+    if (result != null && result.id != componentId) {
+      FRLogger.warn("Components.get: inconsistent component ID");
     }
     return result;
   }
@@ -132,57 +132,56 @@ public class Components implements Serializable {
   private void restoreComponentArrFromUndoList(BoardObservers observers) {
     Iterator<UndoableObjects.UndoableObjectNode> it = this.undoList.startReadObject();
     for (; ; ) {
-      Component currComponent = (Component) this.undoList.readObject(it);
-      if (currComponent == null) {
+      Component currentComponent = (Component) this.undoList.readObject(it);
+      if (currentComponent == null) {
         break;
       }
-      this.componentArr.setElementAt(currComponent, currComponent.no - 1);
+      this.componentArr.setElementAt(currentComponent, currentComponent.id - 1);
 
       if (observers != null) {
-        observers.notifyMoved(currComponent);
+        observers.notifyMoved(currentComponent);
       }
     }
   }
 
   /**
-   * Moves the component with number p_component_no. Works contrary to Component.translate_by with
-   * the undo algorithm of the board.
+   * Moves the component with ID componentId. Works contrary to Component.translate_by with the undo
+   * algorithm of the board.
    */
-  public void move(int componentNo, app.freerouting.geometry.planar.Vector vector) {
-    Component currComponent = this.get(componentNo);
-    this.undoList.saveForUndo(currComponent);
-    currComponent.translateBy(vector);
+  public void move(int componentId, app.freerouting.geometry.planar.Vector vector) {
+    Component currentComponent = this.get(componentId);
+    this.undoList.saveForUndo(currentComponent);
+    currentComponent.translateBy(vector);
   }
 
   /**
-   * Turns the component with number p_component_no by p_factor times 90 degree around p_pole. Works
-   * contrary to Component.turn_90_degree with the undo algorithm of the board.
+   * Turns the component with ID componentId by factor times 90 degree around pole. Works contrary
+   * to Component.turn_90_degree with the undo algorithm of the board.
    */
-  public void turn90Degree(int componentNo, int factor, IntPoint pole) {
-    Component currComponent = this.get(componentNo);
-    this.undoList.saveForUndo(currComponent);
-    currComponent.turn90Degree(factor, pole);
+  public void turn90Degree(int componentId, int factor, IntPoint pole) {
+    Component currentComponent = this.get(componentId);
+    this.undoList.saveForUndo(currentComponent);
+    currentComponent.turn90Degree(factor, pole);
   }
 
   /**
-   * Rotates the component with number p_component_no by p_rotation_in_degree around p_pole. Works
-   * contrary to Component.rotate with the undo algorithm of the board.
+   * Rotates the component with ID componentId by rotationInDegree around pole. Works contrary to
+   * Component.rotate with the undo algorithm of the board.
    */
-  public void rotate(int componentNo, double rotationInDegree, IntPoint pole) {
-    Component currComponent = this.get(componentNo);
-    this.undoList.saveForUndo(currComponent);
-    currComponent.rotate(rotationInDegree, pole, flipStyleRotateFirst);
+  public void rotate(int componentId, double rotationInDegree, IntPoint pole) {
+    Component currentComponent = this.get(componentId);
+    this.undoList.saveForUndo(currentComponent);
+    currentComponent.rotate(rotationInDegree, pole, flipStyleRotateFirst);
   }
 
   /**
-   * Changes the placement side of the component with number p_component_no and mirrors it at the
-   * vertical line through p_pole. Works contrary to Component.change_side the undo algorithm of the
-   * board.
+   * Changes the placement side of the component with ID componentId and mirrors it at the vertical
+   * line through pole. Works contrary to Component.change_side the undo algorithm of the board.
    */
-  public void changeSide(int componentNo, IntPoint pole) {
-    Component currComponent = this.get(componentNo);
-    this.undoList.saveForUndo(currComponent);
-    currComponent.changeSide(pole);
+  public void changeSide(int componentId, IntPoint pole) {
+    Component currentComponent = this.get(componentId);
+    this.undoList.saveForUndo(currentComponent);
+    currentComponent.changeSide(pole);
   }
 
   /**

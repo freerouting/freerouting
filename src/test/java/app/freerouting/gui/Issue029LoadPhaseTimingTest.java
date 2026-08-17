@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.gui.session.RatsNest;
+import app.freerouting.gui.workspace.RatsNest;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
@@ -17,6 +17,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class Issue029LoadPhaseTimingTest {
+
+  private static double ms(long start, long end) {
+    return (end - start) / 1_000_000.0;
+  }
 
   @Test
   void profileAllPhases() throws Exception {
@@ -52,10 +56,10 @@ class Issue029LoadPhaseTimingTest {
 
       long t8 = System.nanoTime();
       app.freerouting.geometry.planar.IntBox bbox = board.getBoundingBox();
-      for (app.freerouting.board.Item currItem : board.getItems()) {
-        app.freerouting.geometry.planar.IntBox currBoundingBox = currItem.boundingBox();
-        if (currBoundingBox.ur.x < Integer.MAX_VALUE) {
-          bbox = bbox.union(currBoundingBox);
+      for (app.freerouting.board.Item currentItem : board.getItems()) {
+        app.freerouting.geometry.planar.IntBox currentBoundingBox = currentItem.boundingBox();
+        if (currentBoundingBox.ur.x < Integer.MAX_VALUE) {
+          bbox = bbox.union(currentBoundingBox);
         }
       }
       long t9 = System.nanoTime();
@@ -80,9 +84,5 @@ class Issue029LoadPhaseTimingTest {
           "Board: components=%d traces=%d items=%d%n",
           board.components.count(), board.getTraces().size(), board.getItems().size());
     }
-  }
-
-  private static double ms(long start, long end) {
-    return (end - start) / 1_000_000.0;
   }
 }

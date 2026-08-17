@@ -28,10 +28,10 @@ import java.util.TreeSet;
 
 /** Basic class of the items on a board. */
 public abstract class Item
-    implements SearchTreeObject, ObjectInfoPanel.Printable, UndoableObjects.Storable, Serializable {
+    implements SearchTreeObject, ItemInfoPrinter.Printable, UndoableObjects.Storable, Serializable {
 
   private static final double PROTECT_FANOUT_LENGTH = 400;
-  private final int idNo;
+  private final int id;
 
   /** The board this Item is on. */
   public transient BasicBoard board;
@@ -39,13 +39,13 @@ public abstract class Item
   public double smallestClearance;
 
   /** Not 0, if this item belongs to a component. */
-  protected int componentNo;
+  protected int componentId;
 
   /** The nets, to which this item belongs. */
-  int[] netNoArr;
+  int[] netNumbers;
 
   /** The index in the clearance matrix describing the required spacing to other items. */
-  private int clearanceClass;
+  private int clearanceClassIndex;
 
   /** Points to the entries of this item in the ShapeSearchTrees. */
   private transient ItemSearchTreesInfo searchTreesInfo;
@@ -59,26 +59,26 @@ public abstract class Item
   private transient ItemAutorouteInfo autorouteInfo;
 
   Item(
-      int[] netNoArr,
-      int clearanceType,
-      int idNo,
-      int componentNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int id,
+      int componentId,
       FixedState fixedState,
       BasicBoard board) {
-    if (netNoArr == null) {
-      this.netNoArr = new int[0];
+    if (netNumbers == null) {
+      this.netNumbers = new int[0];
     } else {
-      this.netNoArr = new int[netNoArr.length];
-      System.arraycopy(netNoArr, 0, this.netNoArr, 0, netNoArr.length);
+      this.netNumbers = new int[netNumbers.length];
+      System.arraycopy(netNumbers, 0, this.netNumbers, 0, netNumbers.length);
     }
-    clearanceClass = clearanceType;
-    this.componentNo = componentNo;
+    this.clearanceClassIndex = clearanceClassIndex;
+    this.componentId = componentId;
     this.fixedState = fixedState;
     this.board = board;
-    if (idNo <= 0) {
-      this.idNo = board.communication.idNoGenerator.newNo();
+    if (id <= 0) {
+      this.id = board.communication.idGenerator.newId();
     } else {
-      this.idNo = idNo;
+      this.id = id;
     }
   }
 
@@ -87,7 +87,7 @@ public abstract class Item
   public int compareTo(Object other) {
     int result;
     if (other instanceof Item item) {
-      result = item.idNo - idNo;
+      result = item.id - id;
     } else {
       result = 1;
     }
@@ -95,8 +95,9 @@ public abstract class Item
   }
 
   /** Returns the unique identification number of this item. */
-  public int getIdNo() {
-    return idNo;
+  @Override
+  public int getId() {
+    return id;
   }
 
   /**
@@ -136,13 +137,13 @@ public abstract class Item
     return BoardItemType.OTHER;
   }
 
-  /** Returns true if the net number array of this item contains p_net_no. */
-  public boolean containsNet(int netNo) {
-    if (netNo <= 0) {
+  /** Returns true if the net number array of this item contains netNumber. */
+  public boolean containsNet(int netNumber) {
+    if (netNumber <= 0) {
       return false;
     }
-    for (int i = 0; i < netNoArr.length; i++) {
-      if (netNoArr[i] == netNo) {
+    for (int i = 0; i < netNumbers.length; i++) {
+      if (netNumbers[i] == netNumber) {
         return true;
       }
     }
@@ -150,28 +151,28 @@ public abstract class Item
   }
 
   @Override
-  public boolean isObstacle(int netNo) {
-    return !containsNet(netNo);
+  public boolean isObstacle(int netNumber) {
+    return !containsNet(netNumber);
   }
 
-  /** Returns, if this item in not allowed to overlap with p_other. */
+  /** Returns, if this item in not allowed to overlap with other. */
   public abstract boolean isObstacle(Item other);
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
-    return !containsNet(netNo);
+  public boolean isTraceObstacle(int netNumber) {
+    return !containsNet(netNumber);
   }
 
-  /** Returns true if the net number arrays of this and p_other have a common number. */
+  /** Returns true if the net number arrays of this and other have a common number. */
   public boolean sharesNet(Item other) {
-    return this.sharesNetNo(other.netNoArr);
+    return this.sharesNetNo(other.netNumbers);
   }
 
-  /** Returns true if the net number array of this and p_net_no_arr have a common number. */
-  public boolean sharesNetNo(int[] netNoArr) {
-    for (int i = 0; i < this.netNoArr.length; i++) {
-      for (int j = 0; j < netNoArr.length; j++) {
-        if (this.netNoArr[i] == netNoArr[j]) {
+  /** Returns true if the net number array of this and netNumbers have a common number. */
+  public boolean sharesNetNo(int[] netNumbers) {
+    for (int i = 0; i < this.netNumbers.length; i++) {
+      for (int j = 0; j < netNumbers.length; j++) {
+        if (this.netNumbers[i] == netNumbers[j]) {
           return true;
         }
       }
@@ -182,7 +183,7 @@ public abstract class Item
   /** Returns the number of shapes of this item after decomposition into convex polygonal shapes. */
   public abstract int tileShapeCount();
 
-  /** Returns the p_index-th shape of this item after decomposition into convex polygonal shapes. */
+  /** Returns the index-th shape of this item after decomposition into convex polygonal shapes. */
   public TileShape getTileShape(int index) {
     if (this.board == null) {
       FRLogger.warn("Item.get_tile_shape: app.freerouting.board is null");
@@ -228,7 +229,7 @@ public abstract class Item
     return precalculatedTreeShapes;
   }
 
-  /** Calculates the tree shapes for this item for p_search_tree. */
+  /** Calculates the tree shapes for this item for searchTree. */
   protected abstract TileShape[] calculateTreeShapes(ShapeSearchTree searchTree);
 
   /** Returns false, if this item is deleted oor not inserted into the board. */
@@ -241,14 +242,14 @@ public abstract class Item
   }
 
   /**
-   * Creates a copy of this item with id number p_id_no. If p_id_no {@literal <}= 0, the idNo of the
-   * new item is generated internally
+   * Creates a copy of this item with ID id. If id {@literal <}= 0, the id of the new item is
+   * generated internally.
    */
-  public abstract Item copy(int idNo);
+  public abstract Item copy(int id);
 
   @Override
   public Object clone() {
-    Item dup = copy(this.getIdNo());
+    Item dup = copy(this.getId());
 
     dup.onTheBoard = this.onTheBoard;
     // dup.searchTreesInfo = this.searchTreesInfo;
@@ -256,7 +257,7 @@ public abstract class Item
     return dup;
   }
 
-  /** Returns true, if the layer range of this item contains p_layer. */
+  /** Returns true, if the layer range of this item contains layer. */
   public abstract boolean isOnLayer(int layer);
 
   /** Returns the number of the first layer containing geometry of this item. */
@@ -268,30 +269,27 @@ public abstract class Item
   /** Write this item to an output stream. */
   public abstract boolean write(ObjectOutputStream stream);
 
-  /** Translates the shapes of this item by p_vector. Does not move the item in the board. */
+  /** Translates the shapes of this item by vector. Does not move the item in the board. */
   public abstract void translateBy(Vector vector);
 
   /**
-   * Turns this Item by p_factor times 90 degree around p_pole. Does not update the item in the
-   * board.
+   * Turns this Item by factor times 90 degree around pole. Does not update the item in the board.
    */
   public abstract void turn90Degree(int factor, IntPoint pole);
 
-  /**
-   * Rotates this Item by p_angle_in_degree around p_pole. Does not update the item in the board.
-   */
+  /** Rotates this Item by angleInDegree around pole. Does not update the item in the board. */
   public abstract void rotateApprox(double angleInDegree, FloatPoint pole);
 
   /**
-   * Changes the placement side of this Item and mirrors it at the vertical line through p_pole.
-   * Does not update the item in the board.
+   * Changes the placement side of this Item and mirrors it at the vertical line through pole. Does
+   * not update the item in the board.
    */
   public abstract void changePlacementSide(IntPoint pole);
 
   /** Returns a box containing the geometry of this item. */
   public abstract IntBox boundingBox();
 
-  /** Translates this item by p_vector in the board. */
+  /** Translates this item by vector in the board. */
   public void moveBy(Vector vector) {
     board.itemList.saveForUndo(this);
     board.searchTreeManager.remove(this);
@@ -304,7 +302,7 @@ public abstract class Item
     }
   }
 
-  /** Returns true, if some shapes of this item and p_other are on the same layer. */
+  /** Returns true, if some shapes of this item and other are on the same layer. */
   public boolean sharesLayer(Item other) {
     int maxFirstLayer = Math.max(this.firstLayer(), other.firstLayer());
     int minLastLayer = Math.min(this.lastLayer(), other.lastLayer());
@@ -312,7 +310,7 @@ public abstract class Item
   }
 
   /**
-   * Returns the first layer, where both this item and p_other have a shape. Returns -1, if such a
+   * Returns the first layer, where both this item and other have a shape. Returns -1, if such a
    * layer does not exist.
    */
   public int firstCommonLayer(Item other) {
@@ -325,7 +323,7 @@ public abstract class Item
   }
 
   /**
-   * Returns the last layer, where both this item and p_other have a shape. Returns -1, if such a
+   * Returns the last layer, where both this item and other have a shape. Returns -1, if such a
    * layer does not exist.
    */
   public int lastCommonLayer(Item other) {
@@ -342,10 +340,10 @@ public abstract class Item
    * component.
    */
   public String componentName() {
-    if (componentNo <= 0) {
+    if (componentId <= 0) {
       return null;
     }
-    return board.components.get(componentNo).name;
+    return board.components.get(componentId).name;
   }
 
   /** Returns the count of clearance violations of this item with other items. */
@@ -365,39 +363,39 @@ public abstract class Item
     }
     ShapeSearchTree defaultTree = board.searchTreeManager.getDefaultTree();
     for (int i = 0; i < tileShapeCount(); i++) {
-      TileShape currTileShape = getTileShape(i);
-      Collection<TreeEntry> currOverlappingItems =
+      TileShape currentTileShape = getTileShape(i);
+      Collection<TreeEntry> currentOverlappingItems =
           defaultTree.overlappingTreeEntriesWithClearance(
-              currTileShape, shapeLayer(i), new int[0], clearanceClass);
-      for (TreeEntry currentEntry : currOverlappingItems) {
-        if (!(currentEntry.object instanceof Item currItem) || currentEntry.object == this) {
+              currentTileShape, shapeLayer(i), new int[0], this.clearanceClassIndex);
+      for (TreeEntry currentEntry : currentOverlappingItems) {
+        if (!(currentEntry.object instanceof Item currentItem) || currentEntry.object == this) {
           continue;
         }
-        boolean isObstacle = currItem.isObstacle(this);
-        if (isObstacle && this instanceof Trace thisTrace && currItem instanceof Trace) {
+        boolean isObstacle = currentItem.isObstacle(this);
+        if (isObstacle && this instanceof Trace thisTrace && currentItem instanceof Trace) {
           // Look, if both traces are connected to the same tie pin.
           // In this case they are allowed to overlap without sharing a net.
           Point contactPoint = thisTrace.firstCorner();
           boolean contactFound = false;
-          Collection<Item> currContacts = thisTrace.getNormalContacts(contactPoint, true);
+          Collection<Item> currentContacts = thisTrace.getNormalContacts(contactPoint, true);
           {
-            if (currContacts.contains(currItem)) {
+            if (currentContacts.contains(currentItem)) {
               contactFound = true;
             }
           }
           if (!contactFound) {
             contactPoint = thisTrace.lastCorner();
-            currContacts = thisTrace.getNormalContacts(contactPoint, true);
+            currentContacts = thisTrace.getNormalContacts(contactPoint, true);
             {
-              if (currContacts.contains(currItem)) {
+              if (currentContacts.contains(currentItem)) {
                 contactFound = true;
               }
             }
           }
           if (contactFound) {
-            for (Item currContact : currContacts) {
-              if (currContact instanceof Pin) {
-                if (currContact.sharesNet(this) && currContact.sharesNet(currItem)) {
+            for (Item currentContact : currentContacts) {
+              if (currentContact instanceof Pin) {
+                if (currentContact.sharesNet(this) && currentContact.sharesNet(currentItem)) {
                   isObstacle = false;
                   break;
                 }
@@ -408,8 +406,8 @@ public abstract class Item
 
         if (isObstacle) {
           // Get the two shapes the clearance is calculated between
-          TileShape shape1 = currTileShape;
-          TileShape shape2 = currItem.getTreeShape(defaultTree, currentEntry.shapeIndexInObject);
+          TileShape shape1 = currentTileShape;
+          TileShape shape2 = currentItem.getTreeShape(defaultTree, currentEntry.shapeIndexInObject);
           if (shape1 == null || shape2 == null) {
             FRLogger.warn("Item.clearanceViolations: unexpected null shape");
             continue;
@@ -418,7 +416,7 @@ public abstract class Item
           // Calculate the expected minimum clearance between these two shapes
           double minimumClearance =
               board.rules.clearanceMatrix.getValue(
-                  currItem.clearanceClass, this.clearanceClass, shapeLayer(i), false);
+                  currentItem.clearanceClassIndex, this.clearanceClassIndex, shapeLayer(i), false);
 
           double actualClearance = 0;
 
@@ -440,10 +438,15 @@ public abstract class Item
 
           TileShape intersection = enlargedShape1.intersection(enlargedShape2);
           if (intersection.dimension() == 2) {
-            ClearanceViolation currViolation =
+            ClearanceViolation currentViolation =
                 new ClearanceViolation(
-                    this, currItem, intersection, shapeLayer(i), minimumClearance, actualClearance);
-            result.add(currViolation);
+                    this,
+                    currentItem,
+                    intersection,
+                    shapeLayer(i),
+                    minimumClearance,
+                    actualClearance);
+            result.add(currentViolation);
           }
         }
       }
@@ -479,12 +482,14 @@ public abstract class Item
     for (int i = 0; i < this.tileShapeCount(); i++) {
       Collection<SearchTreeObject> overlappingItems =
           board.overlappingObjects(getTileShape(i), shapeLayer(i));
-      for (SearchTreeObject currOb : overlappingItems) {
-        if (!(currOb instanceof Item currItem)) {
+      for (SearchTreeObject currentObject : overlappingItems) {
+        if (!(currentObject instanceof Item currentItem)) {
           continue;
         }
-        if (currItem != this && currItem instanceof Connectable && currItem.sharesNet(this)) {
-          result.add(currItem);
+        if (currentItem != this
+            && currentItem instanceof Connectable
+            && currentItem.sharesNet(this)) {
+          result.add(currentItem);
         }
       }
     }
@@ -506,12 +511,14 @@ public abstract class Item
       }
       Collection<SearchTreeObject> overlappingItems =
           board.overlappingObjects(getTileShape(i), layer);
-      for (SearchTreeObject currOb : overlappingItems) {
-        if (!(currOb instanceof Item currItem)) {
+      for (SearchTreeObject currentObject : overlappingItems) {
+        if (!(currentObject instanceof Item currentItem)) {
           continue;
         }
-        if (currItem != this && currItem instanceof Connectable && currItem.sharesNet(this)) {
-          result.add(currItem);
+        if (currentItem != this
+            && currentItem instanceof Connectable
+            && currentItem.sharesNet(this)) {
+          result.add(currentItem);
         }
       }
     }
@@ -542,7 +549,7 @@ public abstract class Item
   }
 
   /**
-   * Returns the contact point, if this item and p_other are Connectable and have a unique normal
+   * Returns the contact point, if this item and other are Connectable and have a unique normal
    * contact. Returns null otherwise
    */
   public Point normalContactPoint(Item other) {
@@ -560,47 +567,47 @@ public abstract class Item
   }
 
   /**
-   * Returns the set of all Connectable items of the net with number p_net_no which can be reached
-   * recursively via normal contacts from this item. If p_net_no {@literal <}= 0, the net number is
+   * Returns the set of all Connectable items of the net with number netNumber which can be reached
+   * recursively via normal contacts from this item. If netNumber {@literal <}= 0, the net number is
    * ignored.
    */
-  public Set<Item> getConnectedSet(int netNo) {
-    return getConnectedSet(netNo, false);
+  public Set<Item> getConnectedSet(int netNumber) {
+    return getConnectedSet(netNumber, false);
   }
 
   /**
-   * Returns the set of all Connectable items of the net with number p_net_no which can be reached
-   * recursively via normal contacts from this item. If p_net_no {@literal <}= 0, the net number is
-   * ignored. If p_stop_at_plane, the recursive algorithm stops, when a conduction area is reached,
+   * Returns the set of all Connectable items of the net with number netNumber which can be reached
+   * recursively via normal contacts from this item. If netNumber {@literal <}= 0, the net number is
+   * ignored. If stopAtPlane, the recursive algorithm stops, when a conduction area is reached,
    * which does not belong to a component.
    */
-  public Set<Item> getConnectedSet(int netNo, boolean stopAtPlane) {
+  public Set<Item> getConnectedSet(int netNumber, boolean stopAtPlane) {
     Set<Item> result = new TreeSet<>();
-    if (netNo > 0 && !this.containsNet(netNo)) {
+    if (netNumber > 0 && !this.containsNet(netNumber)) {
       return result;
     }
     result.add(this);
-    getConnectedSetRecu(result, netNo, stopAtPlane);
+    getConnectedSetRecu(result, netNumber, stopAtPlane);
     return result;
   }
 
   /** Recursive part of get_connected_set. */
-  private void getConnectedSetRecu(Set<Item> result, int netNo, boolean stopAtPlane) {
+  private void getConnectedSetRecu(Set<Item> result, int netNumber, boolean stopAtPlane) {
     Collection<Item> contactList = getNormalContacts();
     if (contactList == null) {
       return;
     }
-    for (Item currContact : contactList) {
+    for (Item currentContact : contactList) {
       if (stopAtPlane
-          && currContact instanceof ConductionArea
-          && currContact.getComponentNo() <= 0) {
+          && currentContact instanceof ConductionArea
+          && currentContact.getComponentId() <= 0) {
         continue;
       }
-      if (netNo > 0 && !currContact.containsNet(netNo)) {
+      if (netNumber > 0 && !currentContact.containsNet(netNumber)) {
         continue;
       }
-      if (result.add(currContact)) {
-        currContact.getConnectedSetRecu(result, netNo, stopAtPlane);
+      if (result.add(currentContact)) {
+        currentContact.getConnectedSetRecu(result, netNumber, stopAtPlane);
       }
     }
   }
@@ -611,7 +618,7 @@ public abstract class Item
   }
 
   /**
-   * Recursive part of Trace.is_cycle. If p_ignore_areas is true, cycles where conduction areas are
+   * Recursive part of Trace.is_cycle. If ignoreAreas is true, cycles where conduction areas are
    * involved are ignored.
    */
   boolean isCycleRecu(
@@ -623,15 +630,15 @@ public abstract class Item
     if (contactList == null) {
       return false;
     }
-    for (Item currContact : contactList) {
-      if (currContact == comeFromItem) {
+    for (Item currentContact : contactList) {
+      if (currentContact == comeFromItem) {
         continue;
       }
-      if (currContact == searchItem) {
+      if (currentContact == searchItem) {
         return true;
       }
-      if (visitedItems.add(currContact)) {
-        if (currContact.isCycleRecu(visitedItems, searchItem, this, ignoreAreas)) {
+      if (visitedItems.add(currentContact)) {
+        if (currentContact.isCycleRecu(visitedItems, searchItem, this, ignoreAreas)) {
           return true;
         }
       }
@@ -640,23 +647,23 @@ public abstract class Item
   }
 
   /**
-   * Returns the set of all Connectable items belonging to the net with number p_net_no, which are
-   * not in the connected set of this item. If p_net_no {@literal <}= 0, the net numbers contained
-   * in this items are used instead of p_net_no.
+   * Returns the set of all Connectable items belonging to the net with number netNumber, which are
+   * not in the connected set of this item. If netNumber {@literal <}= 0, the net numbers contained
+   * in this items are used instead of netNumber.
    */
-  public Set<Item> getUnconnectedSet(int netNo) {
+  public Set<Item> getUnconnectedSet(int netNumber) {
     Set<Item> result = new TreeSet<>();
-    if (netNo > 0 && !this.containsNet(netNo)) {
+    if (netNumber > 0 && !this.containsNet(netNumber)) {
       return result;
     }
-    if (netNo > 0) {
-      result.addAll(board.getConnectableItems(netNo));
+    if (netNumber > 0) {
+      result.addAll(board.getConnectableItems(netNumber));
     } else {
-      for (int currNetNo : this.netNoArr) {
-        result.addAll(board.getConnectableItems(currNetNo));
+      for (int currentNetNumber : this.netNumbers) {
+        result.addAll(board.getConnectableItems(currentNetNumber));
       }
     }
-    result.removeAll(this.getConnectedSet(netNo));
+    result.removeAll(this.getConnectedSet(netNumber));
     return result;
   }
 
@@ -666,9 +673,9 @@ public abstract class Item
   }
 
   /**
-   * Returns all traces and vias from this item until the next fork or terminal item. If
-   * p_stop_option == StopConnectionOption.FANOUT_VIA, the algorithm will stop at the next fanout
-   * via, If p_stop_option == StopConnectionOption.VIA, the algorithm will stop at any via.
+   * Returns all traces and vias from this item until the next fork or terminal item. If stopOption
+   * == StopConnectionOption.FANOUT_VIA, the algorithm will stop at the next fanout via, If
+   * stopOption == StopConnectionOption.VIA, the algorithm will stop at any via.
    */
   public Set<Item> getConnectionItems(StopConnectionOption stopOption) {
     Set<Item> contacts = this.getNormalContacts();
@@ -676,13 +683,13 @@ public abstract class Item
     if (this.isRoutable()) {
       result.add(this);
     }
-    for (Item currItem : contacts) {
-      Point prevContactPoint = this.normalContactPoint(currItem);
+    for (Item currentItem : contacts) {
+      Point prevContactPoint = this.normalContactPoint(currentItem);
       if (prevContactPoint == null) {
         // no unique contact point
         continue;
       }
-      int prevContactLayer = this.firstCommonLayer(currItem);
+      int prevContactLayer = this.firstCommonLayer(currentItem);
       if (this instanceof Trace startTrace) {
         // Check, that there is only 1 contact at this location.
         // Only for pins and vias items of more than 1 connection
@@ -692,25 +699,25 @@ public abstract class Item
           continue;
         }
       }
-      // Search from currItem along the contacts
+      // Search from currentItem along the contacts
       // until the next fork or nonroute item.
       for (; ; ) {
-        if (!currItem.isRoutable()) {
+        if (!currentItem.isRoutable()) {
           // connection ends
           break;
         }
-        if (currItem instanceof Via) {
+        if (currentItem instanceof Via) {
           if (stopOption == StopConnectionOption.VIA) {
             break;
           }
           if (stopOption == StopConnectionOption.FANOUT_VIA) {
-            if (currItem.isFanoutVia(result)) {
+            if (currentItem.isFanoutVia(result)) {
               break;
             }
           }
         }
-        result.add(currItem);
-        Collection<Item> currObContacts = currItem.getNormalContacts();
+        result.add(currentItem);
+        Collection<Item> currentObContacts = currentItem.getNormalContacts();
         // filter the contacts at the previous contact point,
         // because we were already there.
         // If then there is not exactly 1 new contact left, there is
@@ -719,10 +726,10 @@ public abstract class Item
         int nextContactLayer = -1;
         Item nextContact = null;
         boolean forkFound = false;
-        for (Item tmpContact : currObContacts) {
-          int tmpContactLayer = currItem.firstCommonLayer(tmpContact);
+        for (Item tmpContact : currentObContacts) {
+          int tmpContactLayer = currentItem.firstCommonLayer(tmpContact);
           if (tmpContactLayer >= 0) {
-            Point tmpContactPoint = currItem.normalContactPoint(tmpContact);
+            Point tmpContactPoint = currentItem.normalContactPoint(tmpContact);
             if (tmpContactPoint == null) {
               // no unique contact point
               forkFound = true;
@@ -743,7 +750,7 @@ public abstract class Item
         if (nextContact == null || forkFound) {
           break;
         }
-        currItem = nextContact;
+        currentItem = nextContact;
         prevContactPoint = nextContactPoint;
         prevContactLayer = nextContactLayer;
       }
@@ -768,8 +775,8 @@ public abstract class Item
   public boolean validate() {
     boolean result = board.searchTreeManager.validateEntries(this);
     for (int i = 0; i < this.tileShapeCount(); i++) {
-      TileShape currShape = this.getTileShape(i);
-      if (currShape.isEmpty()) {
+      TileShape currentShape = this.getTileShape(i);
+      if (currentShape.isEmpty()) {
         FRLogger.warn("Item.validate: shape is empty");
         result = false;
       }
@@ -778,8 +785,8 @@ public abstract class Item
   }
 
   /**
-   * Returns for this item the layer of the shape with index p_index. If p_id_no {@literal <}= 0, it
-   * will be generated internally.
+   * Returns for this item the layer of the shape with index index. If idNo {@literal <}= 0, it will
+   * be generated internally.
    */
   @Override
   public abstract int shapeLayer(int index);
@@ -792,12 +799,12 @@ public abstract class Item
   /** Returns true, if it is not allowed to delete this item. */
   boolean isDeletionForbidden() {
     // Items belonging to a component are delete_fixed.
-    if (this.componentNo > 0 || isUserFixed()) {
+    if (this.componentId > 0 || isUserFixed()) {
       return true;
     }
     // Also power planes are delete_fixed.
     if (this instanceof ConductionArea area) {
-      return !this.board.layerStructure.arr[area.getLayer()].isSignal;
+      return !this.board.layerStructure.layers[area.getLayer()].isSignal;
     }
     return false;
   }
@@ -820,7 +827,7 @@ public abstract class Item
   }
 
   /** Returns false, if this item is an obstacle for vias with the input net number. */
-  public boolean isDrillable(int netNo) {
+  public boolean isDrillable(int netNumber) {
     return false;
   }
 
@@ -843,43 +850,45 @@ public abstract class Item
 
   /** Returns the count of nets this item belongs to. */
   public int netCount() {
-    return netNoArr.length;
+    return netNumbers.length;
+  }
+
+  /** Returns the no-th net number of this item for 0 {@literal <=} no {@literal <} netCount(). */
+  public int getNetNumber(int no) {
+    return netNumbers[no];
+  }
+
+  /** Return the component ID of this item or 0, if it does not belong to a component. */
+  public int getComponentId() {
+    return componentId;
   }
 
   /**
-   * Returns the p_no-th net number of this item for 0 {@literal <=} p_no {@literal <} netCount().
-   */
-  public int getNetNo(int no) {
-    return netNoArr[no];
-  }
-
-  /** Return the component number of this item or 0, if it does not belong to a component. */
-  public int getComponentNo() {
-    return componentNo;
-  }
-
-  /**
-   * Removes p_net_no from the net number array. Returns false, if p_net_no was not contained in
+   * Removes netNumber from the net number array. Returns false, if netNumber was not contained in
    * this array.
    */
-  public boolean removeFromNet(int netNo) {
+  public boolean removeFromNet(int netNumber) {
     int foundIndex = -1;
-    for (int i = 0; i < this.netNoArr.length; i++) {
-      if (this.netNoArr[i] == netNo) {
+    for (int i = 0; i < this.netNumbers.length; i++) {
+      if (this.netNumbers[i] == netNumber) {
         foundIndex = i;
       }
     }
     if (foundIndex < 0) {
       return false;
     }
-    int[] newNetNoArr = new int[this.netNoArr.length - 1];
-    System.arraycopy(this.netNoArr, 0, newNetNoArr, 0, foundIndex);
+    int[] newNetNoArr = new int[this.netNumbers.length - 1];
+    System.arraycopy(this.netNumbers, 0, newNetNoArr, 0, foundIndex);
     if (foundIndex < newNetNoArr.length) {
       // copy remaining elements if present
       System.arraycopy(
-          this.netNoArr, foundIndex + 1, newNetNoArr, foundIndex, newNetNoArr.length - foundIndex);
+          this.netNumbers,
+          foundIndex + 1,
+          newNetNoArr,
+          foundIndex,
+          newNetNoArr.length - foundIndex);
     }
-    this.netNoArr = newNetNoArr;
+    this.netNumbers = newNetNoArr;
     return true;
   }
 
@@ -887,29 +896,29 @@ public abstract class Item
    * Returns the index in the clearance matrix describing the required spacing of this item to other
    * items.
    */
-  public int clearanceClassNo() {
-    return clearanceClass;
+  public int clearanceClassIndex() {
+    return clearanceClassIndex;
   }
 
   /**
    * Sets the index in the clearance matrix describing the required spacing of this item to other
    * items.
    */
-  public void setClearanceClassNo(int index) {
+  public void setClearanceClassIndex(int index) {
     if (index < 0 || index >= this.board.rules.clearanceMatrix.getClassCount()) {
-      FRLogger.warn("Item.set_clearance_class_no: p_index out of range");
+      FRLogger.warn("Item.set_clearance_class_no: index out of range");
       return;
     }
-    clearanceClass = index;
+    clearanceClassIndex = index;
   }
 
   /** Changes the clearance class of this item and updates the search tree. */
-  public void changeClearanceClass(int index) {
+  public void changeClearanceClassIndex(int index) {
     if (index < 0 || index >= this.board.rules.clearanceMatrix.getClassCount()) {
-      FRLogger.warn("Item.set_clearance_class_no: p_index out of range");
+      FRLogger.warn("Item.set_clearance_class_no: index out of range");
       return;
     }
-    clearanceClass = index;
+    clearanceClassIndex = index;
     this.clearDerivedData();
     if (this.board != null && this.board.searchTreeManager.isClearanceCompensationUsed()) {
       // reinsert the item into the search tree, because the compensated shape has changed.
@@ -918,37 +927,37 @@ public abstract class Item
     }
   }
 
-  /** Assigns this item to the component with the input component number. */
-  public void assignComponentNo(int no) {
-    componentNo = no;
+  /** Assigns this item to the component with the input component ID. */
+  public void assignComponentId(int id) {
+    componentId = id;
   }
 
   /**
-   * Makes this item connectable and assigns it to the input net. If p_net_no {@literal <} 0, the
+   * Makes this item connectable and assigns it to the input net. If netNumber {@literal <} 0, the
    * net items net number will be removed and the item will no longer be connectable.
    */
-  public void assignNetNo(int netNo) {
-    if (!Nets.isNormalNetNo(netNo)) {
+  public void assignNetNo(int netNumber) {
+    if (!Nets.isNormalNetNumber(netNumber)) {
       return;
     }
-    if (netNo > board.rules.nets.maxNetNo()) {
-      FRLogger.warn("Item.assign_net_no: p_net_no to big");
+    if (netNumber > board.rules.nets.maxNetNumber()) {
+      FRLogger.warn("Item.assign_net_no: netNumber to big");
       return;
     }
     board.itemList.saveForUndo(this);
-    if (netNo <= 0) {
-      netNoArr = new int[0];
+    if (netNumber <= 0) {
+      netNumbers = new int[0];
     } else {
-      if (netNoArr.length == 0) {
-        netNoArr = new int[1];
-      } else if (netNoArr.length > 1) {
+      if (netNumbers.length == 0) {
+        netNumbers = new int[1];
+      } else if (netNumbers.length > 1) {
         FRLogger.warn("Item.assign_net_no: unexpected netCount > 1");
       }
-      netNoArr[0] = netNo;
+      netNumbers[0] = netNumber;
     }
   }
 
-  /** Returns true, if p_item is contained in the input filter. */
+  /** Returns true, if item is contained in the input filter. */
   public abstract boolean isSelectedByFilter(ItemSelectionFilter filter);
 
   /** Internally used for implementing the function is_selected_by_filter. */
@@ -962,7 +971,7 @@ public abstract class Item
     return result;
   }
 
-  /** Sets the item tree entries for the tree with identification number p_tree_no. */
+  /** Sets the item tree entries for the tree with identification number treeNo. */
   @Override
   public void setSearchTreeEntries(ShapeTree.Leaf[] treeEntries, ShapeTree tree) {
     if (this.board == null) {
@@ -975,8 +984,8 @@ public abstract class Item
   }
 
   /**
-   * Returns the tree entries for the tree with identification number p_tree_no, or null, if for
-   * this tree no entries of this item are inserted.
+   * Returns the tree entries for the tree with identification number treeNo, or null, if for this
+   * tree no entries of this item are inserted.
    */
   public ShapeTree.Leaf[] getSearchTreeEntries(ShapeSearchTree tree) {
     if (this.searchTreesInfo == null) {
@@ -986,8 +995,7 @@ public abstract class Item
   }
 
   /**
-   * Sets the precalculated tree shapes tree entries for the tree with identification number
-   * p_tree_no.
+   * Sets the precalculated tree shapes tree entries for the tree with identification number treeNo.
    */
   protected void setPrecalculatedTreeShapes(TileShape[] shapes, ShapeSearchTree tree) {
     if (this.board == null) {
@@ -1053,116 +1061,116 @@ public abstract class Item
       if (i > 0) {
         sb.append("<br>");
       }
-      Net currentNet = board.rules.nets.get(this.getNetNo(i));
+      Net currentNet = board.rules.nets.get(this.getNetNumber(i));
       sb.append(tm.getText("net_hover_info", currentNet.name));
     }
     return sb.toString();
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printNetInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printNetInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
     for (int i = 0; i < this.netCount(); i++) {
-      window.append(", " + tm.getText("net") + " ");
-      Net currentNet = board.rules.nets.get(this.getNetNo(i));
-      window.append(currentNet.name, tm.getText("net_info"), currentNet);
+      printer.append(", " + tm.getText("net") + " ");
+      Net currentNet = board.rules.nets.get(this.getNetNumber(i));
+      printer.append(currentNet.name, tm.getText("net_info"), currentNet);
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printClearanceInfo(ObjectInfoPanel window, Locale locale) {
-    if (this.clearanceClass > 0) {
+  protected void printClearanceInfo(ItemInfoPrinter printer, Locale locale) {
+    if (this.clearanceClassIndex > 0) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.append(", " + tm.getText("clearanceClass") + " ");
-      String name = board.rules.clearanceMatrix.getName(this.clearanceClass);
-      window.append(
+      printer.append(", " + tm.getText("clearanceClass") + " ");
+      String name = board.rules.clearanceMatrix.getName(this.clearanceClassIndex);
+      printer.append(
           name,
           tm.getText("clearance_info"),
-          board.rules.clearanceMatrix.getRow(this.clearanceClass));
+          board.rules.clearanceMatrix.getRow(this.clearanceClassIndex));
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printFixedInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printFixedInfo(ItemInfoPrinter printer, Locale locale) {
     if (this.fixedState != FixedState.UNFIXED) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.append(", ");
-      window.append(tm.getText(this.fixedState.toString()));
+      printer.append(", ");
+      printer.append(tm.getText(this.fixedState.toString()));
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printContactInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printContactInfo(ItemInfoPrinter printer, Locale locale) {
     Collection<Item> contacts = this.getNormalContacts();
     if (!contacts.isEmpty()) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.append(", " + tm.getText("contacts") + " ");
+      printer.append(", " + tm.getText("contacts") + " ");
       int contactCount = contacts.size();
-      window.appendItems(String.valueOf(contactCount), tm.getText("contact_info"), contacts);
+      printer.appendItems(String.valueOf(contactCount), tm.getText("contact_info"), contacts);
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printClearanceViolationInfo(ObjectInfoPanel window, Locale locale) {
+  protected void printClearanceViolationInfo(ItemInfoPrinter printer, Locale locale) {
     Collection<ClearanceViolation> clearanceViolations = this.clearanceViolations();
     if (!clearanceViolations.isEmpty()) {
       TextManager tm = new TextManager(this.getClass(), locale);
 
-      window.append(", ");
+      printer.append(", ");
       int violationCount = clearanceViolations.size();
-      Collection<ObjectInfoPanel.Printable> violations = new LinkedList<>(clearanceViolations);
-      window.appendObjects(
+      Collection<ItemInfoPrinter.Printable> violations = new LinkedList<>(clearanceViolations);
+      printer.appendObjects(
           String.valueOf(violationCount), tm.getText("violation_info"), violations);
       if (violationCount == 1) {
-        window.append(" " + tm.getText("clearance_violation"));
+        printer.append(" " + tm.getText("clearance_violation"));
       } else {
-        window.append(" " + tm.getText("clearanceViolations"));
+        printer.append(" " + tm.getText("clearanceViolations"));
       }
     }
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printConnectableItemInfo(ObjectInfoPanel window, Locale locale) {
-    this.printClearanceInfo(window, locale);
-    this.printFixedInfo(window, locale);
-    this.printNetInfo(window, locale);
-    this.printContactInfo(window, locale);
-    this.printClearanceViolationInfo(window, locale);
+  protected void printConnectableItemInfo(ItemInfoPrinter printer, Locale locale) {
+    this.printClearanceInfo(printer, locale);
+    this.printFixedInfo(printer, locale);
+    this.printNetInfo(printer, locale);
+    this.printContactInfo(printer, locale);
+    this.printClearanceViolationInfo(printer, locale);
   }
 
   /** Internal function used in the implementation of print_info. */
-  protected void printItemInfo(ObjectInfoPanel window, Locale locale) {
-    this.printClearanceInfo(window, locale);
-    this.printFixedInfo(window, locale);
-    this.printClearanceViolationInfo(window, locale);
+  protected void printItemInfo(ItemInfoPrinter printer, Locale locale) {
+    this.printClearanceInfo(printer, locale);
+    this.printFixedInfo(printer, locale);
+    this.printClearanceViolationInfo(printer, locale);
   }
 
   /** Checks, if all nets of this items are normal. */
   public boolean netsNormal() {
-    for (int i = 0; i < this.netNoArr.length; i++) {
-      if (!Nets.isNormalNetNo(this.netNoArr[i])) {
+    for (int i = 0; i < this.netNumbers.length; i++) {
+      if (!Nets.isNormalNetNumber(this.netNumbers[i])) {
         return false;
       }
     }
     return true;
   }
 
-  /** Checks, if this item and p_other contain exactly the same net numbers. */
+  /** Checks, if this item and other contain exactly the same net numbers. */
   public boolean netsEqual(Item other) {
-    return netsEqual(other.netNoArr);
+    return netsEqual(other.netNumbers);
   }
 
-  /** Checks, if this item contains exactly the nets in p_net_no_arr. */
-  public boolean netsEqual(int[] netNoArr) {
-    if (this.netNoArr.length != netNoArr.length) {
+  /** Checks, if this item contains exactly the nets in netNumbers. */
+  public boolean netsEqual(int[] netNumbers) {
+    if (this.netNumbers.length != netNumbers.length) {
       return false;
     }
-    for (int currNetNo : netNoArr) {
-      if (!this.containsNet(currNetNo)) {
+    for (int currentNetNumber : netNumbers) {
+      if (!this.containsNet(currentNetNumber)) {
         return false;
       }
     }
@@ -1171,24 +1179,24 @@ public abstract class Item
 
   /**
    * Returns true, if the via is directly ob by a trace connected to a nearby SMD-pin. If
-   * p_ignore_items != null, contact traces in P-ignoreItems are ignored.
+   * ignoreItems != null, contact traces in P-ignoreItems are ignored.
    */
   boolean isFanoutVia(Set<Item> ignoreItems) {
     Collection<Item> contactList = this.getNormalContacts();
-    for (Item currContact : contactList) {
-      if (currContact instanceof Pin
-          && currContact.firstLayer() == currContact.lastLayer()
-          && currContact.getNormalContacts().size() <= 1) {
+    for (Item currentContact : contactList) {
+      if (currentContact instanceof Pin
+          && currentContact.firstLayer() == currentContact.lastLayer()
+          && currentContact.getNormalContacts().size() <= 1) {
         return true;
       }
-      if (currContact instanceof Trace currTrace) {
-        if (ignoreItems != null && ignoreItems.contains(currContact)) {
+      if (currentContact instanceof Trace currentTrace) {
+        if (ignoreItems != null && ignoreItems.contains(currentContact)) {
           continue;
         }
-        if (currTrace.getLength() >= PROTECT_FANOUT_LENGTH * currTrace.getHalfWidth()) {
+        if (currentTrace.getLength() >= PROTECT_FANOUT_LENGTH * currentTrace.getHalfWidth()) {
           continue;
         }
-        Collection<Item> traceContactList = currTrace.getNormalContacts();
+        Collection<Item> traceContactList = currentTrace.getNormalContacts();
         for (Item tmpContact : traceContactList) {
           if (tmpContact instanceof Pin
               && tmpContact.firstLayer() == tmpContact.lastLayer()
@@ -1214,8 +1222,8 @@ public abstract class Item
    * @return true, if this item has at least one net that must be ignored
    */
   public boolean hasIgnoredNets() {
-    for (int netNo : this.netNoArr) {
-      Net net = this.board.rules.nets.get(netNo);
+    for (int netNumber : this.netNumbers) {
+      Net net = this.board.rules.nets.get(netNumber);
       if (net.getNetClass().isIgnoredByAutorouter) {
         return true;
       }
@@ -1230,9 +1238,9 @@ public abstract class Item
 
     simpleName.append(this.getClass().getSimpleName().toLowerCase());
 
-    if (componentNo > 0) {
+    if (componentId > 0) {
       simpleName.append(" of component #");
-      simpleName.append(componentNo);
+      simpleName.append(componentId);
     }
 
     return simpleName.toString();
@@ -1241,8 +1249,8 @@ public abstract class Item
   /** GetAllNets. */
   public List<Net> getAllNets() {
     List<Net> nets = new ArrayList<>();
-    for (int netNo : this.netNoArr) {
-      Net net = board.rules.nets.get(netNo);
+    for (int netNumber : this.netNumbers) {
+      Net net = board.rules.nets.get(netNumber);
       if (net != null) {
         nets.add(net);
       }

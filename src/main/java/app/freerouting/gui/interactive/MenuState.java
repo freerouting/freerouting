@@ -5,7 +5,7 @@ import app.freerouting.board.ItemSelectionFilter;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.Pin;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import java.util.Collection;
 import java.util.Set;
@@ -67,54 +67,54 @@ public class MenuState extends InteractiveState {
   /** Action to be taken when a key shortcut is pressed. */
   @Override
   public InteractiveState keyTyped(char keyChar) {
-    InteractiveState currReturnState = this;
+    InteractiveState currentReturnState = this;
     switch (keyChar) {
       case 'b' -> hdlg.redo();
-      case 'd' -> currReturnState = DragMenuState.getInstance(hdlg);
+      case 'd' -> currentReturnState = DragMenuState.getInstance(hdlg);
       case 'e' ->
-          currReturnState = ExpandTestState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
+          currentReturnState =
+              ExpandTestState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
       case 'g' -> hdlg.toggleRatsnest();
-      case 'i' -> currReturnState = this.selectItems(hdlg.getCurrentMousePosition());
+      case 'i' -> currentReturnState = this.selectItems(hdlg.getCurrentMousePosition());
       case 'p' -> {
-        hdlg.getInteractiveSettings()
-            .setPushEnabled(!hdlg.getInteractiveSettings().getPushEnabled());
+        hdlg.getWorkspaceSettings().setPushEnabled(!hdlg.getWorkspaceSettings().getPushEnabled());
         hdlg.getPanel().boardFrame.refreshWindows();
       }
-      case 'r' -> currReturnState = RouteMenuState.getInstance(hdlg);
-      case 's' -> currReturnState = InspectMenuState.getInstance(hdlg);
+      case 'r' -> currentReturnState = RouteMenuState.getInstance(hdlg);
+      case 's' -> currentReturnState = InspectMenuState.getInstance(hdlg);
       case 't' ->
-          currReturnState = RouteState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
+          currentReturnState = RouteState.getInstance(hdlg.getCurrentMousePosition(), this, hdlg);
       case 'u' -> hdlg.undo();
       case 'v' -> hdlg.toggleClearanceViolations();
-      case 'w' -> currReturnState = swapPins(hdlg.getCurrentMousePosition());
+      case 'w' -> currentReturnState = swapPins(hdlg.getCurrentMousePosition());
       case '+' -> {
         // increase the current layer to the next signal layer
         LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-        int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
+        int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
         do {
-          ++currentLayerNo;
-        } while (currentLayerNo < layerStructure.arr.length
-            && !layerStructure.arr[currentLayerNo].isSignal);
+          ++currentLayerIndex;
+        } while (currentLayerIndex < layerStructure.layers.length
+            && !layerStructure.layers[currentLayerIndex].isSignal);
 
-        if (currentLayerNo < layerStructure.arr.length) {
-          hdlg.setCurrentLayer(currentLayerNo);
+        if (currentLayerIndex < layerStructure.layers.length) {
+          hdlg.setCurrentLayer(currentLayerIndex);
         }
       }
       case '-' -> {
         // decrease the current layer to the previous signal layer
         LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-        int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
+        int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
         do {
-          --currentLayerNo;
-        } while (currentLayerNo >= 0 && !layerStructure.arr[currentLayerNo].isSignal);
+          --currentLayerIndex;
+        } while (currentLayerIndex >= 0 && !layerStructure.layers[currentLayerIndex].isSignal);
 
-        if (currentLayerNo >= 0) {
-          hdlg.setCurrentLayer(currentLayerNo);
+        if (currentLayerIndex >= 0) {
+          hdlg.setCurrentLayer(currentLayerIndex);
         }
       }
-      default -> currReturnState = super.keyTyped(keyChar);
+      default -> currentReturnState = super.keyTyped(keyChar);
     }
-    return currReturnState;
+    return currentReturnState;
   }
 
   /** Do nothing on complete. */

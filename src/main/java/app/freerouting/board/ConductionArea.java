@@ -42,10 +42,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int[] netNoArr,
-      int clearanceClass,
-      int idNo,
-      int groupNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int id,
+      int groupId,
       String name,
       boolean isObstacle,
       FixedState fixedState,
@@ -56,10 +56,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         translation,
         rotationInDegree,
         sideChanged,
-        netNoArr,
-        clearanceClass,
-        idNo,
-        groupNo,
+        netNumbers,
+        clearanceClassIndex,
+        id,
+        groupId,
         name,
         fixedState,
         board);
@@ -78,17 +78,17 @@ public class ConductionArea extends ObstacleArea implements Connectable {
     if (!this.isFilled) {
       return;
     }
-    int layerNo = this.getLayer();
+    int layerIndex = this.getLayer();
     double maxClearanceLookupBoard = 2000.0 * this.board.communication.getResolution(Unit.UM);
     if (this.board.rules != null && this.board.rules.clearanceMatrix != null) {
       double maxMatrixClearance =
-          this.board.rules.clearanceMatrix.maxValue(this.clearanceClassNo(), layerNo);
+          this.board.rules.clearanceMatrix.maxValue(this.clearanceClassIndex(), layerIndex);
       maxClearanceLookupBoard =
           Math.max(
               maxClearanceLookupBoard,
               maxMatrixClearance + 100.0 * this.board.communication.getResolution(Unit.UM));
     }
-    ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
+    ensureDetailedFillCache(maxClearanceLookupBoard, layerIndex);
   }
 
   /**
@@ -97,12 +97,12 @@ public class ConductionArea extends ObstacleArea implements Connectable {
    * <p>The cache remains owned by the conduction-area model because it depends on board revision
    * and clearance geometry. The renderer owns the AWT paint operation that consumes this geometry.
    */
-  public java.awt.geom.Area getDetailedFillArea(double maxClearanceLookupBoard, int layerNo) {
-    ensureDetailedFillCache(maxClearanceLookupBoard, layerNo);
+  public java.awt.geom.Area getDetailedFillArea(double maxClearanceLookupBoard, int layerIndex) {
+    ensureDetailedFillCache(maxClearanceLookupBoard, layerIndex);
     return cachedBoardFillArea;
   }
 
-  private void ensureDetailedFillCache(double maxClearanceLookupBoard, int layerNo) {
+  private void ensureDetailedFillCache(double maxClearanceLookupBoard, int layerIndex) {
     boolean boardChanged = this.board.getRevision() != cachedBoardRevision;
     if (cachedBoardFillArea != null && !boardChanged) {
       return;
@@ -125,29 +125,29 @@ public class ConductionArea extends ObstacleArea implements Connectable {
       java.util.List<java.awt.geom.Area> sameNetClearances = new java.util.ArrayList<>();
       java.util.List<java.awt.geom.Area> sameNetSpokesList = new java.util.ArrayList<>();
 
-      Set<SearchTreeObject> overlaps = this.board.overlappingObjects(inflatedBbox, layerNo);
+      Set<SearchTreeObject> overlaps = this.board.overlappingObjects(inflatedBbox, layerIndex);
       for (SearchTreeObject ob : overlaps) {
-        if (!(ob instanceof Item currItem) || currItem == this) {
+        if (!(ob instanceof Item currentItem) || currentItem == this) {
           continue;
         }
-        if (!currItem.sharesLayer(this)) {
+        if (!currentItem.sharesLayer(this)) {
           continue;
         }
 
-        if (currItem instanceof Trace || currItem instanceof ConductionArea) {
-          if (currItem.sharesNet(this)) {
+        if (currentItem instanceof Trace || currentItem instanceof ConductionArea) {
+          if (currentItem.sharesNet(this)) {
             continue;
           }
         }
 
-        int clClass1 = this.clearanceClassNo();
-        int clClass2 = currItem.clearanceClassNo();
-        double clearanceDist = this.board.clearanceValue(clClass1, clClass2, layerNo);
+        int clClass1 = this.clearanceClassIndex();
+        int clClass2 = currentItem.clearanceClassIndex();
+        double clearanceDist = this.board.clearanceValue(clClass1, clClass2, layerIndex);
 
-        if (currItem.sharesNet(this)) {
-          if (currItem instanceof DrillItem drillItem) {
+        if (currentItem.sharesNet(this)) {
+          if (currentItem instanceof DrillItem drillItem) {
             FloatPoint center = drillItem.getCenter().toFloat();
-            Shape shape = drillItem.getShapeOnLayer(layerNo);
+            Shape shape = drillItem.getShapeOnLayer(layerIndex);
             if (shape == null) {
               continue;
             }
@@ -185,8 +185,8 @@ public class ConductionArea extends ObstacleArea implements Connectable {
             sameNetSpokesList.add(spokes);
           }
         } else {
-          if (currItem instanceof DrillItem drillItem) {
-            Shape shape = drillItem.getShapeOnLayer(layerNo);
+          if (currentItem instanceof DrillItem drillItem) {
+            Shape shape = drillItem.getShapeOnLayer(layerIndex);
             if (shape != null) {
               Shape enlargedShape = shape.enlarge(clearanceDist);
               java.awt.geom.Area clearanceAwt = getAwtAreaFromShapeInBoardUnits(enlargedShape);
@@ -195,10 +195,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
               }
             }
           } else {
-            int shapeCount = currItem.tileShapeCount();
+            int shapeCount = currentItem.tileShapeCount();
             for (int i = 0; i < shapeCount; i++) {
-              if (currItem.shapeLayer(i) == layerNo) {
-                TileShape tileShape = currItem.getTileShape(i);
+              if (currentItem.shapeLayer(i) == layerIndex) {
+                TileShape tileShape = currentItem.getTileShape(i);
                 if (tileShape != null) {
                   Shape enlargedShape = tileShape.enlarge(clearanceDist);
                   java.awt.geom.Area clearanceAwt = getAwtAreaFromShapeInBoardUnits(enlargedShape);
@@ -300,7 +300,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public Item copy(int idNo) {
+  public Item copy(int id) {
     if (this.netCount() != 1) {
       FRLogger.warn("ConductionArea.copy not yet implemented for areas with more than 1 net");
       return null;
@@ -311,10 +311,10 @@ public class ConductionArea extends ObstacleArea implements Connectable {
         getTranslation(),
         getRotationInDegree(),
         getSideChanged(),
-        netNoArr,
-        clearanceClassNo(),
-        idNo,
-        getComponentNo(),
+        netNumbers,
+        clearanceClassIndex(),
+        id,
+        getComponentId(),
         this.name,
         isObstacle,
         getFixedState(),
@@ -325,21 +325,21 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   public Set<Item> getNormalContacts() {
     Set<Item> result = new TreeSet<>();
     for (int i = 0; i < tileShapeCount(); i++) {
-      TileShape currShape = getTileShape(i);
-      Set<SearchTreeObject> overlaps = board.overlappingObjects(currShape, getLayer());
-      for (SearchTreeObject currOb : overlaps) {
-        if (!(currOb instanceof Item currItem)) {
+      TileShape currentShape = getTileShape(i);
+      Set<SearchTreeObject> overlaps = board.overlappingObjects(currentShape, getLayer());
+      for (SearchTreeObject currentObject : overlaps) {
+        if (!(currentObject instanceof Item currentItem)) {
           continue;
         }
-        if (currItem != this && currItem.sharesNet(this) && currItem.sharesLayer(this)) {
-          if (currItem instanceof Trace currTrace) {
-            if (currShape.contains(currTrace.firstCorner())
-                || currShape.contains(currTrace.lastCorner())) {
-              result.add(currItem);
+        if (currentItem != this && currentItem.sharesNet(this) && currentItem.sharesLayer(this)) {
+          if (currentItem instanceof Trace currentTrace) {
+            if (currentShape.contains(currentTrace.firstCorner())
+                || currentShape.contains(currentTrace.lastCorner())) {
+              result.add(currentItem);
             }
-          } else if (currItem instanceof DrillItem currDrillItem) {
-            if (currShape.contains(currDrillItem.getCenter())) {
-              result.add(currItem);
+          } else if (currentItem instanceof DrillItem currentDrillItem) {
+            if (currentShape.contains(currentDrillItem.getCenter())) {
+              result.add(currentItem);
             }
           }
         }
@@ -351,7 +351,7 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   @Override
   public TileShape getTraceConnectionShape(ShapeSearchTree searchTree, int index) {
     if (index < 0 || index >= this.treeShapeCount(searchTree)) {
-      FRLogger.warn("ConductionArea.get_trace_connection_shape p_index out of range");
+      FRLogger.warn("ConductionArea.get_trace_connection_shape index out of range");
       return null;
     }
     return this.getTreeShape(searchTree, index);
@@ -388,13 +388,13 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
-    return this.isObstacle && !this.containsNet(netNo);
+  public boolean isTraceObstacle(int netNumber) {
+    return this.isObstacle && !this.containsNet(netNumber);
   }
 
   @Override
-  public boolean isDrillable(int netNo) {
-    return !this.isObstacle || this.containsNet(netNo);
+  public boolean isDrillable(int netNumber) {
+    return !this.isObstacle || this.containsNet(netNumber);
   }
 
   @Override
@@ -406,12 +406,12 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("conductionArea"));
-    this.printShapeInfo(window, locale);
-    this.printConnectableItemInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("conductionArea"));
+    this.printShapeInfo(printer, locale);
+    this.printConnectableItemInfo(printer, locale);
+    printer.newline();
   }
 }

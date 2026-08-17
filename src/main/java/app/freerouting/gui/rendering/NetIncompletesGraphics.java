@@ -32,18 +32,21 @@ public class NetIncompletesGraphics {
       }
       FloatPoint[] drawPoints = new FloatPoint[2];
       int drawWidth = 1;
-      for (AirLine currIncomplete : netIncompletes.getIncompletes()) {
-        drawPoints[0] = currIncomplete.fromCorner;
-        drawPoints[1] = currIncomplete.toCorner;
+      for (AirLine currentIncomplete : netIncompletes.getIncompletes()) {
+        drawPoints[0] = currentIncomplete.fromCorner;
+        drawPoints[1] = currentIncomplete.toCorner;
         graphicsContext.draw(drawPoints, drawWidth, drawColor, graphics, drawIntensity);
-        if (!currIncomplete.fromItem.sharesLayer(currIncomplete.toItem)) {
+        if (!currentIncomplete.fromItem.sharesLayer(currentIncomplete.toItem)) {
           drawLayerChangeMarker(
-              currIncomplete.fromCorner,
+              currentIncomplete.fromCorner,
               netIncompletes.getMarkerRadius(),
               graphics,
               graphicsContext);
           drawLayerChangeMarker(
-              currIncomplete.toCorner, netIncompletes.getMarkerRadius(), graphics, graphicsContext);
+              currentIncomplete.toCorner,
+              netIncompletes.getMarkerRadius(),
+              graphics,
+              graphicsContext);
         }
       }
     }
@@ -52,9 +55,9 @@ public class NetIncompletesGraphics {
     }
     // draw the length violation around every Pin of the net.
     Collection<Pin> netPins = netIncompletes.getNet().getPins();
-    for (Pin currPin : netPins) {
+    for (Pin currentPin : netPins) {
       drawLengthViolationMarker(
-          currPin.getCenter().toFloat(),
+          currentPin.getCenter().toFloat(),
           netIncompletes.getLengthViolation(),
           graphics,
           graphicsContext);

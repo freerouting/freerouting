@@ -13,6 +13,7 @@ import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.fixtures.RoutingFixtureTest;
+import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.management.BoardLoader;
 import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.settings.GlobalSettings;
@@ -66,7 +67,9 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
 
     // Both traces are on the same net
     assertEquals(
-        trace1.getNetNo(0), trace2.getNetNo(0), "Traces 2402 and 2411 must belong to the same net");
+        trace1.getNetNumber(0),
+        trace2.getNetNumber(0),
+        "Traces 2402 and 2411 must belong to the same net");
 
     // Trace 2402 is genuinely dangling: the board-model connectivity check
     // confirms neither endpoint has a contact. The DRC must report this.
@@ -86,7 +89,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     }
 
     Item via2522item =
-        board.getItems().stream().filter(item -> item.getIdNo() == 2522).findFirst().orElse(null);
+        board.getItems().stream().filter(item -> item.getId() == 2522).findFirst().orElse(null);
 
     assertNotNull(via2522item, "Via 2522 should be found in the board");
     Via via2522 = assertInstanceOf(Via.class, via2522item, "Item 2522 should be a Via");
@@ -150,7 +153,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
     Set<Integer> danglingTrackIds =
         allIssues.stream()
             .filter(ui -> "track_dangling".equals(ui.type))
-            .map(ui -> ui.firstItem.getIdNo())
+            .map(ui -> ui.firstItem.getId())
             .collect(Collectors.toSet());
 
     int[] spotCheckIds = {2340, 1869, 2372, 1802};
@@ -166,7 +169,7 @@ public class UnconnectedItemsReproductionTest extends RoutingFixtureTest {
           "DRC should detect track " + trackId + " as a dangling track");
     }
 
-    DrcReport report = drc.generateReport(TEST_BOARD, "mm");
+    KiCadDrcReport report = drc.generateReport(TEST_BOARD, "mm");
 
     assertNotNull(report, "DRC report should not be null");
     assertNotNull(report.violations, "Violations list should not be null");

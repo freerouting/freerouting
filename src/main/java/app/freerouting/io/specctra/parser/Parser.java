@@ -15,30 +15,31 @@ public class Parser extends ScopeKeyword {
     super("parser");
   }
 
-  private static SpecctraParserInfo.WriteResolution readWriteSolution(ReadScopeParameter par) {
+  private static SpecctraParserInfo.WriteResolution readWriteSolution(
+      ReadScopeParameter scopeParameter) {
     try {
-      Object nextToken = par.scanner.nextToken();
+      Object nextToken = scopeParameter.scanner.nextToken();
       if (!(nextToken instanceof String resolutionString)) {
         FRLogger.warn(
             "Parser.read_write_solution: string expected at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
-      nextToken = par.scanner.nextToken();
+      nextToken = scopeParameter.scanner.nextToken();
       if (!(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Parser.read_write_solution: integer expected expected at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
       int resolutionValue = (Integer) nextToken;
-      nextToken = par.scanner.nextToken();
+      nextToken = scopeParameter.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Parser.read_write_solution: closing_bracket expected at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -49,30 +50,34 @@ public class Parser extends ScopeKeyword {
     }
   }
 
-  private static String[] readConstant(ReadScopeParameter par) {
+  private static String[] readConstant(ReadScopeParameter scopeParameter) {
     try {
       String[] result = new String[2];
-      par.scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      Object nextToken = par.scanner.nextToken();
+      scopeParameter.scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      Object nextToken = scopeParameter.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Parser.read_constant: string expected at '" + par.scanner.getScopeIdentifier() + "'");
+            "Parser.read_constant: string expected at '"
+                + scopeParameter.scanner.getScopeIdentifier()
+                + "'");
         return null;
       }
       result[0] = (String) nextToken;
-      par.scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      nextToken = par.scanner.nextToken();
+      scopeParameter.scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      nextToken = scopeParameter.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Parser.read_constant: string expected at '" + par.scanner.getScopeIdentifier() + "'");
+            "Parser.read_constant: string expected at '"
+                + scopeParameter.scanner.getScopeIdentifier()
+                + "'");
         return null;
       }
       result[1] = (String) nextToken;
-      nextToken = par.scanner.nextToken();
+      nextToken = scopeParameter.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Parser.read_constant: closing_bracket expected at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return null;
       }
@@ -113,11 +118,11 @@ public class Parser extends ScopeKeyword {
       file.write(")");
     }
     if (parserInfo.constants != null) {
-      for (String[] currConstant : parserInfo.constants) {
+      for (String[] currentConstant : parserInfo.constants) {
         file.newLine();
         file.write("(constant ");
-        for (int i = 0; i < currConstant.length; i++) {
-          identifierType.write(currConstant[i], file);
+        for (int i = 0; i < currentConstant.length; i++) {
+          identifierType.write(currentConstant[i], file);
           file.write(" ");
         }
         file.write(")");
@@ -163,23 +168,23 @@ public class Parser extends ScopeKeyword {
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     Object nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
       try {
-        nextToken = par.scanner.nextToken();
+        nextToken = scopeParameter.scanner.nextToken();
       } catch (IOException _) {
         FRLogger.warn(
             "Parser.read_scope: IO error scanning file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
       if (nextToken == null) {
         FRLogger.warn(
             "Parser.read_scope: unexpected end of file at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
@@ -190,28 +195,28 @@ public class Parser extends ScopeKeyword {
       boolean readOk = true;
       if (prevToken == OPEN_BRACKET) {
         if (nextToken == STRING_QUOTE) {
-          String quoteChar = readQuoteChar(par.scanner);
+          String quoteChar = readQuoteChar(scopeParameter.scanner);
           if (quoteChar == null) {
             return false;
           }
-          par.stringQuote = quoteChar;
+          scopeParameter.stringQuote = quoteChar;
         } else if (nextToken == HOST_CAD) {
-          par.hostCad = DsnFile.readStringScope(par.scanner);
+          scopeParameter.hostCad = DsnFile.readStringScope(scopeParameter.scanner);
         } else if (nextToken == HOST_VERSION) {
-          par.hostVersion = DsnFile.readStringScope(par.scanner);
+          scopeParameter.hostVersion = DsnFile.readStringScope(scopeParameter.scanner);
         } else if (nextToken == CONSTANT) {
-          String[] currConstant = readConstant(par);
-          if (currConstant != null) {
-            par.constants.add(currConstant);
+          String[] currentConstant = readConstant(scopeParameter);
+          if (currentConstant != null) {
+            scopeParameter.constants.add(currentConstant);
           }
         } else if (nextToken == WRITE_RESOLUTION) {
-          par.writeResolution = readWriteSolution(par);
+          scopeParameter.writeResolution = readWriteSolution(scopeParameter);
         } else if (nextToken == GENERATED_BY_FREEROUTING) {
-          par.dsnFileGeneratedByHost = false;
+          scopeParameter.dsnFileGeneratedByHost = false;
           // skip the closing bracket
-          skipScope(par.scanner);
+          skipScope(scopeParameter.scanner);
         } else {
-          skipScope(par.scanner);
+          skipScope(scopeParameter.scanner);
         }
       }
       if (!readOk) {

@@ -1,24 +1,24 @@
 package app.freerouting.gui;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.gui.rendering.TutorialBoardPalette;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveActionThread;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.InteractiveActionThread;
 import app.freerouting.io.FileFormat;
 import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.ThreadActionListener;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.ThreadActionListener;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.rules.NetClasses;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
-import app.freerouting.settings.sources.GuiSettings;
+import app.freerouting.settings.sources.GuiSettingsSource;
 import app.freerouting.util.TextManager;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -110,7 +110,7 @@ public class GuiManager {
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
       settingsMerger.addOrReplaceSources(
           new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()),
-          new GuiSettings(routingJob.routerSettings));
+          new GuiSettingsSource(routingJob.routerSettings));
       routingJob.routerSettings = settingsMerger.merge();
       guiSession.addJob(routingJob);
 
@@ -319,7 +319,7 @@ public class GuiManager {
       // we didn't have any input file passed as a parameter
       // we load a blank board
       var settingsMerger = globalSettings.settingsMergerProtype.clone();
-      settingsMerger.addOrReplaceSources(new GuiSettings(null));
+      settingsMerger.addOrReplaceSources(new GuiSettingsSource(null));
 
       final BoardFrame newFrame = createBoardFrame(null, null, globalSettings, settingsMerger);
       if (newFrame == null) {

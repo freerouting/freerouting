@@ -34,7 +34,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
   /** Creates a new instance of AssignNetRulesWindow. */
   public WindowAssignNetClass(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -115,7 +115,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
       columnNames[1] = tm.getText("className");
 
       BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
-      data = new Object[boardRules.nets.maxNetNo()][];
+      data = new Object[boardRules.nets.maxNetNumber()][];
       for (int i = 0; i < data.length; i++) {
         this.data[i] = new Object[columnNames.length];
       }
@@ -163,7 +163,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
     @Override
     public void setValueAt(Object value, int row, int col) {
-      if (col != 1 || !(value instanceof NetClass currNetRule)) {
+      if (col != 1 || !(value instanceof NetClass currentNetRule)) {
         return;
       }
       Object firstRowObject = getValueAt(row, 0);
@@ -171,7 +171,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
         FRLogger.warn("AssignNetRuLesVindow.setValueAt: Net expected");
         return;
       }
-      currentNet.setClass(currNetRule);
+      currentNet.setClass(currentNetRule);
 
       this.data[row][col] = value;
       fireTableCellUpdated(row, col);

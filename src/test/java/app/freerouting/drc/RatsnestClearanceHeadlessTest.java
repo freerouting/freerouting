@@ -67,8 +67,8 @@ class RatsnestClearanceHeadlessTest {
 
     // Per-net query must also be headless-reachable.
     int sumPerNet = 0;
-    for (int netNo = 1; netNo <= board.rules.nets.maxNetNo(); netNo++) {
-      sumPerNet += drc.getIncompleteCount(netNo);
+    for (int netNumber = 1; netNumber <= board.rules.nets.maxNetNumber(); netNumber++) {
+      sumPerNet += drc.getIncompleteCount(netNumber);
     }
     assertEquals(EXPECTED_UNCONNECTED, sumPerNet, "per-net incomplete counts must sum to total");
   }
@@ -103,8 +103,8 @@ class RatsnestClearanceHeadlessTest {
     // Verify the list is sorted by severity (expected - actual, descending).
     for (int i = 1; i < aggregated.size(); i++) {
       double prev = aggregated.get(i - 1).expectedClearance - aggregated.get(i - 1).actualClearance;
-      double curr = aggregated.get(i).expectedClearance - aggregated.get(i).actualClearance;
-      assertTrue(prev >= curr, "aggregated violations must be sorted by severity, descending");
+      double current = aggregated.get(i).expectedClearance - aggregated.get(i).actualClearance;
+      assertTrue(prev >= current, "aggregated violations must be sorted by severity, descending");
     }
 
     double smallest = ClearanceViolation.smallestClearance(board.getItems());

@@ -1,9 +1,9 @@
 package app.freerouting.api.v1;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.api.dto.SystemStatus;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.util.gson.GsonProvider;
 import io.swagger.v3.oas.annotations.Operation;

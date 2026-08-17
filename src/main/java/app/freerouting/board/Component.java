@@ -1,7 +1,7 @@
 package app.freerouting.board;
 
-import app.freerouting.core.LogicalPart;
-import app.freerouting.core.Package;
+import app.freerouting.core.library.LogicalPart;
+import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
@@ -15,13 +15,13 @@ import java.util.Locale;
  * keepouts.
  */
 public class Component
-    implements UndoableObjects.Storable, ObjectInfoPanel.Printable, Serializable {
+    implements UndoableObjects.Storable, ItemInfoPrinter.Printable, Serializable {
 
   /** The name of the component. */
   public final String name;
 
   /** Internal generated unique identification number. */
-  public final int no;
+  public final int id;
 
   /** If true, the component cannot be moved. */
   public final boolean positionFixed;
@@ -31,6 +31,8 @@ public class Component
 
   /** The library package of the component if it is placed on the solder side. */
   private final Package libPackageBack;
+
+  private final String partNumber;
 
   /** The location of the component. */
   private Point location;
@@ -44,10 +46,8 @@ public class Component
   /** If false, the component will be placed on the back side of the board. */
   private boolean onFront;
 
-  private final String partNumber;
-
   /**
-   * Creates a new instance of Component with the input parameters. If p_on_front is false, the
+   * Creates a new instance of Component with the input parameters. If onFront is false, the
    * component will be placed on the back side.
    */
   Component(
@@ -57,7 +57,7 @@ public class Component
       boolean onFront,
       Package packageFront,
       Package packageBack,
-      int no,
+      int id,
       boolean positionFixed,
       String partNumber) {
     this.name = name;
@@ -72,7 +72,7 @@ public class Component
     this.onFront = onFront;
     libPackageFront = packageFront;
     libPackageBack = packageBack;
-    this.no = no;
+    this.id = id;
     this.positionFixed = positionFixed;
     this.partNumber = partNumber;
   }
@@ -97,7 +97,7 @@ public class Component
   }
 
   /**
-   * Translates the location of this Component by p_p_vector. The Pins in the board must be moved
+   * Translates the location of this Component by pVector. The Pins in the board must be moved
    * separately.
    */
   public void translateBy(Vector vector) {
@@ -106,7 +106,7 @@ public class Component
     }
   }
 
-  /** Turns this component by p_factor times 90 degree around p_pole. */
+  /** Turns this component by factor times 90 degree around pole. */
   public void turn90Degree(int factor, IntPoint pole) {
     if (factor == 0) {
       return;
@@ -123,7 +123,7 @@ public class Component
     }
   }
 
-  /** Rotates this component by p_angle_in_degree around p_pole. */
+  /** Rotates this component by angleInDegree around pole. */
   public void rotate(double angleInDegree, IntPoint pole, boolean flipStyleRotateFirst) {
     if (angleInDegree == 0) {
       return;
@@ -147,8 +147,7 @@ public class Component
   }
 
   /**
-   * Changes the placement side of this component and mirrors it at the vertical line through
-   * p_pole.
+   * Changes the placement side of this component and mirrors it at the vertical line through pole.
    */
   public void changeSide(IntPoint pole) {
     this.onFront = !this.onFront;
@@ -181,7 +180,7 @@ public class Component
             onFront,
             libPackageFront,
             libPackageBack,
-            no,
+            id,
             positionFixed,
             partNumber);
     result.logicalPart = this.logicalPart;
@@ -204,34 +203,34 @@ public class Component
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("component") + " ");
-    window.appendBold(this.name);
+    printer.appendBold(tm.getText("component") + " ");
+    printer.appendBold(this.name);
     if (this.location != null) {
-      window.append(" " + tm.getText("at") + " ");
-      window.append(this.location.toFloat());
+      printer.append(" " + tm.getText("at") + " ");
+      printer.append(this.location.toFloat());
 
-      window.append(", " + tm.getText("rotation") + " ");
-      window.appendWithoutTransforming(rotationInDegree);
+      printer.append(", " + tm.getText("rotation") + " ");
+      printer.appendWithoutTransforming(rotationInDegree);
 
       if (this.onFront) {
-        window.append(", " + tm.getText("front"));
+        printer.append(", " + tm.getText("front"));
       } else {
-        window.append(", " + tm.getText("back"));
+        printer.append(", " + tm.getText("back"));
       }
     } else {
-      window.append(" " + tm.getText("not_yet_placed"));
+      printer.append(" " + tm.getText("not_yet_placed"));
     }
-    window.append(", " + tm.getText("package"));
+    printer.append(", " + tm.getText("package"));
     Package libPackage = this.getPackage();
-    window.append(libPackage.name, tm.getText("package_info"), libPackage);
+    printer.append(libPackage.name, tm.getText("package_info"), libPackage);
     if (this.logicalPart != null) {
-      window.append(", " + tm.getText("logicalPart") + " ");
-      window.append(this.logicalPart.name, tm.getText("logical_part_info"), this.logicalPart);
+      printer.append(", " + tm.getText("logicalPart") + " ");
+      printer.append(this.logicalPart.name, tm.getText("logical_part_info"), this.logicalPart);
     }
-    window.newline();
+    printer.newline();
   }
 
   /** Returns the library package of this component. */

@@ -66,8 +66,8 @@ public class TargetItemExpansionDoor implements ExpandableObject {
   }
 
   @Override
-  public int getIdNo() {
+  public int getId() {
     // Unique ID for a target door: hash of target item ID and room ID.
-    return 31 * item.getIdNo() + (room != null ? room.getIdNo() : 0);
+    return 31 * item.getId() + (room != null ? room.getId() : 0);
   }
 }

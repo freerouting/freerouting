@@ -167,11 +167,11 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
       PriorityQueue<ItemRouteResult> pq = new PriorityQueue<>();
 
       for (Item item = sortedRouteItems.next(); item != null; item = sortedRouteItems.next()) {
-        ItemRouteResult r = resultMap.get(item.getIdNo());
+        ItemRouteResult r = resultMap.get(item.getId());
         if (r != null) { // use PriorityQueue to sort item according to route result
           pq.add(r);
         } else {
-          newItemIds.add(item.getIdNo());
+          newItemIds.add(item.getId());
         }
       }
 
@@ -182,7 +182,7 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
       itemIds.addAll(newItemIds);
     } else {
       for (Item item = sortedRouteItems.next(); item != null; item = sortedRouteItems.next()) {
-        itemIds.add(item.getIdNo());
+        itemIds.add(item.getId());
       }
 
       if (currentItemSelectionStrategy() == ItemSelectionStrategy.RANDOM) {

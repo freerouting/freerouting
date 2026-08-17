@@ -10,6 +10,10 @@ import app.freerouting.board.Unit;
 import app.freerouting.board.Via;
 import app.freerouting.constants.Constants;
 import app.freerouting.geometry.planar.Point;
+import app.freerouting.io.kicad.KiCadDrcPosition;
+import app.freerouting.io.kicad.KiCadDrcReport;
+import app.freerouting.io.kicad.KiCadDrcViolation;
+import app.freerouting.io.kicad.KiCadDrcViolationItem;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.settings.DesignRulesCheckerSettings;
@@ -59,8 +63,8 @@ public class DesignRulesChecker {
 
         // Deduplicate violations - A-B and B-A are the same violation
         for (ClearanceViolation violation : itemViolations) {
-          int id1 = violation.firstItem.getIdNo();
-          int id2 = violation.secondItem.getIdNo();
+          int id1 = violation.firstItem.getId();
+          int id2 = violation.secondItem.getId();
 
           // Create a unique key using sorted IDs to avoid duplicates
           String key =
@@ -91,14 +95,14 @@ public class DesignRulesChecker {
     java.util.Map<Integer, List<Item>> itemsByNet = new java.util.HashMap<>();
     for (Item item : board.getItems()) {
       if (item instanceof app.freerouting.board.Connectable && item.netCount() > 0) {
-        int netNo = item.getNetNo(0);
-        itemsByNet.computeIfAbsent(netNo, k -> new ArrayList<>()).add(item);
+        int netNumber = item.getNetNumber(0);
+        itemsByNet.computeIfAbsent(netNumber, k -> new ArrayList<>()).add(item);
       }
     }
 
     // For each net, find truly unconnected items
     for (java.util.Map.Entry<Integer, List<Item>> entry : itemsByNet.entrySet()) {
-      int netNo = entry.getKey();
+      int netNumber = entry.getKey();
       List<Item> netItems = entry.getValue();
 
       if (netItems.size() <= 1) {
@@ -115,7 +119,7 @@ public class DesignRulesChecker {
         }
 
         // Get the connected set for this item
-        Collection<Item> connectedSet = item.getConnectedSet(netNo);
+        Collection<Item> connectedSet = item.getConnectedSet(netNumber);
         java.util.Set<Item> setItems = new java.util.HashSet<>(connectedSet);
 
         // Only add items that are actually in this net
@@ -163,7 +167,7 @@ public class DesignRulesChecker {
     // Check for dangling vias - vias not connected or connected on only one layer
     for (Item item : board.getItems()) {
       if (item instanceof Via via) {
-        // Use the is_tail() method which checks if via has contacts on at most 1 layer
+        // Use the isTail() method which checks if via has contacts on at most 1 layer
         if (via.isTail()) {
           unconnectedItems.add(new UnconnectedItems(via, null, "via_dangling"));
         }
@@ -203,9 +207,10 @@ public class DesignRulesChecker {
    * @param coordinateUnit Unit for coordinates (e.g., "mm", "mil")
    * @return DRC report in KiCad JSON format
    */
-  public DrcReport generateReport(String sourceFile, String coordinateUnit) {
-    DrcReport report =
-        new DrcReport(coordinateUnit, sourceFile, "Freerouting " + Constants.FREEROUTING_VERSION);
+  public KiCadDrcReport generateReport(String sourceFile, String coordinateUnit) {
+    KiCadDrcReport report =
+        new KiCadDrcReport(
+            coordinateUnit, sourceFile, "Freerouting " + Constants.FREEROUTING_VERSION);
 
     // Get all clearance violations
     Collection<ClearanceViolation> violations = getAllClearanceViolations();
@@ -224,8 +229,8 @@ public class DesignRulesChecker {
 
     // Convert internal violations to DRC report format
     for (ClearanceViolation violation : violations) {
-      DrcViolation drcViolation = convertToDrcViolation(violation, coordinateUnit);
-      report.addViolation(drcViolation);
+      KiCadDrcViolation kiCadDrcViolation = convertToDrcViolation(violation, coordinateUnit);
+      report.addViolation(kiCadDrcViolation);
 
       FRLogger.trace(
           "DesignRulesChecker.generateReport",
@@ -262,12 +267,12 @@ public class DesignRulesChecker {
 
     // Convert unconnected items to DRC report format
     for (UnconnectedItems unconnectedItem : unconnectedItems) {
-      DrcViolation drcViolation = convertToDrcViolation(unconnectedItem, coordinateUnit);
+      KiCadDrcViolation kiCadDrcViolation = convertToDrcViolation(unconnectedItem, coordinateUnit);
       if ("track_dangling".equals(unconnectedItem.type)
           || "via_dangling".equals(unconnectedItem.type)) {
-        report.addViolation(drcViolation);
+        report.addViolation(kiCadDrcViolation);
       } else {
-        report.addUnconnectedItem(drcViolation);
+        report.addUnconnectedItem(kiCadDrcViolation);
       }
     }
 
@@ -291,8 +296,9 @@ public class DesignRulesChecker {
    * @param coordinateUnit Unit for coordinates
    * @return DRC violation in report format
    */
-  private DrcViolation convertToDrcViolation(ClearanceViolation violation, String coordinateUnit) {
-    List<DrcViolationItem> items = new ArrayList<>();
+  private KiCadDrcViolation convertToDrcViolation(
+      ClearanceViolation violation, String coordinateUnit) {
+    List<KiCadDrcViolationItem> items = new ArrayList<>();
 
     // Create items for first and second objects
     String firstItemDesc = getItemDescription(violation.firstItem);
@@ -300,22 +306,22 @@ public class DesignRulesChecker {
 
     // Position is the center of gravity of the violation shape
     var firstItemCenterOfGravity = violation.firstItem.boundingBox().centreOfGravity();
-    DrcPosition firstItemPos =
-        new DrcPosition(
+    KiCadDrcPosition firstItemPos =
+        new KiCadDrcPosition(
             convertCoordinate(firstItemCenterOfGravity.x, coordinateUnit),
             convertCoordinate(firstItemCenterOfGravity.y, coordinateUnit));
     var secondItemCenterOfGravity = violation.secondItem.boundingBox().centreOfGravity();
-    DrcPosition secondItemPos =
-        new DrcPosition(
+    KiCadDrcPosition secondItemPos =
+        new KiCadDrcPosition(
             convertCoordinate(secondItemCenterOfGravity.x, coordinateUnit),
             convertCoordinate(secondItemCenterOfGravity.y, coordinateUnit));
 
     // Use item IDs as UUIDs (they are unique within the board)
-    String firstUuid = String.valueOf(violation.firstItem.getIdNo());
-    String secondUuid = String.valueOf(violation.secondItem.getIdNo());
+    String firstUuid = String.valueOf(violation.firstItem.getId());
+    String secondUuid = String.valueOf(violation.secondItem.getId());
 
-    items.add(new DrcViolationItem(firstItemDesc, firstItemPos, firstUuid));
-    items.add(new DrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
+    items.add(new KiCadDrcViolationItem(firstItemDesc, firstItemPos, firstUuid));
+    items.add(new KiCadDrcViolationItem(secondItemDesc, secondItemPos, secondUuid));
 
     // Determine violation type
     String type = "clearance";
@@ -347,12 +353,12 @@ public class DesignRulesChecker {
                   coordinateUnit);
     }
 
-    return new DrcViolation(type, description, "error", items);
+    return new KiCadDrcViolation(type, description, "error", items);
   }
 
-  private DrcViolation convertToDrcViolation(
+  private KiCadDrcViolation convertToDrcViolation(
       UnconnectedItems unconnectedItems, String coordinateUnit) {
-    List<DrcViolationItem> items = new ArrayList<>();
+    List<KiCadDrcViolationItem> items = new ArrayList<>();
 
     String description;
 
@@ -370,13 +376,13 @@ public class DesignRulesChecker {
       }
 
       var itemCenterOfGravity = item.boundingBox().centreOfGravity();
-      DrcPosition itemPos =
-          new DrcPosition(
+      KiCadDrcPosition itemPos =
+          new KiCadDrcPosition(
               convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
               convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
 
-      String uuid = String.valueOf(item.getIdNo());
-      items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
+      String uuid = String.valueOf(item.getId());
+      items.add(new KiCadDrcViolationItem(itemDesc, itemPos, uuid));
 
       description =
           switch (unconnectedItems.type) {
@@ -385,7 +391,7 @@ public class DesignRulesChecker {
             default -> "Unconnected item: " + itemDesc;
           };
 
-      return new DrcViolation(unconnectedItems.type, description, "warning", items);
+      return new KiCadDrcViolation(unconnectedItems.type, description, "warning", items);
     }
 
     // Create items for all items from the unconnected net
@@ -393,12 +399,12 @@ public class DesignRulesChecker {
     for (Item item : unconnectedItems.allItems) {
       String itemDesc = getItemDescription(item);
       var itemCenterOfGravity = item.boundingBox().centreOfGravity();
-      DrcPosition itemPos =
-          new DrcPosition(
+      KiCadDrcPosition itemPos =
+          new KiCadDrcPosition(
               convertCoordinate(itemCenterOfGravity.x, coordinateUnit),
               convertCoordinate(itemCenterOfGravity.y, coordinateUnit));
-      String uuid = String.valueOf(item.getIdNo());
-      items.add(new DrcViolationItem(itemDesc, itemPos, uuid));
+      String uuid = String.valueOf(item.getId());
+      items.add(new KiCadDrcViolationItem(itemDesc, itemPos, uuid));
     }
 
     // Create violation description using the first two representative items
@@ -412,7 +418,7 @@ public class DesignRulesChecker {
       description = "Unconnected item: %s".formatted(fromItemDesc);
     }
 
-    return new DrcViolation(unconnectedItems.type, description, "warning", items);
+    return new KiCadDrcViolation(unconnectedItems.type, description, "warning", items);
   }
 
   private boolean isHole(Item item) {
@@ -447,7 +453,7 @@ public class DesignRulesChecker {
 
     // Add net information
     if (item.netCount() > 0) {
-      String netName = board.rules.nets.get(item.getNetNo(0)).name;
+      String netName = board.rules.nets.get(item.getNetNumber(0)).name;
       desc.append(" [").append(netName).append("]");
     }
 
@@ -466,14 +472,14 @@ public class DesignRulesChecker {
 
     // Add net information
     if (item.netCount() > 0) {
-      String netName = board.rules.nets.get(item.getNetNo(0)).name;
+      String netName = board.rules.nets.get(item.getNetNumber(0)).name;
       desc.append(" [").append(netName).append("]");
     }
 
     // Add layer information
     if (item instanceof Trace trace) {
       int layer = trace.getLayer();
-      String layerName = board.layerStructure.arr[layer].name;
+      String layerName = board.layerStructure.layers[layer].name;
       desc.append(" on ").append(layerName);
 
       // Add length information
@@ -534,7 +540,7 @@ public class DesignRulesChecker {
    * may have multiple connections with some connections completed while others remain incomplete.
    */
   public void calculateAllIncompletes() {
-    int maxNetNo = board.rules.nets.maxNetNo();
+    int maxNetNo = board.rules.nets.maxNetNumber();
     // Create the net item lists at once for performance reasons.
     java.util.Vector<Collection<Item>> netItemLists = new java.util.Vector<>(maxNetNo);
     for (int i = 0; i < maxNetNo; i++) {
@@ -543,13 +549,13 @@ public class DesignRulesChecker {
     java.util.Iterator<app.freerouting.datastructures.UndoableObjects.UndoableObjectNode> it =
         board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof app.freerouting.board.Connectable) {
-        for (int i = 0; i < currItem.netCount(); i++) {
-          netItemLists.get(currItem.getNetNo(i) - 1).add(currItem);
+      if (currentItem instanceof app.freerouting.board.Connectable) {
+        for (int i = 0; i < currentItem.netCount(); i++) {
+          netItemLists.get(currentItem.getNetNumber(i) - 1).add(currentItem);
         }
       }
     }
@@ -586,20 +592,20 @@ public class DesignRulesChecker {
         new Point[0]);
 
     int[] focusNets = new int[] {98, 99};
-    for (int netNo : focusNets) {
-      if (netNo >= 1 && netNo <= netItemLists.size()) {
-        int netItemsCount = netItemLists.get(netNo - 1).size();
-        Net net = board.rules.nets.get(netNo);
+    for (int netNumber : focusNets) {
+      if (netNumber >= 1 && netNumber <= netItemLists.size()) {
+        int netItemsCount = netItemLists.get(netNumber - 1).size();
+        Net net = board.rules.nets.get(netNumber);
         String netName = net != null ? net.name : "unknown";
         FRLogger.trace(
             "DesignRulesChecker.calculateAllIncompletes",
             "netItemCount",
-            "Net item count: net=" + netNo + ", name=" + netName + ", items=" + netItemsCount,
-            "Net #" + netNo + " (" + netName + ")",
+            "Net item count: net=" + netNumber + ", name=" + netName + ", items=" + netItemsCount,
+            "Net #" + netNumber + " (" + netName + ")",
             new Point[0]);
 
         // Let's validate all the polyline traces for this net
-        var netItems = netItemLists.get(netNo - 1);
+        var netItems = netItemLists.get(netNumber - 1);
         for (Item item : netItems) {
           if (item instanceof PolylineTrace trace) {
             // trace.validateAndLogPolylineIntegrity();
@@ -610,46 +616,46 @@ public class DesignRulesChecker {
 
     this.netIncompletes = new NetIncompletes[maxNetNo];
     for (int i = 0; i < netIncompletes.length; i++) {
-      // netNo is 1-based, index is 0-based
-      int netNo = i + 1;
-      netIncompletes[i] = new NetIncompletes(netNo, netItemLists.get(i), board);
+      // netNumber is 1-based, index is 0-based
+      int netNumber = i + 1;
+      netIncompletes[i] = new NetIncompletes(netNumber, netItemLists.get(i), board);
     }
   }
 
   /**
    * Recalculates the incomplete connections (airlines) for the specified net.
    *
-   * @param netNo The number of the net to recalculate.
+   * @param netNumber The number of the net to recalculate.
    */
-  public void recalculateNetIncompletes(int netNo) {
+  public void recalculateNetIncompletes(int netNumber) {
     if (netIncompletes == null) {
       calculateAllIncompletes();
       return;
     }
-    if (netNo >= 1 && netNo <= netIncompletes.length) {
-      Collection<Item> itemList = board.getConnectableItems(netNo);
-      netIncompletes[netNo - 1] = new NetIncompletes(netNo, itemList, board);
+    if (netNumber >= 1 && netNumber <= netIncompletes.length) {
+      Collection<Item> itemList = board.getConnectableItems(netNumber);
+      netIncompletes[netNumber - 1] = new NetIncompletes(netNumber, itemList, board);
     }
   }
 
   /**
    * Recalculates the incomplete connections for the specified net using a provided list of items.
    *
-   * @param netNo The number of the net to recalculate.
+   * @param netNumber The number of the net to recalculate.
    * @param itemList The collection of items belonging to the net.
    */
-  public void recalculateNetIncompletes(int netNo, Collection<Item> itemList) {
+  public void recalculateNetIncompletes(int netNumber, Collection<Item> itemList) {
     if (netIncompletes == null) {
       calculateAllIncompletes(); // Initialize if not already done, though this might be expensive
       // if we only
       // want one net. catch-22.
       // But effectively we need the array initialized.
     }
-    if (netNo >= 1 && netNo <= netIncompletes.length) {
+    if (netNumber >= 1 && netNumber <= netIncompletes.length) {
       // copy itemList, because it will be changed inside the constructor of
       // NetIncompletes
       Collection<Item> items = new java.util.LinkedList<>(itemList);
-      netIncompletes[netNo - 1] = new NetIncompletes(netNo, items, board);
+      netIncompletes[netNumber - 1] = new NetIncompletes(netNumber, items, board);
     }
   }
 
@@ -699,23 +705,28 @@ public class DesignRulesChecker {
   }
 
   /** Returns the number of incomplete connections for a specific net. */
-  public int getIncompleteCount(int netNo) {
+  public int getIncompleteCount(int netNumber) {
     if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > netIncompletes.length) {
+    if (netNumber <= 0 || netNumber > netIncompletes.length) {
       return 0;
     }
 
-    int result = netIncompletes[netNo - 1].count();
-    Net net = board.rules.nets.get(netNo);
+    int result = netIncompletes[netNumber - 1].count();
+    Net net = board.rules.nets.get(netNumber);
     String netName = net != null ? net.name : "unknown";
 
     FRLogger.trace(
         "DesignRulesChecker.getIncompleteCount",
         "net_incomplete_count",
-        "Net incomplete count: net=" + netNo + ", name=" + netName + ", incompleteCount=" + result,
-        "Net #" + netNo + " (" + netName + ")",
+        "Net incomplete count: net="
+            + netNumber
+            + ", name="
+            + netName
+            + ", incompleteCount="
+            + result,
+        "Net #" + netNumber + " (" + netName + ")",
         new Point[0]);
 
     return result;
@@ -736,14 +747,14 @@ public class DesignRulesChecker {
   }
 
   /** Returns the magnitude of the length violation for the specified net. */
-  public double getLengthViolation(int netNo) {
+  public double getLengthViolation(int netNumber) {
     if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > netIncompletes.length) {
+    if (netNumber <= 0 || netNumber > netIncompletes.length) {
       return 0;
     }
-    return netIncompletes[netNo - 1].getLengthViolation();
+    return netIncompletes[netNumber - 1].getLengthViolation();
   }
 
   /**
@@ -772,12 +783,12 @@ public class DesignRulesChecker {
     }
     int count = getIncompleteCount();
     AirLine[] result = new AirLine[count];
-    int currIndex = 0;
+    int currentIndex = 0;
     for (int i = 0; i < netIncompletes.length; i++) {
-      Collection<AirLine> currList = netIncompletes[i].incompletes;
-      for (AirLine currLine : currList) {
-        result[currIndex] = currLine;
-        ++currIndex;
+      Collection<AirLine> currentList = netIncompletes[i].incompletes;
+      for (AirLine currentLine : currentList) {
+        result[currentIndex] = currentLine;
+        ++currentIndex;
       }
     }
     return result;
@@ -786,14 +797,14 @@ public class DesignRulesChecker {
   /**
    * Gets the NetIncompletes object for a specific net. Useful for drawing or detailed inspection.
    */
-  public NetIncompletes getNetIncompletes(int netNo) {
+  public NetIncompletes getNetIncompletes(int netNumber) {
     if (netIncompletes == null) {
       calculateAllIncompletes();
     }
-    if (netNo <= 0 || netNo > netIncompletes.length) {
+    if (netNumber <= 0 || netNumber > netIncompletes.length) {
       return null;
     }
-    return netIncompletes[netNo - 1];
+    return netIncompletes[netNumber - 1];
   }
 
   /**
@@ -804,7 +815,7 @@ public class DesignRulesChecker {
    * @return JSON string of the DRC report
    */
   public String generateReportJson(String sourceFile, String coordinateUnit) {
-    DrcReport report = generateReport(sourceFile, coordinateUnit);
+    KiCadDrcReport report = generateReport(sourceFile, coordinateUnit);
     return GsonProvider.GSON.toJson(report);
   }
 }

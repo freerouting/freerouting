@@ -9,7 +9,7 @@ import javax.swing.JMenuItem;
 class PopupMenuChangeLayer extends JMenu {
 
   private final BoardFrame boardFrame;
-  private final LayermenuItem[] itemArr;
+  private final LayermenuItem[] items;
 
   /** Creates a new instance of ChangeLayerMenu. */
   PopupMenuChangeLayer(BoardFrame boardFrame) {
@@ -17,42 +17,42 @@ class PopupMenuChangeLayer extends JMenu {
 
     LayerStructure layerStructure =
         boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
-    this.itemArr = new LayermenuItem[layerStructure.signalLayerCount()];
-    TextManager tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    this.items = new LayermenuItem[layerStructure.signalLayerCount()];
+    TextManager tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     this.setText(tm.getText("change_layer"));
     this.setToolTipText(tm.getText("change_layer_tooltip"));
-    int currSignalLayerNo = 0;
-    for (int i = 0; i < layerStructure.arr.length; i++) {
-      if (layerStructure.arr[i].isSignal) {
-        this.itemArr[currSignalLayerNo] = new LayermenuItem(i);
-        this.itemArr[currSignalLayerNo].setText(layerStructure.arr[i].name);
-        this.add(this.itemArr[currSignalLayerNo]);
-        ++currSignalLayerNo;
+    int currentSignalLayerNo = 0;
+    for (int i = 0; i < layerStructure.layers.length; i++) {
+      if (layerStructure.layers[i].isSignal) {
+        this.items[currentSignalLayerNo] = new LayermenuItem(i);
+        this.items[currentSignalLayerNo].setText(layerStructure.layers[i].name);
+        this.add(this.items[currentSignalLayerNo]);
+        ++currentSignalLayerNo;
       }
     }
   }
 
-  /** Disables the item with index p_no and enables all other items. */
+  /** Disables the item with index no and enables all other items. */
   void disableItem(int no) {
-    for (int i = 0; i < itemArr.length; i++) {
-      this.itemArr[i].setEnabled(i != no);
+    for (int i = 0; i < items.length; i++) {
+      this.items[i].setEnabled(i != no);
     }
   }
 
   private class LayermenuItem extends JMenuItem {
 
-    private final int layerNo;
+    private final int layerIndex;
 
-    LayermenuItem(int layerNo) {
-      this.layerNo = layerNo;
+    LayermenuItem(int layerIndex) {
+      this.layerIndex = layerIndex;
       addActionListener(
           _ -> {
             final BoardPanel boardPanel = boardFrame.boardPanel;
-            if (boardPanel.boardHandling.changeLayerAction(layerNo)) {
-              TextManager tm = new TextManager(PopupMenuChangeLayer.class, boardFrame.get_locale());
+            if (boardPanel.boardHandling.changeLayerAction(layerIndex)) {
+              TextManager tm = new TextManager(PopupMenuChangeLayer.class, boardFrame.getLocale());
               String layerName =
-                  boardPanel.boardHandling.getRoutingBoard().layerStructure.arr[layerNo].name;
+                  boardPanel.boardHandling.getRoutingBoard().layerStructure.layers[layerIndex].name;
               boardPanel.screenMessages.setStatusMessage(
                   tm.getText("layer_changed_to_message", layerName));
             }

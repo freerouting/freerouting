@@ -1,9 +1,9 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.rules.NetClass;
@@ -39,7 +39,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
   /** Creates a new instance of ViaTablePanel. */
   public WindowEditVias(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
     this.setTitle(tm.getText("title"));
 
     this.boardFrame = boardFrame;
@@ -185,10 +185,10 @@ public class WindowEditVias extends BoardSavableSubWindow {
       BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       ViaInfo viaInfo = boardRules.viaInfos.get((String) viaName);
       // Check, if viaInfo is used in a via rule.
-      for (ViaRule currRule : boardRules.viaRules) {
-        if (currRule.contains(viaInfo)) {
+      for (ViaRule currentRule : boardRules.viaRules) {
+        if (currentRule.contains(viaInfo)) {
           boardFrame.screenMessages.setStatusMessage(
-              tm.getText("via_not_removed_in_rule_message", currRule.name));
+              tm.getText("via_not_removed_in_rule_message", currentRule.name));
           return;
         }
       }
@@ -224,12 +224,12 @@ public class WindowEditVias extends BoardSavableSubWindow {
     public void setValues() {
       BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       for (int i = 0; i < data.length; i++) {
-        ViaInfo currVia = boardRules.viaInfos.get(i);
-        this.data[i][ColumnName.NAME.ordinal()] = currVia.getName();
-        this.data[i][ColumnName.PADSTACK.ordinal()] = currVia.getPadstack().name;
+        ViaInfo currentVia = boardRules.viaInfos.get(i);
+        this.data[i][ColumnName.NAME.ordinal()] = currentVia.getName();
+        this.data[i][ColumnName.PADSTACK.ordinal()] = currentVia.getPadstack().name;
         this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] =
-            boardRules.clearanceMatrix.getName(currVia.getClearanceClass());
-        this.data[i][ColumnName.ATTACH_SMD.ordinal()] = currVia.attachSmdAllowed();
+            boardRules.clearanceMatrix.getName(currentVia.getClearanceClassIndex());
+        this.data[i][ColumnName.ATTACH_SMD.ordinal()] = currentVia.attachSmdAllowed();
       }
     }
 
@@ -298,7 +298,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
             return;
           }
         }
-        viaInfo.setClearanceClass(newClClassIndex);
+        viaInfo.setClearanceClassIndex(newClClassIndex);
       } else if (col == ColumnName.ATTACH_SMD.ordinal()) {
         if (!(value instanceof Boolean attachSmd)) {
           FRLogger.warn("ViaVindow.setValueAt: Boolean expected");

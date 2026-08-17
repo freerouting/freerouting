@@ -3,7 +3,7 @@ package app.freerouting.gui.interactive;
 import app.freerouting.board.AngleRestriction;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Iterator;
@@ -45,8 +45,8 @@ public class CornerItemConstructionState extends InteractiveState {
   @Override
   public InteractiveState mouseMoved() {
     super.mouseMoved();
-    IntPoint currMousePos = hdlg.getCurrentMousePosition().round();
-    this.snappedMousePosition = this.snap(currMousePos).toFloat();
+    IntPoint currentMousePos = hdlg.getCurrentMousePosition().round();
+    this.snappedMousePosition = this.snap(currentMousePos).toFloat();
     hdlg.repaint();
     return this;
   }

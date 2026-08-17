@@ -2,7 +2,7 @@ package app.freerouting.io.specctra;
 
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.FixedState;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;
 import app.freerouting.io.specctra.parser.IJFlexScanner;
@@ -24,8 +24,7 @@ import java.io.OutputStream;
  *
  * <p>This class has no dependency on {@code BoardManager}, {@code RoutingJob}, or any GUI class.
  *
- * <p>Replaces the read path previously found in {@link
- * app.freerouting.io.specctra.parser.SesFileReader} (now {@link Deprecated}).
+ * <p>This class is the public read entry point for Specctra session files.
  */
 public final class SesReader {
 
@@ -68,7 +67,7 @@ public final class SesReader {
 
     IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
 
-    // SES files use the same scale factor as SpecctraSesFileWriter: dsn_to_board(1) / resolution
+    // SES files use the DSN-to-board scale factor: dsn_to_board(1) / resolution
     double scaleFactor =
         board.communication.coordinateTransform.dsnToBoard(1) / board.communication.resolution;
 
@@ -91,8 +90,23 @@ public final class SesReader {
   }
 
   // ---------------------------------------------------------------------------
-  // Private parse helpers (migrated from SesFileReader)
+  // Private helpers for session-file parsing.
   // ---------------------------------------------------------------------------
+
+  private static void closeQuietly(InputStream stream) {
+    try {
+      stream.close();
+    } catch (IOException _) {
+      // ignore — nothing useful to do here
+    }
+  }
+
+  /** Transforms a Specctra session file into an Eagle script file. */
+  public static boolean saveSpecctraSessionSesAsEagleScriptScr(
+      InputStream inputStream, OutputStream outputStream, BasicBoard board) {
+    return app.freerouting.io.specctra.parser.SessionToEagle.getInstance(
+        inputStream, outputStream, board);
+  }
 
   /**
    * Processes the outermost scope of the session file.
@@ -216,8 +230,8 @@ public final class SesReader {
       ScopeKeyword.skipScope(this.scanner);
       return;
     }
-    int netNo = net.netNumber;
-    int[] netNoArr = new int[] {netNo};
+    int netNumber = net.netNumber;
+    int[] netNumbers = new int[] {netNumber};
 
     for (; ; ) {
       final Object prevToken = nextToken;
@@ -231,11 +245,11 @@ public final class SesReader {
 
       if (prevToken == Keyword.OPEN_BRACKET) {
         if (nextToken == Keyword.WIRE) {
-          if (!processWireScope(netNoArr)) {
+          if (!processWireScope(netNumbers)) {
             errorsEncountered++;
           }
         } else if (nextToken == Keyword.VIA) {
-          if (!processViaScope(netNoArr)) {
+          if (!processViaScope(netNumbers)) {
             errorsEncountered++;
           }
         } else {
@@ -245,13 +259,15 @@ public final class SesReader {
     }
   }
 
+  // ---------------------------------------------------------------------------
+
   /**
    * Processes a {@code (wire ...)} scope and inserts the trace into the board.
    *
    * @return {@code true} if the wire was successfully imported; {@code false} on a parse or
    *     geometry error (the caller increments {@link #errorsEncountered})
    */
-  private boolean processWireScope(int[] netNoArr) throws IOException {
+  private boolean processWireScope(int[] netNumbers) throws IOException {
     PolygonPath wirePath = null;
     Object nextToken = null;
     for (; ; ) {
@@ -282,7 +298,7 @@ public final class SesReader {
     }
 
     try {
-      int layerNo = wirePath.layer.no;
+      int layerIndex = wirePath.layer.no;
       int[] boardCoordinates = new int[wirePath.coordinateArr.length];
       for (int i = 0; i < wirePath.coordinateArr.length; i++) {
         boardCoordinates[i] =
@@ -305,7 +321,7 @@ public final class SesReader {
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.TRACE);
 
       board.insertTrace(
-          polyline, layerNo, halfWidth, netNoArr, clearanceClass, FixedState.USER_FIXED);
+          polyline, layerIndex, halfWidth, netNumbers, clearanceClass, FixedState.USER_FIXED);
 
       wiresImported++;
       return true;
@@ -322,7 +338,7 @@ public final class SesReader {
    * @return {@code true} if the via was successfully imported; {@code false} on a parse or geometry
    *     error (the caller increments {@link #errorsEncountered})
    */
-  private boolean processViaScope(int[] netNoArr) throws IOException {
+  private boolean processViaScope(int[] netNumbers) throws IOException {
     Object nextToken = this.scanner.nextToken();
     if (!(nextToken instanceof String padstackName)) {
       FRLogger.warn(
@@ -384,7 +400,7 @@ public final class SesReader {
               .get(app.freerouting.rules.DefaultItemClearanceClasses.ItemClass.VIA);
 
       board.insertVia(
-          viaPadstack, viaLocation, netNoArr, clearanceClass, FixedState.USER_FIXED, true);
+          viaPadstack, viaLocation, netNumbers, clearanceClass, FixedState.USER_FIXED, true);
 
       viasImported++;
       return true;
@@ -393,22 +409,5 @@ public final class SesReader {
       FRLogger.warn("SesReader.processViaScope: failed to import via — " + e.getMessage());
       return false;
     }
-  }
-
-  // ---------------------------------------------------------------------------
-
-  private static void closeQuietly(InputStream stream) {
-    try {
-      stream.close();
-    } catch (IOException _) {
-      // ignore — nothing useful to do here
-    }
-  }
-
-  /** Transforms a Specctra session file into an Eagle script file. */
-  public static boolean saveSpecctraSessionSesAsEagleScriptScr(
-      InputStream inputStream, OutputStream outputStream, BasicBoard board) {
-    return app.freerouting.io.specctra.parser.SessionToEagle.getInstance(
-        inputStream, outputStream, board);
   }
 }

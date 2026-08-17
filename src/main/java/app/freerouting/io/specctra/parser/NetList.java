@@ -18,7 +18,7 @@ public class NetList {
   }
 
   /**
-   * Adds a new net mit the input name to the net list. Returns null, if a net with p_name already
+   * Adds a new net mit the input name to the net list. Returns null, if a net with name already
    * exists in the net list. In this case no new net is added.
    */
   public Net addNet(Net.Id netId) {

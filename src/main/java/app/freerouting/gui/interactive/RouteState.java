@@ -14,7 +14,7 @@ import app.freerouting.board.Via;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.awt.Graphics;
@@ -62,11 +62,11 @@ public class RouteState extends InteractiveState {
       // tie pin, remove nets, which are already connected to this pin on the current
       // layer.
       routeNetNoArr =
-          getRouteNetNumbersAtTiePin(pin, boardHandling.getInteractiveSettings().getLayer());
+          getRouteNetNumbersAtTiePin(pin, boardHandling.getWorkspaceSettings().getLayer());
     } else {
       routeNetNoArr = new int[netCount];
       for (int i = 0; i < netCount; i++) {
-        routeNetNoArr[i] = pickedItem.getNetNo(i);
+        routeNetNoArr[i] = pickedItem.getNetNumber(i);
       }
     }
     if (routeNetNoArr.length == 0) {
@@ -98,17 +98,17 @@ public class RouteState extends InteractiveState {
           location = nearestPoint.round();
         }
         if (!routingBoard.connectToTrace(
-            location, pickedTrace, pickedTrace.getHalfWidth(), pickedTrace.clearanceClassNo())) {
+            location, pickedTrace, pickedTrace.getHalfWidth(), pickedTrace.clearanceClassIndex())) {
           startOk = false;
         }
       }
-      if (startOk && !boardHandling.getInteractiveSettings().getManualRuleSelection()) {
+      if (startOk && !boardHandling.getWorkspaceSettings().getManualRuleSelection()) {
         // Pick up the half with and the clearance class of the found trace.
         int[] newTraceHalfWidths = new int[traceHalfWidths.length];
         System.arraycopy(traceHalfWidths, 0, newTraceHalfWidths, 0, traceHalfWidths.length);
         newTraceHalfWidths[pickedTrace.getLayer()] = pickedTrace.getHalfWidth();
         traceHalfWidths = newTraceHalfWidths;
-        traceClearanceClass = pickedTrace.clearanceClassNo();
+        traceClearanceClass = pickedTrace.clearanceClassIndex();
       }
     } else if (pickedItem instanceof DrillItem drillItem) {
       Point center = drillItem.getCenter();
@@ -126,7 +126,7 @@ public class RouteState extends InteractiveState {
     }
     // Switch to stitch mode for nets, which are shove fixed.
     boolean isStitchRoute =
-        boardHandling.getInteractiveSettings().getIsStitchRoute()
+        boardHandling.getWorkspaceSettings().getIsStitchRoute()
             || currentNet.getNetClass().isShoveFixed()
             || !currentNet.getNetClass().getPullTight();
     routingBoard.generateSnapshot();
@@ -141,22 +141,22 @@ public class RouteState extends InteractiveState {
     newInstance.route =
         new Route(
             location,
-            boardHandling.getInteractiveSettings().getLayer(),
+            boardHandling.getWorkspaceSettings().getLayer(),
             traceHalfWidths,
             layerActiveArr,
             routeNetNoArr,
             traceClearanceClass,
             boardHandling.getViaRule(routeNetNoArr[0]),
-            boardHandling.getInteractiveSettings().getPushEnabled(),
-            boardHandling.getInteractiveSettings().getTracePullTightRegionWidth(),
-            boardHandling.getInteractiveSettings().getTracePullTightAccuracy(),
+            boardHandling.getWorkspaceSettings().getPushEnabled(),
+            boardHandling.getWorkspaceSettings().getTracePullTightRegionWidth(),
+            boardHandling.getWorkspaceSettings().getTracePullTightAccuracy(),
             pickedItem,
             newInstance.routingTargetSet,
             routingBoard,
             isStitchRoute,
-            boardHandling.getInteractiveSettings().getAutomaticNeckdown(),
-            boardHandling.getInteractiveSettings().getViaSnapToSmdCenter(),
-            boardHandling.getInteractiveSettings().getHighlightRoutingObstacle());
+            boardHandling.getWorkspaceSettings().getAutomaticNeckdown(),
+            boardHandling.getWorkspaceSettings().getViaSnapToSmdCenter(),
+            boardHandling.getWorkspaceSettings().getHighlightRoutingObstacle());
     newInstance.observersActivated = !routingBoard.observersActive();
     if (newInstance.observersActivated) {
       routingBoard.startNotifyObservers();
@@ -178,10 +178,9 @@ public class RouteState extends InteractiveState {
      * Look for an existing trace ending at the specified location and pick it up in that case.
      */
     Item pickedItem =
-        routingBoard.pickNearestRoutingItem(
-            location, hdlg.getInteractiveSettings().getLayer(), null);
+        routingBoard.pickNearestRoutingItem(location, hdlg.getWorkspaceSettings().getLayer(), null);
     int layerCount = routingBoard.getLayerCount();
-    if (pickedItem == null && hdlg.getInteractiveSettings().getSelectOnAllVisibleLayers()) {
+    if (pickedItem == null && hdlg.getWorkspaceSettings().getSelectOnAllVisibleLayers()) {
       // Nothing found on preferred layer, try the other visible layers.
       // Prefer the outer layers.
       pickedItem = pickRoutingItem(location, 0, hdlg);
@@ -191,7 +190,7 @@ public class RouteState extends InteractiveState {
       // prefer signal layers
       if (pickedItem == null) {
         for (int i = 1; i < layerCount - 1; i++) {
-          if (routingBoard.layerStructure.arr[i].isSignal) {
+          if (routingBoard.layerStructure.layers[i].isSignal) {
             pickedItem = pickRoutingItem(location, i, hdlg);
             if (pickedItem != null) {
               break;
@@ -201,7 +200,7 @@ public class RouteState extends InteractiveState {
       }
       if (pickedItem == null) {
         for (int i = 1; i < layerCount - 1; i++) {
-          if (!routingBoard.layerStructure.arr[i].isSignal) {
+          if (!routingBoard.layerStructure.layers[i].isSignal) {
             pickedItem = pickRoutingItem(location, i, hdlg);
             if (pickedItem != null) {
               break;
@@ -213,13 +212,13 @@ public class RouteState extends InteractiveState {
     return pickedItem;
   }
 
-  private static Item pickRoutingItem(IntPoint location, int layerNo, GuiBoardManager hdlg) {
+  private static Item pickRoutingItem(IntPoint location, int layerIndex, GuiBoardManager hdlg) {
 
-    if (layerNo == hdlg.getInteractiveSettings().getLayer()
-        || (hdlg.graphicsContext.getLayerVisibility(layerNo) <= 0)) {
+    if (layerIndex == hdlg.getWorkspaceSettings().getLayer()
+        || (hdlg.graphicsContext.getLayerVisibility(layerIndex) <= 0)) {
       return null;
     }
-    Item pickedItem = hdlg.getRoutingBoard().pickNearestRoutingItem(location, layerNo, null);
+    Item pickedItem = hdlg.getRoutingBoard().pickNearestRoutingItem(location, layerIndex, null);
     if (pickedItem != null) {
       hdlg.setLayer(pickedItem.firstLayer());
     }
@@ -233,21 +232,21 @@ public class RouteState extends InteractiveState {
   static int[] getRouteNetNumbersAtTiePin(Pin pin, int layer) {
     Set<Integer> netNumberList = new TreeSet<>();
     for (int i = 0; i < pin.netCount(); i++) {
-      netNumberList.add(pin.getNetNo(i));
+      netNumberList.add(pin.getNetNumber(i));
     }
     Set<Item> contacts = pin.getNormalContacts();
-    for (Item currContact : contacts) {
-      if (currContact.firstLayer() <= layer && currContact.lastLayer() >= layer) {
-        for (int i = 0; i < currContact.netCount(); i++) {
-          netNumberList.remove(currContact.getNetNo(i));
+    for (Item currentContact : contacts) {
+      if (currentContact.firstLayer() <= layer && currentContact.lastLayer() >= layer) {
+        for (int i = 0; i < currentContact.netCount(); i++) {
+          netNumberList.remove(currentContact.getNetNumber(i));
         }
       }
     }
     int[] result = new int[netNumberList.size()];
-    int currInd = 0;
-    for (Integer currNetNumber : netNumberList) {
-      result[currInd] = currNetNumber;
-      ++currInd;
+    int currentInd = 0;
+    for (Integer currentNetNumber : netNumberList) {
+      result[currentInd] = currentNetNumber;
+      ++currentInd;
     }
     return result;
   }
@@ -255,7 +254,7 @@ public class RouteState extends InteractiveState {
   /** Action to be taken when a key is pressed (Shortcut). */
   @Override
   public InteractiveState keyTyped(char keyChar) {
-    InteractiveState currReturnState = this;
+    InteractiveState currentReturnState = this;
     if (Character.isDigit(keyChar)) {
       // Change to the signal layer selected by the numeric key.
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
@@ -272,29 +271,29 @@ public class RouteState extends InteractiveState {
     } else if (keyChar == '+') {
       // change to the next signal layer
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-      int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
+      int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
       do {
-        ++currentLayerNo;
-      } while (currentLayerNo < layerStructure.arr.length
-          && !layerStructure.arr[currentLayerNo].isSignal);
-      if (currentLayerNo < layerStructure.arr.length) {
-        changeLayerAction(currentLayerNo);
+        ++currentLayerIndex;
+      } while (currentLayerIndex < layerStructure.layers.length
+          && !layerStructure.layers[currentLayerIndex].isSignal);
+      if (currentLayerIndex < layerStructure.layers.length) {
+        changeLayerAction(currentLayerIndex);
       }
     } else if (keyChar == '-') {
       // change to the previous signal layer
       LayerStructure layerStructure = hdlg.getRoutingBoard().layerStructure;
-      int currentLayerNo = hdlg.getInteractiveSettings().getLayer();
+      int currentLayerIndex = hdlg.getWorkspaceSettings().getLayer();
       do {
-        --currentLayerNo;
-      } while (currentLayerNo >= 0 && !layerStructure.arr[currentLayerNo].isSignal);
-      if (currentLayerNo >= 0) {
-        changeLayerAction(currentLayerNo);
+        --currentLayerIndex;
+      } while (currentLayerIndex >= 0 && !layerStructure.layers[currentLayerIndex].isSignal);
+      if (currentLayerIndex >= 0) {
+        changeLayerAction(currentLayerIndex);
       }
 
     } else {
-      currReturnState = super.keyTyped(keyChar);
+      currentReturnState = super.keyTyped(keyChar);
     }
-    return currReturnState;
+    return currentReturnState;
   }
 
   /**
@@ -304,7 +303,8 @@ public class RouteState extends InteractiveState {
    */
   public InteractiveState addCorner(FloatPoint location) {
     boolean routeCompleted = route.nextCorner(location);
-    String layerString = hdlg.getRoutingBoard().layerStructure.arr[route.nearestTargetLayer()].name;
+    String layerString =
+        hdlg.getRoutingBoard().layerStructure.layers[route.nearestTargetLayer()].name;
     hdlg.screenMessages.setTargetLayer(layerString);
     if (routeCompleted) {
       if (this.observersActivated) {
@@ -316,8 +316,8 @@ public class RouteState extends InteractiveState {
     if (routeCompleted) {
       result = this.returnState;
       hdlg.screenMessages.clear();
-      for (int currNetNo : this.route.netNoArr) {
-        hdlg.updateRatsnest(currNetNo);
+      for (int currentNetNumber : this.route.netNumbers) {
+        hdlg.updateRatsnest(currentNetNumber);
       }
     } else {
       result = this;
@@ -332,15 +332,15 @@ public class RouteState extends InteractiveState {
     Trace tail =
         hdlg.getRoutingBoard()
             .getTraceTail(
-                route.getLastCorner(), hdlg.getInteractiveSettings().getLayer(), route.netNoArr);
+                route.getLastCorner(), hdlg.getWorkspaceSettings().getLayer(), route.netNumbers);
     if (tail != null) {
       Collection<Item> removeItems = tail.getConnectionItems(Item.StopConnectionOption.VIA);
-      if (hdlg.getInteractiveSettings().getPushEnabled()) {
+      if (hdlg.getWorkspaceSettings().getPushEnabled()) {
         hdlg.getRoutingBoard()
             .removeItemsAndPullTight(
                 removeItems,
-                hdlg.getInteractiveSettings().getTracePullTightRegionWidth(),
-                hdlg.getInteractiveSettings().getTracePullTightAccuracy());
+                hdlg.getWorkspaceSettings().getTracePullTightRegionWidth(),
+                hdlg.getWorkspaceSettings().getTracePullTightAccuracy());
       } else {
         hdlg.getRoutingBoard().removeItems(removeItems);
       }
@@ -350,8 +350,8 @@ public class RouteState extends InteractiveState {
       this.observersActivated = false;
     }
     hdlg.screenMessages.clear();
-    for (int currNetNo : this.route.netNoArr) {
-      hdlg.updateRatsnest(currNetNo);
+    for (int currentNetNumber : this.route.netNumbers) {
+      hdlg.updateRatsnest(currentNetNumber);
     }
     return this.returnState;
   }
@@ -361,7 +361,7 @@ public class RouteState extends InteractiveState {
     boolean result = true;
     if (newLayer >= 0 && newLayer < hdlg.getRoutingBoard().getLayerCount()) {
       if (this.route != null && !this.route.isLayerActive(newLayer)) {
-        String layerName = hdlg.getRoutingBoard().layerStructure.arr[newLayer].name;
+        String layerName = hdlg.getRoutingBoard().layerStructure.layers[newLayer].name;
         hdlg.screenMessages.setStatusMessage(
             tm.getText("layer_not_changed_inactive_net_message", layerName));
       }
@@ -369,15 +369,15 @@ public class RouteState extends InteractiveState {
       if (changeLayerSucceeded) {
         boolean connectedToPlane = false;
         // check, if the layer change resulted in a connection to a power plane.
-        int oldLayer = hdlg.getInteractiveSettings().getLayer();
+        int oldLayer = hdlg.getWorkspaceSettings().getLayer();
         ItemSelectionFilter selectionFilter =
             new ItemSelectionFilter(ItemSelectionFilter.SelectableChoices.VIAS);
         Collection<Item> pickedItems =
             hdlg.getRoutingBoard().pickItems(route.getLastCorner(), oldLayer, selectionFilter);
         Via newVia = null;
-        for (Item currVia : pickedItems) {
-          if (currVia.sharesNetNo(route.netNoArr)) {
-            newVia = (Via) currVia;
+        for (Item currentVia : pickedItems) {
+          if (currentVia.sharesNetNo(route.netNumbers)) {
+            newVia = (Via) currentVia;
             break;
           }
         }
@@ -392,9 +392,9 @@ public class RouteState extends InteractiveState {
             toLayer = oldLayer - 1;
           }
           Collection<Item> contacts = newVia.getNormalContacts();
-          for (Item currItem : contacts) {
-            if (currItem instanceof ConductionArea currArea) {
-              if (currArea.getLayer() >= fromLayer && currArea.getLayer() <= toLayer) {
+          for (Item currentItem : contacts) {
+            if (currentItem instanceof ConductionArea currentArea) {
+              if (currentArea.getLayer() >= fromLayer && currentArea.getLayer() <= toLayer) {
                 connectedToPlane = true;
                 break;
               }
@@ -404,12 +404,12 @@ public class RouteState extends InteractiveState {
 
         if (connectedToPlane) {
           hdlg.setEditorState(this.returnState);
-          for (int currNetNo : this.route.netNoArr) {
-            hdlg.updateRatsnest(currNetNo);
+          for (int currentNetNumber : this.route.netNumbers) {
+            hdlg.updateRatsnest(currentNetNumber);
           }
         } else {
           hdlg.setLayer(newLayer);
-          String layerName = hdlg.getRoutingBoard().layerStructure.arr[newLayer].name;
+          String layerName = hdlg.getRoutingBoard().layerStructure.layers[newLayer].name;
           hdlg.screenMessages.setStatusMessage(tm.getText("layer_changed_to_message", layerName));
           // make the current situation restorable by undo
           hdlg.getRoutingBoard().generateSnapshot();
@@ -420,7 +420,7 @@ public class RouteState extends InteractiveState {
           String layerName =
               hdlg.getRoutingBoard()
                   .layerStructure
-                  .arr[hdlg.getRoutingBoard().getShoveFailingLayer()]
+                  .layers[hdlg.getRoutingBoard().getShoveFailingLayer()]
                   .name;
           hdlg.screenMessages.setStatusMessage(
               tm.getText("layer_not_changed_obstacle_message", layerName));
@@ -444,7 +444,7 @@ public class RouteState extends InteractiveState {
   @Override
   public void displayDefaultMessage() {
     if (route != null) {
-      Net currentNet = hdlg.getRoutingBoard().rules.nets.get(route.netNoArr[0]);
+      Net currentNet = hdlg.getRoutingBoard().rules.nets.get(route.netNumbers[0]);
       hdlg.screenMessages.setStatusMessage(tm.getText("routing_net_message", currentNet.name));
     }
   }

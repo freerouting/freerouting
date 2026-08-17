@@ -1,6 +1,6 @@
 package app.freerouting.board;
 
-import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.io.CoordinateTransform;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -25,7 +25,7 @@ public class Communication implements Serializable {
   public final int resolution;
 
   public final SpecctraParserInfo specctraParserInfo;
-  public final IdentificationNumberGenerator idNoGenerator;
+  public final IdGenerator idGenerator;
   public transient BoardObservers observers;
 
   /** Creates a new instance of BoardCommunication. */
@@ -34,13 +34,13 @@ public class Communication implements Serializable {
       int resolution,
       SpecctraParserInfo specctraParserInfo,
       CoordinateTransform coordinateTransform,
-      IdentificationNumberGenerator idNoGenerator,
+      IdGenerator idGenerator,
       BoardObservers observers) {
     this.coordinateTransform = coordinateTransform;
     this.unit = unit;
     this.resolution = resolution;
     this.specctraParserInfo = specctraParserInfo;
-    this.idNoGenerator = idNoGenerator;
+    this.idGenerator = idGenerator;
     this.observers = observers;
   }
 
@@ -51,7 +51,7 @@ public class Communication implements Serializable {
         1,
         new SpecctraParserInfo("\"", null, null, null, null, false),
         new CoordinateTransform(1, 0, 0),
-        new ItemIdentificationNumberGenerator(),
+        new ItemIdGenerator(),
         new BoardObserverAdaptor());
   }
 

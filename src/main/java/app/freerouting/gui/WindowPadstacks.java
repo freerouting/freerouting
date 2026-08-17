@@ -3,8 +3,8 @@ package app.freerouting.gui;
 import app.freerouting.board.DrillItem;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.core.Padstack;
-import app.freerouting.core.Padstacks;
+import app.freerouting.core.library.Padstack;
+import app.freerouting.core.library.Padstacks;
 import app.freerouting.datastructures.UndoableObjects;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +20,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
   /** Creates a new instance of PadstacksWindow. */
   public WindowPadstacks(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("padstacks"));
   }
@@ -55,15 +55,15 @@ public class WindowPadstacks extends WindowObjectListWithFilter {
     Set<Item> boardInstances = new TreeSet<>();
     Iterator<UndoableObjects.UndoableObjectNode> it = routingBoard.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currObject = routingBoard.itemList.readObject(it);
-      if (currObject == null) {
+      UndoableObjects.Storable currentObject = routingBoard.itemList.readObject(it);
+      if (currentObject == null) {
         break;
       }
-      if (currObject instanceof DrillItem item) {
-        Padstack currPadstack = item.getPadstack();
-        for (Padstack currSelectedPadstack : padstackList) {
-          if (currPadstack == currSelectedPadstack) {
-            boardInstances.add((Item) currObject);
+      if (currentObject instanceof DrillItem item) {
+        Padstack currentPadstack = item.getPadstack();
+        for (Padstack currentSelectedPadstack : padstackList) {
+          if (currentPadstack == currentSelectedPadstack) {
+            boardInstances.add((Item) currentObject);
             break;
           }
         }

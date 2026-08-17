@@ -1,6 +1,6 @@
 package app.freerouting.gui;
 
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.util.TextManager;
 import java.awt.Dimension;
 import javax.swing.JButton;
@@ -17,7 +17,7 @@ class BoardToolbarInspectedItem extends JToolBar {
   BoardToolbarInspectedItem(BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
 
-    this.tm = new TextManager(this.getClass(), boardFrame.get_locale());
+    this.tm = new TextManager(this.getClass(), boardFrame.getLocale());
 
     JButton toolbarCancelButton = new JButton();
     toolbarCancelButton.setText(tm.getText("cancel"));

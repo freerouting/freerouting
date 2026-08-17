@@ -1,6 +1,6 @@
 package app.freerouting.board;
 
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -43,13 +43,13 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   /** DrillItem. */
   protected DrillItem(
       Point center,
-      int[] netNoArr,
-      int clearanceType,
-      int idNo,
-      int groupNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int id,
+      int groupId,
       FixedState fixedState,
       BasicBoard board) {
-    super(netNoArr, clearanceType, idNo, groupNo, fixedState, board);
+    super(netNumbers, clearanceClassIndex, id, groupId, fixedState, board);
     this.center = center;
   }
 
@@ -93,12 +93,14 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     // remember the contact situation of this drillitem to traces on each layer
     Set<TraceInfo> contactTraceInfo = new TreeSet<>();
     Collection<Item> contacts = this.getNormalContacts();
-    for (Item currContact : contacts) {
-      if (currContact instanceof Trace currTrace) {
-        TraceInfo currTraceInfo =
+    for (Item currentContact : contacts) {
+      if (currentContact instanceof Trace currentTrace) {
+        TraceInfo currentTraceInfo =
             new TraceInfo(
-                currTrace.getLayer(), currTrace.getHalfWidth(), currTrace.clearanceClassNo());
-        contactTraceInfo.add(currTraceInfo);
+                currentTrace.getLayer(),
+                currentTrace.getHalfWidth(),
+                currentTrace.clearanceClassIndex());
+        contactTraceInfo.add(currentTraceInfo);
       }
     }
     super.moveBy(vector);
@@ -126,13 +128,13 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     for (int i = 0; i < connectPoints.length; i++) {
       connectPoints[i] = it3.next();
     }
-    for (TraceInfo currTraceInfo : contactTraceInfo) {
+    for (TraceInfo currentTraceInfo : contactTraceInfo) {
       board.insertTrace(
           connectPoints,
-          currTraceInfo.layer,
-          currTraceInfo.halfWidth,
-          this.netNoArr,
-          currTraceInfo.clearanceType,
+          currentTraceInfo.layer,
+          currentTraceInfo.halfWidth,
+          this.netNumbers,
+          currentTraceInfo.clearanceClassIndex,
           FixedState.UNFIXED);
     }
   }
@@ -184,9 +186,9 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
   public IntBox boundingBox() {
     IntBox result = IntBox.EMPTY;
     for (int i = 0; i < tileShapeCount(); i++) {
-      Shape currShape = this.getShape(i);
-      if (currShape != null) {
-        result = result.union(currShape.boundingBox());
+      Shape currentShape = this.getShape(i);
+      if (currentShape != null) {
+        result = result.union(currentShape.boundingBox());
       }
     }
     return result;
@@ -210,9 +212,9 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     double result = Double.MAX_VALUE;
     FloatPoint c = getCenter().toFloat();
     for (int i = 0; i < tileShapeCount(); i++) {
-      Shape currShape = getShape(i);
-      if (currShape != null) {
-        result = Math.min(result, currShape.borderDistance(c));
+      Shape currentShape = getShape(i);
+      if (currentShape != null) {
+        result = Math.min(result, currentShape.borderDistance(c));
       }
     }
     return result;
@@ -235,7 +237,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     int fromLayer = firstLayer();
     int toLayer = lastLayer();
     if (layer < fromLayer || layer > toLayer) {
-      FRLogger.warn("DrillItem.get_tree_shape_on_layer: p_layer out of range");
+      FRLogger.warn("DrillItem.get_tree_shape_on_layer: layer out of range");
       return null;
     }
     return getTreeShape(tree, layer - fromLayer);
@@ -246,7 +248,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     int fromLayer = firstLayer();
     int toLayer = lastLayer();
     if (layer < fromLayer || layer > toLayer) {
-      FRLogger.warn("DrillItem.get_tile_shape_on_layer: p_layer out of range");
+      FRLogger.warn("DrillItem.get_tile_shape_on_layer: layer out of range");
       return null;
     }
     return getTileShape(layer - fromLayer);
@@ -257,7 +259,7 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     int fromLayer = firstLayer();
     int toLayer = lastLayer();
     if (layer < fromLayer || layer > toLayer) {
-      FRLogger.warn("DrillItem.get_shape_on_layer: p_layer out of range");
+      FRLogger.warn("DrillItem.get_shape_on_layer: layer out of range");
       return null;
     }
     return getShape(layer - fromLayer);
@@ -269,27 +271,27 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
     TileShape searchShape = TileShape.getInstance(drillCenter);
     Set<SearchTreeObject> overlaps = board.overlappingObjects(searchShape, -1);
     Set<Item> result = new TreeSet<>();
-    for (SearchTreeObject currOb : overlaps) {
-      if (!(currOb instanceof Item currItem)) {
+    for (SearchTreeObject currentObject : overlaps) {
+      if (!(currentObject instanceof Item currentItem)) {
         continue;
       }
-      if (currItem != this && currItem.sharesNet(this) && currItem.sharesLayer(this)) {
-        if (currItem instanceof Trace currTrace) {
+      if (currentItem != this && currentItem.sharesNet(this) && currentItem.sharesLayer(this)) {
+        if (currentItem instanceof Trace currentTrace) {
           // Use exact matching to match trace endpoints to pin/via center.
           // Tolerance-based matching causes false cycle detection during trace normalization
           // when nearby trace endpoints (but not at pin center) are incorrectly treated as
           // contacts.
-          if (drillCenter.equals(currTrace.firstCorner())
-              || drillCenter.equals(currTrace.lastCorner())) {
-            result.add(currItem);
+          if (drillCenter.equals(currentTrace.firstCorner())
+              || drillCenter.equals(currentTrace.lastCorner())) {
+            result.add(currentItem);
           }
-        } else if (currItem instanceof DrillItem currDrillItem) {
-          if (drillCenter.equals(currDrillItem.getCenter())) {
-            result.add(currItem);
+        } else if (currentItem instanceof DrillItem currentDrillItem) {
+          if (drillCenter.equals(currentDrillItem.getCenter())) {
+            result.add(currentItem);
           }
-        } else if (currItem instanceof ConductionArea currArea) {
-          if (currArea.getArea().contains(drillCenter)) {
-            result.add(currItem);
+        } else if (currentItem instanceof ConductionArea currentArea) {
+          if (currentArea.getArea().contains(drillCenter)) {
+            result.add(currentItem);
           }
         }
       }
@@ -364,15 +366,15 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
       double minWidth = Integer.MAX_VALUE;
       int beginLayer = this.firstLayer();
       int endLayer = this.lastLayer();
-      for (int currLayer = beginLayer; currLayer <= endLayer; currLayer++) {
-        if (this.board != null && !this.board.layerStructure.arr[currLayer].isSignal) {
+      for (int currentLayer = beginLayer; currentLayer <= endLayer; currentLayer++) {
+        if (this.board != null && !this.board.layerStructure.layers[currentLayer].isSignal) {
           continue;
         }
-        Shape currShape = this.getShapeOnLayer(currLayer);
-        if (currShape != null) {
-          IntBox currBoundingBox = currShape.boundingBox();
-          minWidth = Math.min(minWidth, currBoundingBox.width());
-          minWidth = Math.min(minWidth, currBoundingBox.height());
+        Shape currentShape = this.getShapeOnLayer(currentLayer);
+        if (currentShape != null) {
+          IntBox currentBoundingBox = currentShape.boundingBox();
+          minWidth = Math.min(minWidth, currentBoundingBox.width());
+          minWidth = Math.min(minWidth, currentBoundingBox.height());
         }
       }
       this.precalculatedMinWidth = minWidth;
@@ -392,12 +394,12 @@ public abstract class DrillItem extends Item implements Connectable, Serializabl
 
     int layer;
     int halfWidth;
-    int clearanceType;
+    int clearanceClassIndex;
 
-    TraceInfo(int layer, int halfWidth, int clearanceType) {
+    TraceInfo(int layer, int halfWidth, int clearanceClassIndex) {
       this.layer = layer;
       this.halfWidth = halfWidth;
-      this.clearanceType = clearanceType;
+      this.clearanceClassIndex = clearanceClassIndex;
     }
 
     /** Implements the comparable interface. */

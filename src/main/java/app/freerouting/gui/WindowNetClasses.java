@@ -1,14 +1,14 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
+import app.freerouting.board.ItemInfoPrinter.Printable;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.board.ObjectInfoPanel.Printable;
 import app.freerouting.board.RoutingBoard;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
@@ -67,7 +67,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
   /** Creates a new instance of NetClassesWindow. */
   public WindowNetClasses(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -180,10 +180,10 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     // Dispose all subwindows because they may be no longer up-to-date.
     Iterator<JFrame> it = this.subwindows.iterator();
     while (it.hasNext()) {
-      JFrame currSubwindow = it.next();
-      if (currSubwindow != null) {
+      JFrame currentSubwindow = it.next();
+      if (currentSubwindow != null) {
 
-        currSubwindow.dispose();
+        currentSubwindow.dispose();
       }
       it.remove();
     }
@@ -191,9 +191,9 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
-    for (JFrame currSubwindow : this.subwindows) {
-      if (currSubwindow != null) {
-        currSubwindow.dispose();
+    for (JFrame currentSubwindow : this.subwindows) {
+      if (currentSubwindow != null) {
+        currentSubwindow.dispose();
       }
     }
     super.dispose();
@@ -212,7 +212,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     this.centerPanel.add(scrollPane, BorderLayout.CENTER);
 
     // add message for german localisation bug
-    if ("de".equalsIgnoreCase(boardFrame.get_locale().getLanguage())) {
+    if ("de".equalsIgnoreCase(boardFrame.getLocale().getLanguage())) {
       // Due to a Java system bug, the decimal comma in this table must be entered as a dot.
       JLabel bugLabel =
           new JLabel(
@@ -241,8 +241,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     for (int i = 0; i < routingBoard.rules.clearanceMatrix.getClassCount(); i++) {
       clClassComboBox.addItem(routingBoard.rules.clearanceMatrix.getName(i));
     }
-    for (ViaRule currRule : routingBoard.rules.viaRules) {
-      viaRuleComboBox.addItem(currRule.name);
+    for (ViaRule currentRule : routingBoard.rules.viaRules) {
+      viaRuleComboBox.addItem(currentRule.name);
     }
   }
 
@@ -266,12 +266,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     List<Integer> allSignalLayers = new ArrayList<>();
     List<String> activeLayerNames = new ArrayList<>();
 
-    for (int i = 0; i < ls.arr.length; i++) {
-      if (ls.arr[i].isSignal) {
+    for (int i = 0; i < ls.layers.length; i++) {
+      if (ls.layers[i].isSignal) {
         allSignalLayers.add(i);
         if (netClass.isActiveRoutingLayer(i)) {
           activeSignalLayers.add(i);
-          activeLayerNames.add(ls.arr[i].name);
+          activeLayerNames.add(ls.layers[i].name);
         }
       }
     }
@@ -309,8 +309,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     Integer commonHalfWidth = null;
     boolean multiple = false;
 
-    for (int i = 0; i < ls.arr.length; i++) {
-      if (ls.arr[i].isSignal && netClass.isActiveRoutingLayer(i)) {
+    for (int i = 0; i < ls.layers.length; i++) {
+      if (ls.layers[i].isSignal && netClass.isActiveRoutingLayer(i)) {
         int width = netClass.getTraceHalfWidth(i);
         if (commonHalfWidth == null) {
           commonHalfWidth = width;
@@ -370,7 +370,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
       NetClass netRule = boardRules.netClasses.get((String) netClassName);
       // Check, if netRule is used in a net of the net list
-      for (int i = 1; i < boardRules.nets.maxNetNo(); i++) {
+      for (int i = 1; i < boardRules.nets.maxNetNumber(); i++) {
         Net currentNet = boardRules.nets.get(i);
         if (currentNet.getNetClass() == netRule) {
           boardFrame.screenMessages.setStatusMessage(
@@ -412,15 +412,15 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       Nets nets = routingBoard.rules.nets;
       Set<Item> selectedItems = new TreeSet<>();
       Collection<Item> boardItems = routingBoard.getItems();
-      for (Item currItem : boardItems) {
+      for (Item currentItem : boardItems) {
         boolean itemMatches = false;
-        for (int i = 0; i < currItem.netCount(); i++) {
-          NetClass currNetClass = nets.get(currItem.getNetNo(i)).getNetClass();
-          if (currNetClass == null) {
+        for (int i = 0; i < currentItem.netCount(); i++) {
+          NetClass currentNetClass = nets.get(currentItem.getNetNumber(i)).getNetClass();
+          if (currentNetClass == null) {
             continue;
           }
           for (int j = 0; j < selectedClassArr.length; j++) {
-            if (currNetClass == selectedClassArr[i]) {
+            if (currentNetClass == selectedClassArr[i]) {
               itemMatches = true;
               break;
             }
@@ -430,7 +430,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           }
         }
         if (itemMatches) {
-          selectedItems.add(currItem);
+          selectedItems.add(currentItem);
         }
       }
       boardFrame.boardPanel.boardHandling.selectItems(selectedItems);
@@ -454,12 +454,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
             boardRules.netClasses.get(
                 (String) table.getValueAt(selectedRows[i], ColumnName.NAME.ordinal()));
       }
-      int maxNetNo = boardRules.nets.maxNetNo();
+      int maxNetNo = boardRules.nets.maxNetNumber();
       for (int i = 1; i <= maxNetNo; i++) {
         boardHandling.setIncompletesFilter(i, true);
-        NetClass currNetClass = boardRules.nets.get(i).getNetClass();
+        NetClass currentNetClass = boardRules.nets.get(i).getNetClass();
         for (int j = 0; j < selectedClassArr.length; j++) {
-          if (currNetClass == selectedClassArr[j]) {
+          if (currentNetClass == selectedClassArr[j]) {
             boardHandling.setIncompletesFilter(i, false);
             break;
           }
@@ -486,12 +486,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
                 (String) table.getValueAt(selectedRows[i], ColumnName.NAME.ordinal()));
       }
       Collection<Printable> containedNets = new LinkedList<>();
-      int maxNetNo = boardRules.nets.maxNetNo();
+      int maxNetNo = boardRules.nets.maxNetNumber();
       for (int i = 1; i <= maxNetNo; i++) {
         Net currentNet = boardRules.nets.get(i);
-        NetClass currNetClass = currentNet.getNetClass();
+        NetClass currentNetClass = currentNet.getNetClass();
         for (int j = 0; j < selectedClassArr.length; j++) {
-          if (currNetClass == selectedClassArr[j]) {
+          if (currentNetClass == selectedClassArr[j]) {
             containedNets.add(currentNet);
             break;
           }
@@ -567,33 +567,33 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         this.data[i] = new Object[ColumnName.values().length];
       }
       for (int i = 0; i < data.length; i++) {
-        NetClass currNetClass = boardRules.netClasses.get(i);
-        this.data[i][ColumnName.NAME.ordinal()] = currNetClass.getName();
-        if (currNetClass.getViaRule() != null) {
-          this.data[i][ColumnName.VIA_RULE.ordinal()] = currNetClass.getViaRule().name;
+        NetClass currentNetClass = boardRules.netClasses.get(i);
+        this.data[i][ColumnName.NAME.ordinal()] = currentNetClass.getName();
+        if (currentNetClass.getViaRule() != null) {
+          this.data[i][ColumnName.VIA_RULE.ordinal()] = currentNetClass.getViaRule().name;
         }
         this.data[i][ColumnName.SHOVE_FIXED.ordinal()] =
-            currNetClass.isShoveFixed() || !currNetClass.getPullTight();
+            currentNetClass.isShoveFixed() || !currentNetClass.getPullTight();
         this.data[i][ColumnName.CYCLES_WITH_AREAS.ordinal()] =
-            currNetClass.getIgnoreCyclesWithAreas();
+            currentNetClass.getIgnoreCyclesWithAreas();
         double minTraceLength =
             boardFrame.boardPanel.boardHandling.coordinateTransform.boardToUser(
-                currNetClass.getMinimumTraceLength());
+                currentNetClass.getMinimumTraceLength());
         if (minTraceLength <= 0) {
           minTraceLength = 0;
         }
         this.data[i][ColumnName.MIN_TRACE_LENGTH.ordinal()] = (float) minTraceLength;
         double maxTraceLength =
             boardFrame.boardPanel.boardHandling.coordinateTransform.boardToUser(
-                currNetClass.getMaximumTraceLength());
+                currentNetClass.getMaximumTraceLength());
         if (maxTraceLength <= 0) {
           maxTraceLength = -1;
         }
         this.data[i][ColumnName.MAX_TRACE_LENGTH.ordinal()] = (float) maxTraceLength;
         this.data[i][ColumnName.IGNORED_BY_AUTOROUTER.ordinal()] =
-            currNetClass.isIgnoredByAutorouter;
+            currentNetClass.isIgnoredByAutorouter;
         this.data[i][ColumnName.CLEARANCE_CLASS.ordinal()] =
-            boardRules.clearanceMatrix.getName(currNetClass.getTraceClearanceClass());
+            boardRules.clearanceMatrix.getName(currentNetClass.getTraceClearanceClass());
       }
     }
 
@@ -614,13 +614,13 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
     @Override
     public Object getValueAt(int row, int col) {
-      NetClass currNetClass =
+      NetClass currentNetClass =
           boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.netClasses.get(row);
       if (col == ColumnName.ON_LAYER.ordinal()) {
-        return getLayerSummary(currNetClass);
+        return getLayerSummary(currentNetClass);
       }
       if (col == ColumnName.TRACE_WIDTH.ordinal()) {
-        return getTraceWidthSummary(currNetClass);
+        return getTraceWidthSummary(currentNetClass);
       }
       return data[row][col];
     }
@@ -675,52 +675,52 @@ public class WindowNetClasses extends BoardSavableSubWindow {
         netRule.setIgnoreCyclesWithAreas(ignoreCyclesWithAreas);
       } else if (col == ColumnName.MIN_TRACE_LENGTH.ordinal()) {
 
-        float currValue = 0F;
+        float currentValue = 0F;
         if (value instanceof Float float1) {
-          currValue = float1;
+          currentValue = float1;
         } else if (value instanceof String string) {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
           try {
-            currValue = Float.parseFloat(string);
+            currentValue = Float.parseFloat(string);
           } catch (Exception _) {
-            currValue = 0f;
+            currentValue = 0f;
           }
-          value = String.valueOf(currValue);
+          value = String.valueOf(currentValue);
         }
-        if (currValue <= 0) {
-          currValue = (float) 0;
-          value = currValue;
+        if (currentValue <= 0) {
+          currentValue = (float) 0;
+          value = currentValue;
         }
         double minTraceLength =
             Math.round(
-                boardFrame.boardPanel.boardHandling.coordinateTransform.userToBoard(currValue));
+                boardFrame.boardPanel.boardHandling.coordinateTransform.userToBoard(currentValue));
         netRule.setMinimumTraceLength(minTraceLength);
         boardFrame.boardPanel.boardHandling.recalculateLengthViolations();
       } else if (col == ColumnName.MAX_TRACE_LENGTH.ordinal()) {
-        float currValue = 0F;
+        float currentValue = 0F;
         if (value instanceof Float float1) {
-          currValue = float1;
+          currentValue = float1;
         } else if (value instanceof String string) {
           // Workaround because of a localisation Bug in Java
           // The numbers are always displayed in the English Format.
 
           try {
-            currValue = Float.parseFloat(string);
+            currentValue = Float.parseFloat(string);
           } catch (Exception _) {
-            currValue = 0f;
+            currentValue = 0f;
           }
-          value = String.valueOf(currValue);
+          value = String.valueOf(currentValue);
         }
-        if (currValue <= 0) {
-          currValue = (float) 0;
-          value = currValue - 1;
+        if (currentValue <= 0) {
+          currentValue = (float) 0;
+          value = currentValue - 1;
         }
 
         double maxTraceLength =
             Math.round(
-                boardFrame.boardPanel.boardHandling.coordinateTransform.userToBoard(currValue));
+                boardFrame.boardPanel.boardHandling.coordinateTransform.userToBoard(currentValue));
         netRule.setMaximumTraceLength(maxTraceLength);
         boardFrame.boardPanel.boardHandling.recalculateLengthViolations();
       } else if (col == ColumnName.IGNORED_BY_AUTOROUTER.ordinal()) {
@@ -763,12 +763,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       if (currentEntry == null) {
         return Object.class;
       }
-      Class<?> currClass = currentEntry.getClass();
+      Class<?> currentClass = currentEntry.getClass();
       // changed because of a localisation bug in Java
       if (currentEntry instanceof Float) {
-        currClass = String.class;
+        currentClass = String.class;
       }
-      return currClass;
+      return currentClass;
     }
   }
 
@@ -804,12 +804,12 @@ public class WindowNetClasses extends BoardSavableSubWindow {
 
       JPanel checkGridPanel = new JPanel(new GridLayout(0, 2, 15, 8));
       checkGridPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-      checkboxes = new JCheckBox[ls.arr.length];
+      checkboxes = new JCheckBox[ls.layers.length];
 
-      for (int i = 0; i < ls.arr.length; i++) {
-        if (ls.arr[i].isSignal) {
+      for (int i = 0; i < ls.layers.length; i++) {
+        if (ls.layers[i].isSignal) {
           allSignalLayers.add(i);
-          checkboxes[i] = new JCheckBox(ls.arr[i].name);
+          checkboxes[i] = new JCheckBox(ls.layers[i].name);
           if (netClass.isActiveRoutingLayer(i)) {
             checkboxes[i].setSelected(true);
           }

@@ -2,8 +2,8 @@ package app.freerouting.gui;
 
 import static app.freerouting.Freerouting.globalSettings;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.settings.GlobalSettings;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -46,7 +46,7 @@ public final class WindowUserSettings extends WindowBase {
   private WindowUserSettings(BoardFrame boardFrame) {
     super(480, 355);
 
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setTitle(tm.getText("title"));

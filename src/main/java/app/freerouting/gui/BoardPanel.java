@@ -2,10 +2,10 @@ package app.freerouting.gui;
 
 import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.interactive.InteractiveStateController;
-import app.freerouting.gui.session.EdtExecutor;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.GuiSessionPortAdapter;
-import app.freerouting.gui.session.ScreenMessages;
+import app.freerouting.gui.workspace.EdtExecutor;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.ScreenMessages;
+import app.freerouting.gui.workspace.WorkspacePortAdapter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.SettingsMerger;
@@ -165,6 +165,9 @@ public class BoardPanel extends JPanel {
    */
   private final GlobalSettings globalSettings;
 
+  /** Stable session port shared across manager replacement and asynchronous loads. */
+  private final WorkspacePortAdapter sessionPort;
+
   /**
    * Popup menu displayed during interactive construction with insert/cancel options.
    *
@@ -222,16 +225,6 @@ public class BoardPanel extends JPanel {
   public JPopupMenu popupMenuSelect;
 
   /**
-   * Drop target listener for handling drag-and-drop file operations.
-   *
-   * @see BoardPanelDropTargetListener
-   */
-  private BoardPanelDropTargetListener dropTargetListener;
-
-  /** Non-null while the first board paint after load is in progress. */
-  private String renderingOverlayMessage;
-
-  /**
    * Board handling instance managing interactive board operations.
    *
    * <p>Handles:
@@ -247,15 +240,22 @@ public class BoardPanel extends JPanel {
    */
   GuiBoardManager boardHandling;
 
-  /** Stable session port shared across manager replacement and asynchronous loads. */
-  private final GuiSessionPortAdapter sessionPort;
-
   /**
    * Screen location where the right mouse button was last clicked.
    *
    * <p>Used for operations that need to reference the popup menu trigger location.
    */
   Point2D rightButtonClickLocation;
+
+  /**
+   * Drop target listener for handling drag-and-drop file operations.
+   *
+   * @see BoardPanelDropTargetListener
+   */
+  private BoardPanelDropTargetListener dropTargetListener;
+
+  /** Non-null while the first board paint after load is in progress. */
+  private String renderingOverlayMessage;
 
   /**
    * AWT Robot for programmatically moving the mouse cursor.
@@ -335,7 +335,7 @@ public class BoardPanel extends JPanel {
     this.globalSettings = globalSettings;
     this.scrollPane = boardFrame.scrollPane;
     this.sessionPort =
-        new GuiSessionPortAdapter(
+        new WorkspacePortAdapter(
             () -> this.boardHandling, () -> this.boardFrame, EdtExecutor.swing());
     defaultInit(globalSettings, routingJob, settingsMerger);
   }
@@ -557,20 +557,20 @@ public class BoardPanel extends JPanel {
     if (evt.getButton() == 1) {
       boardHandling.leftButtonClicked(evt.getPoint());
     } else if (evt.getButton() == 3) {
-      JPopupMenu currMenu = boardHandling.getCurrentPopupMenu();
-      if (currMenu != null) {
-        int currX = evt.getX();
-        int currY = evt.getY();
+      JPopupMenu currentMenu = boardHandling.getCurrentPopupMenu();
+      if (currentMenu != null) {
+        int currentX = evt.getX();
+        int currentY = evt.getY();
         if (false) {
-          int dx = currMenu.getWidth();
+          int dx = currentMenu.getWidth();
           if (dx <= 0) {
             // force the width to be calculated
-            currMenu.show(this, currX, currY);
-            dx = currMenu.getWidth();
+            currentMenu.show(this, currentX, currentY);
+            dx = currentMenu.getWidth();
           }
-          currX -= dx;
+          currentX -= dx;
         }
-        currMenu.show(this, currX, currY);
+        currentMenu.show(this, currentX, currentY);
       }
       rightButtonClickLocation = evt.getPoint();
     }
@@ -809,7 +809,7 @@ public class BoardPanel extends JPanel {
    * <ol>
    *   <li>Scales the panel size by the zoom factor
    *   <li>Adjusts the coordinate transform in the graphics context
-   *   <li>Repositions the viewport to keep p_location fixed on screen
+   *   <li>Repositions the viewport to keep location fixed on screen
    *   <li>Returns the adjusted cursor position after zoom
    * </ol>
    *
@@ -882,7 +882,7 @@ public class BoardPanel extends JPanel {
   /**
    * Sets the viewport center to the specified point with boundary adjustments.
    *
-   * <p>Attempts to center the viewport on p_point, but adjusts if the point is near the panel edges
+   * <p>Attempts to center the viewport on point, but adjusts if the point is near the panel edges
    * to keep the viewport within valid bounds. Returns the adjustment vector representing how much
    * the requested center had to be shifted.
    *

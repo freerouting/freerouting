@@ -2,7 +2,7 @@ package app.freerouting.autoroute;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import app.freerouting.board.ItemIdentificationNumberGenerator;
+import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.fixtures.RoutingFixtureTest;
 import app.freerouting.management.HeadlessBoardManager;
@@ -15,8 +15,7 @@ class RoutableLayersSafetyCheckTest extends RoutingFixtureTest {
     RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn");
     HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
     try {
-      boardManager.loadFromSpecctraDsn(
-          job.input.getData(), null, new ItemIdentificationNumberGenerator());
+      boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
     } catch (Exception e) {
       throw new RuntimeException("Failed to load DSN board", e);
     }
@@ -36,8 +35,7 @@ class RoutableLayersSafetyCheckTest extends RoutingFixtureTest {
     RoutingJob job = getRoutingJob("Issue508-DAC2020_bm01.dsn");
     HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
     try {
-      boardManager.loadFromSpecctraDsn(
-          job.input.getData(), null, new ItemIdentificationNumberGenerator());
+      boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
     } catch (Exception e) {
       throw new RuntimeException("Failed to load DSN board", e);
     }

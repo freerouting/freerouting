@@ -1,14 +1,14 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BasicBoard;
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Layer;
 import app.freerouting.board.LayerStructure;
-import app.freerouting.core.BoardLibrary;
-import app.freerouting.core.Padstack;
+import app.freerouting.core.library.BoardLibrary;
+import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaInfos;
@@ -53,7 +53,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
   /** Creates a new instance of ViaWindow. */
   public WindowVia(BoardFrame boardFrame) {
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
 
@@ -163,8 +163,8 @@ public class WindowVia extends BoardSavableSubWindow {
 
     // fill the list
     BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
-    for (ViaRule currRule : boardRules.viaRules) {
-      this.ruleListModel.addElement(currRule);
+    for (ViaRule currentRule : boardRules.viaRules) {
+      this.ruleListModel.addElement(currentRule);
     }
 
     // Add buttons to edit the via rules.
@@ -218,17 +218,17 @@ public class WindowVia extends BoardSavableSubWindow {
     // reinsert the elements in the rule list
     this.ruleListModel.removeAllElements();
     BoardRules boardRules = boardFrame.boardPanel.boardHandling.getRoutingBoard().rules;
-    for (ViaRule currRule : boardRules.viaRules) {
-      this.ruleListModel.addElement(currRule);
+    for (ViaRule currentRule : boardRules.viaRules) {
+      this.ruleListModel.addElement(currentRule);
     }
 
     // Dispose all subwindows because they may be no longer up-to-date.
     Iterator<JFrame> it = this.subwindows.iterator();
     while (it.hasNext()) {
-      JFrame currSubwindow = it.next();
-      if (currSubwindow != null) {
+      JFrame currentSubwindow = it.next();
+      if (currentSubwindow != null) {
 
-        currSubwindow.dispose();
+        currentSubwindow.dispose();
       }
       it.remove();
     }
@@ -236,9 +236,9 @@ public class WindowVia extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
-    for (JFrame currSubwindow : this.subwindows) {
-      if (currSubwindow != null) {
-        currSubwindow.dispose();
+    for (JFrame currentSubwindow : this.subwindows) {
+      if (currentSubwindow != null) {
+        currentSubwindow.dispose();
       }
     }
     if (boardFrame.editViasWindow != null) {
@@ -274,7 +274,7 @@ public class WindowVia extends BoardSavableSubWindow {
     @Override
     public void actionPerformed(ActionEvent evt) {
       BasicBoard pcb = boardFrame.boardPanel.boardHandling.getRoutingBoard();
-      if (pcb.layerStructure.arr.length <= 1) {
+      if (pcb.layerStructure.layers.length <= 1) {
         return;
       }
       String padstackName = JOptionPane.showInputDialog(tm.getText("prompt_new_padstack_name"));
@@ -288,14 +288,14 @@ public class WindowVia extends BoardSavableSubWindow {
           return;
         }
       }
-      Layer startLayer = pcb.layerStructure.arr[0];
-      Layer endLayer = pcb.layerStructure.arr[pcb.layerStructure.arr.length - 1];
+      Layer startLayer = pcb.layerStructure.layers[0];
+      Layer endLayer = pcb.layerStructure.layers[pcb.layerStructure.layers.length - 1];
       boolean layersSelected = false;
-      if (pcb.layerStructure.arr.length == 2) {
+      if (pcb.layerStructure.layers.length == 2) {
         layersSelected = true;
       } else {
         Layer[] possibleStartLayers =
-            Arrays.copyOf(pcb.layerStructure.arr, pcb.layerStructure.arr.length - 1);
+            Arrays.copyOf(pcb.layerStructure.layers, pcb.layerStructure.layers.length - 1);
         Object selectedValue =
             JOptionPane.showInputDialog(
                 null,
@@ -317,7 +317,9 @@ public class WindowVia extends BoardSavableSubWindow {
         int firstPossibleEndLayerNo = pcb.layerStructure.getNo(startLayer) + 1;
         Layer[] possibleEndLayers =
             Arrays.copyOfRange(
-                pcb.layerStructure.arr, firstPossibleEndLayerNo, pcb.layerStructure.arr.length);
+                pcb.layerStructure.layers,
+                firstPossibleEndLayerNo,
+                pcb.layerStructure.layers.length);
         Object selectedValue =
             JOptionPane.showInputDialog(
                 null,
@@ -336,7 +338,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
       JPanel defaultRadiusInputPanel = new JPanel();
       defaultRadiusInputPanel.add(new JLabel(tm.getText("prompt_default_radius")));
-      NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+      NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
       numberFormat.setMaximumFractionDigits(7);
       JFormattedTextField defaultRadiusInputField = new JFormattedTextField(numberFormat);
       defaultRadiusInputField.setColumns(7);
@@ -355,14 +357,14 @@ public class WindowVia extends BoardSavableSubWindow {
           new PadstackInputPanel(startLayer, endLayer, defaultRadius);
       JOptionPane.showMessageDialog(
           boardFrame, padstackInputPanel, tm.getText("adjust_circles"), JOptionPane.PLAIN_MESSAGE);
-      int fromLayerNo = pcb.layerStructure.getNo(startLayer);
-      int toLayerNo = pcb.layerStructure.getNo(endLayer);
-      ConvexShape[] padstackShapes = new ConvexShape[pcb.layerStructure.arr.length];
+      int fromLayerIndex = pcb.layerStructure.getNo(startLayer);
+      int toLayerIndex = pcb.layerStructure.getNo(endLayer);
+      ConvexShape[] padstackShapes = new ConvexShape[pcb.layerStructure.layers.length];
       CoordinateTransform coordinateTransform =
           boardFrame.boardPanel.boardHandling.coordinateTransform;
       boolean shapeExists = false;
-      for (int i = fromLayerNo; i <= toLayerNo; i++) {
-        Object input = padstackInputPanel.circleRadius[i - fromLayerNo].getValue();
+      for (int i = fromLayerIndex; i <= toLayerIndex; i++) {
+        Object input = padstackInputPanel.circleRadius[i - fromLayerIndex].getValue();
         double radius = defaultRadius;
         if (input instanceof Number number) {
           radius = number.doubleValue();
@@ -394,16 +396,16 @@ public class WindowVia extends BoardSavableSubWindow {
 
       LayerStructure layerStructure =
           boardFrame.boardPanel.boardHandling.getRoutingBoard().layerStructure;
-      int fromLayerNo = layerStructure.getNo(fromLayer);
-      int toLayerNo = layerStructure.getNo(toLayer);
-      int layerCount = toLayerNo - fromLayerNo + 1;
+      int fromLayerIndex = layerStructure.getNo(fromLayer);
+      int toLayerIndex = layerStructure.getNo(toLayer);
+      int layerCount = toLayerIndex - fromLayerIndex + 1;
       layerNames = new JLabel[layerCount];
       circleRadius = new JFormattedTextField[layerCount];
       for (int i = 0; i < layerCount; i++) {
         String labelString =
-            tm.getText("radius_on_layer_label", layerStructure.arr[fromLayerNo + i].name);
+            tm.getText("radius_on_layer_label", layerStructure.layers[fromLayerIndex + i].name);
         layerNames[i] = new JLabel(labelString);
-        NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.get_locale());
+        NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
         numberFormat.setMaximumFractionDigits(7);
         circleRadius[i] = new JFormattedTextField(numberFormat);
         circleRadius[i].setColumns(7);

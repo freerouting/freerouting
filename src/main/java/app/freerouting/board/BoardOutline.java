@@ -37,8 +37,8 @@ public class BoardOutline extends Item implements Serializable {
   private boolean keepoutOutsideOutline;
 
   /** Creates a new instance of BoardOutline. */
-  public BoardOutline(PolylineShape[] shapes, int clearanceClassNo, int idNo, BasicBoard board) {
-    super(new int[0], clearanceClassNo, idNo, 0, FixedState.SYSTEM_FIXED, board);
+  public BoardOutline(PolylineShape[] shapes, int clearanceClassIndex, int id, BasicBoard board) {
+    super(new int[0], clearanceClassIndex, id, 0, FixedState.SYSTEM_FIXED, board);
     this.shapes = shapes;
   }
 
@@ -51,10 +51,10 @@ public class BoardOutline extends Item implements Serializable {
         // an error occurred while dividing the area
         result = 0;
       } else {
-        result = tileShapes.length * this.board.layerStructure.arr.length;
+        result = tileShapes.length * this.board.layerStructure.layers.length;
       }
     } else {
-      result = this.lineCount() * this.board.layerStructure.arr.length;
+      result = this.lineCount() * this.board.layerStructure.layers.length;
     }
     return result;
   }
@@ -64,12 +64,12 @@ public class BoardOutline extends Item implements Serializable {
     int shapeCount = this.tileShapeCount();
     int result;
     if (shapeCount > 0) {
-      result = index * this.board.layerStructure.arr.length / shapeCount;
+      result = index * this.board.layerStructure.layers.length / shapeCount;
     } else {
       result = 0;
     }
-    if (result < 0 || result >= this.board.layerStructure.arr.length) {
-      FRLogger.warn("BoardOutline.shapeLayer: p_index out of range");
+    if (result < 0 || result >= this.board.layerStructure.layers.length) {
+      FRLogger.warn("BoardOutline.shapeLayer: index out of range");
     }
     return result;
   }
@@ -82,8 +82,8 @@ public class BoardOutline extends Item implements Serializable {
   @Override
   public IntBox boundingBox() {
     IntBox result = IntBox.EMPTY;
-    for (PolylineShape currShape : this.shapes) {
-      result = result.union(currShape.boundingBox());
+    for (PolylineShape currentShape : this.shapes) {
+      result = result.union(currentShape.boundingBox());
     }
     return result;
   }
@@ -95,7 +95,7 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public int lastLayer() {
-    return this.board.layerStructure.arr.length - 1;
+    return this.board.layerStructure.layers.length - 1;
   }
 
   @Override
@@ -105,8 +105,8 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void translateBy(Vector vector) {
-    for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.translateBy(vector);
+    for (PolylineShape currentShape : this.shapes) {
+      currentShape = currentShape.translateBy(vector);
     }
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.translateBy(vector);
@@ -116,8 +116,8 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void turn90Degree(int factor, IntPoint pole) {
-    for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.turn90Degree(factor, pole);
+    for (PolylineShape currentShape : this.shapes) {
+      currentShape = currentShape.turn90Degree(factor, pole);
     }
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.turn90Degree(factor, pole);
@@ -128,8 +128,8 @@ public class BoardOutline extends Item implements Serializable {
   @Override
   public void rotateApprox(double angleInDegree, FloatPoint pole) {
     double angle = Math.toRadians(angleInDegree);
-    for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.rotateApprox(angle, pole);
+    for (PolylineShape currentShape : this.shapes) {
+      currentShape = currentShape.rotateApprox(angle, pole);
     }
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.rotateApprox(angle, pole);
@@ -139,8 +139,8 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public void changePlacementSide(IntPoint pole) {
-    for (PolylineShape currShape : this.shapes) {
-      currShape = currShape.mirrorVertical(pole);
+    for (PolylineShape currentShape : this.shapes) {
+      currentShape = currentShape.mirrorVertical(pole);
     }
     if (keepoutArea != null) {
       keepoutArea = keepoutArea.mirrorVertical(pole);
@@ -156,7 +156,7 @@ public class BoardOutline extends Item implements Serializable {
   /** Get shape. */
   public PolylineShape getShape(int index) {
     if (index < 0 || index >= this.shapes.length) {
-      FRLogger.warn("BoardOutline.get_shape: p_index out of range");
+      FRLogger.warn("BoardOutline.get_shape: index out of range");
       return null;
     }
     return this.shapes[index];
@@ -190,16 +190,16 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   @Override
-  public Item copy(int idNo) {
-    return new BoardOutline(this.shapes, this.clearanceClassNo(), idNo, this.board);
+  public Item copy(int id) {
+    return new BoardOutline(this.shapes, this.clearanceClassIndex(), id, this.board);
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
-    window.appendBold(tm.getText("boardOutline"));
-    printClearanceInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("boardOutline"));
+    printClearanceInfo(printer, locale);
+    printer.newline();
   }
 
   @Override
@@ -221,7 +221,7 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   /**
-   * Makes the area outside this Outline to Keepout, if p_value = true. Reinserts this Outline into
+   * Makes the area outside this Outline to Keepout, if value = true. Reinserts this Outline into
    * the search trees, if the value changes.
    */
   public void generateKeepoutOutside(boolean value) {
@@ -239,8 +239,8 @@ public class BoardOutline extends Item implements Serializable {
   /** Returns the sum of the lines of all outline polygons. */
   public int lineCount() {
     int result = 0;
-    for (PolylineShape currShape : this.shapes) {
-      result += currShape.borderLineCount();
+    for (PolylineShape currentShape : this.shapes) {
+      result += currentShape.borderLineCount();
     }
     return result;
   }

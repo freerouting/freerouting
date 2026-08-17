@@ -15,10 +15,10 @@ public class ViaObstacleArea extends ObstacleArea {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int[] netNoArr,
-      int clearanceType,
-      int idNo,
-      int groupNo,
+      int[] netNumbers,
+      int clearanceClassIndex,
+      int id,
+      int groupId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
@@ -28,10 +28,10 @@ public class ViaObstacleArea extends ObstacleArea {
         translation,
         rotationInDegree,
         sideChanged,
-        netNoArr,
-        clearanceType,
-        idNo,
-        groupNo,
+        netNumbers,
+        clearanceClassIndex,
+        id,
+        groupId,
         name,
         fixedState,
         board);
@@ -44,9 +44,9 @@ public class ViaObstacleArea extends ObstacleArea {
       Vector translation,
       double rotationInDegree,
       boolean sideChanged,
-      int clearanceType,
-      int idNo,
-      int groupNo,
+      int clearanceClassIndex,
+      int id,
+      int groupId,
       String name,
       FixedState fixedState,
       BasicBoard board) {
@@ -57,18 +57,18 @@ public class ViaObstacleArea extends ObstacleArea {
         rotationInDegree,
         sideChanged,
         new int[0],
-        clearanceType,
-        idNo,
-        groupNo,
+        clearanceClassIndex,
+        id,
+        groupId,
         name,
         fixedState,
         board);
   }
 
   @Override
-  public Item copy(int idNo) {
-    int[] copiedNetNos = new int[netNoArr.length];
-    System.arraycopy(netNoArr, 0, copiedNetNos, 0, netNoArr.length);
+  public Item copy(int id) {
+    int[] copiedNetNos = new int[netNumbers.length];
+    System.arraycopy(netNumbers, 0, copiedNetNos, 0, netNumbers.length);
     return new ViaObstacleArea(
         getRelativeArea(),
         getLayer(),
@@ -76,9 +76,9 @@ public class ViaObstacleArea extends ObstacleArea {
         getRotationInDegree(),
         getSideChanged(),
         copiedNetNos,
-        clearanceClassNo(),
-        idNo,
-        getComponentNo(),
+        clearanceClassIndex(),
+        id,
+        getComponentId(),
         this.name,
         getFixedState(),
         board);
@@ -93,7 +93,7 @@ public class ViaObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public boolean isTraceObstacle(int netNo) {
+  public boolean isTraceObstacle(int netNumber) {
     return false;
   }
 
@@ -106,13 +106,13 @@ public class ViaObstacleArea extends ObstacleArea {
   }
 
   @Override
-  public void printInfo(ObjectInfoPanel window, Locale locale) {
+  public void printInfo(ItemInfoPrinter printer, Locale locale) {
     TextManager tm = new TextManager(this.getClass(), locale);
 
-    window.appendBold(tm.getText("via_keepout"));
-    this.printShapeInfo(window, locale);
-    this.printClearanceInfo(window, locale);
-    this.printClearanceViolationInfo(window, locale);
-    window.newline();
+    printer.appendBold(tm.getText("via_keepout"));
+    this.printShapeInfo(printer, locale);
+    this.printClearanceInfo(printer, locale);
+    this.printClearanceViolationInfo(printer, locale);
+    printer.newline();
   }
 }

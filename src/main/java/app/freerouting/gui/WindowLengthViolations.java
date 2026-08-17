@@ -2,8 +2,8 @@ package app.freerouting.gui;
 
 import app.freerouting.board.CoordinateTransform;
 import app.freerouting.board.Item;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.RatsNest;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.RatsNest;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.NetClass;
 import app.freerouting.rules.Nets;
@@ -18,7 +18,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
   /** Creates a new instance of WindowLengthViolations. */
   public WindowLengthViolations(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title"));
     this.listEmptyMessage.setText(tm.getText("listEmpty"));
@@ -29,17 +29,17 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     RatsNest ratsnest = this.boardFrame.boardPanel.boardHandling.getRatsnest();
     Nets netList = this.boardFrame.boardPanel.boardHandling.getRoutingBoard().rules.nets;
     SortedSet<LengthViolation> lengthViolations = new TreeSet<>();
-    for (int netIndex = 1; netIndex <= netList.maxNetNo(); netIndex++) {
-      double currViolationLength = ratsnest.getLengthViolation(netIndex);
-      if (currViolationLength != 0) {
-        LengthViolation currLengthViolation =
-            new LengthViolation(netList.get(netIndex), currViolationLength);
-        lengthViolations.add(currLengthViolation);
+    for (int netIndex = 1; netIndex <= netList.maxNetNumber(); netIndex++) {
+      double currentViolationLength = ratsnest.getLengthViolation(netIndex);
+      if (currentViolationLength != 0) {
+        LengthViolation currentLengthViolation =
+            new LengthViolation(netList.get(netIndex), currentViolationLength);
+        lengthViolations.add(currentLengthViolation);
       }
     }
 
-    for (LengthViolation currViolation : lengthViolations) {
-      this.addToList(currViolation);
+    for (LengthViolation currentViolation : lengthViolations) {
+      this.addToList(currentViolation);
     }
     this.list.setVisibleRowCount(Math.min(lengthViolations.size(), DEFAULT_TABLE_SIZE));
   }
@@ -52,8 +52,8 @@ public class WindowLengthViolations extends WindowObjectListWithFilter {
     }
     Set<Item> selectedItems = new TreeSet<>();
     for (int i = 0; i < selectedViolations.size(); i++) {
-      LengthViolation currViolation = (LengthViolation) selectedViolations.get(i);
-      selectedItems.addAll(currViolation.net.getItems());
+      LengthViolation currentViolation = (LengthViolation) selectedViolations.get(i);
+      selectedItems.addAll(currentViolation.net.getItems());
     }
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
     boardHandling.selectItems(selectedItems);

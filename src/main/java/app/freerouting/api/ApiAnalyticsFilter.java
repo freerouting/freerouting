@@ -1,7 +1,7 @@
 package app.freerouting.api;
 
-import app.freerouting.management.analytics.AnalyticsRequestContext;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.analytics.AnalyticsRequestContext;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.util.gson.GsonProvider;
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
@@ -62,6 +62,24 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
   // ContainerRequestFilter — runs before the controller
   // -------------------------------------------------------------------------
 
+  private static String serializeEntity(Object entity) {
+    if (entity == null) {
+      return "";
+    }
+    if (entity instanceof String s) {
+      return s;
+    }
+    try {
+      return GsonProvider.GSON.toJson(entity);
+    } catch (Exception ignored) {
+      return entity.toString();
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // ContainerResponseFilter — runs after the controller
+  // -------------------------------------------------------------------------
+
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
     // Store method and decoded path so the response filter can reconstruct the
@@ -84,7 +102,7 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
   }
 
   // -------------------------------------------------------------------------
-  // ContainerResponseFilter — runs after the controller
+  // Helpers
   // -------------------------------------------------------------------------
 
   @Override
@@ -121,24 +139,6 @@ public class ApiAnalyticsFilter implements ContainerRequestFilter, ContainerResp
       FRAnalytics.apiEndpointCalled(apiMethod, "", errorBody, userId);
     } finally {
       AnalyticsRequestContext.clear();
-    }
-  }
-
-  // -------------------------------------------------------------------------
-  // Helpers
-  // -------------------------------------------------------------------------
-
-  private static String serializeEntity(Object entity) {
-    if (entity == null) {
-      return "";
-    }
-    if (entity instanceof String s) {
-      return s;
-    }
-    try {
-      return GsonProvider.GSON.toJson(entity);
-    } catch (Exception ignored) {
-      return entity.toString();
     }
   }
 }

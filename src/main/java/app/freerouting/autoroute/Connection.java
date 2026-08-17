@@ -53,13 +53,13 @@ public final class Connection {
     Point endPoint = null;
     int endLayer = 0;
 
-    for (Item currItem : contacts) {
-      Point prevContactPoint = item.normalContactPoint(currItem);
+    for (Item currentItem : contacts) {
+      Point prevContactPoint = item.normalContactPoint(currentItem);
       if (prevContactPoint == null) {
         // no unique contact point
         continue;
       }
-      int prevContactLayer = item.firstCommonLayer(currItem);
+      int prevContactLayer = item.firstCommonLayer(currentItem);
       boolean forkFound = false;
       if (item instanceof Trace startTrace) {
         // Check, that there is only 1 contact at this location.
@@ -70,10 +70,10 @@ public final class Connection {
           forkFound = true;
         }
       }
-      // Search from currItem along the contacts
+      // Search from currentItem along the contacts
       // until the next fork or nonroute item.
       for (; ; ) {
-        if (!currItem.isRoutable() || forkFound) {
+        if (!currentItem.isRoutable() || forkFound) {
           // connection ends
           if (startPoint == null) {
             startPoint = prevContactPoint;
@@ -84,8 +84,8 @@ public final class Connection {
           }
           break;
         }
-        connectionItems.add(currItem);
-        Collection<Item> currItemContacts = currItem.getNormalContacts();
+        connectionItems.add(currentItem);
+        Collection<Item> currentItemContacts = currentItem.getNormalContacts();
         // filter the contacts at the previous contact point,
         // because we were already there.
         // If then there is not exactly 1 new contact left, there is
@@ -93,10 +93,10 @@ public final class Connection {
         Point nextContactPoint = null;
         int nextContactLayer = -1;
         Item nextContact = null;
-        for (Item tmpContact : currItemContacts) {
-          int tmpContactLayer = currItem.firstCommonLayer(tmpContact);
+        for (Item tmpContact : currentItemContacts) {
+          int tmpContactLayer = currentItem.firstCommonLayer(tmpContact);
           if (tmpContactLayer >= 0) {
-            Point tmpContactPoint = currItem.normalContactPoint(tmpContact);
+            Point tmpContactPoint = currentItem.normalContactPoint(tmpContact);
             if (tmpContactPoint == null) {
               // no unique contact point
               forkFound = true;
@@ -117,14 +117,14 @@ public final class Connection {
         if (nextContact == null) {
           break;
         }
-        currItem = nextContact;
+        currentItem = nextContact;
         prevContactPoint = nextContactPoint;
         prevContactLayer = nextContactLayer;
       }
     }
     Connection result = new Connection(startPoint, startLayer, endPoint, endLayer, connectionItems);
-    for (Item currItem : connectionItems) {
-      currItem.getAutorouteInfo().setPrecalculatedConnection(result);
+    for (Item currentItem : connectionItems) {
+      currentItem.getAutorouteInfo().setPrecalculatedConnection(result);
     }
     return result;
   }
@@ -132,8 +132,8 @@ public final class Connection {
   /** Returns the cumulative length of the traces in this connection. */
   public double traceLength() {
     double result = 0;
-    for (Item currItem : itemList) {
-      if (currItem instanceof Trace trace) {
+    for (Item currentItem : itemList) {
+      if (currentItem instanceof Trace trace) {
         result += trace.getLength();
       }
     }

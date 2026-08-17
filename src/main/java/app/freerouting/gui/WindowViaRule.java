@@ -1,7 +1,7 @@
 package app.freerouting.gui;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaInfos;
 import app.freerouting.rules.ViaRule;
@@ -39,7 +39,7 @@ public class WindowViaRule extends WindowBase {
     this.viaRule = viaRule;
     this.viaList = viaList;
 
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
     this.setTitle(tm.getText("title") + " " + viaRule.name);
 
@@ -119,7 +119,7 @@ public class WindowViaRule extends WindowBase {
     this.setVisible(true);
   }
 
-  /** Swaps the position of the vias with index p_1 and p_2. */
+  /** Swaps the position of the vias with index 1 and 2. */
   private void swapPosition(int p1, int p2) {
     ViaInfo via1 = this.ruleListModel.get(p1);
     ViaInfo via2 = this.ruleListModel.get(p2);
@@ -139,19 +139,19 @@ public class WindowViaRule extends WindowBase {
       if (possibleValues.length == 0) {
         return;
       }
-      int currIndex = 0;
+      int currentIndex = 0;
       for (int i = 0; i < viaList.count(); i++) {
-        ViaInfo currVia = viaList.get(i);
-        if (!viaRule.contains(currVia)) {
-          if (currIndex >= possibleValues.length) {
+        ViaInfo currentVia = viaList.get(i);
+        if (!viaRule.contains(currentVia)) {
+          if (currentIndex >= possibleValues.length) {
             FRLogger.warn("ViaRuleWindow.AppendListener.actionPerformed: index inconsistent");
             break;
           }
-          possibleValues[currIndex] = currVia;
-          ++currIndex;
+          possibleValues[currentIndex] = currentVia;
+          ++currentIndex;
         }
       }
-      assert (currIndex == possibleValues.length);
+      assert (currentIndex == possibleValues.length);
       Object selectedValue =
           JOptionPane.showInputDialog(
               null,

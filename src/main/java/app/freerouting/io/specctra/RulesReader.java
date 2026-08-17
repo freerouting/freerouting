@@ -21,10 +21,9 @@ import java.util.Collection;
 
 /**
  * Reads a Specctra {@code .rules} file and applies the parsed rules directly to a {@link
- * BasicBoard}, without any dependency on {@link app.freerouting.gui.session.GuiBoardManager}.
+ * BasicBoard}, without any dependency on {@link app.freerouting.gui.workspace.GuiBoardManager}.
  *
- * <p>Replaces the read path previously found in {@link
- * app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
+ * <p>This class is the public read entry point for Specctra rules files.
  */
 public final class RulesReader {
 
@@ -56,34 +55,34 @@ public final class RulesReader {
     IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
     try {
       // Validate the "(rules PCB <name>" header
-      Object currToken = scanner.nextToken();
-      if (currToken != Keyword.OPEN_BRACKET) {
+      Object currentToken = scanner.nextToken();
+      if (currentToken != Keyword.OPEN_BRACKET) {
         FRLogger.warn(
             "RulesReader.read: open bracket expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
-      currToken = scanner.nextToken();
-      if (currToken != Keyword.RULES) {
+      currentToken = scanner.nextToken();
+      if (currentToken != Keyword.RULES) {
         FRLogger.warn(
             "RulesReader.read: keyword 'rules' expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
-      currToken = scanner.nextToken();
-      if (currToken != Keyword.PCB_SCOPE) {
+      currentToken = scanner.nextToken();
+      if (currentToken != Keyword.PCB_SCOPE) {
         FRLogger.warn(
             "RulesReader.read: keyword 'pcb' expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
       scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      currToken = scanner.nextToken();
-      if (!(currToken instanceof String) || !currToken.equals(designName)) {
+      currentToken = scanner.nextToken();
+      if (!(currentToken instanceof String) || !currentToken.equals(designName)) {
         FRLogger.warn(
             "RulesReader.read: designName not matching at '"
                 + scanner.getScopeIdentifier()
                 + "' (expected '"
                 + designName
                 + "', got '"
-                + currToken
+                + currentToken
                 + "')");
         // non-fatal: continue reading
       }
@@ -144,17 +143,17 @@ public final class RulesReader {
   }
 
   // -------------------------------------------------------------------------
-  // Private helpers (migrated from RulesFile)
+  // Private helpers for rules-file parsing.
   // -------------------------------------------------------------------------
 
   private static void applyRules(Collection<Rule> rules, BasicBoard board, String layerName) {
     if (rules == null) {
       return;
     }
-    int layerNo = -1;
+    int layerIndex = -1;
     if (layerName != null) {
-      layerNo = board.layerStructure.getNo(layerName);
-      if (layerNo < 0) {
+      layerIndex = board.layerStructure.getNo(layerName);
+      if (layerIndex < 0) {
         FRLogger.warn("RulesReader.applyRules: layer not found: '" + layerName + "'");
       }
     }
@@ -163,14 +162,14 @@ public final class RulesReader {
     for (Rule rule : rules) {
       if (rule instanceof Rule.WidthRule widthRule) {
         int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(widthRule.value) / 2);
-        if (layerNo < 0) {
+        if (layerIndex < 0) {
           board.rules.setDefaultTraceHalfWidths(traceHalfwidth);
         } else {
-          board.rules.setDefaultTraceHalfWidth(layerNo, traceHalfwidth);
+          board.rules.setDefaultTraceHalfWidth(layerIndex, traceHalfwidth);
         }
       } else if (rule instanceof Rule.ClearanceRule clearanceRule) {
         Structure.setClearanceRule(
-            clearanceRule, layerNo, coordinateTransform, board.rules, stringQuote);
+            clearanceRule, layerIndex, coordinateTransform, board.rules, stringQuote);
       }
     }
   }

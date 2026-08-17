@@ -22,8 +22,8 @@ public class RationalVector extends Vector implements Serializable {
   public final BigInteger z;
 
   /**
-   * Creates a RationalVector from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional
-   * Vector with the rational number Tuple ( p_x / p_z , p_y / p_z).
+   * Creates a RationalVector from 3 BigIntegers x, y and z. They represent the 2-dimensional Vector
+   * with the rational number Tuple ( x / z , y / z).
    */
   public RationalVector(BigInteger x, BigInteger y, BigInteger z) {
     if (z.signum() >= 0) {
@@ -51,25 +51,24 @@ public class RationalVector extends Vector implements Serializable {
     return x.signum() == 0 && y.signum() == 0;
   }
 
-  /** Returns true, if this RationalVector is equal to p_ob. */
+  /** Returns true, if this RationalVector is equal to ob. */
   @Override
-  public final boolean equals(Object ob) {
-    if (this == ob) {
+  public final boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (ob == null) {
+    if (other == null) {
       return false;
     }
-    if (getClass() != ob.getClass()) {
+    if (getClass() != other.getClass()) {
       return false;
     }
-    RationalPoint other = (RationalPoint) ob;
-    BigInteger det = BigIntAux.determinant(x, other.x, z, other.z);
+    RationalVector otherVector = (RationalVector) other;
+    BigInteger det = BigIntAux.determinant(x, otherVector.x, z, otherVector.z);
     if (det.signum() != 0) {
       return false;
     }
-    det = BigIntAux.determinant(y, other.y, z, other.z);
-
+    det = BigIntAux.determinant(y, otherVector.y, z, otherVector.z);
     return det.signum() == 0;
   }
 
@@ -79,7 +78,7 @@ public class RationalVector extends Vector implements Serializable {
     return new RationalVector(x.negate(), y.negate(), z);
   }
 
-  /** Adds p_other to this vector. */
+  /** Adds other to this vector. */
   @Override
   public final Vector add(Vector other) {
     return other.add(this);
@@ -107,8 +106,8 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   /**
-   * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if
-   * this Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
+   * Let L be the line from the Zero Vector to other. The function returns Side.ON_THE_LEFT, if this
+   * Vector is on the left of L Side.ON_THE_RIGHT, if this Vector is on the right of L and
    * Side.COLLINEAR, if this Vector is collinear with L.
    */
   @Override
@@ -143,9 +142,9 @@ public class RationalVector extends Vector implements Serializable {
   }
 
   /**
-   * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other
-   * {@literal >} 0, Signum.NEGATIVE, if the scalar product is {@literal <} 0, and Signum.ZERO, if
-   * the scalar product is equal 0.
+   * The function returns Signum.POSITIVE, if the scalar product of this vector and other {@literal
+   * >} 0, Signum.NEGATIVE, if the scalar product is {@literal <} 0, and Signum.ZERO, if the scalar
+   * product is equal 0.
    */
   @Override
   public Signum projection(Vector other) {
@@ -167,7 +166,7 @@ public class RationalVector extends Vector implements Serializable {
     return Signum.of(result);
   }
 
-  /** Calculates the scalar product of this vector and p_other. */
+  /** Calculates the scalar product of this vector and other. */
   @Override
   public double scalarProduct(Vector other) {
     return other.scalarProduct(this);
@@ -210,30 +209,13 @@ public class RationalVector extends Vector implements Serializable {
     while (n >= 4) {
       n -= 4;
     }
-    BigInteger newX;
-    BigInteger newY;
-    switch (n) {
-      case 0 -> { // 0 degree
-        newX = x;
-        newY = y;
-      }
-      case 1 -> { // 90 degree
-        newX = y.negate();
-        newY = x;
-      }
-      case 2 -> { // 180 degree
-        newX = x.negate();
-        newY = y.negate();
-      }
-      case 3 -> { // 270 degree
-        newX = y;
-        newY = x.negate();
-      }
-      default -> {
-        return this;
-      }
-    }
-    return new RationalVector(newX, newY, this.z);
+    return switch (n) {
+      case 0 -> this; // 0 degrees
+      case 1 -> new RationalVector(y.negate(), x, this.z); // 90 degrees
+      case 2 -> new RationalVector(x.negate(), y.negate(), this.z); // 180 degrees
+      case 3 -> new RationalVector(y, x.negate(), this.z); // 270 degrees
+      default -> this;
+    };
   }
 
   @Override

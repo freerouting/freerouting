@@ -4,7 +4,7 @@ import app.freerouting.board.BasicBoard;
 import app.freerouting.board.Item;
 import app.freerouting.board.Trace;
 import app.freerouting.board.Via;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import app.freerouting.util.TextManager;
@@ -17,14 +17,14 @@ import java.util.TreeSet;
 /** Displays route segments that are not connected to their net. */
 public class WindowUnconnectedRoute extends CleanupWindows {
 
-  private int maxUnconnectedRouteInfoIdNo;
+  private int maxUnconnectedRouteInfoId;
 
   /** Creates a new instance of WindowUnconnectedRoute. */
   public WindowUnconnectedRoute(BoardFrame boardFrame) {
     super(boardFrame);
-    setLanguage(boardFrame.get_locale());
+    setLanguage(boardFrame.getLocale());
 
-    this.tm = new TextManager(CleanupWindows.class, boardFrame.get_locale());
+    this.tm = new TextManager(CleanupWindows.class, boardFrame.getLocale());
 
     this.setTitle(tm.getText("unconnected_route"));
     this.listEmptyMessage.setText(tm.getText("no_unconnected_route_found"));
@@ -39,29 +39,29 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     SortedSet<UnconnectedRouteInfo> unconnectedRouteInfoSet = new TreeSet<>();
 
     Collection<Item> boardItems = routingBoard.getItems();
-    for (Item currItem : boardItems) {
-      if (!(currItem instanceof Trace || currItem instanceof Via)) {
+    for (Item currentItem : boardItems) {
+      if (!(currentItem instanceof Trace || currentItem instanceof Via)) {
         continue;
       }
-      if (handledItems.contains(currItem)) {
+      if (handledItems.contains(currentItem)) {
         continue;
       }
-      Collection<Item> currConnectedSet = currItem.getConnectedSet(-1);
+      Collection<Item> currentConnectedSet = currentItem.getConnectedSet(-1);
       boolean terminalItemFound = false;
-      for (Item currConnnectedItem : currConnectedSet) {
-        handledItems.add(currConnnectedItem);
-        if (!(currConnnectedItem instanceof Trace || currConnnectedItem instanceof Via)) {
+      for (Item currentConnnectedItem : currentConnectedSet) {
+        handledItems.add(currentConnnectedItem);
+        if (!(currentConnnectedItem instanceof Trace || currentConnnectedItem instanceof Via)) {
           terminalItemFound = true;
         }
       }
       if (!terminalItemFound) {
         // We have found unconnected route
-        if (currItem.netCount() == 1) {
-          Net currentNet = routingBoard.rules.nets.get(currItem.getNetNo(0));
+        if (currentItem.netCount() == 1) {
+          Net currentNet = routingBoard.rules.nets.get(currentItem.getNetNumber(0));
           if (currentNet != null) {
-            UnconnectedRouteInfo currUnconnectedRouteInfo =
-                new UnconnectedRouteInfo(currentNet, currConnectedSet);
-            unconnectedRouteInfoSet.add(currUnconnectedRouteInfo);
+            UnconnectedRouteInfo currentUnconnectedRouteInfo =
+                new UnconnectedRouteInfo(currentNet, currentConnectedSet);
+            unconnectedRouteInfoSet.add(currentUnconnectedRouteInfo);
           }
         } else {
           FRLogger.warn("WindowUnconnectedRoute.fill_list: netCount 1 expected");
@@ -69,8 +69,8 @@ public class WindowUnconnectedRoute extends CleanupWindows {
       }
     }
 
-    for (UnconnectedRouteInfo currInfo : unconnectedRouteInfoSet) {
-      this.addToList(currInfo);
+    for (UnconnectedRouteInfo currentInfo : unconnectedRouteInfoSet) {
+      this.addToList(currentInfo);
     }
     this.list.setVisibleRowCount(Math.min(unconnectedRouteInfoSet.size(), DEFAULT_TABLE_SIZE));
   }
@@ -95,26 +95,26 @@ public class WindowUnconnectedRoute extends CleanupWindows {
 
     private final Net net;
     private final Collection<Item> itemList;
-    private final int idNo;
+    private final int id;
     private final Integer traceCount;
     private final Integer viaCount;
 
     public UnconnectedRouteInfo(Net net, Collection<Item> itemList) {
       this.net = net;
       this.itemList = itemList;
-      ++maxUnconnectedRouteInfoIdNo;
-      this.idNo = maxUnconnectedRouteInfoIdNo;
-      int currTraceCount = 0;
-      int currViaCount = 0;
-      for (Item currItem : itemList) {
-        if (currItem instanceof Trace) {
-          ++currTraceCount;
-        } else if (currItem instanceof Via) {
-          ++currViaCount;
+      ++maxUnconnectedRouteInfoId;
+      this.id = maxUnconnectedRouteInfoId;
+      int currentTraceCount = 0;
+      int currentViaCount = 0;
+      for (Item currentItem : itemList) {
+        if (currentItem instanceof Trace) {
+          ++currentTraceCount;
+        } else if (currentItem instanceof Via) {
+          ++currentViaCount;
         }
       }
-      this.traceCount = currTraceCount;
-      this.viaCount = currViaCount;
+      this.traceCount = currentTraceCount;
+      this.viaCount = currentViaCount;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class WindowUnconnectedRoute extends CleanupWindows {
     public int compareTo(UnconnectedRouteInfo other) {
       int result = this.net.name.compareTo(other.net.name);
       if (result == 0) {
-        result = this.idNo - other.idNo;
+        result = this.id - other.id;
       }
       return result;
     }

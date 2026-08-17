@@ -1,6 +1,6 @@
 package app.freerouting.core;
 
-import app.freerouting.management.RoutingJobScheduler;
+import app.freerouting.management.jobs.RoutingJobScheduler;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class Session implements Serializable {
   @SerializedName("host")
   public final String host;
 
-  public transient boolean isGuiSession;
+  public transient boolean isPrimary;
 
   /**
    * Creates a new session.

@@ -2,6 +2,7 @@ package app.freerouting.management;
 
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.BoardObservers;
 import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
@@ -10,16 +11,17 @@ import app.freerouting.board.Unit;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.io.specctra.SesWriter;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.ThreadActionListener;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.DefaultItemClearanceClasses;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -55,7 +57,7 @@ import java.io.OutputStream;
  * <p><strong>Design Pattern:</strong> This class implements the {@link BoardManager} interface,
  * providing headless-specific implementations while maintaining compatibility with the broader
  * board management architecture. It can be used as a drop-in replacement for {@link
- * app.freerouting.gui.session.GuiBoardManager} when GUI is not needed.
+ * app.freerouting.gui.workspace.GuiBoardManager} when GUI is not needed.
  *
  * <p><strong>Thread Safety:</strong> The {@link #replaceRoutingBoard(RoutingBoard)} method is
  * synchronized to allow thread-safe board replacement during multi-threaded routing operations.
@@ -72,7 +74,7 @@ import java.io.OutputStream;
  * }</pre>
  *
  * @see BoardManager
- * @see app.freerouting.gui.session.GuiBoardManager
+ * @see app.freerouting.gui.workspace.GuiBoardManager
  * @see RoutingBoard
  * @see RoutingJob
  */
@@ -95,7 +97,7 @@ public class HeadlessBoardManager implements BoardManager {
    * <p>Typically used for logging, progress reporting, or coordinating with external systems.
    *
    * @see ThreadActionListener
-   * @see app.freerouting.gui.session.InteractiveActionThread
+   * @see app.freerouting.gui.workspace.InteractiveActionThread
    */
   public ThreadActionListener autorouterListener;
 
@@ -159,11 +161,78 @@ public class HeadlessBoardManager implements BoardManager {
    * operations.
    *
    * @param routingJob the routing job context that will orchestrate routing operations
-   * @see #loadFromSpecctraDsn(InputStream, BoardObservers, IdentificationNumberGenerator)
+   * @see #loadFromSpecctraDsn(InputStream, BoardObservers, IdGenerator)
    * @see #createBoard
    */
   public HeadlessBoardManager(RoutingJob routingJob) {
     this.routingJob = routingJob;
+  }
+
+  private static void compareCounterpartBoardIfPresent(RoutingBoard board, String inputFilename) {
+    if (inputFilename == null) {
+      return;
+    }
+    String counterpartPath = null;
+    if (inputFilename.toLowerCase().endsWith(".dsn")) {
+      counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
+    } else if (inputFilename.toLowerCase().endsWith(".json")) {
+      counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
+    }
+    if (counterpartPath == null) {
+      return;
+    }
+    java.io.File counterpartFile = new java.io.File(counterpartPath);
+    if (!counterpartFile.exists()) {
+      return;
+    }
+    RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
+    if (counterpartBoard == null) {
+      return;
+    }
+    app.freerouting.board.BoardComparator.ComparisonResult comparison =
+        app.freerouting.board.BoardComparator.compare(board, counterpartBoard, 1e-3);
+    if (comparison.areEqual) {
+      FRLogger.debug(
+          "Counterpart comparison: The loaded board and its counterpart '"
+              + counterpartFile.getName()
+              + "' are identical in representation.");
+    } else {
+      FRLogger.warn(
+          "Counterpart comparison: Differences detected between loaded board and counterpart '"
+              + counterpartFile.getName()
+              + "'.");
+      FRLogger.debug(comparison.report);
+    }
+  }
+
+  private static RoutingBoard loadBoardFromFileForComparison(java.io.File file) {
+    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
+      if (file.getName().toLowerCase().endsWith(".json")) {
+        try (java.io.Reader r =
+            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
+          app.freerouting.io.BoardReadResult readResult =
+              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
+          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+            return (RoutingBoard) success.board();
+          } else if (readResult
+              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+            return (RoutingBoard) outlineMissing.board();
+          }
+        }
+      } else {
+        app.freerouting.io.BoardReadResult readResult =
+            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+          return (RoutingBoard) success.board();
+        } else if (readResult
+            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+          return (RoutingBoard) outlineMissing.board();
+        }
+      }
+    } catch (Exception e) {
+      FRLogger.error("Failed to load counterpart board: " + e.getMessage(), e);
+    }
+    return null;
   }
 
   /**
@@ -234,7 +303,7 @@ public class HeadlessBoardManager implements BoardManager {
    * @param rules the board design rules and constraints
    * @param boardCommunication communication interface for external integration
    * @see RoutingBoard#RoutingBoard
-   * @see app.freerouting.gui.session.InteractiveSettings
+   * @see WorkspaceSettings
    */
   @Override
   public void createBoard(
@@ -344,7 +413,7 @@ public class HeadlessBoardManager implements BoardManager {
       app.freerouting.board.ObstacleArea keepout = (app.freerouting.board.ObstacleArea) item;
       // Package keepouts belong to a component; a circular one is a drilled hole in the
       // footprint (the only way KiCad expresses NPTH in DSN).
-      if (keepout.getComponentNo() > 0
+      if (keepout.getComponentId() > 0
           && keepout.getArea() instanceof app.freerouting.geometry.planar.Circle) {
         holeKeepouts.add(keepout);
       }
@@ -382,8 +451,8 @@ public class HeadlessBoardManager implements BoardManager {
     }
     int reclassified = 0;
     for (app.freerouting.board.ObstacleArea keepout : holeKeepouts) {
-      if (keepout.clearanceClassNo() != holeEdgeClassNo) {
-        keepout.setClearanceClassNo(holeEdgeClassNo);
+      if (keepout.clearanceClassIndex() != holeEdgeClassNo) {
+        keepout.setClearanceClassIndex(holeEdgeClassNo);
         keepout.clearDerivedData();
         reclassified++;
       }
@@ -425,7 +494,7 @@ public class HeadlessBoardManager implements BoardManager {
             .getDefaultNetClass()
             .defaultItemClearanceClasses
             .get(DefaultItemClearanceClasses.ItemClass.AREA);
-    boolean usesFallbackOutlineClass = outline.clearanceClassNo() == defaultAreaClassNo;
+    boolean usesFallbackOutlineClass = outline.clearanceClassIndex() == defaultAreaClassNo;
     boolean usesDefaultEdgeClearanceValue =
         Math.abs(configuredClearanceUm - DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM)
             < 1e-9;
@@ -465,7 +534,7 @@ public class HeadlessBoardManager implements BoardManager {
     if (this.board.searchTreeManager != null) {
       this.board.searchTreeManager.remove(outline);
     }
-    outline.setClearanceClassNo(boardEdgeClassNo);
+    outline.setClearanceClassIndex(boardEdgeClassNo);
     outline.clearDerivedData();
     if (this.board.searchTreeManager != null) {
       this.board.searchTreeManager.insert(outline);
@@ -568,9 +637,8 @@ public class HeadlessBoardManager implements BoardManager {
    *   <li>Send analytics about the loaded board
    * </ol>
    *
-   * <p><strong>Integration Parameters:</strong> The {@code boardObservers} and {@code
-   * identificationNumberGenerator} parameters support embedding Freerouting into host CAD systems,
-   * allowing:
+   * <p><strong>Integration Parameters:</strong> The {@code boardObservers} and {@code idGenerator}
+   * parameters support embedding Freerouting into host CAD systems, allowing:
    *
    * <ul>
    *   <li>Real-time synchronization of board changes with the host
@@ -594,15 +662,13 @@ public class HeadlessBoardManager implements BoardManager {
    * @param inputStream the input stream containing DSN file data (will be closed after reading)
    * @param boardObservers optional observers for board item changes (can be null for standalone
    *     use)
-   * @param identificationNumberGenerator optional ID generator for board items (can be null)
+   * @param idGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    * @see app.freerouting.io.specctra.DsnReader#readBoard
    * @see BoardObservers
    */
   public BoardReadResult loadFromSpecctraDsn(
-      InputStream inputStream,
-      BoardObservers boardObservers,
-      IdentificationNumberGenerator identificationNumberGenerator) {
+      InputStream inputStream, BoardObservers boardObservers, IdGenerator idGenerator) {
     if (inputStream == null) {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
@@ -624,8 +690,7 @@ public class HeadlessBoardManager implements BoardManager {
                 + "...");
       }
       BoardReadResult dsnResult =
-          DsnReader.readBoard(
-              inputStream, boardObservers, identificationNumberGenerator, inputFilename);
+          DsnReader.readBoard(inputStream, boardObservers, idGenerator, inputFilename);
 
       applyParsedBoardResult(dsnResult, inputFilename, "DSN");
       return dsnResult;
@@ -706,7 +771,7 @@ public class HeadlessBoardManager implements BoardManager {
                     loadedBoard.communication.specctraParserInfo.hostVersion,
                     loadedBoard.getLayerCount(),
                     loadedBoard.components.count(),
-                    loadedBoard.rules.nets.maxNetNo());
+                    loadedBoard.rules.nets.maxNetNumber());
                 manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
                 compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
               } catch (Exception e) {
@@ -715,55 +780,16 @@ public class HeadlessBoardManager implements BoardManager {
             });
   }
 
-  private static void compareCounterpartBoardIfPresent(RoutingBoard board, String inputFilename) {
-    if (inputFilename == null) {
-      return;
-    }
-    String counterpartPath = null;
-    if (inputFilename.toLowerCase().endsWith(".dsn")) {
-      counterpartPath = inputFilename.substring(0, inputFilename.length() - 4) + ".json";
-    } else if (inputFilename.toLowerCase().endsWith(".json")) {
-      counterpartPath = inputFilename.substring(0, inputFilename.length() - 5) + ".dsn";
-    }
-    if (counterpartPath == null) {
-      return;
-    }
-    java.io.File counterpartFile = new java.io.File(counterpartPath);
-    if (!counterpartFile.exists()) {
-      return;
-    }
-    RoutingBoard counterpartBoard = loadBoardFromFileForComparison(counterpartFile);
-    if (counterpartBoard == null) {
-      return;
-    }
-    app.freerouting.board.BoardComparator.ComparisonResult comparison =
-        app.freerouting.board.BoardComparator.compare(board, counterpartBoard, 1e-3);
-    if (comparison.areEqual) {
-      FRLogger.debug(
-          "Counterpart comparison: The loaded board and its counterpart '"
-              + counterpartFile.getName()
-              + "' are identical in representation.");
-    } else {
-      FRLogger.warn(
-          "Counterpart comparison: Differences detected between loaded board and counterpart '"
-              + counterpartFile.getName()
-              + "'.");
-      FRLogger.debug(comparison.report);
-    }
-  }
-
   /**
    * Loads a board design from a KiCad JSON format file/stream.
    *
    * @param inputStream the input stream containing KiCad JSON data (will be closed after reading)
    * @param boardObservers optional observers for board item changes (can be null)
-   * @param identificationNumberGenerator optional ID generator for board items (can be null)
+   * @param idGenerator optional ID generator for board items (can be null)
    * @return the read result indicating success, warnings, or errors
    */
   public BoardReadResult loadFromKiCadJson(
-      InputStream inputStream,
-      BoardObservers boardObservers,
-      IdentificationNumberGenerator identificationNumberGenerator) {
+      InputStream inputStream, BoardObservers boardObservers, IdGenerator idGenerator) {
     if (inputStream == null) {
       return new BoardReadResult.IoError(new java.io.IOException("inputStream is null"));
     }
@@ -782,8 +808,7 @@ public class HeadlessBoardManager implements BoardManager {
 
     try (java.io.Reader reader =
         new java.io.InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)) {
-      BoardReadResult dsnResult =
-          KiCadJsonReader.readBoard(reader, boardObservers, identificationNumberGenerator);
+      BoardReadResult dsnResult = KiCadJsonReader.readBoard(reader, boardObservers, idGenerator);
       applyParsedBoardResult(dsnResult, inputFilename, "KICAD_JSON");
       return dsnResult;
 
@@ -848,36 +873,6 @@ public class HeadlessBoardManager implements BoardManager {
     return wasSaveSuccessful;
   }
 
-  private static RoutingBoard loadBoardFromFileForComparison(java.io.File file) {
-    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
-      if (file.getName().toLowerCase().endsWith(".json")) {
-        try (java.io.Reader r =
-            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
-          app.freerouting.io.BoardReadResult readResult =
-              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
-          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-            return (RoutingBoard) success.board();
-          } else if (readResult
-              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-            return (RoutingBoard) outlineMissing.board();
-          }
-        }
-      } else {
-        app.freerouting.io.BoardReadResult readResult =
-            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
-        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-          return (RoutingBoard) success.board();
-        } else if (readResult
-            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-          return (RoutingBoard) outlineMissing.board();
-        }
-      }
-    } catch (Exception e) {
-      FRLogger.error("Failed to load counterpart board: " + e.getMessage(), e);
-    }
-    return null;
-  }
-
   boolean conductionAreasOverlap(
       app.freerouting.board.ConductionArea ca1, app.freerouting.board.ConductionArea ca2) {
     app.freerouting.geometry.planar.TileShape[] pieces1 = ca1.getArea().splitToConvex();
@@ -901,12 +896,12 @@ public class HeadlessBoardManager implements BoardManager {
   String getConductionAreaNetNames(app.freerouting.board.ConductionArea ca) {
     java.util.List<String> names = new java.util.ArrayList<>();
     for (int i = 0; i < ca.netCount(); i++) {
-      int netNo = ca.getNetNo(i);
-      app.freerouting.rules.Net net = this.board.rules.nets.get(netNo);
+      int netNumber = ca.getNetNumber(i);
+      app.freerouting.rules.Net net = this.board.rules.nets.get(netNumber);
       if (net != null) {
         names.add(net.name);
       } else {
-        names.add(String.valueOf(netNo));
+        names.add(String.valueOf(netNumber));
       }
     }
     return String.join(", ", names);
@@ -921,13 +916,13 @@ public class HeadlessBoardManager implements BoardManager {
     java.util.List<String> violations = new java.util.ArrayList<>();
 
     for (int i = 0; i < this.board.getLayerCount(); i++) {
-      app.freerouting.board.Layer layer = this.board.layerStructure.arr[i];
+      app.freerouting.board.Layer layer = this.board.layerStructure.layers[i];
       if (!layer.isSignal) {
-        final int layerNo = i;
+        final int layerIndex = i;
 
         // 1. Check for signal wires/traces
         long traceCount =
-            this.board.getTraces().stream().filter(trace -> trace.getLayer() == layerNo).count();
+            this.board.getTraces().stream().filter(trace -> trace.getLayer() == layerIndex).count();
         if (traceCount > 0) {
           validationFailed = true;
           violations.add(
@@ -941,7 +936,7 @@ public class HeadlessBoardManager implements BoardManager {
         // 2. Check for at least one conduction area
         java.util.List<app.freerouting.board.ConductionArea> layerAreas =
             this.board.getConductionAreas().stream()
-                .filter(ca -> ca.getLayer() == layerNo)
+                .filter(ca -> ca.getLayer() == layerIndex)
                 .toList();
         if (layerAreas.isEmpty()) {
           validationFailed = true;
@@ -961,12 +956,12 @@ public class HeadlessBoardManager implements BoardManager {
                       + layer.name
                       + "' has overlapping conduction areas: "
                       + "Area (ID "
-                      + layerAreas.get(j).getIdNo()
+                      + layerAreas.get(j).getId()
                       + ", Net(s): ["
                       + nets1
                       + "]) and "
                       + "Area (ID "
-                      + layerAreas.get(k).getIdNo()
+                      + layerAreas.get(k).getId()
                       + ", Net(s): ["
                       + nets2
                       + "]) overlap.");

@@ -36,7 +36,7 @@ public class ScreenTransform implements Serializable {
     int minLl = Math.min(designBox.ll.x, designBox.ll.y);
     int maxUr = Math.max(designBox.ur.x, designBox.ur.y);
     if (Math.max(Math.abs(minLl), Math.abs(maxUr)) <= 0.3 * Limits.CRIT_INT) {
-      // create an offset to p_design_box to enable deep zoom out
+      // create an offset to designBox to enable deep zoom out
       double designOffset = Math.max(designBox.width(), designBox.height());
       designBoxWithOffset = designBox.offset(designOffset);
     } else {
@@ -178,7 +178,7 @@ public class ScreenTransform implements Serializable {
     return mirrorLeftRight;
   }
 
-  /** If p_value is true, the left side and the right side of the board will be swapped. */
+  /** If value is true, the left side and the right side of the board will be swapped. */
   public void setMirrorLeftRight(boolean value) {
     mirrorLeftRight = value;
   }
@@ -190,7 +190,7 @@ public class ScreenTransform implements Serializable {
     return !mirrorTopBottom;
   }
 
-  /** If p_value is true, the top side and the bottom side of the board will be swapped. */
+  /** If value is true, the top side and the bottom side of the board will be swapped. */
   public void setMirrorTopBottom(boolean value) {
     // Because the origin of display is the upper left corner, the internal value
     // will be opposite to the input value of this function.
@@ -202,7 +202,7 @@ public class ScreenTransform implements Serializable {
     return rotation;
   }
 
-  /** Sets the rotation of the displayed board to p_value. */
+  /** Sets the rotation of the displayed board to value. */
   public void setRotation(double value) {
     rotation = value;
   }

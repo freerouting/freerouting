@@ -6,6 +6,8 @@ import app.freerouting.board.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.gui.workspace.WorkspaceContract;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.rules.BoardRules;
 
 /**
@@ -19,14 +21,14 @@ import app.freerouting.rules.BoardRules;
  * <p><strong>GUI / Headless duality:</strong>
  *
  * <ul>
- *   <li>In <em>GUI mode</em> ({@link app.freerouting.gui.session.GuiBoardManager}) the manager also
- *       implements the {@link app.freerouting.gui.session.GuiSessionContract}, which exposes the
- *       GUI-session singleton {@link app.freerouting.gui.session.InteractiveSettings} (the live
- *       {@code GuiSettings} source at SettingsMerger priority 50).
+ *   <li>In <em>GUI mode</em> ({@link app.freerouting.gui.workspace.GuiBoardManager}) the manager
+ *       also implements the {@link WorkspaceContract}, which exposes the GUI-session singleton
+ *       {@link WorkspaceSettings} (the live {@code GuiSettingsSource} source at SettingsMerger
+ *       priority 65).
  *   <li>In <em>headless mode</em> ({@link app.freerouting.management.HeadlessBoardManager}) there
- *       is no GUI; the manager does <em>not</em> implement {@code GuiSessionContract}, so {@code
- *       InteractiveSettings} is unreachable. To detect GUI mode, use {@code manager instanceof
- *       app.freerouting.gui.session.GuiSessionContract}.
+ *       is no GUI; the manager does <em>not</em> implement {@code WorkspaceContract}, so {@code
+ *       WorkspaceSettings} is unreachable. To detect GUI mode, use {@code manager instanceof
+ *       app.freerouting.gui.workspace.WorkspaceContract}.
  * </ul>
  *
  * <p><strong>Primary Responsibilities:</strong>
@@ -41,9 +43,9 @@ import app.freerouting.rules.BoardRules;
  * <p><strong>Implementation Classes:</strong>
  *
  * <ul>
- *   <li><strong>{@link app.freerouting.gui.session.GuiBoardManager}:</strong> Full-featured
+ *   <li><strong>{@link app.freerouting.gui.workspace.GuiBoardManager}:</strong> Full-featured
  *       implementation with graphical user interface support, handling user interaction, display
- *       updates, and visual feedback; also implements {@code GuiSessionContract}
+ *       updates, and visual feedback; also implements {@code WorkspaceContract}
  *   <li><strong>{@link app.freerouting.management.HeadlessBoardManager}:</strong> Lightweight
  *       implementation for batch processing, command-line tools, and automated routing without GUI
  *       overhead
@@ -54,7 +56,7 @@ import app.freerouting.rules.BoardRules;
  * <pre>{@code
  * // Create appropriate manager based on mode
  * BoardManager manager = isGuiMode
- *     ? new app.freerouting.gui.session.GuiBoardManager(panel, settings, job, merger)
+ *     ? new app.freerouting.gui.workspace.GuiBoardManager(panel, settings, job, merger)
  *     : new app.freerouting.management.HeadlessBoardManager(job);
  *
  * // Initialize board from design file
@@ -63,14 +65,14 @@ import app.freerouting.rules.BoardRules;
  * // Access board for routing operations
  * RoutingBoard board = manager.getRoutingBoard();
  *
- * // Access interactive settings only when in GUI mode
- * if (manager instanceof app.freerouting.gui.session.GuiSessionContract gui) {
- *     InteractiveSettings settings = gui.getInteractiveSettings();
+ * // Access workspace settings only when in GUI mode
+ * if (manager instanceof app.freerouting.gui.workspace.WorkspaceContract gui) {
+ *     WorkspaceSettings settings = gui.getWorkspaceSettings();
  * }
  * }</pre>
  *
- * @see app.freerouting.gui.session.GuiBoardManager
- * @see app.freerouting.gui.session.GuiSessionContract
+ * @see app.freerouting.gui.workspace.GuiBoardManager
+ * @see WorkspaceContract
  * @see app.freerouting.management.HeadlessBoardManager
  * @see RoutingBoard
  */

@@ -177,7 +177,7 @@ This is analogous to what `Network.read_net_scope()` does for `(fromto ...)` cla
 
 ### Phase 5 — Optimizer Guard
 
-After routing, the optimizer must not merge star sub-net traces into a daisy chain. Guard this with a check in `BatchOptimizer` or `OptViaAlgo`: if a trace belongs to a sub-net whose parent net is a star-ground net, skip trace-length reduction moves that would alter the star topology.
+After routing, the optimizer must not merge star sub-net traces into a daisy chain. Guard this with a check in `BatchOptimizer` or `ViaOptimizer`: if a trace belongs to a sub-net whose parent net is a star-ground net, skip trace-length reduction moves that would alter the star topology.
 
 ---
 
