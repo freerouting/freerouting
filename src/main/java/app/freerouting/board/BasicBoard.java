@@ -19,13 +19,9 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
@@ -82,6 +78,9 @@ public class BasicBoard implements Serializable {
 
   private transient Set<Integer> normalizeSuppressedNetNos = new HashSet<>();
   private transient int revision;
+  private transient BoardItemRepository itemRepository;
+  private transient BoardConnectivityQueries connectivityQueries;
+  private transient BoardSnapshotManager snapshotManager;
 
   /** The rectangle, where the graphics may be not up-to-date. */
   private transient IntBox updateBox = IntBox.EMPTY;
@@ -121,41 +120,7 @@ public class BasicBoard implements Serializable {
 
   /** Deserialize. */
   public static BasicBoard deserialize(byte[] objectByteArray) {
-    try {
-      ByteArrayInputStream inputStream = new ByteArrayInputStream(objectByteArray);
-      ObjectInputStream objectStream = new ObjectInputStream(inputStream);
-
-      return (BasicBoard) objectStream.readObject();
-    } catch (Exception e) {
-      FRLogger.error("Couldn't deserialize board", e);
-    }
-
-    return null;
-  }
-
-  private static String convertByteArrayToHexString(byte[] arrayBytes) {
-    StringBuilder stringBuffer = new StringBuilder();
-    for (int i = 0; i < arrayBytes.length; i++) {
-      stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16).substring(1));
-    }
-    return stringBuffer.toString();
-  }
-
-  private static boolean isItemActivityDebugCandidate(Item item) {
-    IntBox bounds = item.boundingBox();
-    IntBox debugWindow = new IntBox(1620000, -1105000, 1930000, -1003000);
-    return bounds != null && bounds.intersects(debugWindow);
-  }
-
-  private static String firstNetOrNone(Item item) {
-    return item.netCount() > 0 ? Integer.toString(item.getNetNumber(0)) : "none";
-  }
-
-  private static String describeBounds(IntBox bounds) {
-    if (bounds == null) {
-      return "null";
-    }
-    return "[(" + bounds.ll.x + "," + bounds.ll.y + ")..(" + bounds.ur.x + "," + bounds.ur.y + ")]";
+    return BoardSnapshotManager.deserialize(objectByteArray);
   }
 
   public int getRevision() {
@@ -169,67 +134,23 @@ public class BasicBoard implements Serializable {
 
   /** Serialize. */
   public byte[] serialize(boolean basicProfile) {
-    try {
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      ObjectOutputStream objectStream = new ObjectOutputStream(outputStream);
-
-      if (basicProfile) {
-        objectStream.writeObject(this.getTraces());
-        objectStream.writeObject(this.getVias());
-        objectStream.writeObject(this.itemList);
-      } else {
-        objectStream.writeObject(this);
-      }
-
-      objectStream.close();
-
-      return outputStream.toByteArray();
-    } catch (Exception e) {
-      FRLogger.error("Couldn't serialize board", e);
-    }
-
-    return null;
+    return getSnapshotManager().serialize(basicProfile);
   }
 
   /** Clone. */
   @Override
   public BasicBoard clone() {
-    return deserialize(this.serialize(false));
+    return BoardSnapshotManager.deserialize(getSnapshotManager().serialize(false));
   }
 
   /** Returns an MD5 hash of the board trace state. */
   public String getHash() {
-    try {
-      MessageDigest digest = MessageDigest.getInstance("MD5");
-      digest.update(this.serialize(true));
-      byte[] hashedBytes = digest.digest();
-
-      return convertByteArrayToHexString(hashedBytes);
-    } catch (Exception e) {
-      FRLogger.error("Couldn't calculate hash for board", e);
-    }
-
-    return null;
+    return getSnapshotManager().getHash();
   }
 
   /** Returns the number of trace ID differences compared to another board. */
   public int diffTraces(BasicBoard compareTo) {
-    int result = 0;
-    HashSet<Integer> traceIds = new HashSet<>();
-    for (Trace trace : this.getTraces()) {
-      traceIds.add(trace.getId());
-    }
-
-    for (Trace trace : compareTo.getTraces()) {
-      if (!traceIds.contains(trace.getId())) {
-        result++;
-      } else {
-        traceIds.remove(trace.getId());
-      }
-    }
-    result += traceIds.size();
-
-    return result;
+    return getSnapshotManager().diffTraces(compareTo);
   }
 
   /**
@@ -643,77 +564,12 @@ public class BasicBoard implements Serializable {
 
   /** Returns the outline of the board. */
   public BoardOutline getOutline() {
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      UndoableObjects.Storable currentItem = itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof BoardOutline outline) {
-        return outline;
-      }
-    }
-    return null;
+    return getItemRepository().getOutline();
   }
 
   /** Removes an item from the board. */
   public void removeItem(Item item) {
-    if (item == null) {
-      return;
-    }
-    if (isItemActivityDebugCandidate(item)) {
-      FRLogger.trace(
-          "ITEM_ACTIVITY action=REMOVE"
-              + ", id="
-              + item.getId()
-              + ", type="
-              + item.getClass().getSimpleName()
-              + ", bounds="
-              + describeBounds(item.boundingBox())
-              + ", net0="
-              + firstNetOrNone(item));
-    }
-    if (item instanceof Trace t && t.netNumbers.length > 0 && t.netNumbers[0] == 94) {
-      if (t instanceof PolylineTrace pt
-          && pt.cornerCount() == 2
-          && t.firstCorner().equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1097274))
-          && t.lastCorner()
-              .equals(new app.freerouting.geometry.planar.IntPoint(1885928, -1098024))) {
-        FRLogger.trace(
-            "BasicBoard.remove_item",
-            "compare_trace_remove_item",
-            "REMOVE_ITEM called on trace [7,8]",
-            "Net #" + t.netNumbers[0] + ",Trace #" + t.getId() + ",Layer #" + t.getLayer(),
-            new Point[] {t.firstCorner(), t.lastCorner()});
-        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-          FRLogger.trace(
-              "BasicBoard.remove_item",
-              "compare_trace_remove_item_stack",
-              ste.toString(),
-              "Net #" + t.netNumbers[0] + ",Trace #" + t.getId() + ",Layer #" + t.getLayer(),
-              new Point[] {t.firstCorner(), t.lastCorner()});
-        }
-      } else {
-        FRLogger.trace(
-            "BasicBoard.remove_item",
-            "compare_trace_remove_item",
-            "REMOVE_ITEM called by " + Thread.currentThread().getStackTrace()[3],
-            "Net #" + t.netNumbers[0] + ",Trace #" + t.getId() + ",Layer #" + t.getLayer(),
-            new Point[] {t.firstCorner(), t.lastCorner()});
-      }
-    }
-    if (item.isDeletionForbidden()) {
-      return;
-    }
-    additionalUpdateAfterChange(item); // must be called before item is deleted.
-    searchTreeManager.remove(item);
-    itemList.delete(item);
-
-    // let the observers synchronize the deletion
-    if ((communication != null) && (communication.observers != null)) {
-      communication.observers.notifyDeleted(item);
-    }
-    incrementRevision();
+    getItemRepository().removeItem(item);
   }
 
   /**
@@ -723,112 +579,37 @@ public class BasicBoard implements Serializable {
    * @return the found item, or null if no such item is found
    */
   public Item getItem(int id) {
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      Item currentItem = (Item) itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem.getId() == id) {
-        return currentItem;
-      }
-    }
-    return null;
+    return getItemRepository().getItem(id);
   }
 
   /** Returns the list of all items on the board. */
   public Collection<Item> getItems() {
-    Collection<Item> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      Item currentItem = (Item) itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      result.add(currentItem);
-    }
-    return result;
+    return getItemRepository().getItems();
   }
 
   /** Returns all connectable items on the board containing netNumber. */
   public Collection<Item> getConnectableItems(int netNumber) {
-    Collection<Item> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      Item currentItem = (Item) itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof Connectable && currentItem.containsNet(netNumber)) {
-        result.add(currentItem);
-      }
-    }
-    return result;
+    return getConnectivityQueries().getConnectableItems(netNumber);
   }
 
   /** Returns the count of connectable items of the net with number netNumber. */
   public int connectableItemCount(int netNumber) {
-    int result = 0;
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      Item currentItem = (Item) itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof Connectable && currentItem.containsNet(netNumber)) {
-        ++result;
-      }
-    }
-    return result;
+    return getConnectivityQueries().connectableItemCount(netNumber);
   }
 
   /** Returns all items with the input component ID. */
   public Collection<Item> getComponentItems(int componentId) {
-    Collection<Item> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      Item currentItem = (Item) itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem.getComponentId() == componentId) {
-        result.add(currentItem);
-      }
-    }
-    return result;
+    return getConnectivityQueries().getComponentItems(componentId);
   }
 
   /** Returns all pins with the input component ID. */
   public Collection<Pin> getComponentPins(int componentId) {
-    Collection<Pin> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      Item currentItem = (Item) itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem.getComponentId() == componentId && currentItem instanceof Pin pin) {
-        result.add(pin);
-      }
-    }
-    return result;
+    return getConnectivityQueries().getComponentPins(componentId);
   }
 
   /** Returns the pin with the input component ID and pin index, or null, if no such pin exists. */
   public Pin getPin(int componentId, int pinIndex) {
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      Item currentItem = (Item) itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem.getComponentId() == componentId && currentItem instanceof Pin currentPin) {
-        if (currentPin.pinIndex == pinIndex) {
-          return currentPin;
-        }
-      }
-    }
-    return null;
+    return getConnectivityQueries().getPin(componentId, pinIndex);
   }
 
   /**
@@ -850,100 +631,32 @@ public class BasicBoard implements Serializable {
 
   /** Returns the list of all conduction areas on the board. */
   public Collection<ConductionArea> getConductionAreas() {
-    Collection<ConductionArea> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      UndoableObjects.Storable currentItem = itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof ConductionArea area) {
-        result.add(area);
-      }
-    }
-    return result;
+    return getItemRepository().getConductionAreas();
   }
 
   /** Returns the list of all pins on the board. */
   public Collection<Pin> getPins() {
-    Collection<Pin> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      UndoableObjects.Storable currentItem = itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof Pin pin) {
-        result.add(pin);
-      }
-    }
-    return result;
+    return getItemRepository().getPins();
   }
 
   /** Returns the list of all pins on the board with only 1 layer. */
   public Collection<Pin> getSmdPins() {
-    Collection<Pin> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      UndoableObjects.Storable currentItem = itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof Pin currentPin) {
-        if (currentPin.firstLayer() == currentPin.lastLayer()) {
-          result.add(currentPin);
-        }
-      }
-    }
-    return result;
+    return getItemRepository().getSmdPins();
   }
 
   /** Returns the list of all vias on the board. */
   public Collection<Via> getVias() {
-    Collection<Via> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      UndoableObjects.Storable currentItem = itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof Via via) {
-        result.add(via);
-      }
-    }
-    return result;
+    return getItemRepository().getVias();
   }
 
   /** Returns the list of all traces on the board. */
   public Collection<Trace> getTraces() {
-    Collection<Trace> result = new LinkedList<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      UndoableObjects.Storable currentItem = itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof Trace trace) {
-        result.add(trace);
-      }
-    }
-    return result;
+    return getItemRepository().getTraces();
   }
 
   /** Returns the cumulative length of all traces on the board. */
   public double cumulativeTraceLength() {
-    double result = 0;
-    Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
-    for (; ; ) {
-      UndoableObjects.Storable currentItem = itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof Trace trace) {
-        result += trace.getLength();
-      }
-    }
-    return result;
+    return getItemRepository().cumulativeTraceLength();
   }
 
   /**
@@ -1178,30 +891,7 @@ public class BasicBoard implements Serializable {
 
   /** Returns a Collection of Collections of items forming a connected set. */
   public Collection<Collection<Item>> getConnectedSets(int netNumber) {
-    Collection<Collection<Item>> result = new LinkedList<>();
-    if (netNumber <= 0) {
-      return result;
-    }
-    SortedSet<Item> itemsToHandle = new TreeSet<>();
-    Iterator<UndoableObjects.UndoableObjectNode> it = this.itemList.startReadObject();
-    for (; ; ) {
-      Item currentItem = (Item) itemList.readObject(it);
-      if (currentItem == null) {
-        break;
-      }
-      if (currentItem instanceof Connectable && currentItem.containsNet(netNumber)) {
-        itemsToHandle.add(currentItem);
-      }
-    }
-    Iterator<Item> it2 = itemsToHandle.iterator();
-    while (it2.hasNext()) {
-      Item currentItem = it2.next();
-      Collection<Item> nextConnectedSet = currentItem.getConnectedSet(netNumber);
-      result.add(nextConnectedSet);
-      itemsToHandle.removeAll(nextConnectedSet);
-      it2 = itemsToHandle.iterator();
-    }
-    return result;
+    return getConnectivityQueries().getConnectedSets(netNumber);
   }
 
   /**
@@ -1510,37 +1200,7 @@ public class BasicBoard implements Serializable {
 
   /** Inserts an item into the board database. */
   public void insertItem(Item item) {
-    if (item == null) {
-      return;
-    }
-    if (isItemActivityDebugCandidate(item)) {
-      FRLogger.trace(
-          "ITEM_ACTIVITY action=INSERT"
-              + ", id="
-              + item.getId()
-              + ", type="
-              + item.getClass().getSimpleName()
-              + ", bounds="
-              + describeBounds(item.boundingBox())
-              + ", net0="
-              + firstNetOrNone(item));
-    }
-
-    if (rules == null
-        || rules.clearanceMatrix == null
-        || item.clearanceClassIndex() < 0
-        || item.clearanceClassIndex() >= rules.clearanceMatrix.getClassCount()) {
-      FRLogger.warn("LayeredBoard.insert_item: clearanceClass no out of range");
-      item.setClearanceClassIndex(0);
-    }
-    item.board = this;
-    itemList.insert(item);
-    searchTreeManager.insert(item);
-    if ((communication != null) && (communication.observers != null)) {
-      communication.observers.notifyNew(item);
-    }
-    additionalUpdateAfterChange(item);
-    incrementRevision();
+    getItemRepository().insertItem(item);
   }
 
   /**
@@ -1611,8 +1271,7 @@ public class BasicBoard implements Serializable {
 
   /** Makes the current board situation restorable by undo. */
   public void generateSnapshot() {
-    itemList.generateSnapshot();
-    components.generateSnapshot();
+    getSnapshotManager().generateSnapshot();
   }
 
   /**
@@ -1620,7 +1279,7 @@ public class BasicBoard implements Serializable {
    * Returns false, if no more snapshot could be popped.
    */
   public boolean popSnapshot() {
-    return itemList.popSnapshot();
+    return getSnapshotManager().popSnapshot();
   }
 
   /**
@@ -1688,11 +1347,35 @@ public class BasicBoard implements Serializable {
     return true;
   }
 
+  private BoardItemRepository getItemRepository() {
+    if (itemRepository == null) {
+      itemRepository = new BoardItemRepository(this);
+    }
+    return itemRepository;
+  }
+
+  private BoardConnectivityQueries getConnectivityQueries() {
+    if (connectivityQueries == null) {
+      connectivityQueries = new BoardConnectivityQueries(this);
+    }
+    return connectivityQueries;
+  }
+
+  private BoardSnapshotManager getSnapshotManager() {
+    if (snapshotManager == null) {
+      snapshotManager = new BoardSnapshotManager(this);
+    }
+    return snapshotManager;
+  }
+
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     // insert the items on the board into the search trees
     searchTreeManager = new SearchTreeManager(this);
     normalizeSuppressedNetNos = new HashSet<>();
+    itemRepository = null;
+    connectivityQueries = null;
+    snapshotManager = null;
     for (Item currentItem : this.getItems()) {
       currentItem.board = this;
       searchTreeManager.insert(currentItem);

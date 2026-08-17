@@ -95,9 +95,7 @@
   },
   "confirm_cancel": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "5792a2543b49e787b089e6b02778d33454de0729d39ad19c53015959eaf9556f",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -181,9 +179,7 @@
   },
   "error_design_file_read_failed": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "bef72e51fdba184a20e9f2e3acb18d01b39d0830f5356e75b425430f6cb536ab",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -257,7 +253,7 @@
   "loading_design": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.BoardFrame"
+      "app.freerouting.gui.BoardLoadCoordinator"
     ],
     "english_hash": "b0e1b8889847a6d17b17935fde2e5c6cc00bf101667b581831c865b339a1dedf",
     "grammatical_role": "noun_phrase",
@@ -275,7 +271,7 @@
   "loading_design_with_file": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.BoardFrame",
+      "app.freerouting.gui.BoardLoadCoordinator",
       "app.freerouting.gui.GuiManager"
     ],
     "english_hash": "71a80ead8e9aca0e78e51a0a3896af4934f8f8856a29f230e5d14dbdc082d82a",
@@ -341,9 +337,7 @@
   },
   "rendering_board": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "54bd6df9e71515b6366c3f56eea5411bf7b4f0d714f10ee5d1b29b228d736b4d",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -485,9 +479,7 @@
   },
   "title": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "f516a949dea8024b29c91fc4f57c0e71dd987957049058f5d6191dcfc44c73f2",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

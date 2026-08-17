@@ -28,7 +28,6 @@ import java.util.LinkedList;
 /** Objects of class Trace, whose geometry is described by a Polyline. */
 public class PolylineTrace extends Trace implements Serializable {
 
-  private static final int MAX_NORMALIZATION_DEPTH = 16;
   // primary data
   private Polyline lines;
 
@@ -80,7 +79,7 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   @Override
   public Point firstCorner() {
-    return lines.corner(0);
+    return PolylineTraceGeometry.firstCorner(lines);
   }
 
   /**
@@ -89,7 +88,7 @@ public class PolylineTrace extends Trace implements Serializable {
    */
   @Override
   public Point lastCorner() {
-    return lines.corner(lines.lines.length - 2);
+    return PolylineTraceGeometry.lastCorner(lines);
   }
 
   /**
@@ -97,18 +96,17 @@ public class PolylineTrace extends Trace implements Serializable {
    * one.
    */
   public int cornerCount() {
-    return lines.lines.length - 1;
+    return PolylineTraceGeometry.cornerCount(lines);
   }
 
   @Override
   public double getLength() {
-    return lines.lengthApprox();
+    return PolylineTraceGeometry.length(lines);
   }
 
   @Override
   public IntBox boundingBox() {
-    IntBox result = this.lines.boundingBox();
-    return result.offset(this.getHalfWidth());
+    return PolylineTraceGeometry.boundingBox(lines, getHalfWidth());
   }
 
   /** Returns the polyline of this trace. */
@@ -116,37 +114,42 @@ public class PolylineTrace extends Trace implements Serializable {
     return lines;
   }
 
+  /** Replaces the stored polyline for the search-tree adapter. */
+  void setPolyline(Polyline newPolyline) {
+    lines = newPolyline;
+  }
+
   @Override
   protected TileShape[] calculateTreeShapes(ShapeSearchTree searchTree) {
-    return searchTree.calculateTreeShapes(this);
+    return PolylineTraceSearchTreeAdapter.calculateTreeShapes(this, searchTree);
   }
 
   /** Returns the count of tile shapes of this polyline. */
   @Override
   public int tileShapeCount() {
-    return Math.max(lines.lines.length - 2, 0);
+    return PolylineTraceGeometry.tileShapeCount(lines);
   }
 
   @Override
   public void translateBy(Vector vector) {
-    lines = lines.translateBy(vector);
+    lines = PolylineTraceGeometry.translate(lines, vector);
     this.clearDerivedData();
   }
 
   @Override
   public void turn90Degree(int factor, IntPoint pole) {
-    lines = lines.turn90Degree(factor, pole);
+    lines = PolylineTraceGeometry.turn90Degree(lines, factor, pole);
     this.clearDerivedData();
   }
 
   @Override
   public void rotateApprox(double angleInDegree, FloatPoint pole) {
-    this.lines = this.lines.rotateApprox(Math.toRadians(angleInDegree), pole);
+    this.lines = PolylineTraceGeometry.rotateApprox(lines, angleInDegree, pole);
   }
 
   @Override
   public void changePlacementSide(IntPoint pole) {
-    lines = lines.mirrorVertical(pole);
+    lines = PolylineTraceGeometry.mirrorVertical(lines, pole);
 
     if (this.board != null) {
       this.setLayer(board.getLayerCount() - this.getLayer() - 1);
@@ -291,17 +294,11 @@ public class PolylineTrace extends Trace implements Serializable {
     // Determine whether both traces have entries in the default search tree.
     // If either is missing, the optimised merge_entries_in_front path will NPE,
     // so we fall back to the safe full-remove + re-insert path in that case.
-    boolean hasTreeEntries =
-        (this.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()) != null)
-            && (otherTrace.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()) != null);
+    boolean hasTreeEntries = PolylineTraceSearchTreeAdapter.hasDefaultEntries(this, otherTrace);
     if (joinedPolyline.lines.length != newLineCount || !hasTreeEntries) {
       // consecutive parallel lines were skipped at the join location OR a trace
       // lacks search-tree entries — combine without performance optimization
-      board.searchTreeManager.remove(this);
-      this.clearSearchTreeEntries();
-      this.lines = joinedPolyline;
-      this.clearDerivedData();
-      board.searchTreeManager.insert(this);
+      PolylineTraceSearchTreeAdapter.replaceGeometry(this, joinedPolyline);
     } else {
       // reuse the tree entries for better performance
       // create the changed line shape at the join location
@@ -309,7 +306,7 @@ public class PolylineTrace extends Trace implements Serializable {
       if (skipLine) {
         --toNo;
       }
-      board.searchTreeManager.mergeEntriesInFront(
+      PolylineTraceSearchTreeAdapter.mergeEntriesInFront(
           otherTrace, this, joinedPolyline, otherLines.length - 3, toNo);
       otherTrace.clearSearchTreeEntries();
       this.lines = joinedPolyline;
@@ -421,17 +418,11 @@ public class PolylineTrace extends Trace implements Serializable {
     // Determine whether both traces have entries in the default search tree.
     // If either is missing, the optimised merge_entries_at_end path will NPE,
     // so we fall back to the safe full-remove + re-insert path in that case.
-    boolean hasTreeEntries =
-        (this.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()) != null)
-            && (otherTrace.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()) != null);
+    boolean hasTreeEntries = PolylineTraceSearchTreeAdapter.hasDefaultEntries(this, otherTrace);
     if (joinedPolyline.lines.length != newLineCount || !hasTreeEntries) {
       // consecutive parallel lines were skipped at the join location OR a trace
       // lacks search-tree entries — combine without performance optimization
-      board.searchTreeManager.remove(this);
-      this.clearSearchTreeEntries();
-      this.lines = joinedPolyline;
-      this.clearDerivedData();
-      board.searchTreeManager.insert(this);
+      PolylineTraceSearchTreeAdapter.replaceGeometry(this, joinedPolyline);
     } else {
       // reuse tree entries for better performance
       // create the changed line shape at the join location
@@ -439,7 +430,7 @@ public class PolylineTrace extends Trace implements Serializable {
       if (skipLine) {
         --toNo;
       }
-      board.searchTreeManager.mergeEntriesAtEnd(
+      PolylineTraceSearchTreeAdapter.mergeEntriesAtEnd(
           otherTrace, this, joinedPolyline, thisLines.length - 3, toNo);
       otherTrace.clearSearchTreeEntries();
       this.lines = joinedPolyline;
@@ -798,125 +789,7 @@ public class PolylineTrace extends Trace implements Serializable {
    * @return true, if something was changed
    */
   public boolean normalize(IntOctagon clipShape) {
-    return normalize(clipShape, 0);
-  }
-
-  private boolean normalize(IntOctagon clipShape, int normalizationDepth) {
-    if (normalizationDepth > MAX_NORMALIZATION_DEPTH) {
-      // Return false (no further change at this depth level) rather than throwing an exception.
-      // The outer normalizeTraces() loop treats a false return as "nothing changed" for this trace,
-      // which is safe: the trace geometry may be slightly sub-optimal (extra corners), but it
-      // remains
-      // structurally valid, its endpoint contacts are preserved and removeTails() will not touch
-      // it.
-      // Throwing here was causing two problems:
-      //   1. Noisy WARN log in FoundConnectionInserter every routing pass for complex plane nets.
-      //   2. Intermediate trace fragments created during deep-recursion split/combine were left in
-      // an
-      //      inconsistent state, causing them to be misidentified as tails and removed by
-      // removeTails(),
-      //      which in turn forced GND routing to re-attempt the same connection on every subsequent
-      // pass.
-      FRLogger.debug(
-          "PolylineTrace.normalize: max normalization depth ("
-              + MAX_NORMALIZATION_DEPTH
-              + ") reached for trace #"
-              + this.getId()
-              + " on net "
-              + (this.netCount() > 0 ? this.netNumbers[0] : -1)
-              + " — stopping recursion, trace kept as-is.");
-      return false;
-    }
-
-    boolean debugNet49 =
-        this.netNumbers != null
-            && this.netNumbers.length > 0
-            && this.netNumbers[0] == 49
-            && normalizationDepth == 0;
-
-    boolean observersActivated = false;
-    BasicBoard routingBoard = this.board;
-    if (this.board != null) {
-      // Let the observers know the trace changes.
-      observersActivated = !routingBoard.observersActive();
-      if (observersActivated) {
-        routingBoard.startNotifyObservers();
-      }
-    }
-    Collection<PolylineTrace> splitPieces = this.split(clipShape);
-    boolean result = splitPieces.size() != 1;
-    if (debugNet49) {
-      FRLogger.trace(
-          "compare_trace_normalize_net49 depth="
-              + normalizationDepth
-              + ", thisId="
-              + this.getId()
-              + ", thisOnBoard="
-              + this.isOnTheBoard()
-              + ", thisFirst="
-              + this.firstCorner()
-              + ", thisLast="
-              + this.lastCorner()
-              + ", splitPieces="
-              + splitPieces.size());
-      for (PolylineTrace piece : splitPieces) {
-        FRLogger.trace(
-            "compare_trace_normalize_net49  piece id="
-                + piece.getId()
-                + ", onBoard="
-                + piece.isOnTheBoard()
-                + ", first="
-                + piece.firstCorner()
-                + ", last="
-                + piece.lastCorner());
-      }
-    }
-    for (PolylineTrace currentSplitTrace : splitPieces) {
-      if (currentSplitTrace.isOnTheBoard()) {
-        boolean traceCombined = currentSplitTrace.combine();
-        if (debugNet49) {
-          FRLogger.trace(
-              "compare_trace_normalize_net49  after_combine id="
-                  + currentSplitTrace.getId()
-                  + ", onBoard="
-                  + currentSplitTrace.isOnTheBoard()
-                  + ", combined="
-                  + traceCombined
-                  + ", first="
-                  + (currentSplitTrace.isOnTheBoard() ? currentSplitTrace.firstCorner() : "N/A")
-                  + ", last="
-                  + (currentSplitTrace.isOnTheBoard() ? currentSplitTrace.lastCorner() : "N/A"));
-        }
-        if (currentSplitTrace.cornerCount() == 2
-            && currentSplitTrace.firstCorner().equals(currentSplitTrace.lastCorner())) {
-          // remove trace with only 1 corner — only if deletion is allowed.
-          // USER_FIXED traces cannot be removed; skipping silently prevents an infinite loop in
-          // normalizeTraces (where 'result=true' would cause the outer while to spin forever).
-          if (!currentSplitTrace.isDeletionForbidden()) {
-            board.removeItem(currentSplitTrace);
-            result = true;
-          } else {
-            int netNumber = currentSplitTrace.netCount() > 0 ? currentSplitTrace.netNumbers[0] : -1;
-            // A degenerate user-fixed trace (first==last corner) cannot be removed because
-            // deletion is forbidden. This is expected for boards with malformed DSN geometry
-            // (e.g. bad EDA export). The user was already warned at load time; suppress here.
-            FRLogger.debug(
-                "PolylineTrace.normalize: skipping removal of degenerate user-fixed trace #"
-                    + currentSplitTrace.getId()
-                    + " on net "
-                    + netNumber
-                    + " (first==last corner)");
-          }
-        } else if (traceCombined) {
-          currentSplitTrace.normalize(clipShape, normalizationDepth + 1);
-          result = true;
-        }
-      }
-    }
-    if (observersActivated) {
-      routingBoard.endNotifyObservers();
-    }
-    return result;
+    return PolylineTraceNormalization.normalize(this, clipShape);
   }
 
   /**
@@ -1037,8 +910,7 @@ public class PolylineTrace extends Trace implements Serializable {
       FRLogger.warn("PolylineTrace.get_trace_connection_shape index out of range");
       return null;
     }
-    LineSegment currentLineSegment = new LineSegment(this.lines, index + 1);
-    return currentLineSegment.toSimplex().simplify();
+    return PolylineTraceGeometry.connectionShape(lines, index);
   }
 
   @Override
@@ -1098,7 +970,8 @@ public class PolylineTrace extends Trace implements Serializable {
     }
     int keepAtStartCount = Math.max(indexOfFirstDifferentLine - 2, 0);
     int keepAtEndCount = Math.max(newPolyline.lines.length - indexOfLastDifferentLine - 3, 0);
-    board.searchTreeManager.changeEntries(this, newPolyline, keepAtStartCount, keepAtEndCount);
+    PolylineTraceSearchTreeAdapter.changeEntries(
+        this, newPolyline, keepAtStartCount, keepAtEndCount);
     lines = newPolyline;
 
     // let the observers synchronize the changes

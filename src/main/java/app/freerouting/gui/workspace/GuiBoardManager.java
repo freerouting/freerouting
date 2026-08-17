@@ -29,7 +29,6 @@ import app.freerouting.gui.ComboBoxLayer;
 import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.rendering.GraphicsContext;
 import app.freerouting.io.BoardReadResult;
-import app.freerouting.io.specctra.DsnWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
@@ -50,7 +49,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -344,6 +342,12 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   /** Batch routing options owned by this GUI session. */
   private final GuiBoardSessionState sessionState;
 
+  /** Board serialization and export collaborator behind the GUI façade. */
+  private final GuiBoardPersistence persistence;
+
+  /** User-input collaborator behind the public interaction façade. */
+  private final GuiBoardInteractionController interactionController;
+
   /**
    * Thread managing long-running interactive actions in the background.
    *
@@ -452,6 +456,8 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     this.globalSettings = globalSettings;
     this.settingsMerger = settingsMerger;
     this.sessionState = new GuiBoardSessionState(globalSettings, routingJob);
+    this.persistence = new GuiBoardPersistence(this);
+    this.interactionController = new GuiBoardInteractionController(this);
     this.locale = globalSettings.currentLocale;
     this.panel = panel;
     this.screenMessages = panel.screenMessages;
@@ -489,11 +495,6 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     }
   }
 
-  /** Dispatches an input event to the registered concrete state controller. */
-  private EditorStateHandle dispatchEditorEvent(EditorEvent event) {
-    return editorStateController == null ? null : editorStateController.dispatch(event);
-  }
-
   /**
    * Sets the owning {@link app.freerouting.gui.BoardFrame} for this manager.
    *
@@ -505,6 +506,26 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    */
   public void setBoardFrame(app.freerouting.gui.BoardFrame boardFrame) {
     this.boardFrame = boardFrame;
+  }
+
+  /** Returns the concrete editor controller for the interaction collaborator. */
+  EditorStateController getInteractionStateController() {
+    return editorStateController;
+  }
+
+  /** Returns the coordinate transform used by screen-facing interaction methods. */
+  CoordinateTransform getCoordinateTransform() {
+    return coordinateTransform;
+  }
+
+  /** Returns the current rendering context for screen-facing interaction methods. */
+  GraphicsContext getGraphicsContext() {
+    return graphicsContext;
+  }
+
+  /** Stores the latest screen-derived board position for the public mouse-position façade. */
+  void setInteractionMousePosition(FloatPoint position) {
+    currentMousePosition = position;
   }
 
   /**
@@ -1859,17 +1880,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #stopAutorouterAndRouteOptimizer()
    */
   public void leftButtonClicked(Point2D point) {
-    if (boardIsReadOnly) {
-      // We are currently busy working on the board and the user clicked on the canvas
-      // with the left mouse button.
-      this.stopAutorouterAndRouteOptimizer();
-      return;
-    }
-    if (editorStateController != null && graphicsContext != null) {
-      FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
-      EditorStateHandle returnState = dispatchEditorEvent(new EditorEvent.LeftClick(location));
-      applyInteractiveStateChange(returnState, true, false);
-    }
+    interactionController.leftButtonClicked(point);
   }
 
   /**
@@ -1893,32 +1904,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #pickItems(FloatPoint)
    */
   public void mouseMoved(Point2D point) {
-    if (editorStateController != null && graphicsContext != null) {
-      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(point);
-
-      // Always update the mouse position display, even when board is read-only
-      FloatPoint mousePosition = coordinateTransform.boardToUser(this.currentMousePosition);
-      screenMessages.setMousePosition(mousePosition);
-
-      if (boardIsReadOnly) {
-        // no interactive action when logfile is running, but mouse position is still updated
-        return;
-      }
-
-      EditorStateHandle returnState = dispatchEditorEvent(new EditorEvent.MouseMoved());
-      Set<Item> hoverItem = pickItems(this.currentMousePosition);
-      if (hoverItem.size() == 1) {
-        String hoverInfo = hoverItem.iterator().next().getHoverInfo(locale);
-        this.panel.setToolTipText(hoverInfo);
-      } else {
-        this.panel.setToolTipText(null);
-      }
-      // An automatic repaint here would slow down the display
-      // performance in interactive route.
-      // If a repaint is necessary, it should be done in the individual mouse_moved
-      // method of the class derived from InteractiveState
-      applyInteractiveStateChange(returnState, true, false);
-    }
+    interactionController.mouseMoved(point);
   }
 
   /**
@@ -1931,12 +1917,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InteractiveState#mousePressed(FloatPoint)
    */
   public void mousePressed(Point2D point) {
-    if (editorStateController != null && graphicsContext != null) {
-      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(point);
-      EditorStateHandle returnState =
-          dispatchEditorEvent(new EditorEvent.MousePressed(this.currentMousePosition));
-      applyInteractiveStateChange(returnState, false, false);
-    }
+    interactionController.mousePressed(point);
   }
 
   /**
@@ -1951,12 +1932,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InteractiveState#mouseDragged(FloatPoint)
    */
   public void mouseDragged(Point2D point) {
-    if (editorStateController != null && graphicsContext != null) {
-      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(point);
-      EditorStateHandle returnState =
-          dispatchEditorEvent(new EditorEvent.MouseDragged(this.currentMousePosition));
-      applyInteractiveStateChange(returnState, true, false);
-    }
+    interactionController.mouseDragged(point);
   }
 
   /**
@@ -1970,10 +1946,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InteractiveState#buttonReleased()
    */
   public void buttonReleased() {
-    if (editorStateController != null) {
-      EditorStateHandle returnState = dispatchEditorEvent(new EditorEvent.ButtonReleased());
-      applyInteractiveStateChange(returnState, true, false);
-    }
+    interactionController.buttonReleased();
   }
 
   /**
@@ -1993,12 +1966,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InteractiveState#mouseWheelMoved(int)
    */
   public void mouseWheelMoved(Point2D point, int rotation) {
-    if (editorStateController != null && graphicsContext != null) {
-      this.currentMousePosition = graphicsContext.coordinateTransform.screenToBoard(point);
-      EditorStateHandle returnState =
-          dispatchEditorEvent(new EditorEvent.MouseWheelMoved(rotation));
-      applyInteractiveStateChange(returnState, true, false);
-    }
+    interactionController.mouseWheelMoved(point, rotation);
   }
 
   /**
@@ -2015,12 +1983,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InteractiveState#keyTyped(char)
    */
   public void keyTypedAction(char keyChar) {
-    if (boardIsReadOnly || editorStateController == null || graphicsContext == null) {
-      // no interactive action when logfile is running or board graphics are not ready
-      return;
-    }
-    EditorStateHandle returnState = dispatchEditorEvent(new EditorEvent.KeyTyped(keyChar));
-    applyInteractiveStateChange(returnState, true, true);
+    interactionController.keyTypedAction(keyChar);
   }
 
   /**
@@ -2035,13 +1998,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #cancelState()
    */
   public void returnFromState() {
-    if (boardIsReadOnly) {
-      // no interactive action when logfile is running
-      return;
-    }
-
-    EditorStateHandle newState = dispatchEditorEvent(new EditorEvent.Complete());
-    applyInteractiveStateChange(newState, true, false);
+    interactionController.returnFromState();
   }
 
   /**
@@ -2056,13 +2013,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #returnFromState()
    */
   public void cancelState() {
-    if (boardIsReadOnly) {
-      // no interactive action when logfile is running
-      return;
-    }
-
-    EditorStateHandle newState = dispatchEditorEvent(new EditorEvent.Cancel());
-    applyInteractiveStateChange(newState, true, false);
+    interactionController.cancelState();
   }
 
   /**
@@ -2079,8 +2030,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InteractiveState#changeLayerAction(int)
    */
   public boolean changeLayerAction(int newLayer) {
-    return !boardIsReadOnly
-        && (editorStateController == null || editorStateController.changeLayerAction(newLayer));
+    return interactionController.changeLayerAction(newLayer);
   }
 
   /**
@@ -2093,9 +2043,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #setRouteMenuState()
    */
   public void setInspectMenuState() {
-    if (editorStateController != null) {
-      editorStateController.setInspectMenuState();
-    }
+    interactionController.setInspectMenuState();
   }
 
   /**
@@ -2108,9 +2056,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #setInspectMenuState()
    */
   public void setRouteMenuState() {
-    if (editorStateController != null) {
-      editorStateController.setRouteMenuState();
-    }
+    interactionController.setRouteMenuState();
   }
 
   /**
@@ -2121,9 +2067,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see DragMenuState
    */
   public void setDragMenuState() {
-    if (editorStateController != null) {
-      editorStateController.setDragMenuState();
-    }
+    interactionController.setDragMenuState();
   }
 
   /**
@@ -2159,38 +2103,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #saveAsBinary(ObjectOutputStream)
    */
   public boolean loadFromBinary(ObjectInputStream design) {
-    String inputFilename =
-        this.routingJob != null && this.routingJob.input != null
-            ? this.routingJob.input.getFilename()
-            : null;
-    if (this.routingJob != null) {
-      this.routingJob.logInfo(
-          "Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
-    } else {
-      FRLogger.info(
-          "Loading board file" + (inputFilename != null ? " '" + inputFilename + "'" : "") + "...");
-    }
-
-    try {
-      board = (RoutingBoard) design.readObject();
-      workspaceSettings = (WorkspaceSettings) design.readObject();
-      // Adopt the deserialized instance as the authoritative singleton so that subsequent
-      // getOrCreate / getWorkspaceSettings calls return the same object.
-      WorkspaceSettings.setInstance(workspaceSettings);
-      // Register the singleton as the live GuiSettingsSource source (priority 65) in the merger so
-      // that every subsequent merge() call reflects the current interactive GUI state.
-      this.settingsMerger.addOrReplaceSources(workspaceSettings);
-      coordinateTransform = (CoordinateTransform) design.readObject();
-      graphicsContext = (GraphicsContext) design.readObject();
-      originalBoardChecksum = calculateCrc32();
-    } catch (Exception e) {
-      routingJob.logError("Couldn't read design file", e);
-      return false;
-    }
-    screenMessages.setLayer(board.layerStructure.layers[workspaceSettings.getLayer()].name);
-    // Defer GUI refresh until surrounding load flow has recreated frame-managed subwindows.
-    javax.swing.SwingUtilities.invokeLater(this::refreshGuiFromSettings);
-    return true;
+    return persistence.loadFromBinary(design);
   }
 
   /**
@@ -2216,24 +2129,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    */
   public boolean saveAsSpecctraDesignDsn(
       OutputStream outputStream, String designName, boolean compatMode) {
-    if (boardIsReadOnly || outputStream == null) {
-      return false;
-    }
-
-    boolean wasSaveSuccessful;
-    try {
-      DsnWriter.write(getRoutingBoard(), outputStream, designName, compatMode);
-      wasSaveSuccessful = true;
-    } catch (IOException e) {
-      FRLogger.error("unable to write Specctra DSN file", e);
-      wasSaveSuccessful = false;
-    }
-
-    if (wasSaveSuccessful) {
-      originalBoardChecksum = calculateCrc32();
-    }
-
-    return wasSaveSuccessful;
+    return persistence.saveAsSpecctraDesignDsn(outputStream, designName, compatMode);
   }
 
   /**
@@ -2248,11 +2144,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see HeadlessBoardManager#saveAsSpecctraSessionSes
    */
   public boolean saveAsSpecctraSessionSes(OutputStream outputStream, String designName) {
-    if (boardIsReadOnly) {
-      return false;
-    }
-
-    return super.saveAsSpecctraSessionSes(outputStream, designName);
+    return persistence.saveAsSpecctraSessionSes(outputStream, designName);
   }
 
   /**
@@ -2268,11 +2160,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    */
   public boolean saveSpecctraSessionSesAsEagleScriptScr(
       InputStream inputStream, OutputStream outputStream) {
-    if (boardIsReadOnly) {
-      return false;
-    }
-    return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsEagleScriptScr(
-        inputStream, outputStream, this.board);
+    return persistence.saveSpecctraSessionSesAsEagleScriptScr(inputStream, outputStream);
   }
 
   /**
@@ -2378,19 +2266,60 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #loadFromBinary(ObjectInputStream)
    */
   public boolean saveAsBinary(ObjectOutputStream objectStream) {
-    boolean result = true;
-    try {
-      objectStream.writeObject(board);
-      objectStream.writeObject(workspaceSettings);
-      objectStream.writeObject(coordinateTransform);
-      objectStream.writeObject(graphicsContext);
+    return persistence.saveAsBinary(objectStream);
+  }
 
-      originalBoardChecksum = calculateCrc32();
-    } catch (Exception _) {
-      screenMessages.setStatusMessage(tm.getText("save_error"));
-      result = false;
-    }
-    return result;
+  // Package-private persistence seam; the public manager façade remains unchanged.
+  RoutingJob getPersistenceRoutingJob() {
+    return routingJob;
+  }
+
+  RoutingBoard getPersistenceBoard() {
+    return board;
+  }
+
+  void setPersistenceBoard(RoutingBoard value) {
+    board = value;
+  }
+
+  WorkspaceSettings getPersistenceWorkspaceSettings() {
+    return workspaceSettings;
+  }
+
+  void setPersistenceWorkspaceSettings(WorkspaceSettings value) {
+    workspaceSettings = value;
+  }
+
+  CoordinateTransform getPersistenceCoordinateTransform() {
+    return coordinateTransform;
+  }
+
+  void setPersistenceCoordinateTransform(CoordinateTransform value) {
+    coordinateTransform = value;
+  }
+
+  GraphicsContext getPersistenceGraphicsContext() {
+    return graphicsContext;
+  }
+
+  void setPersistenceGraphicsContext(GraphicsContext value) {
+    graphicsContext = value;
+  }
+
+  void setOriginalBoardChecksum(long value) {
+    originalBoardChecksum = value;
+  }
+
+  boolean isBoardReadOnlyForPersistence() {
+    return boardIsReadOnly;
+  }
+
+  String getPersistenceText(String key) {
+    return tm.getText(key);
+  }
+
+  boolean saveHeadlessSpecctraSessionSes(OutputStream outputStream, String designName) {
+    return super.saveAsSpecctraSessionSes(outputStream, designName);
   }
 
   /**
@@ -2413,14 +2342,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see RouteState
    */
   public void startRoute(Point2D point) {
-    if (boardIsReadOnly) {
-      // no interactive action when logfile is running
-      return;
-    }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
-    if (editorStateController != null) {
-      editorStateController.startRoute(location);
-    }
+    interactionController.startRoute(point);
   }
 
   /**
@@ -2436,11 +2358,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see MenuState#selectItems(FloatPoint)
    */
   public void selectItems(Point2D point) {
-    if (boardIsReadOnly || editorStateController == null || !editorStateController.isMenuState()) {
-      return;
-    }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
-    editorStateController.selectItems(location);
+    interactionController.selectItems(point);
   }
 
   /**
@@ -2459,14 +2377,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InspectedItemState
    */
   public void selectItems(Set<Item> items) {
-    if (boardIsReadOnly) {
-      // no interactive action when logfile is running
-      return;
-    }
-    this.displayLayerMessage();
-    if (editorStateController != null) {
-      editorStateController.selectItems(items);
-    }
+    interactionController.selectItems(items);
   }
 
   /**
@@ -2481,10 +2392,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see MenuState
    */
   public void selectItemsInRegion() {
-    if (boardIsReadOnly || editorStateController == null || !editorStateController.isMenuState()) {
-      return;
-    }
-    editorStateController.selectItemsInRegion();
+    interactionController.selectItemsInRegion();
   }
 
   /**
@@ -2500,11 +2408,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see MenuState#swapPins(FloatPoint)
    */
   public void swapPins(Point2D location) {
-    if (boardIsReadOnly || editorStateController == null || !editorStateController.isMenuState()) {
-      return;
-    }
-    FloatPoint boardLocation = graphicsContext.coordinateTransform.screenToBoard(location);
-    editorStateController.swapPins(boardLocation);
+    interactionController.swapPins(location);
   }
 
   /**
@@ -2518,10 +2422,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see BoardPanel#zoomFrame(Point2D, Point2D)
    */
   public void zoomSelection() {
-    if (editorStateController == null || !editorStateController.isInspectedState()) {
-      return;
-    }
-    editorStateController.zoomSelection();
+    interactionController.zoomSelection();
   }
 
   /**
@@ -2542,13 +2443,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InspectedItemState#toggleSelect(FloatPoint)
    */
   public void toggleSelectAction(Point2D point) {
-    if (boardIsReadOnly
-        || editorStateController == null
-        || !editorStateController.isInspectedState()) {
-      return;
-    }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
-    editorStateController.toggleSelect(location);
+    interactionController.toggleSelectAction(point);
   }
 
   /**
@@ -2582,12 +2477,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InspectedItemState#info()
    */
   public void displaySelectedItemInfo() {
-    if (boardIsReadOnly
-        || editorStateController == null
-        || !editorStateController.isInspectedState()) {
-      return;
-    }
-    editorStateController.displaySelectedItemInfo();
+    interactionController.displaySelectedItemInfo();
   }
 
   /**
@@ -2768,12 +2658,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InspectedItemState#extentToWholeNets()
    */
   public void extendSelectionToWholeNets() {
-    if (boardIsReadOnly
-        || editorStateController == null
-        || !editorStateController.isInspectedState()) {
-      return;
-    }
-    editorStateController.extendSelectionToWholeNets();
+    interactionController.extendSelectionToWholeNets();
   }
 
   /**
@@ -2787,12 +2672,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InspectedItemState#extentToWholeComponents()
    */
   public void extendSelectionToWholeComponents() {
-    if (boardIsReadOnly
-        || editorStateController == null
-        || !editorStateController.isInspectedState()) {
-      return;
-    }
-    editorStateController.extendSelectionToWholeComponents();
+    interactionController.extendSelectionToWholeComponents();
   }
 
   /**
@@ -2806,12 +2686,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InspectedItemState#extentToWholeConnectedSets()
    */
   public void extendSelectionToWholeConnectedSets() {
-    if (boardIsReadOnly
-        || editorStateController == null
-        || !editorStateController.isInspectedState()) {
-      return;
-    }
-    editorStateController.extendSelectionToWholeConnectedSets();
+    interactionController.extendSelectionToWholeConnectedSets();
   }
 
   /**
@@ -2825,12 +2700,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InspectedItemState#extentToWholeConnections()
    */
   public void extendSelectionToWholeConnections() {
-    if (boardIsReadOnly
-        || editorStateController == null
-        || !editorStateController.isInspectedState()) {
-      return;
-    }
-    editorStateController.extendSelectionToWholeConnections();
+    interactionController.extendSelectionToWholeConnections();
   }
 
   /**
@@ -2844,12 +2714,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see InspectedItemState#toggleClearanceViolations()
    */
   public void toggleSelectedItemViolations() {
-    if (boardIsReadOnly
-        || editorStateController == null
-        || !editorStateController.isInspectedState()) {
-      return;
-    }
-    editorStateController.toggleSelectedItemViolations();
+    interactionController.toggleSelectedItemViolations();
   }
 
   /**
@@ -2868,11 +2733,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see MoveItemState#turn45Degree(int)
    */
   public void turn45Degree(int factor) {
-    if (boardIsReadOnly || editorStateController == null || !editorStateController.isMoveState()) {
-      // no interactive action when logfile is running
-      return;
-    }
-    editorStateController.turn45Degree(factor);
+    interactionController.turn45Degree(factor);
   }
 
   /**
@@ -2886,18 +2747,12 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see MoveItemState#changePlacementSide()
    */
   public void changePlacementSide() {
-    if (boardIsReadOnly || editorStateController == null || !editorStateController.isMoveState()) {
-      // no interactive action when logfile is running
-      return;
-    }
-    editorStateController.changePlacementSide();
+    interactionController.changePlacementSide();
   }
 
   /** Resets the rotation of the currently moved item through the opaque state controller. */
   public void resetRotation() {
-    if (editorStateController != null && editorStateController.isMoveState()) {
-      editorStateController.resetRotation();
-    }
+    interactionController.resetRotation();
   }
 
   /**
@@ -2909,9 +2764,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see ZoomRegionState
    */
   public void zoomRegion() {
-    if (editorStateController != null) {
-      editorStateController.zoomRegion();
-    }
+    interactionController.zoomRegion();
   }
 
   /**
@@ -2927,14 +2780,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see CircleConstructionState
    */
   public void startCircle(Point2D point) {
-    if (boardIsReadOnly) {
-      // no interactive action when logfile is running
-      return;
-    }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
-    if (editorStateController != null) {
-      editorStateController.startCircle(location);
-    }
+    interactionController.startCircle(point);
   }
 
   /**
@@ -2949,14 +2795,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see TileConstructionState
    */
   public void startTile(Point2D point) {
-    if (boardIsReadOnly) {
-      // no interactive action when logfile is running
-      return;
-    }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
-    if (editorStateController != null) {
-      editorStateController.startTile(location);
-    }
+    interactionController.startTile(point);
   }
 
   /**
@@ -2971,14 +2810,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see PolygonShapeConstructionState
    */
   public void startPolygonshapeItem(Point2D point) {
-    if (boardIsReadOnly) {
-      // no interactive action when logfile is running
-      return;
-    }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
-    if (editorStateController != null) {
-      editorStateController.startPolygon(location);
-    }
+    interactionController.startPolygonshapeItem(point);
   }
 
   /**
@@ -2993,14 +2825,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see HoleConstructionState
    */
   public void startAddingHole(Point2D point) {
-    if (boardIsReadOnly) {
-      // no interactive action when logfile is running
-      return;
-    }
-    FloatPoint location = graphicsContext.coordinateTransform.screenToBoard(point);
-    if (editorStateController != null) {
-      editorStateController.startHole(location);
-    }
+    interactionController.startAddingHole(point);
   }
 
   /**
@@ -3085,7 +2910,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   }
 
   /** Applies a state transition and optional side effects in one place. */
-  private void applyInteractiveStateChange(
+  void applyInteractionStateChange(
       EditorStateHandle nextState, boolean repaintAfterChange, boolean updateToolbarSelection) {
     if (nextState == null || nextState == getEditorState()) {
       return;

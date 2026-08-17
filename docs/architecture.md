@@ -254,6 +254,8 @@ Several implementation areas live one level below the top-level package grouping
 - `app.freerouting.autoroute.events` contains routing event callbacks; start with [BoardUpdatedEvent.java](src/main/java/app/freerouting/autoroute/events/BoardUpdatedEvent.java).
 - `app.freerouting.autoroute.pipeline` contains the shared routing sequencer; start with [RoutingPipeline.java](src/main/java/app/freerouting/autoroute/pipeline/RoutingPipeline.java).
 - `app.freerouting.board.searchtree` contains board spatial indexes; start with [SearchTreeManager.java](src/main/java/app/freerouting/board/searchtree/SearchTreeManager.java).
+- `app.freerouting.board` keeps board services behind the stable `BasicBoard` and `RoutingBoard`
+  façades: item storage/connectivity/snapshots, routing operations/search, and routing undo/redo.
 
 ## How The Code Fits Together
 

@@ -152,9 +152,7 @@
   },
   "save_error": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "07932a884be34cb439779fa49627745c7800ed8b8430e044c8bb728b618ecee1",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,

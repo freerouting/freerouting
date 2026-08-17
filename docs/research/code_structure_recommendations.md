@@ -316,8 +316,29 @@ incomplete switches.
 geometry types or changing public behavior.
 
 **Current increment (in progress):** `GuiBoardSessionState` now owns the GUI batch-routing options
-behind the unchanged `GuiBoardManager` façade. Interaction, persistence, load, export, and
-`BoardFrame` layout collaborators remain for subsequent increments in group 1.
+ behind the unchanged `GuiBoardManager` façade, `BoardWindowLayout` owns permanent subwindow
+ lifecycle and placement behind the unchanged `BoardFrame` façade, and `GuiBoardPersistence` owns
+ serialization/export delegation. Interaction, load, and format-specific export coordination remain
+ for subsequent increments in group 1.
+
+**Task list:**
+
+- [x] Extract `GuiBoardSessionState` and preserve the `GuiBoardManager` batch-option façade,
+  including the multi-threading fallback and its logging behavior.
+- [ ] Add characterization coverage for the remaining `GuiBoardManager` interaction and
+  persistence façade methods before moving implementations.
+- [x] Extract `BoardWindowLayout` for permanent-subwindow allocation, positioning, refresh,
+  repaint, disposal, and viewport-independent window lifecycle.
+- [x] Extract `GuiBoardPersistence` for binary serialization and direct board/session exports while
+  preserving serialized field order and the existing `GuiBoardManager` façade.
+- [ ] Extract `GuiBoardInteractionController` only after its event/state dependencies are mapped;
+  keep concrete interactive states in `gui.interactive`.
+- [ ] Extract `BoardLoadCoordinator` and `BoardExportActions` only after stale-load, failure,
+  tutorial-restoration, and export characterization tests exist.
+- [ ] Run package-boundary tests, fast routing tests, full DRC, Spotless, Checkstyle, and i18n
+  checks after each collaborator extraction.
+- [x] Defer `BatchAutorouter.java` to Phase 7 and defer `SpecctraDsnStreamReader.java` to a
+  separate parser-boundary investigation.
 
 The line counts below are from the August 17, 2026 scan of 645 tracked Java files (144,101 total
 lines). Size is a prioritization signal; each extraction must follow a stable responsibility seam
@@ -421,7 +442,8 @@ Profile `ShapeSearchTree` / expansion-room churn on a >500-net board. Record **p
 
 August 17, 2026 scan of tracked `src/main/java` and `src/test/java`: 645 files, 144,101 lines.
 The visual heat map and split schedule accompany this shortlist; this section records the
-actionable candidates that belong in the repository plan.
+actionable candidates that belong in the repository plan. The post-phase column reflects the
+current extracted façade state, including the intentionally deferred files that remain unchanged.
 
 | Area | Files | This PR |
 |---|---|---|
@@ -432,29 +454,29 @@ actionable candidates that belong in the repository plan.
 | I/O parsers | 7 | `SpecctraDsnStreamReader` deferred |
 | API / settings / DRC / analytics | 8 | Settings documentation in Phase 2 only |
 
-| File | Lines | Phase 6 action |
-|---|---|---|
-| `GuiBoardManager` | 3312 | Split in group 1: state, interaction, persistence |
-| `BatchAutorouter` | 2158 | Defer to Phase 7 pipeline-package investigation |
-| `MazeSearchEngine` | 1948 | Split in group 2: expansion, ripup, fanout diagnostics |
-| `SpecctraDsnStreamReader` | 1862 | Skip for now; defer parser-boundary investigation |
-| `BoardFrame` | 1856 | Split in group 1: load, layout, export |
-| `GuiDefaultsScanner` | 1799 | Defer; investigate generated/config scanning seam separately |
-| `BasicBoard` | 1787 | Split in group 3: items, connectivity, snapshots |
-| `IntOctagon` | 1722 | Defer pending geometry tests and allocation profile |
-| `RoutingBoard` | 1648 | Split in group 3: operations, search, undo |
-| `Network` | 1464 | Defer; parser/domain coupling needs a separate design |
-| `PolylineTrace` | 1431 | Split in group 5: geometry, normalization, search-tree adapter |
-| `JobControllerV1` | 1421 | Split in group 4: input, output, progress |
-| `WindowAutorouteParameter` | 1406 | Defer to GUI presenter follow-up after group 1 |
-| `Freerouting` | 1358 | Defer; startup/server lifecycle needs an explicit boundary design |
-| `GuiDefaultsFile` | 1352 | Defer with GUI persistence work; avoid splitting config format handling prematurely |
-| `Structure` | 1351 | Defer; parser/domain boundary is coupled to Specctra representation |
-| `Item` | 1279 | Defer; core board identity and serialization make this a high-risk split |
-| `ShapeSearchTree` | 1160 | Defer until board-service seams settle |
-| `Simplex` | 1147 | Defer pending geometry allocation profile |
-| `RouterSettings` | 958 | Keep cohesive; preserve nullable merger fields and serialization keys |
-| `DesignRulesChecker` | 821 | Keep public `getAllClearanceViolations()` entry point stable |
+| File | Lines | Post-Phase 6/7 lines | Phase 6 action |
+|---|---:|---:|---|
+| `GuiBoardManager` | 3312 | 3091 | Split in group 1: state, interaction, persistence |
+| `BatchAutorouter` | 2158 | 2158 | Defer to Phase 7 pipeline-package investigation |
+| `MazeSearchEngine` | 1948 | 1258 | Split in group 2: expansion, ripup, fanout diagnostics |
+| `SpecctraDsnStreamReader` | 1862 | 1862 | Skip for now; defer parser-boundary investigation |
+| `BoardFrame` | 1856 | 1493 | Split in group 1: load, layout, export |
+| `GuiDefaultsScanner` | 1799 | 1799 | Defer; investigate generated/config scanning seam separately |
+| `BasicBoard` | 1787 | 1470 | Split in group 3: items, connectivity, snapshots |
+| `IntOctagon` | 1722 | 1722 | Defer pending geometry tests and allocation profile |
+| `RoutingBoard` | 1648 | 1428 | Split in group 3: operations, search, undo |
+| `Network` | 1464 | 1464 | Defer; parser/domain coupling needs a separate design |
+| `PolylineTrace` | 1431 | 1304 | Split in group 5: geometry, normalization, search-tree adapter |
+| `JobControllerV1` | 1421 | 619 | Split in group 4: input, output, progress |
+| `WindowAutorouteParameter` | 1406 | 1406 | Defer to GUI presenter follow-up after group 1 |
+| `Freerouting` | 1358 | 1358 | Defer; startup/server lifecycle needs an explicit boundary design |
+| `GuiDefaultsFile` | 1352 | 1352 | Defer with GUI persistence work; avoid splitting config format handling prematurely |
+| `Structure` | 1351 | 1351 | Defer; parser/domain boundary is coupled to Specctra representation |
+| `Item` | 1279 | 1279 | Defer; core board identity and serialization make this a high-risk split |
+| `ShapeSearchTree` | 1160 | 1160 | Defer until board-service seams settle |
+| `Simplex` | 1147 | 1147 | Defer pending geometry allocation profile |
+| `RouterSettings` | 958 | 958 | Keep cohesive; preserve nullable merger fields and serialization keys |
+| `DesignRulesChecker` | 821 | 821 | Keep public `getAllClearanceViolations()` entry point stable |
 
 ---
 

@@ -11,7 +11,6 @@ import app.freerouting.board.optimize.TraceTightener;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
@@ -30,10 +29,6 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.settings.RouterSettings;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -47,9 +42,6 @@ import java.util.TreeSet;
  */
 public class RoutingBoard extends BasicBoard implements Serializable {
 
-  /** The time limit in milliseconds for the pull tight algorithm. */
-  private static final int PULL_TIGHT_TIME_LIMIT = 2000;
-
   public final app.freerouting.autoroute.RoutingFailureLog failureLog;
 
   /** The area marked for optimizing the route. */
@@ -60,6 +52,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
 
   private transient Item shoveFailingObstacle;
   private transient int shoveFailingLayer = -1;
+  private transient RoutingBoardOperations operations;
+  private transient RoutingBoardSearchFacade searchFacade;
+  private transient RoutingBoardUndoFacade undoFacade;
 
   /**
    * Creates a new instance of a routing Board with surrounding box boundingBox Rules contains the
@@ -109,73 +104,22 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    */
   public boolean removeItemsAndPullTight(
       Collection<Item> itemList, int tidyWidth, int pullTightAccuracy) {
-    boolean result = true;
-    IntOctagon tidyRegion;
-    boolean calculateTidyRegion;
-    if (tidyWidth < Integer.MAX_VALUE) {
-      tidyRegion = IntOctagon.EMPTY;
-      calculateTidyRegion = tidyWidth > 0;
-    } else {
-      tidyRegion = null;
-      calculateTidyRegion = false;
-    }
-    startMarkingChangedArea();
-    Set<Integer> changedNets = new TreeSet<>();
-    for (Item currentItem : itemList) {
-      if (currentItem.isDeletionForbidden() || currentItem.isUserFixed()) {
-        // We are not allowed to delete this item.
-        result = false;
-      } else {
-        for (int i = 0; i < currentItem.tileShapeCount(); i++) {
-          TileShape currentShape = currentItem.getTileShape(i);
-          changedArea.join(currentShape, currentItem.shapeLayer(i));
-          if (calculateTidyRegion) {
-            tidyRegion = tidyRegion.union(currentShape.boundingOctagon());
-          }
-        }
-        removeItem(currentItem);
-        for (int i = 0; i < currentItem.netCount(); i++) {
-          changedNets.add(currentItem.getNetNumber(i));
-        }
-      }
-    }
-    for (Integer currentNetNumber : changedNets) {
-      this.combineTraces(currentNetNumber);
-    }
-    if (calculateTidyRegion) {
-      tidyRegion = tidyRegion.enlarge(tidyWidth);
-    }
-    optChangedArea(new int[0], tidyRegion, pullTightAccuracy, null, null, PULL_TIGHT_TIME_LIMIT);
-    return result;
+    return getOperations().removeItemsAndPullTight(itemList, tidyWidth, pullTightAccuracy);
   }
 
   /** Starts marking the changed areas for optimizing traces. */
   public void startMarkingChangedArea() {
-    if (changedArea == null) {
-      changedArea = new ChangedArea(getLayerCount());
-    }
+    getOperations().startMarkingChangedArea();
   }
 
   /** Enlarges the changed area on layer, so that it contains point. */
   public void joinChangedArea(FloatPoint point, int layer) {
-    if (changedArea != null) {
-      changedArea.join(point, layer);
-    }
+    getOperations().joinChangedArea(point, layer);
   }
 
   /** Marks the whole board as changed. */
   public void markAllChangedArea() {
-    startMarkingChangedArea();
-    FloatPoint[] boardCorners = new FloatPoint[4];
-    boardCorners[0] = boundingBox.ll.toFloat();
-    boardCorners[1] = new FloatPoint(boundingBox.ur.x, boundingBox.ll.y);
-    boardCorners[2] = boundingBox.ur.toFloat();
-    boardCorners[3] = new FloatPoint(boundingBox.ll.x, boundingBox.ur.y);
-    for (int i = 0; i < getLayerCount(); i++) {
-      for (int j = 0; j < 4; j++) {
-        joinChangedArea(boardCorners[j], i);
-      }
-    }
+    getOperations().markAllChangedArea();
   }
 
   /**
@@ -192,8 +136,9 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       ExpansionCostFactor[] traceCosts,
       Stoppable stoppableThread,
       int timeLimit) {
-    optChangedArea(
-        onlyNetNoArr, clipShape, accuracy, traceCosts, stoppableThread, timeLimit, null, 0);
+    getOperations()
+        .optChangedArea(
+            onlyNetNoArr, clipShape, accuracy, traceCosts, stoppableThread, timeLimit, null, 0);
   }
 
   /**
@@ -213,24 +158,16 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int timeLimit,
       Point keepPoint,
       int keepPointLayer) {
-    if (changedArea == null) {
-      return;
-    }
-    if (clipShape != IntOctagon.EMPTY) {
-      TraceTightener pullTightAlgo =
-          TraceTightener.getInstance(
-              this,
-              onlyNetNoArr,
-              clipShape,
-              accuracy,
-              stoppableThread,
-              timeLimit,
-              keepPoint,
-              keepPointLayer);
-      pullTightAlgo.optChangedArea(traceCosts);
-    }
-    joinGraphicsUpdateBox(changedArea.surroundingBox());
-    changedArea = null;
+    getOperations()
+        .optChangedArea(
+            onlyNetNoArr,
+            clipShape,
+            accuracy,
+            traceCosts,
+            stoppableThread,
+            timeLimit,
+            keepPoint,
+            keepPointLayer);
   }
 
   /**
@@ -247,13 +184,15 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int traceHalfWidth,
       int clClassNo,
       boolean onlyNotShovableObstacles) {
-    if (fromPoint.equals(toPoint)) {
-      return 0;
-    }
-    Polyline currentPolyline = new Polyline(fromPoint, toPoint);
-    LineSegment currentLineSegment = new LineSegment(currentPolyline, 1);
-    return checkTraceSegment(
-        currentLineSegment, layer, netNumbers, traceHalfWidth, clClassNo, onlyNotShovableObstacles);
+    return getSearchFacade()
+        .checkTraceSegment(
+            fromPoint,
+            toPoint,
+            layer,
+            netNumbers,
+            traceHalfWidth,
+            clClassNo,
+            onlyNotShovableObstacles);
   }
 
   /**
@@ -269,131 +208,26 @@ public class RoutingBoard extends BasicBoard implements Serializable {
       int traceHalfWidth,
       int clClassNo,
       boolean onlyNotShovableObstacles) {
-    Polyline checkPolyline = lineSegment.toPolyline();
-    if (checkPolyline.lines.length != 3) {
-      return 0;
-    }
-    TileShape shapeToCheck = checkPolyline.offsetShape(traceHalfWidth, 0);
-    FloatPoint fromPoint = lineSegment.startPointApprox();
-    FloatPoint toPoint = lineSegment.endPointApprox();
-    double lineLength = toPoint.distance(fromPoint);
-    double okLength = Integer.MAX_VALUE;
-    ShapeSearchTree defaultTree = this.searchTreeManager.getDefaultTree();
-
-    Collection<TreeEntry> obstacleEntries =
-        defaultTree.overlappingTreeEntriesWithClearance(shapeToCheck, layer, netNumbers, clClassNo);
-
-    for (TreeEntry currentObstacleEntry : obstacleEntries) {
-
-      if (!(currentObstacleEntry.object instanceof Item currentObstacle)) {
-        continue;
-      }
-      if (onlyNotShovableObstacles
-          && currentObstacle.isRoutable()
-          && !currentObstacle.isShoveFixed()) {
-        continue;
-      }
-      TileShape currentObstacleShape =
-          currentObstacleEntry.object.getTreeShape(
-              defaultTree, currentObstacleEntry.shapeIndexInObject);
-      TileShape currentOffsetShape;
-      FloatPoint nearestObstaclePoint;
-      double shortenValue;
-      if (defaultTree.isClearanceCompensationUsed()) {
-        currentOffsetShape = shapeToCheck;
-        shortenValue =
-            traceHalfWidth
-                + rules.clearanceMatrix.clearanceCompensationValue(
-                    currentObstacle.clearanceClassIndex(), layer);
-      } else {
-        int clearanceValue =
-            this.clearanceValue(currentObstacle.clearanceClassIndex(), clClassNo, layer);
-        currentOffsetShape = (TileShape) shapeToCheck.offset(clearanceValue);
-        shortenValue = traceHalfWidth + clearanceValue;
-      }
-      TileShape intersection = currentObstacleShape.intersection(currentOffsetShape);
-      if (intersection.isEmpty()) {
-        continue;
-      }
-      nearestObstaclePoint = intersection.nearestPointApprox(fromPoint);
-
-      double projection = fromPoint.scalarProduct(toPoint, nearestObstaclePoint) / lineLength;
-
-      projection = Math.max(0.0, projection - shortenValue - 1);
-
-      if (projection < okLength) {
-        okLength = projection;
-        if (okLength <= 0) {
-          return 0;
-        }
-      }
-    }
-
-    return okLength;
+    return getSearchFacade()
+        .checkTraceSegment(
+            lineSegment,
+            layer,
+            netNumbers,
+            traceHalfWidth,
+            clClassNo,
+            onlyNotShovableObstacles);
   }
 
   /**
    * Checks, if item can be translated by vector without producing overlaps or clearance violations.
    */
   public boolean checkMoveItem(Item item, Vector vector, Collection<Item> ignoreItems) {
-    int netCount = item.netNumbers.length;
-    if (netCount > 1) {
-      return false; // not yet implemented
-    }
-    int contactCount = 0;
-    // the connected items must remain connected after moving
-    if (item instanceof Connectable) {
-      contactCount = item.getAllContacts().size();
-    }
-    if (item instanceof Trace && contactCount > 0) {
-      return false;
-    }
-    if (ignoreItems != null) {
-      ignoreItems.add(item);
-    }
-    for (int i = 0; i < item.tileShapeCount(); i++) {
-      TileShape movedShape = (TileShape) item.getTileShape(i).translateBy(vector);
-      if (!movedShape.isContainedIn(boundingBox)) {
-        return false;
-      }
-      Set<Item> obstacles =
-          this.overlappingItemsWithClearance(
-              movedShape, item.shapeLayer(i), item.netNumbers, item.clearanceClassIndex());
-      for (Item currentItem : obstacles) {
-        if (ignoreItems != null) {
-          if (!ignoreItems.contains(currentItem)) {
-            if (currentItem.isObstacle(item)) {
-              return false;
-            }
-          }
-        } else if (currentItem != item) {
-          if (currentItem.isObstacle(item)) {
-            return false;
-          }
-        }
-      }
-    }
-    return true;
+    return getSearchFacade().checkMoveItem(item, vector, ignoreItems);
   }
 
   /** Checks, if the net number of item can be changed without producing clearance violations. */
   public boolean checkChangeNet(Item item, int newNetNo) {
-    int[] netNumbers = new int[1];
-    netNumbers[0] = newNetNo;
-    for (int i = 0; i < item.tileShapeCount(); i++) {
-      TileShape currentShape = item.getTileShape(i);
-      Set<Item> obstacles =
-          this.overlappingItemsWithClearance(
-              currentShape, item.shapeLayer(i), netNumbers, item.clearanceClassIndex());
-      for (SearchTreeObject currentObject : obstacles) {
-        if (currentObject != item
-            && currentObject instanceof Connectable connectable
-            && !connectable.containsNet(newNetNo)) {
-          return false;
-        }
-      }
-    }
-    return true;
+    return getSearchFacade().checkChangeNet(item, newNetNo);
   }
 
   /**
@@ -453,58 +287,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * ignored
    */
   public Item pickNearestRoutingItem(Point location, int layer, Item fromItem) {
-    TileShape pointShape = TileShape.getInstance(location);
-    Collection<Item> foundItems = overlappingItems(pointShape, layer);
-    FloatPoint pickLocation = location.toFloat();
-    double minDist = Integer.MAX_VALUE;
-    Item nearestItem = null;
-    Set<Item> ignoreSet = null;
-    for (Item currentItem : foundItems) {
-      if (!currentItem.isConnectable()) {
-        continue;
-      }
-      boolean candidateFound = false;
-      double currentDistance = 0;
-      if (currentItem instanceof PolylineTrace currentTrace) {
-        if (layer < 0 || currentTrace.getLayer() == layer) {
-          if (nearestItem instanceof DrillItem) {
-            continue; // prefer drill items
-          }
-          int traceRadius = currentTrace.getHalfWidth();
-          currentDistance = currentTrace.polyline().distance(pickLocation);
-          if (currentDistance < minDist && currentDistance <= traceRadius) {
-            candidateFound = true;
-          }
-        }
-      } else if (currentItem instanceof DrillItem currentDrillItem) {
-        if (layer < 0 || currentDrillItem.isOnLayer(layer)) {
-          FloatPoint drillItemCenter = currentDrillItem.getCenter().toFloat();
-          currentDistance = drillItemCenter.distance(pickLocation);
-          if (currentDistance < minDist || nearestItem instanceof Trace) {
-            candidateFound = true;
-          }
-        }
-      } else if (currentItem instanceof ConductionArea currentArea) {
-        if ((layer < 0 || currentArea.getLayer() == layer) && nearestItem == null) {
-          candidateFound = true;
-          currentDistance = Integer.MAX_VALUE;
-        }
-      }
-      if (candidateFound) {
-        if (fromItem != null) {
-          if (ignoreSet == null) {
-            // calculated here to avoid unnecessary calculations for performance reasoss.
-            ignoreSet = fromItem.getConnectedSet(-1);
-          }
-          if (ignoreSet.contains(currentItem)) {
-            continue;
-          }
-        }
-        minDist = currentDistance;
-        nearestItem = currentItem;
-      }
-    }
-    return nearestItem;
+    return getSearchFacade().pickNearestRoutingItem(location, layer, fromItem);
   }
 
   /**
@@ -1600,6 +1383,16 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
   }
 
+  @Override
+  public boolean undo(Set<Integer> changedNets) {
+    return getUndoFacade().undo(changedNets);
+  }
+
+  @Override
+  public boolean redo(Set<Integer> changedNets) {
+    return getUndoFacade().redo(changedNets);
+  }
+
   public BoardStatistics getStatistics() {
     return new BoardStatistics(this);
   }
@@ -1609,40 +1402,27 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * but it copies the routing related values as well.
    */
   public synchronized RoutingBoard deepCopy() {
-    ObjectOutputStream oos = null;
-    ObjectInputStream objectInputStream = null;
+    return getUndoFacade().deepCopy();
+  }
 
-    try {
-      ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      oos = new ObjectOutputStream(bos);
-
-      oos.writeObject(this); // serialize this.board
-      oos.flush();
-
-      ByteArrayInputStream bin = new ByteArrayInputStream(bos.toByteArray());
-      objectInputStream = new ObjectInputStream(bin);
-
-      RoutingBoard boardCopy = (RoutingBoard) objectInputStream.readObject();
-
-      // boardCopy.clear_autoroute_database();
-      boardCopy.clearAllItemTemporaryAutorouteData();
-      boardCopy.finishAutoroute();
-
-      return boardCopy;
-    } catch (Exception e) {
-      FRLogger.error("Exception in deep_copy_routing_board" + e, e);
-      return null;
-    } finally {
-      try {
-        if (oos != null) {
-          oos.close();
-        }
-        if (objectInputStream != null) {
-          objectInputStream.close();
-        }
-      } catch (Exception _) {
-        // Best-effort stream cleanup during board deserialization.
-      }
+  private RoutingBoardOperations getOperations() {
+    if (operations == null) {
+      operations = new RoutingBoardOperations(this);
     }
+    return operations;
+  }
+
+  private RoutingBoardSearchFacade getSearchFacade() {
+    if (searchFacade == null) {
+      searchFacade = new RoutingBoardSearchFacade(this);
+    }
+    return searchFacade;
+  }
+
+  private RoutingBoardUndoFacade getUndoFacade() {
+    if (undoFacade == null) {
+      undoFacade = new RoutingBoardUndoFacade(this);
+    }
+    return undoFacade;
   }
 }

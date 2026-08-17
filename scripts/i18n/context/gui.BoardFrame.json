@@ -284,9 +284,7 @@
   },
   "message_binary_file_save_failed": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "13bee0a360a0ed5b91a3f0b84a3686ae048b78de407594552ebd13a9751b8a56",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
@@ -302,9 +300,7 @@
   },
   "message_binary_file_saved": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "5c2a5fcf531c90b73211ef3f605a3acbfa4ed65ec8f7d947f2066037920efbeb",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
@@ -322,9 +318,7 @@
   },
   "message_eagle_save_failed": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "f759a3607a62b739389c64e246a7db94112a949b1227c8370b21bb12641a45ee",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
@@ -342,9 +336,7 @@
   },
   "message_eagle_saved": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "4c0800759cb8715d636d423a6ed4255522c2b933428823217e887c4f7abcfa1f",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
@@ -362,9 +354,7 @@
   },
   "message_kicad_session_json_save_failed": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "a62141052c245016d8125c75e6bba0336e36146dab5096dd4556f24557ff710f",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
@@ -382,9 +372,7 @@
   },
   "message_kicad_session_json_saved": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "abca44b4eb8d534b2f01055dfced771d889d59b5b008ebf3ed871ba18149250c",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
@@ -402,9 +390,7 @@
   },
   "message_specctra_ses_save_failed": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "24c632292461d6e366871e7c9f53cc562a04b5bb5facd3eda20aa94697e030e7",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
@@ -422,9 +408,7 @@
   },
   "message_specctra_ses_saved": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.BoardFrame"
-    ],
+    "code_references": [],
     "english_hash": "284fd788fa225f5bedaae55db6e117aef5bb435b7286b9f58fa88097d2a338ff",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,

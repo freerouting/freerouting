@@ -18,9 +18,6 @@ import app.freerouting.gui.workspace.RatsNest;
 import app.freerouting.gui.workspace.ScreenMessages;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.FileFormat;
-import app.freerouting.io.kicad.KiCadJsonReader;
-import app.freerouting.io.specctra.DsnReader;
-import app.freerouting.io.specctra.RulesWriter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntries;
 import app.freerouting.logger.LogEntry;
@@ -41,17 +38,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,13 +54,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /** Graphical frame containing the Menu, Toolbar, Canvas and Status bar. */
 public class BoardFrame extends WindowBase {
@@ -145,6 +137,9 @@ public class BoardFrame extends WindowBase {
   BoardSavableSubWindow[] permanentSubwindows = new BoardSavableSubWindow[SUBWINDOW_COUNT];
 
   Collection<BoardTemporarySubWindow> temporarySubwindows = new LinkedList<>();
+  private final BoardWindowLayout windowLayout;
+  private final BoardLoadCoordinator loadCoordinator;
+  private final BoardExportActions exportActions;
   private LogEntries.LogEntryAddedListener logEntryAddedListener;
 
   /**
@@ -171,6 +166,9 @@ public class BoardFrame extends WindowBase {
     this.locale = globalSettings.currentLocale;
     this.setLanguage(this.locale);
     this.freeroutingVersion = globalSettings.version;
+    this.windowLayout = new BoardWindowLayout(this, this.locale, this.freeroutingVersion);
+    this.loadCoordinator = new BoardLoadCoordinator(this);
+    this.exportActions = new BoardExportActions(this);
 
     // Set the menu bar of this frame.
     this.menubar = new BoardMenuBar(this, globalSettings.featureFlags);
@@ -419,25 +417,6 @@ public class BoardFrame extends WindowBase {
     this.pack();
   }
 
-  private static BoardReadResult parseBoardFromBytes(
-      byte[] fileContent, FileFormat format, String filename) {
-    try (InputStream inputStream = new ByteArrayInputStream(fileContent)) {
-      if (format == FileFormat.DSN) {
-        return DsnReader.readBoard(inputStream, null, new ItemIdGenerator(), filename);
-      }
-      if (format == FileFormat.KICAD_DESIGN_JSON) {
-        try (java.io.Reader reader =
-            new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-          return KiCadJsonReader.readBoard(reader, null, new ItemIdGenerator());
-        }
-      }
-      throw new IllegalArgumentException("Unsupported format for async load: " + format);
-    } catch (Exception e) {
-      FRLogger.error("Failed to parse board file", e);
-      return new BoardReadResult.IoError(new IOException("Failed to parse board file", e));
-    }
-  }
-
   private static boolean canAttachParsedBoard(BoardReadResult readResult) {
     if (readResult instanceof BoardReadResult.Success) {
       return true;
@@ -526,36 +505,11 @@ public class BoardFrame extends WindowBase {
    * work.
    */
   private void loadFromBytesAsync(byte[] fileContent, FileFormat format, RoutingJob job) {
-    LoadGeneration generation = boardPanel.boardHandling.getSessionPort().beginBoardLoad();
-    ensureGeneralSettingsVisibleDuringLoad();
+    loadCoordinator.loadFromBytesAsync(fileContent, format, job);
+  }
 
-    String filename = job.input != null ? job.input.getFilename() : null;
-    TextManager guiTm = new TextManager(GuiManager.class, locale);
-    String loadingMessage =
-        filename != null
-            ? guiTm.getText("loading_design_with_file", filename)
-            : guiTm.getText("loading_design");
-    WindowMessage loadingWindow = WindowMessage.show(loadingMessage);
-    loadingWindow.setLocationRelativeTo(this);
-
-    Thread.ofVirtual()
-        .name("gui-board-load")
-        .start(
-            () -> {
-              long parseStart = System.nanoTime();
-              BoardReadResult readResult = parseBoardFromBytes(fileContent, format, filename);
-              long parseMs = (System.nanoTime() - parseStart) / 1_000_000L;
-              FRLogger.debug(
-                  "Board load: DSN/JSON parse completed in "
-                      + parseMs
-                      + " ms"
-                      + (filename != null ? " ('" + filename + "')" : ""));
-
-              javax.swing.SwingUtilities.invokeLater(
-                  () ->
-                      finishLoadFromParseResult(
-                          readResult, fileContent, format, job, loadingWindow, generation));
-            });
+  LoadGeneration beginBoardLoadForCoordinator() {
+    return boardPanel.boardHandling.getSessionPort().beginBoardLoad();
   }
 
   private boolean isCurrentLoad(LoadGeneration generation) {
@@ -564,7 +518,7 @@ public class BoardFrame extends WindowBase {
         && boardPanel.boardHandling.getSessionPort().isCurrent(generation);
   }
 
-  private void ensureGeneralSettingsVisibleDuringLoad() {
+  void ensureGeneralSettingsVisibleDuringLoad() {
     if (boardPanel == null
         || boardPanel.boardHandling == null
         || boardPanel.boardHandling.graphicsContext == null) {
@@ -577,37 +531,10 @@ public class BoardFrame extends WindowBase {
   }
 
   private void disposePermanentSubwindows() {
-    for (int i = 0; i < this.permanentSubwindows.length; i++) {
-      if (this.permanentSubwindows[i] != null) {
-        this.permanentSubwindows[i].dispose();
-        this.permanentSubwindows[i] = null;
-      }
-    }
-    selectParameterWindow = null;
-    colorManager = null;
-    visibilityWindow = null;
-    displayMiscWindow = null;
-    routeParameterWindow = null;
-    autorouteParameterWindow = null;
-    moveParameterWindow = null;
-    clearanceMatrixWindow = null;
-    viaWindow = null;
-    editViasWindow = null;
-    editNetRulesWindow = null;
-    assignNetClassesWindow = null;
-    padstacksWindow = null;
-    packagesWindow = null;
-    componentsWindow = null;
-    incompletesWindow = null;
-    clearanceViolationsWindow = null;
-    lengthViolationsWindow = null;
-    netInfoWindow = null;
-    unconnectedRouteWindow = null;
-    routeStubsWindow = null;
-    aboutWindow = null;
+    windowLayout.disposePermanentSubwindows();
   }
 
-  private void finishLoadFromParseResult(
+  void finishLoadFromParseResult(
       BoardReadResult readResult,
       byte[] fileContent,
       FileFormat format,
@@ -824,7 +751,8 @@ public class BoardFrame extends WindowBase {
       }
       byte[] tutorialBytes = tutorialStream.readAllBytes();
       BoardReadResult tutorialResult =
-          parseBoardFromBytes(tutorialBytes, FileFormat.DSN, TUTORIAL_BOARD_FILENAME);
+          BoardLoadCoordinator.parseBoardFromBytes(
+              tutorialBytes, FileFormat.DSN, TUTORIAL_BOARD_FILENAME);
       if (!(tutorialResult instanceof BoardReadResult.Success)) {
         FRLogger.error(
             "Could not restore " + TUTORIAL_BOARD_FILENAME + " after a failed load", null);
@@ -1139,30 +1067,7 @@ public class BoardFrame extends WindowBase {
    * Returns false, if the save failed.
    */
   private boolean saveAsBinary(OutputStream outputStream) throws Exception {
-    ObjectOutputStream objectStream;
-    objectStream = new ObjectOutputStream(outputStream);
-
-    // (1) Save the board as binary file
-    boolean saveOk = boardPanel.boardHandling.saveAsBinary(objectStream);
-    if (!saveOk) {
-      return false;
-    }
-
-    // (2) Save the GUI settings as binary file
-    objectStream.writeObject(boardPanel.getViewportPosition());
-    objectStream.writeObject(this.getLocation());
-    objectStream.writeObject(this.getBounds());
-
-    // (3) Save the permanent subwindows as binary file
-    for (int i = 0; i < this.permanentSubwindows.length; i++) {
-      if (this.permanentSubwindows[i] != null) {
-        this.permanentSubwindows[i].save(objectStream);
-      }
-    }
-
-    // (4) Flush the binary file
-    objectStream.flush();
-    return true;
+    return exportActions.saveAsBinary(outputStream);
   }
 
   /**
@@ -1170,34 +1075,7 @@ public class BoardFrame extends WindowBase {
    * save failed.
    */
   private boolean saveAsBinary(File outputFile) {
-    if (outputFile == null) {
-      return false;
-    }
-
-    try {
-      FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-
-      // Serialize to a byte array first to capture the data
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      saveAsBinary(byteArrayOutputStream);
-
-      // Store the serialized data in routingJob.output
-      byte[] data = byteArrayOutputStream.toByteArray();
-      this.routingJob.output.setData(data);
-
-      // Write to the file
-      try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
-        fileOutputStream.write(data);
-      }
-
-      screenMessages.setStatusMessage(
-          tm.getText("message_binary_file_saved", outputFile.getPath()));
-      return true;
-    } catch (Exception _) {
-      screenMessages.setStatusMessage(
-          tm.getText("message_binary_file_save_failed", outputFile.getPath()));
-      return false;
-    }
+    return exportActions.saveAsBinary(outputFile);
   }
 
   /**
@@ -1206,52 +1084,12 @@ public class BoardFrame extends WindowBase {
    */
   @Deprecated
   public boolean saveAsSpecctraSessionSes(File outputFile, String designName) {
-    if (outputFile == null) {
-      return false;
-    }
-
-    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-    try (OutputStream outputStream = new FileOutputStream(outputFile)) {
-      if (!boardPanel.boardHandling.saveAsSpecctraSessionSes(outputStream, designName)) {
-        this.screenMessages.setStatusMessage(
-            tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
-        return false;
-      }
-    } catch (IOException e) {
-      FRLogger.error("unable to save Specctra session file '" + outputFile.getPath() + "'", e);
-      this.screenMessages.setStatusMessage(
-          tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
-      return false;
-    }
-
-    this.screenMessages.setStatusMessage(
-        tm.getText("message_specctra_ses_saved", outputFile.getPath()));
-
-    return true;
+    return exportActions.saveAsSpecctraSessionSes(outputFile, designName);
   }
 
   /** Writes a KiCad Session JSON File. Returns false if write operation fails. */
   public boolean saveAsKiCadJson(File outputFile, String designName) {
-    if (outputFile == null) {
-      return false;
-    }
-
-    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-    try (java.io.FileWriter writer = new java.io.FileWriter(outputFile)) {
-      String json =
-          app.freerouting.io.kicad.KiCadJsonWriter.write(
-              boardPanel.boardHandling.getRoutingBoard(), designName);
-      writer.write(json);
-    } catch (Exception e) {
-      FRLogger.error("Unable to write KiCad JSON file", e);
-      this.screenMessages.setStatusMessage(
-          tm.getText("message_kicad_session_json_save_failed", outputFile.getPath()));
-      return false;
-    }
-
-    this.screenMessages.setStatusMessage(
-        tm.getText("message_kicad_session_json_saved", outputFile.getPath()));
-    return true;
+    return exportActions.saveAsKiCadJson(outputFile, designName);
   }
 
   /**
@@ -1262,73 +1100,12 @@ public class BoardFrame extends WindowBase {
    * @return the file selected by the user, or {@code null} when the dialog is cancelled
    */
   public File showSaveAsDialog(String defaultDirectory, BoardFileDetails output) {
-    String directoryName;
-    var outputFile = output.getFile();
-    if (outputFile == null) {
-      directoryName = defaultDirectory;
-    } else {
-      directoryName = outputFile.getParent();
-    }
-
-    JFileChooser fileChooser = new JFileChooser(directoryName);
-    fileChooser.setMinimumSize(new Dimension(500, 250));
-
-    // Add the file filter for SPECCTRA Session .SES files
-    FileNameExtensionFilter sesFilter =
-        new FileNameExtensionFilter("SPECCTRA Session file (*.ses)", "ses");
-    fileChooser.addChoosableFileFilter(sesFilter);
-
-    // Add the file filter for Freerouting binary .FRB files
-    FileNameExtensionFilter frbFilter =
-        new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
-    fileChooser.addChoosableFileFilter(frbFilter);
-
-    // Add the file filter for Eagle script .SCR files
-    FileNameExtensionFilter scrFilter =
-        new FileNameExtensionFilter("Eagle Session Script file (*.scr)", "scr");
-    fileChooser.addChoosableFileFilter(scrFilter);
-
-    // Add the file filter for SPECCTRA Design .DSN files
-    FileNameExtensionFilter dsnFilter =
-        new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
-    fileChooser.addChoosableFileFilter(dsnFilter);
-
-    // Add the file filter for KiCad Session JSON files
-    FileNameExtensionFilter jsonSessionFilter =
-        new FileNameExtensionFilter("KiCad Session JSON file (*.json)", "json");
-    fileChooser.addChoosableFileFilter(jsonSessionFilter);
-
-    // Set the file filter based on the output file format
-    fileChooser.setFileFilter(
-        switch (output.format) {
-          case FRB -> frbFilter;
-          case SCR -> scrFilter;
-          case DSN -> dsnFilter;
-          case KICAD_SESSION_JSON -> jsonSessionFilter;
-          default -> sesFilter;
-        });
-
-    // Set the default file name based on the output file name
-    if (!output.getFilename().isEmpty()) {
-      fileChooser.setSelectedFile(output.getFile());
-    }
-
-    fileChooser.showSaveDialog(this);
-
-    return fileChooser.getSelectedFile();
+    return exportActions.showSaveAsDialog(defaultDirectory, output);
   }
 
   /** Saves the board rule to file, so that they can be reused later on. */
   private boolean saveRulesAs(File rulesFile, String designName, GuiBoardManager boardHandling) {
-    FRLogger.info("Saving '" + rulesFile.getPath() + "'...");
-
-    try (OutputStream outputStream = new FileOutputStream(rulesFile)) {
-      RulesWriter.write(boardHandling.getRoutingBoard(), outputStream, designName);
-      return true;
-    } catch (IOException e) {
-      FRLogger.error("unable to save rules file for design '" + designName + "'", e);
-      return false;
-    }
+    return exportActions.saveRulesAs(rulesFile, designName, boardHandling);
   }
 
   /**
@@ -1338,44 +1115,13 @@ public class BoardFrame extends WindowBase {
    * @param designName the design name written into the intermediate session
    */
   public void saveAsEagleScriptScr(File outputFile, String designName) {
-    ByteArrayOutputStream sesOutputStream = new ByteArrayOutputStream();
-    if (!boardPanel.boardHandling.saveAsSpecctraSessionSes(sesOutputStream, designName)) {
-      return;
-    }
-    InputStream sesInputStream = new ByteArrayInputStream(sesOutputStream.toByteArray());
-
-    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-
-    try (OutputStream outputStream = new FileOutputStream(outputFile)) {
-      if (boardPanel.boardHandling.saveSpecctraSessionSesAsEagleScriptScr(
-          sesInputStream, outputStream)) {
-        screenMessages.setStatusMessage(tm.getText("message_eagle_saved", outputFile.getPath()));
-      } else {
-        screenMessages.setStatusMessage(
-            tm.getText("message_eagle_save_failed", outputFile.getPath()));
-      }
-    } catch (IOException e) {
-      FRLogger.error("unable to save Eagle script file '" + outputFile.getPath() + "'", e);
-      screenMessages.setStatusMessage(
-          tm.getText("message_eagle_save_failed", outputFile.getPath()));
-    }
+    exportActions.saveAsEagleScriptScr(outputFile, designName);
   }
 
   /** Writes a Specctra Design File (DSN). Returns false, if write operation fails. */
   public boolean saveAsSpecctraDesignDsn(
       File outputFile, String designName, boolean compatibilityMode) {
-    if (outputFile == null) {
-      return false;
-    }
-
-    FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-    try (OutputStream outputStream = new FileOutputStream(outputFile)) {
-      return boardPanel.boardHandling.saveAsSpecctraDesignDsn(
-          outputStream, designName, compatibilityMode);
-    } catch (IOException e) {
-      FRLogger.error("unable to save Specctra design file '" + outputFile.getPath() + "'", e);
-      return false;
-    }
+    return exportActions.saveAsSpecctraDesignDsn(outputFile, designName, compatibilityMode);
   }
 
   /** Sets the toolbar to the buttons of the selected item state. */
@@ -1425,12 +1171,7 @@ public class BoardFrame extends WindowBase {
     if (activeFrame == this) {
       activeFrame = null;
     }
-    for (int i = 0; i < this.permanentSubwindows.length; i++) {
-      if (this.permanentSubwindows[i] != null) {
-        this.permanentSubwindows[i].dispose();
-        this.permanentSubwindows[i] = null;
-      }
-    }
+    windowLayout.disposePermanentSubwindows();
     for (BoardTemporarySubWindow currentSubwindow : this.temporarySubwindows) {
       if (currentSubwindow != null) {
         currentSubwindow.boardFrameDisposed();
@@ -1453,65 +1194,15 @@ public class BoardFrame extends WindowBase {
    * easy management.
    */
   private void allocatePermanentSubwindows() {
-    allocateEssentialSubwindows();
-    allocateRemainingSubwindows();
+    windowLayout.allocatePermanentSubwindows();
   }
 
   private void allocateEssentialSubwindows() {
-    if (this.selectParameterWindow == null) {
-      this.selectParameterWindow = new WindowSelectParameter(this);
-      this.permanentSubwindows[6] = this.selectParameterWindow;
-    }
+    windowLayout.allocateEssentialSubwindows();
   }
 
   private void allocateRemainingSubwindows() {
-    if (this.colorManager != null) {
-      return;
-    }
-    this.colorManager = new ColorManager(this);
-    this.permanentSubwindows[0] = this.colorManager;
-    this.visibilityWindow = new WindowVisibility(this);
-    this.permanentSubwindows[1] = this.visibilityWindow;
-    this.permanentSubwindows[2] = null;
-    this.displayMiscWindow = new WindowDisplayMisc(this);
-    this.permanentSubwindows[3] = this.displayMiscWindow;
-
-    this.routeParameterWindow = new WindowRouteParameter(this);
-    this.permanentSubwindows[5] = this.routeParameterWindow;
-    this.clearanceMatrixWindow = new WindowClearanceMatrix(this);
-    this.permanentSubwindows[7] = this.clearanceMatrixWindow;
-    this.padstacksWindow = new WindowPadstacks(this);
-    this.permanentSubwindows[8] = this.padstacksWindow;
-    this.packagesWindow = new WindowPackages(this);
-    this.permanentSubwindows[9] = this.packagesWindow;
-    this.componentsWindow = new WindowComponents(this);
-    this.permanentSubwindows[10] = this.componentsWindow;
-    this.incompletesWindow = new WindowIncompletes(this);
-    this.permanentSubwindows[11] = this.incompletesWindow;
-    this.clearanceViolationsWindow = new WindowClearanceViolations(this);
-    this.permanentSubwindows[12] = this.clearanceViolationsWindow;
-    this.netInfoWindow = new WindowNets(this);
-    this.permanentSubwindows[13] = this.netInfoWindow;
-    this.viaWindow = new WindowVia(this);
-    this.permanentSubwindows[14] = this.viaWindow;
-    this.editViasWindow = new WindowEditVias(this);
-    this.permanentSubwindows[15] = this.editViasWindow;
-    this.editNetRulesWindow = new WindowNetClasses(this);
-    this.permanentSubwindows[16] = this.editNetRulesWindow;
-    this.assignNetClassesWindow = new WindowAssignNetClass(this);
-    this.permanentSubwindows[17] = this.assignNetClassesWindow;
-    this.lengthViolationsWindow = new WindowLengthViolations(this);
-    this.permanentSubwindows[18] = this.lengthViolationsWindow;
-    this.aboutWindow = new WindowAbout(this.locale, this.freeroutingVersion);
-    this.permanentSubwindows[19] = this.aboutWindow;
-    this.moveParameterWindow = new WindowMoveParameter(this);
-    this.permanentSubwindows[20] = this.moveParameterWindow;
-    this.unconnectedRouteWindow = new WindowUnconnectedRoute(this);
-    this.permanentSubwindows[21] = this.unconnectedRouteWindow;
-    this.routeStubsWindow = new WindowRouteStubs(this);
-    this.permanentSubwindows[22] = this.routeStubsWindow;
-    this.autorouteParameterWindow = new WindowAutorouteParameter(this);
-    this.permanentSubwindows[23] = this.autorouteParameterWindow;
+    windowLayout.allocateRemainingSubwindows();
   }
 
   /**
@@ -1521,56 +1212,11 @@ public class BoardFrame extends WindowBase {
    *     remaining tool windows are still created on a later cycle
    */
   private void initializeWindows(boolean showEssentialImmediately) {
-    allocateEssentialSubwindows();
-
-    this.setLocation(120, 0);
-
-    this.selectParameterWindow.setLocation(0, 0);
-
-    if (showEssentialImmediately) {
-      this.selectParameterWindow.setVisible(true);
-      javax.swing.SwingUtilities.invokeLater(
-          () -> {
-            allocateRemainingSubwindows();
-            positionRemainingSubwindows();
-          });
-    } else {
-      javax.swing.SwingUtilities.invokeLater(
-          () -> {
-            this.selectParameterWindow.setVisible(true);
-            allocateRemainingSubwindows();
-            positionRemainingSubwindows();
-          });
-    }
+    windowLayout.initializeWindows(showEssentialImmediately);
   }
 
   private void initializeWindows() {
-    initializeWindows(false);
-  }
-
-  private void positionRemainingSubwindows() {
-    this.routeParameterWindow.setLocation(0, 100);
-    this.autorouteParameterWindow.setLocation(0, 200);
-    this.moveParameterWindow.setLocation(0, 50);
-    this.clearanceMatrixWindow.setLocation(0, 150);
-    this.viaWindow.setLocation(50, 150);
-    this.editViasWindow.setLocation(100, 150);
-    this.editNetRulesWindow.setLocation(100, 200);
-    this.assignNetClassesWindow.setLocation(100, 250);
-    this.padstacksWindow.setLocation(100, 30);
-    this.packagesWindow.setLocation(200, 30);
-    this.componentsWindow.setLocation(300, 30);
-    this.incompletesWindow.setLocation(400, 30);
-    this.clearanceViolationsWindow.setLocation(500, 30);
-    this.lengthViolationsWindow.setLocation(550, 30);
-    this.netInfoWindow.setLocation(350, 30);
-    this.unconnectedRouteWindow.setLocation(650, 30);
-    this.routeStubsWindow.setLocation(600, 30);
-
-    this.visibilityWindow.setLocation(0, 450);
-    this.displayMiscWindow.setLocation(0, 350);
-    this.colorManager.setLocation(0, 600);
-    this.aboutWindow.setLocation(200, 200);
+    windowLayout.initializeWindows();
   }
 
   /** Returns the locale used for language-dependent output. */
@@ -1585,11 +1231,7 @@ public class BoardFrame extends WindowBase {
 
   /** Refreshes all displayed coordinates after the user unit has changed. */
   public void refreshWindows() {
-    for (int i = 0; i < this.permanentSubwindows.length; i++) {
-      if (permanentSubwindows[i] != null) {
-        permanentSubwindows[i].refresh();
-      }
-    }
+    windowLayout.refreshWindows();
   }
 
   /** Sets the mode value on mode selection component of the toolbar. */
@@ -1603,12 +1245,7 @@ public class BoardFrame extends WindowBase {
 
   /** Repaints this board frame and all the subwindows of the board. */
   public void repaintAll() {
-    this.repaint();
-    for (int i = 0; i < permanentSubwindows.length; i++) {
-      if (permanentSubwindows[i] != null) {
-        permanentSubwindows[i].repaint();
-      }
-    }
+    windowLayout.repaintAll();
   }
 
   /** Registers a listener that is notified after a board has been loaded. */
@@ -1621,7 +1258,7 @@ public class BoardFrame extends WindowBase {
    * GuiBoardManager.refreshGuiFromSettings()}.
    */
   public BoardSavableSubWindow[] getPermanentSubwindows() {
-    return permanentSubwindows;
+    return windowLayout.getPermanentSubwindows();
   }
 
   /** Registers a listener that is notified after a board has been saved. */
