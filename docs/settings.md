@@ -134,6 +134,18 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`routable`**: Boolean indicating if the layer is active/routable by the autorouter.
     - **`preferred_direction_horizontal`**: Boolean indicating if the preferred direction on this layer is horizontal.
 
+##### **`optimizer` Sub-section**
+
+Configures the optional route-optimization stage that runs after autorouting.
+
+- **`enabled`**: Whether to run the optimizer. Default is `true`.
+- **`max_passes`**: Maximum number of optimizer passes.
+- **`max_items`**: Maximum number of item optimization attempts.
+- **`max_threads`**: Maximum optimizer worker count for the GUI path when the
+  `feature_flags.multi_threading` flag is enabled. It also controls autorouter pass parallelism
+  in `BatchAutorouterThread`. Headless and API jobs always use the single-threaded
+  `BatchOptimizer`; this setting does not enable parallel optimizer workers there.
+
 ##### **`fanout` Sub-section**
 
 Configures the SMD-pin fanout pre-pass stage.

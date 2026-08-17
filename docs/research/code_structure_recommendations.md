@@ -12,7 +12,7 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 ## How to use this plan
 
 1. Implement phases **0–5** on `refactor/restructure` in order. Each phase has a gate; do not start the next until it is green.
-2. Phases **6–8 are not in this PR.** They are follow-ups (see [Later work](#later-work-not-this-pr)).
+2. The [Later work](#later-work-not-this-pr) section is not in this PR.
 3. Do not put GUI types under `board` or `autoroute` (`ModuleBoundariesArchTest`).
 4. Do not convert `RouterSettings` (or nested settings) to records. `SettingsMerger` requires nullable reference fields with no Java-default initializers.
 5. Do not create phase-specific branches or interim PRs.
@@ -25,7 +25,7 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 |---|---|
 | Retire `BatchAutorouterV19` and the GUI algorithm combo | JPMS, `BoardLength`, geometry `*Math` splits |
 | Shared 3-stage `RoutingPipeline` used by GUI and headless | `JobService` extraction (MCP already calls REST over HTTP) |
-| Optimizer factory that **preserves** today’s GUI vs headless construction | Folding or deleting `BatchOptimizerMultiThreaded` (needs a DRC audit) |
+| Optimizer factory that **preserves** today’s GUI vs headless construction | Folding or deleting `BatchOptimizerMultiThreaded` (needs a separate DRC/parity audit) |
 | Finish per-family angle-mode factories (no cross-package adapter bag) | Virtual threads, BVH rewrite, parallel sector routing |
 | Subpackages `board.searchtree`, `board.optimize`, `autoroute.{pipeline,maze,expansion,drill,path}` | GUI presenter split of `GuiBoardManager` / `BoardFrame` |
 | Seal `Point`, `TileShape`, `RegularTileShape`; `NamedAlgorithm` only as far as subclasses allow | Sealing `Item`; streaming Specctra parser |
@@ -41,7 +41,9 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 - One GUI/headless construction drift remains:
   GUI may instantiate `BatchOptimizerMultiThreaded` when `featureFlags.multiThreading` and `optimizer.maxThreads > 1`; headless always uses `new BatchOptimizer(job)` even though defaults set `maxThreads` to `CPU−1`.
 
-Do not fix this drift in this PR by turning MT on for API jobs.
+The optimizer parity, determinism, logging, and benchmark work is intentionally deferred to the
+separate [`optimizer_unification_plan.md`](optimizer_unification_plan.md). Do not turn MT on for
+API/CLI jobs as part of this restructuring roadmap.
 
 ---
 
@@ -148,13 +150,16 @@ Do not touch `BatchAutorouterThread`.
 // Shared factory — GUI path (feature flag + maxThreads)
 static BatchOptimizer createForGui(RoutingJob job) { ... }
 
-// Headless path stays single-threaded until a later DRC audit
+// Headless path stays single-threaded until the separate optimizer plan is complete
 static BatchOptimizer createForHeadless(RoutingJob job) {
   return new BatchOptimizer(job);
 }
 ```
 
-If `optimizer.enabled` is false, the pipeline skips the stage. Do not enable MT for API/CLI jobs in this PR.
+The optimizer is enabled by default by `DefaultSettings`. If `optimizer.enabled` is false, the
+pipeline skips the stage. GUI, CLI, and API jobs must resolve the same optimizer settings before
+constructing the pipeline. Do not enable MT for API/CLI jobs in this restructuring roadmap; see the
+[`optimizer_unification_plan.md`](optimizer_unification_plan.md).
 
 ### 4. Sealed types — closed trees only
 
@@ -168,7 +173,8 @@ public sealed abstract class RegularTileShape permits IntBox, IntOctagon { ... }
 
 `FloatPoint` is not a `Point`. `Circle` is a `ConvexShape`, not a `TileShape`. Do not seal `Item` in this PR.
 
-`NamedAlgorithm`: permit `BatchAutorouter`, `BatchFanout`, `BatchOptimizer`. Because `BatchOptimizerMultiThreaded` remains, `BatchOptimizer` must be **`non-sealed`**.
+`NamedAlgorithm`: permit `BatchAutorouter`, `BatchFanout`, `BatchOptimizer`. Because
+`BatchOptimizerMultiThreaded` remains, `BatchOptimizer` must be **`non-sealed`**.
 
 ---
 
@@ -251,11 +257,12 @@ autoroute/
 
 **Tasks:**
 
-- [ ] Put `createForGui` / `createForHeadless` on `BatchOptimizer` (or a tiny package-private factory next to it).
-- [ ] Delete duplicated algorithm-id warning / listener-registration blocks in the GUI thread.
-- [ ] Document the headless-always-ST policy in `docs/settings.md` (`optimizer.maxThreads` applies to the GUI path and to `BatchAutorouterThread` pass parallelism, not to headless optimizer workers).
+- [x] Put `createForGui` / `createForHeadless` on `BatchOptimizer` (or a tiny package-private factory next to it).
+- [x] Delete duplicated algorithm-id warning / listener-registration blocks in the GUI thread.
+- [x] Document the headless-always-ST policy in `docs/settings.md` (`optimizer.maxThreads` applies to the GUI path and to `BatchAutorouterThread` pass parallelism, not to headless optimizer workers).
 
-**Gate:** Fast tests green. A unit test asserts `createForHeadless` returns `BatchOptimizer` (not the MT subclass) even when `maxThreads > 1`.
+**Gate (passed):** Fast tests green. `BatchOptimizerFactoryTest` asserts `createForHeadless` returns
+`BatchOptimizer` (not the MT subclass) even when `maxThreads > 1`.
 
 ### Phase 3 — Room-neighbour factory
 
@@ -299,9 +306,11 @@ autoroute/
 
 ## Later work (not this PR)
 
-### Follow-up A — Optimizer DRC audit
+### Follow-up A — Optimizer unification
 
-Stress GUI MT vs ST on `Issue508-DAC2020_bm01`…`bm05`, `Issue159`, `Issue093` at `maxThreads` 1, 2, 4, 8 using `DesignRulesChecker.getAllClearanceViolations()`. Then either fold `BatchOptimizerMultiThreaded` into `BatchOptimizer` or delete MT and force `maxThreads = 1` for optimization. Only after that may headless use the GUI construction policy.
+The deterministic multi-threaded optimizer migration, cross-mode parity work, logging compatibility,
+and before/after benchmarks are specified separately in
+[`optimizer_unification_plan.md`](optimizer_unification_plan.md).
 
 ### Follow-up B — API/I/O thinning
 
@@ -328,7 +337,7 @@ August 2026, files ≥600 LOC:
 | Board / trees / tighteners | 15 | Package split only |
 | Geometry | 8 | Seal; do not split |
 | I/O parsers | 7 | Out |
-| API / settings / DRC / analytics | 8 | Settings doc note in Phase 2 only |
+| API / settings / DRC / analytics | 8 | Settings documentation in Phase 2 only |
 
 | File | This PR does |
 |---|---|
