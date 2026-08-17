@@ -1,8 +1,8 @@
 package app.freerouting.management.jobs;
 
 import app.freerouting.Freerouting;
-import app.freerouting.autoroute.BatchAutorouter;
-import app.freerouting.autoroute.RoutingPipeline;
+import app.freerouting.autoroute.pipeline.BatchAutorouter;
+import app.freerouting.autoroute.pipeline.RoutingPipeline;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;

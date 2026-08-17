@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import app.freerouting.autoroute.pipeline.BatchAutorouter;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.Trace;

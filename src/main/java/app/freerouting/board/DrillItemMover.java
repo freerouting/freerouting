@@ -1,5 +1,7 @@
 package app.freerouting.board;
 
+import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.board.searchtree.ShapeTraceEntries;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -97,7 +99,7 @@ public final class DrillItemMover {
    * violations occur. If tidyRegion != null, it will be joined by the bounding octagons of the
    * translated shapes.
    */
-  static boolean insert(
+  public static boolean insert(
       DrillItem drillItem,
       Vector vector,
       int maxRecursionDepth,
@@ -160,7 +162,7 @@ public final class DrillItemMover {
    * Shoves vias out of obstacleShape. Returns false, if the database is damaged, so that an undo is
    * necessary afterwards.
    */
-  static boolean shoveVias(
+  public static boolean shoveVias(
       TileShape obstacleShape,
       ShapeEntrySide fromSide,
       int layer,
@@ -243,7 +245,7 @@ public final class DrillItemMover {
    * true, more than 1 possible new locations are calculated. The function is used here and in
    * TraceShover.check.
    */
-  static IntPoint[] tryShoveViaPoints(
+  public static IntPoint[] tryShoveViaPoints(
       TileShape obstacleShape,
       int layer,
       Via via,

@@ -183,8 +183,8 @@ public class PowerPlaneValidationTest {
     // Force plane layer to active in settings after optimizations to test override guard
     settings.setLayerActive(1, true);
 
-    app.freerouting.autoroute.AutorouteControl control =
-        new app.freerouting.autoroute.AutorouteControl(board, gndNet.netNumber, settings);
+    app.freerouting.autoroute.maze.AutorouteControl control =
+        new app.freerouting.autoroute.maze.AutorouteControl(board, gndNet.netNumber, settings);
 
     // Assert that the override guard forced it to false
     assertFalse(

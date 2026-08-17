@@ -1,12 +1,12 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.autoroute.AutorouteControl;
-import app.freerouting.autoroute.AutorouteEngine;
-import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
-import app.freerouting.autoroute.FoundConnectionInserter;
-import app.freerouting.autoroute.FoundConnectionLocator;
-import app.freerouting.autoroute.IncompleteFreeSpaceExpansionRoom;
-import app.freerouting.autoroute.MazeSearchEngine;
+import app.freerouting.autoroute.expansion.CompleteFreeSpaceExpansionRoom;
+import app.freerouting.autoroute.expansion.IncompleteFreeSpaceExpansionRoom;
+import app.freerouting.autoroute.maze.AutorouteControl;
+import app.freerouting.autoroute.maze.AutorouteEngine;
+import app.freerouting.autoroute.maze.MazeSearchEngine;
+import app.freerouting.autoroute.path.FoundConnectionInserter;
+import app.freerouting.autoroute.path.FoundConnectionLocator;
 import app.freerouting.board.Connectable;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;

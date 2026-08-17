@@ -1,8 +1,3 @@
-// Use this to test for missing keys in all .properties files
-// For individual testing use:
-// ./gradlew cleanTest test --tests app.freerouting.i18n.EnglishPropertiesParityTest --rerun-tasks
-// Reports are in build/reports/i18n/*Report.txt and build/reports/i18n/*Report.json
-
 package app.freerouting.i18n;
 
 import app.freerouting.logger.FRLogger;
@@ -26,6 +21,11 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+
+// Use this to test for missing keys in all .properties files
+// For individual testing use:
+// ./gradlew cleanTest test --tests app.freerouting.i18n.EnglishPropertiesParityTest --rerun-tasks
+// Reports are in build/reports/i18n/*Report.txt and build/reports/i18n/*Report.json
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EnglishPropertiesParityTest {

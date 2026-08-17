@@ -14,8 +14,8 @@ import app.freerouting.logger.FRLogger;
 public class ShapeEntrySide {
 
   public static final ShapeEntrySide NOT_CALCULATED = new ShapeEntrySide(-1, null);
-  final int no;
-  FloatPoint borderIntersection;
+  public final int no;
+  public FloatPoint borderIntersection;
 
   /**
    * Calculates the number of the edge line of shape where polyline enters.
@@ -23,7 +23,7 @@ public class ShapeEntrySide {
    * <p>Used in the push trace algorithm to determine the shove direction. no is expected between 1
    * and polyline.lineCount - 2 inclusive.
    */
-  ShapeEntrySide(Polyline polyline, int no, TileShape shape) {
+  public ShapeEntrySide(Polyline polyline, int no, TileShape shape) {
     int fromsideNo = -1;
     FloatPoint intersection = null;
     boolean borderIntersectionFound = false;
@@ -65,7 +65,7 @@ public class ShapeEntrySide {
    * Calculates the nearest border side of shape to fromPoint. Used in the shove_drill_item
    * algorithm to determine the shove direction.
    */
-  ShapeEntrySide(Point fromPoint, TileShape shape) {
+  public ShapeEntrySide(Point fromPoint, TileShape shape) {
     Point borderProjection = shape.nearestBorderPoint(fromPoint);
     this.no = shape.containsOnBorderLineNo(borderProjection);
     if (this.no < 0) {
@@ -78,7 +78,7 @@ public class ShapeEntrySide {
    * Calculates the Side of shape at the start of lineSegment. If shoveToTheLeft, the fromSideIndex
    * is decremented by 2, else it is increased by 2.
    */
-  ShapeEntrySide(LineSegment lineSegment, TileShape shape, boolean shoveToTheLeft) {
+  public ShapeEntrySide(LineSegment lineSegment, TileShape shape, boolean shoveToTheLeft) {
     FloatPoint startCorner = lineSegment.startPointApprox();
     FloatPoint endCorner = lineSegment.endPointApprox();
     int borderLineCount = shape.borderLineCount();
@@ -154,7 +154,7 @@ public class ShapeEntrySide {
   }
 
   /** Values already calculated. Just create an instance from them. */
-  ShapeEntrySide(int no, FloatPoint borderIntersection) {
+  public ShapeEntrySide(int no, FloatPoint borderIntersection) {
     this.no = no;
     this.borderIntersection = borderIntersection;
   }

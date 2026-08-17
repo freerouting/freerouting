@@ -2,6 +2,7 @@ package app.freerouting.autoroute;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import app.freerouting.autoroute.pipeline.BatchAutorouter;
 import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.fixtures.RoutingFixtureTest;

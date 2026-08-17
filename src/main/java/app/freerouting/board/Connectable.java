@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.Set;
 

@@ -1,7 +1,8 @@
 package app.freerouting.board;
 
-import app.freerouting.autoroute.ExpansionDrill;
 import app.freerouting.autoroute.ItemAutorouteInfo;
+import app.freerouting.autoroute.drill.ExpansionDrill;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;

@@ -1,5 +1,8 @@
 package app.freerouting.board;
 
+import app.freerouting.board.optimize.TraceShover;
+import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.board.searchtree.ShapeTraceEntries;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.FloatPoint;

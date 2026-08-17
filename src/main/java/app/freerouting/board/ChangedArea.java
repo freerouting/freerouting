@@ -6,7 +6,7 @@ import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.TileShape;
 
 /** Used internally for marking changed areas on the board after shoving and optimizing items. */
-class ChangedArea {
+public class ChangedArea {
 
   final int layerCount;
   MutableOctagon[] arr;
@@ -74,7 +74,7 @@ class ChangedArea {
   }
 
   /** Initializes the marking octagon on layer to empty. */
-  void setEmpty(int layer) {
+  public void setEmpty(int layer) {
     arr[layer].setEmpty();
   }
 

@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -311,7 +312,7 @@ public class ObstacleArea extends Item implements Serializable {
     printer.append(this.board.layerStructure.layers[this.getLayer()].name);
   }
 
-  TileShape[] splitToConvex() {
+  public TileShape[] splitToConvex() {
     if (this.relativeArea == null) {
       FRLogger.warn("ObstacleArea.split_to_convex: area is null");
       return null;

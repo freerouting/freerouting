@@ -1,5 +1,7 @@
 package app.freerouting.board;
 
+import app.freerouting.board.searchtree.SearchTreeObject;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;

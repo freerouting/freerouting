@@ -1,5 +1,8 @@
 package app.freerouting.board;
 
+import app.freerouting.board.optimize.TraceTightener;
+import app.freerouting.board.searchtree.SearchTreeObject;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.Point;
@@ -378,7 +381,7 @@ public abstract class Trace extends Item implements Connectable, Serializable {
    * Looks up touching pins at the first corner and the last corner of the trace. Used to avoid acid
    * traps.
    */
-  Set<Pin> touchingPinsAtEndCorners() {
+  public Set<Pin> touchingPinsAtEndCorners() {
     Set<Pin> result = new TreeSet<>();
     if (this.board == null) {
       return result;

@@ -1,5 +1,7 @@
 package app.freerouting.board;
 
+import app.freerouting.board.optimize.TraceTightener;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.geometry.planar.Direction;
@@ -1050,7 +1052,7 @@ public class PolylineTrace extends Trace implements Serializable {
   }
 
   /** Changes the geometry of this trace to newPolyline. */
-  void change(Polyline newPolyline) {
+  public void change(Polyline newPolyline) {
     if (!this.isOnTheBoard()) {
       // Just change the polyline of this trace.
       lines = newPolyline;

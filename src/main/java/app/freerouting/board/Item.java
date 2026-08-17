@@ -1,6 +1,8 @@
 package app.freerouting.board;
 
 import app.freerouting.autoroute.ItemAutorouteInfo;
+import app.freerouting.board.searchtree.SearchTreeObject;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
@@ -42,7 +44,7 @@ public abstract class Item
   protected int componentId;
 
   /** The nets, to which this item belongs. */
-  int[] netNumbers;
+  public int[] netNumbers;
 
   /** The index in the clearance matrix describing the required spacing to other items. */
   private int clearanceClassIndex;
@@ -237,7 +239,7 @@ public abstract class Item
     return this.onTheBoard;
   }
 
-  void setOnTheBoard(boolean value) {
+  public void setOnTheBoard(boolean value) {
     this.onTheBoard = value;
   }
 
@@ -997,7 +999,7 @@ public abstract class Item
   /**
    * Sets the precalculated tree shapes tree entries for the tree with identification number treeNo.
    */
-  protected void setPrecalculatedTreeShapes(TileShape[] shapes, ShapeSearchTree tree) {
+  public void setPrecalculatedTreeShapes(TileShape[] shapes, ShapeSearchTree tree) {
     if (this.board == null) {
       return;
     }

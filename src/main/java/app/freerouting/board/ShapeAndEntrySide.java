@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
@@ -10,17 +11,18 @@ import app.freerouting.geometry.planar.TileShape;
  * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of the
  * trace shape.
  */
-class ShapeAndEntrySide {
+public class ShapeAndEntrySide {
 
-  final TileShape shape;
-  final ShapeEntrySide fromSide;
+  public final TileShape shape;
+  public final ShapeEntrySide fromSide;
 
   /**
    * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of
    * the trace shape. In the check shove functions, inShoveCheck is expected to be true. In the
    * actual shove functions inShoveCheck is expected to be false.
    */
-  ShapeAndEntrySide(PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
+  public ShapeAndEntrySide(
+      PolylineTrace trace, int index, boolean orthogonal, boolean inShoveCheck) {
     ShapeSearchTree searchTree = trace.board.searchTreeManager.getDefaultTree();
     TileShape currentShape = trace.getTreeShape(searchTree, index);
     ShapeEntrySide currentFromSide = null;

@@ -1,7 +1,9 @@
 package app.freerouting.autoroute;
 
+import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
+import app.freerouting.autoroute.path.Connection;
 import app.freerouting.board.Item;
-import app.freerouting.board.ShapeSearchTree;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.logger.FRLogger;
 
 /** Temporary data stored in board Items used in the autoroute algorithm. */

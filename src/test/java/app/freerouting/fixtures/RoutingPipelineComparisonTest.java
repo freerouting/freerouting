@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import app.freerouting.autoroute.RoutingPipeline;
+import app.freerouting.autoroute.pipeline.RoutingPipeline;
 import app.freerouting.board.ItemIdGenerator;
 import app.freerouting.board.Unit;
 import app.freerouting.core.RoutingJob;

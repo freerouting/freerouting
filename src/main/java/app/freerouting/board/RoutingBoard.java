@@ -2,10 +2,14 @@ package app.freerouting.board;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
-import app.freerouting.autoroute.AutorouteControl;
-import app.freerouting.autoroute.AutorouteControl.ExpansionCostFactor;
-import app.freerouting.autoroute.AutorouteEngine;
-import app.freerouting.autoroute.CompleteFreeSpaceExpansionRoom;
+import app.freerouting.autoroute.expansion.CompleteFreeSpaceExpansionRoom;
+import app.freerouting.autoroute.maze.AutorouteControl;
+import app.freerouting.autoroute.maze.AutorouteControl.ExpansionCostFactor;
+import app.freerouting.autoroute.maze.AutorouteEngine;
+import app.freerouting.board.optimize.TraceShover;
+import app.freerouting.board.optimize.TraceTightener;
+import app.freerouting.board.searchtree.SearchTreeObject;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.Stoppable;
@@ -49,7 +53,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   public final app.freerouting.autoroute.RoutingFailureLog failureLog;
 
   /** The area marked for optimizing the route. */
-  transient ChangedArea changedArea;
+  public transient ChangedArea changedArea;
 
   /** Contains the database for the auto-route algorithm. */
   private transient AutorouteEngine autorouteEngine;
@@ -1559,7 +1563,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     return shoveFailingObstacle;
   }
 
-  void setShoveFailingObstacle(Item item) {
+  public void setShoveFailingObstacle(Item item) {
     shoveFailingObstacle = item;
   }
 

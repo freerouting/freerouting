@@ -1,5 +1,6 @@
 package app.freerouting.board;
 
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -174,7 +175,7 @@ public class BoardOutline extends Item implements Serializable {
    * The board shape outside the outline curves, where a keepout will be generated The outline
    * curves are holes of the keepoutArea.
    */
-  Area getKeepoutArea() {
+  public Area getKeepoutArea() {
     if (this.keepoutArea == null) {
       PolylineShape[] holeArr = this.shapes.clone();
       keepoutArea = new PolylineArea(this.board.boundingBox, holeArr);

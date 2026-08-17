@@ -1,6 +1,6 @@
 package app.freerouting.settings;
 
-import app.freerouting.autoroute.AutorouteControl;
+import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.ReflectionUtil;

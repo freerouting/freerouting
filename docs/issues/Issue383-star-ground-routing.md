@@ -205,7 +205,7 @@ After routing, the optimizer must not merge star sub-net traces into a daisy cha
 
 ## References
 
-- `src/main/java/app/freerouting/autoroute/BatchAutorouter.java` — `getAutorouteItems()`, `autoroute_pass()`
+- `src/main/java/app/freerouting/autoroute/pipeline/BatchAutorouter.java` — `getAutorouteItems()`, `autoroute_pass()`
 - `src/main/java/app/freerouting/rules/Net.java` — `subnet_number`, `contains_plane`
 - `src/main/java/app/freerouting/rules/NetClass.java` — `is_ignored_by_autorouter`
 - `src/main/java/app/freerouting/io/specctra/parser/Network.java` — `read_net_scope()`, `fromto` handling (line 1096–1101)

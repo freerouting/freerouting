@@ -286,12 +286,14 @@ autoroute/
 
 **Tasks:**
 
-- [ ] Move search-tree types to `board.searchtree`, tighteners/shove/via optimizer to `board.optimize`.
-- [ ] Split `autoroute` into `pipeline`, `maze`, `expansion`, `drill`, `path`; leave `events`.
-- [ ] Move matching `*.properties` with relocated classes.
-- [ ] Update ArchUnit strings and the `docs/architecture.md` glossary / mermaid. Accept `.frb` FQCN breakage.
+- [x] Move search-tree types to `board.searchtree`, tighteners/shove/via optimizer to `board.optimize`.
+- [x] Split `autoroute` into `pipeline`, `maze`, `expansion`, `drill`, `path`; leave `events`.
+- [x] Check matching `*.properties`; no class-local bundles exist for the relocated types.
+- [x] Update ArchUnit strings and the `docs/architecture.md` glossary / mermaid. Accept `.frb` FQCN breakage.
 
-**Gate:** `ModuleBoundariesArchTest` and `SpecctraPackageArchTest` green; `spotlessCheck` + Checkstyle; `python scripts/i18n/extract-context.py --check`. `git diff` is moves + import/FQCN updates only.
+**Gate (pending verification):** `ModuleBoundariesArchTest` and `SpecctraPackageArchTest` green;
+`spotlessCheck` + Checkstyle; `python scripts/i18n/extract-context.py --check`. `git diff` is moves +
+import/FQCN updates only.
 
 ### Phase 5 — Sealed geometry (and NamedAlgorithm if cheap)
 

@@ -1,6 +1,9 @@
 package app.freerouting.board;
 
-import app.freerouting.autoroute.AutorouteControl;
+import app.freerouting.autoroute.maze.AutorouteControl;
+import app.freerouting.board.searchtree.SearchTreeManager;
+import app.freerouting.board.searchtree.SearchTreeObject;
+import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.core.library.BoardLibrary;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;

@@ -108,7 +108,7 @@ public class HeadlessBoardManager implements BoardManager {
    *
    * <ul>
    *   <li>{@link BoardManager} holds a board reference
-   *   <li>{@link app.freerouting.autoroute.NamedAlgorithm} may hold a board reference
+   *   <li>{@link app.freerouting.autoroute.pipeline.NamedAlgorithm} may hold a board reference
    *   <li>{@link RoutingJob} holds a board reference
    * </ul>
    *
