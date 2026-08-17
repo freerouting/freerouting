@@ -4,7 +4,7 @@ import app.freerouting.logger.FRLogger;
 import java.io.Serializable;
 
 /** Implements functionality of orthogonal rectangles in the plane with integer coordinates. */
-public class IntBox extends RegularTileShape implements Serializable {
+public final class IntBox extends RegularTileShape implements Serializable {
 
   /** Standard implementation of an empty box. */
   public static final IntBox EMPTY =

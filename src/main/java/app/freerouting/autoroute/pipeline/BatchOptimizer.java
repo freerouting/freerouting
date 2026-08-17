@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /** Optimizes routes using a single thread on a board that has completed auto-routing. */
-public class BatchOptimizer extends NamedAlgorithm {
+public non-sealed class BatchOptimizer extends NamedAlgorithm {
 
   protected final ProgressThrottler progressThrottler = new ProgressThrottler(1000);
   protected ReadSortedRouteItems sortedRouteItems;

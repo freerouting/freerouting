@@ -341,50 +341,8 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    */
   private app.freerouting.gui.BoardFrame boardFrame;
 
-  /**
-   * Number of threads to use for parallel routing operations.
-   *
-   * <p>Controls the thread pool size for autorouting and batch optimization tasks.
-   */
-  private int numThreads;
-
-  /**
-   * Strategy for updating the board during batch operations.
-   *
-   * <p>Determines how and when the board is updated during autorouting:
-   *
-   * <ul>
-   *   <li>Update frequency
-   *   <li>Commit timing
-   *   <li>Rollback behavior
-   * </ul>
-   *
-   * @see BoardUpdateStrategy
-   */
-  private BoardUpdateStrategy boardUpdateStrategy;
-
-  /**
-   * The hybrid routing ratio configuration string.
-   *
-   * <p>Defines the balance between different routing algorithms when using hybrid routing
-   * approaches.
-   */
-  private String hybridRatio;
-
-  /**
-   * Strategy for selecting which items to route during batch autorouting.
-   *
-   * <p>Controls the order and selection criteria for:
-   *
-   * <ul>
-   *   <li>Net prioritization
-   *   <li>Connection selection
-   *   <li>Routing sequence optimization
-   * </ul>
-   *
-   * @see ItemSelectionStrategy
-   */
-  private ItemSelectionStrategy itemSelectionStrategy;
+  /** Batch routing options owned by this GUI session. */
+  private final GuiBoardSessionState sessionState;
 
   /**
    * Thread managing long-running interactive actions in the background.
@@ -493,6 +451,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
     super(routingJob);
     this.globalSettings = globalSettings;
     this.settingsMerger = settingsMerger;
+    this.sessionState = new GuiBoardSessionState(globalSettings, routingJob);
     this.locale = globalSettings.currentLocale;
     this.panel = panel;
     this.screenMessages = panel.screenMessages;
@@ -3211,7 +3170,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see BoardUpdateStrategy
    */
   public BoardUpdateStrategy getBoardUpdateStrategy() {
-    return boardUpdateStrategy;
+    return sessionState.getBoardUpdateStrategy();
   }
 
   /**
@@ -3221,7 +3180,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see BoardUpdateStrategy
    */
   public void setBoardUpdateStrategy(BoardUpdateStrategy boardUpdateStrategy) {
-    this.boardUpdateStrategy = boardUpdateStrategy;
+    sessionState.setBoardUpdateStrategy(boardUpdateStrategy);
   }
 
   /**
@@ -3233,7 +3192,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @return the hybrid ratio string
    */
   public String getHybridRatio() {
-    return hybridRatio;
+    return sessionState.getHybridRatio();
   }
 
   /**
@@ -3242,7 +3201,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @param hybridRatio the hybrid ratio configuration string
    */
   public void setHybridRatio(String hybridRatio) {
-    this.hybridRatio = hybridRatio;
+    sessionState.setHybridRatio(hybridRatio);
   }
 
   /**
@@ -3255,7 +3214,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see ItemSelectionStrategy
    */
   public ItemSelectionStrategy getItemSelectionStrategy() {
-    return itemSelectionStrategy;
+    return sessionState.getItemSelectionStrategy();
   }
 
   /**
@@ -3265,7 +3224,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see ItemSelectionStrategy
    */
   public void setItemSelectionStrategy(ItemSelectionStrategy itemSelectionStrategy) {
-    this.itemSelectionStrategy = itemSelectionStrategy;
+    sessionState.setItemSelectionStrategy(itemSelectionStrategy);
   }
 
   /**
@@ -3277,12 +3236,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @return the effective number of threads (respecting global settings)
    */
   public int getNumThreads() {
-    if ((numThreads > 1) && (!globalSettings.featureFlags.multiThreading)) {
-      routingJob.logInfo("Multi-threading is disabled in the settings. Using single thread.");
-      numThreads = 1;
-    }
-
-    return numThreads;
+    return sessionState.getNumThreads();
   }
 
   /**
@@ -3294,7 +3248,7 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
    * @see #getNumThreads()
    */
   public void setNumThreads(int value) {
-    numThreads = value;
+    sessionState.setNumThreads(value);
   }
 
   /**

@@ -13,7 +13,7 @@ import java.math.BigInteger;
  * in addition to the affine plane with rational coordinates the so-called line at infinity, which
  * consist of all projective points (x, y, z) with z = 0.
  */
-public class RationalPoint extends Point implements Serializable {
+public final class RationalPoint extends Point implements Serializable {
 
   @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger x;

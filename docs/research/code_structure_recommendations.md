@@ -11,7 +11,7 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 
 ## How to use this plan
 
-1. Implement phases **0–6** on `refactor/restructure` in order. Each phase has a gate; do not start the next until it is green.
+1. Implement phases **0–7** on `refactor/restructure` in order. Each phase has a gate; do not start the next until it is green.
 2. The [Later work](#later-work-not-this-pr) section is not in this PR.
 3. Do not put GUI types under `board` or `autoroute` (`ModuleBoundariesArchTest`).
 4. Do not convert `RouterSettings` (or nested settings) to records. `SettingsMerger` requires nullable reference fields with no Java-default initializers.
@@ -27,8 +27,8 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 | Shared 3-stage `RoutingPipeline` used by GUI and headless | `JobService` extraction (MCP already calls REST over HTTP) |
 | Optimizer factory that **preserves** today’s GUI vs headless construction | Folding or deleting `BatchOptimizerMultiThreaded` (needs a separate DRC/parity audit) |
 | Finish per-family angle-mode factories (no cross-package adapter bag) | Virtual threads, BVH rewrite, parallel sector routing |
-| Subpackages `board.searchtree`, `board.optimize`, `autoroute.{pipeline,maze,expansion,drill,path}` | GUI presenter split of `GuiBoardManager` / `BoardFrame` |
-| Seal `Point`, `TileShape`, `RegularTileShape`; `NamedAlgorithm` only as far as subclasses allow | Sealing `Item`; streaming Specctra parser |
+| Subpackages `board.searchtree`, `board.optimize`, `autoroute.{pipeline,maze,expansion,drill,path}` | Full GUI presenter split of `GuiBoardManager` / `BoardFrame` |
+| Seal `Point`, `TileShape`, `RegularTileShape`, and `NamedAlgorithm` | Sealing `Item`; streaming Specctra parser |
 
 ---
 
@@ -36,7 +36,7 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 
 - `board`: 52 Java files. `autoroute`: 48 files, with events already in `autoroute.events`.
 - `GuiBoardManager` lives in `gui.workspace`. `HeadlessBoardManager` lives in `management`.
-- `NamedAlgorithm` is the strategy base for `BatchAutorouter`, `BatchFanout`, and `BatchOptimizer`. `BatchOptimizerMultiThreaded` extends `BatchOptimizer`. `BatchAutorouterThread` is a **per-pass parallel worker**, not a job orchestrator.
+- `NamedAlgorithm` is the strategy base for `BatchAutorouter` and `BatchOptimizer`. `BatchOptimizerMultiThreaded` extends `BatchOptimizer`; `BatchFanout` is a separate pipeline stage. `BatchAutorouterThread` is a **per-pass parallel worker**, not a job orchestrator.
 - Angle-mode factories **already exist** for three of four families (`TraceTightener.getInstance`, `FoundConnectionLocator.getInstance`, `SearchTreeManager` autoroute-tree construction). The missing one is room-neighbour dispatch in `AutorouteEngine.calculateDoors`.
 - One GUI/headless construction drift remains:
   GUI may instantiate `BatchOptimizerMultiThreaded` when `featureFlags.multiThreading` and `optimizer.maxThreads > 1`; headless always uses `new BatchOptimizer(job)` even though defaults set `maxThreads` to `CPU−1`.
@@ -301,17 +301,23 @@ moves plus import/FQCN updates only.
 
 **Tasks:**
 
-- [ ] Seal `Point`, `TileShape`, `RegularTileShape` with the permits lists above.
-- [ ] Replace `default: throw` on those types with exhaustive switches.
-- [ ] Optionally seal `NamedAlgorithm` with `BatchOptimizer` **non-sealed**. Skip if it forces noisy modifiers for no call-site gain.
-- [ ] Do not seal `Item`.
+- [x] Seal `Point`, `TileShape`, `RegularTileShape` with the permits lists above.
+- [x] Audit switches on those types. No geometry-type switches required conversion; the remaining
+  `default` branches are intentional index/range guards.
+- [x] Seal `NamedAlgorithm` with `BatchOptimizer` **non-sealed**.
+- [x] Do not seal `Item`.
 
-**Gate:** Compile + fast tests. No new incomplete switches.
+**Gate (passed):** `compileJava`, `compileTestJava`, and focused sealing tests passed. No new
+incomplete switches.
 
 ### Phase 6 — Responsibility-oriented file splits
 
 **Goal:** Reduce the highest-risk multi-responsibility classes without splitting cohesive hot
 geometry types or changing public behavior.
+
+**Current increment (in progress):** `GuiBoardSessionState` now owns the GUI batch-routing options
+behind the unchanged `GuiBoardManager` façade. Interaction, persistence, load, export, and
+`BoardFrame` layout collaborators remain for subsequent increments in group 1.
 
 The line counts below are from the August 17, 2026 scan of 645 tracked Java files (144,101 total
 lines). Size is a prioritization signal; each extraction must follow a stable responsibility seam
@@ -327,8 +333,8 @@ and preserve the existing public façade where callers depend on it.
    - Keep `GuiBoardManager` and `BoardFrame` as compatibility façades while collaborators are
      introduced behind package-private contracts.
 2. **Routing orchestration second**
-   - `BatchAutorouter.java` (2,158 lines) → `AutoroutePassRunner`, `AutorouteBatchLoop`, and
-     `AutorouteDiagnostics`.
+   - **Deferred for now:** `BatchAutorouter.java` (2,158 lines). Revisit it only after the
+     pipeline-package investigation in Phase 7 establishes the correct ownership boundaries.
    - `MazeSearchEngine.java` (1,948 lines) → `MazeExpansionEngine`, `MazeRipupResolver`, and
      `MazeFanoutDiagnostics`.
    - Preserve maze ordering, ripup costs, plane-net behavior, and diagnostic payloads before and
@@ -342,8 +348,8 @@ and preserve the existing public façade where callers depend on it.
 4. **API and parser seams fourth**
    - `JobControllerV1.java` (1,421 lines) → `JobInputResource`, `JobOutputResource`, and
      `JobProgressResource`, preserving all REST paths and analytics calls.
-   - `SpecctraDsnStreamReader.java` (1,862 lines) → `DsnLexer`, `DsnTokenReader`, and
-     `DsnStringReader` only if the generated scanner boundary remains intact.
+   - **Deferred for now:** `SpecctraDsnStreamReader.java` (1,862 lines). Do not split the
+     generated scanner until a separate parser-boundary investigation justifies it.
 5. **Geometry and trace seams last**
    - `PolylineTrace.java` (1,431 lines) → `PolylineTraceGeometry`,
      `PolylineTraceNormalization`, and `PolylineTraceSearchTreeAdapter`.
@@ -355,6 +361,37 @@ for routing changes; full DRC via `DesignRulesChecker.getAllClearanceViolations(
 clearance, serialization, or performance regression. Complete one numbered group before starting
 the next. The generated Specctra parser and hot geometry candidates are explicitly lower priority
 than GUI, routing orchestration, and board-service seams.
+
+### Phase 7 — Autoroute pipeline package investigation
+
+**Goal:** Investigate `app.freerouting.autoroute.pipeline` and restructure its classes, splitting
+them where responsibility seams are stable and renaming them so class and package names express the
+logical connections between pipeline stages, workers, algorithm metadata, and execution adapters.
+
+**Scope:**
+
+- Inventory every class in `autoroute.pipeline` and map its callers, lifecycle, event flow, thread
+  ownership, and relationship to `RoutingPipeline`.
+- Separate stage orchestration (`fanout → autoroute → optimize`), algorithm implementations,
+  per-pass workers, task state/metadata, and GUI/headless execution adapters where the dependency
+  graph supports it.
+- `BatchAutorouter.java` is explicitly in scope for this phase: it may be changed, moved, split,
+  and renamed when the dependency map identifies a clearer ownership boundary.
+- Evaluate focused splits for `BatchAutorouter`, `BatchOptimizer`, `BatchOptimizerMultiThreaded`,
+  `BatchFanout`, `BatchAutorouterThread`, `OptimizeRouteTask`, and `RoutingPipeline`; do not split
+  merely to reduce line count.
+- Propose names that describe behavior and ownership, such as stage/coordinator, optimizer,
+  worker, task, or pipeline-contract names. Confirm each rename against public callers,
+  serialization/FQCN compatibility, algorithm IDs, and analytics/logging payloads before applying it.
+- Prefer package names that make the direction of dependencies visible, for example distinct
+  stage/orchestration and execution-adapter packages only when the resulting boundaries are
+  simpler than the current single package.
+- The provisional `AutoroutePassRunner` / `AutorouteBatchLoop` names are candidates only; replace
+  them if the Phase 7 dependency analysis produces more accurate names.
+
+**Gate:** A dependency map and naming proposal are reviewed against the pipeline tests and
+architecture rules before code moves. Any implemented split must preserve stage order, optimizer
+construction policy, stop propagation, event delivery, algorithm IDs, and routing/DRC behavior.
 
 ---
 
@@ -380,7 +417,7 @@ Profile `ShapeSearchTree` / expansion-room churn on a >500-net board. Record **p
 
 ---
 
-## Heat map (Phase 6 prioritization)
+## Heat map (Phase 6–7 prioritization)
 
 August 17, 2026 scan of tracked `src/main/java` and `src/test/java`: 645 files, 144,101 lines.
 The visual heat map and split schedule accompany this shortlist; this section records the
@@ -388,19 +425,19 @@ actionable candidates that belong in the repository plan.
 
 | Area | Files | This PR |
 |---|---|---|
-| GUI / workspace / rendering | 14 | Rename/thin the routing worker only |
-| Autoroute | 10 | Pipeline + neighbour factory + package split |
+| GUI / workspace / rendering | 14 | Incremental façade split; full presenter split remains |
+| Autoroute | 10 | Pipeline + neighbour factory + package split; `BatchAutorouter` deferred to Phase 7 |
 | Board / trees / tighteners | 15 | Package split only |
-| Geometry | 8 | Seal; do not split |
-| I/O parsers | 7 | Out |
+| Geometry | 8 | Phase 5 sealed; do not split |
+| I/O parsers | 7 | `SpecctraDsnStreamReader` deferred |
 | API / settings / DRC / analytics | 8 | Settings documentation in Phase 2 only |
 
 | File | Lines | Phase 6 action |
-|---|---|---|---|
+|---|---|---|
 | `GuiBoardManager` | 3312 | Split in group 1: state, interaction, persistence |
-| `BatchAutorouter` | 2158 | Split in group 2: pass, loop, diagnostics |
+| `BatchAutorouter` | 2158 | Defer to Phase 7 pipeline-package investigation |
 | `MazeSearchEngine` | 1948 | Split in group 2: expansion, ripup, fanout diagnostics |
-| `SpecctraDsnStreamReader` | 1862 | Split in group 4 only if scanner boundary is stable |
+| `SpecctraDsnStreamReader` | 1862 | Skip for now; defer parser-boundary investigation |
 | `BoardFrame` | 1856 | Split in group 1: load, layout, export |
 | `GuiDefaultsScanner` | 1799 | Defer; investigate generated/config scanning seam separately |
 | `BasicBoard` | 1787 | Split in group 3: items, connectivity, snapshots |

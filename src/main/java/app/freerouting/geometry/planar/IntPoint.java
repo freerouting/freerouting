@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Implementation of the abstract class Point as a tuple of integers. */
-public class IntPoint extends Point implements Serializable {
+public final class IntPoint extends Point implements Serializable {
 
   /** The x coordinate of this point. */
   @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")

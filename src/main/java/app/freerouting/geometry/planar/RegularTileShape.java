@@ -4,7 +4,7 @@ package app.freerouting.geometry.planar;
  * TileShapes whose border lines may have only directions out of a fixed set, as for example
  * orthogonal directions, which define axis parallel box shapes.
  */
-public abstract class RegularTileShape extends TileShape {
+public abstract sealed class RegularTileShape extends TileShape permits IntBox, IntOctagon {
 
   /**
    * Compares the edgelines of index edgeIndex of this regular TileShape and other. returns

@@ -11,7 +11,8 @@ import java.util.LinkedList;
  * Abstract class defining functionality for convex shapes, whose borders consists of straight
  * lines.
  */
-public abstract class TileShape extends PolylineShape implements ConvexShape, Serializable {
+public abstract sealed class TileShape extends PolylineShape implements ConvexShape, Serializable
+    permits RegularTileShape, Simplex {
 
   /** Creates a Simplex as intersection of the half-planes defined by directed lines. */
   public static TileShape getInstance(Line[] lines) {

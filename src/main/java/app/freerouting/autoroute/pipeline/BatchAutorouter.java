@@ -52,7 +52,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /** Handles the sequencing of the auto-router passes. */
-public class BatchAutorouter extends NamedAlgorithm {
+public final class BatchAutorouter extends NamedAlgorithm {
 
   // The lowest rank of the board to be selected to go back to.
   // Must not exceed BoardHistory.MAX_HISTORY_SIZE so the check can actually fire.

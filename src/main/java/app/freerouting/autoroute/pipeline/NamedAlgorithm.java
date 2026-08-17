@@ -19,7 +19,8 @@ import java.util.List;
  * Interface for named algorithms, e.g. "Freerouting Classic Fast Auto-router v1.0" for auto-router,
  * "Freerouting Classic Optimizer v1.0" for route-optimization.
  */
-public abstract class NamedAlgorithm implements Serializable {
+public abstract sealed class NamedAlgorithm implements Serializable
+    permits BatchAutorouter, BatchOptimizer {
 
   protected final transient StoppableThread thread;
   protected final transient List<BoardSnapshotEventListener> boardSnapshotEventListeners =
