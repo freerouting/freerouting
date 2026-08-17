@@ -209,12 +209,12 @@ dependencies {
 
     // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
     // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
-    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
+    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.41.0'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
     rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
 
-    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
+    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.41.0'
     rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
     rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.88.0'
     rewrite sourceSets.rewriteRecipes.output
