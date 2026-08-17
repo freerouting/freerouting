@@ -54,7 +54,19 @@ graph TD
   * `app.freerouting.board.session` — Board lifecycle & management: `BasicBoard`, `RoutingBoard`, `HeadlessBoardManager`, `GuiBoardManager`, `BoardObservers`.
 * **Benefits:** Drastically reduces cognitive load, clarifies module boundaries, and simplifies ArchUnit verification rules.
 
-### 1.2 Rationalizing `core`, `management`, and `api`
+### 1.2 Reorganizing the `autoroute` Subpackage Architecture
+* **Current State:** The `app.freerouting.autoroute` package contains 48 classes in a single flat directory, mixing batch pipeline schedulers, A* maze search algorithms, expansion room geometric models, inter-layer drill pages, backtrace connection locators, and diagnostic profilers.
+* **Proposed Structure:**
+  * `app.freerouting.autoroute.pipeline` — High-level routing orchestrators & stages: `BatchAutorouter`, `BatchFanout`, `BatchOptimizer`, `NamedAlgorithm`, `NamedAlgorithmType`, `TaskState`.
+  * `app.freerouting.autoroute.maze` — Core A* maze expansion engine: `MazeSearchEngine`, `MazeSearchElement`, `MazeListElement`, `DestinationDistance`, `MazeTraceShover`, `AutorouteControl`, `AutorouteEngine`.
+  * `app.freerouting.autoroute.expansion` — Free-space expansion rooms & doors: `ExpansionRoom`, `CompleteExpansionRoom`, `CompleteFreeSpaceExpansionRoom`, `FreeSpaceExpansionRoom`, `IncompleteFreeSpaceExpansionRoom`, `ObstacleExpansionRoom`, `ExpansionDoor`, `TargetItemExpansionDoor`, `SortedRoomNeighbours`, `Sorted45DegreeRoomNeighbours`, `SortedOrthogonalRoomNeighbours`, `ExpandableObject`.
+  * `app.freerouting.autoroute.drill` — Inter-layer drill pages & via placement: `DrillPage`, `DrillPageArray`, `ExpansionDrill`.
+  * `app.freerouting.autoroute.path` — Backtrace path reconstruction & board insertion: `FoundConnectionLocator`, `FoundConnectionLocator45Degree`, `FoundConnectionLocatorAnyAngle`, `FoundConnectionInserter`, `Connection`.
+  * `app.freerouting.autoroute.metrics` — Diagnostics, profilers & history: `PerformanceProfiler`, `RoutingFailureLog`, `BoardHistory`, `BoardHistoryEntry`, `AutorouteDiagnostic`, `AutorouteAttemptResult`, `AutorouteAttemptState`, `ItemAutorouteInfo`, `ItemRouteResult`.
+  * `app.freerouting.autoroute.events` — Lifecycle & board update event bus: `BoardUpdatedEvent`, `BoardUpdatedEventListener`, `TaskStateChangedEvent`, `TaskStateChangedEventListener`.
+* **Benefits:** Groups related algorithmic components logically, encapsulates internal maze search data structures, and facilitates unit testing of individual sub-pipelines in isolation.
+
+### 1.3 Rationalizing `core`, `management`, and `api`
 * **Current State:**
   * `core` contains only `Freerouting.java`, `FreeroutingContext.java`, and `core.scoring` (`BoardStatistics`, `Score`).
   * `management` contains server hosting (`FreeroutingServer`, `HeadlessServer`, `ServerRunner`) and session handling (`SessionManager`, `HeadlessSession`).
@@ -62,7 +74,7 @@ graph TD
   * Consolidate server execution into `app.freerouting.server` (or `app.freerouting.api.server`), placing headless session management alongside the API layer where it is consumed.
   * Move `app.freerouting.logger.FRLogger` to `app.freerouting.util.logging.FRLogger` or `app.freerouting.logging.FRLogger` to align with utility and telemetry packages.
 
-### 1.3 Strict Module Boundaries via Java Platform Module System (JPMS)
+### 1.4 Strict Module Boundaries via Java Platform Module System (JPMS)
 * Transition from Gradle-only package boundary enforcement to `module-info.java` definitions:
   * `app.freerouting.core`
   * `app.freerouting.geometry`
@@ -257,7 +269,7 @@ pie title Distribution of Classes >600 LOC by Subsystem
 | [`WindowRouteParameter.java`](src/main/java/app/freerouting/gui/WindowRouteParameter.java) | **1,164** | Interactive route settings dialog: trace width, necking, snap angle, via rules. | • `RouteParameterFormPresenter` (view-model & state management)<br>• `RouteRuleInputComponents` (form field components) |
 | [`GraphicsContext.java`](src/main/java/app/freerouting/gui/rendering/GraphicsContext.java) | **1,082** | Visual styles, layer color schemes, visibility toggles, alpha blending, zoom transforms. | • `ColorPaletteService` (color themes & layer palettes)<br>• `LayerVisibilityState` (visibility & selection masks)<br>• `AffineTransformPipeline` (screen-to-board coordinate math) |
 | [`BoardPanel.java`](src/main/java/app/freerouting/gui/BoardPanel.java) | **1,059** | Main drawing surface: mouse drag/zoom gestures, paint hooks, repaint throttling. | • `BoardGestureHandler` (pan, pinch, zoom, crosshair events)<br>• `BoardCanvasRepaintScheduler` (throttled double-buffered canvas) |
-| [`AutorouterAndRouteOptimizerThread.java`](src/main/java/app/freerouting/gui/workspace/AutorouterAndRouteOptimizerThread.java) | **942** | Background worker thread: autoroute execution loop, optimization passes, progress reporting, GUI repaint triggers. | • `RoutingWorkerEngine` (pass execution loop)<br>• `ProgressEstimator` (ETA & percentage calculator)<br>• `ThreadRepaintNotifier` (safe Swing EDT repaint dispatcher) |
+| [`AutorouterAndRouteOptimizerThread.java`](src/main/java/app/freerouting/gui/workspace/AutorouterAndRouteOptimizerThread.java) | **942** | Background worker thread orchestrating the GUI routing pipeline: Fanout (Stage 1), Autoroute (Stage 2), Optimizer (Stage 3), and SES export (Stage 4). | • Rename to `GuiRoutingPipelineWorker`<br>• `RoutingProgressPresenter` (EDT progress updates & ETA)<br>• `RoutingOverlayPainter` (airline & optimizer cursor rendering)<br>• `JobArtifactExporter` (SES & board snapshot output) |
 | [`WindowNetClasses.java`](src/main/java/app/freerouting/gui/WindowNetClasses.java) | **934** | Net class rule editor: clearance matrix grid, via rule selectors, net assignment tables. | • `NetClassEditorPresenter` (view-model & transactional edits)<br>• `ClearanceMatrixGridComponent` (editable 2D matrix table) |
 | [`BoardToolbar.java`](src/main/java/app/freerouting/gui/BoardToolbar.java) | **851** | Application toolbar construction, icon management, mode toggles, unit dropdowns. | • `ToolbarButtonGroupFactory` (mode button groups)<br>• `UnitSelectionDropdownComponent` (unit switching widget) |
 | [`WorkspaceSettings.java`](src/main/java/app/freerouting/gui/workspace/WorkspaceSettings.java) | **722** | GUI live settings singleton: display properties, routing parameters, window bounds. | • `DisplaySettings` (record: colors, grid, zoom)<br>• `InteractiveEditorSettings` (record: snap angle, shove mode)<br>• `WorkspaceSettingsFacade` (property change event bus) |
@@ -432,6 +444,22 @@ gantt
      - **Dynamic OpenAPI Tool Mapping:** Freerouting's `OpenApiMcpToolRegistry` dynamically generates MCP tool schemas directly from the OpenAPI specification (`/openapi/openapi.json`). As a result, when REST endpoints evolve, MCP tools automatically inherit the current schema definitions.
      - **Recommendation for MCP:** Keep the single canonical endpoint `/v1/mcp` (along with `/.well-known/agent.json` discovery), and handle protocol version differences through standard JSON-RPC capability negotiation in `McpController` rather than duplicating MCP controllers across `/v1/mcp`, `/v2/mcp`, etc.
 
+### 7.4 Renaming and Decomposing `AutorouterAndRouteOptimizerThread`
+* **Analysis & Problem:**
+  * **Inaccurate & Incomplete Name:** The class name `AutorouterAndRouteOptimizerThread` is overly specific yet incomplete: it names only two stages (Autoroute and Optimizer), but actually orchestrates the **entire 4-stage interactive routing pipeline**:
+    1. **Stage 1 — Fanout:** Escapes SMD pins (`BatchFanout.fanoutBoard(...)` via `BatchAutorouter`).
+    2. **Stage 2 — Main Autorouting:** Routes incomplete airlines across multiple passes (`BatchAutorouter`).
+    3. **Stage 3 — Post-Route Optimization:** Optimizes trace lengths and removes unnecessary vias (`BatchOptimizer`).
+    4. **Stage 4 — SES Artifact Export & State Commit:** Serializes Specctra `.ses` output and restores board interactive state.
+  * **Violates Single Responsibility Principle:** At 942 lines, it mixes background thread lifecycle management, multi-stage pipeline orchestration, EDT status message formatting, real-time graphics rendering (`draw(Graphics)`), CPU time / peak heap profiling, and file serialization.
+* **Proposed Action Plan:**
+  1. **Rename Class:** Rename `AutorouterAndRouteOptimizerThread` $\rightarrow$ `GuiRoutingPipelineWorker` (or `InteractiveRoutingJobWorker`), creating clean architectural symmetry with its headless counterpart (`RoutingJobSchedulerActionThread` / `HeadlessRoutingWorker`).
+  2. **Decompose into Four Single-Responsibility Classes:**
+     * **`GuiRoutingPipelineWorker` (~250 LOC):** Manages background thread lifecycle, stage sequencing (Fanout $\rightarrow$ Route $\rightarrow$ Optimize $\rightarrow$ Export), pause/resume states, and cooperative interruption.
+     * **`RoutingProgressPresenter` (~200 LOC):** Listens to `BoardUpdatedEvent` and `TaskStateChangedEvent`, calculates elapsed time and ETA, and safely updates Swing status bar labels and progress bars on the EDT.
+     * **`RoutingOverlayPainter` (~150 LOC):** Encapsulates the visual rendering of the active airline being routed and the current optimizer cursor position during canvas repaints.
+     * **`JobArtifactExporter` (~100 LOC):** Handles writing the final `.ses` Specctra file and updating `RoutingJobState.COMPLETED`.
+
 ---
 
 ## Summary Matrix of Future Improvements
@@ -439,7 +467,9 @@ gantt
 | Improvement | Category | Priority | Effort | Impact |
 |---|---|---|---|---|
 | **Decompose `board` package into `model`, `spatial`, `optimize`, `session`** | Package Structure | High | Medium | High (Maintainability & Clean Architecture) |
+| **Reorganize `autoroute` package into 6 focused subpackages** | Package Structure | High | Medium | High (Encapsulates Maze & Expansion Math) |
 | **Split 62 Monolithic (>600 LOC) Classes into Focused Modules** | Code Organization | High | High | Very High (Single Responsibility & Testability) |
+| **Rename & Decompose `AutorouterAndRouteOptimizerThread` $\rightarrow$ `GuiRoutingPipelineWorker`** | Code Organization | High | Medium | High (Pipeline Symmetry & SoC) |
 | **Remove `BatchAutorouterV19` and Streamline GUI Algorithm Dropdown** | Code Consolidation | High | Low | High (Removes Dead Code & UI Clutter) |
 | **Audit & Unify Single/Multi-Threaded Optimizer (`BatchOptimizer`)** | Concurrency & Safety | High | Medium | Very High (Eliminates Concurrency DRC Bugs) |
 | **Rationalize API & MCP Protocol Versioning Strategy** | API Architecture | Medium | Low | High (Future-Proof Integrations) |
