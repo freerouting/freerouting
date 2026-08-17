@@ -272,7 +272,7 @@ class ModuleBoundariesArchTest {
         .that()
         .haveFullyQualifiedName("app.freerouting.gui.workspace.InteractiveActionThread")
         .or()
-        .haveFullyQualifiedName("app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread")
+        .haveFullyQualifiedName("app.freerouting.gui.workspace.GuiRoutingJobWorker")
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(

@@ -6,6 +6,7 @@ import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.autoroute.BatchAutorouter;
 import app.freerouting.autoroute.BatchOptimizer;
 import app.freerouting.autoroute.BatchOptimizerMultiThreaded;
+import app.freerouting.autoroute.RoutingPipeline;
 import app.freerouting.autoroute.TaskState;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
@@ -30,7 +31,6 @@ import java.awt.Graphics;
 import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
-import java.util.Objects;
 
 /**
  * Interactive thread managing the combined execution of batch autorouting and route optimization.
@@ -132,7 +132,7 @@ import java.util.Objects;
  * @see BatchOptimizerMultiThreaded
  * @see RoutingJob
  */
-public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
+public class GuiRoutingJobWorker extends InteractiveActionThread {
 
   /**
    * The batch autorouter instance executing the routing algorithm.
@@ -140,6 +140,8 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * <p>Uses the current {@link BatchAutorouter} implementation.
    */
   private final BatchAutorouter batchAutorouter;
+
+  private final RoutingPipeline pipeline;
 
   /**
    * The batch optimizer instance for post-routing optimization, or null if disabled.
@@ -153,7 +155,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    *
    * <p>Set to null if optimization is disabled in router settings.
    */
-  private BatchOptimizer batchOptimizer;
+  private final BatchOptimizer batchOptimizer;
+
+  private boolean routerEnabledForRun;
+  private float scoreBeforeOptimization;
+  private double autoroutingSecondsToComplete;
 
   /**
    * Creates a new autorouter and optimizer thread for GUI-based routing.
@@ -192,26 +198,16 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
    * @see BatchOptimizer
    * @see BatchOptimizerMultiThreaded
    */
-  protected AutorouterAndRouteOptimizerThread(
+  protected GuiRoutingJobWorker(
       WorkspacePort sessionPort, RunGeneration generation, RoutingJob routingJob) {
     super(sessionPort, generation, routingJob);
 
     routingJob.thread = this;
     routingJob.board = sessionPort.routingBoard();
 
-    // Validate the algorithm setting and always use the current router.
-    String algorithm = routingJob.routerSettings.algorithm;
-    if (!app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
-      routingJob.logWarning(
-          "The algorithm '"
-              + algorithm
-              + "' is not supported. The default algorithm '"
-              + app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT
-              + "' will be used instead.");
-      routingJob.routerSettings.algorithm =
-          app.freerouting.settings.RouterSettings.ALGORITHM_CURRENT;
-    }
-    this.batchAutorouter = new BatchAutorouter(routingJob);
+    this.pipeline = RoutingPipeline.createForGui(routingJob);
+    this.batchAutorouter = this.pipeline.getAutorouter();
+    this.batchOptimizer = this.pipeline.getOptimizer();
 
     // Add event listener for the GUI updates
     this.batchAutorouter.addBoardUpdatedEventListener(
@@ -296,115 +292,44 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
           }
         });
 
-    this.batchOptimizer = null;
-
-    if (routingJob.routerSettings.optimizer.enabled) {
-      if ((!globalSettings.featureFlags.multiThreading)
-          || (routingJob.routerSettings.optimizer.maxThreads == 1)) {
-        // Single-threaded route optimization
-        this.batchOptimizer = new BatchOptimizer(routingJob);
-
-        if (!Objects.equals(
-            routingJob.routerSettings.optimizer.algorithm, this.batchOptimizer.getId())) {
-          routingJob.logWarning(
-              "The algorithm '"
-                  + routingJob.routerSettings.optimizer.algorithm
-                  + "' is not supported by the batch autorouter. The default algorithm '"
-                  + this.batchOptimizer.getId()
-                  + "' will be used instead.");
-          routingJob.routerSettings.optimizer.algorithm = this.batchOptimizer.getId();
-        }
-
-        // Add event listener for the GUI updates
-        this.batchOptimizer.addBoardUpdatedEventListener(
-            new BoardUpdatedEventListener() {
-              @Override
-              public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-                BoardStatistics boardStatistics = event.getBoardStatistics();
-                sessionPort.publishProgress(
-                    new RouteProgress(
-                        generation,
-                        null,
-                        null,
-                        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring),
-                        boardStatistics.connections.incompleteCount,
-                        boardStatistics.clearanceViolations.totalCount,
-                        boardStatistics.items.viaCount,
-                        (double) boardStatistics.traces.totalLength,
-                        sessionPort.displayUnit(),
-                        false,
-                        true));
-              }
-            });
-
-        this.batchOptimizer.addTaskStateChangedEventListener(
-            new TaskStateChangedEventListener() {
-              @Override
-              public void onTaskStateChangedEvent(TaskStateChangedEvent event) {
-                TaskState taskState = event.getTaskState();
-                if (taskState == TaskState.RUNNING) {
-                  TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
-                  String startMessage =
-                      tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
-                  sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
-                }
-              }
-            });
-      }
-
-      if ((globalSettings.featureFlags.multiThreading)
-          && (routingJob.routerSettings.optimizer.maxThreads > 1)) {
-        // Multi-threaded route optimization
-        this.batchOptimizer = new BatchOptimizerMultiThreaded(routingJob);
-
-        if (!Objects.equals(
-            routingJob.routerSettings.optimizer.algorithm, this.batchOptimizer.getId())) {
-          routingJob.logWarning(
-              "The algorithm '"
-                  + routingJob.routerSettings.optimizer.algorithm
-                  + "' is not supported by the batch autorouter. The default algorithm '"
-                  + this.batchOptimizer.getId()
-                  + "' will be used instead.");
-          routingJob.routerSettings.optimizer.algorithm = this.batchOptimizer.getId();
-        }
-
-        this.batchOptimizer.addBoardUpdatedEventListener(
-            new BoardUpdatedEventListener() {
-              @Override
-              public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-                BoardStatistics boardStatistics = event.getBoardStatistics();
+    if (this.batchOptimizer != null) {
+      this.batchOptimizer.addBoardUpdatedEventListener(
+          new BoardUpdatedEventListener() {
+            @Override
+            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
+              BoardStatistics boardStatistics = event.getBoardStatistics();
+              if (batchOptimizer instanceof BatchOptimizerMultiThreaded) {
                 routingJob.board = event.getBoard();
                 sessionPort.replaceBoard(new BoardReplacement(generation, event.getBoard()));
-                sessionPort.publishProgress(
-                    new RouteProgress(
-                        generation,
-                        null,
-                        null,
-                        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring),
-                        boardStatistics.connections.incompleteCount,
-                        boardStatistics.clearanceViolations.totalCount,
-                        boardStatistics.items.viaCount,
-                        (double) boardStatistics.traces.totalLength,
-                        sessionPort.displayUnit(),
-                        false,
-                        true));
               }
-            });
+              sessionPort.publishProgress(
+                  new RouteProgress(
+                      generation,
+                      null,
+                      null,
+                      boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring),
+                      boardStatistics.connections.incompleteCount,
+                      boardStatistics.clearanceViolations.totalCount,
+                      boardStatistics.items.viaCount,
+                      (double) boardStatistics.traces.totalLength,
+                      sessionPort.displayUnit(),
+                      false,
+                      true));
+            }
+          });
 
-        this.batchOptimizer.addTaskStateChangedEventListener(
-            new TaskStateChangedEventListener() {
-              @Override
-              public void onTaskStateChangedEvent(TaskStateChangedEvent event) {
-                TaskState taskState = event.getTaskState();
-                if (taskState == TaskState.RUNNING) {
-                  TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
-                  String startMessage =
-                      tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
-                  sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
-                }
+      this.batchOptimizer.addTaskStateChangedEventListener(
+          new TaskStateChangedEventListener() {
+            @Override
+            public void onTaskStateChangedEvent(TaskStateChangedEvent event) {
+              if (event.getTaskState() == TaskState.RUNNING) {
+                TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+                String startMessage =
+                    tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
+                sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
               }
-            });
-      }
+            }
+          });
     }
   }
 
@@ -420,6 +345,117 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
         counters.failedToBeRoutedCount == null ? 0 : counters.failedToBeRoutedCount,
         counters.rippedCount == null ? 0 : counters.rippedCount,
         counters.fanoutExtraViasCount);
+  }
+
+  private void handleRoutingStageFinished(BatchAutorouter autorouter) {
+    var boardStatistics = new BoardStatistics(routingJob.board);
+    this.scoreBeforeOptimization =
+        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring);
+    this.autoroutingSecondsToComplete =
+        FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
+
+    Instant sessionStartTime = autorouter.getSessionStartTime();
+    int initialUnroutedCount = autorouter.getInitialUnroutedCount();
+    if (this.routerEnabledForRun) {
+      if (sessionStartTime != null) {
+        String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
+        if (routingJob.routerSettings.maxPasses != null
+            && routingJob.routerSettings.maxPasses > 0
+            && 1 > routingJob.routerSettings.maxPasses) {
+          completionStatus = "completed with pass number limit hit:";
+        }
+
+        routingJob.logInfo(
+            String.format(
+                java.util.Locale.US,
+                "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, "
+                    + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
+                    + "and %.1f MB peak heap usage.",
+                completionStatus,
+                initialUnroutedCount,
+                this.autoroutingSecondsToComplete,
+                FRLogger.formatScore(
+                    this.scoreBeforeOptimization,
+                    boardStatistics.connections.incompleteCount,
+                    boardStatistics.clearanceViolations.totalCount),
+                routingJob.resourceUsage.cpuTimeUsed,
+                routingJob.resourceUsage.maxMemoryUsed / 1024.0f,
+                routingJob.resourceUsage.peakMemoryUsed));
+      } else {
+        routingJob.logInfo(
+            String.format(
+                "Auto-routing was completed in %.2f seconds with the score of %s.",
+                this.autoroutingSecondsToComplete,
+                FRLogger.formatScore(
+                    this.scoreBeforeOptimization,
+                    boardStatistics.connections.incompleteCount,
+                    boardStatistics.clearanceViolations.totalCount)));
+      }
+    }
+
+    FRAnalytics.autorouterFinished(
+        boardStatistics.nets.totalCount,
+        boardStatistics.connections.incompleteCount,
+        boardStatistics.clearanceViolations.totalCount,
+        routingJob.board.getHash(),
+        this.scoreBeforeOptimization);
+  }
+
+  private void handleOptimizationStageStarted() {
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+
+    int numThreads =
+        routingJob.routerSettings.maxThreads == null ? 1 : routingJob.routerSettings.maxThreads;
+    routingJob.logInfo(
+        "Starting optimization on "
+            + (numThreads == 1 ? "1 thread" : numThreads + " threads")
+            + "...");
+    if (numThreads > 1) {
+      routingJob.logWarning(
+          "Multi-threaded route optimization is broken and it is known to generate clearance "
+              + "violations. It is highly recommended to use the single-threaded route "
+              + "optimization instead by setting the number of threads to 1 with the '-mt 1' "
+              + "command line argument.");
+    }
+
+    FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
+    FRAnalytics.routeOptimizerStarted();
+    TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+    sessionPort.publishProgress(
+        RouteProgress.status(generation, tm.getText("batch_optimizer_start_message")));
+  }
+
+  private void handleOptimizationStageFinished() {
+    var boardStatistics = new BoardStatistics(routingJob.board);
+    var scoreAfterOptimization =
+        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring);
+    double percentageImprovement =
+        ((scoreAfterOptimization / this.scoreBeforeOptimization) * 100.0) - 100.0;
+    double routeOptimizationSecondsToComplete =
+        FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
+    routingJob.logInfo(
+        "Optimization was completed in "
+            + FRLogger.formatDuration(routeOptimizationSecondsToComplete)
+            + " with the score of "
+            + FRLogger.formatScore(
+                this.scoreBeforeOptimization,
+                boardStatistics.connections.incompleteCount,
+                boardStatistics.clearanceViolations.totalCount)
+            + (percentageImprovement > 0
+                ? " and an improvement of "
+                    + FRLogger.defaultSignedFloatFormat.format(percentageImprovement)
+                    + "%."
+                : "."));
+
+    String currentMessage = this.isStopRequested() ? "interrupted" : "completed";
+    TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+    sessionPort.publishProgress(
+        RouteProgress.status(generation, tm.getText("optimization_end_message", currentMessage)));
+    FRAnalytics.routeOptimizerFinished();
   }
 
   /**
@@ -555,11 +591,11 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
 
     FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
     try {
-      boolean isRouterEnabled =
+      this.routerEnabledForRun =
           routingJob.routerSettings.getRunRouter()
               && (routingJob.routerSettings.maxPasses == null
                   || routingJob.routerSettings.maxPasses >= 0);
-      if (isRouterEnabled) {
+      if (this.routerEnabledForRun) {
         int threadCount = routingJob.routerSettings.maxThreads;
         routingJob.logInfo(
             "Starting routing of '"
@@ -579,141 +615,24 @@ public class AutorouterAndRouteOptimizerThread extends InteractiveActionThread {
       String startMessage = tm.getText("batch_autorouter_start_message");
       sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
 
-      // Let's run the autorouter
-      if (isRouterEnabled && !this.isStopAutoRouterRequested()) {
-        batchAutorouter.runBatchLoop();
-      } else if (routingJob.routerSettings.isFanoutEnabled() && !this.isStopAutoRouterRequested()) {
-        // Run only the fanout pre-pass
-        Integer originalMaxPasses = routingJob.routerSettings.maxPasses;
-        try {
-          routingJob.routerSettings.maxPasses = 0;
-          batchAutorouter.runBatchLoop();
-        } finally {
-          routingJob.routerSettings.maxPasses = originalMaxPasses;
-        }
-      }
+      this.pipeline.addStageListener(
+          new RoutingPipeline.StageListener() {
+            @Override
+            public void afterRouting(BatchAutorouter autorouter) {
+              handleRoutingStageFinished(autorouter);
+            }
 
-      routingJob.board.finishAutoroute();
+            @Override
+            public void beforeOptimization(BatchOptimizer optimizer) {
+              handleOptimizationStageStarted();
+            }
 
-      var bs = new BoardStatistics(routingJob.board);
-      var scoreBeforeOptimization = bs.getNormalizedScore(routingJob.routerSettings.scoring);
-
-      double autoroutingSecondsToComplete =
-          FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
-
-      // Log detailed session summary
-      int initialUnroutedCount = 0;
-      Instant sessionStartTime = null;
-      int currentPassNo = 0; // Will be populated below
-
-      sessionStartTime = batchAutorouter.getSessionStartTime();
-      initialUnroutedCount = batchAutorouter.getInitialUnroutedCount();
-      // Note: currentPassNo should come from router but we don't have a getter yet
-      currentPassNo = 1; // Placeholder - actual pass count tracked in router
-
-      if (isRouterEnabled) {
-        if (sessionStartTime != null) {
-          String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
-          if (routingJob.routerSettings.maxPasses != null
-              && routingJob.routerSettings.maxPasses > 0
-              && currentPassNo > routingJob.routerSettings.maxPasses) {
-            completionStatus = "completed with pass number limit hit:";
-          }
-
-          String sessionSummary =
-              String.format(
-                  java.util.Locale.US,
-                  "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, "
-                      + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
-                      + "and %.1f MB peak heap usage.",
-                  completionStatus,
-                  initialUnroutedCount,
-                  autoroutingSecondsToComplete,
-                  FRLogger.formatScore(
-                      scoreBeforeOptimization,
-                      bs.connections.incompleteCount,
-                      bs.clearanceViolations.totalCount),
-                  routingJob.resourceUsage.cpuTimeUsed,
-                  routingJob.resourceUsage.maxMemoryUsed / 1024.0f,
-                  routingJob.resourceUsage.peakMemoryUsed);
-
-          routingJob.logInfo(sessionSummary);
-        } else {
-          // Fallback to simple logging if session info not available
-          routingJob.logInfo(
-              String.format(
-                  "Auto-routing was completed in %.2f seconds with the score of %s.",
-                  autoroutingSecondsToComplete,
-                  FRLogger.formatScore(
-                      scoreBeforeOptimization,
-                      bs.connections.incompleteCount,
-                      bs.clearanceViolations.totalCount)));
-        }
-      }
-      FRAnalytics.autorouterFinished(
-          bs.nets.totalCount,
-          bs.connections.incompleteCount,
-          bs.clearanceViolations.totalCount,
-          routingJob.board.getHash(),
-          scoreBeforeOptimization);
-
-      Thread.sleep(100);
-
-      // Let's run the optimizer if it's enabled
-      int numThreads =
-          routingJob.routerSettings.maxThreads == null ? 1 : routingJob.routerSettings.maxThreads;
-      if ((numThreads > 0) && (routingJob.routerSettings.optimizer.enabled)) {
-        routingJob.logInfo(
-            "Starting optimization on "
-                + (numThreads == 1 ? "1 thread" : numThreads + " threads")
-                + "...");
-        if (numThreads > 1) {
-          routingJob.logWarning(
-              "Multi-threaded route optimization is broken and it is known to generate clearance "
-                  + "violations. It is highly recommended to use the single-threaded route "
-                  + "optimization instead by setting the number of threads to 1 with the '-mt 1' "
-                  + "command line argument.");
-        }
-
-        FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
-        FRAnalytics.routeOptimizerStarted();
-
-        if (routingJob.routerSettings.getRunOptimizer() && !this.isStopRequested()) {
-          String optMessage = tm.getText("batch_optimizer_start_message");
-          sessionPort.publishProgress(RouteProgress.status(generation, optMessage));
-          this.batchOptimizer.runBatchLoop();
-          String currentMessage;
-          if (this.isStopRequested()) {
-            currentMessage = tm.getText("interrupted");
-          } else {
-            currentMessage = tm.getText("completed");
-          }
-          String endMessage = tm.getText("optimization_end_message", currentMessage);
-          sessionPort.publishProgress(RouteProgress.status(generation, endMessage));
-        }
-
-        bs = new BoardStatistics(routingJob.board);
-        var scoreAfterOptimization = bs.getNormalizedScore(routingJob.routerSettings.scoring);
-
-        double percentageImprovement =
-            ((scoreAfterOptimization / scoreBeforeOptimization) * 100.0) - 100.0;
-        double routeOptimizationSecondsToComplete =
-            FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
-        routingJob.logInfo(
-            "Optimization was completed in "
-                + FRLogger.formatDuration(routeOptimizationSecondsToComplete)
-                + " with the score of "
-                + FRLogger.formatScore(
-                    scoreBeforeOptimization,
-                    bs.connections.incompleteCount,
-                    bs.clearanceViolations.totalCount)
-                + (percentageImprovement > 0
-                    ? " and an improvement of "
-                        + FRLogger.defaultSignedFloatFormat.format(percentageImprovement)
-                        + "%."
-                    : "."));
-        FRAnalytics.routeOptimizerFinished();
-      }
+            @Override
+            public void afterOptimization(BatchOptimizer optimizer) {
+              handleOptimizationStageFinished();
+            }
+          });
+      this.pipeline.run();
 
       // Save the result to the output field as a Specctra SES file
       if (routingJob.output.format == FileFormat.SES) {

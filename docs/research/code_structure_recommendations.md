@@ -41,7 +41,7 @@ This is the work list for one branch and one final pull request. Routing, DRC, a
 - One GUI/headless construction drift remains:
   GUI may instantiate `BatchOptimizerMultiThreaded` when `featureFlags.multiThreading` and `optimizer.maxThreads > 1`; headless always uses `new BatchOptimizer(job)` even though defaults set `maxThreads` to `CPU−1`.
 
-Do not “fix” drift 2 in this PR by turning MT on for API jobs.
+Do not fix this drift in this PR by turning MT on for API jobs.
 
 ---
 
@@ -237,13 +237,13 @@ autoroute/
 
 **Tasks:**
 
-- [ ] Add `RoutingPipeline` that runs fanout → `BatchAutorouter` → optimizer (if enabled).
-- [ ] GUI optimizer via `createForGui`; headless via `createForHeadless` (always `BatchOptimizer`).
-- [ ] Rewrite `RoutingJobSchedulerActionThread` to call the pipeline (timeout monitor stays here).
-- [ ] Rename `AutorouterAndRouteOptimizerThread` → `GuiRoutingJobWorker`; update `InteractiveActionThread` factory and `draw` dispatch.
-- [ ] Do not touch `BatchAutorouterThread`.
+- [x] Add `RoutingPipeline` that runs fanout → `BatchAutorouter` → optimizer (if enabled).
+- [x] GUI optimizer via `createForGui`; headless via `createForHeadless` (always `BatchOptimizer`).
+- [x] Rewrite `RoutingJobSchedulerActionThread` to call the pipeline (timeout monitor stays here).
+- [x] Rename `AutorouterAndRouteOptimizerThread` → `GuiRoutingJobWorker`; update `InteractiveActionThread` factory and `draw` dispatch.
+- [x] Do not touch `BatchAutorouterThread`.
 
-**Gate:** `Dac2020Bm01RoutingTest`. Same fixture, GUI vs headless with **default-like optimizer threading** (headless ST): completion %, via count, and `DesignRulesChecker.getAllClearanceViolations()` must not regress.
+**Gate (passed):** `Dac2020Bm01RoutingTest` and `RoutingPipelineComparisonTest`. Same fixture, GUI vs headless with **default-like optimizer threading** (headless ST): completion %, via count, and `DesignRulesChecker.getAllClearanceViolations()` did not regress.
 
 ### Phase 2 — Optimizer factory only
 
@@ -332,7 +332,7 @@ August 2026, files ≥600 LOC:
 
 | File | This PR does |
 |---|---|
-| `AutorouterAndRouteOptimizerThread` (942) | Become `GuiRoutingJobWorker` over `RoutingPipeline` |
+| `GuiRoutingJobWorker` (942) | Uses `RoutingPipeline` with GUI-only progress and rendering |
 | `BatchAutorouter` (2152) | Stay; plane-net policy stays here (Issue 093) |
 | `MazeSearchEngine` (1936) | Stay; no heuristic edits |
 | `JobControllerV1` (1421) | Stay |

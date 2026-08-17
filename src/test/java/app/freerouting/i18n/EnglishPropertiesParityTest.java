@@ -97,7 +97,7 @@ class EnglishPropertiesParityTest {
               "app.freerouting.gui.rendering.OtherColorTableModel",
               "app.freerouting.gui.rendering.ColorTableModel"),
           Map.entry(
-              "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread",
+              "app.freerouting.gui.workspace.GuiRoutingJobWorker",
               "app.freerouting.gui.interactive.InteractiveState"),
           Map.entry("app.freerouting.gui.AirLineInfo", "app.freerouting.drc.AirLine"),
           Map.entry("app.freerouting.gui.AirLine", "app.freerouting.drc.AirLine"),

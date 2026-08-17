@@ -135,7 +135,9 @@ The live board model: components, pins, vias, traces, layers, and the board-leve
 
 ### `app.freerouting.autoroute`
 
-The routing engine and its orchestration. This package contains the logic for connecting items, selecting vias, fanout, maze search, and route optimization.
+The routing engine and its orchestration. This package contains `RoutingPipeline`, which sequences
+fanout, autorouting, and optional optimization, along with the logic for connecting items, selecting
+vias, maze search, and route optimization.
 
 ### `app.freerouting.rules`
 
@@ -165,7 +167,7 @@ state.
 ### `app.freerouting.gui.workspace`
 
 The GUI board workspace boundary: `GuiBoardManager`, `WorkspaceContract`, `WorkspaceSettings`,
-`ScreenMessages`, action threads, ratsnest/violation presentation façades, opaque
+`ScreenMessages`, `GuiRoutingJobWorker`, action threads, ratsnest/violation presentation façades, opaque
 `EditorStateHandle`/`EditorStateKind`, `EditorEvent`, and `InteractiveCommand`. This package owns no
 concrete editor state and has no dependency on `gui.interactive`; GUI views perform initial-state
 registration.

@@ -72,7 +72,7 @@ import java.util.List;
  *
  * @see StoppableThread
  * @see ThreadActionListener
- * @see AutorouterAndRouteOptimizerThread
+ * @see GuiRoutingJobWorker
  */
 public abstract class InteractiveActionThread extends StoppableThread {
 
@@ -194,12 +194,12 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * @param generation the run generation
    * @param job the routing job containing configuration and board data
    * @return a configured batch autorouter and optimizer thread ready to start
-   * @see AutorouterAndRouteOptimizerThread
+   * @see GuiRoutingJobWorker
    * @see GlobalSettings#saveAsJson(GlobalSettings)
    */
   public static InteractiveActionThread getAutorouterAndRouteOptimizerInstance(
       WorkspacePort sessionPort, RunGeneration generation, RoutingJob job) {
-    var routerThread = new AutorouterAndRouteOptimizerThread(sessionPort, generation, job);
+    var routerThread = new GuiRoutingJobWorker(sessionPort, generation, job);
     routerThread.addListener(
         new ThreadActionListener() {
           @Override
@@ -295,7 +295,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * operations. Examples include:
    *
    * <ul>
-   *   <li>Current airline being routed (in {@link AutorouterAndRouteOptimizerThread})
+   *   <li>Current airline being routed (in {@link GuiRoutingJobWorker})
    *   <li>Optimization position indicators
    *   <li>Progress indicators or status graphics
    * </ul>
@@ -303,7 +303,7 @@ public abstract class InteractiveActionThread extends StoppableThread {
    * <p>The default implementation does nothing. Drawing is synchronized to ensure thread safety.
    *
    * @param graphics the graphics context for drawing overlays
-   * @see AutorouterAndRouteOptimizerThread#draw(Graphics)
+   * @see GuiRoutingJobWorker#draw(Graphics)
    */
   public synchronized void draw(Graphics graphics) {
     // Can be overwritten in derived classes.

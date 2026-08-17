@@ -1,5 +1,7 @@
 package app.freerouting.autoroute;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.Item;
 import app.freerouting.board.RoutingBoard;
@@ -42,6 +44,36 @@ public class BatchOptimizer extends NamedAlgorithm {
   public BatchOptimizer(RoutingJob job) {
     super(job.thread, job.board, job.routerSettings);
     this.job = job;
+  }
+
+  /** Creates the optimizer used by headless jobs. */
+  public static BatchOptimizer createForHeadless(RoutingJob job) {
+    return new BatchOptimizer(job);
+  }
+
+  /** Creates the optimizer used by GUI jobs, honoring the GUI multithreading feature flag. */
+  public static BatchOptimizer createForGui(RoutingJob job) {
+    BatchOptimizer optimizer;
+    if (globalSettings.featureFlags.multiThreading && job.routerSettings.optimizer.maxThreads > 1) {
+      optimizer = new BatchOptimizerMultiThreaded(job);
+    } else {
+      optimizer = new BatchOptimizer(job);
+    }
+
+    normalizeAlgorithm(job, optimizer);
+    return optimizer;
+  }
+
+  private static void normalizeAlgorithm(RoutingJob job, BatchOptimizer optimizer) {
+    if (!optimizer.getId().equals(job.routerSettings.optimizer.algorithm)) {
+      job.logWarning(
+          "The algorithm '"
+              + job.routerSettings.optimizer.algorithm
+              + "' is not supported by the batch autorouter. The default algorithm '"
+              + optimizer.getId()
+              + "' will be used instead.");
+      job.routerSettings.optimizer.algorithm = optimizer.getId();
+    }
   }
 
   /** Returns true if timed out. */

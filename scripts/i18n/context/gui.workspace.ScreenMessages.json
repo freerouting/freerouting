@@ -116,7 +116,7 @@
   "autoroute_end_message": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread"
+      "app.freerouting.gui.workspace.GuiRoutingJobWorker"
     ],
     "english_hash": "10221213ff69fc47c8b2c9c231fae32ec777836acd085c5d2919af572df8d5b4",
     "grammatical_role": "noun_phrase",
@@ -138,7 +138,7 @@
   "autorouter_started": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread"
+      "app.freerouting.gui.workspace.GuiRoutingJobWorker"
     ],
     "english_hash": "6195cd585765f305ad6efcca1ba6558b3fde1f9ab894bcc6a74a3a79df1c7db6",
     "grammatical_role": "noun_phrase",
@@ -200,7 +200,7 @@
   "batch_autorouter_start_message": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread"
+      "app.freerouting.gui.workspace.GuiRoutingJobWorker"
     ],
     "english_hash": "cbb0ef68477a2aea62a79d7f5eb950f1b05bbfc7af235eda20ac399334d0973e",
     "grammatical_role": "full_sentence",
@@ -245,7 +245,7 @@
   "batch_optimizer_start_message": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread"
+      "app.freerouting.gui.workspace.GuiRoutingJobWorker"
     ],
     "english_hash": "4048473a525db0b20cd66676e238fc463f9e7d21c5e4f9e201e0bd5b39910ec7",
     "grammatical_role": "full_sentence",
@@ -294,7 +294,7 @@
   "completed": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread"
+      "app.freerouting.gui.workspace.GuiRoutingJobWorker"
     ],
     "english_hash": "4ddb3e96801a1ee2b77dc5247c0db478d5f97a93b90e7cdb09f5f51d43764b08",
     "grammatical_role": "fragment",
@@ -609,7 +609,7 @@
   "interrupted": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread"
+      "app.freerouting.gui.workspace.GuiRoutingJobWorker"
     ],
     "english_hash": "132d124d6bb3d811116f98aa03bc474f5783517d4c82635c031745912e62e1c8",
     "grammatical_role": "noun_phrase",
@@ -876,7 +876,7 @@
   "optimization_end_message": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread"
+      "app.freerouting.gui.workspace.GuiRoutingJobWorker"
     ],
     "english_hash": "30e39af15e875ea2f2cfa75b1cdf44556c6ea42daa29450de800e7d3b6779308",
     "grammatical_role": "noun_phrase",
@@ -896,7 +896,7 @@
   "optimizer_started": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread"
+      "app.freerouting.gui.workspace.GuiRoutingJobWorker"
     ],
     "english_hash": "f1ad500a4e613e602e02cb0a234ad7b154b30e2923980a2b1b2ee3776c762ded",
     "grammatical_role": "noun_phrase",
