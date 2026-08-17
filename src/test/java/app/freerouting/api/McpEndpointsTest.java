@@ -352,18 +352,18 @@ class McpEndpointsTest {
     java.nio.file.Path tempOutput = null;
 
     try {
-      // Find valid empty_board.dsn test file
-      java.nio.file.Path sourceDsn = java.nio.file.Path.of("fixtures/empty_board.dsn");
-      if (!java.nio.file.Files.exists(sourceDsn)) {
-        sourceDsn = java.nio.file.Path.of("../fixtures/empty_board.dsn");
-      }
-      if (!java.nio.file.Files.exists(sourceDsn)) {
-        sourceDsn = java.nio.file.Path.of("C:/Work/freerouting/fixtures/empty_board.dsn");
-      }
-
       tempInput = java.nio.file.Files.createTempFile("freerouting-test-input", ".dsn");
-      java.nio.file.Files.copy(
-          sourceDsn, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+      try (java.io.InputStream in = getClass().getResourceAsStream("/empty_board.dsn")) {
+        if (in != null) {
+          java.nio.file.Files.copy(
+              in, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        } else {
+          java.nio.file.Path sourceDsn =
+              app.freerouting.TestFixtures.resolvePath("empty_board.dsn");
+          java.nio.file.Files.copy(
+              sourceDsn, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }
+      }
 
       // We need a session and job first to upload input to
 
