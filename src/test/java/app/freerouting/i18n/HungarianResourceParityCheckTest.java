@@ -24,17 +24,17 @@ class HungarianResourceParityCheckTest {
 
   /** Bundles touched by component-only accessibility workflows and the shared Common fallback. */
   private static final String[] MVP_BUNDLES = {
-    "gui/BoardPanelStatus",
-    "gui/BoardMenuFile",
-    "gui/BoardMenuDisplay",
-    "gui/BoardMenuParameter",
-    "gui/BoardMenuRules",
-    "gui/BoardMenuInfo",
-    "gui/BoardMenuHelp",
-    "gui/BoardMenuOther",
-    "gui/BoardToolbar",
-    "gui/BoardFrame",
-    "gui/WindowVisibility",
+    "gui/board/BoardPanelStatus",
+    "gui/menus/BoardMenuFile",
+    "gui/menus/BoardMenuDisplay",
+    "gui/menus/BoardMenuParameter",
+    "gui/menus/BoardMenuRules",
+    "gui/menus/BoardMenuInfo",
+    "gui/menus/BoardMenuHelp",
+    "gui/menus/BoardMenuOther",
+    "gui/board/BoardToolbar",
+    "gui/board/BoardFrame",
+    "gui/windows/board/WindowVisibility",
     "Common",
   };
 

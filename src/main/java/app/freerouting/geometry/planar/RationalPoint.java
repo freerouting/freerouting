@@ -90,6 +90,25 @@ public final class RationalPoint extends Point implements Serializable {
   }
 
   @Override
+  public int hashCode() {
+    if (z.signum() == 0) {
+      return 0;
+    }
+    BigInteger gcd = x.abs().gcd(y.abs()).gcd(z);
+    BigInteger rx = x;
+    BigInteger ry = y;
+    BigInteger rz = z;
+    if (gcd.compareTo(BigInteger.ONE) > 0) {
+      rx = x.divide(gcd);
+      ry = y.divide(gcd);
+      rz = z.divide(gcd);
+    }
+    int result = rx.hashCode();
+    result = 31 * result + ry.hashCode();
+    return 31 * result + rz.hashCode();
+  }
+
+  @Override
   public boolean isInfinite() {
     return z.signum() == 0;
   }

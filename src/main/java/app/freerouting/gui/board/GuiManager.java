@@ -22,6 +22,7 @@ import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
 import app.freerouting.settings.sources.GuiSettingsSource;
 import app.freerouting.util.TextManager;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,6 +56,17 @@ public class GuiManager {
    */
   // CHECKSTYLE.SUPPRESS: AbbreviationAsWordInName for +1 lines
   public static boolean initializeGUI(GlobalSettings globalSettings) {
+    if (!EventQueue.isDispatchThread()) {
+      final boolean[] result = new boolean[1];
+      try {
+        EventQueue.invokeAndWait(() -> result[0] = initializeGUI(globalSettings));
+      } catch (Exception e) {
+        FRLogger.error("Failed to initialize GUI on EDT", e);
+        return false;
+      }
+      return result[0];
+    }
+
     // Start a new Freerouting session
     var guiSession =
         SessionManager.getInstance()
