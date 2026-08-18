@@ -54,22 +54,20 @@ function Save-BenchmarksJson {
 
     $tempPath = "$JsonPath.tmp"
     try {
-        $rawJson = ConvertTo-Json $RawData -Depth 100 -Compress
+        $json = ConvertTo-Json $RawData -Depth 100 -Compress
+        $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+        [System.IO.File]::WriteAllText($tempPath, $json, $utf8NoBom)
+
         $pyFormatScript = @"
 import json, sys
-data = json.loads(sys.argv[1])
-with open(sys.argv[2], 'w', encoding='utf-8') as f:
+p = sys.argv[1]
+with open(p, 'r', encoding='utf-8') as f:
+    data = json.load(f)
+with open(p, 'w', encoding='utf-8') as f:
     json.dump(data, f, indent=2)
 "@
-        python -c $pyFormatScript $rawJson $tempPath
-        if (Test-Path $tempPath) {
-            Move-Item -Path $tempPath -Destination $JsonPath -Force
-        } else {
-            $json = ConvertTo-Json $RawData -Depth 100
-            $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-            [System.IO.File]::WriteAllText($tempPath, $json, $utf8NoBom)
-            Move-Item -Path $tempPath -Destination $JsonPath -Force
-        }
+        python -c $pyFormatScript $tempPath
+        Move-Item -Path $tempPath -Destination $JsonPath -Force
     } catch {
         Write-Error "Failed to write benchmarks.json atomically: $_"
     }

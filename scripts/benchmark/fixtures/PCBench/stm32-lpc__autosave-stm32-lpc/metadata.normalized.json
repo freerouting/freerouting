@@ -51,6 +51,13 @@
     }
   },
   "tags": [
-    "2-layer"
-  ]
+    "2-layer",
+    "canary",
+    "plane",
+    "small",
+    "tier-a"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00"
 }

@@ -677,5 +677,5 @@ tiers were not run because their budget expired.”
 | 4 | PCBench pipeline: fetch, strip, convert, ground truth, G3 gate | Implemented |
 | 5 | Nightly scheduler, REPORT.md, PR promotion rule | Implemented |
 | 6 | PCBench artifact preservation, dual DSNs, normalized metadata | Implemented |
-| 7 | A–E tier catalog, baseline outcome classes, tier-aware stopping gates | Planned |
+| 7 | A–E tier catalog, baseline outcome classes, tier-aware stopping gates | Implemented |
 | 8 | End-to-end PCBench tutorial command, corpus index, tier reports, regression tests | Planned |

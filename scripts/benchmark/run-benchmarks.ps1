@@ -81,7 +81,7 @@ if ($ReportOnly) {
 $allBinaries = @(Get-ChildItem $BinariesDir -Filter "*.jar")
 $binaries = @($allBinaries | Where-Object { $_.Name -like $FilterBinary })
 $fixtures = @(Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object {
-    $_.Name -like $FilterFixture -and (Test-IsActiveBenchmarkFixtureFile $_)
+    ($_.Name -like $FilterFixture -or ($_.FullName -replace '\\', '/') -like "*$($FilterFixture -replace '\\', '/')*") -and (Test-IsActiveBenchmarkFixtureFile $_)
 })
 
 if ($binaries.Count -eq 0) {

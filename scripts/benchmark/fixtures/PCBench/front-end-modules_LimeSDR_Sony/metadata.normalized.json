@@ -54,6 +54,12 @@
     }
   },
   "tags": [
-    "6-layer"
-  ]
+    "6-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
 }

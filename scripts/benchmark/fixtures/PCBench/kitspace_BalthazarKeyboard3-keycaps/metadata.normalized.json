@@ -51,6 +51,13 @@
     }
   },
   "tags": [
-    "4-layer"
-  ]
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
 }

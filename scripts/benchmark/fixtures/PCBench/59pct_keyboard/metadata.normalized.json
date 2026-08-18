@@ -50,6 +50,12 @@
     }
   },
   "tags": [
-    "2-layer"
-  ]
+    "2-layer",
+    "complex",
+    "medium",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
 }

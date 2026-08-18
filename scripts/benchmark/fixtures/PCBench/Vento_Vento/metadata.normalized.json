@@ -53,6 +53,13 @@
     }
   },
   "tags": [
-    "4-layer"
-  ]
+    "4-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
 }

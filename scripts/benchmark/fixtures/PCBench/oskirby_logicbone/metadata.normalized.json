@@ -51,6 +51,12 @@
     }
   },
   "tags": [
-    "8-layer"
-  ]
+    "8-layer",
+    "complex",
+    "large",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
 }

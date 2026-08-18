@@ -51,6 +51,13 @@
     }
   },
   "tags": [
-    "2-layer"
-  ]
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
 }

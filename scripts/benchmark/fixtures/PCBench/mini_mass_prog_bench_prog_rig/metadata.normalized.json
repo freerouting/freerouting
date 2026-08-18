@@ -51,6 +51,12 @@
     }
   },
   "tags": [
-    "4-layer"
-  ]
+    "4-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
 }

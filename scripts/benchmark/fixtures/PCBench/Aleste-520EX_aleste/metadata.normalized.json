@@ -49,6 +49,11 @@
     }
   },
   "tags": [
-    "2-layer"
-  ]
+    "2-layer",
+    "extreme-stress",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
 }
