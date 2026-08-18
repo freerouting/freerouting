@@ -49,11 +49,20 @@
   "tags": [
     "2-layer",
     "canary",
+    "golden-canary",
     "plane",
     "small",
-    "tier-a"
+    "tier-a",
+    "tier-b"
   ],
   "tier": "A",
   "expected_outcome": "complete",
-  "timeout_budget": "00:01:00"
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.151918+00:00",
+    "elapsed_seconds": 20.48,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
 }

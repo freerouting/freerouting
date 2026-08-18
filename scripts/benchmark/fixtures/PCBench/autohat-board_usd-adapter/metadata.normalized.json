@@ -45,11 +45,17 @@
   },
   "tags": [
     "2-layer",
-    "canary",
     "small",
-    "tier-a"
+    "tier-b"
   ],
-  "tier": "A",
-  "expected_outcome": "complete",
-  "timeout_budget": "00:01:00"
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.832488+00:00",
+    "elapsed_seconds": 7.9,
+    "unrouted_nets": 2,
+    "clearance_violations": 0,
+    "quality_score": 749.99
+  }
 }
