@@ -14,7 +14,7 @@ if (-not $ResultsDir) {
 }
 $fixtures = Join-Path (Join-Path $PSScriptRoot "..\benchmark\fixtures") "PCBench"
 
-if (-not (Test-Path $fixtures) -or -not (Get-ChildItem $fixtures -Filter "*.dsn" -ErrorAction SilentlyContinue)) {
+if (-not (Test-Path $fixtures) -or -not (Get-ChildItem $fixtures -Recurse -Filter "unrouted.dsn" -ErrorAction SilentlyContinue)) {
     & (Join-Path $PSScriptRoot "Convert-PCBenchBoards.ps1") -MaxBoards $MaxBoards -PCBenchRoot $PCBenchRoot
 }
 
@@ -26,6 +26,7 @@ if (-not $BinariesDir) {
     -BinariesDir $BinariesDir `
     -FixturesDir $fixtures `
     -ResultsDir $ResultsDir `
+    -FilterFixture "*unrouted.dsn*" `
     -FilterBinary "*current*" `
     -MaxTime "00:20:00" `
     -SkipWebsiteUpdate `

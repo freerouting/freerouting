@@ -49,4 +49,3 @@ gha-creds-*.json
 !/experiments/experiments.jsonl
 /scripts/pcbench/cache/
 /scripts/pcbench/__pycache__/
-/scripts/benchmark/fixtures/PCBench/*.dsn

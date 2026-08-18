@@ -1,0 +1,59 @@
+{
+  "board_id": "front-end-modules_LimeSDR_Sony",
+  "display_name": "front-end-modules_LimeSDR_Sony",
+  "pcbench_directory": "PCBs/front-end-modules_LimeSDR_Sony",
+  "source": "https://github.com/myriadrf/front-end-modules",
+  "author": "myriadrf",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.929744+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 6,
+    "nets": 352,
+    "components": 529,
+    "dimensions_mm": {
+      "width": 56.76,
+      "height": 40.0
+    },
+    "area_cm2": 22.7,
+    "zones": 30
+  },
+  "reference": {
+    "segments": 2150,
+    "vias": 237,
+    "track_length_mm": 1917.12,
+    "kicad_drc_violations": 1723,
+    "kicad_drc_breakdown": {
+      "total_violations": 1723,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 90,
+        "clearance": 499,
+        "copper_edge_clearance": 90,
+        "hole_clearance": 199,
+        "hole_to_hole": 3,
+        "item_on_disabled_layer": 1,
+        "lib_footprint_issues": 19,
+        "silk_edge_clearance": 15,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 201,
+        "text_height": 199,
+        "text_thickness": 2,
+        "track_dangling": 5,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 1080,
+        "warning": 643
+      }
+    }
+  },
+  "tags": [
+    "6-layer"
+  ]
+}

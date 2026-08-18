@@ -150,6 +150,24 @@ fixtures:
     timeout_budget: "00:30:00"
     max_items: 100
     tags: [large]
+  PCBench/1-Wire-Wing-pcb_1-Wire_Wing/unrouted.dsn:
+    size_class: small
+    layers: 2
+    nets: 60
+    timeout_budget: "00:05:00"
+    tags: [pcbench, 2-layer]
+  PCBench/1Bitsy_1bitsy/unrouted.dsn:
+    size_class: small
+    layers: 4
+    nets: 20
+    timeout_budget: "00:05:00"
+    tags: [pcbench, 4-layer]
+  PCBench/front-end-modules_LimeSDR_Sony/unrouted.dsn:
+    size_class: medium
+    layers: 6
+    nets: 352
+    timeout_budget: "00:15:00"
+    tags: [pcbench, 6-layer]
 
 canary_fixtures:
   - DAC2020_boards/DAC2020_bm02.dsn

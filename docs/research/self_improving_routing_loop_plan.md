@@ -588,11 +588,11 @@ The gate result should include `stopped_at_tier`, `stop_reason`, `tiers_not_run`
 `continued_after_failure` flag. This makes “we stopped because Tier A failed” different from “later
 tiers were not run because their budget expired.”
 
-## Phase 6 — PCBench artifact preservation and metadata (proposed)
+## Phase 6 — PCBench artifact preservation and metadata (implemented)
 
 - Add a board-artifact manifest that preserves the original PCBench four-file layout and writes
   `reference-routed.dsn`, `unrouted.kicad_pcb`, `unrouted.dsn`, hashes, tool versions, and warnings.
-- Export both the completed reference DSN from `raw.kicad_pcb` and the unrouted DSN from the
+- Export both the completed reference DSN from `raw.kicad_pcb` (with fallback to `processed.kicad_pcb`) and the unrouted DSN from the
   stripped `processed.kicad_pcb`; never overwrite either source PCB.
 - Make conversion output idempotent, atomic, and resumable. A source-hash/tool-version mismatch
   invalidates generated artifacts and requires an explicit `-Force`.
@@ -676,6 +676,6 @@ tiers were not run because their budget expired.”
 | 3 | `scripts/autopilot/` lifecycle scripts + `LOOP.md` | Implemented |
 | 4 | PCBench pipeline: fetch, strip, convert, ground truth, G3 gate | Implemented |
 | 5 | Nightly scheduler, REPORT.md, PR promotion rule | Implemented |
-| 6 | PCBench artifact preservation, dual DSNs, normalized metadata | Planned |
+| 6 | PCBench artifact preservation, dual DSNs, normalized metadata | Implemented |
 | 7 | A–E tier catalog, baseline outcome classes, tier-aware stopping gates | Planned |
 | 8 | End-to-end PCBench tutorial command, corpus index, tier reports, regression tests | Planned |

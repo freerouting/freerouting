@@ -1,0 +1,36 @@
+{
+  "board": "front-end-modules_LimeSDR_Sony",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\front-end-modules_LimeSDR_Sony\\raw.kicad_pcb",
+  "layers": 6,
+  "via_count": 237,
+  "segment_count": 2150,
+  "approximate_track_length_mm": 1917.12,
+  "kicad_drc_violations": 1723,
+  "generated_at": "2026-08-18T14:04:10.021681+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1723,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 90,
+      "clearance": 499,
+      "copper_edge_clearance": 90,
+      "hole_clearance": 199,
+      "hole_to_hole": 3,
+      "item_on_disabled_layer": 1,
+      "lib_footprint_issues": 19,
+      "silk_edge_clearance": 15,
+      "silk_over_copper": 199,
+      "silk_overlap": 199,
+      "solder_mask_bridge": 201,
+      "text_height": 199,
+      "text_thickness": 2,
+      "track_dangling": 5,
+      "via_dangling": 2
+    },
+    "by_severity": {
+      "error": 1080,
+      "warning": 643
+    }
+  }
+}

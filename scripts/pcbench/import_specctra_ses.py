@@ -18,6 +18,13 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
+        import wx  # type: ignore
+        app = wx.App(False)
+        wx.Log.EnableLogging(False)
+    except Exception:
+        pass
+
+    try:
         import pcbnew  # type: ignore
     except ImportError:
         print("pcbnew is not available; run this script with KiCad's python.exe", file=sys.stderr)

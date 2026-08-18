@@ -1,5 +1,5 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-08-18 00:06:17
+Generated on: 2026-08-18 16:12:07
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -170,7 +170,7 @@ Size: 146.8 kB · Layers: 6 · Nets: 220 · Components: 51 · Dimensions: 61.2 x
 | 2.2.4                                | CLI  |                N/A |        N/A |     175.07 |      N/A |    175.07 |   0+ 20+  2 |        6 |        N/A |   954 |      2018 |       85.8 |   16 / 0 |           |
 | 2.3.0                                | CLI  |  460/ 589 ( 78.1%) |      52.70 |    3516.58 |      N/A |   3569.28 |   5+  1+  0 |      N/A |        N/A |   896 |      1433 |       65.2 |    2 / 0 | TIMEOUT,  |
 | refactor/naming-and-packages         | CLI  |  460/ 589 ( 78.1%) |      53.20 |     535.47 |   601.72 |   1190.39 |   5+  5+  0 |        2 |         29 |   974 |       908 |     1469.5 |    2 / 0 | TIMEOUT,  |
-| refactor/restructure                 | CLI  |  460/ 589 ( 78.1%) |      61.10 |     611.39 |   636.48 |   1308.97 |   5+  5+  0 |        2 |         29 |   974 |       768 |     1470.3 |    1 / 0 | TIMEOUT   |
+| refactor/restructure                 | CLI  |  460/ 589 ( 78.1%) |      61.10 |     611.39 |   636.48 |   1308.97 |   5+  5+  0 |        2 |         29 |   974 |       768 |     1470.3 |    1 / 0 | TIMEOUT,  |
 | soc-gui-separation-and-accessibility | CLI  |  460/ 589 ( 78.1%) |      49.51 |    3515.00 |      N/A |   3564.51 |   5+  1+  0 |      N/A |        N/A |   N/A |      1423 |       64.8 |    2 / 0 | TIMEOUT,  |
 
 

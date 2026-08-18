@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "board_id": "1Bitsy_1bitsy",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 475510,
+      "sha256": "fa685a6d6f0c8c198fe8246c75366add0891bb2e6bc0f343da9cb2e946d316ef"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 244573,
+      "sha256": "d1d775dd42d7aa297a18a47d839e83f25fa2b4b0f75c8102a6b296edd3be2e8b"
+    },
+    "metadata_json": {
+      "bytes": 430,
+      "sha256": "0f7dda4a44ee4929b645412c1e82f6e3d6fc4246c92b3aae27d5a413b2ce4151"
+    },
+    "final_json": {
+      "bytes": 182171,
+      "sha256": "9e67cf0cec164bcbdd976f68fcefc4e7121c9a78f934a57ffac21c05e8160cd4"
+    }
+  },
+  "generated_files": {
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T14:04:02.691695+00:00"
+  }
+}
