@@ -212,7 +212,7 @@ dependencies {
     rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
     rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
+    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.44.0'
 
     rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
     rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
