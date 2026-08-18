@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_Spikeling_V2.2",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1333596,
+      "sha256": "736899d95cc8381a66c399515291c46408aa0cb79f380c9ebda9e543ec3d698c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 178435,
+      "sha256": "77bd9ad60d66ae367ca6754427495629e9cf6f1389d962908faba132e6951d11"
+    },
+    "metadata_json": {
+      "bytes": 599,
+      "sha256": "5855f356d30c08734665f3aa0986591ff3dd9e27420c2201082ca975806b85f8"
+    },
+    "final_json": {
+      "bytes": 120764,
+      "sha256": "780f6486d6d4622ca2017883b874a5820d5321230536640dabbce3d8fde4e89b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:11:14.355954+00:00"
+  }
+}

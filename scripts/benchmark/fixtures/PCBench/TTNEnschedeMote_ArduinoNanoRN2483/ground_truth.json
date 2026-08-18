@@ -1,0 +1,29 @@
+{
+  "board": "TTNEnschedeMote_ArduinoNanoRN2483",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\TTNEnschedeMote_ArduinoNanoRN2483\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 5,
+  "segment_count": 57,
+  "approximate_track_length_mm": 355.16,
+  "kicad_drc_violations": 137,
+  "generated_at": "2026-08-18T19:53:58.543957+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 137,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 69,
+      "copper_edge_clearance": 2,
+      "items_not_allowed": 3,
+      "lib_footprint_issues": 6,
+      "silk_over_copper": 2,
+      "silk_overlap": 3,
+      "solder_mask_bridge": 42,
+      "starved_thermal": 10
+    },
+    "by_severity": {
+      "error": 126,
+      "warning": 11
+    }
+  }
+}

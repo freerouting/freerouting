@@ -1,0 +1,52 @@
+{
+  "board_id": "kika-in-space_DS8500",
+  "display_name": "kika-in-space_DS8500",
+  "pcbench_directory": "PCBs/kika-in-space_DS8500",
+  "source": "https://github.com/skopjehacklab/kika-in-space",
+  "author": "skopjehacklab",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:01.594164+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 45.72,
+      "height": 21.59
+    },
+    "area_cm2": 9.87,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 92,
+    "vias": 4,
+    "track_length_mm": 155.59,
+    "kicad_drc_violations": 189,
+    "kicad_drc_breakdown": {
+      "total_violations": 189,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 18,
+        "lib_footprint_issues": 21,
+        "silk_over_copper": 107,
+        "silk_overlap": 4,
+        "solder_mask_bridge": 14,
+        "starved_thermal": 5,
+        "text_height": 11,
+        "text_thickness": 9
+      },
+      "by_severity": {
+        "error": 37,
+        "warning": 152
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "board_id": "kitspace_level_shifter",
+  "display_name": "kitspace_level_shifter",
+  "pcbench_directory": "PCBs/kitspace_level_shifter",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:27.773747+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 45.5,
+      "height": 48.5
+    },
+    "area_cm2": 22.07,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 110,
+    "vias": 0,
+    "track_length_mm": 377.06,
+    "kicad_drc_violations": 36,
+    "kicad_drc_breakdown": {
+      "total_violations": 36,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 20,
+        "silk_overlap": 7,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 7,
+        "warning": 29
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

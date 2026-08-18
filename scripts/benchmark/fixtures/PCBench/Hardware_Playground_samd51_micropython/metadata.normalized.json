@@ -1,0 +1,54 @@
+{
+  "board_id": "Hardware_Playground_samd51_micropython",
+  "display_name": "Hardware_Playground_samd51_micropython",
+  "pcbench_directory": "PCBs/Hardware_Playground_samd51_micropython",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 35.56,
+      "height": 18.8
+    },
+    "area_cm2": 6.69,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 279,
+    "vias": 59,
+    "track_length_mm": 490.45,
+    "kicad_drc_violations": 340,
+    "kicad_drc_breakdown": {
+      "total_violations": 340,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 20,
+        "copper_edge_clearance": 30,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 22,
+        "silk_edge_clearance": 109,
+        "silk_over_copper": 29,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 67,
+        "starved_thermal": 5,
+        "text_height": 50
+      },
+      "by_severity": {
+        "error": 124,
+        "warning": 216
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

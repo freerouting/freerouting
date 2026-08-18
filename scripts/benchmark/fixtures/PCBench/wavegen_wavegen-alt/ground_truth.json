@@ -1,0 +1,30 @@
+{
+  "board": "wavegen_wavegen-alt",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\wavegen_wavegen-alt\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 55,
+  "segment_count": 446,
+  "approximate_track_length_mm": 998.05,
+  "kicad_drc_violations": 184,
+  "generated_at": "2026-08-18T19:56:24.006713+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 184,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 38,
+      "courtyards_overlap": 8,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 53,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 48,
+      "silk_overlap": 30,
+      "via_dangling": 1,
+      "zones_intersect": 1
+    },
+    "by_severity": {
+      "error": 47,
+      "warning": 137
+    }
+  }
+}

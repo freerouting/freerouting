@@ -1,0 +1,55 @@
+{
+  "board_id": "xmasOrn_xmasOrn",
+  "display_name": "xmasOrn_xmasOrn",
+  "pcbench_directory": "PCBs/xmasOrn_xmasOrn",
+  "source": "https://github.com/agrede/xmasOrn",
+  "author": "agrede",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.230160+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 272,
+    "dimensions_mm": {
+      "width": 81.71,
+      "height": 95.86
+    },
+    "area_cm2": 78.33,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 654,
+    "vias": 118,
+    "track_length_mm": 1470.22,
+    "kicad_drc_violations": 772,
+    "kicad_drc_breakdown": {
+      "total_violations": 772,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 179,
+        "copper_edge_clearance": 8,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 199,
+        "pth_inside_courtyard": 5,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 108,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 63,
+        "starved_thermal": 3,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 262,
+        "warning": 510
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

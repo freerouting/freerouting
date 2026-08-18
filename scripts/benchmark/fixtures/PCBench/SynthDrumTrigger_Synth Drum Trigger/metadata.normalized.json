@@ -1,0 +1,48 @@
+{
+  "board_id": "SynthDrumTrigger_Synth Drum Trigger",
+  "display_name": "SynthDrumTrigger_Synth Drum Trigger",
+  "pcbench_directory": "PCBs/SynthDrumTrigger_Synth Drum Trigger",
+  "source": "https://github.com/dqmcdonald/SynthDrumTrigger",
+  "author": "dqmcdonald",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.026087+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 52.0,
+      "height": 48.0
+    },
+    "area_cm2": 24.96,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 97,
+    "vias": 0,
+    "track_length_mm": 311.29,
+    "kicad_drc_violations": 148,
+    "kicad_drc_breakdown": {
+      "total_violations": 148,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 20,
+        "lib_footprint_issues": 31,
+        "silk_overlap": 89,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 20,
+        "warning": 128
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

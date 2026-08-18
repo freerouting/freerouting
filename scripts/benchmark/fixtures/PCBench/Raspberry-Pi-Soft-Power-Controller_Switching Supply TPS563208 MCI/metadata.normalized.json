@@ -1,0 +1,51 @@
+{
+  "board_id": "Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI",
+  "display_name": "Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI",
+  "pcbench_directory": "PCBs/Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI",
+  "source": "https://github.com/baldengineer/Raspberry-Pi-Soft-Power-Controller",
+  "author": "baldengineer",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.649718+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 45.0,
+      "height": 20.0
+    },
+    "area_cm2": 9.0,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 59,
+    "vias": 18,
+    "track_length_mm": 107.07,
+    "kicad_drc_violations": 48,
+    "kicad_drc_breakdown": {
+      "total_violations": 48,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 22,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 10,
+        "silk_over_copper": 2,
+        "starved_thermal": 1,
+        "text_height": 10,
+        "text_thickness": 1
+      },
+      "by_severity": {
+        "error": 25,
+        "warning": 23
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

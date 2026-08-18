@@ -1,0 +1,45 @@
+{
+  "board_id": "Amiga-A1012-PCB_Amiga-A1012",
+  "display_name": "Amiga-A1012-PCB_Amiga-A1012",
+  "pcbench_directory": "PCBs/Amiga-A1012-PCB_Amiga-A1012",
+  "source": "https://github.com/sgust/Amiga-A1012-PCB",
+  "author": "sgust",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.317949+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 40,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 73.75,
+      "height": 78.25
+    },
+    "area_cm2": 57.71,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 414,
+    "vias": 62,
+    "track_length_mm": 1980.09,
+    "kicad_drc_violations": 30,
+    "kicad_drc_breakdown": {
+      "total_violations": 30,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 24,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "warning": 30
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

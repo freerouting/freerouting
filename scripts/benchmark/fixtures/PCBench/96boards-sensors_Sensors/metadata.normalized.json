@@ -1,0 +1,54 @@
+{
+  "board_id": "96boards-sensors_Sensors",
+  "display_name": "96boards-sensors_Sensors",
+  "pcbench_directory": "PCBs/96boards-sensors_Sensors",
+  "source": "https://github.com/96boards/96boards-sensors",
+  "author": "96boards",
+  "license": "BSD 2-Clause \"Simplified\" License",
+  "license_spdx": "BSD-2-Clause",
+  "retrieved_at": "2023-08-17T17:22:25.705742+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 93,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 54.0
+    },
+    "area_cm2": 45.9,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1702,
+    "vias": 140,
+    "track_length_mm": 3968.1,
+    "kicad_drc_violations": 541,
+    "kicad_drc_breakdown": {
+      "total_violations": 541,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 299,
+        "lib_footprint_issues": 93,
+        "malformed_courtyard": 4,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 5,
+        "silk_overlap": 36,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 1,
+        "text_height": 99,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 305,
+        "warning": 236
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

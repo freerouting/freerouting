@@ -1,0 +1,159 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\PixyWirelessShield_Shield PIXY\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  248920 -57785  212090 -57785  212090 -31750  248920 -31750
+            248920 -57785)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 700)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component TPS730:shield
+      (place shield_1 237490 -36830 front 0 (PN shield))
+    )
+    (component TPS730:PIXY
+      (place PIXY_1 250736.1 -30073.6 front 0 (PN PIXY))
+    )
+    (component TPS730:opensource_solo
+      (place G***_2 227330 -44450 back 0 (PN LOGO))
+      (place G*** 227330 -43180 front 90 (PN LOGO))
+    )
+  )
+  (library
+    (image TPS730:shield
+      (outline (path signal 150  -25400 2540  2540 2540))
+      (outline (path signal 150  2540 2540  2540 -20320))
+      (outline (path signal 150  2540 -20320  -25400 -20320))
+      (outline (path signal 150  -25400 -20320  -25400 2540))
+      (pin Round[A]Pad_2000.000000_um 14 0 0)
+      (pin Round[A]Pad_2000.000000_um 13 0 -2540)
+      (pin Round[A]Pad_2000.000000_um 12 0 -5080)
+      (pin Round[A]Pad_2000.000000_um 8 0 -7620)
+      (pin Round[A]Pad_2000.000000_um 7 0 -10160)
+      (pin Round[A]Pad_2000.000000_um 6 0 -12700)
+      (pin Round[A]Pad_2000.000000_um 5 0 -15240)
+      (pin Round[A]Pad_2000.000000_um 1 0 -17780)
+      (pin Round[A]Pad_2000.000000_um 9 -23000 0)
+      (pin Round[A]Pad_2000.000000_um 10 -23000 -2540)
+      (pin Round[A]Pad_2000.000000_um 11 -23000 -5080)
+      (pin Round[A]Pad_2000.000000_um 4 -23000 -7620)
+      (pin Round[A]Pad_2000.000000_um 3 -23000 -10160)
+      (pin Round[A]Pad_2000.000000_um 2 -23000 -12700)
+      (pin Round[A]Pad_2000.000000_um 15 -23000 -15240)
+      (pin Round[A]Pad_2000.000000_um 16 -23000 -17780)
+    )
+    (image TPS730:PIXY
+      (outline (path signal 150  -10160 -15240  -10160 -17780))
+      (outline (path signal 150  -10160 -17780  -2540 -17780))
+      (outline (path signal 150  -2540 -17780  -2540 -15240))
+      (outline (path signal 150  -2540 -2540  -10160 -2540))
+      (outline (path signal 150  -10160 -2540  -10160 -15240))
+      (outline (path signal 150  -2540 -15240  -2540 -2540))
+      (outline (path signal 150  -60960 -2540  -55880 -2540))
+      (outline (path signal 150  -55880 -2540  -55880 -12700))
+      (outline (path signal 150  -55880 -12700  -60960 -12700))
+      (outline (path signal 150  -60960 -12700  -60960 -2540))
+      (outline (path signal 150  -55880 -60960  -55880 -66040))
+      (outline (path signal 150  -55880 -66040  -12700 -66040))
+      (outline (path signal 150  -12700 -66040  -10160 -66040))
+      (outline (path signal 150  -10160 -66040  -10160 -60960))
+      (outline (path signal 150  -63500 2540  -63500 -22860))
+      (outline (path signal 150  -63500 -22860  -63500 -48260))
+      (outline (path signal 150  -63500 -48260  -63500 -60960))
+      (outline (path signal 150  -63500 -60960  0 -60960))
+      (outline (path signal 150  0 -60960  0 2540))
+      (outline (path signal 150  0 2540  -50800 2540))
+      (outline (path signal 150  -50800 2540  -63500 2540))
+      (pin Round[A]Pad_2000.000000_um 1 -7620 -5080)
+      (pin Round[A]Pad_2000.000000_um 2 -5080 -5080)
+      (pin Round[A]Pad_2000.000000_um 3 -7620 -7620)
+      (pin Round[A]Pad_2000.000000_um 4 -5080 -7620)
+      (pin Round[A]Pad_2000.000000_um 5 -7620 -10160)
+      (pin Round[A]Pad_2000.000000_um 6 -5080 -10160)
+      (pin Round[A]Pad_2000.000000_um 7 -7620 -12700)
+      (pin Round[A]Pad_2000.000000_um 8 -5080 -12700)
+      (pin Round[A]Pad_2000.000000_um 9 -7620 -15240)
+      (pin Round[A]Pad_2000.000000_um 10 -5080 -15240)
+    )
+    (image TPS730:opensource_solo
+    )
+    (padstack Round[A]Pad_2000.000000_um
+      (shape (circle F.Cu 2000))
+      (shape (circle B.Cu 2000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net /d6
+      (pins shield_1-3 PIXY_1-1)
+    )
+    (net /5v
+      (pins shield_1-1 PIXY_1-2)
+    )
+    (net /d5
+      (pins shield_1-4 PIXY_1-3)
+    )
+    (net /d7
+      (pins shield_1-2 PIXY_1-4)
+    )
+    (net "Net-(PIXY_1-Pad5)"
+      (pins PIXY_1-5)
+    )
+    (net "Net-(PIXY_1-Pad6)"
+      (pins PIXY_1-6)
+    )
+    (net "Net-(PIXY_1-Pad7)"
+      (pins PIXY_1-7)
+    )
+    (net "Net-(PIXY_1-Pad8)"
+      (pins PIXY_1-8)
+    )
+    (net "Net-(PIXY_1-Pad9)"
+      (pins PIXY_1-9)
+    )
+    (net /gnd
+      (pins shield_1-5 PIXY_1-10)
+    )
+    (class kicad_default /5v /d5 /d6 /d7 /gnd "Net-(PIXY_1-Pad5)" "Net-(PIXY_1-Pad6)"
+      "Net-(PIXY_1-Pad7)" "Net-(PIXY_1-Pad8)" "Net-(PIXY_1-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 700)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

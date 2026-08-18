@@ -1,0 +1,51 @@
+{
+  "board_id": "kitspace_flypi",
+  "display_name": "kitspace_flypi",
+  "pcbench_directory": "PCBs/kitspace_flypi",
+  "source": "https://github.com/amchagas/Flypi",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/amchagas/Flypi/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:06:54.139487+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 59,
+    "components": 53,
+    "dimensions_mm": {
+      "width": 57.2,
+      "height": 146.6
+    },
+    "area_cm2": 83.86,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 502,
+    "vias": 76,
+    "track_length_mm": 2226.65,
+    "kicad_drc_violations": 239,
+    "kicad_drc_breakdown": {
+      "total_violations": 239,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 170,
+        "lib_footprint_issues": 53,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 3,
+        "silk_overlap": 7,
+        "starved_thermal": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 172,
+        "warning": 67
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "board_id": "esp8266-external-temp-sensor_external-temp-sensor",
+  "display_name": "esp8266-external-temp-sensor_external-temp-sensor",
+  "pcbench_directory": "PCBs/esp8266-external-temp-sensor_external-temp-sensor",
+  "source": "https://github.com/theopensourcerer/esp8266-external-temp-sensor",
+  "author": "theopensourcerer",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.638094+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 29.46,
+      "height": 38.1
+    },
+    "area_cm2": 11.22,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 60,
+    "vias": 4,
+    "track_length_mm": 167.77,
+    "kicad_drc_violations": 107,
+    "kicad_drc_breakdown": {
+      "total_violations": 107,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 65,
+        "lib_footprint_issues": 14,
+        "malformed_courtyard": 6,
+        "silk_over_copper": 22
+      },
+      "by_severity": {
+        "error": 71,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "board_id": "kitspace_esp8266",
+  "display_name": "kitspace_esp8266",
+  "pcbench_directory": "PCBs/kitspace_esp8266",
+  "source": "https://github.com/alpharesearch/ESP8266_DS18B20",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/alpharesearch/ESP8266_DS18B20/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:08:51.234407+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 201,
+    "vias": 8,
+    "track_length_mm": 714.57,
+    "kicad_drc_violations": 271,
+    "kicad_drc_breakdown": {
+      "total_violations": 271,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 58,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 10,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 30,
+        "pth_inside_courtyard": 4,
+        "silk_over_copper": 17,
+        "silk_overlap": 87,
+        "solder_mask_bridge": 57,
+        "text_height": 4,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 131,
+        "warning": 140
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

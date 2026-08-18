@@ -1,0 +1,31 @@
+{
+  "board": "kitspace_antenna_analyser",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_antenna_analyser\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 306,
+  "approximate_track_length_mm": 1303.28,
+  "kicad_drc_violations": 351,
+  "generated_at": "2026-08-18T19:03:14.872589+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 351,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 241,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 34,
+      "pth_inside_courtyard": 4,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 12,
+      "silk_overlap": 46,
+      "solder_mask_bridge": 2,
+      "starved_thermal": 2,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 252,
+      "warning": 99
+    }
+  }
+}

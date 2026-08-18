@@ -1,0 +1,59 @@
+{
+  "board_id": "kitspace_OtterCastAudioV2",
+  "display_name": "kitspace_OtterCastAudioV2",
+  "pcbench_directory": "PCBs/kitspace_OtterCastAudioV2",
+  "source": "https://github.com/Ottercast/OtterCastAudioV2",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/Ottercast/OtterCastAudioV2/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:14:09.356319+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 266,
+    "components": 226,
+    "dimensions_mm": {
+      "width": 25.0,
+      "height": 49.27
+    },
+    "area_cm2": 12.32,
+    "zones": 28
+  },
+  "reference": {
+    "segments": 2813,
+    "vias": 451,
+    "track_length_mm": 2535.73,
+    "kicad_drc_violations": 690,
+    "kicad_drc_breakdown": {
+      "total_violations": 690,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 4,
+        "courtyards_overlap": 1,
+        "footprint_type_mismatch": 7,
+        "hole_clearance": 199,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 199,
+        "lib_footprint_mismatch": 7,
+        "silk_edge_clearance": 12,
+        "silk_over_copper": 8,
+        "silk_overlap": 30,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 11,
+        "text_height": 199,
+        "track_dangling": 2,
+        "via_dangling": 8
+      },
+      "by_severity": {
+        "error": 225,
+        "warning": 465
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

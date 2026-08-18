@@ -1,0 +1,57 @@
+{
+  "board_id": "bumps_bumps",
+  "display_name": "bumps_bumps",
+  "pcbench_directory": "PCBs/bumps_bumps",
+  "source": "https://github.com/hzeller/bumps",
+  "author": "hzeller",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.473716+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 71,
+    "components": 138,
+    "dimensions_mm": {
+      "width": 111.12,
+      "height": 65.41
+    },
+    "area_cm2": 72.68,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 1334,
+    "vias": 46,
+    "track_length_mm": 3604.88,
+    "kicad_drc_violations": 840,
+    "kicad_drc_breakdown": {
+      "total_violations": 840,
+      "unconnected_count": 22,
+      "by_type": {
+        "clearance": 121,
+        "copper_edge_clearance": 26,
+        "courtyards_overlap": 4,
+        "drill_out_of_range": 76,
+        "lib_footprint_issues": 138,
+        "padstack": 4,
+        "shorting_items": 5,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 7,
+        "text_height": 36,
+        "track_dangling": 23
+      },
+      "by_severity": {
+        "error": 239,
+        "warning": 601
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "board_id": "esp8266_network_speaker_esp_network_speaker",
+  "display_name": "esp8266_network_speaker_esp_network_speaker",
+  "pcbench_directory": "PCBs/esp8266_network_speaker_esp_network_speaker",
+  "source": "https://github.com/JDRobotter/esp8266_network_speaker",
+  "author": "JDRobotter",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.762095+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 50,
+    "dimensions_mm": {
+      "width": 24.13,
+      "height": 36.32
+    },
+    "area_cm2": 8.76,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 390,
+    "vias": 36,
+    "track_length_mm": 651.1,
+    "kicad_drc_violations": 115,
+    "kicad_drc_breakdown": {
+      "total_violations": 115,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 30,
+        "copper_edge_clearance": 20,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 50,
+        "silk_over_copper": 2,
+        "silk_overlap": 1,
+        "text_height": 8,
+        "track_dangling": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 52,
+        "warning": 63
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

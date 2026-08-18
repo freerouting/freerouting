@@ -1,0 +1,49 @@
+{
+  "board_id": "JLink-SWD_JLink-SWD",
+  "display_name": "JLink-SWD_JLink-SWD",
+  "pcbench_directory": "PCBs/JLink-SWD_JLink-SWD",
+  "source": "https://github.com/baoshi/JLink-SWD",
+  "author": "baoshi",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.037993+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 32.26,
+      "height": 30.48
+    },
+    "area_cm2": 9.83,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 91,
+    "vias": 18,
+    "track_length_mm": 235.37,
+    "kicad_drc_violations": 97,
+    "kicad_drc_breakdown": {
+      "total_violations": 97,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 74,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 16,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 2
+      },
+      "by_severity": {
+        "error": 76,
+        "warning": 21
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

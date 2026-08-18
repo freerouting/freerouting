@@ -1,0 +1,52 @@
+{
+  "board_id": "rufs_aprs_tracker",
+  "display_name": "rufs_aprs_tracker",
+  "pcbench_directory": "PCBs/rufs_aprs_tracker",
+  "source": "https://github.com/mik4el/rufs",
+  "author": "mik4el",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:49.038016+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 77.0,
+      "height": 42.2
+    },
+    "area_cm2": 32.49,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 440,
+    "vias": 26,
+    "track_length_mm": 1069.77,
+    "kicad_drc_violations": 194,
+    "kicad_drc_breakdown": {
+      "total_violations": 194,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 69,
+        "copper_edge_clearance": 14,
+        "lib_footprint_issues": 43,
+        "silk_over_copper": 28,
+        "silk_overlap": 35,
+        "text_height": 2,
+        "text_thickness": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 83,
+        "warning": 111
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

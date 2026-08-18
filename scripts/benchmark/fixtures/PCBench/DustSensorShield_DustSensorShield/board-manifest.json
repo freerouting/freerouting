@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "DustSensorShield_DustSensorShield",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 119380,
+      "sha256": "72e49ff5ecdc15d901f3eb429e66984043b480d0dbd155943c8ec9f588f61248"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 77913,
+      "sha256": "74201da0443839ef6612f69292a1ecde51e2fa51152c5520862939bee1864f02"
+    },
+    "metadata_json": {
+      "bytes": 630,
+      "sha256": "cd2f1fc15faabd4c16d54b4d7f7732befe57de561191dc220a84dced8f99faa3"
+    },
+    "final_json": {
+      "bytes": 29753,
+      "sha256": "6797296a9dc973d218226cfaed5275890fcfa9e3321df7b32bc3770f2f98db6e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:43:25.484514+00:00"
+  }
+}

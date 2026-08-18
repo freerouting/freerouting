@@ -1,0 +1,51 @@
+{
+  "board_id": "SimpleCPLD_SimpleCPLD",
+  "display_name": "SimpleCPLD_SimpleCPLD",
+  "pcbench_directory": "PCBs/SimpleCPLD_SimpleCPLD",
+  "source": "https://github.com/jonthomasson/SimpleCPLD",
+  "author": "jonthomasson",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.753989+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 4,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 51.18,
+      "height": 18.29
+    },
+    "area_cm2": 9.36,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 388,
+    "vias": 30,
+    "track_length_mm": 683.89,
+    "kicad_drc_violations": 142,
+    "kicad_drc_breakdown": {
+      "total_violations": 142,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 78,
+        "copper_edge_clearance": 3,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 16,
+        "silk_edge_clearance": 2,
+        "solder_mask_bridge": 40,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 124,
+        "warning": 18
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

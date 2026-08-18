@@ -1,0 +1,60 @@
+{
+  "board_id": "ourglass_watch-v4",
+  "display_name": "ourglass_watch-v4",
+  "pcbench_directory": "PCBs/ourglass_watch-v4",
+  "source": "https://github.com/photomattmills/ourglass",
+  "author": "photomattmills",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:41.265925+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 11,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 35.08,
+      "height": 14.0
+    },
+    "area_cm2": 4.91,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 490,
+    "vias": 44,
+    "track_length_mm": 551.17,
+    "kicad_drc_violations": 545,
+    "kicad_drc_breakdown": {
+      "total_violations": 545,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 44,
+        "clearance": 172,
+        "copper_edge_clearance": 33,
+        "hole_clearance": 114,
+        "hole_to_hole": 3,
+        "invalid_outline": 5,
+        "lib_footprint_issues": 43,
+        "malformed_courtyard": 1,
+        "shorting_items": 1,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 29,
+        "silk_overlap": 19,
+        "solder_mask_bridge": 1,
+        "text_height": 38,
+        "text_thickness": 33,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 371,
+        "warning": 174
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

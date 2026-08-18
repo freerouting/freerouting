@@ -1,0 +1,29 @@
+{
+  "board": "avr_ledprojector_avr_ledprojection-0402",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\avr_ledprojector_avr_ledprojection-0402\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 62,
+  "segment_count": 1322,
+  "approximate_track_length_mm": 786.6,
+  "kicad_drc_violations": 470,
+  "generated_at": "2026-08-18T18:31:36.673462+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 470,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 107,
+      "copper_edge_clearance": 15,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 175,
+      "silk_overlap": 13,
+      "starved_thermal": 3,
+      "text_height": 87,
+      "text_thickness": 69
+    },
+    "by_severity": {
+      "error": 125,
+      "warning": 345
+    }
+  }
+}

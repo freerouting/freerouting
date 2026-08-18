@@ -1,0 +1,53 @@
+{
+  "board_id": "kitspace_T32_ref",
+  "display_name": "kitspace_T32_ref",
+  "pcbench_directory": "PCBs/kitspace_T32_ref",
+  "source": "https://github.com/sci-bots/teensy-3.2-clone.kicad",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/sci-bots/teensy-3.2-clone.kicad/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:23:39.261021+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 7,
+    "components": 89,
+    "dimensions_mm": {
+      "width": 71.12,
+      "height": 25.4
+    },
+    "area_cm2": 18.06,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 960,
+    "vias": 124,
+    "track_length_mm": 2026.54,
+    "kicad_drc_violations": 336,
+    "kicad_drc_breakdown": {
+      "total_violations": 336,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 124,
+        "hole_clearance": 23,
+        "lib_footprint_issues": 89,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 77,
+        "starved_thermal": 4,
+        "text_height": 12,
+        "text_thickness": 3,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 228,
+        "warning": 108
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

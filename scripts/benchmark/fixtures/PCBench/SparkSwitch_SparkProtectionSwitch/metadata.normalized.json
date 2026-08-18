@@ -1,0 +1,48 @@
+{
+  "board_id": "SparkSwitch_SparkProtectionSwitch",
+  "display_name": "SparkSwitch_SparkProtectionSwitch",
+  "pcbench_directory": "PCBs/SparkSwitch_SparkProtectionSwitch",
+  "source": "https://github.com/vedderb/SparkSwitch",
+  "author": "vedderb",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.297690+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 40.0,
+      "height": 32.0
+    },
+    "area_cm2": 12.8,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 142,
+    "vias": 72,
+    "track_length_mm": 350.66,
+    "kicad_drc_violations": 35,
+    "kicad_drc_breakdown": {
+      "total_violations": 35,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "copper_edge_clearance": 7,
+        "lib_footprint_issues": 15,
+        "silk_over_copper": 10
+      },
+      "by_severity": {
+        "error": 10,
+        "warning": 25
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

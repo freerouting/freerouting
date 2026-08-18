@@ -1,0 +1,45 @@
+{
+  "board_id": "starsynctrackers_reset_switch",
+  "display_name": "starsynctrackers_reset_switch",
+  "pcbench_directory": "PCBs/starsynctrackers_reset_switch",
+  "source": "https://github.com/bluthen/starsynctrackers",
+  "author": "bluthen",
+  "license": "GNU Lesser General Public License v2.1",
+  "license_spdx": "LGPL-2.1",
+  "retrieved_at": "2023-08-17T17:23:00.842155+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 15.24,
+      "height": 24.77
+    },
+    "area_cm2": 3.77,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 51,
+    "vias": 0,
+    "track_length_mm": 83.6,
+    "kicad_drc_violations": 13,
+    "kicad_drc_breakdown": {
+      "total_violations": 13,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 9,
+        "silk_over_copper": 4
+      },
+      "by_severity": {
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

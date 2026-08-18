@@ -1,0 +1,52 @@
+{
+  "board_id": "Hardware_Playground_multisensor_cr123",
+  "display_name": "Hardware_Playground_multisensor_cr123",
+  "pcbench_directory": "PCBs/Hardware_Playground_multisensor_cr123",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 64,
+    "dimensions_mm": {
+      "width": 48.2,
+      "height": 22.16
+    },
+    "area_cm2": 10.68,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 371,
+    "vias": 30,
+    "track_length_mm": 768.54,
+    "kicad_drc_violations": 376,
+    "kicad_drc_breakdown": {
+      "total_violations": 376,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 104,
+        "copper_edge_clearance": 15,
+        "courtyards_overlap": 35,
+        "lib_footprint_issues": 64,
+        "pth_inside_courtyard": 60,
+        "silk_overlap": 8,
+        "starved_thermal": 3,
+        "text_height": 87
+      },
+      "by_severity": {
+        "error": 217,
+        "warning": 159
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

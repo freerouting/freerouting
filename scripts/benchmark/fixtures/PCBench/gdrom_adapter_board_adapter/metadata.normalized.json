@@ -1,0 +1,48 @@
+{
+  "board_id": "gdrom_adapter_board_adapter",
+  "display_name": "gdrom_adapter_board_adapter",
+  "pcbench_directory": "PCBs/gdrom_adapter_board_adapter",
+  "source": "https://github.com/zeldin/gdrom_adapter_board",
+  "author": "zeldin",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:55.122088+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 80.0
+    },
+    "area_cm2": 80.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 601,
+    "vias": 27,
+    "track_length_mm": 3617.86,
+    "kicad_drc_violations": 116,
+    "kicad_drc_breakdown": {
+      "total_violations": 116,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 10,
+        "silk_overlap": 46,
+        "solder_mask_bridge": 48,
+        "track_dangling": 12
+      },
+      "by_severity": {
+        "error": 48,
+        "warning": 68
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

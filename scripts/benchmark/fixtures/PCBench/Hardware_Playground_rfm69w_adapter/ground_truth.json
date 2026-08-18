@@ -1,0 +1,31 @@
+{
+  "board": "Hardware_Playground_rfm69w_adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_rfm69w_adapter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 30,
+  "segment_count": 304,
+  "approximate_track_length_mm": 328.3,
+  "kicad_drc_violations": 305,
+  "generated_at": "2026-08-18T18:54:54.454227+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 305,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 52,
+      "clearance": 32,
+      "copper_edge_clearance": 45,
+      "courtyards_overlap": 26,
+      "lib_footprint_issues": 35,
+      "pth_inside_courtyard": 11,
+      "silk_over_copper": 10,
+      "solder_mask_bridge": 72,
+      "starved_thermal": 3,
+      "text_height": 19
+    },
+    "by_severity": {
+      "error": 241,
+      "warning": 64
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "board_id": "cap-soil-moisture-v2_soil-moisture2x4",
+  "display_name": "cap-soil-moisture-v2_soil-moisture2x4",
+  "pcbench_directory": "PCBs/cap-soil-moisture-v2_soil-moisture2x4",
+  "source": "https://github.com/acolomitchi/cap-soil-moisture-v2",
+  "author": "acolomitchi",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:23.265713+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 44.85,
+      "height": 44.83
+    },
+    "area_cm2": 20.11,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 92,
+    "vias": 0,
+    "track_length_mm": 343.17,
+    "kicad_drc_violations": 61,
+    "kicad_drc_breakdown": {
+      "total_violations": 61,
+      "unconnected_count": 2,
+      "by_type": {
+        "annular_width": 4,
+        "lib_footprint_issues": 21,
+        "padstack": 4,
+        "silk_edge_clearance": 4,
+        "silk_overlap": 28
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 57
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

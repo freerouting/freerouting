@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_40-channel-hv-switching-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 2151255,
+      "sha256": "e37c904b64caa9238a8fdca2942339bfdf471265ac25c60281e7d1d323be4947"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 693511,
+      "sha256": "2d7bfd36f1b2b3fd2302086231bc9a2aecdbf01b99f3c3bd360c3c637bfc028c"
+    },
+    "metadata_json": {
+      "bytes": 671,
+      "sha256": "087cc961fdab989ad5f0b344b25b6d96d54ed67818b9beb12a2d218e7833b125"
+    },
+    "final_json": {
+      "bytes": 707795,
+      "sha256": "5c45b5de6008369c7604587f03a554fd3d2a6b08ea31caf050d4d9b77b643bc5"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:16:36.012995+00:00"
+  }
+}

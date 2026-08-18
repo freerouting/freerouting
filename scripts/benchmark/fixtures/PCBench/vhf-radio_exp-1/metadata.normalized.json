@@ -1,0 +1,53 @@
+{
+  "board_id": "vhf-radio_exp-1",
+  "display_name": "vhf-radio_exp-1",
+  "pcbench_directory": "PCBs/vhf-radio_exp-1",
+  "source": "https://github.com/baobrien/vhf-radio",
+  "author": "baobrien",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.350067+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 43,
+    "components": 90,
+    "dimensions_mm": {
+      "width": 50.8,
+      "height": 50.8
+    },
+    "area_cm2": 25.81,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 244,
+    "vias": 7,
+    "track_length_mm": 374.59,
+    "kicad_drc_violations": 121,
+    "kicad_drc_breakdown": {
+      "total_violations": 121,
+      "unconnected_count": 89,
+      "by_type": {
+        "clearance": 1,
+        "copper_edge_clearance": 10,
+        "lib_footprint_issues": 90,
+        "padstack": 4,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 2,
+        "silk_overlap": 2,
+        "text_height": 6,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 11,
+        "warning": 110
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

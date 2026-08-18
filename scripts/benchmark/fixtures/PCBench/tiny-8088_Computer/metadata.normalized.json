@@ -1,0 +1,47 @@
+{
+  "board_id": "tiny-8088_Computer",
+  "display_name": "tiny-8088_Computer",
+  "pcbench_directory": "PCBs/tiny-8088_Computer",
+  "source": "https://github.com/nkeck720/tiny-8088",
+  "author": "nkeck720",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:58.866132+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 137,
+    "components": 54,
+    "dimensions_mm": {
+      "width": 147.32,
+      "height": 128.27
+    },
+    "area_cm2": 188.97,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 1618,
+    "vias": 47,
+    "track_length_mm": 7386.24,
+    "kicad_drc_violations": 73,
+    "kicad_drc_breakdown": {
+      "total_violations": 73,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 54,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 2,
+        "silk_overlap": 11
+      },
+      "by_severity": {
+        "warning": 73
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

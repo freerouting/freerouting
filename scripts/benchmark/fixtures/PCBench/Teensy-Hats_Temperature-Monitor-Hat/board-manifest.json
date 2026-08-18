@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Teensy-Hats_Temperature-Monitor-Hat",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 76730,
+      "sha256": "ea4a0686ce59006d5f768fbabcc4b888c76fdae1b4c191c508299031f195e258"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 40072,
+      "sha256": "e7cbadc4b6826f6c200f9f5ea6ff996fac93ec542b6654cedf40a845111543f1"
+    },
+    "metadata_json": {
+      "bytes": 701,
+      "sha256": "23e94bf5b727fcdfd0702c02835e6ae92f3cabe8f2b2bbc0f404744adbb6b70f"
+    },
+    "final_json": {
+      "bytes": 34956,
+      "sha256": "80e06613cd0fc429e3d60706b169e199915584dfdef8aad36c58873484303780"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:50:49.609837+00:00"
+  }
+}

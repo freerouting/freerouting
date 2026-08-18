@@ -1,0 +1,55 @@
+{
+  "board_id": "iCE40-DIO_ICE40-DIO_Rev_A",
+  "display_name": "iCE40-DIO_ICE40-DIO_Rev_A",
+  "pcbench_directory": "PCBs/iCE40-DIO_ICE40-DIO_Rev_A",
+  "source": "https://github.com/OLIMEX/iCE40-DIO",
+  "author": "OLIMEX",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:48.270007+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 1703,
+    "vias": 205,
+    "track_length_mm": 3134.84,
+    "kicad_drc_violations": 573,
+    "kicad_drc_breakdown": {
+      "total_violations": 573,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 119,
+        "clearance": 235,
+        "copper_edge_clearance": 95,
+        "hole_to_hole": 4,
+        "item_on_disabled_layer": 1,
+        "lib_footprint_issues": 51,
+        "silk_edge_clearance": 23,
+        "silk_overlap": 32,
+        "starved_thermal": 6,
+        "text_height": 5,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 456,
+        "warning": 117
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

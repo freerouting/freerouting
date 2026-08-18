@@ -1,0 +1,50 @@
+{
+  "board_id": "PCB_constant_current_ac_hv",
+  "display_name": "PCB_constant_current_ac_hv",
+  "pcbench_directory": "PCBs/PCB_constant_current_ac_hv",
+  "source": "https://github.com/theopenbar/PCB",
+  "author": "theopenbar",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:59.518140+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 81.0,
+      "height": 22.0
+    },
+    "area_cm2": 17.82,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 17,
+    "vias": 0,
+    "track_length_mm": 132.35,
+    "kicad_drc_violations": 60,
+    "kicad_drc_breakdown": {
+      "total_violations": 60,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 12,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 16,
+        "silk_overlap": 27
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 57
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

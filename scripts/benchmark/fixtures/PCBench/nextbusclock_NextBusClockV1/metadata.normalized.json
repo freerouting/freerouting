@@ -1,0 +1,45 @@
+{
+  "board_id": "nextbusclock_NextBusClockV1",
+  "display_name": "nextbusclock_NextBusClockV1",
+  "pcbench_directory": "PCBs/nextbusclock_NextBusClockV1",
+  "source": "https://github.com/chrisgillis/nextbusclock",
+  "author": "chrisgillis",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:50.322031+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 45,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 90.17,
+      "height": 68.58
+    },
+    "area_cm2": 61.84,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 325,
+    "vias": 0,
+    "track_length_mm": 1493.79,
+    "kicad_drc_violations": 63,
+    "kicad_drc_breakdown": {
+      "total_violations": 63,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 26,
+        "silk_overlap": 37
+      },
+      "by_severity": {
+        "warning": 63
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

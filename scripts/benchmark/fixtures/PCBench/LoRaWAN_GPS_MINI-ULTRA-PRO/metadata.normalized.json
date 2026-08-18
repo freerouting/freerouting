@@ -1,0 +1,55 @@
+{
+  "board_id": "LoRaWAN_GPS_MINI-ULTRA-PRO",
+  "display_name": "LoRaWAN_GPS_MINI-ULTRA-PRO",
+  "pcbench_directory": "PCBs/LoRaWAN_GPS_MINI-ULTRA-PRO",
+  "source": "https://github.com/robot-army/LoRaWAN_GPS",
+  "author": "robot-army",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:45.361973+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 33,
+    "components": 62,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 55.88
+    },
+    "area_cm2": 14.19,
+    "zones": 19
+  },
+  "reference": {
+    "segments": 714,
+    "vias": 129,
+    "track_length_mm": 1202.38,
+    "kicad_drc_violations": 526,
+    "kicad_drc_breakdown": {
+      "total_violations": 526,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 365,
+        "copper_edge_clearance": 55,
+        "courtyards_overlap": 8,
+        "hole_clearance": 12,
+        "hole_to_hole": 5,
+        "lib_footprint_issues": 62,
+        "silk_edge_clearance": 7,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 3,
+        "starved_thermal": 6,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 449,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "16x12-bits-I2C_I2C_Servo",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 223578,
+      "sha256": "407bc9f8cdb5f2cc39d6dd926c53c2de9c7b04a577ef1bfd727c963111856ddd"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 137843,
+      "sha256": "ec191c086aefa87da63c728ce9b3d9f3e7f1d0c9de0df3ff923c53efbe218126"
+    },
+    "metadata_json": {
+      "bytes": 478,
+      "sha256": "c8b28cc2aa7b3c5df4a4213e269b38fe7b367179c7719f8d61b02d8b75e0a98e"
+    },
+    "final_json": {
+      "bytes": 91687,
+      "sha256": "de75a4b435ba6582db2076877c1d63d43a9ba408169cab7e395d347e9ef4501d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:26:03.887237+00:00"
+  }
+}

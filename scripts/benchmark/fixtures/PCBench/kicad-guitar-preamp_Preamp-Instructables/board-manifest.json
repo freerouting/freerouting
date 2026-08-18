@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kicad-guitar-preamp_Preamp-Instructables",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 40163,
+      "sha256": "b5ff1ecb28e5b92e187afc039dc4a4f4932febde1b3d5bbf0d0f0f69bbd5c8c8"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 28272,
+      "sha256": "c6ca223567302b08f3f42f307eeab5fe11d42c0310d436fec36347341c09ada7"
+    },
+    "metadata_json": {
+      "bytes": 522,
+      "sha256": "5c82ea6846e1702b66c9b7904903b47f3093072c020debce4a1731df101cd57a"
+    },
+    "final_json": {
+      "bytes": 10565,
+      "sha256": "619a79778449f8778fc4b022b7f4a62ccfa3e500930c0b65a077d598741e3f66"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:01:35.354076+00:00"
+  }
+}

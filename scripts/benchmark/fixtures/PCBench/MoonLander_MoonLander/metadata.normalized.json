@@ -1,0 +1,58 @@
+{
+  "board_id": "MoonLander_MoonLander",
+  "display_name": "MoonLander_MoonLander",
+  "pcbench_directory": "PCBs/MoonLander_MoonLander",
+  "source": "https://github.com/graycatlabs/MoonLander",
+  "author": "graycatlabs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.418091+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 107,
+    "dimensions_mm": {
+      "width": 37.85,
+      "height": 22.73
+    },
+    "area_cm2": 8.6,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 432,
+    "vias": 31,
+    "track_length_mm": 585.07,
+    "kicad_drc_violations": 538,
+    "kicad_drc_breakdown": {
+      "total_violations": 538,
+      "unconnected_count": 4,
+      "by_type": {
+        "clearance": 184,
+        "copper_edge_clearance": 19,
+        "courtyards_overlap": 1,
+        "hole_clearance": 82,
+        "hole_to_hole": 12,
+        "item_on_disabled_layer": 6,
+        "lib_footprint_issues": 107,
+        "pth_inside_courtyard": 12,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 36,
+        "silk_overlap": 3,
+        "starved_thermal": 4,
+        "text_height": 63,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "error": 308,
+        "warning": 230
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

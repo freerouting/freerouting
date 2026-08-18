@@ -1,0 +1,378 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\oled-bmp280-touch_oled-bmp280-touch\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  128853 -110061  78663.7 -110061  78663.7 -58170.6  128853 -58170.6
+            128853 -110061)
+    )
+    (via "Via[0-1]_685.8:330.2_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component "TEENSY-LC"
+      (place J1 105410 -82804 front 0 (PN "TEENSY-LC"))
+    )
+    (component Wickerlib:CAPSENSE_CIRCLE_D10
+      (place CAP15 86487 -71882 front 0 (PN CAP15))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x01
+      (place CAP23 122174 -70358 front 0 (PN CAP23))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x01::1
+      (place CAP22 110617 -63881 front 0 (PN CAP22))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x01::2
+      (place CAP17 122301 -98933 front 90 (PN CAP17))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x01::3
+      (place CAP16 97663 -63881 front -90 (PN CAP16))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x07
+      (place BMP280 86995 -80010 front 0 (PN I2C_BMP280))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x08
+      (place "SPI OLED" 123698 -75946 front 0 (PN SPI_OLED_128x64))
+    )
+    (component "CHIP-DIPs:Symbol_OSHW-Logo_SilkScreen"
+      (place REF** 115316 -103378 front -90 (PN "Symbol_OSHW-Logo_SilkScreen"))
+    )
+    (component "teensy-big-oled:oshpark-silk-25dpi"
+      (place G***_2 96774 -107315 back 180 (PN LOGO))
+      (place G*** 84074 -104648 front 90 (PN LOGO))
+    )
+  )
+  (library
+    (image "TEENSY-LC"
+      (outline (polygon signal 0  6345 -24125  -11425 -24125  -11425 11425  6345 11425))
+      (pin Round[A]Pad_1727.200000_um G1 -10160 10160)
+      (pin Round[A]Pad_1727.200000_um 0 -10160 7620)
+      (pin Round[A]Pad_1727.200000_um 1 -10160 5080)
+      (pin Round[A]Pad_1727.200000_um 2 -10160 2540)
+      (pin Round[A]Pad_1727.200000_um 3 -10160 0)
+      (pin Round[A]Pad_1727.200000_um 4 -10160 -2540)
+      (pin Round[A]Pad_1727.200000_um 5 -10160 -5080)
+      (pin Round[A]Pad_1727.200000_um 6 -10160 -7620)
+      (pin Round[A]Pad_1727.200000_um 7 -10160 -10160)
+      (pin Round[A]Pad_1727.200000_um 8 -10160 -12700)
+      (pin Round[A]Pad_1727.200000_um 9 -10160 -15240)
+      (pin Round[A]Pad_1727.200000_um 10 -10160 -17780)
+      (pin Round[A]Pad_1727.200000_um 11 -10160 -20320)
+      (pin Round[A]Pad_1727.200000_um 12 -10160 -22860)
+      (pin Round[A]Pad_1727.200000_um 17A -7620 -22860)
+      (pin Round[A]Pad_1727.200000_um 3V1 -5080 -22860)
+      (pin Round[A]Pad_1727.200000_um G2 -2540 -22860)
+      (pin Round[A]Pad_1727.200000_um PGM 0 -22860)
+      (pin Round[A]Pad_1727.200000_um DAC 2540 -22860)
+      (pin Round[A]Pad_1727.200000_um 13 5080 -22860)
+      (pin Round[A]Pad_1727.200000_um 16 5080 -15240)
+      (pin Round[A]Pad_1727.200000_um 3V2 5080 5080)
+      (pin Round[A]Pad_1727.200000_um 18 5080 -10160)
+      (pin Round[A]Pad_1727.200000_um 17 5080 -12700)
+      (pin Round[A]Pad_1727.200000_um G3 5080 7620)
+      (pin Round[A]Pad_1727.200000_um 22 5080 0)
+      (pin Round[A]Pad_1727.200000_um VIN 5080 10160)
+      (pin Round[A]Pad_1727.200000_um 21 5080 -2540)
+      (pin Round[A]Pad_1727.200000_um 20 5080 -5080)
+      (pin Round[A]Pad_1727.200000_um 19 5080 -7620)
+      (pin Round[A]Pad_1727.200000_um 23 5080 2540)
+      (pin Round[A]Pad_1727.200000_um 14 5080 -20320)
+      (pin Round[A]Pad_1727.200000_um 15 5080 -17780)
+    )
+    (image Wickerlib:CAPSENSE_CIRCLE_D10
+      (pin Round[T]Pad_10160.000000_um 1 0 0)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x01
+      (outline (polygon signal 0  1745 -1745  -1745 -1745  -1745 1745  1745 1745))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1550 1550  1550 0))
+      (pin Oval[T]Pad_9000.000000x5000.000000_um 1 0 0)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x01::1
+      (outline (polygon signal 0  1745 -1745  -1745 -1745  -1745 1745  1745 1745))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1550 1550  1550 0))
+      (pin Rect[T]Pad_8000.000000x6000.000000_um 1 0 0)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x01::2
+      (outline (polygon signal 0  -1745 -1745  -1745 1745  1745 1745  1745 -1745))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1550 1550  1550 0))
+      (pin Oval[T]Pad_5000.000000x9000.000000_um 1 0 0)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x01::3
+      (outline (polygon signal 0  1745 1745  1745 -1745  -1745 -1745  -1745 1745))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1550 1550  1550 0))
+      (pin Trapz[T]Pad_6000.000000x5000.000000_p4000.000000xp0.000000_um 1 0 0)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x07
+      (outline (polygon signal 0  1745 -16995  -1745 -16995  -1745 1745  1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -16510  -1270 -1270))
+      (outline (path signal 150  1270 -16510  -1270 -16510))
+      (outline (path signal 150  1270 -1270  1270 -16510))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+    )
+    (image Wickerlib:Pin_Header_Straight_1x08
+      (outline (polygon signal 0  1745 -19545  -1745 -19545  -1745 1745  1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -19050  -1270 -1270))
+      (outline (path signal 150  1270 -19050  -1270 -19050))
+      (outline (path signal 150  1270 -1270  1270 -19050))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 8 0 -17780)
+    )
+    (image "CHIP-DIPs:Symbol_OSHW-Logo_SilkScreen"
+      (outline (path signal 150  350.52 -899.16  749.3 -1899.92))
+      (outline (path signal 150  -350.52 -899.16  -701.04 -1899.92))
+      (outline (path signal 150  -701.04 -701.04  -350.52 -899.16))
+      (outline (path signal 150  -949.96 -398.78  -701.04 -701.04))
+      (outline (path signal 150  -1000.76 99.06  -949.96 -398.78))
+      (outline (path signal 150  -850.9 551.18  -1000.76 99.06))
+      (outline (path signal 150  -449.58 899.16  -850.9 551.18))
+      (outline (path signal 150  -50.8 1000.76  -449.58 899.16))
+      (outline (path signal 150  398.78 949.96  -50.8 1000.76))
+      (outline (path signal 150  850.9 599.44  398.78 949.96))
+      (outline (path signal 150  1000.76 248.92  850.9 599.44))
+      (outline (path signal 150  1000.76 -149.86  1000.76 248.92))
+      (outline (path signal 150  850.9 -551.18  1000.76 -149.86))
+      (outline (path signal 150  650.24 -749.3  850.9 -551.18))
+      (outline (path signal 150  350.52 -899.16  650.24 -749.3))
+      (outline (path signal 150  -1930.4 -520.7  -1790.7 -919.48))
+      (outline (path signal 150  -2489.2 -320.04  -1930.4 -520.7))
+      (outline (path signal 150  -2479.04 381  -2489.2 -320.04))
+      (outline (path signal 150  -1930.4 480.06  -2479.04 381))
+      (outline (path signal 150  -1760.22 960.12  -1930.4 480.06))
+      (outline (path signal 150  -2009.14 1501.14  -1760.22 960.12))
+      (outline (path signal 150  -1490.98 2029.46  -2009.14 1501.14))
+      (outline (path signal 150  -939.8 1760.22  -1490.98 2029.46))
+      (outline (path signal 150  -520.7 1930.4  -939.8 1760.22))
+      (outline (path signal 150  -309.88 2479.04  -520.7 1930.4))
+      (outline (path signal 150  381 2461.26  -309.88 2479.04))
+      (outline (path signal 150  551.18 1920.24  381 2461.26))
+      (outline (path signal 150  1021.08 1719.58  551.18 1920.24))
+      (outline (path signal 150  1539.24 1981.2  1021.08 1719.58))
+      (outline (path signal 150  2009.14 1470.66  1539.24 1981.2))
+      (outline (path signal 150  1739.9 1000.76  2009.14 1470.66))
+      (outline (path signal 150  1940.56 429.26  1739.9 1000.76))
+      (outline (path signal 150  2499.36 289.56  1940.56 429.26))
+      (outline (path signal 150  2499.36 -391.16  2499.36 289.56))
+      (outline (path signal 150  1889.76 -579.12  2499.36 -391.16))
+      (outline (path signal 150  1699.26 -1049.02  1889.76 -579.12))
+      (outline (path signal 150  1981.2 -1529.08  1699.26 -1049.02))
+      (outline (path signal 150  1508.76 -2019.3  1981.2 -1529.08))
+      (outline (path signal 150  1069.34 -1689.1  1508.76 -2019.3))
+      (outline (path signal 150  739.14 -1879.6  1069.34 -1689.1))
+      (outline (path signal 150  -980.44 -1739.9  -701.04 -1899.92))
+      (outline (path signal 150  -1501.14 -2009.14  -980.44 -1739.9))
+      (outline (path signal 150  -2039.62 -1490.98  -1501.14 -2009.14))
+      (outline (path signal 150  -1780.54 -929.64  -2039.62 -1490.98))
+    )
+    (image "teensy-big-oled:oshpark-silk-25dpi"
+    )
+    (padstack Round[T]Pad_10160.000000_um
+      (shape (circle F.Cu 10160))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1727.200000_um
+      (shape (circle F.Cu 1727.2))
+      (shape (circle B.Cu 1727.2))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Oval[T]Pad_9000.000000x5000.000000_um
+      (shape (path F.Cu 5000  -2000 0  2000 0))
+      (attach off)
+    )
+    (padstack Oval[T]Pad_5000.000000x9000.000000_um
+      (shape (path F.Cu 5000  0 -2000  0 2000))
+      (attach off)
+    )
+    (padstack Trapz[T]Pad_6000.000000x5000.000000_p4000.000000xp0.000000_um
+      (shape (polygon F.Cu 0  -3000 -4500  -3000 4500  3000 500  3000 -500))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_8000.000000x6000.000000_um
+      (shape (rect F.Cu -4000 -3000 4000 3000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins J1-G1 J1-G2 J1-G3 BMP280-3 "SPI OLED"-1)
+    )
+    (net /D15
+      (pins J1-15 CAP15-1)
+    )
+    (net /D0
+      (pins J1-0)
+    )
+    (net /D1
+      (pins J1-1)
+    )
+    (net /D2
+      (pins J1-2)
+    )
+    (net /D3
+      (pins J1-3)
+    )
+    (net /D4
+      (pins J1-4)
+    )
+    (net /D5
+      (pins J1-5)
+    )
+    (net /D6
+      (pins J1-6)
+    )
+    (net /D7
+      (pins J1-7)
+    )
+    (net /D8
+      (pins J1-8)
+    )
+    (net OLED_DATA
+      (pins J1-9 "SPI OLED"-8)
+    )
+    (net OLED_CLK
+      (pins J1-10 "SPI OLED"-7)
+    )
+    (net OLED_DC
+      (pins J1-11 "SPI OLED"-6)
+    )
+    (net OLED_CS
+      (pins J1-12 "SPI OLED"-4)
+    )
+    (net "/D17(VIN)"
+      (pins J1-17A)
+    )
+    (net VIN
+      (pins J1-3V1 J1-3V2 J1-VIN BMP280-1 "SPI OLED"-2)
+    )
+    (net /PROG
+      (pins J1-PGM)
+    )
+    (net /DAC
+      (pins J1-DAC)
+    )
+    (net OLED_RST
+      (pins J1-13 "SPI OLED"-5)
+    )
+    (net /D16
+      (pins J1-16 CAP16-1)
+    )
+    (net BMP280_SDI
+      (pins J1-18 BMP280-6)
+    )
+    (net /D17
+      (pins J1-17 CAP17-1)
+    )
+    (net /D22
+      (pins J1-22 CAP22-1)
+    )
+    (net /D21
+      (pins J1-21)
+    )
+    (net /D20
+      (pins J1-20)
+    )
+    (net BMP280_SCK
+      (pins J1-19 BMP280-4)
+    )
+    (net /D23
+      (pins J1-23 CAP23-1)
+    )
+    (net "Net-(J1-Pad14)"
+      (pins J1-14)
+    )
+    (net "Net-(J6-Pad2)"
+      (pins BMP280-2)
+    )
+    (net "Net-(J6-Pad5)"
+      (pins BMP280-5)
+    )
+    (net "Net-(J6-Pad7)"
+      (pins BMP280-7)
+    )
+    (net "Net-(J7-Pad3)"
+      (pins "SPI OLED"-3)
+    )
+    (class kicad_default /D0 /D1 /D15 /D16 /D17 "/D17(VIN)" /D2 /D20 /D21
+      /D22 /D23 /D3 /D4 /D5 /D6 /D7 /D8 /DAC /PROG BMP280_SCK BMP280_SDI GND
+      "Net-(J1-Pad14)" "Net-(J6-Pad2)" "Net-(J6-Pad5)" "Net-(J6-Pad7)" "Net-(J7-Pad3)"
+      OLED_CLK OLED_CS OLED_DATA OLED_DC OLED_RST VIN
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,0 +1,62 @@
+{
+  "board_id": "HiFiAudioCodecModule_HiFiAudioCodecModule",
+  "display_name": "HiFiAudioCodecModule_HiFiAudioCodecModule",
+  "pcbench_directory": "PCBs/HiFiAudioCodecModule_HiFiAudioCodecModule",
+  "source": "https://github.com/MickMad/HiFiAudioCodecModule",
+  "author": "MickMad",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:42.397938+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 25.4
+    },
+    "area_cm2": 6.45,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 178,
+    "vias": 15,
+    "track_length_mm": 293.69,
+    "kicad_drc_violations": 281,
+    "kicad_drc_breakdown": {
+      "total_violations": 281,
+      "unconnected_count": 9,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 58,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 11,
+        "item_on_disabled_layer": 2,
+        "lib_footprint_issues": 26,
+        "padstack": 4,
+        "pth_inside_courtyard": 2,
+        "shorting_items": 7,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 37,
+        "silk_overlap": 20,
+        "solder_mask_bridge": 12,
+        "starved_thermal": 2,
+        "text_height": 40,
+        "text_thickness": 40,
+        "track_dangling": 11,
+        "tracks_crossing": 2
+      },
+      "by_severity": {
+        "error": 102,
+        "warning": 179
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

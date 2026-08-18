@@ -1,0 +1,60 @@
+{
+  "board_id": "BlueBerry-Zero_blueberry",
+  "display_name": "BlueBerry-Zero_blueberry",
+  "pcbench_directory": "PCBs/BlueBerry-Zero_blueberry",
+  "source": "https://github.com/IdleHandsProject/BlueBerry-Zero",
+  "author": "IdleHandsProject",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:45.201971+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 63,
+    "components": 50,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 30.0
+    },
+    "area_cm2": 19.5,
+    "zones": 14
+  },
+  "reference": {
+    "segments": 294,
+    "vias": 68,
+    "track_length_mm": 491.95,
+    "kicad_drc_violations": 569,
+    "kicad_drc_breakdown": {
+      "total_violations": 569,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 167,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 1,
+        "hole_clearance": 32,
+        "holes_co_located": 25,
+        "items_not_allowed": 70,
+        "lib_footprint_issues": 50,
+        "padstack": 4,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 145,
+        "silk_overlap": 6,
+        "starved_thermal": 8,
+        "text_height": 39,
+        "track_dangling": 1,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 290,
+        "warning": 279
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

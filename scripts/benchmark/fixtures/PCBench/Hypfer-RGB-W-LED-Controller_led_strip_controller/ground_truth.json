@@ -1,0 +1,26 @@
+{
+  "board": "Hypfer-RGB-W-LED-Controller_led_strip_controller",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hypfer-RGB-W-LED-Controller_led_strip_controller\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 7,
+  "segment_count": 303,
+  "approximate_track_length_mm": 1450.97,
+  "kicad_drc_violations": 309,
+  "generated_at": "2026-08-18T18:57:53.602883+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 309,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 194,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 31,
+      "silk_overlap": 80,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 196,
+      "warning": 113
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "board_id": "deskbot_breakout",
+  "display_name": "deskbot_breakout",
+  "pcbench_directory": "PCBs/deskbot_breakout",
+  "source": "https://github.com/superlou/deskbot",
+  "author": "superlou",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.806155+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 30,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 26.67,
+      "height": 53.98
+    },
+    "area_cm2": 14.4,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 99,
+    "vias": 4,
+    "track_length_mm": 335.47,
+    "kicad_drc_violations": 24,
+    "kicad_drc_breakdown": {
+      "total_violations": 24,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "lib_footprint_issues": 14,
+        "silk_overlap": 4
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 18
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

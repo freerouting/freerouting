@@ -1,0 +1,51 @@
+{
+  "board_id": "Planet_Vocab",
+  "display_name": "Planet_Vocab",
+  "pcbench_directory": "PCBs/Planet_Vocab",
+  "source": "https://github.com/WorldWilderLab/Planet",
+  "author": "WorldWilderLab",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.041934+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 53.34,
+      "height": 68.58
+    },
+    "area_cm2": 36.58,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 223,
+    "vias": 0,
+    "track_length_mm": 782.17,
+    "kicad_drc_violations": 205,
+    "kicad_drc_breakdown": {
+      "total_violations": 205,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 54,
+        "copper_edge_clearance": 1,
+        "silk_edge_clearance": 4,
+        "silk_overlap": 135,
+        "starved_thermal": 1,
+        "track_dangling": 9,
+        "tracks_crossing": 1
+      },
+      "by_severity": {
+        "error": 57,
+        "warning": 148
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

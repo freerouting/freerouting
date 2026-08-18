@@ -1,0 +1,57 @@
+{
+  "board_id": "kitspace_stack-light",
+  "display_name": "kitspace_stack-light",
+  "pcbench_directory": "PCBs/kitspace_stack-light",
+  "source": "https://github.com/Tyler-Ward/stacklight-hardware",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/Tyler-Ward/stacklight-hardware/master/LICENSE.txt'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:17:56.242635+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 91,
+    "components": 131,
+    "dimensions_mm": {
+      "width": 132.0,
+      "height": 60.0
+    },
+    "area_cm2": 79.2,
+    "zones": 14
+  },
+  "reference": {
+    "segments": 761,
+    "vias": 159,
+    "track_length_mm": 1564.42,
+    "kicad_drc_violations": 299,
+    "kicad_drc_breakdown": {
+      "total_violations": 299,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 105,
+        "copper_edge_clearance": 18,
+        "courtyards_overlap": 1,
+        "hole_clearance": 22,
+        "lib_footprint_issues": 10,
+        "lib_footprint_mismatch": 109,
+        "shorting_items": 6,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 7,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 6,
+        "starved_thermal": 1,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 160,
+        "warning": 139
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

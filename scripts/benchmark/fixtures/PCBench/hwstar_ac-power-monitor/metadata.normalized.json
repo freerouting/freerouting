@@ -1,0 +1,52 @@
+{
+  "board_id": "hwstar_ac-power-monitor",
+  "display_name": "hwstar_ac-power-monitor",
+  "pcbench_directory": "PCBs/hwstar_ac-power-monitor",
+  "source": "https://github.com/hwstar/HW-AC-Emeter",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 62,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 50.0
+    },
+    "area_cm2": 50.0,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 336,
+    "vias": 40,
+    "track_length_mm": 976.55,
+    "kicad_drc_violations": 419,
+    "kicad_drc_breakdown": {
+      "total_violations": 419,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 114,
+        "lib_footprint_issues": 62,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 10,
+        "silk_overlap": 131,
+        "starved_thermal": 1,
+        "text_height": 99,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 115,
+        "warning": 304
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

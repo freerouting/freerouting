@@ -1,0 +1,45 @@
+{
+  "board_id": "I2CTempsensor_sensors",
+  "display_name": "I2CTempsensor_sensors",
+  "pcbench_directory": "PCBs/I2CTempsensor_sensors",
+  "source": "https://github.com/nickjkl/I2CTempsensor",
+  "author": "nickjkl",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.438021+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 21.59,
+      "height": 21.59
+    },
+    "area_cm2": 4.66,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 83,
+    "vias": 1,
+    "track_length_mm": 140.71,
+    "kicad_drc_violations": 11,
+    "kicad_drc_breakdown": {
+      "total_violations": 11,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 6,
+        "text_height": 5
+      },
+      "by_severity": {
+        "warning": 11
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

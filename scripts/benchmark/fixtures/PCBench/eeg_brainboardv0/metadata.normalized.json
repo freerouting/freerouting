@@ -1,0 +1,53 @@
+{
+  "board_id": "eeg_brainboardv0",
+  "display_name": "eeg_brainboardv0",
+  "pcbench_directory": "PCBs/eeg_brainboardv0",
+  "source": "https://github.com/gskelly/eeg",
+  "author": "gskelly",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:24.221724+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 29,
+    "components": 86,
+    "dimensions_mm": {
+      "width": 86.36,
+      "height": 54.61
+    },
+    "area_cm2": 47.16,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 1003,
+    "vias": 94,
+    "track_length_mm": 2185.66,
+    "kicad_drc_violations": 417,
+    "kicad_drc_breakdown": {
+      "total_violations": 417,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 128,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 129,
+        "silk_overlap": 16,
+        "solder_mask_bridge": 17,
+        "starved_thermal": 3,
+        "text_height": 111,
+        "text_thickness": 7,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 148,
+        "warning": 269
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

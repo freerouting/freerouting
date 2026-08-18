@@ -1,0 +1,33 @@
+{
+  "board": "TMC261-stepstick_TMC261-stepstick-v1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\TMC261-stepstick_TMC261-stepstick-v1\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 23,
+  "segment_count": 267,
+  "approximate_track_length_mm": 283.79,
+  "kicad_drc_violations": 223,
+  "generated_at": "2026-08-18T19:52:58.304894+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 223,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 15,
+      "clearance": 1,
+      "copper_edge_clearance": 72,
+      "lib_footprint_issues": 22,
+      "padstack": 15,
+      "shorting_items": 1,
+      "silk_edge_clearance": 19,
+      "silk_over_copper": 38,
+      "silk_overlap": 1,
+      "solder_mask_bridge": 31,
+      "text_height": 6,
+      "via_dangling": 2
+    },
+    "by_severity": {
+      "error": 120,
+      "warning": 103
+    }
+  }
+}

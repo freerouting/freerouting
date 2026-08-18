@@ -1,0 +1,35 @@
+{
+  "board": "Hornbill-ESP32-Minima_Beacon32",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hornbill-ESP32-Minima_Beacon32\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 39,
+  "segment_count": 334,
+  "approximate_track_length_mm": 692.92,
+  "kicad_drc_violations": 585,
+  "generated_at": "2026-08-18T18:57:04.842421+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 585,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 45,
+      "copper_edge_clearance": 169,
+      "courtyards_overlap": 1,
+      "drill_out_of_range": 15,
+      "hole_to_hole": 15,
+      "lib_footprint_issues": 40,
+      "padstack": 15,
+      "shorting_items": 27,
+      "silk_edge_clearance": 38,
+      "silk_over_copper": 35,
+      "silk_overlap": 27,
+      "solder_mask_bridge": 140,
+      "text_height": 17,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 397,
+      "warning": 188
+    }
+  }
+}

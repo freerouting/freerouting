@@ -1,0 +1,30 @@
+{
+  "board": "rfcx-sentinel-pcb_Mainboard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\rfcx-sentinel-pcb_Mainboard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 61,
+  "segment_count": 831,
+  "approximate_track_length_mm": 2025.26,
+  "kicad_drc_violations": 540,
+  "generated_at": "2026-08-18T19:40:08.708427+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 540,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 226,
+      "lib_footprint_issues": 102,
+      "padstack": 4,
+      "silk_over_copper": 129,
+      "silk_overlap": 65,
+      "solder_mask_bridge": 1,
+      "starved_thermal": 5,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 236,
+      "warning": 304
+    }
+  }
+}

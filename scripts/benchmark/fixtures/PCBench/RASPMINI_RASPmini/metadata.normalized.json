@@ -1,0 +1,53 @@
+{
+  "board_id": "RASPMINI_RASPmini",
+  "display_name": "RASPMINI_RASPmini",
+  "pcbench_directory": "PCBs/RASPMINI_RASPmini",
+  "source": "https://github.com/zwb800/RASPMINI",
+  "author": "zwb800",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.937744+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 56.0
+    },
+    "area_cm2": 36.4,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 138,
+    "vias": 0,
+    "track_length_mm": 713.88,
+    "kicad_drc_violations": 240,
+    "kicad_drc_breakdown": {
+      "total_violations": 240,
+      "unconnected_count": 9,
+      "by_type": {
+        "clearance": 141,
+        "copper_edge_clearance": 6,
+        "courtyards_overlap": 3,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 15,
+        "malformed_courtyard": 54,
+        "silk_overlap": 4,
+        "starved_thermal": 15,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 220,
+        "warning": 20
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

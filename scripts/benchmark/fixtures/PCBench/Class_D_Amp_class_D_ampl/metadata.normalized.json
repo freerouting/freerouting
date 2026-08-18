@@ -1,0 +1,51 @@
+{
+  "board_id": "Class_D_Amp_class_D_ampl",
+  "display_name": "Class_D_Amp_class_D_ampl",
+  "pcbench_directory": "PCBs/Class_D_Amp_class_D_ampl",
+  "source": "https://github.com/zerberros/Class_D_Amp",
+  "author": "zerberros",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.434139+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 59,
+    "components": 89,
+    "dimensions_mm": {
+      "width": 140.5,
+      "height": 79.0
+    },
+    "area_cm2": 111.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 736,
+    "vias": 39,
+    "track_length_mm": 2020.2,
+    "kicad_drc_violations": 323,
+    "kicad_drc_breakdown": {
+      "total_violations": 323,
+      "unconnected_count": 6,
+      "by_type": {
+        "clearance": 127,
+        "lib_footprint_issues": 89,
+        "pth_inside_courtyard": 1,
+        "silk_edge_clearance": 34,
+        "silk_over_copper": 20,
+        "silk_overlap": 35,
+        "track_dangling": 17
+      },
+      "by_severity": {
+        "error": 128,
+        "warning": 195
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "avr-fuser-32_hvpp",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 252691,
+      "sha256": "9d46739ef6b5936e2f95962fe891d70d25a813ba773e58080ea4d54cc5d96bbd"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 154832,
+      "sha256": "fa133eaf506c09568df292b85662a456f027099cf622f356b0c3b278ff858e7e"
+    },
+    "metadata_json": {
+      "bytes": 446,
+      "sha256": "978bdf575c8d97a754df0c1c72f58d05073364ece2303d94173701224c4d5c6e"
+    },
+    "final_json": {
+      "bytes": 121224,
+      "sha256": "c5cbf23a06aa9d2402c87c180d9f6c0abdae27e3a2279001ddaaa52d9d06de96"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:31:01.391172+00:00"
+  }
+}

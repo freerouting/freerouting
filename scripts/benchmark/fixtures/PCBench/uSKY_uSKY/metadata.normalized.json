@@ -1,0 +1,54 @@
+{
+  "board_id": "uSKY_uSKY",
+  "display_name": "uSKY_uSKY",
+  "pcbench_directory": "PCBs/uSKY_uSKY",
+  "source": "https://github.com/fishpepper/uSKY",
+  "author": "fishpepper",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:27.633764+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 11.16,
+      "height": 8.39
+    },
+    "area_cm2": 0.94,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 292,
+    "vias": 23,
+    "track_length_mm": 174.59,
+    "kicad_drc_violations": 386,
+    "kicad_drc_breakdown": {
+      "total_violations": 386,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 24,
+        "copper_edge_clearance": 106,
+        "courtyards_overlap": 34,
+        "invalid_outline": 4,
+        "lib_footprint_issues": 36,
+        "pth_inside_courtyard": 1,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 115,
+        "silk_overlap": 58,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 169,
+        "warning": 217
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

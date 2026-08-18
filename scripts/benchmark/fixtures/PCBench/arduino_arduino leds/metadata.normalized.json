@@ -1,0 +1,51 @@
+{
+  "board_id": "arduino_arduino leds",
+  "display_name": "arduino_arduino leds",
+  "pcbench_directory": "PCBs/arduino_arduino leds",
+  "source": "https://github.com/estalldecker/arduino",
+  "author": "estalldecker",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.306149+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 99.06,
+      "height": 49.53
+    },
+    "area_cm2": 49.06,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 116,
+    "vias": 0,
+    "track_length_mm": 732.53,
+    "kicad_drc_violations": 344,
+    "kicad_drc_breakdown": {
+      "total_violations": 344,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 111,
+        "silk_over_copper": 3,
+        "silk_overlap": 199,
+        "starved_thermal": 1,
+        "text_height": 27,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 114,
+        "warning": 230
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

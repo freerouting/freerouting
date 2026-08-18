@@ -1,0 +1,48 @@
+{
+  "board_id": "hardware-designs_si7021-board",
+  "display_name": "hardware-designs_si7021-board",
+  "pcbench_directory": "PCBs/hardware-designs_si7021-board",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 9.91,
+      "height": 45.47
+    },
+    "area_cm2": 4.51,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 34,
+    "vias": 1,
+    "track_length_mm": 113.7,
+    "kicad_drc_violations": 24,
+    "kicad_drc_breakdown": {
+      "total_violations": 24,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 7,
+        "copper_edge_clearance": 10,
+        "starved_thermal": 1,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 18,
+        "warning": 6
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

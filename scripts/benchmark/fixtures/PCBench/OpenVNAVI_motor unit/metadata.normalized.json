@@ -1,0 +1,50 @@
+{
+  "board_id": "OpenVNAVI_motor unit",
+  "display_name": "OpenVNAVI_motor unit",
+  "pcbench_directory": "PCBs/OpenVNAVI_motor unit",
+  "source": "https://github.com/davidanton/OpenVNAVI",
+  "author": "davidanton",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:53.550069+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 17.53,
+      "height": 17.14
+    },
+    "area_cm2": 3.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 48,
+    "vias": 0,
+    "track_length_mm": 69.33,
+    "kicad_drc_violations": 46,
+    "kicad_drc_breakdown": {
+      "total_violations": 46,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 17,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 4,
+        "silk_over_copper": 6,
+        "silk_overlap": 2,
+        "text_height": 14
+      },
+      "by_severity": {
+        "error": 20,
+        "warning": 26
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

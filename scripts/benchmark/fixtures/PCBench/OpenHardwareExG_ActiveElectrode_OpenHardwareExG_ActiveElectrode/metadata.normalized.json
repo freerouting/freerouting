@@ -1,0 +1,50 @@
+{
+  "board_id": "OpenHardwareExG_ActiveElectrode_OpenHardwareExG_ActiveElectrode",
+  "display_name": "OpenHardwareExG_ActiveElectrode_OpenHardwareExG_ActiveElectrode",
+  "pcbench_directory": "PCBs/OpenHardwareExG_ActiveElectrode_OpenHardwareExG_ActiveElectrode",
+  "source": "https://github.com/OpenElectronicsLab/OpenHardwareExG_ActiveElectrode",
+  "author": "OpenElectronicsLab",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:44.841967+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 0,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 9.65
+    },
+    "area_cm2": 0.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 133,
+    "vias": 5,
+    "track_length_mm": 163.68,
+    "kicad_drc_violations": 76,
+    "kicad_drc_breakdown": {
+      "total_violations": 76,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 25,
+        "copper_edge_clearance": 17,
+        "lib_footprint_issues": 13,
+        "silk_over_copper": 5,
+        "text_height": 15,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 42,
+        "warning": 34
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

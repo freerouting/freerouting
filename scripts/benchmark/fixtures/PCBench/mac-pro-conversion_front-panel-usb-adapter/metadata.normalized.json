@@ -1,0 +1,51 @@
+{
+  "board_id": "mac-pro-conversion_front-panel-usb-adapter",
+  "display_name": "mac-pro-conversion_front-panel-usb-adapter",
+  "pcbench_directory": "PCBs/mac-pro-conversion_front-panel-usb-adapter",
+  "source": "https://github.com/carlossless/mac-pro-conversion",
+  "author": "carlossless",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.325949+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 3,
+    "dimensions_mm": {
+      "width": 17.53,
+      "height": 20.83
+    },
+    "area_cm2": 3.65,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 27,
+    "vias": 6,
+    "track_length_mm": 75.39,
+    "kicad_drc_violations": 66,
+    "kicad_drc_breakdown": {
+      "total_violations": 66,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 49,
+        "holes_co_located": 4,
+        "isolated_copper": 2,
+        "lib_footprint_issues": 3,
+        "silk_edge_clearance": 3,
+        "solder_mask_bridge": 4,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 53,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

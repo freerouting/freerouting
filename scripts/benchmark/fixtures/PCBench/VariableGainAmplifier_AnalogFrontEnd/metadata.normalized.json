@@ -1,0 +1,58 @@
+{
+  "board_id": "VariableGainAmplifier_AnalogFrontEnd",
+  "display_name": "VariableGainAmplifier_AnalogFrontEnd",
+  "pcbench_directory": "PCBs/VariableGainAmplifier_AnalogFrontEnd",
+  "source": "https://github.com/digibird1/VariableGainAmplifier",
+  "author": "digibird1",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.830084+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 63.55,
+      "height": 43.43
+    },
+    "area_cm2": 27.6,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 476,
+    "vias": 57,
+    "track_length_mm": 1114.15,
+    "kicad_drc_violations": 289,
+    "kicad_drc_breakdown": {
+      "total_violations": 289,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 57,
+        "shorting_items": 3,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 138,
+        "silk_overlap": 60,
+        "solder_mask_bridge": 5,
+        "text_height": 2,
+        "text_thickness": 2,
+        "track_dangling": 2,
+        "via_dangling": 10
+      },
+      "by_severity": {
+        "error": 14,
+        "warning": 275
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

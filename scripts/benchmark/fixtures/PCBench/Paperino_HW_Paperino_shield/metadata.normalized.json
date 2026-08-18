@@ -1,0 +1,48 @@
+{
+  "board_id": "Paperino_HW_Paperino_shield",
+  "display_name": "Paperino_HW_Paperino_shield",
+  "pcbench_directory": "PCBs/Paperino_HW_Paperino_shield",
+  "source": "https://github.com/JohnnyKaramello/Paperino_HW",
+  "author": "JohnnyKaramello",
+  "license": "Creative Commons Attribution 4.0 International",
+  "license_spdx": "CC-BY-4.0",
+  "retrieved_at": "2023-08-17T17:22:55.230089+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 36.9
+    },
+    "area_cm2": 25.83,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 106,
+    "vias": 5,
+    "track_length_mm": 475.11,
+    "kicad_drc_violations": 39,
+    "kicad_drc_breakdown": {
+      "total_violations": 39,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 28,
+        "copper_edge_clearance": 2,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 7
+      },
+      "by_severity": {
+        "error": 32,
+        "warning": 7
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

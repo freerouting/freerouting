@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "HW-ESP8266_Roomba_ESP8266_Roomba",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 353555,
+      "sha256": "2688afacbf90c0e61c0ec1c9a09fbb0109accd79e912805b8c487cdfb5ebb37f"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 203663,
+      "sha256": "ce834e8e5af46f266c8587d9d55affef2a9bbf79b5bd12bd2d5c3b7054747634"
+    },
+    "metadata_json": {
+      "bytes": 499,
+      "sha256": "302def994294db8803616923a862ef174a75296527783231f59ac061298935e4"
+    },
+    "final_json": {
+      "bytes": 209399,
+      "sha256": "8fcc29734836db6948e50eeef8d6157a9a6a7317281ba61792a9c758213eb047"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:57:26.511024+00:00"
+  }
+}

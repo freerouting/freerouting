@@ -1,0 +1,48 @@
+{
+  "board_id": "tepmachcha_tepmachcha",
+  "display_name": "tepmachcha_tepmachcha",
+  "pcbench_directory": "PCBs/tepmachcha_tepmachcha",
+  "source": "https://github.com/DAI-Maker-Lab/tepmachcha",
+  "author": "DAI-Maker-Lab",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:25.325737+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 38,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 50.29,
+      "height": 51.82
+    },
+    "area_cm2": 26.06,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 36,
+    "vias": 0,
+    "track_length_mm": 135.68,
+    "kicad_drc_violations": 15,
+    "kicad_drc_breakdown": {
+      "total_violations": 15,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "lib_footprint_issues": 6,
+        "silk_edge_clearance": 3,
+        "text_height": 4
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

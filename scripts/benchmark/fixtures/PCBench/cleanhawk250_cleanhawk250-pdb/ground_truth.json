@@ -1,0 +1,31 @@
+{
+  "board": "cleanhawk250_cleanhawk250-pdb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\cleanhawk250_cleanhawk250-pdb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 74,
+  "segment_count": 505,
+  "approximate_track_length_mm": 1374.55,
+  "kicad_drc_violations": 841,
+  "generated_at": "2026-08-18T18:38:55.128518+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 841,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 499,
+      "copper_edge_clearance": 2,
+      "hole_clearance": 44,
+      "lib_footprint_issues": 80,
+      "shorting_items": 3,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 160,
+      "silk_overlap": 10,
+      "solder_mask_bridge": 38,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 586,
+      "warning": 255
+    }
+  }
+}

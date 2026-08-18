@@ -1,0 +1,52 @@
+{
+  "board_id": "digital_clock_led_clock_v1",
+  "display_name": "digital_clock_led_clock_v1",
+  "pcbench_directory": "PCBs/digital_clock_led_clock_v1",
+  "source": "https://github.com/PrabhuSammandam/digital_clock",
+  "author": "PrabhuSammandam",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:00.366149+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 58,
+    "components": 138,
+    "dimensions_mm": {
+      "width": 152.62,
+      "height": 101.67
+    },
+    "area_cm2": 155.17,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 1065,
+    "vias": 66,
+    "track_length_mm": 6134.33,
+    "kicad_drc_violations": 550,
+    "kicad_drc_breakdown": {
+      "total_violations": 550,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 271,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 138,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 33,
+        "silk_overlap": 102,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 274,
+        "warning": 276
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

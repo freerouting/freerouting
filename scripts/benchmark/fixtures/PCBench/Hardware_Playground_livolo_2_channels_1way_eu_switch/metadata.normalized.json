@@ -1,0 +1,53 @@
+{
+  "board_id": "Hardware_Playground_livolo_2_channels_1way_eu_switch",
+  "display_name": "Hardware_Playground_livolo_2_channels_1way_eu_switch",
+  "pcbench_directory": "PCBs/Hardware_Playground_livolo_2_channels_1way_eu_switch",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 52,
+    "dimensions_mm": {
+      "width": 186.49,
+      "height": 104.59
+    },
+    "area_cm2": 195.05,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 550,
+    "vias": 57,
+    "track_length_mm": 886.07,
+    "kicad_drc_violations": 286,
+    "kicad_drc_breakdown": {
+      "total_violations": 286,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 83,
+        "copper_edge_clearance": 12,
+        "courtyards_overlap": 9,
+        "invalid_outline": 5,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 52,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 16,
+        "text_height": 106
+      },
+      "by_severity": {
+        "error": 110,
+        "warning": 176
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

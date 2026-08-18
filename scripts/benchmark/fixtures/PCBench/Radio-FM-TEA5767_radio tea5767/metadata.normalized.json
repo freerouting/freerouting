@@ -1,0 +1,51 @@
+{
+  "board_id": "Radio-FM-TEA5767_radio tea5767",
+  "display_name": "Radio-FM-TEA5767_radio tea5767",
+  "pcbench_directory": "PCBs/Radio-FM-TEA5767_radio tea5767",
+  "source": "https://github.com/ololuki/Radio-FM-TEA5767",
+  "author": "ololuki",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.910074+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 284,
+    "vias": 8,
+    "track_length_mm": 775.14,
+    "kicad_drc_violations": 385,
+    "kicad_drc_breakdown": {
+      "total_violations": 385,
+      "unconnected_count": 3,
+      "by_type": {
+        "invalid_outline": 1,
+        "lib_footprint_issues": 4,
+        "silk_over_copper": 165,
+        "silk_overlap": 199,
+        "text_height": 8,
+        "text_thickness": 6,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 384
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

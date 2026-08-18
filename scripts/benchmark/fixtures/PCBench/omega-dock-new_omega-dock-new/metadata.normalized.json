@@ -1,0 +1,53 @@
+{
+  "board_id": "omega-dock-new_omega-dock-new",
+  "display_name": "omega-dock-new_omega-dock-new",
+  "pcbench_directory": "PCBs/omega-dock-new_omega-dock-new",
+  "source": "https://github.com/valerionew/omega-dock-new",
+  "author": "valerionew",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:21.789696+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 29,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 42.9,
+      "height": 26.4
+    },
+    "area_cm2": 11.33,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 321,
+    "vias": 11,
+    "track_length_mm": 206.74,
+    "kicad_drc_violations": 187,
+    "kicad_drc_breakdown": {
+      "total_violations": 187,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 98,
+        "copper_edge_clearance": 36,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 20,
+        "pth_inside_courtyard": 4,
+        "silk_edge_clearance": 16,
+        "silk_over_copper": 3,
+        "silk_overlap": 7,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 141,
+        "warning": 46
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

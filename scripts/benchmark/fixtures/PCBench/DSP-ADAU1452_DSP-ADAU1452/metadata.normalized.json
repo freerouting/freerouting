@@ -1,0 +1,51 @@
+{
+  "board_id": "DSP-ADAU1452_DSP-ADAU1452",
+  "display_name": "DSP-ADAU1452_DSP-ADAU1452",
+  "pcbench_directory": "PCBs/DSP-ADAU1452_DSP-ADAU1452",
+  "source": "https://github.com/ohdsp/DSP-ADAU1452",
+  "author": "ohdsp",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:21.953697+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 116,
+    "components": 377,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 25
+  },
+  "reference": {
+    "segments": 1992,
+    "vias": 355,
+    "track_length_mm": 4113.52,
+    "kicad_drc_violations": 802,
+    "kicad_drc_breakdown": {
+      "total_violations": 802,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 504,
+        "items_not_allowed": 4,
+        "lib_footprint_issues": 199,
+        "silk_over_copper": 52,
+        "silk_overlap": 3,
+        "starved_thermal": 6,
+        "track_dangling": 34
+      },
+      "by_severity": {
+        "error": 514,
+        "warning": 288
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

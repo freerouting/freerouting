@@ -1,0 +1,48 @@
+{
+  "board_id": "CAL430FR_CAL430F_watch",
+  "display_name": "CAL430FR_CAL430F_watch",
+  "pcbench_directory": "PCBs/CAL430FR_CAL430F_watch",
+  "source": "https://github.com/kentN/CAL430FR",
+  "author": "kentN",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:42.669941+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 36.0,
+      "height": 45.5
+    },
+    "area_cm2": 16.38,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 139,
+    "vias": 4,
+    "track_length_mm": 376.69,
+    "kicad_drc_violations": 36,
+    "kicad_drc_breakdown": {
+      "total_violations": 36,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 20,
+        "lib_footprint_issues": 8,
+        "padstack": 4
+      },
+      "by_severity": {
+        "error": 24,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "board_id": "kitspace_USBee32-S2",
+  "display_name": "kitspace_USBee32-S2",
+  "pcbench_directory": "PCBs/kitspace_USBee32-S2",
+  "source": "https://github.com/dhairyashah1/USBee32-S2",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/dhairyashah1/USBee32-S2/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:19:43.642856+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 18,
+    "components": 53,
+    "dimensions_mm": {
+      "width": 28.14,
+      "height": 68.26
+    },
+    "area_cm2": 19.21,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 816,
+    "vias": 93,
+    "track_length_mm": 1152.44,
+    "kicad_drc_violations": 135,
+    "kicad_drc_breakdown": {
+      "total_violations": 135,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "copper_edge_clearance": 8,
+        "hole_clearance": 3,
+        "lib_footprint_issues": 16,
+        "lib_footprint_mismatch": 35,
+        "silk_edge_clearance": 7,
+        "silk_overlap": 6,
+        "text_height": 53,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 14,
+        "warning": 121
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "board": "avr-fuser-32_adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\avr-fuser-32_adapter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 145,
+  "segment_count": 923,
+  "approximate_track_length_mm": 5792.67,
+  "kicad_drc_violations": 572,
+  "generated_at": "2026-08-18T18:30:56.614244+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 572,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 153,
+      "silk_over_copper": 39,
+      "silk_overlap": 199,
+      "solder_mask_bridge": 173,
+      "starved_thermal": 1,
+      "text_height": 5,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 327,
+      "warning": 245
+    }
+  }
+}

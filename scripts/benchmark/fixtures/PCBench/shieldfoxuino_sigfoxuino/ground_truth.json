@@ -1,0 +1,34 @@
+{
+  "board": "shieldfoxuino_sigfoxuino",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\shieldfoxuino_sigfoxuino\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 90,
+  "segment_count": 335,
+  "approximate_track_length_mm": 1198.41,
+  "kicad_drc_violations": 730,
+  "generated_at": "2026-08-18T19:44:12.040946+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 730,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 188,
+      "copper_edge_clearance": 2,
+      "invalid_outline": 10,
+      "padstack": 4,
+      "silk_edge_clearance": 9,
+      "silk_over_copper": 117,
+      "silk_overlap": 54,
+      "solder_mask_bridge": 201,
+      "starved_thermal": 2,
+      "text_height": 48,
+      "track_dangling": 1,
+      "via_diameter": 90
+    },
+    "by_severity": {
+      "error": 497,
+      "warning": 233
+    }
+  }
+}

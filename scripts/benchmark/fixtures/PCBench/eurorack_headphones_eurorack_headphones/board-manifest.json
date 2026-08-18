@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "eurorack_headphones_eurorack_headphones",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 3026311,
+      "sha256": "1825347dcdeaeea04c1220c0ae9f13c3c1bd25ffe1858cc99f799c4990daab38"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 2959548,
+      "sha256": "0b66dc3843f4a9af60a441a1dd0edfa8d0f21405951ac4cce046f83078cf146d"
+    },
+    "metadata_json": {
+      "bytes": 541,
+      "sha256": "2ee702fe6fbd25ce8e65f2caeb25ed5d40441f323b7ea7754697fcc224d3c3a0"
+    },
+    "final_json": {
+      "bytes": 58128,
+      "sha256": "a62599f4eb73b556d4e7479535d343322ee8a983e01f6bc2155a0296457115ae"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:48:50.592481+00:00"
+  }
+}

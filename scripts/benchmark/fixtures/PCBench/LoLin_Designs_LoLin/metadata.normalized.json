@@ -1,0 +1,48 @@
+{
+  "board_id": "LoLin_Designs_LoLin",
+  "display_name": "LoLin_Designs_LoLin",
+  "pcbench_directory": "PCBs/LoLin_Designs_LoLin",
+  "source": "https://github.com/tommck/LoLin_Designs",
+  "author": "tommck",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.497951+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 56.51,
+      "height": 66.04
+    },
+    "area_cm2": 37.32,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 23,
+    "vias": 0,
+    "track_length_mm": 111.01,
+    "kicad_drc_violations": 98,
+    "kicad_drc_breakdown": {
+      "total_violations": 98,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 84,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 10,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 86,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

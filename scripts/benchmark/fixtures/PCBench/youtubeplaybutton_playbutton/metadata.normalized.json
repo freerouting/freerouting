@@ -1,0 +1,53 @@
+{
+  "board_id": "youtubeplaybutton_playbutton",
+  "display_name": "youtubeplaybutton_playbutton",
+  "pcbench_directory": "PCBs/youtubeplaybutton_playbutton",
+  "source": "https://github.com/IdleHandsProject/youtubeplaybutton",
+  "author": "IdleHandsProject",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:27.629764+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 192,
+    "dimensions_mm": {
+      "width": 148.09,
+      "height": 103.94
+    },
+    "area_cm2": 153.92,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 1221,
+    "vias": 274,
+    "track_length_mm": 3419.37,
+    "kicad_drc_violations": 995,
+    "kicad_drc_breakdown": {
+      "total_violations": 995,
+      "unconnected_count": 4,
+      "by_type": {
+        "clearance": 296,
+        "copper_edge_clearance": 2,
+        "holes_co_located": 86,
+        "lib_footprint_issues": 192,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 199,
+        "silk_overlap": 48,
+        "starved_thermal": 1,
+        "text_height": 169
+      },
+      "by_severity": {
+        "error": 299,
+        "warning": 696
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

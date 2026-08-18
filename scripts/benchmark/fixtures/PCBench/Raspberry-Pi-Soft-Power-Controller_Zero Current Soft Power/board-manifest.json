@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Raspberry-Pi-Soft-Power-Controller_Zero Current Soft Power",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 135647,
+      "sha256": "c6562d4a5d9e09b9a88e323702f023c9fff68dc79c2679895777e4a784e0d890"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 89091,
+      "sha256": "3191fa9ebb4bde482f3296c04b1a759574d5b16d1f8434fee778bd0c64198f9b"
+    },
+    "metadata_json": {
+      "bytes": 612,
+      "sha256": "f48f712d00fb2f4485790757ef738d5179a64cd215685a5e3e2ff9b9ecfbd239"
+    },
+    "final_json": {
+      "bytes": 30840,
+      "sha256": "1ac487944420e3fbeb345797a7fe36f5587bbbc824359dcf7d21e0eb5c67d055"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:37:41.400623+00:00"
+  }
+}

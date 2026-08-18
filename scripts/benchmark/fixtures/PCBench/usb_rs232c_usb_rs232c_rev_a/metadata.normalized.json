@@ -1,0 +1,53 @@
+{
+  "board_id": "usb_rs232c_usb_rs232c_rev_a",
+  "display_name": "usb_rs232c_usb_rs232c_rev_a",
+  "pcbench_directory": "PCBs/usb_rs232c_usb_rs232c_rev_a",
+  "source": "https://github.com/4x1md/usb_rs232c",
+  "author": "4x1md",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:59.450139+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 34.7,
+      "height": 14.4
+    },
+    "area_cm2": 5.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 189,
+    "vias": 19,
+    "track_length_mm": 248.25,
+    "kicad_drc_violations": 93,
+    "kicad_drc_breakdown": {
+      "total_violations": 93,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 21,
+        "copper_edge_clearance": 18,
+        "courtyards_overlap": 4,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 33,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 4,
+        "solder_mask_bridge": 4,
+        "text_height": 5
+      },
+      "by_severity": {
+        "error": 48,
+        "warning": 45
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "poncho_fpga_fpga-dongle",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 620340,
+      "sha256": "a75b060275c93aa270dd02e1544b98daaaa3373d4f0d6efc18907b70c6ac0d57"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 494962,
+      "sha256": "d60a1c50c0c1f419396841b0aa5edc0f30578621c735050b5807bef7a182ce14"
+    },
+    "metadata_json": {
+      "bytes": 679,
+      "sha256": "d6c26c93fb598a72c35e9a416a6bff9b3f9f78889af709c2bffc9be47ed84a2d"
+    },
+    "final_json": {
+      "bytes": 563804,
+      "sha256": "1c8864fe34e9fed5fa992f97d8759b1faed8642e5c36e2d423581ca1bb840d4a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:34:53.716097+00:00"
+  }
+}

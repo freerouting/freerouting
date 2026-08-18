@@ -1,0 +1,51 @@
+{
+  "board_id": "S4A-Mini-board_s4a-mini-board",
+  "display_name": "S4A-Mini-board_s4a-mini-board",
+  "pcbench_directory": "PCBs/S4A-Mini-board_s4a-mini-board",
+  "source": "https://github.com/SindormirNet/S4A-Mini-board",
+  "author": "SindormirNet",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:01.398162+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 53.34,
+      "height": 49.53
+    },
+    "area_cm2": 26.42,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 177,
+    "vias": 1,
+    "track_length_mm": 979.47,
+    "kicad_drc_violations": 221,
+    "kicad_drc_breakdown": {
+      "total_violations": 221,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 133,
+        "copper_edge_clearance": 26,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 27,
+        "silk_over_copper": 15,
+        "silk_overlap": 15,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 164,
+        "warning": 57
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

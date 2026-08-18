@@ -1,0 +1,51 @@
+{
+  "board_id": "newer-motor-controllers_stm32f407riser",
+  "display_name": "newer-motor-controllers_stm32f407riser",
+  "pcbench_directory": "PCBs/newer-motor-controllers_stm32f407riser",
+  "source": "https://github.com/lizardmech/newer-motor-controllers",
+  "author": "lizardmech",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.046016+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 86,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 69.09,
+      "height": 41.91
+    },
+    "area_cm2": 28.96,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 732,
+    "vias": 79,
+    "track_length_mm": 1497.53,
+    "kicad_drc_violations": 423,
+    "kicad_drc_breakdown": {
+      "total_violations": 423,
+      "unconnected_count": 5,
+      "by_type": {
+        "clearance": 242,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 57,
+        "silk_over_copper": 82,
+        "silk_overlap": 29,
+        "text_height": 5,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "error": 244,
+        "warning": 179
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

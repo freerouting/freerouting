@@ -1,0 +1,57 @@
+{
+  "board_id": "kitspace_OtterScreen",
+  "display_name": "kitspace_OtterScreen",
+  "pcbench_directory": "PCBs/kitspace_OtterScreen",
+  "source": "https://github.com/Jana-Marie/OtterScreenAdapter",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Jana-Marie/OtterScreenAdapter/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:15:54.418290+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 44.8,
+      "height": 31.4
+    },
+    "area_cm2": 14.07,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 330,
+    "vias": 111,
+    "track_length_mm": 531.4,
+    "kicad_drc_violations": 198,
+    "kicad_drc_breakdown": {
+      "total_violations": 198,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 19,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 9,
+        "hole_clearance": 10,
+        "lib_footprint_issues": 5,
+        "lib_footprint_mismatch": 24,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 3,
+        "solder_mask_bridge": 79,
+        "starved_thermal": 3,
+        "text_height": 33,
+        "track_dangling": 1,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 125,
+        "warning": 73
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,186 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\breakout-boards_50-to-100\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  170291 -81282.4  170509 -81320.9  170718 -81396.8  170910 -81507.7
+            171080 -81650.3  171222 -81820.2  171333 -82012.2  171409 -82220.7
+            171448 -82439.1  171450 -82550  171450 -97790  171448 -97900.9
+            171409 -98119.3  171333 -98327.8  171222 -98519.8  171080 -98689.7
+            170910 -98832.3  170718 -98943.2  170509 -99019.1  170291 -99057.6
+            170180 -99060  157480 -99060  157369 -99057.6  157151 -99019.1
+            156942 -98943.2  156750 -98832.3  156580 -98689.7  156438 -98519.8
+            156327 -98327.8  156251 -98119.3  156212 -97900.9  156210 -97790
+            156210 -82550  156212 -82439.1  156251 -82220.7  156327 -82012.2
+            156438 -81820.2  156580 -81650.3  156750 -81507.7  156942 -81396.8
+            157151 -81320.9  157369 -81282.4  157480 -81280  170180 -81280
+            170291 -81282.4)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 203.2)
+      (clearance 50.8 (type smd_smd))
+    )
+  )
+  (placement
+    (component "myelin-kicad:pin_array_5x2_50mil_smd"
+      (place P1 163860 -95000 front 0 (PN "1.27mm 2x5"))
+    )
+    (component "myelin-kicad:header_02x05_40mil_60mil"
+      (place P2 163910 -84930 front 0 (PN "2.54mm 2x5"))
+    )
+  )
+  (library
+    (image "myelin-kicad:pin_array_5x2_50mil_smd"
+      (outline (path signal 300  -1900 -300  -3400 -300))
+      (outline (path signal 300  -1900 -3600  -3400 -3600))
+      (outline (path signal 300  -3400 -3600  -3400 -300))
+      (pin Rect[T]Pad_760.000000x2400.000000_um 10 2540 1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 9 2540 -1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 8 1270 1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 7 1270 -1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 1 -2540 -1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 2 -2540 1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 3 -1270 -1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 4 -1270 1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 5 0 -1950)
+      (pin Rect[T]Pad_760.000000x2400.000000_um 6 0 1950)
+    )
+    (image "myelin-kicad:header_02x05_40mil_60mil"
+      (outline (path signal 150  -6350 -2540  -6350 0))
+      (outline (path signal 150  -3810 -2540  -6350 -2540))
+      (outline (path signal 150  -3810 0  -3810 -2540))
+      (outline (path signal 150  -6350 0  -3810 0))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -5080 -1270)
+      (pin Round[A]Pad_1524.000000_um 2 -5080 1270)
+      (pin Round[A]Pad_1524.000000_um 3 -2540 -1270)
+      (pin Round[A]Pad_1524.000000_um 4 -2540 1270)
+      (pin Round[A]Pad_1524.000000_um 5 0 -1270)
+      (pin Round[A]Pad_1524.000000_um 6 0 1270)
+      (pin Round[A]Pad_1524.000000_um 7 2540 -1270)
+      (pin Round[A]Pad_1524.000000_um 8 2540 1270)
+      (pin Round[A]Pad_1524.000000_um 9 5080 -1270)
+      (pin Round[A]Pad_1524.000000_um 10 5080 1270)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_760.000000x2400.000000_um
+      (shape (rect F.Cu -380 -1200 380 1200))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect F.Cu -762 -762 762 762))
+      (shape (rect B.Cu -762 -762 762 762))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net /1
+      (pins P1-1 P2-1)
+    )
+    (net /2
+      (pins P1-2 P2-2)
+    )
+    (net /3
+      (pins P1-3 P2-3)
+    )
+    (net /4
+      (pins P1-4 P2-4)
+    )
+    (net /5
+      (pins P1-5 P2-5)
+    )
+    (net /6
+      (pins P1-6 P2-6)
+    )
+    (net /7
+      (pins P1-7 P2-7)
+    )
+    (net /8
+      (pins P1-8 P2-8)
+    )
+    (net /9
+      (pins P1-9 P2-9)
+    )
+    (net /10
+      (pins P1-10 P2-10)
+    )
+    (class kicad_default /1 /10 /2 /3 /4 /5 /6 /7 /8 /9
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 203.2)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 508  161320 -96950  160432 -96950  158830 -95348  158830 -87470
+            158830 -86200)(net /1)(type route))
+    (wire (path F.Cu 508  158830 -83660  160157 -84987.2  160157 -85608.4  160151 -85614.8
+            160151 -86785.2  160157 -86791.6  160157 -90179.2  161320 -91342
+            161320 -93050)(net /2)(type route))
+    (wire (path B.Cu 508  161370 -86200  161409 -86239.4  161409 -94160.3)(net /3)(type route))
+    (wire (path B.Cu 508  162222 -94973.1  162260 -94973.1)(net /3)(type route))
+    (wire (path B.Cu 508  161409 -94160.3  162222 -94973.1)(net /3)(type route))
+    (wire (path F.Cu 508  162321 -94973.1  162260 -94973.1)(net /3)(type route))
+    (wire (path F.Cu 508  162590 -95242  162321 -94973.1)(net /3)(type route))
+    (wire (path F.Cu 508  162590 -96950  162590 -95242)(net /3)(type route))
+    (wire (path F.Cu 254  162590 -96130  162590 -96950)(net /3)(type route))
+    (wire (path F.Cu 508  161370 -83660  162664 -84954.1  162664 -92975.9  162590 -93050)(net /4)(type route))
+    (wire (path B.Cu 508  163868 -95001.1  163868 -86241.9  163910 -86200)(net /5)(type route))
+    (wire (path F.Cu 508  163860 -96950  163860 -95009.2  163868 -95001.1)(net /5)(type route))
+    (wire (path F.Cu 254  163890 -96920  163860 -96950)(net /5)(type route))
+    (wire (path F.Cu 508  163910 -83660  165186 -84936.4  165186 -87632.5  163860 -88958.9
+            163860 -93050)(net /6)(type route))
+    (wire (path F.Cu 508  165130 -96950  165130 -95242)(net /7)(type route))
+    (wire (path B.Cu 508  166450 -94044.8  165936 -94559.1)(net /7)(type route))
+    (wire (path F.Cu 508  165368 -95003.6  165491 -95003.6)(net /7)(type route))
+    (wire (path B.Cu 508  166450 -86200  166450 -94044.8)(net /7)(type route))
+    (wire (path F.Cu 508  165130 -95242  165368 -95003.6)(net /7)(type route))
+    (wire (path B.Cu 508  165936 -94559.1  165491 -95003.6)(net /7)(type route))
+    (wire (path F.Cu 254  165130 -96950  165130 -96130)(net /7)(type route))
+    (wire (path F.Cu 508  166450 -83660  167698 -84908.4  167698 -88036.4  165130 -90604.8
+            165130 -93050)(net /8)(type route))
+    (wire (path B.Cu 508  168990 -86200  168968 -86221.6  168968 -93403.4  167358 -95013.8
+            167320 -95013.8)(net /9)(type route))
+    (wire (path F.Cu 508  167320 -95210  167320 -95013.8)(net /9)(type route))
+    (wire (path F.Cu 508  166400 -96130  167320 -95210)(net /9)(type route))
+    (wire (path F.Cu 508  166400 -96950  166400 -96130)(net /9)(type route))
+    (wire (path F.Cu 254  166430 -96920  166400 -96950)(net /9)(type route))
+    (wire (path F.Cu 508  168990 -83660  170350 -85020.2  170350 -87729.1  166400 -91679.2
+            166400 -93050)(net /10)(type route))
+    (via "Via[0-1]_889:635_um"  162260 -94973.1 (net /3)(type route))
+    (via "Via[0-1]_889:635_um"  163868 -95001.1 (net /5)(type route))
+    (via "Via[0-1]_889:635_um"  165491 -95003.6 (net /7)(type route))
+    (via "Via[0-1]_889:635_um"  167320 -95013.8 (net /9)(type route))
+  )
+)

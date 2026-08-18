@@ -1,0 +1,53 @@
+{
+  "board_id": "PowerGloveUHID_main_board",
+  "display_name": "PowerGloveUHID_main_board",
+  "pcbench_directory": "PCBs/PowerGloveUHID_main_board",
+  "source": "https://github.com/nolanmoore/PowerGloveUHID",
+  "author": "nolanmoore",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.429939+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 29,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 113.54,
+      "height": 55.12
+    },
+    "area_cm2": 62.58,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 420,
+    "vias": 74,
+    "track_length_mm": 2130.99,
+    "kicad_drc_violations": 557,
+    "kicad_drc_breakdown": {
+      "total_violations": 557,
+      "unconnected_count": 16,
+      "by_type": {
+        "clearance": 96,
+        "lib_footprint_issues": 57,
+        "malformed_courtyard": 8,
+        "shorting_items": 39,
+        "silk_edge_clearance": 30,
+        "silk_over_copper": 84,
+        "silk_overlap": 35,
+        "solder_mask_bridge": 202,
+        "via_dangling": 6
+      },
+      "by_severity": {
+        "error": 345,
+        "warning": 212
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

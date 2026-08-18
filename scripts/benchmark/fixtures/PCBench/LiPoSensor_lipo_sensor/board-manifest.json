@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "LiPoSensor_lipo_sensor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 117067,
+      "sha256": "03759706e2cc3f5be5ac8fbf14d49b05a9c29fd3e9f299d21e6e7d4af7a3c9bf"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 95860,
+      "sha256": "f1a2bd4ceb6bee6a9d21eb313846f9153f7a371a602d3dcf265110c21169f1cf"
+    },
+    "metadata_json": {
+      "bytes": 659,
+      "sha256": "eb632ec9498338f6181285abe609638623349803bea910507069246817f40805"
+    },
+    "final_json": {
+      "bytes": 76769,
+      "sha256": "f3dd91b6beb7a1c0615ea6684b36ff075da9bc3c9819502f6c7c88820a46e1d6"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:17:01.984436+00:00"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "board_id": "eBUS-Adapter_Groeger",
+  "display_name": "eBUS-Adapter_Groeger",
+  "pcbench_directory": "PCBs/eBUS-Adapter_Groeger",
+  "source": "https://github.com/jasiek/eBUS-Adapter",
+  "author": "jasiek",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.785990+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 38.0,
+      "height": 38.0
+    },
+    "area_cm2": 14.44,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 82,
+    "vias": 0,
+    "track_length_mm": 297.47,
+    "kicad_drc_violations": 25,
+    "kicad_drc_breakdown": {
+      "total_violations": 25,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 14,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 4
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 21
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

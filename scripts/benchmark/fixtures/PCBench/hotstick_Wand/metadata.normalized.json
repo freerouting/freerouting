@@ -1,0 +1,52 @@
+{
+  "board_id": "hotstick_Wand",
+  "display_name": "hotstick_Wand",
+  "pcbench_directory": "PCBs/hotstick_Wand",
+  "source": "https://github.com/robot-army/hotstick",
+  "author": "robot-army",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:47.826002+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 6,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 7.0
+    },
+    "area_cm2": 3.5,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 356,
+    "vias": 37,
+    "track_length_mm": 561.28,
+    "kicad_drc_violations": 200,
+    "kicad_drc_breakdown": {
+      "total_violations": 200,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "copper_edge_clearance": 68,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 20,
+        "silk_edge_clearance": 2,
+        "solder_mask_bridge": 67,
+        "text_height": 35,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 142,
+        "warning": 58
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "board_id": "retroreflectors_TANGOFLOCK",
+  "display_name": "retroreflectors_TANGOFLOCK",
+  "pcbench_directory": "PCBs/retroreflectors_TANGOFLOCK",
+  "source": "https://github.com/mossmann/retroreflectors",
+  "author": "",
+  "license": "[{'name': 'GNU General Public License v2.0', 'link': 'https://api.github.com/licenses/gpl-2.0'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 31.75,
+      "height": 31.75
+    },
+    "area_cm2": 10.08,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 37,
+    "vias": 0,
+    "track_length_mm": 110.75,
+    "kicad_drc_violations": 21,
+    "kicad_drc_breakdown": {
+      "total_violations": 21,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "copper_edge_clearance": 3,
+        "padstack": 4,
+        "silk_over_copper": 8,
+        "silk_overlap": 1,
+        "text_height": 1,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

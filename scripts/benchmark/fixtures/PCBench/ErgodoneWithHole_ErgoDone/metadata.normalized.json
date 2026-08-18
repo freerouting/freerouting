@@ -1,0 +1,58 @@
+{
+  "board_id": "ErgodoneWithHole_ErgoDone",
+  "display_name": "ErgodoneWithHole_ErgoDone",
+  "pcbench_directory": "PCBs/ErgodoneWithHole_ErgoDone",
+  "source": "https://github.com/randomdot/ErgodoneWithHole",
+  "author": "randomdot",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:49.366020+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 56,
+    "components": 71,
+    "dimensions_mm": {
+      "width": 182.84,
+      "height": 158.87
+    },
+    "area_cm2": 290.48,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1402,
+    "vias": 29,
+    "track_length_mm": 5601.68,
+    "kicad_drc_violations": 1388,
+    "kicad_drc_breakdown": {
+      "total_violations": 1388,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 109,
+        "clearance": 509,
+        "copper_edge_clearance": 20,
+        "hole_clearance": 159,
+        "isolated_copper": 2,
+        "lib_footprint_issues": 22,
+        "padstack": 80,
+        "pth_inside_courtyard": 8,
+        "shorting_items": 200,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 6,
+        "silk_overlap": 61,
+        "solder_mask_bridge": 200,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 1205,
+        "warning": 183
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "board_id": "slushengine-modelx_slushengine_modelx",
+  "display_name": "slushengine-modelx_slushengine_modelx",
+  "pcbench_directory": "PCBs/slushengine-modelx_slushengine_modelx",
+  "source": "https://github.com/Roboteurs/slushengine-modelx",
+  "author": "Roboteurs",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:32.385820+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 120,
+    "components": 223,
+    "dimensions_mm": {
+      "width": 261.0,
+      "height": 100.0
+    },
+    "area_cm2": 261.0,
+    "zones": 50
+  },
+  "reference": {
+    "segments": 3977,
+    "vias": 546,
+    "track_length_mm": 13730.87,
+    "kicad_drc_violations": 1268,
+    "kicad_drc_breakdown": {
+      "total_violations": 1268,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 10,
+        "clearance": 507,
+        "copper_edge_clearance": 2,
+        "hole_clearance": 27,
+        "hole_to_hole": 9,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 199,
+        "padstack": 10,
+        "shorting_items": 18,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 199,
+        "silk_overlap": 53,
+        "solder_mask_bridge": 18,
+        "text_height": 199,
+        "text_thickness": 1,
+        "track_dangling": 10,
+        "via_dangling": 4
+      },
+      "by_severity": {
+        "error": 583,
+        "warning": 685
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "board_id": "hardware-designs_c-trigger",
+  "display_name": "hardware-designs_c-trigger",
+  "pcbench_directory": "PCBs/hardware-designs_c-trigger",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 46.23,
+      "height": 10.67
+    },
+    "area_cm2": 4.93,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 8,
+    "vias": 0,
+    "track_length_mm": 49.48,
+    "kicad_drc_violations": 19,
+    "kicad_drc_breakdown": {
+      "total_violations": 19,
+      "unconnected_count": 0,
+      "by_type": {
+        "silk_edge_clearance": 2,
+        "silk_overlap": 15,
+        "text_height": 2
+      },
+      "by_severity": {
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "board_id": "onion2-breakout_onion2 breakout",
+  "display_name": "onion2-breakout_onion2 breakout",
+  "pcbench_directory": "PCBs/onion2-breakout_onion2 breakout",
+  "source": "https://github.com/washingtonian88/onion2-breakout",
+  "author": "washingtonian88",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:44.929968+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 36,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 39.62,
+      "height": 51.82
+    },
+    "area_cm2": 20.53,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 187,
+    "vias": 14,
+    "track_length_mm": 630.89,
+    "kicad_drc_violations": 168,
+    "kicad_drc_breakdown": {
+      "total_violations": 168,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 146,
+        "lib_footprint_issues": 14,
+        "silk_edge_clearance": 2,
+        "solder_mask_bridge": 4
+      },
+      "by_severity": {
+        "error": 152,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

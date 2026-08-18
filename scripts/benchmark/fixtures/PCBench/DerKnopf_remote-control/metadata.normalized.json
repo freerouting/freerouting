@@ -1,0 +1,51 @@
+{
+  "board_id": "DerKnopf_remote-control",
+  "display_name": "DerKnopf_remote-control",
+  "pcbench_directory": "PCBs/DerKnopf_remote-control",
+  "source": "https://github.com/hzeller/DerKnopf",
+  "author": "hzeller",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.781990+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 13.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 68,
+    "vias": 0,
+    "track_length_mm": 108.82,
+    "kicad_drc_violations": 77,
+    "kicad_drc_breakdown": {
+      "total_violations": 77,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 20,
+        "courtyards_overlap": 2,
+        "drill_out_of_range": 2,
+        "lib_footprint_issues": 13,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 26,
+        "silk_overlap": 11
+      },
+      "by_severity": {
+        "error": 24,
+        "warning": 53
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

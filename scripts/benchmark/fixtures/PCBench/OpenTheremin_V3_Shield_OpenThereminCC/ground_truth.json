@@ -1,0 +1,36 @@
+{
+  "board": "OpenTheremin_V3_Shield_OpenThereminCC",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\OpenTheremin_V3_Shield_OpenThereminCC\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 69,
+  "segment_count": 962,
+  "approximate_track_length_mm": 2107.1,
+  "kicad_drc_violations": 486,
+  "generated_at": "2026-08-18T19:30:18.602288+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 486,
+    "unconnected_count": 1,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 288,
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 9,
+      "invalid_outline": 2,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 109,
+      "malformed_courtyard": 4,
+      "padstack": 4,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 19,
+      "silk_overlap": 8,
+      "solder_mask_bridge": 23,
+      "starved_thermal": 2,
+      "track_dangling": 7
+    },
+    "by_severity": {
+      "error": 337,
+      "warning": 149
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "board": "SparkSwitch_SparkProtectionSwitch",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SparkSwitch_SparkProtectionSwitch\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 72,
+  "segment_count": 142,
+  "approximate_track_length_mm": 350.66,
+  "kicad_drc_violations": 35,
+  "generated_at": "2026-08-18T19:46:50.190217+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 35,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 3,
+      "copper_edge_clearance": 7,
+      "lib_footprint_issues": 15,
+      "silk_over_copper": 10
+    },
+    "by_severity": {
+      "error": 10,
+      "warning": 25
+    }
+  }
+}

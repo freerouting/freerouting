@@ -1,0 +1,48 @@
+{
+  "board_id": "fan_controller_fan_controller",
+  "display_name": "fan_controller_fan_controller",
+  "pcbench_directory": "PCBs/fan_controller_fan_controller",
+  "source": "https://github.com/slightlynybbled/fan_controller",
+  "author": "slightlynybbled",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:53.286066+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 31,
+    "components": 66,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 37.0
+    },
+    "area_cm2": 22.2,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 288,
+    "vias": 23,
+    "track_length_mm": 534.0,
+    "kicad_drc_violations": 116,
+    "kicad_drc_breakdown": {
+      "total_violations": 116,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "lib_footprint_issues": 66,
+        "silk_over_copper": 33,
+        "silk_overlap": 9
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 108
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

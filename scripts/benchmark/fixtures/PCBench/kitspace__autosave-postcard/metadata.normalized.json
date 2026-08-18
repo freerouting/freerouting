@@ -1,0 +1,50 @@
+{
+  "board_id": "kitspace__autosave-postcard",
+  "display_name": "kitspace__autosave-postcard",
+  "pcbench_directory": "PCBs/kitspace__autosave-postcard",
+  "source": "https://github.com/ollyoid/ShenzhenPostcard",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/ollyoid/ShenzhenPostcard/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:13:06.408642+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 23,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 116,
+    "vias": 6,
+    "track_length_mm": 532.83,
+    "kicad_drc_violations": 66,
+    "kicad_drc_breakdown": {
+      "total_violations": 66,
+      "unconnected_count": 1,
+      "by_type": {
+        "copper_edge_clearance": 24,
+        "lib_footprint_issues": 9,
+        "lib_footprint_mismatch": 13,
+        "malformed_courtyard": 1,
+        "silk_over_copper": 18,
+        "silk_overlap": 1
+      },
+      "by_severity": {
+        "error": 25,
+        "warning": 41
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "board": "freeDSPx-AMP-x4_freeDSPx-AMPx4",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\freeDSPx-AMP-x4_freeDSPx-AMPx4\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 51,
+  "segment_count": 663,
+  "approximate_track_length_mm": 1433.82,
+  "kicad_drc_violations": 777,
+  "generated_at": "2026-08-18T18:50:26.574954+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 777,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 32,
+      "clearance": 205,
+      "copper_edge_clearance": 4,
+      "items_not_allowed": 51,
+      "lib_footprint_issues": 199,
+      "malformed_courtyard": 10,
+      "pth_inside_courtyard": 70,
+      "solder_mask_bridge": 206
+    },
+    "by_severity": {
+      "error": 578,
+      "warning": 199
+    }
+  }
+}

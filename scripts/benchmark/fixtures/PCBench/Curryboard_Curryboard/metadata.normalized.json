@@ -1,0 +1,54 @@
+{
+  "board_id": "Curryboard_Curryboard",
+  "display_name": "Curryboard_Curryboard",
+  "pcbench_directory": "PCBs/Curryboard_Curryboard",
+  "source": "https://github.com/javifercep/Curryboard",
+  "author": "javifercep",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:59.978145+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 60,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 49.99
+    },
+    "area_cm2": 25.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1234,
+    "vias": 234,
+    "track_length_mm": 2419.64,
+    "kicad_drc_violations": 563,
+    "kicad_drc_breakdown": {
+      "total_violations": 563,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 199,
+        "copper_edge_clearance": 39,
+        "invalid_outline": 10,
+        "silk_over_copper": 199,
+        "silk_overlap": 38,
+        "starved_thermal": 5,
+        "text_height": 63,
+        "text_thickness": 3,
+        "track_dangling": 5,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 253,
+        "warning": 310
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

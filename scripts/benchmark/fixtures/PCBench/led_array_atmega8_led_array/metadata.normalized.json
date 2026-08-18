@@ -1,0 +1,49 @@
+{
+  "board_id": "led_array_atmega8_led_array",
+  "display_name": "led_array_atmega8_led_array",
+  "pcbench_directory": "PCBs/led_array_atmega8_led_array",
+  "source": "https://github.com/jnduli/led_array_atmega8",
+  "author": "jnduli",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.478151+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 63,
+    "dimensions_mm": {
+      "width": 99.7,
+      "height": 49.53
+    },
+    "area_cm2": 49.38,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 401,
+    "vias": 5,
+    "track_length_mm": 1725.68,
+    "kicad_drc_violations": 380,
+    "kicad_drc_breakdown": {
+      "total_violations": 380,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 299,
+        "lib_footprint_issues": 63,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 15,
+        "silk_overlap": 1
+      },
+      "by_severity": {
+        "error": 299,
+        "warning": 81
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "board_id": "tinyFISH_tinyFISH",
+  "display_name": "tinyFISH_tinyFISH",
+  "pcbench_directory": "PCBs/tinyFISH_tinyFISH",
+  "source": "https://github.com/fishpepper/tinyFISH",
+  "author": "fishpepper",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:22.557705+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 22,
+    "components": 88,
+    "dimensions_mm": {
+      "width": 20.0,
+      "height": 20.0
+    },
+    "area_cm2": 4.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1116,
+    "vias": 55,
+    "track_length_mm": 706.96,
+    "kicad_drc_violations": 611,
+    "kicad_drc_breakdown": {
+      "total_violations": 611,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 136,
+        "copper_edge_clearance": 97,
+        "courtyards_overlap": 62,
+        "hole_clearance": 3,
+        "lib_footprint_issues": 88,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 164,
+        "silk_overlap": 21,
+        "text_height": 17,
+        "track_dangling": 16
+      },
+      "by_severity": {
+        "error": 298,
+        "warning": 313
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

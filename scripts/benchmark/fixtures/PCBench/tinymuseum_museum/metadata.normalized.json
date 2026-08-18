@@ -1,0 +1,49 @@
+{
+  "board_id": "tinymuseum_museum",
+  "display_name": "tinymuseum_museum",
+  "pcbench_directory": "PCBs/tinymuseum_museum",
+  "source": "https://github.com/xxv/tinymuseum",
+  "author": "xxv",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:40.809919+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 45.5
+    },
+    "area_cm2": 27.3,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 210,
+    "vias": 1,
+    "track_length_mm": 681.76,
+    "kicad_drc_violations": 133,
+    "kicad_drc_breakdown": {
+      "total_violations": 133,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 99,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 18,
+        "silk_overlap": 10,
+        "starved_thermal": 3
+      },
+      "by_severity": {
+        "error": 105,
+        "warning": 28
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

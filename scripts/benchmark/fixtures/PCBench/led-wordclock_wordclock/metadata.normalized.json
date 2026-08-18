@@ -1,0 +1,51 @@
+{
+  "board_id": "led-wordclock_wordclock",
+  "display_name": "led-wordclock_wordclock",
+  "pcbench_directory": "PCBs/led-wordclock_wordclock",
+  "source": "https://github.com/Virtex7/led-wordclock",
+  "author": "Virtex7",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.921944+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 57,
+    "components": 75,
+    "dimensions_mm": {
+      "width": 80.01,
+      "height": 50.8
+    },
+    "area_cm2": 40.65,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 814,
+    "vias": 38,
+    "track_length_mm": 1968.85,
+    "kicad_drc_violations": 722,
+    "kicad_drc_breakdown": {
+      "total_violations": 722,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 278,
+        "lib_footprint_issues": 15,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 196,
+        "silk_overlap": 57,
+        "solder_mask_bridge": 76,
+        "text_height": 99
+      },
+      "by_severity": {
+        "error": 354,
+        "warning": 368
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

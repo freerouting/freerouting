@@ -1,0 +1,51 @@
+{
+  "board_id": "minievse_minievse",
+  "display_name": "minievse_minievse",
+  "pcbench_directory": "PCBs/minievse_minievse",
+  "source": "https://github.com/jerkey/minievse",
+  "author": "jerkey",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:32.665824+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 36,
+    "components": 54,
+    "dimensions_mm": {
+      "width": 101.6,
+      "height": 50.8
+    },
+    "area_cm2": 51.61,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 240,
+    "vias": 24,
+    "track_length_mm": 1063.45,
+    "kicad_drc_violations": 121,
+    "kicad_drc_breakdown": {
+      "total_violations": 121,
+      "unconnected_count": 29,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 54,
+        "silk_edge_clearance": 16,
+        "silk_over_copper": 6,
+        "silk_overlap": 38,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 117
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

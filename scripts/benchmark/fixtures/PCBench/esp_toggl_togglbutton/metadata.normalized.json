@@ -1,0 +1,50 @@
+{
+  "board_id": "esp_toggl_togglbutton",
+  "display_name": "esp_toggl_togglbutton",
+  "pcbench_directory": "PCBs/esp_toggl_togglbutton",
+  "source": "https://github.com/DirkHeinke/esp_toggl",
+  "author": "DirkHeinke",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.993745+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 22.86,
+      "height": 50.8
+    },
+    "area_cm2": 11.61,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 45,
+    "vias": 2,
+    "track_length_mm": 238.96,
+    "kicad_drc_violations": 16,
+    "kicad_drc_breakdown": {
+      "total_violations": 16,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 7,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 2,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

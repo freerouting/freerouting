@@ -1,0 +1,54 @@
+{
+  "board_id": "pcbproject_opensda_project_opensda",
+  "display_name": "pcbproject_opensda_project_opensda",
+  "pcbench_directory": "PCBs/pcbproject_opensda_project_opensda",
+  "source": "https://github.com/HarborZhang/pcbproject_opensda",
+  "author": "HarborZhang",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:40.793919+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 50,
+    "dimensions_mm": {
+      "width": 66.04,
+      "height": 38.1
+    },
+    "area_cm2": 25.16,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 697,
+    "vias": 156,
+    "track_length_mm": 1687.42,
+    "kicad_drc_violations": 509,
+    "kicad_drc_breakdown": {
+      "total_violations": 509,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 141,
+        "clearance": 203,
+        "lib_footprint_issues": 50,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 12,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 86,
+        "starved_thermal": 4,
+        "text_height": 1,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 434,
+        "warning": 75
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

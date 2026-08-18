@@ -1,0 +1,47 @@
+{
+  "board_id": "boards_shift-register-demo-v2",
+  "display_name": "boards_shift-register-demo-v2",
+  "pcbench_directory": "PCBs/boards_shift-register-demo-v2",
+  "source": "https://github.com/OSHPark/boards",
+  "author": "OSHPark",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.254019+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 104.14,
+      "height": 35.56
+    },
+    "area_cm2": 37.03,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 203,
+    "vias": 2,
+    "track_length_mm": 932.85,
+    "kicad_drc_violations": 199,
+    "kicad_drc_breakdown": {
+      "total_violations": 199,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 161,
+        "lib_footprint_issues": 36,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 163,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

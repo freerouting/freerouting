@@ -1,0 +1,49 @@
+{
+  "board_id": "nichiden27_PISCIUM",
+  "display_name": "nichiden27_PISCIUM",
+  "pcbench_directory": "PCBs/nichiden27_PISCIUM",
+  "source": "https://github.com/makit0sh/nichiden27",
+  "author": "makit0sh",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.146076+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 108,
+    "components": 73,
+    "dimensions_mm": {
+      "width": 119.38,
+      "height": 78.74
+    },
+    "area_cm2": 94.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 0,
+    "vias": 0,
+    "track_length_mm": 0.0,
+    "kicad_drc_violations": 279,
+    "kicad_drc_breakdown": {
+      "total_violations": 279,
+      "unconnected_count": 156,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 73,
+        "silk_edge_clearance": 41,
+        "silk_overlap": 163
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 277
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

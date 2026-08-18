@@ -1,0 +1,25 @@
+{
+  "board": "ottawa-badges-2016_ottawa-badge-tagger-2016",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ottawa-badges-2016_ottawa-badge-tagger-2016\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 5,
+  "segment_count": 79,
+  "approximate_track_length_mm": 248.46,
+  "kicad_drc_violations": 79,
+  "generated_at": "2026-08-18T19:30:53.931481+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 79,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 61,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 14,
+      "silk_over_copper": 2
+    },
+    "by_severity": {
+      "error": 63,
+      "warning": 16
+    }
+  }
+}

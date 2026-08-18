@@ -1,0 +1,379 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\keytee_pcb\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  163350 -91250  153700 -91250  153595 -91252.3  153389 -91288.7
+            153192 -91360.4  153010 -91465.1  152850 -91599.9  152715 -91760.4
+            152610 -91941.9  152539 -92138.8  152502 -92345.2  152500 -92450
+            152500 -97550  147500 -97550  147500 -92450  147498 -92345.2
+            147461 -92138.8  147390 -91941.9  147285 -91760.4  147150 -91599.9
+            146990 -91465.1  146808 -91360.4  146611 -91288.7  146405 -91252.3
+            146300 -91250  130850 -91250  130850 -86250  163350 -86250  163350 -91250)
+    )
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 150)
+      (clearance 150)
+      (clearance 37.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component "nan-15:C_0402_square"
+      (place C6 138600 -87650 front 90 (PN 1u))
+      (place C1 134350 -88900 front 90 (PN 1u))
+    )
+    (component "nan-15:crystal_MT_32x25"
+      (place Y1 142350 -89450 front 180 (PN "MT 16MHz"))
+    )
+    (component "nan-15:R_0402_square"
+      (place R1 154020 -86900 front 180 (PN 10k))
+      (place R2 137050 -88470 front 180 (PN 22))
+      (place R3 139100 -89060 front 180 (PN 22))
+      (place R4 155250 -90610 front 180 (PN 10k))
+      (place C5 139500 -90550 front 180 (PN 18p))
+    )
+    (component "nan-15:C_0402_square::1"
+      (place C3 145700 -88650 front 135 (PN 100n))
+    )
+    (component "nan-15:C_0402_square::2"
+      (place C4 144850 -90050 front -90 (PN 18p))
+    )
+    (component "nan-15:SolderWirePad_SMD_circular"
+      (place W31 154950 -89150 back 180 (PN TEST_1P))
+    )
+    (component "Symbols:OSHW-Symbol_6.7x6mm_SilkScreen"
+      (place REF*** 150000 -90600 back 0 (PN "OSHW-Symbol_6.7x6mm_SilkScreen"))
+    )
+    (component "nan-15:QFN-32-1EP_5x5mm_Pitch0.5mm_internal_vias"
+      (place IC1 150000 -90000 front 45 (PN ATMEGA32U2))
+    )
+    (component "nan-15:SolderWirePad_SMD"
+      (place W30 132400 -87200 back 270 (PN TEST_1P))
+      (place W28 136550 -87200 back 270 (PN TEST_1P))
+      (place W3 161800 -88750 back 270 (PN TEST_1P))
+      (place W25 157650 -90300 front -90 (PN TEST_1P))
+      (place W17 157650 -87200 front -90 (PN TEST_1P))
+    )
+    (component "nan-15:SolderWirePad_SMD::1"
+      (place W5 132400 -88750 back 90 (PN TEST_1P))
+      (place W7 132400 -90300 back 90 (PN TEST_1P))
+      (place W26 136550 -90300 front 90 (PN TEST_1P))
+      (place W18 157650 -87200 back 90 (PN TEST_1P))
+      (place W8 157650 -90300 back 90 (PN TEST_1P))
+      (place W16 161800 -87200 back 90 (PN TEST_1P))
+      (place W1 161800 -90300 back 90 (PN TEST_1P))
+      (place W29 132400 -87200 front 90 (PN TEST_1P))
+      (place W4 132400 -88750 front 90 (PN TEST_1P))
+      (place W6 132400 -90300 front 90 (PN TEST_1P))
+      (place W27 136550 -87200 front 90 (PN TEST_1P))
+      (place W15 161800 -87200 front 90 (PN TEST_1P))
+      (place W2 161800 -88750 front 90 (PN TEST_1P))
+      (place W0 161800 -90300 front 90 (PN TEST_1P))
+    )
+    (component "nan-15:SolderWirePad_SMD::2"
+      (place W20 148450 -96000 back 180 (PN TEST_1P))
+      (place W22 150000 -96000 back 180 (PN TEST_1P))
+      (place W24 151550 -96000 back 180 (PN TEST_1P))
+      (place W19 148450 -96000 front 0 (PN TEST_1P))
+      (place W21 150000 -96000 front 0 (PN TEST_1P))
+      (place W23 151550 -96000 front 0 (PN TEST_1P))
+    )
+  )
+  (library
+    (image "nan-15:C_0402_square"
+      (outline (polygon signal 0  -945 -595  -945 595  945 595  945 -595))
+      (outline (path signal 150  250 475  -250 475))
+      (outline (path signal 150  -250 -475  250 -475))
+      (pin Rect[T]Pad_560.000000x560.000000_um 1 -534 0)
+      (pin Rect[T]Pad_560.000000x560.000000_um 2 534 0)
+    )
+    (image "nan-15:crystal_MT_32x25"
+      (outline (path signal 150  -1600 1300  1600 1300))
+      (outline (path signal 150  1600 1300  1600 -1300))
+      (outline (path signal 150  1600 -1300  -1600 -1300))
+      (outline (path signal 150  -1600 -1300  -1600 1300))
+      (pin Rect[T]Pad_1300.000000x1000.000000_um 1 -1100 -900)
+      (pin Rect[T]Pad_1300.000000x1000.000000_um 3 1100 -900)
+      (pin Rect[T]Pad_1300.000000x1000.000000_um 3@1 -1100 900)
+      (pin Rect[T]Pad_1300.000000x1000.000000_um 2 1100 900)
+    )
+    (image "nan-15:R_0402_square"
+      (outline (polygon signal 0  -945 595  945 595  945 -595  -945 -595))
+      (outline (path signal 150  250 475  -250 475))
+      (outline (path signal 150  -250 -475  250 -475))
+      (pin Rect[T]Pad_560.000000x560.000000_um 1 -534 0)
+      (pin Rect[T]Pad_560.000000x560.000000_um 2 534 0)
+    )
+    (image "nan-15:C_0402_square::1"
+      (outline (polygon signal 0  -944.999 -595  -944.999 595  944.999 595  944.999 -595))
+      (outline (path signal 150  250 475  -250 475))
+      (outline (path signal 150  -250 -475  250 -475))
+      (pin Rect[T]Pad_560.000000x560.000000_um 1 -534 0)
+      (pin Rect[T]Pad_560.000000x560.000000_um 2 534 0)
+    )
+    (image "nan-15:C_0402_square::2"
+      (outline (polygon signal 0  945 595  945 -595  -945 -595  -945 595))
+      (outline (path signal 150  250 475  -250 475))
+      (outline (path signal 150  -250 -475  250 -475))
+      (pin Rect[T]Pad_560.000000x560.000000_um 1 -534 0)
+      (pin Rect[T]Pad_560.000000x560.000000_um 2 534 0)
+    )
+    (image "nan-15:SolderWirePad_SMD_circular"
+      (pin Round[T]Pad_1500.000000_um 1 0 0)
+    )
+    (image "Symbols:OSHW-Symbol_6.7x6mm_SilkScreen"
+    )
+    (image "nan-15:QFN-32-1EP_5x5mm_Pitch0.5mm_internal_vias"
+      (outline (polygon signal 0  2995 -2995  -2995 -2995  -2995 2995  2995 2995))
+      (outline (path signal 150  2625 2625  2625 2100))
+      (outline (path signal 150  -2625 -2625  -2625 -2100))
+      (outline (path signal 150  2625 -2625  2625 -2100))
+      (outline (path signal 150  -2625 2625  -2100 2625))
+      (outline (path signal 150  -2625 -2625  -2100 -2625))
+      (outline (path signal 150  2625 -2625  2100 -2625))
+      (outline (path signal 150  2625 2625  2100 2625))
+      (pin Round[A]Pad_600.000000_um (rotate 180) 33 -800 -800)
+      (pin Round[A]Pad_600.000000_um (rotate 180) 33@1 800 -800)
+      (pin Round[A]Pad_600.000000_um (rotate 180) 33@2 800 800)
+      (pin RoundRect[T]Pad_1300.000000x1300.000000_391.484000_um_0.000000_0 (rotate 45) 33@3 800 -800)
+      (pin RoundRect[T]Pad_1300.000000x1300.000000_391.484000_um_0.000000_0 (rotate 45) 33@4 -800 800)
+      (pin RoundRect[T]Pad_1300.000000x1300.000000_391.484000_um_0.000000_0 (rotate 45) 33@5 -800 -800)
+      (pin Rect[T]Pad_700.000000x250.000000_um 1 -2400 1750)
+      (pin Rect[T]Pad_700.000000x250.000000_um 2 -2400 1250)
+      (pin Rect[T]Pad_700.000000x250.000000_um 3 -2400 750)
+      (pin Rect[T]Pad_700.000000x250.000000_um 4 -2400 250)
+      (pin Rect[T]Pad_700.000000x250.000000_um 5 -2400 -250)
+      (pin Rect[T]Pad_700.000000x250.000000_um 6 -2400 -750)
+      (pin Rect[T]Pad_700.000000x250.000000_um 7 -2400 -1250)
+      (pin Rect[T]Pad_700.000000x250.000000_um 8 -2400 -1750)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 9 -1750 -2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 10 -1250 -2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 11 -750 -2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 12 -250 -2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 13 250 -2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 14 750 -2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 15 1250 -2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 16 1750 -2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um 17 2400 -1750)
+      (pin Rect[T]Pad_700.000000x250.000000_um 18 2400 -1250)
+      (pin Rect[T]Pad_700.000000x250.000000_um 19 2400 -750)
+      (pin Rect[T]Pad_700.000000x250.000000_um 20 2400 -250)
+      (pin Rect[T]Pad_700.000000x250.000000_um 21 2400 250)
+      (pin Rect[T]Pad_700.000000x250.000000_um 22 2400 750)
+      (pin Rect[T]Pad_700.000000x250.000000_um 23 2400 1250)
+      (pin Rect[T]Pad_700.000000x250.000000_um 24 2400 1750)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 25 1750 2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 26 1250 2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 27 750 2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 28 250 2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 29 -250 2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 30 -750 2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 31 -1250 2400)
+      (pin Rect[T]Pad_700.000000x250.000000_um (rotate 90) 32 -1750 2400)
+      (pin RoundRect[T]Pad_1300.000000x1300.000000_391.484000_um_0.000000_0 (rotate 45) 33@6 800 800)
+      (pin RoundRect[T]Pad_1900.000000x1900.000000_572.169000_um_0.000000_0 (rotate 46) 33@7 0 0)
+      (pin Round[A]Pad_600.000000_um (rotate 180) 33@8 -800 800)
+    )
+    (image "nan-15:SolderWirePad_SMD"
+      (outline (polygon signal 0  695 1345  695 -1345  -695 -1345  -695 1345))
+      (pin Rect[T]Pad_1260.000000x2500.000000_um 1 0 0)
+    )
+    (image "nan-15:SolderWirePad_SMD::1"
+      (outline (polygon signal 0  -695 -1345  -695 1345  695 1345  695 -1345))
+      (pin Rect[T]Pad_1260.000000x2500.000000_um 1 0 0)
+    )
+    (image "nan-15:SolderWirePad_SMD::2"
+      (outline (polygon signal 0  695 -1345  -695 -1345  -695 1345  695 1345))
+      (pin Rect[T]Pad_1260.000000x2500.000000_um 1 0 0)
+    )
+    (padstack Round[T]Pad_1500.000000_um
+      (shape (circle F.Cu 1500))
+      (attach off)
+    )
+    (padstack Round[A]Pad_600.000000_um
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_1300.000000x1300.000000_391.484000_um_0.000000_0
+      (shape (polygon F.Cu 0  -651.484 260  -632.323 380.975  -576.717 490.109  -490.109 576.717
+            -380.975 632.323  -260 651.484  260 651.484  380.975 632.323
+            490.109 576.717  576.717 490.109  632.323 380.975  651.484 260
+            651.484 -260  632.323 -380.975  576.717 -490.109  490.109 -576.717
+            380.975 -632.323  260 -651.484  -260 -651.484  -380.975 -632.323
+            -490.109 -576.717  -576.717 -490.109  -632.323 -380.975  -651.484 -260
+            -651.484 260))
+      (attach off)
+    )
+    (padstack RoundRect[T]Pad_1900.000000x1900.000000_572.169000_um_0.000000_0
+      (shape (polygon F.Cu 0  -952.169 380  -932.673 528.088  -875.513 666.085  -784.585 784.585
+            -666.085 875.513  -528.088 932.673  -379.999 952.168  380 952.169
+            528.088 932.673  666.085 875.513  784.585 784.585  875.513 666.085
+            932.673 528.088  952.168 379.999  952.169 -380  932.673 -528.088
+            875.513 -666.085  784.585 -784.585  666.085 -875.513  528.088 -932.673
+            379.999 -952.168  -380 -952.169  -528.088 -932.673  -666.085 -875.513
+            -784.585 -784.585  -875.513 -666.085  -932.673 -528.088  -952.168 -379.999
+            -952.169 380))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_560.000000x560.000000_um
+      (shape (rect F.Cu -280 -280 280 280))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x250.000000_um
+      (shape (rect F.Cu -350 -125 350 125))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1260.000000x2500.000000_um
+      (shape (rect F.Cu -630 -1250 630 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1300.000000x1000.000000_um
+      (shape (rect F.Cu -650 -500 650 500))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net VCC
+      (pins R1-1 C3-1 C1-1 IC1-4 IC1-31 IC1-32 W6-1)
+    )
+    (net GND
+      (pins C6-1 Y1-3 Y1-3@1 R4-1 C3-2 C5-2 C4-2 C1-2 W31-1 IC1-33 IC1-33@1 IC1-33@2
+        IC1-33@3 IC1-33@4 IC1-33@5 IC1-3 IC1-28 IC1-33@6 IC1-33@7 IC1-33@8 W7-1)
+    )
+    (net "Net-(C4-Pad1)"
+      (pins Y1-1 C4-1 IC1-1)
+    )
+    (net "Net-(C5-Pad1)"
+      (pins Y1-2 C5-1 IC1-2)
+    )
+    (net "Net-(C6-Pad2)"
+      (pins C6-2 IC1-27)
+    )
+    (net "Net-(IC1-Pad13)"
+      (pins R4-2 IC1-13)
+    )
+    (net "Net-(IC1-Pad24)"
+      (pins R1-2 IC1-24 W8-1)
+    )
+    (net "Net-(IC1-Pad29)"
+      (pins R2-1 IC1-29)
+    )
+    (net "Net-(IC1-Pad30)"
+      (pins R3-1 IC1-30)
+    )
+    (net /C2
+      (pins IC1-5 W26-1)
+    )
+    (net /D0
+      (pins IC1-6 W19-1)
+    )
+    (net /D1
+      (pins IC1-7 W20-1)
+    )
+    (net /D2
+      (pins IC1-8 W21-1)
+    )
+    (net /D3
+      (pins IC1-9 W22-1)
+    )
+    (net /D4
+      (pins IC1-10 W23-1)
+    )
+    (net /D5
+      (pins IC1-11 W24-1)
+    )
+    (net /D6
+      (pins IC1-12 W25-1)
+    )
+    (net /B0
+      (pins IC1-14 W0-1)
+    )
+    (net /B1
+      (pins IC1-15 W1-1)
+    )
+    (net /B2
+      (pins IC1-16 W2-1)
+    )
+    (net /B3
+      (pins IC1-17 W3-1)
+    )
+    (net /B4
+      (pins IC1-18 W15-1)
+    )
+    (net /B5
+      (pins IC1-19 W16-1)
+    )
+    (net /B6
+      (pins IC1-20 W17-1)
+    )
+    (net /B7
+      (pins IC1-21 W18-1)
+    )
+    (net /C7
+      (pins IC1-22 W30-1)
+    )
+    (net /C6
+      (pins IC1-23 W29-1)
+    )
+    (net /C5
+      (pins IC1-25 W28-1)
+    )
+    (net /C4
+      (pins IC1-26 W27-1)
+    )
+    (net "Net-(R2-Pad2)"
+      (pins R2-2 W4-1)
+    )
+    (net "Net-(R3-Pad2)"
+      (pins R3-2 W5-1)
+    )
+    (class kicad_default /B0 /B1 /B2 /B3 /B4 /B5 /B6 /B7 /C2 /C4 /C5 /C6 /C7
+      /D0 /D1 /D2 /D3 /D4 /D5 /D6 "Net-(C4-Pad1)" "Net-(C5-Pad1)" "Net-(C6-Pad2)"
+      "Net-(IC1-Pad13)" "Net-(IC1-Pad24)" "Net-(IC1-Pad29)" "Net-(IC1-Pad30)"
+      "Net-(R2-Pad2)" "Net-(R3-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 150)
+        (clearance 150)
+      )
+    )
+    (class Power GND VCC
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 250)
+        (clearance 150)
+      )
+    )
+  )
+  (wiring
+  )
+)

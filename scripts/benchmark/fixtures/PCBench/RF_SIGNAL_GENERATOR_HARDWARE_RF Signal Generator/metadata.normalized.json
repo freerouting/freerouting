@@ -1,0 +1,54 @@
+{
+  "board_id": "RF_SIGNAL_GENERATOR_HARDWARE_RF Signal Generator",
+  "display_name": "RF_SIGNAL_GENERATOR_HARDWARE_RF Signal Generator",
+  "pcbench_directory": "PCBs/RF_SIGNAL_GENERATOR_HARDWARE_RF Signal Generator",
+  "source": "https://github.com/ckflight/RF_SIGNAL_GENERATOR_HARDWARE",
+  "author": "ckflight",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:46.269984+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 57,
+    "components": 98,
+    "dimensions_mm": {
+      "width": 46.61,
+      "height": 22.86
+    },
+    "area_cm2": 10.66,
+    "zones": 36
+  },
+  "reference": {
+    "segments": 942,
+    "vias": 369,
+    "track_length_mm": 1107.79,
+    "kicad_drc_violations": 595,
+    "kicad_drc_breakdown": {
+      "total_violations": 595,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "copper_edge_clearance": 61,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 98,
+        "silk_over_copper": 199,
+        "silk_overlap": 1,
+        "text_height": 128,
+        "text_thickness": 97,
+        "track_dangling": 4,
+        "via_dangling": 4
+      },
+      "by_severity": {
+        "error": 64,
+        "warning": 531
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

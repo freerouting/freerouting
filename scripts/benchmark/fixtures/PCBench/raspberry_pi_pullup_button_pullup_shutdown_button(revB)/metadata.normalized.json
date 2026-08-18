@@ -1,0 +1,46 @@
+{
+  "board_id": "raspberry_pi_pullup_button_pullup_shutdown_button(revB)",
+  "display_name": "raspberry_pi_pullup_button_pullup_shutdown_button(revB)",
+  "pcbench_directory": "PCBs/raspberry_pi_pullup_button_pullup_shutdown_button(revB)",
+  "source": "https://github.com/facelesstech/raspberry_pi_pullup_button",
+  "author": "facelesstech",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.677894+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 6.35,
+      "height": 21.84
+    },
+    "area_cm2": 1.39,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 29,
+    "vias": 1,
+    "track_length_mm": 55.77,
+    "kicad_drc_violations": 34,
+    "kicad_drc_breakdown": {
+      "total_violations": 34,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 4,
+        "silk_over_copper": 30
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 30
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

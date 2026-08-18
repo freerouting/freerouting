@@ -1,0 +1,51 @@
+{
+  "board_id": "sv650sds_sds_tool",
+  "display_name": "sv650sds_sds_tool",
+  "pcbench_directory": "PCBs/sv650sds_sds_tool",
+  "source": "https://github.com/synfinatic/sv650sds",
+  "author": "synfinatic",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:21.857697+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 29.34,
+      "height": 39.88
+    },
+    "area_cm2": 11.7,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 86,
+    "vias": 2,
+    "track_length_mm": 227.52,
+    "kicad_drc_violations": 82,
+    "kicad_drc_breakdown": {
+      "total_violations": 82,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 44,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 17,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 10,
+        "silk_overlap": 1,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 46,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

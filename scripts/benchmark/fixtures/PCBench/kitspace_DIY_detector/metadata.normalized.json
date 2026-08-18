@@ -1,0 +1,50 @@
+{
+  "board_id": "kitspace_DIY_detector",
+  "display_name": "kitspace_DIY_detector",
+  "pcbench_directory": "PCBs/kitspace_DIY_detector",
+  "source": "https://github.com/ozel/DIY_particle_detector",
+  "author": "",
+  "license": "[{'name': 'BSD', 'link': 'https://raw.githubusercontent.com/ozel/DIY_particle_detector/master/LICENSE'}, {'name': 'CERN', 'link': 'https://raw.githubusercontent.com/ozel/DIY_particle_detector/master/hardware/V1.1/CERN_OPEN_HARDWARE_LICENSE_OHL_v_1_2.txt'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:18:04.604492+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 35,
+    "dimensions_mm": {
+      "width": 75.0,
+      "height": 26.0
+    },
+    "area_cm2": 19.5,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 104,
+    "vias": 15,
+    "track_length_mm": 291.88,
+    "kicad_drc_violations": 123,
+    "kicad_drc_breakdown": {
+      "total_violations": 123,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 17,
+        "courtyards_overlap": 5,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 35,
+        "pth_inside_courtyard": 10,
+        "solder_mask_bridge": 55
+      },
+      "by_severity": {
+        "error": 88,
+        "warning": 35
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

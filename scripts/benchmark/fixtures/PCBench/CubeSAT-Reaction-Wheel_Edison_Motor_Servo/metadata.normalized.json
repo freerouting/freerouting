@@ -1,0 +1,47 @@
+{
+  "board_id": "CubeSAT-Reaction-Wheel_Edison_Motor_Servo",
+  "display_name": "CubeSAT-Reaction-Wheel_Edison_Motor_Servo",
+  "pcbench_directory": "PCBs/CubeSAT-Reaction-Wheel_Edison_Motor_Servo",
+  "source": "https://github.com/jalouke/CubeSAT-Reaction-Wheel",
+  "author": "jalouke",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.697742+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 23,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 27.94,
+      "height": 27.94
+    },
+    "area_cm2": 7.81,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 23,
+    "vias": 0,
+    "track_length_mm": 93.91,
+    "kicad_drc_violations": 39,
+    "kicad_drc_breakdown": {
+      "total_violations": 39,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 31,
+        "lib_footprint_issues": 6,
+        "silk_edge_clearance": 2
+      },
+      "by_severity": {
+        "error": 31,
+        "warning": 8
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "board_id": "ESP_BaPoTeSta_ESP_BaPoTeSta",
+  "display_name": "ESP_BaPoTeSta_ESP_BaPoTeSta",
+  "pcbench_directory": "PCBs/ESP_BaPoTeSta_ESP_BaPoTeSta",
+  "source": "https://github.com/schumar/ESP_BaPoTeSta",
+  "author": "schumar",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:26.209748+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 50,
+    "dimensions_mm": {
+      "width": 39.37,
+      "height": 49.53
+    },
+    "area_cm2": 19.5,
+    "zones": 14
+  },
+  "reference": {
+    "segments": 317,
+    "vias": 34,
+    "track_length_mm": 677.35,
+    "kicad_drc_violations": 369,
+    "kicad_drc_breakdown": {
+      "total_violations": 369,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 117,
+        "courtyards_overlap": 14,
+        "items_not_allowed": 3,
+        "lib_footprint_issues": 50,
+        "malformed_courtyard": 6,
+        "silk_over_copper": 7,
+        "silk_overlap": 51,
+        "solder_mask_bridge": 37,
+        "text_height": 84
+      },
+      "by_severity": {
+        "error": 177,
+        "warning": 192
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

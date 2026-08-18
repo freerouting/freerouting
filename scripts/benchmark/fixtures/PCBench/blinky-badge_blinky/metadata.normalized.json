@@ -1,0 +1,49 @@
+{
+  "board_id": "blinky-badge_blinky",
+  "display_name": "blinky-badge_blinky",
+  "pcbench_directory": "PCBs/blinky-badge_blinky",
+  "source": "https://github.com/electronut/blinky-badge",
+  "author": "electronut",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.670000+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 40.0,
+      "height": 39.88
+    },
+    "area_cm2": 15.95,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 91,
+    "vias": 9,
+    "track_length_mm": 412.79,
+    "kicad_drc_violations": 90,
+    "kicad_drc_breakdown": {
+      "total_violations": 90,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 51,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 18,
+        "starved_thermal": 13,
+        "text_height": 7
+      },
+      "by_severity": {
+        "error": 65,
+        "warning": 25
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "board_id": "denbit_basic",
+  "display_name": "denbit_basic",
+  "pcbench_directory": "PCBs/denbit_basic",
+  "source": "https://github.com/theapi/denbit",
+  "author": "theapi",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:53.198065+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 167,
+    "vias": 1,
+    "track_length_mm": 626.21,
+    "kicad_drc_violations": 178,
+    "kicad_drc_breakdown": {
+      "total_violations": 178,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 134,
+        "copper_edge_clearance": 4,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 20,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 6
+      },
+      "by_severity": {
+        "error": 146,
+        "warning": 32
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "board_id": "kitspace_OtterPillG",
+  "display_name": "kitspace_OtterPillG",
+  "pcbench_directory": "PCBs/kitspace_OtterPillG",
+  "source": "https://github.com/Jana-Marie/OtterPill",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/Jana-Marie/OtterPill/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:13:16.529514+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 38,
+    "dimensions_mm": {
+      "width": 43.2,
+      "height": 17.6
+    },
+    "area_cm2": 7.6,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 489,
+    "vias": 119,
+    "track_length_mm": 650.3,
+    "kicad_drc_violations": 234,
+    "kicad_drc_breakdown": {
+      "total_violations": 234,
+      "unconnected_count": 6,
+      "by_type": {
+        "clearance": 5,
+        "copper_edge_clearance": 52,
+        "courtyards_overlap": 10,
+        "hole_clearance": 9,
+        "lib_footprint_issues": 26,
+        "lib_footprint_mismatch": 11,
+        "pth_inside_courtyard": 6,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 2,
+        "silk_overlap": 3,
+        "text_height": 102,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 82,
+        "warning": 152
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

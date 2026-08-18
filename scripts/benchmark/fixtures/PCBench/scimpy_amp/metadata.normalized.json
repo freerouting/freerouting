@@ -1,0 +1,51 @@
+{
+  "board_id": "scimpy_amp",
+  "display_name": "scimpy_amp",
+  "pcbench_directory": "PCBs/scimpy_amp",
+  "source": "https://github.com/maqifrnswa/scimpy",
+  "author": "maqifrnswa",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:21.285690+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 104.14,
+      "height": 51.82
+    },
+    "area_cm2": 53.97,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 361,
+    "vias": 2,
+    "track_length_mm": 1408.36,
+    "kicad_drc_violations": 360,
+    "kicad_drc_breakdown": {
+      "total_violations": 360,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 248,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 51,
+        "silk_edge_clearance": 25,
+        "silk_over_copper": 14,
+        "silk_overlap": 20,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 250,
+        "warning": 110
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

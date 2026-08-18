@@ -1,0 +1,54 @@
+{
+  "board_id": "smart-meter_SmartMeter",
+  "display_name": "smart-meter_SmartMeter",
+  "pcbench_directory": "PCBs/smart-meter_SmartMeter",
+  "source": "https://github.com/tadakado/smart-meter",
+  "author": "tadakado",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.501986+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 36,
+    "components": 260,
+    "dimensions_mm": {
+      "width": 64.14,
+      "height": 72.39
+    },
+    "area_cm2": 46.43,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 465,
+    "vias": 37,
+    "track_length_mm": 1173.97,
+    "kicad_drc_violations": 639,
+    "kicad_drc_breakdown": {
+      "total_violations": 639,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 170,
+        "hole_to_hole": 2,
+        "holes_co_located": 24,
+        "lib_footprint_issues": 199,
+        "padstack": 174,
+        "pth_inside_courtyard": 9,
+        "shorting_items": 5,
+        "silk_over_copper": 1,
+        "solder_mask_bridge": 53,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 239,
+        "warning": 400
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

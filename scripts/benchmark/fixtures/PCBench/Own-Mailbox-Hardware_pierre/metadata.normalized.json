@@ -1,0 +1,61 @@
+{
+  "board_id": "Own-Mailbox-Hardware_pierre",
+  "display_name": "Own-Mailbox-Hardware_pierre",
+  "pcbench_directory": "PCBs/Own-Mailbox-Hardware_pierre",
+  "source": "https://github.com/pparent76/Own-Mailbox-Hardware",
+  "author": "pparent76",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.253995+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 146,
+    "components": 141,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 2426,
+    "vias": 261,
+    "track_length_mm": 2589.38,
+    "kicad_drc_violations": 1114,
+    "kicad_drc_breakdown": {
+      "total_violations": 1114,
+      "unconnected_count": 7,
+      "by_type": {
+        "annular_width": 17,
+        "clearance": 176,
+        "copper_edge_clearance": 35,
+        "drill_out_of_range": 16,
+        "hole_clearance": 94,
+        "holes_co_located": 2,
+        "lib_footprint_issues": 141,
+        "nonmirrored_text_on_back_layer": 19,
+        "padstack": 1,
+        "silk_edge_clearance": 15,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 17,
+        "text_height": 166,
+        "text_thickness": 6,
+        "track_dangling": 9,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 355,
+        "warning": 759
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

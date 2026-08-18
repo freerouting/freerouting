@@ -1,0 +1,48 @@
+{
+  "board_id": "beast-phat_beast-phat",
+  "display_name": "beast-phat_beast-phat",
+  "pcbench_directory": "PCBs/beast-phat_beast-phat",
+  "source": "https://github.com/balena-io-experimental/beast-phat",
+  "author": "balena-io-experimental",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.418138+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 40,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 69.5
+    },
+    "area_cm2": 45.17,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 90,
+    "vias": 7,
+    "track_length_mm": 323.79,
+    "kicad_drc_violations": 67,
+    "kicad_drc_breakdown": {
+      "total_violations": 67,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 38,
+        "lib_footprint_issues": 19,
+        "silk_edge_clearance": 3,
+        "starved_thermal": 7
+      },
+      "by_severity": {
+        "error": 45,
+        "warning": 22
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

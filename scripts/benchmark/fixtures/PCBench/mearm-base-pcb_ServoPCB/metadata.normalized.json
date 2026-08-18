@@ -1,0 +1,48 @@
+{
+  "board_id": "mearm-base-pcb_ServoPCB",
+  "display_name": "mearm-base-pcb_ServoPCB",
+  "pcbench_directory": "PCBs/mearm-base-pcb_ServoPCB",
+  "source": "https://github.com/mimeindustries/mearm-base-pcb",
+  "author": "mimeindustries",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.314090+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 54.3,
+      "height": 68.69
+    },
+    "area_cm2": 37.3,
+    "zones": 16
+  },
+  "reference": {
+    "segments": 68,
+    "vias": 2,
+    "track_length_mm": 319.07,
+    "kicad_drc_violations": 72,
+    "kicad_drc_breakdown": {
+      "total_violations": 72,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 59,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 9,
+        "silk_edge_clearance": 2
+      },
+      "by_severity": {
+        "error": 61,
+        "warning": 11
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

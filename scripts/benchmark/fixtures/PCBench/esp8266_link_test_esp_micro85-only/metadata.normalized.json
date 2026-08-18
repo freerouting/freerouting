@@ -1,0 +1,50 @@
+{
+  "board_id": "esp8266_link_test_esp_micro85-only",
+  "display_name": "esp8266_link_test_esp_micro85-only",
+  "pcbench_directory": "PCBs/esp8266_link_test_esp_micro85-only",
+  "source": "https://github.com/cnlohr/esp8266_link_test",
+  "author": "cnlohr",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:23.121711+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 12.45,
+      "height": 15.11
+    },
+    "area_cm2": 1.88,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 176,
+    "vias": 0,
+    "track_length_mm": 129.1,
+    "kicad_drc_violations": 92,
+    "kicad_drc_breakdown": {
+      "total_violations": 92,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 27,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 24,
+        "silk_overlap": 8,
+        "text_height": 23,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "error": 27,
+        "warning": 65
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

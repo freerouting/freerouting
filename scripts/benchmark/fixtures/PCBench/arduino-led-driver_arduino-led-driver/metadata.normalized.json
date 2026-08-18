@@ -1,0 +1,53 @@
+{
+  "board_id": "arduino-led-driver_arduino-led-driver",
+  "display_name": "arduino-led-driver_arduino-led-driver",
+  "pcbench_directory": "PCBs/arduino-led-driver_arduino-led-driver",
+  "source": "https://github.com/daniestevez/arduino-led-driver",
+  "author": "daniestevez",
+  "license": "The Unlicense",
+  "license_spdx": "Unlicense",
+  "retrieved_at": "2023-08-17T17:22:55.178088+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 57,
+    "components": 118,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 15
+  },
+  "reference": {
+    "segments": 945,
+    "vias": 145,
+    "track_length_mm": 2099.36,
+    "kicad_drc_violations": 372,
+    "kicad_drc_breakdown": {
+      "total_violations": 372,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 216,
+        "copper_edge_clearance": 7,
+        "holes_co_located": 1,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 118,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 5,
+        "starved_thermal": 17,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 241,
+        "warning": 131
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,268 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\retroreflectors_SALSAFLOCK\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  140400 -121400  109600 -121400  109600 -68600  140400 -68600
+            140400 -121400)
+    )
+    (via "Via[0-1]_889:381_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component "GSG-0402-SHORT-10MIL"
+      (place R4 132500 -91900 front 180 (PN 0))
+      (place R3 137200 -99600 front 180 (PN 0))
+    )
+    (component "GSG-0402"
+      (place R2 134800 -99600 front 0 (PN 10k))
+      (place R1 137400 -94800 front 90 (PN DNP))
+      (place R5 135400 -87300 front 180 (PN 10k))
+      (place C2 133700 -100900 front 0 (PN 1uF))
+      (place R6 136000 -100900 front 0 (PN 10k))
+    )
+    (component "GSG-50MIL-HEADER-1x2-TH"
+      (place P2 139000 -95000 front 90 (PN ANTENNA))
+    )
+    (component "GSG-DB15-VGA"
+      (place J1 125000 -110000 front 0 (PN "DB15-VGA"))
+      (place J2 125000 -80000 front 180 (PN "DB15-VGA"))
+    )
+    (component "GSG-0805"
+      (place C1 136700 -90200 front -90 (PN 22uF))
+    )
+    (component "GSG-SOT23-3"
+      (place D2 133200 -88700 front 90 (PN "DIODE-SOT23-3"))
+      (place D1 134700 -93200 front 180 (PN "DIODE-SOT23-3"))
+    )
+    (component "GSG-SOT143B-GDS"
+      (place Q1 136600 -97400 front 0 (PN MOSFET_N))
+      (place Q2 133300 -97300 front -90 (PN MOSFET_N))
+    )
+  )
+  (library
+    (image "GSG-0402-SHORT-10MIL"
+      (outline (path signal 203.2  889 381  889 -381))
+      (outline (path signal 203.2  889 -381  -889 -381))
+      (outline (path signal 203.2  -889 -381  -889 381))
+      (outline (path signal 203.2  -889 381  889 381))
+      (pin Rect[T]Pad_508.000000x558.800000_um 2 533.4 0)
+      (pin Rect[T]Pad_508.000000x558.800000_um 1 -533.4 0)
+      (pin Rect[T]Pad_762.000000x254.000000_um @1 0 0)
+    )
+    (image "GSG-0402"
+      (outline (path signal 203.2  889 381  889 -381))
+      (outline (path signal 203.2  889 -381  -889 -381))
+      (outline (path signal 203.2  -889 -381  -889 381))
+      (outline (path signal 203.2  -889 381  889 381))
+      (pin Rect[T]Pad_508.000000x558.800000_um 2 533.4 0)
+      (pin Rect[T]Pad_508.000000x558.800000_um 1 -533.4 0)
+    )
+    (image "GSG-50MIL-HEADER-1x2-TH"
+      (pin Rect[A]Pad_1066.800000x1066.800000_um 1 -635 0)
+      (pin Round[A]Pad_1066.800000_um 2 635 0)
+    )
+    (image "GSG-DB15-VGA"
+      (outline (path signal 150  -15410 -11430  15410 -11430))
+      (outline (path signal 150  15410 4670  -15410 4670))
+      (outline (path signal 150  15410 -11430  15410 4670))
+      (outline (path signal 150  -15410 -11430  -15410 4670))
+      (pin Round[A]Pad_5000.000000_um 0 -12495 0)
+      (pin Round[A]Pad_5000.000000_um 0@1 12495 0)
+      (pin Round[A]Pad_1500.000000_um 6 5455 0)
+      (pin Round[A]Pad_1500.000000_um 7 3165 0)
+      (pin Round[A]Pad_1500.000000_um 8 875 0)
+      (pin Round[A]Pad_1500.000000_um 9 -1415 0)
+      (pin Round[A]Pad_1500.000000_um 10 -3705 0)
+      (pin Round[A]Pad_1500.000000_um 1 4310 2540)
+      (pin Round[A]Pad_1500.000000_um 2 2020 2540)
+      (pin Round[A]Pad_1500.000000_um 3 -270 2540)
+      (pin Round[A]Pad_1500.000000_um 4 -2560 2540)
+      (pin Round[A]Pad_1500.000000_um 5 -4850 2540)
+      (pin Round[A]Pad_1500.000000_um 11 4310 -2540)
+      (pin Round[A]Pad_1500.000000_um 12 2020 -2540)
+      (pin Round[A]Pad_1500.000000_um 13 -270 -2540)
+      (pin Round[A]Pad_1500.000000_um 14 -2560 -2540)
+      (pin Round[A]Pad_1500.000000_um 15 -4850 -2540)
+    )
+    (image "GSG-0805"
+      (outline (path signal 203.2  -1778 914.4  1778 914.4))
+      (outline (path signal 203.2  1778 914.4  1778 -914.4))
+      (outline (path signal 203.2  1778 -914.4  -1778 -914.4))
+      (outline (path signal 203.2  -1778 -914.4  -1778 914.4))
+      (pin Rect[T]Pad_1150.620000x1440.180000_um 2 1016 0)
+      (pin Rect[T]Pad_1150.620000x1440.180000_um 1 -1016 0)
+    )
+    (image "GSG-SOT23-3"
+      (outline (path signal 127  -1524 381  1524 381))
+      (outline (path signal 127  1524 381  1524 -381))
+      (outline (path signal 127  1524 -381  -1524 -381))
+      (outline (path signal 127  -1524 -381  -1524 381))
+      (pin Rect[T]Pad_914.400000x914.400000_um 2 -889 1016)
+      (pin Rect[T]Pad_914.400000x914.400000_um 1 889 1016)
+      (pin Rect[T]Pad_914.400000x914.400000_um 3 0 -1016)
+    )
+    (image "GSG-SOT143B-GDS"
+      (outline (path signal 150  -1500 700  1500 700))
+      (outline (path signal 150  1500 700  1500 -700))
+      (outline (path signal 150  1500 -700  -1500 -700))
+      (outline (path signal 150  -1500 -700  -1500 700))
+      (pin Rect[T]Pad_1000.000000x700.000000_um B -750 -1000)
+      (pin Rect[T]Pad_600.000000x700.000000_um S 950 -1000)
+      (pin Rect[T]Pad_600.000000x700.000000_um D 950 1000)
+      (pin Rect[T]Pad_600.000000x700.000000_um G -950 1000)
+    )
+    (padstack Round[A]Pad_1066.800000_um
+      (shape (circle F.Cu 1066.8))
+      (shape (circle B.Cu 1066.8))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1500.000000_um
+      (shape (circle F.Cu 1500))
+      (shape (circle B.Cu 1500))
+      (attach off)
+    )
+    (padstack Round[A]Pad_5000.000000_um
+      (shape (circle F.Cu 5000))
+      (shape (circle B.Cu 5000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_508.000000x558.800000_um
+      (shape (rect F.Cu -254 -279.4 254 279.4))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x700.000000_um
+      (shape (rect F.Cu -300 -350 300 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_762.000000x254.000000_um
+      (shape (rect F.Cu -381 -127 381 127))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_914.400000x914.400000_um
+      (shape (rect F.Cu -457.2 -457.2 457.2 457.2))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x700.000000_um
+      (shape (rect F.Cu -500 -350 500 350))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1066.800000x1066.800000_um
+      (shape (rect F.Cu -533.4 -533.4 533.4 533.4))
+      (shape (rect B.Cu -533.4 -533.4 533.4 533.4))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1150.620000x1440.180000_um
+      (shape (rect F.Cu -575.31 -720.09 575.31 720.09))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:381_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net /DRAIN
+      (pins R1-1 P2-1 Q1-D)
+    )
+    (net /GATE
+      (pins R2-1 C2-2 R6-1 Q1-G Q2-D Q2-G)
+    )
+    (net /KEY
+      (pins J1-9 J2-9 D1-1)
+    )
+    (net /RED
+      (pins J1-1 J2-1 C2-1)
+    )
+    (net /SCL
+      (pins J1-15 J2-15 D2-1)
+    )
+    (net /SHIELD
+      (pins J1-0 J1-0@1 J2-0 J2-0@1)
+    )
+    (net /SOURCE
+      (pins R2-2 R3-2 Q1-B Q1-S)
+    )
+    (net /VGAGND
+      (pins R4-2 J1-5 J2-5)
+    )
+    (net GND
+      (pins R1-2 P2-2 C1-1 Q2-B Q2-S)
+    )
+    (net "N-000001"
+      (pins J1-10 J2-10)
+    )
+    (net "N-0000010"
+      (pins J1-13 J2-13)
+    )
+    (net "N-0000011"
+      (pins J1-14 J2-14)
+    )
+    (net "N-0000014"
+      (pins R5-2 D2-3)
+    )
+    (net "N-0000016"
+      (pins R5-1 R6-2 C1-2 D1-3)
+    )
+    (net "N-000002"
+      (pins J1-7 J2-7)
+    )
+    (net "N-000003"
+      (pins J1-2 J2-2)
+    )
+    (net "N-000004"
+      (pins J1-3 J2-3)
+    )
+    (net "N-000005"
+      (pins J1-4 J2-4)
+    )
+    (net "N-000006"
+      (pins J1-6 J2-6)
+    )
+    (net "N-000007"
+      (pins J1-8 J2-8)
+    )
+    (net "N-000008"
+      (pins J1-11 J2-11)
+    )
+    (net "N-000009"
+      (pins J1-12 J2-12)
+    )
+    (class kicad_default /DRAIN /GATE /KEY /RED /SCL /SHIELD /SOURCE /VGAGND
+      GND "N-000001" "N-0000010" "N-0000011" "N-0000014" "N-0000016" "N-000002"
+      "N-000003" "N-000004" "N-000005" "N-000006" "N-000007" "N-000008" "N-000009"
+      (circuit
+        (use_via "Via[0-1]_889:381_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

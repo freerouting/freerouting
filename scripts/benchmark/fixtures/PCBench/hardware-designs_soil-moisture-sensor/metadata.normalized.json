@@ -1,0 +1,49 @@
+{
+  "board_id": "hardware-designs_soil-moisture-sensor",
+  "display_name": "hardware-designs_soil-moisture-sensor",
+  "pcbench_directory": "PCBs/hardware-designs_soil-moisture-sensor",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 148.25,
+      "height": 46.5
+    },
+    "area_cm2": 68.94,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 56,
+    "vias": 2,
+    "track_length_mm": 328.1,
+    "kicad_drc_violations": 67,
+    "kicad_drc_breakdown": {
+      "total_violations": 67,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 39,
+        "copper_edge_clearance": 5,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 4,
+        "text_height": 17
+      },
+      "by_severity": {
+        "error": 44,
+        "warning": 23
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

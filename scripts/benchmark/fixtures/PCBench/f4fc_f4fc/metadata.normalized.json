@@ -1,0 +1,55 @@
+{
+  "board_id": "f4fc_f4fc",
+  "display_name": "f4fc_f4fc",
+  "pcbench_directory": "PCBs/f4fc_f4fc",
+  "source": "https://github.com/chickadee-tech/f4fc",
+  "author": "chickadee-tech",
+  "license": "Creative Commons Attribution 4.0 International",
+  "license_spdx": "CC-BY-4.0",
+  "retrieved_at": "2023-08-17T17:22:50.670035+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 63,
+    "components": 63,
+    "dimensions_mm": {
+      "width": 36.0,
+      "height": 36.0
+    },
+    "area_cm2": 12.96,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 1502,
+    "vias": 162,
+    "track_length_mm": 1942.34,
+    "kicad_drc_violations": 379,
+    "kicad_drc_breakdown": {
+      "total_violations": 379,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 87,
+        "copper_edge_clearance": 45,
+        "courtyards_overlap": 4,
+        "items_not_allowed": 162,
+        "lib_footprint_issues": 61,
+        "padstack": 4,
+        "silk_edge_clearance": 5,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 3,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 305,
+        "warning": 74
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

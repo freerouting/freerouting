@@ -1,0 +1,58 @@
+{
+  "board_id": "zx-tsid_zx-tsid",
+  "display_name": "zx-tsid_zx-tsid",
+  "pcbench_directory": "PCBs/zx-tsid_zx-tsid",
+  "source": "https://github.com/UzixLS/zx-tsid",
+  "author": "UzixLS",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:28.621776+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 30,
+    "components": 67,
+    "dimensions_mm": {
+      "width": 73.8,
+      "height": 37.3
+    },
+    "area_cm2": 27.53,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1555,
+    "vias": 144,
+    "track_length_mm": 3420.44,
+    "kicad_drc_violations": 371,
+    "kicad_drc_breakdown": {
+      "total_violations": 371,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 40,
+        "copper_edge_clearance": 44,
+        "courtyards_overlap": 13,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 44,
+        "lib_footprint_mismatch": 19,
+        "pth_inside_courtyard": 1,
+        "shorting_items": 2,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 16,
+        "silk_overlap": 16,
+        "solder_mask_bridge": 92,
+        "starved_thermal": 3,
+        "text_height": 75
+      },
+      "by_severity": {
+        "error": 197,
+        "warning": 174
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "board_id": "NiMH-Charger_NiMH Charger",
+  "display_name": "NiMH-Charger_NiMH Charger",
+  "pcbench_directory": "PCBs/NiMH-Charger_NiMH Charger",
+  "source": "https://github.com/deefstes/NiMH-Charger",
+  "author": "deefstes",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.302090+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 93.98,
+      "height": 62.87
+    },
+    "area_cm2": 59.09,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 143,
+    "vias": 0,
+    "track_length_mm": 1012.22,
+    "kicad_drc_violations": 97,
+    "kicad_drc_breakdown": {
+      "total_violations": 97,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 48,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 24,
+        "silk_over_copper": 9,
+        "silk_overlap": 13
+      },
+      "by_severity": {
+        "error": 51,
+        "warning": 46
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

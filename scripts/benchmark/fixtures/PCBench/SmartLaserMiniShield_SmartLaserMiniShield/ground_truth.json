@@ -1,0 +1,27 @@
+{
+  "board": "SmartLaserMiniShield_SmartLaserMiniShield",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SmartLaserMiniShield_SmartLaserMiniShield\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 18,
+  "segment_count": 291,
+  "approximate_track_length_mm": 1198.31,
+  "kicad_drc_violations": 268,
+  "generated_at": "2026-08-18T19:45:39.003760+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 268,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 100,
+      "invalid_outline": 1,
+      "silk_over_copper": 112,
+      "silk_overlap": 9,
+      "text_height": 30,
+      "text_thickness": 16
+    },
+    "by_severity": {
+      "error": 101,
+      "warning": 167
+    }
+  }
+}

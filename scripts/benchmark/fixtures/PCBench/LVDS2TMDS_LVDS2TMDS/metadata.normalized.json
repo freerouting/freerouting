@@ -1,0 +1,48 @@
+{
+  "board_id": "LVDS2TMDS_LVDS2TMDS",
+  "display_name": "LVDS2TMDS_LVDS2TMDS",
+  "pcbench_directory": "PCBs/LVDS2TMDS_LVDS2TMDS",
+  "source": "https://github.com/chriz2600/LVDS2TMDS",
+  "author": "chriz2600",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:38.973898+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 29,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 43.75,
+      "height": 19.0
+    },
+    "area_cm2": 8.31,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 71,
+    "vias": 13,
+    "track_length_mm": 273.78,
+    "kicad_drc_violations": 52,
+    "kicad_drc_breakdown": {
+      "total_violations": 52,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "lib_footprint_issues": 26,
+        "silk_edge_clearance": 2,
+        "solder_mask_bridge": 18
+      },
+      "by_severity": {
+        "error": 24,
+        "warning": 28
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "board": "esp32-ethernet_esp32-ethernet",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\esp32-ethernet_esp32-ethernet\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 61,
+  "segment_count": 625,
+  "approximate_track_length_mm": 1317.06,
+  "kicad_drc_violations": 154,
+  "generated_at": "2026-08-18T18:46:09.135798+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 154,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 86,
+      "copper_edge_clearance": 11,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 40,
+      "pth_inside_courtyard": 4,
+      "silk_edge_clearance": 5,
+      "silk_over_copper": 2,
+      "starved_thermal": 2,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 104,
+      "warning": 50
+    }
+  }
+}

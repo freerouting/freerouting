@@ -1,0 +1,53 @@
+{
+  "board_id": "cdi-tach_cdi-tach",
+  "display_name": "cdi-tach_cdi-tach",
+  "pcbench_directory": "PCBs/cdi-tach_cdi-tach",
+  "source": "https://github.com/windsorschmidt/cdi-tach",
+  "author": "windsorschmidt",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:00.730154+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 70,
+    "dimensions_mm": {
+      "width": 201.38,
+      "height": 119.75
+    },
+    "area_cm2": 241.15,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 948,
+    "vias": 99,
+    "track_length_mm": 2658.0,
+    "kicad_drc_violations": 575,
+    "kicad_drc_breakdown": {
+      "total_violations": 575,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 403,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 70,
+        "silk_edge_clearance": 8,
+        "silk_over_copper": 33,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 43,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "error": 456,
+        "warning": 119
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

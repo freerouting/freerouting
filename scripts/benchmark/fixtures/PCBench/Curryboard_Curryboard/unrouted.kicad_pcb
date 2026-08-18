@@ -1,0 +1,3631 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 16)
+    (tracks 1331)
+    (zones 0)
+    (modules 60)
+    (nets 67)
+  )
+
+  (page A3)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+  )
+
+  (setup
+    (last_trace_width 0.2)
+    (user_trace_width 0.3)
+    (user_trace_width 0.4)
+    (user_trace_width 0.5)
+    (user_trace_width 0.7)
+    (user_trace_width 0.9)
+    (user_trace_width 1)
+    (trace_clearance 0.15)
+    (zone_clearance 0.508)
+    (zone_45_only yes)
+    (trace_min 0.15)
+    (via_size 0.6)
+    (via_drill 0.3)
+    (via_min_size 0.6)
+    (via_min_drill 0.3)
+    (user_via 0.8 0.4)
+    (user_via 1 0.45)
+    (user_via 1.1 0.5)
+    (uvia_size 0.508)
+    (uvia_drill 0.127)
+    (uvias_allowed no)
+    (uvia_min_size 0.3)
+    (uvia_min_drill 0.1)
+    (edge_width 0.15)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1 1)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 4.5 1.75)
+    (pad_drill 0)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x00030_ffffffff)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.150000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue false)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "GerberFiles/"))
+  )
+
+  (net 0 "")
+  (net 1 "/LIN Interface/EN_LIN1")
+  (net 2 "/LIN Interface/EN_LIN2")
+  (net 3 "/LIN Interface/LIN1")
+  (net 4 "/LIN Interface/LIN2")
+  (net 5 "/LIN Interface/RX_LIN1")
+  (net 6 "/LIN Interface/RX_LIN2")
+  (net 7 "/LIN Interface/TX_LIN1")
+  (net 8 "/LIN Interface/TX_LIN2")
+  (net 9 /OSC32_IN)
+  (net 10 /OSC32_OUT)
+  (net 11 /OSC_IN)
+  (net 12 /OSC_OUT)
+  (net 13 /Peripherals/5V)
+  (net 14 /Peripherals/A1)
+  (net 15 /Peripherals/A10)
+  (net 16 /Peripherals/A11)
+  (net 17 /Peripherals/A2)
+  (net 18 /Peripherals/A3)
+  (net 19 /Peripherals/A7)
+  (net 20 /Peripherals/A8)
+  (net 21 /Peripherals/A9)
+  (net 22 /Peripherals/GPIO1)
+  (net 23 /Peripherals/GPIO2)
+  (net 24 /Peripherals/GPIO3)
+  (net 25 /Peripherals/GPIO4)
+  (net 26 /Peripherals/LED1)
+  (net 27 /Peripherals/LED2)
+  (net 28 /Peripherals/LED3)
+  (net 29 /Peripherals/LED4)
+  (net 30 /Peripherals/PWM1)
+  (net 31 /Peripherals/PWM2)
+  (net 32 /Peripherals/PWM3)
+  (net 33 /Peripherals/PWM4)
+  (net 34 /Peripherals/RESET_BUTTON)
+  (net 35 /Peripherals/RX)
+  (net 36 /Peripherals/SCL)
+  (net 37 /Peripherals/SDA)
+  (net 38 /Peripherals/SPI_MISO)
+  (net 39 /Peripherals/SPI_MOSI)
+  (net 40 /Peripherals/SPI_NSS)
+  (net 41 /Peripherals/SPI_SCLK)
+  (net 42 /Peripherals/TX)
+  (net 43 "/Power Interface/12V")
+  (net 44 "/Power Interface/3V3")
+  (net 45 "/Power Interface/VDDA")
+  (net 46 /SWCLK)
+  (net 47 /SWDIO)
+  (net 48 /SWO)
+  (net 49 GND)
+  (net 50 N-0000047)
+  (net 51 N-0000048)
+  (net 52 N-0000049)
+  (net 53 N-0000059)
+  (net 54 N-0000060)
+  (net 55 N-0000062)
+  (net 56 N-0000063)
+  (net 57 N-0000067)
+  (net 58 N-0000068)
+  (net 59 N-0000069)
+  (net 60 N-0000071)
+  (net 61 N-0000077)
+  (net 62 N-0000082)
+  (net 63 N-0000083)
+  (net 64 N-0000084)
+  (net 65 N-0000085)
+  (net 66 N-0000086)
+
+  (net_class Default "This is the default net class."
+    (clearance 0.15)
+    (trace_width 0.2)
+    (via_dia 0.6)
+    (via_drill 0.3)
+    (uvia_dia 0.508)
+    (uvia_drill 0.127)
+    (add_net "/LIN Interface/EN_LIN1")
+    (add_net "/LIN Interface/EN_LIN2")
+    (add_net "/LIN Interface/LIN1")
+    (add_net "/LIN Interface/LIN2")
+    (add_net "/LIN Interface/RX_LIN1")
+    (add_net "/LIN Interface/RX_LIN2")
+    (add_net "/LIN Interface/TX_LIN1")
+    (add_net "/LIN Interface/TX_LIN2")
+    (add_net /OSC32_IN)
+    (add_net /OSC32_OUT)
+    (add_net /OSC_IN)
+    (add_net /OSC_OUT)
+    (add_net /Peripherals/5V)
+    (add_net /Peripherals/A1)
+    (add_net /Peripherals/A10)
+    (add_net /Peripherals/A11)
+    (add_net /Peripherals/A2)
+    (add_net /Peripherals/A3)
+    (add_net /Peripherals/A7)
+    (add_net /Peripherals/A8)
+    (add_net /Peripherals/A9)
+    (add_net /Peripherals/GPIO1)
+    (add_net /Peripherals/GPIO2)
+    (add_net /Peripherals/GPIO3)
+    (add_net /Peripherals/GPIO4)
+    (add_net /Peripherals/LED1)
+    (add_net /Peripherals/LED2)
+    (add_net /Peripherals/LED3)
+    (add_net /Peripherals/LED4)
+    (add_net /Peripherals/PWM1)
+    (add_net /Peripherals/PWM2)
+    (add_net /Peripherals/PWM3)
+    (add_net /Peripherals/PWM4)
+    (add_net /Peripherals/RESET_BUTTON)
+    (add_net /Peripherals/RX)
+    (add_net /Peripherals/SCL)
+    (add_net /Peripherals/SDA)
+    (add_net /Peripherals/SPI_MISO)
+    (add_net /Peripherals/SPI_MOSI)
+    (add_net /Peripherals/SPI_NSS)
+    (add_net /Peripherals/SPI_SCLK)
+    (add_net /Peripherals/TX)
+    (add_net "/Power Interface/12V")
+    (add_net "/Power Interface/3V3")
+    (add_net "/Power Interface/VDDA")
+    (add_net /SWCLK)
+    (add_net /SWDIO)
+    (add_net /SWO)
+    (add_net GND)
+    (add_net N-0000047)
+    (add_net N-0000048)
+    (add_net N-0000049)
+    (add_net N-0000059)
+    (add_net N-0000060)
+    (add_net N-0000062)
+    (add_net N-0000063)
+    (add_net N-0000067)
+    (add_net N-0000068)
+    (add_net N-0000069)
+    (add_net N-0000071)
+    (add_net N-0000077)
+    (add_net N-0000082)
+    (add_net N-0000083)
+    (add_net N-0000084)
+    (add_net N-0000085)
+    (add_net N-0000086)
+  )
+
+  (module SOT23-5 (layer F.Cu) (tedit 4ECF78EF) (tstamp 524A9AE8)
+    (at 229.178 135.287 90)
+    (path /524A720C/524A9A62)
+    (attr smd)
+    (fp_text reference U2 (at 2.19964 -0.29972 180) (layer F.SilkS)
+      (effects (font (size 0.635 0.635) (thickness 0.127)))
+    )
+    (fp_text value LMR62014X (at 0 0 90) (layer F.SilkS)
+      (effects (font (size 0.635 0.635) (thickness 0.127)))
+    )
+    (fp_line (start -1.524 -0.889) (end 1.524 -0.889) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.524 0.889) (end -1.524 -0.889) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.524 0.889) (end -1.524 0.889) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.524 -0.889) (end 1.524 0.889) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.9525 1.27 90) (size 0.508 0.762) (layers F.Cu F.Paste F.Mask)
+      (net 66 N-0000086))
+    (pad 3 smd rect (at 0.9525 1.27 90) (size 0.508 0.762) (layers F.Cu F.Paste F.Mask)
+      (net 64 N-0000084))
+    (pad 5 smd rect (at -0.9525 -1.27 90) (size 0.508 0.762) (layers F.Cu F.Paste F.Mask)
+      (net 62 N-0000082))
+    (pad 2 smd rect (at 0 1.27 90) (size 0.508 0.762) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 4 smd rect (at 0.9525 -1.27 90) (size 0.508 0.762) (layers F.Cu F.Paste F.Mask)
+      (net 63 N-0000083))
+    (model smd/SOT23_5.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SOT223 (layer F.Cu) (tedit 524D7DBA) (tstamp 524A9AF8)
+    (at 216.535 140.843 270)
+    (descr "module CMS SOT223 4 pins")
+    (tags "CMS SOT")
+    (path /524A720C/524A727A)
+    (attr smd)
+    (fp_text reference IC1 (at -4.7117 0.2032) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.2032)))
+    )
+    (fp_text value LD1117S33 (at 0 0.762 270) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.2032)))
+    )
+    (fp_line (start 3.556 -2.286) (end 3.556 -1.524) (layer F.SilkS) (width 0.2032))
+    (fp_line (start 2.032 -4.572) (end 3.556 -2.286) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -2.032 -4.572) (end 2.032 -4.572) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -3.556 -2.286) (end -2.032 -4.572) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -3.556 -1.524) (end -3.556 -2.286) (layer F.SilkS) (width 0.2032))
+    (fp_line (start 3.556 4.572) (end 3.556 1.524) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -3.556 4.572) (end 3.556 4.572) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -3.556 1.524) (end -3.556 4.572) (layer F.SilkS) (width 0.2032))
+    (pad 4 smd rect (at 0 -3.302 270) (size 3.6576 2.032) (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd rect (at 0 3.302 270) (size 1.016 2.032) (layers F.Cu F.Paste F.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 3 smd rect (at 2.286 3.302 270) (size 1.016 2.032) (layers F.Cu F.Paste F.Mask)
+      (net 65 N-0000085))
+    (pad 1 smd rect (at -2.286 3.302 270) (size 1.016 2.032) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (model smd/SOT223.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.4 0.4 0.4))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SOIC8 (layer F.Cu) (tedit 524D7E4C) (tstamp 524A9B09)
+    (at 240.817 122.212 270)
+    (path /51B6F5B1/524BC7A7)
+    (fp_text reference U3 (at -3.1369 -0.0762) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TJA1027 (at 0.0254 4.1529 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -2.5 2) (end -2.5 -2) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.5 2) (end -2.5 2) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.5 -2) (end 2.5 2) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.5 -2) (end 2.5 -2) (layer F.SilkS) (width 0.15))
+    (fp_circle (center -1.9431 1.4478) (end -1.8034 1.2573) (layer F.SilkS) (width 0.15))
+    (pad 3 smd rect (at 0.635 2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd rect (at -0.635 2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 2 "/LIN Interface/EN_LIN2"))
+    (pad 1 smd rect (at -1.905 2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 6 "/LIN Interface/RX_LIN2"))
+    (pad 4 smd rect (at 1.905 2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 8 "/LIN Interface/TX_LIN2"))
+    (pad 8 smd rect (at -1.905 -2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask))
+    (pad 7 smd rect (at -0.635 -2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 43 "/Power Interface/12V"))
+    (pad 6 smd rect (at 0.635 -2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 4 "/LIN Interface/LIN2"))
+    (pad 5 smd rect (at 1.905 -2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+  )
+
+  (module SOIC8 (layer F.Cu) (tedit 524D7E33) (tstamp 524A9B1A)
+    (at 240.944 130.454 270)
+    (path /51B6F5B1/524BC657)
+    (fp_text reference U4 (at 3.3528 1.2954) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TJA1027 (at 0.0254 4.1529 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -2.5 2) (end -2.5 -2) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.5 2) (end -2.5 2) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.5 -2) (end 2.5 2) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.5 -2) (end 2.5 -2) (layer F.SilkS) (width 0.15))
+    (fp_circle (center -1.9431 1.4478) (end -1.8034 1.2573) (layer F.SilkS) (width 0.15))
+    (pad 3 smd rect (at 0.635 2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd rect (at -0.635 2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 1 "/LIN Interface/EN_LIN1"))
+    (pad 1 smd rect (at -1.905 2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 5 "/LIN Interface/RX_LIN1"))
+    (pad 4 smd rect (at 1.905 2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 7 "/LIN Interface/TX_LIN1"))
+    (pad 8 smd rect (at -1.905 -2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask))
+    (pad 7 smd rect (at -0.635 -2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 43 "/Power Interface/12V"))
+    (pad 6 smd rect (at 0.635 -2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/LIN Interface/LIN1"))
+    (pad 5 smd rect (at 1.905 -2.7 270) (size 0.6 1.55) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+  )
+
+  (module SOD123 (layer F.Cu) (tedit 51876300) (tstamp 524A9B26)
+    (at 243.942 135.026)
+    (path /51B6F5B1/524AFE95)
+    (fp_text reference D4 (at 0.0127 1.7399) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value DIODE (at 0.0381 -1.9685) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.4 0.825) (end -1.4 -0.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.4 0.825) (end -1.4 0.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.4 -0.825) (end 1.4 0.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 -0.825) (end 1.4 -0.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5461 0.8001) (end 0.5334 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5461 -0.7747) (end 0.5461 0.8001) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.675 0) (size 0.8 1) (layers F.Cu F.Paste F.Mask)
+      (net 43 "/Power Interface/12V"))
+    (pad 2 smd rect (at 1.675 0) (size 0.8 1) (layers F.Cu F.Paste F.Mask)
+      (net 61 N-0000077))
+  )
+
+  (module SOD123 (layer F.Cu) (tedit 524D7DC8) (tstamp 524A9B32)
+    (at 235.153 138.112)
+    (path /524A720C/524A9A99)
+    (fp_text reference D3 (at 0.6477 -1.5494) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value DIODESCH (at 0.0381 -1.9685) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.4 0.825) (end -1.4 -0.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.4 0.825) (end -1.4 0.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.4 -0.825) (end 1.4 0.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 -0.825) (end 1.4 -0.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5461 0.8001) (end 0.5334 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5461 -0.7747) (end 0.5461 0.8001) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.675 0) (size 0.8 1) (layers F.Cu F.Paste F.Mask)
+      (net 66 N-0000086))
+    (pad 2 smd rect (at 1.675 0) (size 0.8 1) (layers F.Cu F.Paste F.Mask)
+      (net 43 "/Power Interface/12V"))
+  )
+
+  (module SM1206POL (layer B.Cu) (tedit 524D805A) (tstamp 524A9B41)
+    (at 213.309 140.64 90)
+    (path /524A720C/524A7286)
+    (attr smd)
+    (fp_text reference C13 (at 0.0508 -1.8542 90) (layer B.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)) (justify mirror))
+    )
+    (fp_text value 10u (at 0 0 90) (layer B.SilkS) hide
+      (effects (font (size 0.762 0.762) (thickness 0.127)) (justify mirror))
+    )
+    (fp_line (start -0.889 1.143) (end -2.54 1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start 2.54 -1.143) (end 0.889 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start 2.54 1.143) (end 2.54 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start 0.889 1.143) (end 2.54 1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.54 -1.143) (end -0.889 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.54 1.143) (end -2.54 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.794 -1.143) (end -2.54 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.794 1.143) (end -2.794 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.54 1.143) (end -2.794 1.143) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -1.651 0 90) (size 1.524 2.032) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 2 smd rect (at 1.651 0 90) (size 1.524 2.032) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd/chip_cms_pol.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.17 0.16 0.16))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM1206POL (layer B.Cu) (tedit 524D8057) (tstamp 524A9B50)
+    (at 215.925 134.163)
+    (path /517AB348)
+    (attr smd)
+    (fp_text reference C32 (at 0.0127 1.9939) (layer B.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)) (justify mirror))
+    )
+    (fp_text value 4u7 (at 0 0) (layer B.SilkS) hide
+      (effects (font (size 0.762 0.762) (thickness 0.127)) (justify mirror))
+    )
+    (fp_line (start -0.889 1.143) (end -2.54 1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start 2.54 -1.143) (end 0.889 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start 2.54 1.143) (end 2.54 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start 0.889 1.143) (end 2.54 1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.54 -1.143) (end -0.889 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.54 1.143) (end -2.54 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.794 -1.143) (end -2.54 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.794 1.143) (end -2.794 -1.143) (layer B.SilkS) (width 0.127))
+    (fp_line (start -2.54 1.143) (end -2.794 1.143) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -1.651 0) (size 1.524 2.032) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 2 smd rect (at 1.651 0) (size 1.524 2.032) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd/chip_cms_pol.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.17 0.16 0.16))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer F.Cu) (tedit 524D7DD7) (tstamp 524A9B6A)
+    (at 235.09 140.272)
+    (path /524A720C/524A9AE3)
+    (attr smd)
+    (fp_text reference C16 (at -2.3368 -0.0254) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_text value 4.7u (at 0 0.381) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_line (start 1.524 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 1.524 -0.762) (end 1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 0.508 -0.762) (end 1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -0.508 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -0.508 0.762) (end -1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 0.762) (end -1.651 0.635) (layer F.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 43 "/Power Interface/12V"))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer B.Cu) (tedit 524D8036) (tstamp 524A9B77)
+    (at 224.396 118.326 180)
+    (path /51791157)
+    (attr smd)
+    (fp_text reference R3 (at -0.0127 -1.3843 180) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_text value 47 (at 0 -0.381 180) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_line (start 1.524 -0.762) (end 0.508 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 1.524 0.762) (end 1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 0.508 0.762) (end 1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -0.508 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -0.508 -0.762) (end -1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 -0.762) (end -1.651 -0.635) (layer B.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0 180) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 2 smd rect (at 0.9525 0 180) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 51 N-0000048))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer F.Cu) (tedit 524D7E5E) (tstamp 524A9B84)
+    (at 243.078 117.158)
+    (path /51797E5D/517B7729)
+    (attr smd)
+    (fp_text reference R35 (at 0 -1.3843) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_text value 510 (at 0 0.381) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_line (start 1.524 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 1.524 -0.762) (end 1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 0.508 -0.762) (end 1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -0.508 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -0.508 0.762) (end -1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 0.762) (end -1.651 0.635) (layer F.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 26 /Peripherals/LED1))
+    (pad 2 smd rect (at 0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 58 N-0000068))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer F.Cu) (tedit 524D7E64) (tstamp 524A9B91)
+    (at 243.294 109.677)
+    (path /51797E5D/517B77DD)
+    (attr smd)
+    (fp_text reference R36 (at 0.0381 1.3462) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_text value 510 (at 0 0.381) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_line (start 1.524 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 1.524 -0.762) (end 1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 0.508 -0.762) (end 1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -0.508 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -0.508 0.762) (end -1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 0.762) (end -1.651 0.635) (layer F.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 27 /Peripherals/LED2))
+    (pad 2 smd rect (at 0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 57 N-0000067))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer F.Cu) (tedit 524D7E3C) (tstamp 524A9B9E)
+    (at 248.26 132.004 90)
+    (path /51B6F5B1/524AFEA4)
+    (attr smd)
+    (fp_text reference R15 (at -2.1082 -0.0254 180) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_text value 1k (at 0 0.381 90) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_line (start 1.524 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 1.524 -0.762) (end 1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 0.508 -0.762) (end 1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -0.508 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -0.508 0.762) (end -1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 0.762) (end -1.651 0.635) (layer F.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0 90) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 61 N-0000077))
+    (pad 2 smd rect (at 0.9525 0 90) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/LIN Interface/LIN1"))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer B.Cu) (tedit 524D805B) (tstamp 524A9BAB)
+    (at 215.621 141.707 90)
+    (path /524A720C/524A7280)
+    (attr smd)
+    (fp_text reference C4 (at 0 1.397 90) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_text value 1u (at 0 -0.381 90) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_line (start 1.524 -0.762) (end 0.508 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 1.524 0.762) (end 1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 0.508 0.762) (end 1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -0.508 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -0.508 -0.762) (end -1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 -0.762) (end -1.651 -0.635) (layer B.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0 90) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 65 N-0000085))
+    (pad 2 smd rect (at 0.9525 0 90) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer B.Cu) (tedit 524D8038) (tstamp 524A9BB8)
+    (at 223.355 122.288 270)
+    (path /517911BD)
+    (attr smd)
+    (fp_text reference C6 (at -0.0635 1.3589 270) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_text value 1u (at 0 -0.381 270) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_line (start 1.524 -0.762) (end 0.508 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 1.524 0.762) (end 1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 0.508 0.762) (end 1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -0.508 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -0.508 -0.762) (end -1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 -0.762) (end -1.651 -0.635) (layer B.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0 270) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 51 N-0000048))
+    (pad 2 smd rect (at 0.9525 0 270) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer B.Cu) (tedit 524D8032) (tstamp 524A9BC5)
+    (at 219.088 118.453)
+    (path /524A720C/524A726A)
+    (attr smd)
+    (fp_text reference C15 (at -0.0127 -1.3081) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_text value 1u (at 0 -0.381) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_line (start 1.524 -0.762) (end 0.508 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 1.524 0.762) (end 1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 0.508 0.762) (end 1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -0.508 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -0.508 -0.762) (end -1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 -0.762) (end -1.651 -0.635) (layer B.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 45 "/Power Interface/VDDA"))
+    (pad 2 smd rect (at 0.9525 0) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer F.Cu) (tedit 524D7E68) (tstamp 524A9BDF)
+    (at 243.23 106.909)
+    (path /51797E5D/517B77FB)
+    (attr smd)
+    (fp_text reference R37 (at -0.0127 -1.4351) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_text value 680 (at 0 0.381) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_line (start 1.524 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 1.524 -0.762) (end 1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 0.508 -0.762) (end 1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -0.508 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -0.508 0.762) (end -1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 0.762) (end -1.651 0.635) (layer F.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 28 /Peripherals/LED3))
+    (pad 2 smd rect (at 0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 60 N-0000071))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer B.Cu) (tedit 524D8049) (tstamp 524A9C2D)
+    (at 231.458 122.326 270)
+    (path /517E4ED1)
+    (attr smd)
+    (fp_text reference R5 (at 0.0381 -1.4605 270) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_text value 510 (at 0 -0.381 270) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_line (start 1.524 -0.762) (end 0.508 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 1.524 0.762) (end 1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 0.508 0.762) (end 1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -0.508 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -0.508 -0.762) (end -1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 -0.762) (end -1.651 -0.635) (layer B.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0 270) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 52 N-0000049))
+    (pad 2 smd rect (at 0.9525 0 270) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 50 N-0000047))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer F.Cu) (tedit 524D7E20) (tstamp 524A9C47)
+    (at 242.837 138.532)
+    (path /51797E5D/517B780B)
+    (attr smd)
+    (fp_text reference R38 (at 0 1.4351) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_text value 680 (at 0 0.381) (layer F.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)))
+    )
+    (fp_line (start 1.524 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 1.524 -0.762) (end 1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start 0.508 -0.762) (end 1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -0.508 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -1.524 -0.762) (layer F.SilkS) (width 0.09906))
+    (fp_line (start -0.508 0.762) (end -1.524 0.762) (layer F.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 0.762) (end -1.651 0.635) (layer F.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 29 /Peripherals/LED4))
+    (pad 2 smd rect (at 0.9525 0) (size 0.889 1.397) (layers F.Cu F.Paste F.Mask)
+      (net 59 N-0000069))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7FD5) (tstamp 524A9C75)
+    (at 203.327 120.879 180)
+    (path /51797E5D/517989BD)
+    (attr smd)
+    (fp_text reference C29 (at 0.0127 1.143 180) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 100n (at 0 0 180) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 34 /Peripherals/RESET_BUTTON))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D8053) (tstamp 524A9C7F)
+    (at 222.25 130.137)
+    (path /51785D2D)
+    (attr smd)
+    (fp_text reference C11 (at 0.0508 1.1938) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value 100n (at 0 0) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.762 0) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7E43) (tstamp 524A9C89)
+    (at 245.847 123.533 270)
+    (path /51B6F5B1/524AFE4F)
+    (attr smd)
+    (fp_text reference C18 (at -1.9558 -0.1778 270) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 220p (at 0 0 270) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 270) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 4 "/LIN Interface/LIN2"))
+    (pad 2 smd rect (at 0.762 0 270) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7E38) (tstamp 524A9C93)
+    (at 246.088 131.826 270)
+    (path /51B6F5B1/524AFE07)
+    (attr smd)
+    (fp_text reference C19 (at -1.7018 0.0889) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 1n (at 0 0 270) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 270) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/LIN Interface/LIN1"))
+    (pad 2 smd rect (at 0.762 0 270) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D802B) (tstamp 524A9C9D)
+    (at 213.716 122.415 90)
+    (path /51786A9C)
+    (attr smd)
+    (fp_text reference C8 (at -0.0381 -1.1684 90) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value 100n (at 0 0 90) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 90) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.762 0 90) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D802C) (tstamp 524A9CA7)
+    (at 213.817 126.784 270)
+    (path /51787046)
+    (attr smd)
+    (fp_text reference C9 (at -0.0381 1.1684 270) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value 100n (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 270) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.762 0 270) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D803D) (tstamp 524A9CB1)
+    (at 225.641 121.526 90)
+    (path /51784C15)
+    (attr smd)
+    (fp_text reference C7 (at -0.0381 1.3081 90) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value 100n (at 0 0 90) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 90) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.762 0 90) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D8030) (tstamp 524A9CBB)
+    (at 217.119 120.523)
+    (path /524A720C/524A7259)
+    (attr smd)
+    (fp_text reference L2 (at -0.7366 -1.1938) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value fcm1608 (at 0 0) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 2 smd rect (at 0.762 0) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 45 "/Power Interface/VDDA"))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7FB9) (tstamp 524A9CC5)
+    (at 219.583 105.829 180)
+    (path /51794D02)
+    (attr smd)
+    (fp_text reference C2 (at 0.0381 1.143 180) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 4.7p (at 0 0 180) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 54 N-0000060))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7FC8) (tstamp 524A9CCF)
+    (at 223.139 113.246 180)
+    (path /51794D0B)
+    (attr smd)
+    (fp_text reference R1 (at -0.0381 -1.2192 180) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 0 (at 0 0 180) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 53 N-0000059))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 11 /OSC_IN))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7FC5) (tstamp 524A9CD9)
+    (at 219.558 113.322)
+    (path /51794D1D)
+    (attr smd)
+    (fp_text reference R2 (at -0.0127 1.27) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 0 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 54 N-0000060))
+    (pad 2 smd rect (at 0.762 0) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 12 /OSC_OUT))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D804D) (tstamp 524A9CE3)
+    (at 229.172 123.533 270)
+    (path /517E4ED9)
+    (attr smd)
+    (fp_text reference JP1 (at -0.0127 1.1811 270) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value JUMPER (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 270) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 50 N-0000047))
+    (pad 2 smd rect (at 0.762 0 270) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7E74) (tstamp 524A9CED)
+    (at 234.569 118.148 180)
+    (path /51B9D646)
+    (attr smd)
+    (fp_text reference C10 (at -0.0254 -1.2319 180) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 6.8p (at 0 0 180) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 55 N-0000062))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7E71) (tstamp 524A9CF7)
+    (at 234.569 112.192 180)
+    (path /51B9D64C)
+    (attr smd)
+    (fp_text reference C12 (at 0.0254 1.2319 180) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 6.8p (at 0 0 180) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 56 N-0000063))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7E81) (tstamp 524A9D01)
+    (at 228.028 116.205 180)
+    (path /51B9D653)
+    (attr smd)
+    (fp_text reference R6 (at -0.0127 -1.1557 180) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 0 (at 0 0 180) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 55 N-0000062))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 9 /OSC32_IN))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7E7F) (tstamp 524A9D0B)
+    (at 228.067 114.224 180)
+    (path /51B9D659)
+    (attr smd)
+    (fp_text reference R7 (at -0.0508 1.1811 180) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 0 (at 0 0 180) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 56 N-0000063))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 10 /OSC32_OUT))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D802E) (tstamp 524A9D15)
+    (at 218.034 122.11 180)
+    (path /524A720C/524A725F)
+    (attr smd)
+    (fp_text reference C17 (at 0.0254 -1.3335 180) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value 100n (at 0 0 180) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 45 "/Power Interface/VDDA"))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7FBC) (tstamp 524A9D1F)
+    (at 223.076 105.842)
+    (path /51794CF0)
+    (attr smd)
+    (fp_text reference C1 (at 0.0635 -1.0795) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 4.7p (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 0.762 0) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 53 N-0000059))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D8034) (tstamp 524A9D29)
+    (at 224.511 116.357 180)
+    (path /51791148)
+    (attr smd)
+    (fp_text reference C5 (at 0.0508 1.0414 180) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value 100n (at 0 0 180) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7E1A) (tstamp 524A9D33)
+    (at 224.206 136.195 180)
+    (path /524A720C/524A9AA8)
+    (attr smd)
+    (fp_text reference C3 (at 0 1.1176 180) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 3.3u (at 0 0 180) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 62 N-0000082))
+    (pad 2 smd rect (at 0.762 0 180) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer F.Cu) (tedit 524D7E06) (tstamp 524A9D3D)
+    (at 233.426 136.182)
+    (path /524A720C/524A9AD0)
+    (attr smd)
+    (fp_text reference C14 (at -1.3335 1.1811) (layer F.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_text value 330p (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)))
+    )
+    (fp_line (start -1.143 0.635) (end -1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end -1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end 1.143 0.635) (layer F.SilkS) (width 0.127))
+    (fp_line (start -1.143 -0.635) (end 1.143 -0.635) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 64 N-0000084))
+    (pad 2 smd rect (at 0.762 0) (size 0.635 1.143) (layers F.Cu F.Paste F.Mask)
+      (net 43 "/Power Interface/12V"))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0402 (layer F.Cu) (tedit 524D7E0B) (tstamp 524A9D49)
+    (at 232.994 134.595)
+    (path /524A720C/524A9ADD)
+    (attr smd)
+    (fp_text reference R10 (at 1.2954 0.0254) (layer F.SilkS)
+      (effects (font (size 0.35052 0.3048) (thickness 0.07112)))
+    )
+    (fp_text value 8.66k (at 0.09906 0) (layer F.SilkS) hide
+      (effects (font (size 0.35052 0.3048) (thickness 0.07112)))
+    )
+    (fp_line (start 0.762 0.381) (end 0.254 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start 0.762 -0.381) (end 0.762 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start 0.254 -0.381) (end 0.762 -0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.762 0.381) (end -0.254 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.254 -0.381) (end -0.762 -0.381) (layer F.SilkS) (width 0.07112))
+    (pad 1 smd rect (at -0.44958 0) (size 0.39878 0.59944) (layers F.Cu F.Paste F.Mask)
+      (net 64 N-0000084))
+    (pad 2 smd rect (at 0.44958 0) (size 0.39878 0.59944) (layers F.Cu F.Paste F.Mask)
+      (net 43 "/Power Interface/12V"))
+    (model smd\chip_cms.wrl
+      (offset (xyz 0 0 0.05079999923706055))
+      (scale (xyz 0.05 0.05 0.05))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0402 (layer F.Cu) (tedit 524D7E15) (tstamp 524A9D55)
+    (at 226.365 134.798 90)
+    (path /524A720C/524A9A71)
+    (attr smd)
+    (fp_text reference R8 (at 0 -0.7493 90) (layer F.SilkS)
+      (effects (font (size 0.35052 0.3048) (thickness 0.07112)))
+    )
+    (fp_text value 1000k (at 0.09906 0 90) (layer F.SilkS) hide
+      (effects (font (size 0.35052 0.3048) (thickness 0.07112)))
+    )
+    (fp_line (start 0.762 0.381) (end 0.254 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start 0.762 -0.381) (end 0.762 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start 0.254 -0.381) (end 0.762 -0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.762 0.381) (end -0.254 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.254 -0.381) (end -0.762 -0.381) (layer F.SilkS) (width 0.07112))
+    (pad 1 smd rect (at -0.44958 0 90) (size 0.39878 0.59944) (layers F.Cu F.Paste F.Mask)
+      (net 62 N-0000082))
+    (pad 2 smd rect (at 0.44958 0 90) (size 0.39878 0.59944) (layers F.Cu F.Paste F.Mask)
+      (net 63 N-0000083))
+    (model smd\chip_cms.wrl
+      (offset (xyz 0 0 0.05079999923706055))
+      (scale (xyz 0.05 0.05 0.05))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0402 (layer F.Cu) (tedit 524D7E0E) (tstamp 524A9D61)
+    (at 233.007 133.414)
+    (path /524A720C/524A9AC1)
+    (attr smd)
+    (fp_text reference R9 (at 1.143 0.0127) (layer F.SilkS)
+      (effects (font (size 0.35052 0.3048) (thickness 0.07112)))
+    )
+    (fp_text value 976 (at 0.09906 0) (layer F.SilkS) hide
+      (effects (font (size 0.35052 0.3048) (thickness 0.07112)))
+    )
+    (fp_line (start 0.762 0.381) (end 0.254 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start 0.762 -0.381) (end 0.762 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start 0.254 -0.381) (end 0.762 -0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.762 0.381) (end -0.254 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.SilkS) (width 0.07112))
+    (fp_line (start -0.254 -0.381) (end -0.762 -0.381) (layer F.SilkS) (width 0.07112))
+    (pad 1 smd rect (at -0.44958 0) (size 0.39878 0.59944) (layers F.Cu F.Paste F.Mask)
+      (net 64 N-0000084))
+    (pad 2 smd rect (at 0.44958 0) (size 0.39878 0.59944) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (model smd\chip_cms.wrl
+      (offset (xyz 0 0 0.05079999923706055))
+      (scale (xyz 0.05 0.05 0.05))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module RTC (layer F.Cu) (tedit 524D7E7A) (tstamp 524A9D6E)
+    (at 234.544 115.227)
+    (path /51B9D640)
+    (fp_text reference X2 (at 3.0353 -3.5687) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "32.768 kHz" (at 0.0127 3.556) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -4.35 1.85) (end -4.35 -1.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.35 1.85) (end -4.35 1.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.35 -1.85) (end 4.35 1.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.35 -1.85) (end 4.35 -1.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.45 -1.85) (end -3.45 1.85) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.75 -1.6) (size 1.3 1.9) (layers F.Cu F.Paste F.Mask)
+      (net 56 N-0000063))
+    (pad 2 smd rect (at -2.75 1.6) (size 1.3 1.9) (layers F.Cu F.Paste F.Mask)
+      (net 55 N-0000062))
+    (pad 3 smd rect (at 2.75 -1.6) (size 1.3 1.9) (layers F.Cu F.Paste F.Mask))
+    (pad 4 smd rect (at 2.75 1.6) (size 1.3 1.9) (layers F.Cu F.Paste F.Mask))
+  )
+
+  (module PIN_ARRAY-6X1 (layer F.Cu) (tedit 524D7D97) (tstamp 524A9D87)
+    (at 206.07 131.75 90)
+    (descr "Connecteur 6 pins")
+    (tags "CONN DEV")
+    (path /51761147)
+    (fp_text reference CON1 (at 0.127 2.5908 90) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.2032)))
+    )
+    (fp_text value SWD (at 0 2.159 90) (layer F.SilkS) hide
+      (effects (font (size 1.016 0.889) (thickness 0.2032)))
+    )
+    (fp_line (start -5.08 1.27) (end -5.08 -1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 7.62 1.27) (end -7.62 1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 7.62 -1.27) (end 7.62 1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -7.62 -1.27) (end 7.62 -1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -7.62 1.27) (end -7.62 -1.27) (layer F.SilkS) (width 0.3048))
+    (pad 1 thru_hole rect (at -6.35 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "/Power Interface/3V3"))
+    (pad 2 thru_hole circle (at -3.81 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 46 /SWCLK))
+    (pad 3 thru_hole circle (at -1.27 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 49 GND))
+    (pad 4 thru_hole circle (at 1.27 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 47 /SWDIO))
+    (pad 5 thru_hole circle (at 3.81 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 34 /Peripherals/RESET_BUTTON))
+    (pad 6 thru_hole circle (at 6.35 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 48 /SWO))
+    (model pin_array/pins_array_6x1.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module LQFP64 (layer F.Cu) (tedit 524D7FE0) (tstamp 524A9DD1)
+    (at 219.761 124.181 180)
+    (tags "TQFP64 TQFP SMD IC")
+    (path /51B74A37)
+    (fp_text reference U1 (at 5.9817 5.7658 180) (layer F.SilkS)
+      (effects (font (size 1.09982 1.09982) (thickness 0.127)))
+    )
+    (fp_text value STM32F105R8 (at 0 1.651 180) (layer F.SilkS)
+      (effects (font (size 1.00076 1.00076) (thickness 0.1524)))
+    )
+    (fp_line (start 5.16128 4.99872) (end 5.16128 -5.16128) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -4.36372 4.99872) (end 5.16128 4.99872) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -4.99872 4.36372) (end -4.36372 4.99872) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -4.99872 -5.16128) (end -4.99872 4.36372) (layer F.SilkS) (width 0.2032))
+    (fp_line (start 5.16128 -5.16128) (end -4.99872 -5.16128) (layer F.SilkS) (width 0.2032))
+    (fp_circle (center -3.98272 3.98272) (end -3.98272 3.60172) (layer F.SilkS) (width 0.2032))
+    (pad 1 smd rect (at -3.74904 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 51 N-0000048))
+    (pad 2 smd oval (at -3.24866 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask))
+    (pad 3 smd oval (at -2.74828 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 9 /OSC32_IN))
+    (pad 4 smd oval (at -2.2479 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 10 /OSC32_OUT))
+    (pad 5 smd oval (at -1.74752 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 11 /OSC_IN))
+    (pad 6 smd oval (at -1.24968 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 12 /OSC_OUT))
+    (pad 7 smd oval (at -0.7493 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 34 /Peripherals/RESET_BUTTON))
+    (pad 8 smd oval (at -0.24892 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask))
+    (pad 9 smd oval (at 0.25146 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask))
+    (pad 10 smd oval (at 0.75184 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 14 /Peripherals/A1))
+    (pad 11 smd oval (at 1.25222 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 19 /Peripherals/A7))
+    (pad 12 smd oval (at 1.75006 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 13 smd oval (at 2.25044 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 45 "/Power Interface/VDDA"))
+    (pad 14 smd oval (at 2.75082 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 17 /Peripherals/A2))
+    (pad 15 smd oval (at 3.2512 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 20 /Peripherals/A8))
+    (pad 16 smd oval (at 3.75158 5.86994 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 18 /Peripherals/A3))
+    (pad 17 smd oval (at 6.0325 3.74904 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 21 /Peripherals/A9))
+    (pad 18 smd oval (at 6.0325 3.24866 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 19 smd oval (at 6.0325 2.74828 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 20 smd oval (at 6.0325 2.2479 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 40 /Peripherals/SPI_NSS))
+    (pad 21 smd oval (at 6.0325 1.74752 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 41 /Peripherals/SPI_SCLK))
+    (pad 22 smd oval (at 6.0325 1.24968 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 38 /Peripherals/SPI_MISO))
+    (pad 23 smd oval (at 6.0325 0.7493 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 39 /Peripherals/SPI_MOSI))
+    (pad 24 smd oval (at 6.0325 0.24892 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 15 /Peripherals/A10))
+    (pad 25 smd oval (at 6.0325 -0.25146 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 16 /Peripherals/A11))
+    (pad 26 smd oval (at 6.0325 -0.75184 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask))
+    (pad 27 smd oval (at 6.0325 -1.25222 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask))
+    (pad 28 smd oval (at 6.0325 -1.75006 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask))
+    (pad 29 smd oval (at 6.0325 -2.25044 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 42 /Peripherals/TX))
+    (pad 30 smd oval (at 6.0325 -2.75082 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 35 /Peripherals/RX))
+    (pad 31 smd oval (at 6.0325 -3.2512 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 32 smd oval (at 6.0325 -3.75158 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 33 smd oval (at 3.75158 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask))
+    (pad 34 smd oval (at 3.2512 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 30 /Peripherals/PWM1))
+    (pad 35 smd oval (at 2.75082 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 31 /Peripherals/PWM2))
+    (pad 36 smd oval (at 2.25044 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 32 /Peripherals/PWM3))
+    (pad 37 smd oval (at 1.75006 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 22 /Peripherals/GPIO1))
+    (pad 38 smd oval (at 1.25222 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 23 /Peripherals/GPIO2))
+    (pad 39 smd oval (at 0.75184 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 24 /Peripherals/GPIO3))
+    (pad 40 smd oval (at 0.25146 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 25 /Peripherals/GPIO4))
+    (pad 41 smd oval (at -0.24892 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 26 /Peripherals/LED1))
+    (pad 42 smd oval (at -0.7493 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 27 /Peripherals/LED2))
+    (pad 43 smd oval (at -1.24968 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 28 /Peripherals/LED3))
+    (pad 44 smd oval (at -1.74752 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 33 /Peripherals/PWM4))
+    (pad 45 smd oval (at -2.2479 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask))
+    (pad 46 smd oval (at -2.74828 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 47 /SWDIO))
+    (pad 47 smd oval (at -3.24866 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 48 smd oval (at -3.74904 -6.0325 180) (size 0.3 1.524) (layers F.Cu F.Paste F.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 49 smd oval (at -5.86994 -3.75158 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 46 /SWCLK))
+    (pad 50 smd oval (at -5.86994 -3.2512 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask))
+    (pad 52 smd oval (at -5.86994 -2.25044 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 5 "/LIN Interface/RX_LIN1"))
+    (pad 51 smd oval (at -5.88772 -2.75082 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 7 "/LIN Interface/TX_LIN1"))
+    (pad 53 smd oval (at -5.86994 -1.75006 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 8 "/LIN Interface/TX_LIN2"))
+    (pad 54 smd oval (at -5.86994 -1.25222 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 6 "/LIN Interface/RX_LIN2"))
+    (pad 55 smd oval (at -5.86994 -0.75184 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 48 /SWO))
+    (pad 56 smd oval (at -5.86994 -0.25146 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask))
+    (pad 57 smd oval (at -5.86994 0.24892 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 29 /Peripherals/LED4))
+    (pad 58 smd oval (at -5.86994 0.7493 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 36 /Peripherals/SCL))
+    (pad 59 smd oval (at -5.86994 1.24206 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 37 /Peripherals/SDA))
+    (pad 60 smd oval (at -5.86994 1.74244 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 52 N-0000049))
+    (pad 61 smd oval (at -5.86994 2.24282 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 "/LIN Interface/EN_LIN1"))
+    (pad 62 smd oval (at -5.86994 2.7432 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 "/LIN Interface/EN_LIN2"))
+    (pad 63 smd oval (at -5.86994 3.24104 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 64 smd oval (at -5.86994 3.74142 180) (size 1.524 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (model smd/TQFP_64.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.3937 0.3937 0.3937))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module LED-0805 (layer F.Cu) (tedit 49DC4C0B) (tstamp 524A9E0C)
+    (at 247.294 117.145)
+    (descr "LED 0805 smd package")
+    (tags "LED 0805 SMD")
+    (path /51797E5D/517B771A)
+    (attr smd)
+    (fp_text reference D10 (at 0 -1.27) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_text value LED (at 0 1.27) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_circle (center 0.84836 -0.44958) (end 0.89916 -0.50038) (layer F.SilkS) (width 0.0508))
+    (fp_line (start -0.49784 -0.57404) (end 0.92456 -0.57404) (layer F.SilkS) (width 0.1016))
+    (fp_line (start 0.52324 0.57404) (end -0.52324 0.57404) (layer F.SilkS) (width 0.1016))
+    (fp_line (start 0.92456 -0.62484) (end 0.99822 -0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.99822 -0.62484) (end 0.99822 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.92456 -0.39878) (end 0.99822 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.92456 -0.62484) (end 0.92456 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.59944) (end 0.79756 -0.59944) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.79756 -0.59944) (end 0.79756 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.29972) (end 0.79756 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.59944) (end 0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 -0.09906) (end 0.19812 -0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.19812 -0.09906) (end 0.19812 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 0.09906) (end 0.19812 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 -0.09906) (end 0 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 -0.19812) (end -0.49784 -0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.19812) (end -0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 0.19812) (end -0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 -0.19812) (end -0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.32258) (end -0.49784 -0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.32258) (end -0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.17272) (end -0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.32258) (end -0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.17272) (end -0.49784 0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 0.17272) (end -0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.32258) (end -0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.17272) (end -0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.62484) (end -0.49784 -0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.62484) (end -0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.29972) (end -0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.62484) (end -0.99822 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.29972) (end -0.49784 0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 0.29972) (end -0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.62484) (end -0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.29972) (end -0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.19812) (end 0.6731 -0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.6731 -0.19812) (end 0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.19812) (end 0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.19812) (end 0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.17272) (end 0.7493 0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.7493 0.17272) (end 0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.32258) (end 0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.17272) (end 0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.32258) (end 0.7493 -0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.7493 -0.32258) (end 0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.17272) (end 0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.32258) (end 0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.29972) (end 0.99822 0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.99822 0.29972) (end 0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.62484) (end 0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.29972) (end 0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_arc (start 0.99822 0) (end 0.99822 0.34798) (angle 180) (layer F.SilkS) (width 0.1016))
+    (fp_arc (start -0.99822 0) (end -0.99822 -0.34798) (angle 180) (layer F.SilkS) (width 0.1016))
+    (pad 1 smd rect (at -1.04902 0) (size 1.19888 1.19888) (layers F.Cu F.Paste F.Mask)
+      (net 58 N-0000068))
+    (pad 2 smd rect (at 1.04902 0) (size 1.19888 1.19888) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+  )
+
+  (module LED-0805 (layer F.Cu) (tedit 49DC4C0B) (tstamp 524A9E47)
+    (at 247.523 109.753)
+    (descr "LED 0805 smd package")
+    (tags "LED 0805 SMD")
+    (path /51797E5D/517B77D7)
+    (attr smd)
+    (fp_text reference D11 (at 0 -1.27) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_text value LED (at 0 1.27) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_circle (center 0.84836 -0.44958) (end 0.89916 -0.50038) (layer F.SilkS) (width 0.0508))
+    (fp_line (start -0.49784 -0.57404) (end 0.92456 -0.57404) (layer F.SilkS) (width 0.1016))
+    (fp_line (start 0.52324 0.57404) (end -0.52324 0.57404) (layer F.SilkS) (width 0.1016))
+    (fp_line (start 0.92456 -0.62484) (end 0.99822 -0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.99822 -0.62484) (end 0.99822 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.92456 -0.39878) (end 0.99822 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.92456 -0.62484) (end 0.92456 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.59944) (end 0.79756 -0.59944) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.79756 -0.59944) (end 0.79756 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.29972) (end 0.79756 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.59944) (end 0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 -0.09906) (end 0.19812 -0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.19812 -0.09906) (end 0.19812 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 0.09906) (end 0.19812 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 -0.09906) (end 0 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 -0.19812) (end -0.49784 -0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.19812) (end -0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 0.19812) (end -0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 -0.19812) (end -0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.32258) (end -0.49784 -0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.32258) (end -0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.17272) (end -0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.32258) (end -0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.17272) (end -0.49784 0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 0.17272) (end -0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.32258) (end -0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.17272) (end -0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.62484) (end -0.49784 -0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.62484) (end -0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.29972) (end -0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.62484) (end -0.99822 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.29972) (end -0.49784 0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 0.29972) (end -0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.62484) (end -0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.29972) (end -0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.19812) (end 0.6731 -0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.6731 -0.19812) (end 0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.19812) (end 0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.19812) (end 0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.17272) (end 0.7493 0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.7493 0.17272) (end 0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.32258) (end 0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.17272) (end 0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.32258) (end 0.7493 -0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.7493 -0.32258) (end 0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.17272) (end 0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.32258) (end 0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.29972) (end 0.99822 0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.99822 0.29972) (end 0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.62484) (end 0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.29972) (end 0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_arc (start 0.99822 0) (end 0.99822 0.34798) (angle 180) (layer F.SilkS) (width 0.1016))
+    (fp_arc (start -0.99822 0) (end -0.99822 -0.34798) (angle 180) (layer F.SilkS) (width 0.1016))
+    (pad 1 smd rect (at -1.04902 0) (size 1.19888 1.19888) (layers F.Cu F.Paste F.Mask)
+      (net 57 N-0000067))
+    (pad 2 smd rect (at 1.04902 0) (size 1.19888 1.19888) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+  )
+
+  (module LED-0805 (layer F.Cu) (tedit 49DC4C0B) (tstamp 524A9E82)
+    (at 247.523 107.061)
+    (descr "LED 0805 smd package")
+    (tags "LED 0805 SMD")
+    (path /51797E5D/517B77F5)
+    (attr smd)
+    (fp_text reference D12 (at 0 -1.27) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_text value LED (at 0 1.27) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_circle (center 0.84836 -0.44958) (end 0.89916 -0.50038) (layer F.SilkS) (width 0.0508))
+    (fp_line (start -0.49784 -0.57404) (end 0.92456 -0.57404) (layer F.SilkS) (width 0.1016))
+    (fp_line (start 0.52324 0.57404) (end -0.52324 0.57404) (layer F.SilkS) (width 0.1016))
+    (fp_line (start 0.92456 -0.62484) (end 0.99822 -0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.99822 -0.62484) (end 0.99822 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.92456 -0.39878) (end 0.99822 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.92456 -0.62484) (end 0.92456 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.59944) (end 0.79756 -0.59944) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.79756 -0.59944) (end 0.79756 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.29972) (end 0.79756 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.59944) (end 0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 -0.09906) (end 0.19812 -0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.19812 -0.09906) (end 0.19812 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 0.09906) (end 0.19812 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 -0.09906) (end 0 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 -0.19812) (end -0.49784 -0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.19812) (end -0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 0.19812) (end -0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 -0.19812) (end -0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.32258) (end -0.49784 -0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.32258) (end -0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.17272) (end -0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.32258) (end -0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.17272) (end -0.49784 0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 0.17272) (end -0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.32258) (end -0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.17272) (end -0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.62484) (end -0.49784 -0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.62484) (end -0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.29972) (end -0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.62484) (end -0.99822 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.29972) (end -0.49784 0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 0.29972) (end -0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.62484) (end -0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.29972) (end -0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.19812) (end 0.6731 -0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.6731 -0.19812) (end 0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.19812) (end 0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.19812) (end 0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.17272) (end 0.7493 0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.7493 0.17272) (end 0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.32258) (end 0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.17272) (end 0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.32258) (end 0.7493 -0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.7493 -0.32258) (end 0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.17272) (end 0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.32258) (end 0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.29972) (end 0.99822 0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.99822 0.29972) (end 0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.62484) (end 0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.29972) (end 0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_arc (start 0.99822 0) (end 0.99822 0.34798) (angle 180) (layer F.SilkS) (width 0.1016))
+    (fp_arc (start -0.99822 0) (end -0.99822 -0.34798) (angle 180) (layer F.SilkS) (width 0.1016))
+    (pad 1 smd rect (at -1.04902 0) (size 1.19888 1.19888) (layers F.Cu F.Paste F.Mask)
+      (net 60 N-0000071))
+    (pad 2 smd rect (at 1.04902 0) (size 1.19888 1.19888) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+  )
+
+  (module LED-0805 (layer F.Cu) (tedit 49DC4C0B) (tstamp 524A9EBD)
+    (at 247.142 138.519)
+    (descr "LED 0805 smd package")
+    (tags "LED 0805 SMD")
+    (path /51797E5D/517B7805)
+    (attr smd)
+    (fp_text reference D13 (at 0 -1.27) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_text value LED (at 0 1.27) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_circle (center 0.84836 -0.44958) (end 0.89916 -0.50038) (layer F.SilkS) (width 0.0508))
+    (fp_line (start -0.49784 -0.57404) (end 0.92456 -0.57404) (layer F.SilkS) (width 0.1016))
+    (fp_line (start 0.52324 0.57404) (end -0.52324 0.57404) (layer F.SilkS) (width 0.1016))
+    (fp_line (start 0.92456 -0.62484) (end 0.99822 -0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.99822 -0.62484) (end 0.99822 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.92456 -0.39878) (end 0.99822 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.92456 -0.62484) (end 0.92456 -0.39878) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.59944) (end 0.79756 -0.59944) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.79756 -0.59944) (end 0.79756 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.29972) (end 0.79756 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.59944) (end 0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 -0.09906) (end 0.19812 -0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.19812 -0.09906) (end 0.19812 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 0.09906) (end 0.19812 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0 -0.09906) (end 0 0.09906) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 -0.19812) (end -0.49784 -0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.19812) (end -0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 0.19812) (end -0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.6731 -0.19812) (end -0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.32258) (end -0.49784 -0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.32258) (end -0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.17272) (end -0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 -0.32258) (end -0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.17272) (end -0.49784 0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 0.17272) (end -0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.32258) (end -0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.7493 0.17272) (end -0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.62484) (end -0.49784 -0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 -0.62484) (end -0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.29972) (end -0.49784 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 -0.62484) (end -0.99822 -0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.29972) (end -0.49784 0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.49784 0.29972) (end -0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.62484) (end -0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.99822 0.29972) (end -0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.19812) (end 0.6731 -0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.6731 -0.19812) (end 0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.19812) (end 0.6731 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.19812) (end 0.49784 0.19812) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.17272) (end 0.7493 0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.7493 0.17272) (end 0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.32258) (end 0.7493 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.17272) (end 0.49784 0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.32258) (end 0.7493 -0.32258) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.7493 -0.32258) (end 0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.17272) (end 0.7493 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 -0.32258) (end 0.49784 -0.17272) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.29972) (end 0.99822 0.29972) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.99822 0.29972) (end 0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.62484) (end 0.99822 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.49784 0.29972) (end 0.49784 0.62484) (layer F.SilkS) (width 0.06604))
+    (fp_arc (start 0.99822 0) (end 0.99822 0.34798) (angle 180) (layer F.SilkS) (width 0.1016))
+    (fp_arc (start -0.99822 0) (end -0.99822 -0.34798) (angle 180) (layer F.SilkS) (width 0.1016))
+    (pad 1 smd rect (at -1.04902 0) (size 1.19888 1.19888) (layers F.Cu F.Paste F.Mask)
+      (net 59 N-0000069))
+    (pad 2 smd rect (at 1.04902 0) (size 1.19888 1.19888) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+  )
+
+  (module HC-49V (layer F.Cu) (tedit 524D7FC1) (tstamp 524A9EC9)
+    (at 221.323 109.576)
+    (descr "Quartz boitier HC-49 Vertical")
+    (tags "QUARTZ DEV")
+    (path /51794A80)
+    (autoplace_cost180 10)
+    (fp_text reference X1 (at 7.3279 -0.1016) (layer F.SilkS)
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (fp_text value "16 MHz" (at 0 3.81) (layer F.SilkS)
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (fp_line (start -3.175 -2.54) (end 3.175 -2.54) (layer F.SilkS) (width 0.3175))
+    (fp_line (start -3.175 2.54) (end 3.175 2.54) (layer F.SilkS) (width 0.3175))
+    (fp_arc (start 3.175 0) (end 3.175 -2.54) (angle 90) (layer F.SilkS) (width 0.3175))
+    (fp_arc (start 3.175 0) (end 5.715 0) (angle 90) (layer F.SilkS) (width 0.3175))
+    (fp_arc (start -3.175 0) (end -5.715 0) (angle 90) (layer F.SilkS) (width 0.3175))
+    (fp_arc (start -3.175 0) (end -3.175 2.54) (angle 90) (layer F.SilkS) (width 0.3175))
+    (pad 1 thru_hole circle (at -2.54 0) (size 1.4224 1.4224) (drill 0.762) (layers *.Cu *.Mask F.SilkS)
+      (net 54 N-0000060))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.4224 1.4224) (drill 0.762) (layers *.Cu *.Mask F.SilkS)
+      (net 53 N-0000059))
+    (model discret/xtal/crystal_hc18u_vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 0.2))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module EVQP0 (layer F.Cu) (tedit 524BC5AC) (tstamp 524A9EE1)
+    (at 203.454 114.338 90)
+    (path /51797E5D/517989AB)
+    (fp_text reference SW2 (at 0.0127 4.572 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value SW_PUSH (at 0.0127 4.2291 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.25 3) (end -3.25 -3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.25 3) (end -3.25 3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.25 -3) (end 3.25 3) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.25 -3) (end 3.25 -3) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at 3.4 2 90) (size 3.2 1) (layers F.Cu F.Paste F.Mask)
+      (net 34 /Peripherals/RESET_BUTTON))
+    (pad 1 smd rect (at -3.4 2 90) (size 3.2 1) (layers F.Cu F.Paste F.Mask)
+      (net 34 /Peripherals/RESET_BUTTON))
+    (pad 2 smd rect (at -3.4 -2 90) (size 3.2 1) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+    (pad 2 smd rect (at 3.4 -2 90) (size 3.2 1) (layers F.Cu F.Paste F.Mask)
+      (net 49 GND))
+  )
+
+  (module "DO-214AC(SMA)" (layer F.Cu) (tedit 524D7DB0) (tstamp 524A9F05)
+    (at 224.079 141.656 90)
+    (descr "DO-214AC (SMA)  PACKAGE.")
+    (tags "DO-214AC SMA")
+    (path /524A720C/524A9A45)
+    (attr smd)
+    (fp_text reference D1 (at -3.8354 0.127 180) (layer F.SilkS)
+      (effects (font (size 1.00076 1.00076) (thickness 0.11938)))
+    )
+    (fp_text value DIODE (at 0 2.79908 90) (layer F.SilkS)
+      (effects (font (size 1.00076 1.00076) (thickness 0.11938)))
+    )
+    (fp_line (start -0.127 0) (end 0.98298 0) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 0.3175) (end 0.03048 0.47498) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 0) (end -0.127 0.3175) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 -0.3175) (end -0.28448 -0.47498) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 0) (end -0.127 -0.3175) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.762 0.47498) (end -0.127 0) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.762 0) (end -0.762 0.47498) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.762 -0.47498) (end -0.762 0) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 0) (end -0.762 -0.47498) (layer F.SilkS) (width 0.127))
+    (fp_line (start -2.286 -1.27) (end -2.286 -1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start 2.286 1.905) (end 2.286 1.27) (layer F.SilkS) (width 0.127))
+    (fp_line (start -2.286 1.905) (end 2.286 1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start -2.286 1.27) (end -2.286 1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start 0.9906 1.905) (end 0.9906 -1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start 0.6604 1.905) (end 0.6604 -1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start 2.286 -1.905) (end 2.286 -1.27) (layer F.SilkS) (width 0.127))
+    (fp_line (start -2.286 -1.905) (end 2.286 -1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.762 0) (end -0.9652 0) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -1.89992 0 90) (size 1.6002 2.19964) (layers F.Cu F.Paste F.Mask)
+      (net 13 /Peripherals/5V))
+    (pad 2 smd rect (at 1.89992 0 90) (size 1.6002 2.19964) (layers F.Cu F.Paste F.Mask)
+      (net 62 N-0000082))
+    (model smd/do214.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.95 0.95 0.95))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module "DO-214AC(SMA)" (layer F.Cu) (tedit 524D7FED) (tstamp 524A9F1D)
+    (at 207.188 143.485 90)
+    (descr "DO-214AC (SMA)  PACKAGE.")
+    (tags "DO-214AC SMA")
+    (path /524A720C/524A729F)
+    (attr smd)
+    (fp_text reference D2 (at -4.0132 0.2286 90) (layer F.SilkS)
+      (effects (font (size 1.00076 1.00076) (thickness 0.11938)))
+    )
+    (fp_text value DIODE (at 0 2.79908 90) (layer F.SilkS)
+      (effects (font (size 1.00076 1.00076) (thickness 0.11938)))
+    )
+    (fp_line (start -0.127 0) (end 0.98298 0) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 0.3175) (end 0.03048 0.47498) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 0) (end -0.127 0.3175) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 -0.3175) (end -0.28448 -0.47498) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 0) (end -0.127 -0.3175) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.762 0.47498) (end -0.127 0) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.762 0) (end -0.762 0.47498) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.762 -0.47498) (end -0.762 0) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.127 0) (end -0.762 -0.47498) (layer F.SilkS) (width 0.127))
+    (fp_line (start -2.286 -1.27) (end -2.286 -1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start 2.286 1.905) (end 2.286 1.27) (layer F.SilkS) (width 0.127))
+    (fp_line (start -2.286 1.905) (end 2.286 1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start -2.286 1.27) (end -2.286 1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start 0.9906 1.905) (end 0.9906 -1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start 0.6604 1.905) (end 0.6604 -1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start 2.286 -1.905) (end 2.286 -1.27) (layer F.SilkS) (width 0.127))
+    (fp_line (start -2.286 -1.905) (end 2.286 -1.905) (layer F.SilkS) (width 0.127))
+    (fp_line (start -0.762 0) (end -0.9652 0) (layer F.SilkS) (width 0.127))
+    (pad 1 smd rect (at -1.89992 0 90) (size 1.6002 2.19964) (layers F.Cu F.Paste F.Mask)
+      (net 13 /Peripherals/5V))
+    (pad 2 smd rect (at 1.89992 0 90) (size 1.6002 2.19964) (layers F.Cu F.Paste F.Mask)
+      (net 65 N-0000085))
+    (model smd/do214.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.95 0.95 0.95))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module ArduinoUNOShieldR3EX (layer F.Cu) (tedit 524D7E54) (tstamp 524A9F5F)
+    (at 223.634 125.171)
+    (path /51797E5D/524C4ACA)
+    (fp_text reference U6 (at 21.5773 -22.2758) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value ARDUINO_UNO_R3_EX (at 9.3218 -0.0381) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user SCL (at -22.2885 -21.1455 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user SDA (at -19.6723 -21.1455 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user A5/A11 (at 17.1577 17.653 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user A4/A10 (at 14.605 17.6149 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user A3/A9 (at 12.0904 18.034 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user A2/A8 (at 9.6139 18.0721 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user A1/A7 (at 6.3373 19.2278) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user A0/A6 (at 2.5781 22.0472 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user Vin (at -0.38862 21.3741 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user GND (at -2.9591 21.20646 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user GND (at -5.52958 21.20646 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user 5V (at -8.10006 21.82114 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user 3.3V (at -10.61466 21.20646 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user RESET (at -13.24102 20.59178 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user "0(RX)" (at 17.1958 -20.9804 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user "1(TX)" (at 14.6812 -21.0185 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user "2(EXTI)" (at 12.1666 -20.2946 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user "~3(EXTI)" (at 9.6901 -20.2184 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user 4 (at 7.2136 -21.8567 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user ~5 (at 4.7371 -21.7805 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user ~6 (at 2.1082 -21.7424 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user 7 (at -0.38862 -21.6535 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user 8 (at -4.6355 -21.59762 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user ~9 (at -6.92658 -21.54174 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user "~10(SS)" (at -9.55294 -18.91538 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user "~11(MOSI)" (at -12.23518 -19.6977 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user "12(MISO)" (at -14.6939 -19.6977 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user "13(SCK)" (at -17.2085 -19.47418 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 0 thru_hole rect (at 17.27 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 35 /Peripherals/RX))
+    (pad 2 thru_hole circle (at 12.19 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 25 /Peripherals/GPIO4))
+    (pad 3 thru_hole circle (at 9.65 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 33 /Peripherals/PWM4))
+    (pad 4 thru_hole circle (at 7.11 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 24 /Peripherals/GPIO3))
+    (pad 5 thru_hole circle (at 4.57 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 32 /Peripherals/PWM3))
+    (pad 6 thru_hole circle (at 2.03 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 31 /Peripherals/PWM2))
+    (pad 7 thru_hole circle (at -0.51 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 23 /Peripherals/GPIO2))
+    (pad 8 thru_hole rect (at -4.574 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 22 /Peripherals/GPIO1))
+    (pad 9 thru_hole circle (at -7.114 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 30 /Peripherals/PWM1))
+    (pad 10 thru_hole circle (at -9.654 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 40 /Peripherals/SPI_NSS))
+    (pad 11 thru_hole circle (at -12.194 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 39 /Peripherals/SPI_MOSI))
+    (pad 12 thru_hole circle (at -14.734 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 38 /Peripherals/SPI_MISO))
+    (pad 13 thru_hole circle (at -17.27 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 41 /Peripherals/SPI_SCLK))
+    (pad 1 thru_hole circle (at 14.73 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 42 /Peripherals/TX))
+    (pad 14 thru_hole rect (at 17.27 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 36 /Peripherals/SCL))
+    (pad 15 thru_hole circle (at 14.73 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 37 /Peripherals/SDA))
+    (pad 16 thru_hole circle (at 12.19 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 18 /Peripherals/A3))
+    (pad 17 thru_hole circle (at 9.65 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 17 /Peripherals/A2))
+    (pad 18 thru_hole circle (at 7.11 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 14 /Peripherals/A1))
+    (pad 19 thru_hole circle (at 4.57 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
+    (pad 20 thru_hole circle (at -0.51 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
+    (pad 21 thru_hole circle (at -5.59 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 49 GND))
+    (pad 22 thru_hole circle (at -8.13 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 13 /Peripherals/5V))
+    (pad 23 thru_hole circle (at -10.67 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
+    (pad 24 thru_hole circle (at -13.21 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 34 /Peripherals/RESET_BUTTON))
+    (pad 25 thru_hole circle (at -3.05 24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 49 GND))
+    (pad 28 thru_hole circle (at 4.57 21.59) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
+    (pad 29 thru_hole circle (at 7.11 21.59) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 19 /Peripherals/A7))
+    (pad 30 thru_hole circle (at 9.65 21.59) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 20 /Peripherals/A8))
+    (pad 31 thru_hole circle (at 12.19 21.59) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 21 /Peripherals/A9))
+    (pad 32 thru_hole circle (at 14.73 21.59) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 15 /Peripherals/A10))
+    (pad 33 thru_hole circle (at 17.27 21.59) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 16 /Peripherals/A11))
+    (pad 26 thru_hole circle (at -19.81 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
+    (pad 27 thru_hole circle (at -22.35 -24.13) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module 74477310 (layer F.Cu) (tedit 524A9AA1) (tstamp 524A9F66)
+    (at 229.362 139.941 90)
+    (path /524A720C/524A9A85)
+    (fp_text reference L1 (at 0.0635 -4.6609 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 5.6134 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 1.8669 1.2954) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at 0 -1.625 90) (size 4.5 1.75) (layers F.Cu F.Paste F.Mask)
+      (net 62 N-0000082))
+    (pad 2 smd rect (at 0 1.625 90) (size 4.5 1.75) (layers F.Cu F.Paste F.Mask)
+      (net 66 N-0000086))
+  )
+
+  (module SM0805 (layer B.Cu) (tedit 524D8067) (tstamp 524AA4A0)
+    (at 240.957 122.225 270)
+    (path /51B6F5B1/524AA3FB)
+    (attr smd)
+    (fp_text reference C20 (at 0.0254 1.3589 270) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_text value 4.7u (at 0 -0.381 270) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_line (start 1.524 -0.762) (end 0.508 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 1.524 0.762) (end 1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 0.508 0.762) (end 1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -0.508 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -0.508 -0.762) (end -1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 -0.762) (end -1.651 -0.635) (layer B.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0 270) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 43 "/Power Interface/12V"))
+    (pad 2 smd rect (at 0.9525 0 270) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0805 (layer B.Cu) (tedit 524D8064) (tstamp 524AA4AD)
+    (at 241.021 130.759 270)
+    (path /51B6F5B1/524AA4A5)
+    (attr smd)
+    (fp_text reference C21 (at -0.0635 1.4478 270) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_text value 4.7u (at 0 -0.381 270) (layer B.SilkS)
+      (effects (font (size 0.50038 0.50038) (thickness 0.10922)) (justify mirror))
+    )
+    (fp_line (start 1.524 -0.762) (end 0.508 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 1.524 0.762) (end 1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start 0.508 0.762) (end 1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 0.762) (end -0.508 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -1.524 -0.762) (end -1.524 0.762) (layer B.SilkS) (width 0.09906))
+    (fp_line (start -0.508 -0.762) (end -1.524 -0.762) (layer B.SilkS) (width 0.09906))
+    (fp_circle (center -1.651 -0.762) (end -1.651 -0.635) (layer B.SilkS) (width 0.09906))
+    (pad 1 smd rect (at -0.9525 0 270) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 43 "/Power Interface/12V"))
+    (pad 2 smd rect (at 0.9525 0 270) (size 0.889 1.397) (layers B.Cu B.Paste B.Mask)
+      (net 49 GND))
+    (model smd/chip_cms.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.1 0.1 0.1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module PIN_ARRAY_4x1 (layer F.Cu) (tedit 524D7E40) (tstamp 524A9D78)
+    (at 248.374 124.701 90)
+    (descr "Double rangee de contacts 2 x 5 pins")
+    (tags CONN)
+    (path /51797E5D/524C122D)
+    (fp_text reference P1 (at -2.1463 -2.0701 90) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.2032)))
+    )
+    (fp_text value CONN_4 (at 0 2.54 90) (layer F.SilkS) hide
+      (effects (font (size 1.016 1.016) (thickness 0.2032)))
+    )
+    (fp_line (start 5.08 1.27) (end 5.08 -1.27) (layer F.SilkS) (width 0.254))
+    (fp_line (start -5.08 -1.27) (end -5.08 1.27) (layer F.SilkS) (width 0.254))
+    (fp_line (start 5.08 -1.27) (end -5.08 -1.27) (layer F.SilkS) (width 0.254))
+    (fp_line (start 5.08 1.27) (end -5.08 1.27) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -3.81 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 "/LIN Interface/LIN1"))
+    (pad 2 thru_hole circle (at -1.27 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 49 GND))
+    (pad 3 thru_hole circle (at 1.27 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 4 "/LIN Interface/LIN2"))
+    (pad 4 thru_hole circle (at 3.81 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 49 GND))
+    (model pin_array\pins_array_4x1.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module SM0603 (layer B.Cu) (tedit 524D8040) (tstamp 524A9C20)
+    (at 229.197 120.282 270)
+    (path /517E4EC4)
+    (attr smd)
+    (fp_text reference R4 (at -1.8923 0.0127 270) (layer B.SilkS)
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_text value 10k (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.508 0.4572) (thickness 0.1143)) (justify mirror))
+    )
+    (fp_line (start -1.143 -0.635) (end -1.143 0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 -0.635) (end -1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start 1.143 0.635) (end 1.143 -0.635) (layer B.SilkS) (width 0.127))
+    (fp_line (start -1.143 0.635) (end 1.143 0.635) (layer B.SilkS) (width 0.127))
+    (pad 1 smd rect (at -0.762 0 270) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 44 "/Power Interface/3V3"))
+    (pad 2 smd rect (at 0.762 0 270) (size 0.635 1.143) (layers B.Cu B.Paste B.Mask)
+      (net 52 N-0000049))
+    (model smd\resistors\R0603.wrl
+      (offset (xyz 0 0 0.02539999961853028))
+      (scale (xyz 0.5 0.5 0.5))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (gr_text "SBA-LIN v0.0\nJavier Fernández Cepeda" (at 202.2856 111.8108 90) (layer B.SilkS)
+    (effects (font (size 1 1) (thickness 0.25)) (justify mirror))
+  )
+  (gr_line (start 248.1834 150.0378) (end 248.0818 150.1394) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 249.9995 148.082) (end 249.9995 148.209) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 205.2193 150.1394) (end 205.1177 150.0378) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 199.9996 119.4689) (end 199.9996 119.6975) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 202.3745 122.0724) (end 204.1398 123.8377) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 248.1707 150.0251) (end 249.9995 148.1963) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 249.9995 148.0693) (end 249.9995 101.4984) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 249.9995 101.4984) (end 248.6533 100.1522) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 199.9996 119.4562) (end 199.9996 100.6602) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 202.3618 122.0597) (end 199.9996 119.6975) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 204.1398 149.0472) (end 204.1398 123.8377) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 205.105 150.0124) (end 204.1398 149.0472) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 205.232 150.1394) (end 248.1072 150.1394) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 200.5203 100.1522) (end 248.666 100.1522) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 200.5076 100.1522) (end 199.9996 100.6602) (angle 90) (layer Edge.Cuts) (width 0.15))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

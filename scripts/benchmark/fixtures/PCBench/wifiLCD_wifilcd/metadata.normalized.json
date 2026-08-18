@@ -1,0 +1,52 @@
+{
+  "board_id": "wifiLCD_wifilcd",
+  "display_name": "wifiLCD_wifilcd",
+  "pcbench_directory": "PCBs/wifiLCD_wifilcd",
+  "source": "https://github.com/Asbjoern/wifiLCD",
+  "author": "Asbjoern",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.873991+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 23,
+    "dimensions_mm": {
+      "width": 30.0,
+      "height": 41.0
+    },
+    "area_cm2": 12.3,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 252,
+    "vias": 33,
+    "track_length_mm": 664.68,
+    "kicad_drc_violations": 209,
+    "kicad_drc_breakdown": {
+      "total_violations": 209,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 98,
+        "copper_edge_clearance": 9,
+        "courtyards_overlap": 1,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 23,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 69,
+        "silk_overlap": 5
+      },
+      "by_severity": {
+        "error": 110,
+        "warning": 99
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

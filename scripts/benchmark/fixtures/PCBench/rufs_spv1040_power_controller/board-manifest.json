@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "rufs_spv1040_power_controller",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 77284,
+      "sha256": "44c9eddf34e90251bb10df5dc3807ff0dff838cf34b92815703b42b37cd6cd87"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 49980,
+      "sha256": "106333afa8d361e7598236688a7d88ca67d19c347ee47bc56fd2c90152b796fa"
+    },
+    "metadata_json": {
+      "bytes": 663,
+      "sha256": "c5d5771ad3bde2f22432fd3c7ba41a4f25ba476e9a4c6361a285e4bb0e65b32c"
+    },
+    "final_json": {
+      "bytes": 39014,
+      "sha256": "c6876b10022fa30c4db9bc0bd3583641c15c6a78d949d7fcb66217ce2f54577a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:42:39.774311+00:00"
+  }
+}

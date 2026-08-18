@@ -1,0 +1,51 @@
+{
+  "board_id": "AVR-ZIF-Programmer_AVR-ZIF-Prog",
+  "display_name": "AVR-ZIF-Programmer_AVR-ZIF-Prog",
+  "pcbench_directory": "PCBs/AVR-ZIF-Programmer_AVR-ZIF-Prog",
+  "source": "https://github.com/jbtronics/AVR-ZIF-Programmer",
+  "author": "jbtronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:32.717824+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 36,
+    "components": 35,
+    "dimensions_mm": {
+      "width": 96.52,
+      "height": 76.2
+    },
+    "area_cm2": 73.55,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 337,
+    "vias": 0,
+    "track_length_mm": 1463.96,
+    "kicad_drc_violations": 361,
+    "kicad_drc_breakdown": {
+      "total_violations": 361,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 307,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 35,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 11,
+        "solder_mask_bridge": 3,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 312,
+        "warning": 49
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

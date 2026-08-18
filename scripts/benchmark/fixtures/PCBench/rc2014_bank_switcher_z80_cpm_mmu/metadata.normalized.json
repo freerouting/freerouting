@@ -1,0 +1,49 @@
+{
+  "board_id": "rc2014_bank_switcher_z80_cpm_mmu",
+  "display_name": "rc2014_bank_switcher_z80_cpm_mmu",
+  "pcbench_directory": "PCBs/rc2014_bank_switcher_z80_cpm_mmu",
+  "source": "https://github.com/mooped/rc2014_bank_switcher",
+  "author": "mooped",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.214089+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 102.87,
+      "height": 22.86
+    },
+    "area_cm2": 23.52,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 148,
+    "vias": 26,
+    "track_length_mm": 1114.51,
+    "kicad_drc_violations": 178,
+    "kicad_drc_breakdown": {
+      "total_violations": 178,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 41,
+        "holes_co_located": 2,
+        "silk_overlap": 99,
+        "text_height": 35,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 41,
+        "warning": 137
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

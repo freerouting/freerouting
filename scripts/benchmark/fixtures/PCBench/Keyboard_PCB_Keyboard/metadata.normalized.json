@@ -1,0 +1,54 @@
+{
+  "board_id": "Keyboard_PCB_Keyboard",
+  "display_name": "Keyboard_PCB_Keyboard",
+  "pcbench_directory": "PCBs/Keyboard_PCB_Keyboard",
+  "source": "https://github.com/namlit/Keyboard_PCB",
+  "author": "namlit",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.446021+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 121,
+    "components": 391,
+    "dimensions_mm": {
+      "width": 290.0,
+      "height": 190.0
+    },
+    "area_cm2": 551.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1399,
+    "vias": 62,
+    "track_length_mm": 12251.24,
+    "kicad_drc_violations": 335,
+    "kicad_drc_breakdown": {
+      "total_violations": 335,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 104,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 199,
+        "malformed_courtyard": 2,
+        "npth_inside_courtyard": 2,
+        "padstack": 4,
+        "pth_inside_courtyard": 10,
+        "starved_thermal": 2,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 125,
+        "warning": 210
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

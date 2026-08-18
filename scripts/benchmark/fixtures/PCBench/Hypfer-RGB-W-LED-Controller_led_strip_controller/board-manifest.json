@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Hypfer-RGB-W-LED-Controller_led_strip_controller",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 271268,
+      "sha256": "016e5d1b59bf75bf07d6218990afd2a7fff0977a549a70f8b639bf379bfa5876"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 177890,
+      "sha256": "da1fbb365034c3845102db2edf83e9d85acd59d20681e1e1945e736fb625e796"
+    },
+    "metadata_json": {
+      "bytes": 721,
+      "sha256": "0d52c0c7dcb04fa437e37a0231ba418ba7ce852c8456a3020acb8b587213b2a8"
+    },
+    "final_json": {
+      "bytes": 72499,
+      "sha256": "3ace3c77d28b65c71d6ecd15bb15620c6f2596d15119e0cfd0fb6459eec36e5f"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:57:53.615995+00:00"
+  }
+}

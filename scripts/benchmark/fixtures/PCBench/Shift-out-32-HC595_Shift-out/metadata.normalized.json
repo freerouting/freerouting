@@ -1,0 +1,50 @@
+{
+  "board_id": "Shift-out-32-HC595_Shift-out",
+  "display_name": "Shift-out-32-HC595_Shift-out",
+  "pcbench_directory": "PCBs/Shift-out-32-HC595_Shift-out",
+  "source": "https://github.com/lhartmann/Shift-out-32-HC595",
+  "author": "lhartmann",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:27.593764+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 116.84,
+      "height": 33.02
+    },
+    "area_cm2": 38.58,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 452,
+    "vias": 16,
+    "track_length_mm": 1471.85,
+    "kicad_drc_violations": 331,
+    "kicad_drc_breakdown": {
+      "total_violations": 331,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 217,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 8,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 27,
+        "silk_overlap": 77
+      },
+      "by_severity": {
+        "error": 227,
+        "warning": 104
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

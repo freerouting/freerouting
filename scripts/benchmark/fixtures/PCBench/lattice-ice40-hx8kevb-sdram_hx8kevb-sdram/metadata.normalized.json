@@ -1,0 +1,52 @@
+{
+  "board_id": "lattice-ice40-hx8kevb-sdram_hx8kevb-sdram",
+  "display_name": "lattice-ice40-hx8kevb-sdram_hx8kevb-sdram",
+  "pcbench_directory": "PCBs/lattice-ice40-hx8kevb-sdram_hx8kevb-sdram",
+  "source": "https://github.com/niklasnisbeth/lattice-ice40-hx8kevb-sdram",
+  "author": "niklasnisbeth",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.885991+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 56.0,
+      "height": 74.1
+    },
+    "area_cm2": 41.5,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 442,
+    "vias": 27,
+    "track_length_mm": 1628.08,
+    "kicad_drc_violations": 106,
+    "kicad_drc_breakdown": {
+      "total_violations": 106,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 52,
+        "lib_footprint_issues": 17,
+        "padstack": 2,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 13,
+        "starved_thermal": 8,
+        "track_dangling": 10
+      },
+      "by_severity": {
+        "error": 62,
+        "warning": 44
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

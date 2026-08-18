@@ -1,0 +1,58 @@
+{
+  "board_id": "solar-lora_solar-lora",
+  "display_name": "solar-lora_solar-lora",
+  "pcbench_directory": "PCBs/solar-lora_solar-lora",
+  "source": "https://github.com/mattvenn/solar-lora",
+  "author": "mattvenn",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:52.790060+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 64,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 60.0
+    },
+    "area_cm2": 36.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 591,
+    "vias": 46,
+    "track_length_mm": 1635.78,
+    "kicad_drc_violations": 457,
+    "kicad_drc_breakdown": {
+      "total_violations": 457,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 211,
+        "copper_edge_clearance": 5,
+        "holes_co_located": 1,
+        "lib_footprint_issues": 64,
+        "padstack": 4,
+        "pth_inside_courtyard": 3,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 49,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 65,
+        "starved_thermal": 1,
+        "text_height": 14,
+        "text_thickness": 14
+      },
+      "by_severity": {
+        "error": 289,
+        "warning": 168
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

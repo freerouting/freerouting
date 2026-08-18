@@ -1,0 +1,34 @@
+{
+  "board": "Smart-Watch_SmartWatch",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Smart-Watch_SmartWatch\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 184,
+  "segment_count": 1257,
+  "approximate_track_length_mm": 1560.41,
+  "kicad_drc_violations": 689,
+  "generated_at": "2026-08-18T18:24:35.852067+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 689,
+    "unconnected_count": 1,
+    "by_type": {
+      "annular_width": 120,
+      "clearance": 13,
+      "copper_edge_clearance": 27,
+      "hole_clearance": 167,
+      "hole_to_hole": 10,
+      "padstack": 6,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 199,
+      "silk_overlap": 92,
+      "solder_mask_bridge": 1,
+      "text_height": 23,
+      "text_thickness": 23,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 328,
+      "warning": 361
+    }
+  }
+}

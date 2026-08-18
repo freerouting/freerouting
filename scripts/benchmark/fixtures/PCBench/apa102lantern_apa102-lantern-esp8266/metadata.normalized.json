@@ -1,0 +1,54 @@
+{
+  "board_id": "apa102lantern_apa102-lantern-esp8266",
+  "display_name": "apa102lantern_apa102-lantern-esp8266",
+  "pcbench_directory": "PCBs/apa102lantern_apa102-lantern-esp8266",
+  "source": "https://github.com/Nervengift/apa102lantern",
+  "author": "Nervengift",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.414079+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 22,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 63.5,
+      "height": 63.5
+    },
+    "area_cm2": 40.32,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 137,
+    "vias": 1,
+    "track_length_mm": 397.32,
+    "kicad_drc_violations": 197,
+    "kicad_drc_breakdown": {
+      "total_violations": 197,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 8,
+        "clearance": 121,
+        "courtyards_overlap": 8,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 27,
+        "padstack": 8,
+        "shorting_items": 1,
+        "silk_over_copper": 14,
+        "starved_thermal": 8,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 147,
+        "warning": 50
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "board": "APC_AtariPunkConsole",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\APC_AtariPunkConsole\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 148,
+  "approximate_track_length_mm": 549.05,
+  "kicad_drc_violations": 30,
+  "generated_at": "2026-08-18T18:28:46.673102+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 30,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 30
+    },
+    "by_severity": {
+      "warning": 30
+    }
+  }
+}

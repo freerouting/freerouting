@@ -1,0 +1,236 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\esp8266_wi07_3_adapter_esp\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  154940 -87630  154940 -97790  154686 -97790  132842 -97790
+            132842 -76327  154686 -76327  154940 -76327  154940 -87630)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_1x04
+      (place P1 134620 -92202 front 180 (PN CONN_01X04))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x04::1
+      (place P2 153035 -84836 front 0 (PN CONN_01X04))
+    )
+    (component Resistors_SMD:R_1206_HandSoldering
+      (place R1 138303 -96012 front 0 (PN 1k))
+    )
+    (component mbialon:SW_2
+      (place SW1 147574 -94234 front 180 (PN SW_PUSH))
+    )
+    (component mbialon:ESP8266_Wi07_3
+      (place U1 144018 -81915 front 0 (PN "ESP8266_Wi07-3"))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_1x04
+      (outline (polygon signal 0  -1745 1745  1745 1745  1745 -9395  -1745 -9395))
+      (outline (path signal 150  -1270 -1270  -1270 -8890))
+      (outline (path signal 150  1270 -1270  1270 -8890))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -8890  1270 -8890))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x04::1
+      (outline (polygon signal 0  1745 -9395  -1745 -9395  -1745 1745  1745 1745))
+      (outline (path signal 150  -1270 -1270  -1270 -8890))
+      (outline (path signal 150  1270 -1270  1270 -8890))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -8890  1270 -8890))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+    )
+    (image Resistors_SMD:R_1206_HandSoldering
+      (outline (polygon signal 0  3295 -1195  -3295 -1195  -3295 1195  3295 1195))
+      (outline (path signal 150  1000 -1075  -1000 -1075))
+      (outline (path signal 150  -1000 1075  1000 1075))
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 2 2000 0)
+    )
+    (image mbialon:SW_2
+      (outline (polygon signal 0  -5045 3395  5045 3395  5045 405  -5045 405))
+      (outline (path signal 150  -3225 3225  3225 3225))
+      (outline (path signal 150  -3225 575  3225 575))
+      (pin Rect[T]Pad_1550.000000x1550.000000_um 1 -4000 1800)
+      (pin Rect[T]Pad_1550.000000x1550.000000_um 2 4000 1800)
+    )
+    (image mbialon:ESP8266_Wi07_3
+      (outline (path signal 150  -6200 5200  -6200 -12200))
+      (outline (path signal 150  6000 5200  -6200 5200))
+      (outline (path signal 150  6000 -12200  6000 5200))
+      (outline (path signal 150  -6200 -12200  6000 -12200))
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 1 6000 -11200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 2 6000 -9200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 3 6000 -7200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 4 6000 -5200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 5 6000 -3200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 6 6000 -1200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 7 6000 800)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 14 -6200 -11200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 13 -6200 -9200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 12 -6200 -7200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 11 -6200 -5200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 10 -6200 -3200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 9 -6200 -1200)
+      (pin Rect[T]Pad_2000.000000x1000.000000_um 8 -6200 800)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1000.000000_um
+      (shape (rect F.Cu -1000 -500 1000 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1700.000000_um
+      (shape (rect F.Cu -1000 -850 1000 850))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1550.000000x1550.000000_um
+      (shape (rect F.Cu -775 -775 775 775))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net GPIO16
+      (pins P1-1 U1-5)
+    )
+    (net GPIO14
+      (pins P1-2 U1-9)
+    )
+    (net GPIO13
+      (pins P1-3 U1-11)
+    )
+    (net GPIO12
+      (pins P1-4 U1-10)
+    )
+    (net +3V3
+      (pins P2-1 R1-1 U1-6 U1-13 U1-8)
+    )
+    (net RX
+      (pins P2-2 U1-4)
+    )
+    (net TX
+      (pins P2-3 U1-3)
+    )
+    (net GND
+      (pins P2-4 SW1-1 U1-1 U1-12)
+    )
+    (net "Net-(R1-Pad2)"
+      (pins R1-2 SW1-2 U1-14)
+    )
+    (net "Net-(U1-Pad2)"
+      (pins U1-2)
+    )
+    (net "Net-(U1-Pad7)"
+      (pins U1-7)
+    )
+    (class kicad_default +3V3 GND GPIO12 GPIO13 GPIO14 GPIO16 "Net-(R1-Pad2)"
+      "Net-(U1-Pad2)" "Net-(U1-Pad7)" RX TX
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 254  134620 -93726  135255 -94361)(net GPIO16)(type route))
+    (wire (path B.Cu 254  135255 -94361  144526 -85090)(net GPIO16)(type route))
+    (wire (path F.Cu 254  134620 -92202  134620 -93726)(net GPIO16)(type route))
+    (wire (path F.Cu 254  144551 -85115  150018 -85115)(net GPIO16)(type route))
+    (wire (path F.Cu 254  144526 -85090  144551 -85115)(net GPIO16)(type route))
+    (wire (path F.Cu 254  149567 -84963  149510 -85020)(net GPIO16)(type route))
+    (wire (path F.Cu 254  134620 -89662  134810 -89662  136398 -88074.5)(net GPIO14)(type route))
+    (wire (path F.Cu 254  140265 -83115  137818 -83115)(net GPIO14)(type route))
+    (wire (path F.Cu 254  141288 -84137.5  140265 -83115)(net GPIO14)(type route))
+    (wire (path B.Cu 254  141288 -87058.5  141288 -84137.5)(net GPIO14)(type route))
+    (wire (path B.Cu 254  140272 -88074.5  141288 -87058.5)(net GPIO14)(type route))
+    (wire (path F.Cu 254  136398 -88074.5  140272 -88074.5)(net GPIO14)(type route))
+    (wire (path F.Cu 254  134620 -89662  134747 -89662)(net GPIO14)(type route))
+    (wire (path F.Cu 254  137818 -87115  134627 -87115  134620 -87122)(net GPIO13)(type route))
+    (wire (path F.Cu 254  134620 -84582  135700 -84582)(net GPIO12)(type route))
+    (wire (path F.Cu 254  136232 -85115  137818 -85115)(net GPIO12)(type route))
+    (wire (path F.Cu 254  135700 -84582  136232 -85115)(net GPIO12)(type route))
+    (wire (path F.Cu 254  134620 -84582  135382 -84582)(net GPIO12)(type route))
+    (wire (path F.Cu 254  137818 -91115  140836 -91115)(net +3V3)(type route))
+    (wire (path F.Cu 254  147574 -83185  147574 -83115)(net +3V3)(type route))
+    (wire (path F.Cu 254  146494 -84264.5  147574 -83185)(net +3V3)(type route))
+    (wire (path B.Cu 254  146494 -85471  146494 -84264.5)(net +3V3)(type route))
+    (wire (path B.Cu 254  140843 -91122.5  146494 -85471)(net +3V3)(type route))
+    (wire (path F.Cu 254  140836 -91115  140843 -91122.5)(net +3V3)(type route))
+    (wire (path F.Cu 254  137818 -81115  143916 -81115  145916 -83115  147574 -83115
+            150018 -83115)(net +3V3)(type route))
+    (wire (path F.Cu 254  136303 -96012  136303 -92043  137231 -91115  137818 -91115)(net +3V3)(type route))
+    (wire (path F.Cu 254  153035 -84836  153035 -83693)(net +3V3)(type route))
+    (wire (path F.Cu 254  152457 -83115  150018 -83115)(net +3V3)(type route))
+    (wire (path F.Cu 254  153035 -83693  152457 -83115)(net +3V3)(type route))
+    (wire (path F.Cu 254  153035 -87376  150279 -87376  150018 -87115)(net RX)(type route))
+    (wire (path F.Cu 254  153035 -87630  152654 -87630)(net RX)(type route))
+    (wire (path F.Cu 254  153035 -89916  150819 -89916  150018 -89115)(net TX)(type route))
+    (wire (path F.Cu 254  153035 -90170  152400 -90170)(net TX)(type route))
+    (wire (path F.Cu 254  137818 -89115  141312 -89115)(net GND)(type route))
+    (wire (path F.Cu 254  145312 -93115  150018 -93115)(net GND)(type route))
+    (wire (path F.Cu 254  141312 -89115  145312 -93115)(net GND)(type route))
+    (wire (path F.Cu 254  153035 -92456  152781 -92456  152122 -93115  150018 -93115)(net GND)(type route))
+    (wire (path F.Cu 254  151574 -96034  151574 -94671  150018 -93115)(net GND)(type route))
+    (wire (path F.Cu 254  140303 -96012  140303 -95600  137818 -93115)(net "Net-(R1-Pad2)")(type route))
+    (wire (path F.Cu 254  143574 -96034  140325 -96034  140303 -96012)(net "Net-(R1-Pad2)")(type route))
+    (via "Via[0-1]_889:635_um"  144526 -85090 (net GPIO16)(type route))
+    (via "Via[0-1]_889:635_um"  135255 -94361 (net GPIO16)(type route))
+    (via "Via[0-1]_889:635_um"  141288 -84137.5 (net GPIO14)(type route))
+    (via "Via[0-1]_889:635_um"  140272 -88074.5 (net GPIO14)(type route))
+    (via "Via[0-1]_889:635_um"  146494 -84264.5 (net +3V3)(type route))
+    (via "Via[0-1]_889:635_um"  140843 -91122.5 (net +3V3)(type route))
+  )
+)

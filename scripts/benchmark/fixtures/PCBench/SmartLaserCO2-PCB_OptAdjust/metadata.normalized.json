@@ -1,0 +1,50 @@
+{
+  "board_id": "SmartLaserCO2-PCB_OptAdjust",
+  "display_name": "SmartLaserCO2-PCB_OptAdjust",
+  "pcbench_directory": "PCBs/SmartLaserCO2-PCB_OptAdjust",
+  "source": "https://github.com/smartDIYs/SmartLaserCO2-PCB",
+  "author": "smartDIYs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.450080+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 42.0,
+      "height": 42.0
+    },
+    "area_cm2": 17.64,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 18,
+    "vias": 1,
+    "track_length_mm": 78.75,
+    "kicad_drc_violations": 52,
+    "kicad_drc_breakdown": {
+      "total_violations": 52,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 12,
+        "holes_co_located": 2,
+        "padstack": 4,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 28
+      },
+      "by_severity": {
+        "error": 16,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

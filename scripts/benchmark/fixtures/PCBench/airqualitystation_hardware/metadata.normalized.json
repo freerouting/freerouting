@@ -1,0 +1,54 @@
+{
+  "board_id": "airqualitystation_hardware",
+  "display_name": "airqualitystation_hardware",
+  "pcbench_directory": "PCBs/airqualitystation_hardware",
+  "source": "https://github.com/tiefpunkt/airqualitystation",
+  "author": "tiefpunkt",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:32.673824+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 44.2,
+      "height": 44.2
+    },
+    "area_cm2": 19.54,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 238,
+    "vias": 32,
+    "track_length_mm": 476.01,
+    "kicad_drc_violations": 141,
+    "kicad_drc_breakdown": {
+      "total_violations": 141,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 52,
+        "lib_footprint_issues": 30,
+        "malformed_courtyard": 8,
+        "padstack": 2,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 36,
+        "silk_overlap": 7,
+        "starved_thermal": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 63,
+        "warning": 78
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

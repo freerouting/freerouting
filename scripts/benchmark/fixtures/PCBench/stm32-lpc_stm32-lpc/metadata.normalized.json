@@ -1,0 +1,56 @@
+{
+  "board_id": "stm32-lpc_stm32-lpc",
+  "display_name": "stm32-lpc_stm32-lpc",
+  "pcbench_directory": "PCBs/stm32-lpc_stm32-lpc",
+  "source": "https://github.com/urjaman/stm32-lpc",
+  "author": "urjaman",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:00.666153+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 26.67,
+      "height": 28.83
+    },
+    "area_cm2": 7.69,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 433,
+    "vias": 29,
+    "track_length_mm": 656.86,
+    "kicad_drc_violations": 191,
+    "kicad_drc_breakdown": {
+      "total_violations": 191,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 67,
+        "copper_edge_clearance": 9,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 19,
+        "silk_edge_clearance": 32,
+        "silk_over_copper": 13,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 33,
+        "starved_thermal": 4,
+        "text_height": 3,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 117,
+        "warning": 74
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

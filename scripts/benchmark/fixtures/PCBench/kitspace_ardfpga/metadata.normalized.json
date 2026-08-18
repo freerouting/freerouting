@@ -1,0 +1,55 @@
+{
+  "board_id": "kitspace_ardfpga",
+  "display_name": "kitspace_ardfpga",
+  "pcbench_directory": "PCBs/kitspace_ardfpga",
+  "source": "https://github.com/bru4bas/gelatino-board",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/bru4bas/gelatino-board/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:22:11.957923+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 46,
+    "components": 76,
+    "dimensions_mm": {
+      "width": 69.04,
+      "height": 53.8
+    },
+    "area_cm2": 37.14,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 887,
+    "vias": 186,
+    "track_length_mm": 2242.25,
+    "kicad_drc_violations": 324,
+    "kicad_drc_breakdown": {
+      "total_violations": 324,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 14,
+        "copper_edge_clearance": 2,
+        "hole_clearance": 16,
+        "lib_footprint_issues": 45,
+        "lib_footprint_mismatch": 19,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 80,
+        "solder_mask_bridge": 70,
+        "starved_thermal": 2,
+        "text_height": 69,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 104,
+        "warning": 220
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

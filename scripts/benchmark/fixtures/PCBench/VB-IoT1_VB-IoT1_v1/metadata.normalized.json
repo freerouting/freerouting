@@ -1,0 +1,59 @@
+{
+  "board_id": "VB-IoT1_VB-IoT1_v1",
+  "display_name": "VB-IoT1_VB-IoT1_v1",
+  "pcbench_directory": "PCBs/VB-IoT1_VB-IoT1_v1",
+  "source": "https://github.com/venseytech/VB-IoT1",
+  "author": "venseytech",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:42.069934+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 93,
+    "components": 178,
+    "dimensions_mm": {
+      "width": 66.0,
+      "height": 86.0
+    },
+    "area_cm2": 56.76,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 5166,
+    "vias": 533,
+    "track_length_mm": 8490.25,
+    "kicad_drc_violations": 1652,
+    "kicad_drc_breakdown": {
+      "total_violations": 1652,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 505,
+        "copper_edge_clearance": 2,
+        "hole_clearance": 199,
+        "lib_footprint_issues": 178,
+        "nonmirrored_text_on_back_layer": 86,
+        "silk_edge_clearance": 14,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 10,
+        "text_height": 189,
+        "text_thickness": 8,
+        "track_dangling": 59,
+        "via_dangling": 1,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 719,
+        "warning": 933
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

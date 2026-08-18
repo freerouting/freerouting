@@ -1,0 +1,56 @@
+{
+  "board_id": "ottawa-badges-2016_ottawa-badges-2016",
+  "display_name": "ottawa-badges-2016_ottawa-badges-2016",
+  "pcbench_directory": "PCBs/ottawa-badges-2016_ottawa-badges-2016",
+  "source": "https://github.com/rglenn/ottawa-badges-2016",
+  "author": "rglenn",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.394185+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 33,
+    "components": 105,
+    "dimensions_mm": {
+      "width": 49.0,
+      "height": 100.0
+    },
+    "area_cm2": 49.0,
+    "zones": 12
+  },
+  "reference": {
+    "segments": 987,
+    "vias": 106,
+    "track_length_mm": 3227.25,
+    "kicad_drc_violations": 1008,
+    "kicad_drc_breakdown": {
+      "total_violations": 1008,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 24,
+        "clearance": 488,
+        "copper_edge_clearance": 46,
+        "courtyards_overlap": 2,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 105,
+        "shorting_items": 44,
+        "silk_over_copper": 45,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 200,
+        "starved_thermal": 2,
+        "track_dangling": 46
+      },
+      "by_severity": {
+        "error": 810,
+        "warning": 198
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "board_id": "blinktronicator_.kicad_pcb",
+  "display_name": "blinktronicator_.kicad_pcb",
+  "pcbench_directory": "PCBs/blinktronicator_.kicad_pcb",
+  "source": "https://github.com/zakqwy/blinktronicator",
+  "author": "zakqwy",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:46.913991+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 23.57,
+      "height": 23.55
+    },
+    "area_cm2": 5.55,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 414,
+    "vias": 43,
+    "track_length_mm": 384.62,
+    "kicad_drc_violations": 198,
+    "kicad_drc_breakdown": {
+      "total_violations": 198,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "copper_edge_clearance": 20,
+        "invalid_outline": 5,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 92,
+        "silk_overlap": 16,
+        "text_height": 34,
+        "text_thickness": 17,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 27,
+        "warning": 171
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

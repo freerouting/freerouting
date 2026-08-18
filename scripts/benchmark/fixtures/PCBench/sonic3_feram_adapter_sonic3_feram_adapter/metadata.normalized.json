@@ -1,0 +1,50 @@
+{
+  "board_id": "sonic3_feram_adapter_sonic3_feram_adapter",
+  "display_name": "sonic3_feram_adapter_sonic3_feram_adapter",
+  "pcbench_directory": "PCBs/sonic3_feram_adapter_sonic3_feram_adapter",
+  "source": "https://github.com/Ratfink/sonic3_feram_adapter",
+  "author": "Ratfink",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.838096+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 17.78,
+      "height": 30.48
+    },
+    "area_cm2": 5.42,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 114,
+    "vias": 11,
+    "track_length_mm": 188.62,
+    "kicad_drc_violations": 104,
+    "kicad_drc_breakdown": {
+      "total_violations": 104,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 34,
+        "copper_edge_clearance": 25,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 6,
+        "silk_over_copper": 32,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 60,
+        "warning": 44
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

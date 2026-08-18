@@ -1,0 +1,49 @@
+{
+  "board_id": "autohat-board_usd-adapter",
+  "display_name": "autohat-board_usd-adapter",
+  "pcbench_directory": "PCBs/autohat-board_usd-adapter",
+  "source": "https://github.com/balena-io/autohat-board",
+  "author": "balena-io",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:27.761766+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 2,
+    "dimensions_mm": {
+      "width": 17.01,
+      "height": 34.97
+    },
+    "area_cm2": 5.95,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 47,
+    "vias": 8,
+    "track_length_mm": 268.95,
+    "kicad_drc_violations": 25,
+    "kicad_drc_breakdown": {
+      "total_violations": 25,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 10,
+        "invalid_outline": 4,
+        "lib_footprint_issues": 2,
+        "silk_edge_clearance": 2,
+        "solder_mask_bridge": 7
+      },
+      "by_severity": {
+        "error": 21,
+        "warning": 4
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

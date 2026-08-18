@@ -1,0 +1,48 @@
+{
+  "board_id": "custom_cpu--ALU_custom_cpu--ALU",
+  "display_name": "custom_cpu--ALU_custom_cpu--ALU",
+  "pcbench_directory": "PCBs/custom_cpu--ALU_custom_cpu--ALU",
+  "source": "https://github.com/lelandbatey/custom_cpu--ALU",
+  "author": "lelandbatey",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:37.673882+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 44,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 60.0
+    },
+    "area_cm2": 60.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 303,
+    "vias": 54,
+    "track_length_mm": 1890.72,
+    "kicad_drc_violations": 168,
+    "kicad_drc_breakdown": {
+      "total_violations": 168,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 132,
+        "copper_edge_clearance": 7,
+        "lib_footprint_issues": 25,
+        "silk_over_copper": 4
+      },
+      "by_severity": {
+        "error": 139,
+        "warning": 29
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

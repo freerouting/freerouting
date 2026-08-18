@@ -1,0 +1,49 @@
+{
+  "board_id": "gwurrbus_gwurrbus-relay",
+  "display_name": "gwurrbus_gwurrbus-relay",
+  "pcbench_directory": "PCBs/gwurrbus_gwurrbus-relay",
+  "source": "https://github.com/gwurr3/gwurrbus",
+  "author": "gwurr3",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.274184+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 78.22,
+      "height": 56.29
+    },
+    "area_cm2": 44.03,
+    "zones": 25
+  },
+  "reference": {
+    "segments": 141,
+    "vias": 0,
+    "track_length_mm": 573.66,
+    "kicad_drc_violations": 33,
+    "kicad_drc_breakdown": {
+      "total_violations": 33,
+      "unconnected_count": 12,
+      "by_type": {
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 13,
+        "silk_edge_clearance": 9,
+        "silk_overlap": 7,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 32
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

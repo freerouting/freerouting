@@ -1,0 +1,53 @@
+{
+  "board_id": "makerspace-emonth_load_box",
+  "display_name": "makerspace-emonth_load_box",
+  "pcbench_directory": "PCBs/makerspace-emonth_load_box",
+  "source": "https://github.com/google/makerspace-emonth",
+  "author": "google",
+  "license": "Creative Commons Attribution 4.0 International",
+  "license_spdx": "CC-BY-4.0",
+  "retrieved_at": "2023-08-17T17:22:31.633811+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 27,
+    "components": 59,
+    "dimensions_mm": {
+      "width": 94.79,
+      "height": 80.78
+    },
+    "area_cm2": 76.57,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 211,
+    "vias": 17,
+    "track_length_mm": 720.82,
+    "kicad_drc_violations": 199,
+    "kicad_drc_breakdown": {
+      "total_violations": 199,
+      "unconnected_count": 53,
+      "by_type": {
+        "clearance": 6,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 59,
+        "shorting_items": 2,
+        "silk_edge_clearance": 18,
+        "silk_over_copper": 17,
+        "silk_overlap": 21,
+        "solder_mask_bridge": 72,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 83,
+        "warning": 116
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

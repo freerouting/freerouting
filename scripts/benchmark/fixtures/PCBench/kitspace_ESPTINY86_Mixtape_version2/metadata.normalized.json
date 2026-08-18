@@ -1,0 +1,59 @@
+{
+  "board_id": "kitspace_ESPTINY86_Mixtape_version2",
+  "display_name": "kitspace_ESPTINY86_Mixtape_version2",
+  "pcbench_directory": "PCBs/kitspace_ESPTINY86_Mixtape_version2",
+  "source": "https://github.com/8BitMixtape/ESPTINY86_MixtapePCB",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:22:04.371361+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 34,
+    "dimensions_mm": {
+      "width": 99.0,
+      "height": 64.81
+    },
+    "area_cm2": 64.16,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 511,
+    "vias": 69,
+    "track_length_mm": 1490.43,
+    "kicad_drc_violations": 736,
+    "kicad_drc_breakdown": {
+      "total_violations": 736,
+      "unconnected_count": 7,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 276,
+        "copper_edge_clearance": 6,
+        "hole_clearance": 2,
+        "invalid_outline": 23,
+        "lib_footprint_issues": 34,
+        "malformed_courtyard": 4,
+        "padstack": 4,
+        "shorting_items": 106,
+        "silk_edge_clearance": 15,
+        "silk_over_copper": 49,
+        "solder_mask_bridge": 199,
+        "starved_thermal": 1,
+        "track_dangling": 6,
+        "via_dangling": 7
+      },
+      "by_severity": {
+        "error": 621,
+        "warning": 115
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "board": "PiPlay_AudioHAT",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\PiPlay_AudioHAT\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 56,
+  "segment_count": 465,
+  "approximate_track_length_mm": 935.41,
+  "kicad_drc_violations": 343,
+  "generated_at": "2026-08-18T19:33:51.824353+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 343,
+    "unconnected_count": 2,
+    "by_type": {
+      "annular_width": 32,
+      "clearance": 141,
+      "copper_edge_clearance": 27,
+      "courtyards_overlap": 9,
+      "lib_footprint_issues": 43,
+      "shorting_items": 2,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 8,
+      "silk_overlap": 5,
+      "solder_mask_bridge": 67,
+      "starved_thermal": 3,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 281,
+      "warning": 62
+    }
+  }
+}

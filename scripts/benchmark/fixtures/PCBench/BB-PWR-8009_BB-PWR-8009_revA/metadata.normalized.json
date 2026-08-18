@@ -1,0 +1,51 @@
+{
+  "board_id": "BB-PWR-8009_BB-PWR-8009_revA",
+  "display_name": "BB-PWR-8009_BB-PWR-8009_revA",
+  "pcbench_directory": "PCBs/BB-PWR-8009_BB-PWR-8009_revA",
+  "source": "https://github.com/OLIMEX/BB-PWR-8009",
+  "author": "OLIMEX",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:55.546093+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 11.43,
+      "height": 11.43
+    },
+    "area_cm2": 1.31,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 63,
+    "vias": 2,
+    "track_length_mm": 69.99,
+    "kicad_drc_violations": 79,
+    "kicad_drc_breakdown": {
+      "total_violations": 79,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 4,
+        "copper_edge_clearance": 16,
+        "lib_footprint_issues": 17,
+        "silk_over_copper": 38,
+        "silk_overlap": 1,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 21,
+        "warning": 58
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "board_id": "m2-electronics_m2fc",
+  "display_name": "m2-electronics_m2fc",
+  "pcbench_directory": "PCBs/m2-electronics_m2fc",
+  "source": "https://github.com/cuspaceflight/m2-electronics",
+  "author": "cuspaceflight",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:40.729918+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 150,
+    "components": 351,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 70.0
+    },
+    "area_cm2": 70.0,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 2313,
+    "vias": 307,
+    "track_length_mm": 2896.62,
+    "kicad_drc_violations": 922,
+    "kicad_drc_breakdown": {
+      "total_violations": 922,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 247,
+        "copper_edge_clearance": 11,
+        "hole_clearance": 2,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 199,
+        "silk_edge_clearance": 47,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "starved_thermal": 3,
+        "track_dangling": 13
+      },
+      "by_severity": {
+        "error": 265,
+        "warning": 657
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

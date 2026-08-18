@@ -1,0 +1,30 @@
+{
+  "board": "rfidBoard_rfid",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\rfidBoard_rfid\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 67,
+  "segment_count": 239,
+  "approximate_track_length_mm": 681.86,
+  "kicad_drc_violations": 132,
+  "generated_at": "2026-08-18T19:40:19.461616+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 132,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 44,
+      "hole_clearance": 4,
+      "lib_footprint_issues": 34,
+      "padstack": 4,
+      "silk_over_copper": 4,
+      "silk_overlap": 6,
+      "starved_thermal": 2,
+      "text_height": 30
+    },
+    "by_severity": {
+      "error": 54,
+      "warning": 78
+    }
+  }
+}

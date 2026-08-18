@@ -1,0 +1,58 @@
+{
+  "board_id": "ti_cc3200_quadcopter_cc3200_quad",
+  "display_name": "ti_cc3200_quadcopter_cc3200_quad",
+  "pcbench_directory": "PCBs/ti_cc3200_quadcopter_cc3200_quad",
+  "source": "https://github.com/liangste/ti_cc3200_quadcopter",
+  "author": "liangste",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.938144+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 49,
+    "components": 104,
+    "dimensions_mm": {
+      "width": 40.05,
+      "height": 45.05
+    },
+    "area_cm2": 18.04,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 917,
+    "vias": 99,
+    "track_length_mm": 1068.07,
+    "kicad_drc_violations": 532,
+    "kicad_drc_breakdown": {
+      "total_violations": 532,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 215,
+        "copper_edge_clearance": 22,
+        "courtyards_overlap": 7,
+        "hole_clearance": 4,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 104,
+        "padstack": 2,
+        "silk_edge_clearance": 18,
+        "silk_over_copper": 30,
+        "silk_overlap": 27,
+        "starved_thermal": 2,
+        "text_height": 97,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 253,
+        "warning": 279
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

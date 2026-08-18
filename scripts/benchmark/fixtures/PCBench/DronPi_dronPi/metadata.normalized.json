@@ -1,0 +1,55 @@
+{
+  "board_id": "DronPi_dronPi",
+  "display_name": "DronPi_dronPi",
+  "pcbench_directory": "PCBs/DronPi_dronPi",
+  "source": "https://github.com/radioelf/DronPi",
+  "author": "radioelf",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.934156+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 103,
+    "components": 141,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1606,
+    "vias": 138,
+    "track_length_mm": 2804.72,
+    "kicad_drc_violations": 875,
+    "kicad_drc_breakdown": {
+      "total_violations": 875,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 398,
+        "courtyards_overlap": 5,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 141,
+        "silk_over_copper": 85,
+        "silk_overlap": 53,
+        "solder_mask_bridge": 163,
+        "starved_thermal": 3,
+        "text_height": 10,
+        "text_thickness": 8,
+        "track_dangling": 8
+      },
+      "by_severity": {
+        "error": 570,
+        "warning": 305
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

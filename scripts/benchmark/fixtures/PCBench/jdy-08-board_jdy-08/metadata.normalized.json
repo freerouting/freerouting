@@ -1,0 +1,48 @@
+{
+  "board_id": "jdy-08-board_jdy-08",
+  "display_name": "jdy-08-board_jdy-08",
+  "pcbench_directory": "PCBs/jdy-08-board_jdy-08",
+  "source": "https://github.com/orionrobots/jdy-08-board",
+  "author": "orionrobots",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:53.630070+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 31.75,
+      "height": 38.73
+    },
+    "area_cm2": 12.3,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 124,
+    "vias": 1,
+    "track_length_mm": 417.3,
+    "kicad_drc_violations": 39,
+    "kicad_drc_breakdown": {
+      "total_violations": 39,
+      "unconnected_count": 0,
+      "by_type": {
+        "invalid_outline": 2,
+        "lib_footprint_issues": 5,
+        "malformed_courtyard": 3,
+        "text_height": 29
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 34
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

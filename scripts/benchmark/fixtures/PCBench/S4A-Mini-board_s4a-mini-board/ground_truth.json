@@ -1,0 +1,28 @@
+{
+  "board": "S4A-Mini-board_s4a-mini-board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\S4A-Mini-board_s4a-mini-board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 177,
+  "approximate_track_length_mm": 979.47,
+  "kicad_drc_violations": 221,
+  "generated_at": "2026-08-18T19:43:10.808136+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 221,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 133,
+      "copper_edge_clearance": 26,
+      "courtyards_overlap": 4,
+      "lib_footprint_issues": 27,
+      "silk_over_copper": 15,
+      "silk_overlap": 15,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 164,
+      "warning": 57
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "board_id": "iotuz-esp32-hardware_IoTuz",
+  "display_name": "iotuz-esp32-hardware_IoTuz",
+  "pcbench_directory": "PCBs/iotuz-esp32-hardware_IoTuz",
+  "source": "https://github.com/CCHS-Melbourne/iotuz-esp32-hardware",
+  "author": "CCHS-Melbourne",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:21.849696+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 52,
+    "components": 154,
+    "dimensions_mm": {
+      "width": 150.0,
+      "height": 95.0
+    },
+    "area_cm2": 142.5,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 1553,
+    "vias": 202,
+    "track_length_mm": 6639.07,
+    "kicad_drc_violations": 933,
+    "kicad_drc_breakdown": {
+      "total_violations": 933,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 433,
+        "copper_edge_clearance": 78,
+        "lib_footprint_issues": 154,
+        "padstack": 6,
+        "silk_over_copper": 78,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 165,
+        "starved_thermal": 3,
+        "text_height": 5,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 683,
+        "warning": 250
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "board_id": "kitspace_bomanz",
+  "display_name": "kitspace_bomanz",
+  "pcbench_directory": "PCBs/kitspace_bomanz",
+  "source": "https://github.com/kelu124/bomanz",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:24:12.975616+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 65.02,
+      "height": 30.04
+    },
+    "area_cm2": 19.53,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 233,
+    "vias": 50,
+    "track_length_mm": 507.89,
+    "kicad_drc_violations": 171,
+    "kicad_drc_breakdown": {
+      "total_violations": 171,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 131,
+        "copper_edge_clearance": 5,
+        "lib_footprint_issues": 20,
+        "padstack": 2,
+        "silk_overlap": 3,
+        "starved_thermal": 6,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 142,
+        "warning": 29
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

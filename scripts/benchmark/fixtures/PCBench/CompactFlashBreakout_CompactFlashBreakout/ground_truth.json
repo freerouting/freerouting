@@ -1,0 +1,29 @@
+{
+  "board": "CompactFlashBreakout_CompactFlashBreakout",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\CompactFlashBreakout_CompactFlashBreakout\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 14,
+  "segment_count": 180,
+  "approximate_track_length_mm": 499.18,
+  "kicad_drc_violations": 155,
+  "generated_at": "2026-08-18T18:13:59.927278+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 155,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 36,
+      "lib_footprint_issues": 6,
+      "padstack": 4,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 52,
+      "silk_overlap": 1,
+      "solder_mask_bridge": 50
+    },
+    "by_severity": {
+      "error": 90,
+      "warning": 65
+    }
+  }
+}

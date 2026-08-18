@@ -1,0 +1,52 @@
+{
+  "board_id": "retroreflectors_RUMBAFLOCK",
+  "display_name": "retroreflectors_RUMBAFLOCK",
+  "pcbench_directory": "PCBs/retroreflectors_RUMBAFLOCK",
+  "source": "https://github.com/mossmann/retroreflectors",
+  "author": "",
+  "license": "[{'name': 'GNU General Public License v2.0', 'link': 'https://api.github.com/licenses/gpl-2.0'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 6.35,
+      "height": 6.35
+    },
+    "area_cm2": 0.4,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 21,
+    "vias": 0,
+    "track_length_mm": 13.63,
+    "kicad_drc_violations": 72,
+    "kicad_drc_breakdown": {
+      "total_violations": 72,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 7,
+        "copper_edge_clearance": 10,
+        "shorting_items": 3,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 16,
+        "silk_overlap": 16,
+        "solder_mask_bridge": 10,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 30,
+        "warning": 42
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

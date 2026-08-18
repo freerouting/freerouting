@@ -1,0 +1,48 @@
+{
+  "board_id": "C-BISCUIT_crowbar",
+  "display_name": "C-BISCUIT_crowbar",
+  "pcbench_directory": "PCBs/C-BISCUIT_crowbar",
+  "source": "https://github.com/AllAboutCircuits/C-BISCUIT",
+  "author": "AllAboutCircuits",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:41.465927+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 13.0,
+      "height": 37.2
+    },
+    "area_cm2": 4.84,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 41,
+    "vias": 3,
+    "track_length_mm": 116.53,
+    "kicad_drc_violations": 22,
+    "kicad_drc_breakdown": {
+      "total_violations": 22,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "lib_footprint_issues": 13,
+        "silk_over_copper": 6,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 20
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

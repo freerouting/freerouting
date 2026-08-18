@@ -1,0 +1,55 @@
+{
+  "board_id": "kitspace_cseduinov4",
+  "display_name": "kitspace_cseduinov4",
+  "pcbench_directory": "PCBs/kitspace_cseduinov4",
+  "source": "https://github.com/jpralves/cseduino",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/jpralves/cseduino/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:22:45.637350+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 28,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 48.26,
+      "height": 50.8
+    },
+    "area_cm2": 24.52,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 127,
+    "vias": 2,
+    "track_length_mm": 582.46,
+    "kicad_drc_violations": 303,
+    "kicad_drc_breakdown": {
+      "total_violations": 303,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 176,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 1,
+        "holes_co_located": 2,
+        "lib_footprint_issues": 21,
+        "padstack": 2,
+        "pth_inside_courtyard": 1,
+        "shorting_items": 10,
+        "silk_overlap": 65,
+        "solder_mask_bridge": 21
+      },
+      "by_severity": {
+        "error": 213,
+        "warning": 90
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "board_id": "KiwiSDR_PCB_ant",
+  "display_name": "KiwiSDR_PCB_ant",
+  "pcbench_directory": "PCBs/KiwiSDR_PCB_ant",
+  "source": "https://github.com/mfkiwl/KiwiSDR_PCB",
+  "author": "mfkiwl",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.485716+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 85,
+    "dimensions_mm": {
+      "width": 138.0,
+      "height": 38.0
+    },
+    "area_cm2": 52.44,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 420,
+    "vias": 54,
+    "track_length_mm": 841.52,
+    "kicad_drc_violations": 159,
+    "kicad_drc_breakdown": {
+      "total_violations": 159,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 152,
+        "padstack": 4,
+        "silk_over_copper": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 152,
+        "warning": 7
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

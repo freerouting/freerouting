@@ -1,0 +1,53 @@
+{
+  "board_id": "a123-battery-integration_BCM",
+  "display_name": "a123-battery-integration_BCM",
+  "pcbench_directory": "PCBs/a123-battery-integration_BCM",
+  "source": "https://github.com/MITEVT/a123-battery-integration",
+  "author": "MITEVT",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:51.802049+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 139,
+    "components": 67,
+    "dimensions_mm": {
+      "width": 66.04,
+      "height": 73.66
+    },
+    "area_cm2": 48.65,
+    "zones": 17
+  },
+  "reference": {
+    "segments": 466,
+    "vias": 88,
+    "track_length_mm": 1065.18,
+    "kicad_drc_violations": 436,
+    "kicad_drc_breakdown": {
+      "total_violations": 436,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 141,
+        "copper_edge_clearance": 4,
+        "holes_co_located": 1,
+        "lib_footprint_issues": 67,
+        "silk_over_copper": 158,
+        "silk_overlap": 59,
+        "starved_thermal": 3,
+        "track_dangling": 2,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 149,
+        "warning": 287
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

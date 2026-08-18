@@ -1,0 +1,49 @@
+{
+  "board_id": "16x12-bits-I2C_I2C_Servo",
+  "display_name": "16x12-bits-I2C_I2C_Servo",
+  "pcbench_directory": "PCBs/16x12-bits-I2C_I2C_Servo",
+  "source": "https://github.com/cherault/16x12-bits-I2C",
+  "author": "cherault",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.450092+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 55,
+    "dimensions_mm": {
+      "width": 73.66,
+      "height": 45.72
+    },
+    "area_cm2": 33.68,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 372,
+    "vias": 18,
+    "track_length_mm": 1110.12,
+    "kicad_drc_violations": 229,
+    "kicad_drc_breakdown": {
+      "total_violations": 229,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 109,
+        "lib_footprint_issues": 55,
+        "silk_over_copper": 10,
+        "silk_overlap": 29,
+        "solder_mask_bridge": 26
+      },
+      "by_severity": {
+        "error": 135,
+        "warning": 94
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

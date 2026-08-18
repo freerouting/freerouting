@@ -1,0 +1,52 @@
+{
+  "board_id": "pesho_pesho",
+  "display_name": "pesho_pesho",
+  "pcbench_directory": "PCBs/pesho_pesho",
+  "source": "https://github.com/kzyapkov/pesho",
+  "author": "kzyapkov",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.266007+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 46,
+    "components": 60,
+    "dimensions_mm": {
+      "width": 132.5,
+      "height": 65.0
+    },
+    "area_cm2": 86.12,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 428,
+    "vias": 251,
+    "track_length_mm": 1873.74,
+    "kicad_drc_violations": 664,
+    "kicad_drc_breakdown": {
+      "total_violations": 664,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 161,
+        "lib_footprint_issues": 60,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "starved_thermal": 3,
+        "text_height": 33,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 164,
+        "warning": 500
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

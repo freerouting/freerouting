@@ -1,0 +1,59 @@
+{
+  "board_id": "Own-Mailbox-Hardware_eth",
+  "display_name": "Own-Mailbox-Hardware_eth",
+  "pcbench_directory": "PCBs/Own-Mailbox-Hardware_eth",
+  "source": "https://github.com/pparent76/Own-Mailbox-Hardware",
+  "author": "pparent76",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.253995+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 82,
+    "components": 99,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 2642,
+    "vias": 212,
+    "track_length_mm": 2399.92,
+    "kicad_drc_violations": 1309,
+    "kicad_drc_breakdown": {
+      "total_violations": 1309,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 504,
+        "copper_edge_clearance": 13,
+        "hole_clearance": 15,
+        "lib_footprint_issues": 95,
+        "padstack": 1,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 199,
+        "silk_overlap": 91,
+        "solder_mask_bridge": 202,
+        "starved_thermal": 3,
+        "text_height": 166,
+        "text_thickness": 6,
+        "track_dangling": 1,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 738,
+        "warning": 571
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

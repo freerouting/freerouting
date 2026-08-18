@@ -1,0 +1,55 @@
+{
+  "board_id": "kitspace_PSLab",
+  "display_name": "kitspace_PSLab",
+  "pcbench_directory": "PCBs/kitspace_PSLab",
+  "source": "https://github.com/fossasia/pslab-hardware",
+  "author": "",
+  "license": "[{'name': 'Apache', 'link': 'https://raw.githubusercontent.com/fossasia/pslab-hardware/pslab-v6/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:23:49.557687+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 51,
+    "components": 144,
+    "dimensions_mm": {
+      "width": 72.9,
+      "height": 53.6
+    },
+    "area_cm2": 39.07,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1653,
+    "vias": 174,
+    "track_length_mm": 3399.39,
+    "kicad_drc_violations": 752,
+    "kicad_drc_breakdown": {
+      "total_violations": 752,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 496,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 8,
+        "isolated_copper": 1,
+        "lib_footprint_issues": 144,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 14,
+        "silk_overlap": 54,
+        "starved_thermal": 2,
+        "text_height": 13,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "error": 511,
+        "warning": 241
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

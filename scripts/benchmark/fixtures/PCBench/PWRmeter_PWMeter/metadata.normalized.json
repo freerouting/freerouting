@@ -1,0 +1,49 @@
+{
+  "board_id": "PWRmeter_PWMeter",
+  "display_name": "PWRmeter_PWMeter",
+  "pcbench_directory": "PCBs/PWRmeter_PWMeter",
+  "source": "https://github.com/F6ITU/PWRmeter",
+  "author": "F6ITU",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:32.309819+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 50.0
+    },
+    "area_cm2": 50.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 120,
+    "vias": 29,
+    "track_length_mm": 682.45,
+    "kicad_drc_violations": 191,
+    "kicad_drc_breakdown": {
+      "total_violations": 191,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 113,
+        "lib_footprint_issues": 20,
+        "silk_over_copper": 24,
+        "silk_overlap": 33,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 114,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

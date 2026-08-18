@@ -1,0 +1,47 @@
+{
+  "board_id": "teensy-wifi-weather-logger_teensyi2c",
+  "display_name": "teensy-wifi-weather-logger_teensyi2c",
+  "pcbench_directory": "PCBs/teensy-wifi-weather-logger_teensyi2c",
+  "source": "https://github.com/pdp7/teensy-wifi-weather-logger",
+  "author": "pdp7",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:27.945768+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 28,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 50.95,
+      "height": 51.66
+    },
+    "area_cm2": 26.32,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 109,
+    "vias": 5,
+    "track_length_mm": 334.82,
+    "kicad_drc_violations": 45,
+    "kicad_drc_breakdown": {
+      "total_violations": 45,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 31,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 12
+      },
+      "by_severity": {
+        "error": 33,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "board_id": "MSGEQ7-Breakout-Board_MSGEQ7_Breakout_Board",
+  "display_name": "MSGEQ7-Breakout-Board_MSGEQ7_Breakout_Board",
+  "pcbench_directory": "PCBs/MSGEQ7-Breakout-Board_MSGEQ7_Breakout_Board",
+  "source": "https://github.com/rheingoldheavy/MSGEQ7-Breakout-Board",
+  "author": "rheingoldheavy",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.421938+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 43.05,
+      "height": 25.4
+    },
+    "area_cm2": 10.93,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 53,
+    "vias": 0,
+    "track_length_mm": 134.38,
+    "kicad_drc_violations": 108,
+    "kicad_drc_breakdown": {
+      "total_violations": 108,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 68,
+        "copper_edge_clearance": 2,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 9,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 11,
+        "silk_overlap": 8,
+        "text_height": 5
+      },
+      "by_severity": {
+        "error": 71,
+        "warning": 37
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

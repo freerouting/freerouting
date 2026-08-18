@@ -1,0 +1,49 @@
+{
+  "board_id": "NavigationThing_NavigationThingBacklight",
+  "display_name": "NavigationThing_NavigationThingBacklight",
+  "pcbench_directory": "PCBs/NavigationThing_NavigationThingBacklight",
+  "source": "https://github.com/yaqwsx/NavigationThing",
+  "author": "yaqwsx",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:28.057769+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 22.0,
+      "height": 8.0
+    },
+    "area_cm2": 1.76,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 23,
+    "vias": 0,
+    "track_length_mm": 51.71,
+    "kicad_drc_violations": 20,
+    "kicad_drc_breakdown": {
+      "total_violations": 20,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 4,
+        "lib_footprint_issues": 6,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 7,
+        "silk_overlap": 1
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

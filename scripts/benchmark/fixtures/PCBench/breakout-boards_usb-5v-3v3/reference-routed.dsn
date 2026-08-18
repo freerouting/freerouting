@@ -1,0 +1,258 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\breakout-boards_usb-5v-3v3\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  139348 -93502.4  139541 -93540.7  139723 -93615.9  139886 -93725.1
+            140025 -93864.1  140134 -94027.5  140209 -94209  140248 -94401.7
+            140250 -94500  140250 -110500  140248 -110598  140209 -110791
+            140134 -110973  140025 -111136  139886 -111275  139723 -111384
+            139541 -111459  139348 -111498  139250 -111500  116250 -111500
+            116152 -111498  115959 -111459  115777 -111384  115614 -111275
+            115475 -111136  115366 -110973  115291 -110791  115252 -110598
+            115250 -110500  115250 -94500  115252 -94401.7  115291 -94209
+            115366 -94027.5  115475 -93864.1  115614 -93725.1  115777 -93615.9
+            115959 -93540.7  116152 -93502.4  116250 -93500  139250 -93500
+            139348 -93502.4)
+    )
+    (plane /gnd (polygon B.Cu 0  140750 -101500  114750 -101250  114750 -93000  140750 -93000
+            140750 -101500))
+    (plane /vbus (polygon F.Cu 0  140800 -112000  114800 -112000  114800 -103000  140800 -103000
+            140800 -112000))
+    (plane /vbus (polygon B.Cu 0  140750 -112000  114750 -112000  114750 -103000  140750 -103000
+            140750 -112000))
+    (plane /gnd (polygon F.Cu 0  140750 -101500  114750 -101250  114750 -93000  140750 -93000
+            140750 -101500))
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 177.8)
+      (clearance 44.45 (type smd_smd))
+    )
+  )
+  (placement
+    (component "myelin-kicad:SM0805_NOSILKSCREEN"
+      (place C1 128250 -109000 front 180 (PN 10u))
+      (place C2 128250 -95750 front 180 (PN 10u))
+    )
+    (component "myelin-kicad:USB_A_THRU_HOLE"
+      (place CON1 115000 -102500 front -90 (PN usb_plug))
+    )
+    (component "myelin-kicad:micro_usb_b_smd_bottom_mount"
+      (place CON2 116500 -102250 back 270 (PN micro_usb_socket))
+    )
+    (component Socket_Strips:Socket_Strip_Straight_2x02
+      (place P1 134500 -106040 front 0 (PN 5V))
+      (place P2 134500 -100960 front 0 (PN 3.3V))
+      (place P3 134500 -95880 front 0 (PN GND))
+    )
+    (component "myelin-kicad:SOT-223-LDO-1117LV"
+      (place U1 128250 -102500 front 0 (PN NCP1117ST33T3G))
+    )
+    (component Socket_Strips:Socket_Strip_Straight_1x01
+      (place P4 124000 -109250 front 0 (PN 5V))
+      (place P5 124000 -95750 front 0 (PN GND))
+    )
+  )
+  (library
+    (image "myelin-kicad:SM0805_NOSILKSCREEN"
+      (pin Rect[T]Pad_889.000000x1397.000000_um 1 -952.5 0)
+      (pin Rect[T]Pad_889.000000x1397.000000_um 2 952.5 0)
+    )
+    (image "myelin-kicad:USB_A_THRU_HOLE"
+      (outline (path signal 150  6000 0  6000 6800))
+      (outline (path signal 150  6000 6800  -6000 6800))
+      (outline (path signal 150  -6000 6800  -6000 0))
+      (outline (path signal 150  6000 -12000  -6000 -12000))
+      (outline (path signal 150  -6000 -12000  -6000 0))
+      (outline (path signal 150  -6000 0  6000 0))
+      (outline (path signal 150  6000 0  6000 -12000))
+      (pin Round[A]Pad_1500.000000_um (rotate 180) 1 3560 8000)
+      (pin Round[A]Pad_1500.000000_um (rotate 180) 2 1020 8000)
+      (pin Round[A]Pad_1500.000000_um (rotate 180) 3 -1020 8000)
+      (pin Round[A]Pad_1500.000000_um (rotate 180) 4 -3560 8000)
+      (pin Round[A]Pad_2500.000000_um (rotate 180) @1 6000 5800)
+      (pin Round[A]Pad_2500.000000_um (rotate 180) @2 -6000 5800)
+    )
+    (image "myelin-kicad:micro_usb_b_smd_bottom_mount"
+      (outline (path signal 130  -4200 -1450  4200 -1450))
+      (outline (path signal 130  1950 3350  3400 3350))
+      (outline (path signal 130  3400 3350  3400 1400))
+      (outline (path signal 130  -1950 3350  -3400 3350))
+      (outline (path signal 130  -3400 3350  -3400 1400))
+      (pin Rect[T]Pad_1600.000000x1900.000000_um @1 -4200 0)
+      (pin Rect[T]Pad_1600.000000x1900.000000_um @2 4200 0)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 3 0 2675)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 4 650 2675)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 5 1300 2675)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 2 -650 2675)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 1 -1300 2675)
+      (pin Round[A]Pad_600.000000_um @3 -2000 2250)
+      (pin Round[A]Pad_600.000000_um @4 2000 2250)
+    )
+    (image Socket_Strips:Socket_Strip_Straight_2x02
+      (outline (polygon signal 0  4295 -4295  -1745 -4295  -1745 1745  4295 1745))
+      (outline (path signal 150  -1550 1550  -1550 0))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  1270 1270  1270 -1270))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1270 -1270  -1270 -3810))
+      (outline (path signal 150  -1270 -3810  3810 -3810))
+      (outline (path signal 150  3810 -3810  3810 1270))
+      (outline (path signal 150  3810 1270  1270 1270))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 2540 -2540)
+    )
+    (image "myelin-kicad:SOT-223-LDO-1117LV"
+      (outline (path signal 150  3350 1850  3350 -1850))
+      (outline (path signal 150  -3350 1850  3350 1850))
+      (outline (path signal 150  -3350 -1850  -3350 1850))
+      (outline (path signal 150  -3350 -1850  3350 -1850))
+      (pin Rect[T]Pad_1250.000000x2550.000000_um 1 -2300 -3100)
+      (pin Rect[T]Pad_1250.000000x8750.000000_um 2 0 0)
+      (pin Rect[T]Pad_1250.000000x2550.000000_um 3 2300 -3100)
+      (pin Rect[T]Pad_3650.000000x2550.000000_um 2@1 0 3100)
+    )
+    (image Socket_Strips:Socket_Strip_Straight_1x01
+      (outline (polygon signal 0  1745 -1745  -1745 -1745  -1745 1745  1745 1745))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  -1550 1550  0 1550))
+      (outline (path signal 150  -1550 1550  -1550 -1550))
+      (outline (path signal 150  -1550 -1550  0 -1550))
+      (pin Round[A]Pad_1727.200000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1500.000000_um
+      (shape (circle F.Cu 1500))
+      (shape (circle B.Cu 1500))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1727.200000_um
+      (shape (circle F.Cu 1727.2))
+      (shape (circle B.Cu 1727.2))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2500.000000_um
+      (shape (circle F.Cu 2500))
+      (shape (circle B.Cu 2500))
+      (attach off)
+    )
+    (padstack Round[A]Pad_600.000000_um
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3650.000000x2550.000000_um
+      (shape (rect F.Cu -1825 -1275 1825 1275))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x1350.000000_um
+      (shape (rect F.Cu -200 -675 200 675))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_889.000000x1397.000000_um
+      (shape (rect F.Cu -444.5 -698.5 444.5 698.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1250.000000x2550.000000_um
+      (shape (rect F.Cu -625 -1275 625 1275))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1250.000000x8750.000000_um
+      (shape (rect F.Cu -625 -4375 625 4375))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x1900.000000_um
+      (shape (rect F.Cu -800 -950 800 950))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net /vbus
+      (pins C1-1 CON1-1 CON2-1 P1-1 P1-2 P1-3 P1-4 U1-3 P4-1)
+    )
+    (net /gnd
+      (pins C1-2 C2-2 CON1-4 CON2-5 P3-1 P3-2 P3-3 P3-4 U1-1 P5-1)
+    )
+    (net /3v3
+      (pins C2-1 P2-1 P2-2 P2-3 P2-4 U1-2 U1-2@1)
+    )
+    (net "Net-(CON1-Pad2)"
+      (pins CON1-2)
+    )
+    (net "Net-(CON1-Pad3)"
+      (pins CON1-3)
+    )
+    (net "Net-(CON2-Pad3)"
+      (pins CON2-3)
+    )
+    (net "Net-(CON2-Pad4)"
+      (pins CON2-4)
+    )
+    (net "Net-(CON2-Pad2)"
+      (pins CON2-2)
+    )
+    (class kicad_default /3v3 /gnd /vbus "Net-(CON1-Pad2)" "Net-(CON1-Pad3)"
+      "Net-(CON2-Pad2)" "Net-(CON2-Pad3)" "Net-(CON2-Pad4)"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 177.8)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 1000  125000 -100400  125000 -104650  125950 -105600)(net /gnd)(type route))
+    (wire (path F.Cu 1000  123540 -98940  125000 -100400)(net /gnd)(type route))
+    (wire (path F.Cu 1000  123000 -98940  123540 -98940)(net /gnd)(type route))
+    (wire (path F.Cu 1000  125950 -107652  127298 -109000)(net /gnd)(type route))
+    (wire (path F.Cu 1000  125950 -105600  125950 -107652)(net /gnd)(type route))
+    (wire (path F.Cu 750  134500 -95880  137040 -95880  137040 -98420  134500 -98420
+            134500 -95880)(net /gnd)(type route))
+    (wire (path F.Cu 1000  128250 -99400  128250 -102500)(net /3v3)(type route))
+    (wire (path F.Cu 1000  129202 -98447.5  128250 -99400)(net /3v3)(type route))
+    (wire (path F.Cu 1000  129202 -95750  129202 -98447.5)(net /3v3)(type route))
+    (wire (path F.Cu 1000  128250 -99400  128250 -102500)(net /3v3)(type route))
+    (wire (path F.Cu 1000  129810 -100960  128250 -99400)(net /3v3)(type route))
+    (wire (path F.Cu 1000  134500 -100960  129810 -100960)(net /3v3)(type route))
+    (wire (path F.Cu 750  134500 -103500  137040 -103500  137040 -100960  134500 -100960
+            134500 -103500)(net /3v3)(type route))
+  )
+)

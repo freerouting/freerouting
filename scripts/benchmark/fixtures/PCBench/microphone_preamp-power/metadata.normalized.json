@@ -1,0 +1,48 @@
+{
+  "board_id": "microphone_preamp-power",
+  "display_name": "microphone_preamp-power",
+  "pcbench_directory": "PCBs/microphone_preamp-power",
+  "source": "https://github.com/vlad-ivanov-name/microphone",
+  "author": "vlad-ivanov-name",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.278007+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 61.4,
+      "height": 17.2
+    },
+    "area_cm2": 10.56,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 77,
+    "vias": 33,
+    "track_length_mm": 207.97,
+    "kicad_drc_violations": 33,
+    "kicad_drc_breakdown": {
+      "total_violations": 33,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 14,
+        "lib_footprint_issues": 11,
+        "malformed_courtyard": 6,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "error": 20,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

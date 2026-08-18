@@ -1,0 +1,50 @@
+{
+  "board_id": "SmartLaserMiniShield_SmartLaserMiniShield",
+  "display_name": "SmartLaserMiniShield_SmartLaserMiniShield",
+  "pcbench_directory": "PCBs/SmartLaserMiniShield_SmartLaserMiniShield",
+  "source": "https://github.com/smartDIYs/SmartLaserMiniShield",
+  "author": "smartDIYs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:31.661812+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 81.0,
+      "height": 51.5
+    },
+    "area_cm2": 41.72,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 291,
+    "vias": 18,
+    "track_length_mm": 1198.31,
+    "kicad_drc_violations": 268,
+    "kicad_drc_breakdown": {
+      "total_violations": 268,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 100,
+        "invalid_outline": 1,
+        "silk_over_copper": 112,
+        "silk_overlap": 9,
+        "text_height": 30,
+        "text_thickness": 16
+      },
+      "by_severity": {
+        "error": 101,
+        "warning": 167
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

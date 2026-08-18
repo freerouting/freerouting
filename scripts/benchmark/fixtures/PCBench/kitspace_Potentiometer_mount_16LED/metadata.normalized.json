@@ -1,0 +1,50 @@
+{
+  "board_id": "kitspace_Potentiometer_mount_16LED",
+  "display_name": "kitspace_Potentiometer_mount_16LED",
+  "pcbench_directory": "PCBs/kitspace_Potentiometer_mount_16LED",
+  "source": "https://github.com/BadenLab/LED-Zappelin",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/BadenLab/LED-Zappelin/master/LICENSE'}, {'name': 'CERN', 'link': 'https://raw.githubusercontent.com/BadenLab/LED-Zappelin/master/PCB/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:15:18.187691+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 48,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 97.5,
+      "height": 41.5
+    },
+    "area_cm2": 40.46,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 172,
+    "vias": 0,
+    "track_length_mm": 1549.26,
+    "kicad_drc_violations": 60,
+    "kicad_drc_breakdown": {
+      "total_violations": 60,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 4,
+        "hole_clearance": 4,
+        "isolated_copper": 1,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 18,
+        "silk_edge_clearance": 32
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 52
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

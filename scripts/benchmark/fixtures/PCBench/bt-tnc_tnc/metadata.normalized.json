@@ -1,0 +1,56 @@
+{
+  "board_id": "bt-tnc_tnc",
+  "display_name": "bt-tnc_tnc",
+  "pcbench_directory": "PCBs/bt-tnc_tnc",
+  "source": "https://github.com/hitov/bt-tnc",
+  "author": "hitov",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.550081+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 55,
+    "dimensions_mm": {
+      "width": 56.57,
+      "height": 31.0
+    },
+    "area_cm2": 17.54,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 352,
+    "vias": 19,
+    "track_length_mm": 598.57,
+    "kicad_drc_violations": 410,
+    "kicad_drc_breakdown": {
+      "total_violations": 410,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 62,
+        "copper_edge_clearance": 5,
+        "drill_out_of_range": 17,
+        "padstack": 2,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 199,
+        "silk_overlap": 7,
+        "starved_thermal": 7,
+        "text_height": 95,
+        "text_thickness": 3,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 95,
+        "warning": 315
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

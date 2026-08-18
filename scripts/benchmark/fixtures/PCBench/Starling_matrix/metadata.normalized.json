@@ -1,0 +1,55 @@
+{
+  "board_id": "Starling_matrix",
+  "display_name": "Starling_matrix",
+  "pcbench_directory": "PCBs/Starling_matrix",
+  "source": "https://github.com/ExploreEmbedded/Starling",
+  "author": "ExploreEmbedded",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.861991+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 27,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 26.37,
+      "height": 65.55
+    },
+    "area_cm2": 17.29,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 516,
+    "vias": 54,
+    "track_length_mm": 1030.38,
+    "kicad_drc_violations": 282,
+    "kicad_drc_breakdown": {
+      "total_violations": 282,
+      "unconnected_count": 8,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 107,
+        "copper_edge_clearance": 31,
+        "invalid_outline": 66,
+        "lib_footprint_issues": 29,
+        "padstack": 10,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 2,
+        "silk_overlap": 2,
+        "starved_thermal": 3,
+        "text_height": 19
+      },
+      "by_severity": {
+        "error": 209,
+        "warning": 73
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

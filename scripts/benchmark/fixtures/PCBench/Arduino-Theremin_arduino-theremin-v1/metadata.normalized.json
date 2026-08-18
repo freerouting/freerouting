@@ -1,0 +1,52 @@
+{
+  "board_id": "Arduino-Theremin_arduino-theremin-v1",
+  "display_name": "Arduino-Theremin_arduino-theremin-v1",
+  "pcbench_directory": "PCBs/Arduino-Theremin_arduino-theremin-v1",
+  "source": "https://github.com/wickerbox/Arduino-Theremin",
+  "author": "wickerbox",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:23:01.458162+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 71.12,
+      "height": 53.34
+    },
+    "area_cm2": 37.94,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 103,
+    "vias": 5,
+    "track_length_mm": 567.63,
+    "kicad_drc_violations": 205,
+    "kicad_drc_breakdown": {
+      "total_violations": 205,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 140,
+        "courtyards_overlap": 10,
+        "lib_footprint_issues": 15,
+        "npth_inside_courtyard": 2,
+        "pth_inside_courtyard": 31,
+        "silk_overlap": 4,
+        "starved_thermal": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 185,
+        "warning": 20
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "board_id": "esp12-breakout_ESP12Breakout",
+  "display_name": "esp12-breakout_ESP12Breakout",
+  "pcbench_directory": "PCBs/esp12-breakout_ESP12Breakout",
+  "source": "https://github.com/itmarshall/esp12-breakout",
+  "author": "itmarshall",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:41.025922+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 26.67,
+      "height": 34.92
+    },
+    "area_cm2": 9.31,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 69,
+    "vias": 10,
+    "track_length_mm": 200.88,
+    "kicad_drc_violations": 39,
+    "kicad_drc_breakdown": {
+      "total_violations": 39,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 9,
+        "malformed_courtyard": 8,
+        "text_height": 22
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 31
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

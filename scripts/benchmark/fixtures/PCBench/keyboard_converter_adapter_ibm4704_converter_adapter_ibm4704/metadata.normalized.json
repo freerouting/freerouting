@@ -1,0 +1,50 @@
+{
+  "board_id": "keyboard_converter_adapter_ibm4704_converter_adapter_ibm4704",
+  "display_name": "keyboard_converter_adapter_ibm4704_converter_adapter_ibm4704",
+  "pcbench_directory": "PCBs/keyboard_converter_adapter_ibm4704_converter_adapter_ibm4704",
+  "source": "https://github.com/tmk/keyboard_converter_adapter_ibm4704",
+  "author": "tmk",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.677989+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 30.5,
+      "height": 29.0
+    },
+    "area_cm2": 8.85,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 55,
+    "vias": 1,
+    "track_length_mm": 156.21,
+    "kicad_drc_violations": 89,
+    "kicad_drc_breakdown": {
+      "total_violations": 89,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 42,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 9,
+        "silk_over_copper": 27,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 7
+      },
+      "by_severity": {
+        "error": 51,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

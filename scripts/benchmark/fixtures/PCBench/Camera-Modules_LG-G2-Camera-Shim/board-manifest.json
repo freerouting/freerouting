@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Camera-Modules_LG-G2-Camera-Shim",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 57334,
+      "sha256": "4f84af347e855a038d9a51aef987780acb42f3999c97f5272a8b4de351bf3e7a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 33384,
+      "sha256": "b51e153d1163bae8a5e76f177ce32393c140ff60cb31dd635bc63897f7228155"
+    },
+    "metadata_json": {
+      "bytes": 628,
+      "sha256": "9cbacd77b478c15d2f2989d736dd52ab7676d117f221f35dcb1ea62c247a850b"
+    },
+    "final_json": {
+      "bytes": 43709,
+      "sha256": "2a0f8a317e816fa27301d711d6b90178a7ddc682b02a82849b3d6851490c3666"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:37:29.294461+00:00"
+  }
+}

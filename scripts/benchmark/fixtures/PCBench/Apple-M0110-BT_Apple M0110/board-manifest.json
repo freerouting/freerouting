@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Apple-M0110-BT_Apple M0110",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 834143,
+      "sha256": "b7d7f8955328777988ea2eb1afd8d09fbad365db8d7057aa9887f6793b52b961"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 366328,
+      "sha256": "d458a45631aab89d000ae67626f3f60bcdbaf268bbcf7c4e88b612c45065236e"
+    },
+    "metadata_json": {
+      "bytes": 689,
+      "sha256": "fc672c89b4e053880bdb74884d1e8ab07eebc959ecb9f5920859f882522afa3d"
+    },
+    "final_json": {
+      "bytes": 206520,
+      "sha256": "6c66c22a1c8f7150592f9f23b85b7022f8890b53bc467c0b4ada191e6e22858e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:28:56.628262+00:00"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "board_id": "Cherry-Mx-Bitboard_Cherry Mx Bitboard",
+  "display_name": "Cherry-Mx-Bitboard_Cherry Mx Bitboard",
+  "pcbench_directory": "PCBs/Cherry-Mx-Bitboard_Cherry Mx Bitboard",
+  "source": "https://github.com/ogatatsu/Cherry-Mx-Bitboard",
+  "author": "ogatatsu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.261713+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 19.05,
+      "height": 19.05
+    },
+    "area_cm2": 3.63,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 24,
+    "vias": 0,
+    "track_length_mm": 71.41,
+    "kicad_drc_violations": 25,
+    "kicad_drc_breakdown": {
+      "total_violations": 25,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 12,
+        "silk_overlap": 13
+      },
+      "by_severity": {
+        "warning": 25
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "board_id": "kitspace_Brk40p",
+  "display_name": "kitspace_Brk40p",
+  "pcbench_directory": "PCBs/kitspace_Brk40p",
+  "source": "https://github.com/SdtElectronics/Xassette-Asterisk",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/SdtElectronics/Xassette-Asterisk/master/LICENCE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:22:28.130280+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 40,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 53.09,
+      "height": 51.82
+    },
+    "area_cm2": 27.51,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 185,
+    "vias": 0,
+    "track_length_mm": 623.67,
+    "kicad_drc_violations": 24,
+    "kicad_drc_breakdown": {
+      "total_violations": 24,
+      "unconnected_count": 1,
+      "by_type": {
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 1,
+        "hole_clearance": 4,
+        "isolated_copper": 4,
+        "lib_footprint_mismatch": 3,
+        "npth_inside_courtyard": 1,
+        "silk_over_copper": 2,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 13,
+        "warning": 11
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "board_id": "L6235-PCB_L6235",
+  "display_name": "L6235-PCB_L6235",
+  "pcbench_directory": "PCBs/L6235-PCB_L6235",
+  "source": "https://github.com/PymZoR/L6235-PCB",
+  "author": "PymZoR",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:38.925897+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 34,
+    "dimensions_mm": {
+      "width": 69.85,
+      "height": 66.04
+    },
+    "area_cm2": 46.13,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 221,
+    "vias": 0,
+    "track_length_mm": 939.5,
+    "kicad_drc_violations": 176,
+    "kicad_drc_breakdown": {
+      "total_violations": 176,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 91,
+        "courtyards_overlap": 5,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 34,
+        "silk_edge_clearance": 1,
+        "silk_overlap": 37,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 99,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "board_id": "kitspace_ESP8266-PowerMonitor",
+  "display_name": "kitspace_ESP8266-PowerMonitor",
+  "pcbench_directory": "PCBs/kitspace_ESP8266-PowerMonitor",
+  "source": "https://github.com/jasiek/ESP8266-PowerMonitor",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:20:20.257953+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 69.5,
+      "height": 27.2
+    },
+    "area_cm2": 18.9,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 144,
+    "vias": 4,
+    "track_length_mm": 425.99,
+    "kicad_drc_violations": 49,
+    "kicad_drc_breakdown": {
+      "total_violations": 49,
+      "unconnected_count": 2,
+      "by_type": {
+        "copper_edge_clearance": 9,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 12,
+        "lib_footprint_mismatch": 8,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 2,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 1
+      },
+      "by_severity": {
+        "error": 14,
+        "warning": 35
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

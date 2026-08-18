@@ -1,0 +1,57 @@
+{
+  "board_id": "PICA_pica",
+  "display_name": "PICA_pica",
+  "pcbench_directory": "PCBs/PICA_pica",
+  "source": "https://github.com/mjrice/PICA",
+  "author": "mjrice",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.533740+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 87,
+    "components": 135,
+    "dimensions_mm": {
+      "width": 114.3,
+      "height": 94.92
+    },
+    "area_cm2": 108.49,
+    "zones": 19
+  },
+  "reference": {
+    "segments": 884,
+    "vias": 40,
+    "track_length_mm": 2491.25,
+    "kicad_drc_violations": 959,
+    "kicad_drc_breakdown": {
+      "total_violations": 959,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 454,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 2,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 134,
+        "mirrored_text_on_front_layer": 4,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 187,
+        "silk_overlap": 155,
+        "solder_mask_bridge": 5,
+        "text_height": 1,
+        "track_dangling": 2,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 466,
+        "warning": 493
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

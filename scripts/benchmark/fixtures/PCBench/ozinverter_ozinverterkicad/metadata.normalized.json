@@ -1,0 +1,48 @@
+{
+  "board_id": "ozinverter_ozinverterkicad",
+  "display_name": "ozinverter_ozinverterkicad",
+  "pcbench_directory": "PCBs/ozinverter_ozinverterkicad",
+  "source": "https://github.com/jdevine82/ozinverter",
+  "author": "jdevine82",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.402150+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 40,
+    "components": 68,
+    "dimensions_mm": {
+      "width": 169.44,
+      "height": 86.0
+    },
+    "area_cm2": 145.72,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 481,
+    "vias": 0,
+    "track_length_mm": 2103.2,
+    "kicad_drc_violations": 511,
+    "kicad_drc_breakdown": {
+      "total_violations": 511,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 416,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 68,
+        "silk_overlap": 25
+      },
+      "by_severity": {
+        "error": 418,
+        "warning": 93
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

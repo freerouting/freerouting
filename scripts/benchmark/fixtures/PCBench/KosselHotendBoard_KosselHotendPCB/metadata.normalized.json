@@ -1,0 +1,49 @@
+{
+  "board_id": "KosselHotendBoard_KosselHotendPCB",
+  "display_name": "KosselHotendBoard_KosselHotendPCB",
+  "pcbench_directory": "PCBs/KosselHotendBoard_KosselHotendPCB",
+  "source": "https://github.com/T3P3/KosselHotendBoard",
+  "author": "T3P3",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:55.626094+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 21.64,
+      "height": 35.4
+    },
+    "area_cm2": 7.66,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 53,
+    "vias": 0,
+    "track_length_mm": 214.13,
+    "kicad_drc_violations": 30,
+    "kicad_drc_breakdown": {
+      "total_violations": 30,
+      "unconnected_count": 0,
+      "by_type": {
+        "invalid_outline": 2,
+        "nonmirrored_text_on_back_layer": 3,
+        "silk_edge_clearance": 18,
+        "silk_over_copper": 1,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 28
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

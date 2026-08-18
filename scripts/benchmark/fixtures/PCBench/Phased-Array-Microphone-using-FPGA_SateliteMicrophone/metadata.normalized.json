@@ -1,0 +1,50 @@
+{
+  "board_id": "Phased-Array-Microphone-using-FPGA_SateliteMicrophone",
+  "display_name": "Phased-Array-Microphone-using-FPGA_SateliteMicrophone",
+  "pcbench_directory": "PCBs/Phased-Array-Microphone-using-FPGA_SateliteMicrophone",
+  "source": "https://github.com/LeastSignificantBit/Phased-Array-Microphone-using-FPGA",
+  "author": "LeastSignificantBit",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:43.533952+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 16.0,
+      "height": 40.0
+    },
+    "area_cm2": 6.4,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 103,
+    "vias": 11,
+    "track_length_mm": 153.17,
+    "kicad_drc_violations": 71,
+    "kicad_drc_breakdown": {
+      "total_violations": 71,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 33,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 21,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 12,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 49,
+        "warning": 22
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

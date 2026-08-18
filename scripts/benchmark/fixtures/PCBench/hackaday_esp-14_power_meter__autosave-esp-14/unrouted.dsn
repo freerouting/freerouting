@@ -1,0 +1,201 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\hackaday_esp-14_power_meter__autosave-esp-14\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  165000 -134000  135000 -134000  135000 -97000  165000 -97000
+            165000 -134000)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 304.8)
+      (clearance 0)
+      (clearance 0 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_1x11
+      (place P1 137160 -104140 front 0 (PN CONN_01X11))
+      (place P2 162560 -104140 front 0 (PN CONN_01X11))
+    )
+    (component "esp-14:esp-14"
+      (place U1 148590 -107950 front 0 (PN "esp-14"))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_1x11
+      (outline (polygon signal 0  1745 -27145  -1745 -27145  -1745 1745  1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -26670  -1270 -1270))
+      (outline (path signal 150  1270 -26670  -1270 -26670))
+      (outline (path signal 150  1270 -1270  1270 -26670))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 8 0 -17780)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 9 0 -20320)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 10 0 -22860)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 11 0 -25400)
+    )
+    (image "esp-14:esp-14"
+      (outline (path signal 150  9000 10000  -7000 10000))
+      (outline (path signal 150  9000 -14000  9000 10000))
+      (outline (path signal 150  -7000 -14000  9000 -14000))
+      (outline (path signal 150  -7000 10000  -7000 -14000))
+      (outline (path signal 150  -7000 2000  9000 2000))
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 1 -7000 1500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 2 -7000 -500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 3 -7000 -2500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 5 -7000 -6500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 6 -7000 -8500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 7 -7000 -10500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 8 -7000 -12500)
+      (pin Rect[T]Pad_1500.000000x2000.000000_um 9 -4000 -14000)
+      (pin Rect[T]Pad_1500.000000x2000.000000_um 10 -2000 -14000)
+      (pin Rect[T]Pad_1500.000000x2000.000000_um 11 0 -14000)
+      (pin Rect[T]Pad_1500.000000x2000.000000_um 12 2000 -14000)
+      (pin Rect[T]Pad_1500.000000x2000.000000_um 13 4000 -14000)
+      (pin Rect[T]Pad_1500.000000x2000.000000_um 14 6000 -14000)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 15 9000 -12500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 16 9000 -10500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 17 9000 -8500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 18 9000 -6500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 19 9000 -4500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 20 9000 -2500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 21 9000 -500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 4 -7000 -4500)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 22 9000 1500)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1500.000000_um
+      (shape (rect F.Cu -1000 -750 1000 750))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x2000.000000_um
+      (shape (rect F.Cu -750 -1000 750 1000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(P1-Pad1)"
+      (pins P1-1 U1-1)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins P1-2 U1-2)
+    )
+    (net "Net-(P1-Pad3)"
+      (pins P1-3 U1-3)
+    )
+    (net "Net-(P1-Pad5)"
+      (pins P1-5 U1-5)
+    )
+    (net "Net-(P1-Pad6)"
+      (pins P1-6 U1-6)
+    )
+    (net "Net-(P1-Pad7)"
+      (pins P1-7 U1-7)
+    )
+    (net "Net-(P1-Pad8)"
+      (pins P1-8 U1-8)
+    )
+    (net "Net-(P1-Pad9)"
+      (pins P1-9 U1-9)
+    )
+    (net "Net-(P1-Pad10)"
+      (pins P1-10 U1-10)
+    )
+    (net "Net-(P1-Pad11)"
+      (pins P1-11 U1-11)
+    )
+    (net "Net-(P2-Pad2)"
+      (pins P2-2 U1-21)
+    )
+    (net "Net-(P2-Pad3)"
+      (pins P2-3 U1-20)
+    )
+    (net "Net-(P2-Pad4)"
+      (pins P2-4 U1-19)
+    )
+    (net "Net-(P2-Pad5)"
+      (pins P2-5 U1-18)
+    )
+    (net "Net-(P2-Pad6)"
+      (pins P2-6 U1-17)
+    )
+    (net "Net-(P2-Pad7)"
+      (pins P2-7 U1-16)
+    )
+    (net "Net-(P2-Pad8)"
+      (pins P2-8 U1-15)
+    )
+    (net "Net-(P2-Pad9)"
+      (pins P2-9 U1-14)
+    )
+    (net "Net-(P2-Pad10)"
+      (pins P2-10 U1-13)
+    )
+    (net "Net-(P2-Pad11)"
+      (pins P2-11 U1-12)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins P1-4 U1-4)
+    )
+    (net "Net-(P2-Pad1)"
+      (pins P2-1 U1-22)
+    )
+    (class kicad_default "Net-(P1-Pad1)" "Net-(P1-Pad10)" "Net-(P1-Pad11)"
+      "Net-(P1-Pad2)" "Net-(P1-Pad3)" "Net-(P1-Pad4)" "Net-(P1-Pad5)" "Net-(P1-Pad6)"
+      "Net-(P1-Pad7)" "Net-(P1-Pad8)" "Net-(P1-Pad9)" "Net-(P2-Pad1)" "Net-(P2-Pad10)"
+      "Net-(P2-Pad11)" "Net-(P2-Pad2)" "Net-(P2-Pad3)" "Net-(P2-Pad4)" "Net-(P2-Pad5)"
+      "Net-(P2-Pad6)" "Net-(P2-Pad7)" "Net-(P2-Pad8)" "Net-(P2-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 304.8)
+        (clearance 0)
+      )
+    )
+  )
+  (wiring
+  )
+)

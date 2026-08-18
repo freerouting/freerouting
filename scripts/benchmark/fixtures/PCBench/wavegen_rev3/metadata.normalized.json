@@ -1,0 +1,57 @@
+{
+  "board_id": "wavegen_rev3",
+  "display_name": "wavegen_rev3",
+  "pcbench_directory": "PCBs/wavegen_rev3",
+  "source": "https://github.com/Fifty-Nine/wavegen",
+  "author": "Fifty-Nine",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:23:00.474151+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 22,
+    "components": 289,
+    "dimensions_mm": {
+      "width": 55.88,
+      "height": 76.2
+    },
+    "area_cm2": 42.58,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 925,
+    "vias": 94,
+    "track_length_mm": 1616.39,
+    "kicad_drc_violations": 873,
+    "kicad_drc_breakdown": {
+      "total_violations": 873,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 32,
+        "clearance": 260,
+        "copper_edge_clearance": 15,
+        "courtyards_overlap": 62,
+        "lib_footprint_issues": 199,
+        "padstack": 2,
+        "pth_inside_courtyard": 21,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 5,
+        "silk_overlap": 39,
+        "solder_mask_bridge": 210,
+        "starved_thermal": 7,
+        "text_height": 19
+      },
+      "by_severity": {
+        "error": 607,
+        "warning": 266
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

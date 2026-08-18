@@ -1,0 +1,343 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kitspace_Arduino_uno_sheild\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  65405 53213  66040 52641.5  66040 40386  68580 37846
+            68580 5080  66040 2540  66040 571.5  65405 0  635 0  0 635  0 52705
+            635 53276.5  65405 53213)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "JPL Robotics:rover_image"
+      (place y1 38455.6 27736.8 front 90 (PN rover_silkscreen))
+    )
+    (component "JPL Robotics:455-1708-ND"
+      (place J5 3860.8 15544.8 front 90 (PN 6posheader))
+    )
+    (component TestPoint:TestPoint_Pad_1.0x1.0mm
+      (place TP8 16319 39470 front 0 (PN TestPoint))
+      (place TP7 16319.5 37465 front 0 (PN TestPoint))
+      (place TP6 6591.3 35560 front 0 (PN TestPoint))
+      (place TP5 6527.8 37528.5 front 0 (PN TestPoint))
+      (place TP1 6527.8 39433.5 front 0 (PN TestPoint))
+    )
+    (component TestPoint:TestPoint_Pad_1.0x1.0mm::1
+      (place TP4 21501.1 5727.7 front 90 (PN TestPoint))
+      (place TP3 21501.1 3886.2 front 90 (PN TestPoint))
+      (place TP2 21501.1 7683.5 front 90 (PN TestPoint))
+    )
+    (component "JPL Robotics:Arduino Uno Sheild"
+      (place A1 0 0 front 0 (PN Arduino_UNO_R3))
+    )
+    (component "JPL Robotics:16 pos 3M connector"
+      (place J1 54254.4 30581.6 front 90 (PN "ED10523-ND"))
+    )
+    (component "JPL Robotics:6 pos header pin"
+      (place J2 59055 10160 front 180 (PN 6posheader))
+      (place J3 30480 10160 front 0 (PN 6posheader))
+      (place J4 34036 40640 front 180 (PN 6posheader))
+    )
+    (component "JPL Robotics:ED1501-ND"
+      (place J6 16865.6 15544.8 front 180 (PN "ED2580-ND"))
+    )
+  )
+  (library
+    (image "JPL Robotics:rover_image"
+    )
+    (image "JPL Robotics:455-1708-ND"
+      (outline (path signal 150  -2000 -2000  -2000 2000))
+      (outline (path signal 150  -2000 2000  12000 2000))
+      (outline (path signal 150  12000 2000  12000 -2000))
+      (outline (path signal 150  12000 -2000  -2000 -2000))
+      (pin Round[A]Pad_1524.000000_um 1 0 0)
+      (pin Round[A]Pad_1524.000000_um 2 2000 0)
+      (pin Round[A]Pad_1524.000000_um 3 4000 0)
+      (pin Round[A]Pad_1524.000000_um 4 6000 0)
+      (pin Round[A]Pad_1524.000000_um 5 8000 0)
+      (pin Round[A]Pad_1524.000000_um 6 10000 0)
+    )
+    (image TestPoint:TestPoint_Pad_1.0x1.0mm
+      (outline (polygon signal 0  995 -995  -995 -995  -995 995  995 995))
+      (outline (path signal 120  -700 -700  -700 700))
+      (outline (path signal 120  700 -700  -700 -700))
+      (outline (path signal 120  700 700  700 -700))
+      (outline (path signal 120  -700 700  700 700))
+      (pin Rect[T]Pad_1000.000000x1000.000000_um 1 0 0)
+    )
+    (image TestPoint:TestPoint_Pad_1.0x1.0mm::1
+      (outline (polygon signal 0  -995 -995  -995 995  995 995  995 -995))
+      (outline (path signal 120  -700 -700  -700 700))
+      (outline (path signal 120  700 -700  -700 -700))
+      (outline (path signal 120  700 700  700 -700))
+      (outline (path signal 120  -700 700  700 700))
+      (pin Rect[T]Pad_1000.000000x1000.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:Arduino Uno Sheild"
+      (pin Round[A]Pad_1560.000000_um 31 27940 2540)
+      (pin Round[A]Pad_1560.000000_um 20 30480 2540)
+      (pin Round[A]Pad_1560.000000_um 21 33020 2540)
+      (pin Round[A]Pad_1560.000000_um 22 35560 2540)
+      (pin Round[A]Pad_1560.000000_um 23 38100 2540)
+      (pin Round[A]Pad_1560.000000_um 24 40640 2540)
+      (pin Round[A]Pad_1560.000000_um 25 43180 2540)
+      (pin Round[A]Pad_1560.000000_um 26 45720 2540)
+      (pin Round[A]Pad_1560.000000_um 14 50800 2540)
+      (pin Round[A]Pad_1560.000000_um 15 53340 2540)
+      (pin Round[A]Pad_1560.000000_um 16 55880 2540)
+      (pin Round[A]Pad_1560.000000_um 17 58420 2540)
+      (pin Round[A]Pad_1560.000000_um 18 60960 2540)
+      (pin Round[A]Pad_1560.000000_um 19 63500 2540)
+      (pin Round[A]Pad_1560.000000_um 30 18796 50800)
+      (pin Round[A]Pad_1560.000000_um 29 21336 50800)
+      (pin Round[A]Pad_1560.000000_um 28 23876 50800)
+      (pin Round[A]Pad_1560.000000_um 27 26416 50800)
+      (pin Round[A]Pad_1560.000000_um 13 28956 50800)
+      (pin Round[A]Pad_1560.000000_um 12 31496 50800)
+      (pin Round[A]Pad_1560.000000_um 11 34036 50800)
+      (pin Round[A]Pad_1560.000000_um 10 36576 50800)
+      (pin Round[A]Pad_1560.000000_um 9 39116 50800)
+      (pin Round[A]Pad_1560.000000_um 8 41656 50800)
+      (pin Round[A]Pad_1560.000000_um 7 45720 50800)
+      (pin Round[A]Pad_1560.000000_um 6 48260 50800)
+      (pin Round[A]Pad_1560.000000_um 5 50800 50800)
+      (pin Round[A]Pad_1560.000000_um 4 53340 50800)
+      (pin Round[A]Pad_1560.000000_um 3 55880 50800)
+      (pin Round[A]Pad_1560.000000_um 2 58420 50800)
+      (pin Round[A]Pad_1560.000000_um 1 60960 50800)
+      (pin Round[A]Pad_1560.000000_um 0 63500 50800)
+      (pin Round[A]Pad_3600.000000_um @1 15240 50800)
+      (pin Round[A]Pad_3600.000000_um @2 66040 35560)
+      (pin Round[A]Pad_3600.000000_um @3 66040 7620)
+      (pin Round[A]Pad_3600.000000_um @4 13970 2540)
+    )
+    (image "JPL Robotics:16 pos 3M connector"
+      (outline (path signal 150  -14000 -4500  14000 -4500))
+      (outline (path signal 150  14000 -4500  14000 4500))
+      (outline (path signal 150  14000 4500  -14000 4500))
+      (outline (path signal 150  -14000 4500  -14000 -4500))
+      (pin Round[A]Pad_1600.000000_um 1 -8890 -1270)
+      (pin Round[A]Pad_1600.000000_um 2 -8890 1270)
+      (pin Round[A]Pad_1600.000000_um 3 -6350 -1270)
+      (pin Round[A]Pad_1600.000000_um 4 -6350 1270)
+      (pin Round[A]Pad_1600.000000_um 5 -3810 -1270)
+      (pin Round[A]Pad_1600.000000_um 6 -3810 1270)
+      (pin Round[A]Pad_1600.000000_um 7 -1270 -1270)
+      (pin Round[A]Pad_1600.000000_um 8 -1270 1270)
+      (pin Round[A]Pad_1600.000000_um 9 1270 -1270)
+      (pin Round[A]Pad_1600.000000_um 10 1270 1270)
+      (pin Round[A]Pad_1600.000000_um 11 3810 -1270)
+      (pin Round[A]Pad_1600.000000_um 12 3810 1270)
+      (pin Round[A]Pad_1600.000000_um 13 6350 -1270)
+      (pin Round[A]Pad_1600.000000_um 14 6350 1270)
+      (pin Round[A]Pad_1600.000000_um 15 8890 -1270)
+      (pin Round[A]Pad_1600.000000_um 16 8890 1270)
+    )
+    (image "JPL Robotics:6 pos header pin"
+      (outline (path signal 150  13970 -1270  -1270 -1270))
+      (outline (path signal 150  13970 1270  13970 -1270))
+      (outline (path signal 150  -1270 1270  13970 1270))
+      (outline (path signal 150  -1270 -1270  -1270 1270))
+      (pin Round[A]Pad_1600.000000_um 6 12700 0)
+      (pin Round[A]Pad_1600.000000_um 5 10160 0)
+      (pin Round[A]Pad_1600.000000_um 4 7620 0)
+      (pin Round[A]Pad_1600.000000_um 3 5080 0)
+      (pin Round[A]Pad_1600.000000_um 2 2540 0)
+      (pin Rect[A]Pad_1600.000000x1600.000000_um 1 0 0)
+    )
+    (image "JPL Robotics:ED1501-ND"
+      (outline (path signal 150  -1905 1905  -1905 -1905))
+      (outline (path signal 150  5715 1905  -1905 1905))
+      (outline (path signal 150  5715 -1905  5715 1905))
+      (outline (path signal 150  -1905 -1905  5715 -1905))
+      (pin Round[A]Pad_1800.000000_um 2 3500 0)
+      (pin Rect[A]Pad_1800.000000x1800.000000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1560.000000_um
+      (shape (circle F.Cu 1560))
+      (shape (circle B.Cu 1560))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1600.000000_um
+      (shape (circle F.Cu 1600))
+      (shape (circle B.Cu 1600))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1800.000000_um
+      (shape (circle F.Cu 1800))
+      (shape (circle B.Cu 1800))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3600.000000_um
+      (shape (circle F.Cu 3600))
+      (shape (circle B.Cu 3600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1000.000000_um
+      (shape (rect F.Cu -500 -500 500 500))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1600.000000x1600.000000_um
+      (shape (rect F.Cu -800 -800 800 800))
+      (shape (rect B.Cu -800 -800 800 800))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1800.000000x1800.000000_um
+      (shape (rect F.Cu -900 -900 900 900))
+      (shape (rect B.Cu -900 -900 900 900))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net /RX
+      (pins J5-4 A1-0)
+    )
+    (net /TX
+      (pins J5-5 A1-1)
+    )
+    (net /R1
+      (pins A1-2 J1-1)
+    )
+    (net /G1
+      (pins A1-3 J1-2)
+    )
+    (net /B1
+      (pins A1-4 J1-3)
+    )
+    (net /R2
+      (pins A1-5 J1-5)
+    )
+    (net /G2
+      (pins A1-6 J1-6)
+    )
+    (net /B2
+      (pins A1-7 J1-7)
+    )
+    (net /CLK
+      (pins A1-8 J1-13)
+    )
+    (net /OE
+      (pins A1-9 J1-15)
+    )
+    (net /LAT
+      (pins A1-10 J1-14)
+    )
+    (net /MOSI
+      (pins A1-11 J4-1)
+    )
+    (net /MISO
+      (pins A1-12 J4-2)
+    )
+    (net /SCK
+      (pins A1-13 J4-3)
+    )
+    (net GND
+      (pins J5-3 TP8-1 TP6-1 TP2-1 A1-24 A1-25 A1-27 J1-4 J1-8 J1-12 J1-16 J2-4 J3-5
+        J4-4 J6-2)
+    )
+    (net /AREF
+      (pins A1-28 J4-5)
+    )
+    (net /SDA
+      (pins A1-29 J2-6)
+    )
+    (net /SCL
+      (pins A1-30 J2-5)
+    )
+    (net /A5
+      (pins A1-19 J2-1)
+    )
+    (net /A4
+      (pins A1-18 J2-2)
+    )
+    (net /A3
+      (pins A1-17 J2-3)
+    )
+    (net /C
+      (pins A1-16 J1-11)
+    )
+    (net /B
+      (pins A1-15 J1-10)
+    )
+    (net /A
+      (pins A1-14 J1-9)
+    )
+    (net +12V
+      (pins J5-1 TP1-1 A1-26)
+    )
+    (net /5V
+      (pins TP4-1 A1-23 J3-4)
+    )
+    (net /3.3V
+      (pins TP3-1 A1-22 J3-3)
+    )
+    (net /RESET
+      (pins A1-21 J3-2)
+    )
+    (net /IOREF
+      (pins A1-20 J3-1)
+    )
+    (net "Net-(A1-Pad31)"
+      (pins A1-31)
+    )
+    (net "Net-(J3-Pad6)"
+      (pins J3-6)
+    )
+    (net "Net-(J4-Pad6)"
+      (pins J4-6)
+    )
+    (net +5V
+      (pins J5-2 TP7-1 TP5-1 J6-1)
+    )
+    (net "Net-(J5-Pad6)"
+      (pins J5-6)
+    )
+    (class kicad_default +12V +5V /3.3V /5V /A /A3 /A4 /A5 /AREF /B /B1 /B2
+      /C /CLK /G1 /G2 /IOREF /LAT /MISO /MOSI /OE /R1 /R2 /RESET /RX /SCK
+      /SCL /SDA /TX GND "Net-(A1-Pad31)" "Net-(J3-Pad6)" "Net-(J4-Pad6)" "Net-(J5-Pad6)"
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

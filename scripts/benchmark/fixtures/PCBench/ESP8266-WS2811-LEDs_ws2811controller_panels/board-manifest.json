@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ESP8266-WS2811-LEDs_ws2811controller_panels",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 18974,
+      "sha256": "3d57497f140e83fc5fb5b1cb4c02b0f01f3439d6d4d4353867acab51604c3d75"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 19271,
+      "sha256": "6cc3683dbdb141acf151884b29eb10a94085ec61de0cf79e1d941547165b94c6"
+    },
+    "metadata_json": {
+      "bytes": 538,
+      "sha256": "7273f930c621d7aa97a0163196830061ca809fa92c77af584d4f62de126955f6"
+    },
+    "final_json": {
+      "bytes": 19406,
+      "sha256": "17159900937e6e3568e5c9ed146d4ac96daaddcad9b81c0868cc0e7859bc7297"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:46:45.405828+00:00"
+  }
+}

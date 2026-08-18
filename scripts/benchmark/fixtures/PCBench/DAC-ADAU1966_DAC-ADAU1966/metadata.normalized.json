@@ -1,0 +1,51 @@
+{
+  "board_id": "DAC-ADAU1966_DAC-ADAU1966",
+  "display_name": "DAC-ADAU1966_DAC-ADAU1966",
+  "pcbench_directory": "PCBs/DAC-ADAU1966_DAC-ADAU1966",
+  "source": "https://github.com/ohdsp/DAC-ADAU1966",
+  "author": "ohdsp",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:27.901767+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 113,
+    "components": 306,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 16
+  },
+  "reference": {
+    "segments": 1485,
+    "vias": 298,
+    "track_length_mm": 3650.57,
+    "kicad_drc_violations": 685,
+    "kicad_drc_breakdown": {
+      "total_violations": 685,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 390,
+        "lib_footprint_issues": 199,
+        "silk_over_copper": 9,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 79,
+        "starved_thermal": 2,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 471,
+        "warning": 214
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

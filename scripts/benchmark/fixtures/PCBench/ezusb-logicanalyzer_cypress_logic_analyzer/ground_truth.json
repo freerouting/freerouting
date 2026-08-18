@@ -1,0 +1,25 @@
+{
+  "board": "ezusb-logicanalyzer_cypress_logic_analyzer",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ezusb-logicanalyzer_cypress_logic_analyzer\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 110,
+  "approximate_track_length_mm": 428.21,
+  "kicad_drc_violations": 72,
+  "generated_at": "2026-08-18T18:48:59.050973+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 72,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 40,
+      "lib_footprint_issues": 13,
+      "silk_edge_clearance": 18,
+      "text_height": 1
+    },
+    "by_severity": {
+      "error": 40,
+      "warning": 32
+    }
+  }
+}

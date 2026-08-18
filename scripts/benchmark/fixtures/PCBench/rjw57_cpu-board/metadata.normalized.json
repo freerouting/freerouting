@@ -1,0 +1,49 @@
+{
+  "board_id": "rjw57_cpu-board",
+  "display_name": "rjw57_cpu-board",
+  "pcbench_directory": "PCBs/rjw57_cpu-board",
+  "source": "https://github.com/rjw57/buri",
+  "author": "",
+  "license": "[{'name': 'MIT License', 'link': 'https://api.github.com/licenses/mit'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 71,
+    "components": 69,
+    "dimensions_mm": {
+      "width": 99.06,
+      "height": 99.06
+    },
+    "area_cm2": 98.13,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 1299,
+    "vias": 318,
+    "track_length_mm": 7912.35,
+    "kicad_drc_violations": 229,
+    "kicad_drc_breakdown": {
+      "total_violations": 229,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 140,
+        "lib_footprint_issues": 69,
+        "silk_overlap": 9,
+        "starved_thermal": 1,
+        "via_dangling": 10
+      },
+      "by_severity": {
+        "error": 141,
+        "warning": 88
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

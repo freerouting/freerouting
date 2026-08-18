@@ -1,0 +1,54 @@
+{
+  "board_id": "data-manager_data-manager",
+  "display_name": "data-manager_data-manager",
+  "pcbench_directory": "PCBs/data-manager_data-manager",
+  "source": "https://github.com/LibreSolar/data-manager",
+  "author": "LibreSolar",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:40.825920+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 49,
+    "components": 38,
+    "dimensions_mm": {
+      "width": 74.0,
+      "height": 38.0
+    },
+    "area_cm2": 28.12,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 402,
+    "vias": 62,
+    "track_length_mm": 1016.27,
+    "kicad_drc_violations": 126,
+    "kicad_drc_breakdown": {
+      "total_violations": 126,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 28,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 8,
+        "lib_footprint_issues": 28,
+        "lib_footprint_mismatch": 5,
+        "npth_inside_courtyard": 2,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 12,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 20
+      },
+      "by_severity": {
+        "error": 63,
+        "warning": 63
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

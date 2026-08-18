@@ -1,0 +1,49 @@
+{
+  "board_id": "Practicas-Curso-Kicad_PRY_EJ1",
+  "display_name": "Practicas-Curso-Kicad_PRY_EJ1",
+  "pcbench_directory": "PCBs/Practicas-Curso-Kicad_PRY_EJ1",
+  "source": "https://github.com/INTI-CMNB/Practicas-Curso-Kicad",
+  "author": "INTI-CMNB",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.878073+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 34.29,
+      "height": 17.78
+    },
+    "area_cm2": 6.1,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 17,
+    "vias": 2,
+    "track_length_mm": 53.62,
+    "kicad_drc_violations": 26,
+    "kicad_drc_breakdown": {
+      "total_violations": 26,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "drill_out_of_range": 4,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 6,
+        "silk_overlap": 12
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 18
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

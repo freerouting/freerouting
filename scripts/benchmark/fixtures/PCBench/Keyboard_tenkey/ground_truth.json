@@ -1,0 +1,31 @@
+{
+  "board": "Keyboard_tenkey",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Keyboard_tenkey\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 487,
+  "approximate_track_length_mm": 1365.86,
+  "kicad_drc_violations": 377,
+  "generated_at": "2026-08-18T19:01:20.266417+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 377,
+    "unconnected_count": 4,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 41,
+      "copper_edge_clearance": 6,
+      "lib_footprint_issues": 58,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 40,
+      "silk_overlap": 199,
+      "text_height": 22,
+      "text_thickness": 3,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 49,
+      "warning": 328
+    }
+  }
+}

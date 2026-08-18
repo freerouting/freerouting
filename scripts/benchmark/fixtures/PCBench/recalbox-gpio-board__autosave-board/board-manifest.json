@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "recalbox-gpio-board__autosave-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 543886,
+      "sha256": "4a2196a1e8966ae916a61e97fa0782dfc87a04a0a20760736f66861977624bd0"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 209684,
+      "sha256": "18851ac411db03cc6775579319d24a03b69abbb964250b746546e102d4111f6d"
+    },
+    "metadata_json": {
+      "bytes": 695,
+      "sha256": "0b05f060262b58d1eb35b0ce4e05ba34177afd42125bd74ebe5aade481cfab55"
+    },
+    "final_json": {
+      "bytes": 127234,
+      "sha256": "c4f5c16df7352dc0ee630716240ac5b63a04285a5f26d3b35b97091de5c0d862"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:38:55.737514+00:00"
+  }
+}

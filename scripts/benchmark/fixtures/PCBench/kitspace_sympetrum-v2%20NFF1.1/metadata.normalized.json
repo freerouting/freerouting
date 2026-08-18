@@ -1,0 +1,53 @@
+{
+  "board_id": "kitspace_sympetrum-v2%20NFF1.1",
+  "display_name": "kitspace_sympetrum-v2%20NFF1.1",
+  "pcbench_directory": "PCBs/kitspace_sympetrum-v2%20NFF1.1",
+  "source": "https://github.com/borgel/sympetrum-v2",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/borgel/sympetrum-v2/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:14:34.289172+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 66,
+    "components": 49,
+    "dimensions_mm": {
+      "width": 40.0,
+      "height": 65.0
+    },
+    "area_cm2": 26.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 450,
+    "vias": 28,
+    "track_length_mm": 1095.44,
+    "kicad_drc_violations": 205,
+    "kicad_drc_breakdown": {
+      "total_violations": 205,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 49,
+        "npth_inside_courtyard": 1,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 6,
+        "silk_overlap": 10,
+        "solder_mask_bridge": 129,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 134,
+        "warning": 71
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "board_id": "pcb-covox-amp_pcb-covox-amp",
+  "display_name": "pcb-covox-amp_pcb-covox-amp",
+  "pcbench_directory": "PCBs/pcb-covox-amp_pcb-covox-amp",
+  "source": "https://github.com/yeokm1/pcb-covox-amp",
+  "author": "yeokm1",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:25.941745+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 45,
+    "dimensions_mm": {
+      "width": 78.0,
+      "height": 56.0
+    },
+    "area_cm2": 43.68,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 144,
+    "vias": 2,
+    "track_length_mm": 609.39,
+    "kicad_drc_violations": 204,
+    "kicad_drc_breakdown": {
+      "total_violations": 204,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 62,
+        "lib_footprint_issues": 45,
+        "silk_edge_clearance": 31,
+        "silk_over_copper": 52,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 6,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 68,
+        "warning": 136
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

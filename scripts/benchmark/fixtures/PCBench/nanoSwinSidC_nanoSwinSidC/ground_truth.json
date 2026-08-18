@@ -1,0 +1,28 @@
+{
+  "board": "nanoSwinSidC_nanoSwinSidC",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\nanoSwinSidC_nanoSwinSidC\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 29,
+  "segment_count": 272,
+  "approximate_track_length_mm": 492.52,
+  "kicad_drc_violations": 74,
+  "generated_at": "2026-08-18T19:26:48.637273+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 74,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 28,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 9,
+      "lib_footprint_mismatch": 6,
+      "pth_inside_courtyard": 8,
+      "silk_edge_clearance": 6,
+      "text_height": 14
+    },
+    "by_severity": {
+      "error": 39,
+      "warning": 35
+    }
+  }
+}

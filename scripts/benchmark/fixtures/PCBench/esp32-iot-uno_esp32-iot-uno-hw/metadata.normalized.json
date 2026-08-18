@@ -1,0 +1,59 @@
+{
+  "board_id": "esp32-iot-uno_esp32-iot-uno-hw",
+  "display_name": "esp32-iot-uno_esp32-iot-uno-hw",
+  "pcbench_directory": "PCBs/esp32-iot-uno_esp32-iot-uno-hw",
+  "source": "https://github.com/esp32vn/esp32-iot-uno",
+  "author": "esp32vn",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.297690+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 38,
+    "components": 105,
+    "dimensions_mm": {
+      "width": 68.53,
+      "height": 53.3
+    },
+    "area_cm2": 36.53,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1316,
+    "vias": 117,
+    "track_length_mm": 3053.1,
+    "kicad_drc_violations": 690,
+    "kicad_drc_breakdown": {
+      "total_violations": 690,
+      "unconnected_count": 2,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 299,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 105,
+        "malformed_courtyard": 3,
+        "padstack": 2,
+        "pth_inside_courtyard": 2,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 23,
+        "silk_overlap": 51,
+        "solder_mask_bridge": 109,
+        "starved_thermal": 3,
+        "text_height": 82,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 421,
+        "warning": 269
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

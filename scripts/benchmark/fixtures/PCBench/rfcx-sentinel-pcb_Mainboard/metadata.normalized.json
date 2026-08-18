@@ -1,0 +1,53 @@
+{
+  "board_id": "rfcx-sentinel-pcb_Mainboard",
+  "display_name": "rfcx-sentinel-pcb_Mainboard",
+  "pcbench_directory": "PCBs/rfcx-sentinel-pcb_Mainboard",
+  "source": "https://github.com/rfcx/rfcx-sentinel-pcb",
+  "author": "rfcx",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:59.922144+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 59,
+    "components": 102,
+    "dimensions_mm": {
+      "width": 83.82,
+      "height": 63.5
+    },
+    "area_cm2": 53.23,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 831,
+    "vias": 61,
+    "track_length_mm": 2025.26,
+    "kicad_drc_violations": 540,
+    "kicad_drc_breakdown": {
+      "total_violations": 540,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 226,
+        "lib_footprint_issues": 102,
+        "padstack": 4,
+        "silk_over_copper": 129,
+        "silk_overlap": 65,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 5,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 236,
+        "warning": 304
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

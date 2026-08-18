@@ -1,0 +1,49 @@
+{
+  "board_id": "beer-gauge_sensorboard",
+  "display_name": "beer-gauge_sensorboard",
+  "pcbench_directory": "PCBs/beer-gauge_sensorboard",
+  "source": "https://github.com/jeffkub/beer-gauge",
+  "author": "jeffkub",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:31.549810+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 31.75,
+      "height": 38.1
+    },
+    "area_cm2": 12.1,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 97,
+    "vias": 19,
+    "track_length_mm": 165.64,
+    "kicad_drc_violations": 48,
+    "kicad_drc_breakdown": {
+      "total_violations": 48,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 19,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 16,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 9
+      },
+      "by_severity": {
+        "error": 20,
+        "warning": 28
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

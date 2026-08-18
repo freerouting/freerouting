@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "raspberry-pi-rfm69_rfm69-rpi",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 264558,
+      "sha256": "870abd0ef22a9c5a6141a202b61ad459de9e0a596fc8b03db3e2d92df29f7d5e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 125451,
+      "sha256": "6a4d6de31b2acb962a0fed85681d16c7507294a4c2c6f573609e1aa1d0681eda"
+    },
+    "metadata_json": {
+      "bytes": 617,
+      "sha256": "8664ebd632413e5ab738c2a6a13359b77ca9d5a19aa701afc88fc74851799b27"
+    },
+    "final_json": {
+      "bytes": 124915,
+      "sha256": "1db60bb0f20377a939d634f2af5da3fff4466a2e7726977fffc19a7ff1a9dfec"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:37:31.529584+00:00"
+  }
+}

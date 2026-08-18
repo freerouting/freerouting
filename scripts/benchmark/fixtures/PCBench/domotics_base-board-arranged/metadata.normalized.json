@@ -1,0 +1,49 @@
+{
+  "board_id": "domotics_base-board-arranged",
+  "display_name": "domotics_base-board-arranged",
+  "pcbench_directory": "PCBs/domotics_base-board-arranged",
+  "source": "https://github.com/dmachtey/domotics",
+  "author": "dmachtey",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.213771+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 99,
+    "components": 115,
+    "dimensions_mm": {
+      "width": 271.99,
+      "height": 163.99
+    },
+    "area_cm2": 446.04,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1012,
+    "vias": 0,
+    "track_length_mm": 15105.35,
+    "kicad_drc_violations": 481,
+    "kicad_drc_breakdown": {
+      "total_violations": 481,
+      "unconnected_count": 0,
+      "by_type": {
+        "invalid_outline": 4,
+        "lib_footprint_issues": 115,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 153,
+        "silk_overlap": 199
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 477
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "board_id": "rufs_smart_psu",
+  "display_name": "rufs_smart_psu",
+  "pcbench_directory": "PCBs/rufs_smart_psu",
+  "source": "https://github.com/mik4el/rufs",
+  "author": "mik4el",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:49.038016+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 21.0,
+      "height": 75.0
+    },
+    "area_cm2": 15.75,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 179,
+    "vias": 6,
+    "track_length_mm": 416.12,
+    "kicad_drc_violations": 62,
+    "kicad_drc_breakdown": {
+      "total_violations": 62,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 22,
+        "lib_footprint_issues": 26,
+        "silk_over_copper": 12,
+        "silk_overlap": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 22,
+        "warning": 40
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

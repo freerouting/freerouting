@@ -1,0 +1,59 @@
+{
+  "board_id": "arf154_arf154",
+  "display_name": "arf154_arf154",
+  "pcbench_directory": "PCBs/arf154_arf154",
+  "source": "https://github.com/parumtronics/arf154",
+  "author": "parumtronics",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:47.746001+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 22,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 18.29,
+      "height": 46.23
+    },
+    "area_cm2": 8.46,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 270,
+    "vias": 25,
+    "track_length_mm": 385.84,
+    "kicad_drc_violations": 254,
+    "kicad_drc_breakdown": {
+      "total_violations": 254,
+      "unconnected_count": 28,
+      "by_type": {
+        "clearance": 173,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 30,
+        "shorting_items": 4,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 10,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 6,
+        "text_height": 1,
+        "track_dangling": 2,
+        "track_width": 4,
+        "tracks_crossing": 3,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 198,
+        "warning": 56
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

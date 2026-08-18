@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PixyWirelessShield_Shield PIXY",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 44027,
+      "sha256": "9df720fa91233f5880715f2c90d43628bf9c5a9d05ea7fbdc3f45e47334de02a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 55627,
+      "sha256": "74f3bc0f6f75d8efa7158263681ed638c6e3e9ff7e813bdd286086713d72b665"
+    },
+    "metadata_json": {
+      "bytes": 690,
+      "sha256": "2c05afd237a20f09208762eefd73b406c496b7a4a3d6f15be21792898bab016a"
+    },
+    "final_json": {
+      "bytes": 12265,
+      "sha256": "64dacbfdbac6199f3b7a653d8bdba99918dd0ad6606d67e8a0faac776dfdacee"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:34:02.358658+00:00"
+  }
+}

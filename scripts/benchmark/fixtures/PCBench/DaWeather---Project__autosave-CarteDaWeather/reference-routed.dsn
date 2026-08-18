@@ -1,0 +1,542 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\DaWeather---Project__autosave-CarteDaWeather\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Dessus.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Dessous.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  129540 -109220  73660 -109220  73660 -54610  129540 -54610
+            129540 -109220)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 800)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component SW_PUSH_SMALL
+      (place BP1 97790 -81280 front 0 (PN SW_PUSH))
+    )
+    (component "SIL-7"
+      (place CONN2 109220 -78740 front -90 (PN CONN_7))
+      (place CONN1 83820 -80010 front -90 (PN CONN_7))
+    )
+    (component "SIL-4"
+      (place BMP180 125730 -60960 front 90 (PN CONN_4))
+    )
+    (component "SIL-3"
+      (place ARD1 86360 -59690 front 90 (PN CONN_3))
+      (place TMP36 104140 -63500 front 90 (PN CONN_3))
+    )
+    (component "SIL-2"
+      (place +1 83820 -105410 front -90 (PN CONN_2))
+    )
+    (component "SIL-18"
+      (place P1 77470 -83820 front 90 (PN "CONN LCD"))
+    )
+    (component "scenix4-RJ-11"
+      (place RJ1 99060 -101600 front 180 (PN "RJ-11"))
+    )
+    (component "scenix4-RJ-11::1"
+      (place RJ2 114300 -101600 front 180 (PN "RJ-11"))
+    )
+    (component RV2
+      (place RV1 85090 -97790 front 0 (PN POT))
+    )
+    (component R3
+      (place R6 88900 -73660 front 90 (PN 220))
+      (place R5 105410 -90170 front 180 (PN "10 K"))
+      (place R4 118110 -74930 front 0 (PN "10 K"))
+      (place R3 118110 -71120 front 0 (PN "10 K"))
+      (place R2 118110 -80010 front 180 (PN "10 K"))
+      (place R1 97790 -73660 front 180 (PN "10 K"))
+    )
+    (component bornier2
+      (place JP1 93980 -90170 front 0 (PN CONN_2))
+    )
+  )
+  (library
+    (image SW_PUSH_SMALL
+      (outline (path signal 127  -3810 3810  -3810 -3810))
+      (outline (path signal 127  3810 -3810  -3810 -3810))
+      (outline (path signal 127  3810 3810  3810 -3810))
+      (outline (path signal 127  -3810 3810  3810 3810))
+      (outline (path signal 127  2540 0  2520.75 -312.136  2463.28 -619.541  2368.48 -917.554
+            2237.77 -1201.66  2073.14 -1467.55  1877.08 -1711.19  1652.57 -1928.89
+            1403.01 -2117.35  1132.17 -2273.72  844.181 -2395.61  543.39 -2481.2
+            234.362 -2529.16  -78.219 -2538.8  -389.615 -2509.94  -695.104 -2443.04
+            -990.056 -2339.1  -1270 -2199.7  -1530.69 -2026.96  -1768.18 -1823.5
+            -1978.87 -1592.39  -2159.55 -1337.14  -2307.5 -1061.62  -2420.47 -770.008
+            -2496.75 -466.724  -2535.18 -156.365  -2535.18 156.365  -2496.75 466.724
+            -2420.47 770.008  -2307.5 1061.62  -2159.55 1337.14  -1978.87 1592.39
+            -1768.18 1823.5  -1530.69 2026.96  -1270 2199.7  -990.056 2339.1
+            -695.104 2443.04  -389.615 2509.94  -78.219 2538.8  234.362 2529.16
+            543.39 2481.2  844.181 2395.61  1132.17 2273.72  1403.01 2117.35
+            1652.57 1928.89  1877.08 1711.19  2073.14 1467.55  2237.77 1201.66
+            2368.48 917.554  2463.28 619.541  2520.75 312.136  2540 0))
+      (pin Round[A]Pad_1700.000000_um 1 3810 2540)
+      (pin Round[A]Pad_1397.000000_um 2 3810 -2540)
+      (pin Round[A]Pad_1397.000000_um 1@1 -3810 2540)
+      (pin Round[A]Pad_1700.000000_um 2@1 -3810 -2540)
+    )
+    (image "SIL-7"
+      (outline (path signal 304.8  -6350 -1270  -6350 1270))
+      (outline (path signal 304.8  -6350 -1270  -6350 -1270))
+      (outline (path signal 304.8  -8890 -1270  -8890 1270))
+      (outline (path signal 304.8  8890 -1270  -8890 -1270))
+      (outline (path signal 304.8  8890 1270  8890 -1270))
+      (outline (path signal 304.8  -8890 1270  8890 1270))
+      (outline (path signal 304.8  -8890 1270  -8890 1270))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 -7620 0)
+      (pin Round[A]Pad_1700.000000_um 2 -5080 0)
+      (pin Round[A]Pad_1700.000000_um 3 -2540 0)
+      (pin Round[A]Pad_1700.000000_um 4 0 0)
+      (pin Round[A]Pad_1700.000000_um 5 2540 0)
+      (pin Round[A]Pad_1700.000000_um 6 5080 0)
+      (pin Round[A]Pad_1700.000000_um 7 7620 0)
+    )
+    (image "SIL-4"
+      (outline (path signal 304.8  -2540 -1270  -2540 1270))
+      (outline (path signal 304.8  5080 -1270  -5080 -1270))
+      (outline (path signal 304.8  5080 1270  5080 -1270))
+      (outline (path signal 304.8  -5080 1270  5080 1270))
+      (outline (path signal 304.8  -5080 1270  -5080 1270))
+      (outline (path signal 304.8  -5080 -1270  -5080 1270))
+      (outline (path signal 304.8  -5080 1270  -5080 1270))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 -3810 0)
+      (pin Round[A]Pad_1700.000000_um 2 -1270 0)
+      (pin Round[A]Pad_1700.000000_um 3 1270 0)
+      (pin Round[A]Pad_1700.000000_um 4 3810 0)
+    )
+    (image "SIL-3"
+      (outline (path signal 304.8  -1270 1270  -1270 -1270))
+      (outline (path signal 304.8  3810 -1270  -3810 -1270))
+      (outline (path signal 304.8  3810 1270  3810 -1270))
+      (outline (path signal 304.8  -3810 1270  3810 1270))
+      (outline (path signal 304.8  -3810 -1270  -3810 1270))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 -2540 0)
+      (pin Round[A]Pad_1700.000000_um 2 0 0)
+      (pin Round[A]Pad_1700.000000_um 3 2540 0)
+    )
+    (image "SIL-2"
+      (outline (path signal 304.8  2540 -1270  -2540 -1270))
+      (outline (path signal 304.8  2540 1270  2540 -1270))
+      (outline (path signal 304.8  -2540 1270  2540 1270))
+      (outline (path signal 304.8  -2540 -1270  -2540 1270))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 -1270 0)
+      (pin Round[A]Pad_1700.000000_um 2 1270 0)
+    )
+    (image "SIL-18"
+      (outline (path signal 304.8  -20320 1270  -20320 -1270))
+      (outline (path signal 304.8  -22860 -1270  -22860 1270))
+      (outline (path signal 304.8  22860 -1270  -22860 -1270))
+      (outline (path signal 304.8  22860 1270  22860 -1270))
+      (outline (path signal 304.8  -22860 1270  22860 1270))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 -21590 0)
+      (pin Round[A]Pad_1700.000000_um 2 -19050 0)
+      (pin Round[A]Pad_1700.000000_um 3 -16510 0)
+      (pin Round[A]Pad_1700.000000_um 4 -13970 0)
+      (pin Round[A]Pad_1700.000000_um 5 -11430 0)
+      (pin Round[A]Pad_1700.000000_um 6 -8890 0)
+      (pin Round[A]Pad_1397.000000_um 7 -6350 0)
+      (pin Round[A]Pad_1397.000000_um 8 -3810 0)
+      (pin Round[A]Pad_1397.000000_um 9 -1270 0)
+      (pin Round[A]Pad_1397.000000_um 10 1270 0)
+      (pin Round[A]Pad_1700.000000_um 11 3810 0)
+      (pin Round[A]Pad_1700.000000_um 12 6350 0)
+      (pin Round[A]Pad_1700.000000_um 13 8890 0)
+      (pin Round[A]Pad_1700.000000_um 14 11430 0)
+      (pin Round[A]Pad_1700.000000_um 15 13970 0)
+      (pin Round[A]Pad_1700.000000_um 16 16510 0)
+      (pin Round[A]Pad_1397.000000_um 17 19050 0)
+      (pin Round[A]Pad_1397.000000_um 18 21590 0)
+    )
+    (image "scenix4-RJ-11"
+      (outline (path signal 127  5080 5080  5080 7620))
+      (outline (path signal 127  3810 6350  6350 6350))
+      (outline (path signal 127  4181.97 6350  4200.36 6530.77  4254.75 6704.14  4342.93 6863.01
+            4461.29 7000.88  4604.98 7112.1  4768.11 7192.13  4944.01 7237.67
+            5125.48 7246.87  5305.09 7219.36  5475.48 7156.25  5629.69 7060.14
+            5761.39 6934.95  5865.19 6785.81  5936.84 6618.84  5973.42 6440.85
+            5973.42 6259.15  5936.84 6081.16  5865.19 5914.19  5761.39 5765.05
+            5629.69 5639.86  5475.48 5543.75  5305.09 5480.64  5125.48 5453.13
+            4944.01 5462.33  4768.11 5507.87  4604.98 5587.9  4461.29 5699.12
+            4342.93 5836.99  4254.75 5995.86  4200.36 6169.23  4181.97 6350))
+      (outline (path signal 127  -5080 5080  -5080 7620))
+      (outline (path signal 127  -6350 6350  -3810 6350))
+      (outline (path signal 127  -5978.03 6350  -5959.64 6530.77  -5905.25 6704.14  -5817.07 6863.01
+            -5698.71 7000.88  -5555.02 7112.1  -5391.89 7192.13  -5215.99 7237.67
+            -5034.52 7246.87  -4854.91 7219.36  -4684.52 7156.25  -4530.31 7060.14
+            -4398.61 6934.95  -4294.81 6785.81  -4223.16 6618.84  -4186.58 6440.85
+            -4186.58 6259.15  -4223.16 6081.16  -4294.81 5914.19  -4398.61 5765.05
+            -4530.31 5639.86  -4684.52 5543.75  -4854.91 5480.64  -5034.52 5453.13
+            -5215.99 5462.33  -5391.89 5507.87  -5555.02 5587.9  -5698.71 5699.12
+            -5817.07 5836.99  -5905.25 5995.86  -5959.64 6169.23  -5978.03 6350))
+      (outline (path signal 127  -6350 -5080  -6350 7620))
+      (outline (path signal 127  6350 -5080  -6350 -5080))
+      (outline (path signal 127  6350 7620  6350 -5080))
+      (outline (path signal 127  -6350 7620  6350 7620))
+      (outline (path signal 127  1270 6350  1270 3810))
+      (outline (path signal 127  0 6350  0 3810))
+      (outline (path signal 127  -1270 6350  -1270 3810))
+      (outline (path signal 127  -2540 6350  -2540 3810))
+      (pin Round[A]Pad_1397.000000_um 2 1270 -1270)
+      (pin Round[A]Pad_1700.000000_um 3 0 -3810)
+      (pin Round[A]Pad_1700.000000_um 4 -1270 -1270)
+      (pin Round[A]Pad_1397.000000_um 5 -2540 -3810)
+    )
+    (image "scenix4-RJ-11::1"
+      (outline (path signal 127  5080 5080  5080 7620))
+      (outline (path signal 127  3810 6350  6350 6350))
+      (outline (path signal 127  4181.97 6350  4200.36 6530.77  4254.75 6704.14  4342.93 6863.01
+            4461.29 7000.88  4604.98 7112.1  4768.11 7192.13  4944.01 7237.67
+            5125.48 7246.87  5305.09 7219.36  5475.48 7156.25  5629.69 7060.14
+            5761.39 6934.95  5865.19 6785.81  5936.84 6618.84  5973.42 6440.85
+            5973.42 6259.15  5936.84 6081.16  5865.19 5914.19  5761.39 5765.05
+            5629.69 5639.86  5475.48 5543.75  5305.09 5480.64  5125.48 5453.13
+            4944.01 5462.33  4768.11 5507.87  4604.98 5587.9  4461.29 5699.12
+            4342.93 5836.99  4254.75 5995.86  4200.36 6169.23  4181.97 6350))
+      (outline (path signal 127  -5080 5080  -5080 7620))
+      (outline (path signal 127  -6350 6350  -3810 6350))
+      (outline (path signal 127  -5978.03 6350  -5959.64 6530.77  -5905.25 6704.14  -5817.07 6863.01
+            -5698.71 7000.88  -5555.02 7112.1  -5391.89 7192.13  -5215.99 7237.67
+            -5034.52 7246.87  -4854.91 7219.36  -4684.52 7156.25  -4530.31 7060.14
+            -4398.61 6934.95  -4294.81 6785.81  -4223.16 6618.84  -4186.58 6440.85
+            -4186.58 6259.15  -4223.16 6081.16  -4294.81 5914.19  -4398.61 5765.05
+            -4530.31 5639.86  -4684.52 5543.75  -4854.91 5480.64  -5034.52 5453.13
+            -5215.99 5462.33  -5391.89 5507.87  -5555.02 5587.9  -5698.71 5699.12
+            -5817.07 5836.99  -5905.25 5995.86  -5959.64 6169.23  -5978.03 6350))
+      (outline (path signal 127  -6350 -5080  -6350 7620))
+      (outline (path signal 127  6350 -5080  -6350 -5080))
+      (outline (path signal 127  6350 7620  6350 -5080))
+      (outline (path signal 127  -6350 7620  6350 7620))
+      (outline (path signal 127  1270 6350  1270 3810))
+      (outline (path signal 127  0 6350  0 3810))
+      (outline (path signal 127  -1270 6350  -1270 3810))
+      (outline (path signal 127  -2540 6350  -2540 3810))
+      (pin Round[A]Pad_1700.000000_um 2 1270 -1270)
+      (pin Round[A]Pad_1700.000000_um 3 0 -3810)
+      (pin Round[A]Pad_1700.000000_um 4 -1270 -1270)
+      (pin Round[A]Pad_1700.000000_um 5 -2540 -3810)
+    )
+    (image RV2
+      (outline (path signal 203.2  3556 -381  3536.52 -752.703  3478.29 -1120.33  3381.96 -1479.86
+            3248.57 -1827.36  3079.59 -2159  2876.86 -2471.16  2642.62 -2760.43
+            2379.43 -3023.62  2090.16 -3257.86  1778 -3460.59  1446.36 -3629.57
+            1098.86 -3762.96  739.334 -3859.29  371.703 -3917.52  0 -3937
+            -371.703 -3917.52  -739.334 -3859.29  -1098.86 -3762.96  -1446.36 -3629.57
+            -1778 -3460.59  -2090.16 -3257.86  -2379.43 -3023.62  -2642.62 -2760.43
+            -2876.86 -2471.16  -3079.59 -2159  -3248.57 -1827.36  -3381.96 -1479.86
+            -3478.29 -1120.33  -3536.52 -752.703  -3556 -381  -3536.52 -9.297
+            -3478.29 358.334  -3381.96 717.864  -3248.57 1065.36  -3079.59 1397
+            -2876.86 1709.16  -2642.62 1998.43  -2379.43 2261.62  -2090.16 2495.86
+            -1778 2698.59  -1446.36 2867.57  -1098.86 3000.96  -739.334 3097.29
+            -371.703 3155.52  0 3175  371.703 3155.52  739.334 3097.29  1098.86 3000.96
+            1446.36 2867.57  1778 2698.59  2090.16 2495.86  2379.43 2261.62
+            2642.62 1998.43  2876.86 1709.16  3079.59 1397  3248.57 1065.36
+            3381.96 717.864  3478.29 358.334  3536.52 -9.297  3556 -381))
+      (pin Round[A]Pad_1700.000000_um 1 -2540 -1270)
+      (pin Round[A]Pad_1700.000000_um 2 0 1270)
+      (pin Round[A]Pad_1700.000000_um 3 2540 -1270)
+    )
+    (image R3
+      (outline (path signal 203.2  -3302 508  -2794 1016))
+      (outline (path signal 203.2  3302 -1016  3302 0))
+      (outline (path signal 203.2  -3302 -1016  3302 -1016))
+      (outline (path signal 203.2  -3302 1016  -3302 -1016))
+      (outline (path signal 203.2  3302 1016  -3302 1016))
+      (outline (path signal 203.2  3302 0  3302 1016))
+      (outline (path signal 203.2  3810 0  3302 0))
+      (outline (path signal 203.2  -3810 0  -3302 0))
+      (pin Round[A]Pad_1700.000000_um 1 -3810 0)
+      (pin Round[A]Pad_1700.000000_um 2 3810 0)
+    )
+    (image bornier2
+      (outline (path signal 304.8  -5080 -3810  5080 -3810))
+      (outline (path signal 304.8  -5080 3810  -5080 -3810))
+      (outline (path signal 304.8  5080 3810  -5080 3810))
+      (outline (path signal 304.8  5080 -3810  5080 3810))
+      (outline (path signal 304.8  5080 -2540  -5080 -2540))
+      (pin Rect[A]Pad_2540.000000x2540.000000_um 1 -2540 0)
+      (pin Round[A]Pad_2540.000000_um 2 2540 0)
+    )
+    (padstack Round[A]Pad_1397.000000_um
+      (shape (circle Dessus.Cu 1397))
+      (shape (circle Dessous.Cu 1397))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1700.000000_um
+      (shape (circle Dessus.Cu 1700))
+      (shape (circle Dessous.Cu 1700))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2540.000000_um
+      (shape (circle Dessus.Cu 2540))
+      (shape (circle Dessous.Cu 2540))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2540.000000x2540.000000_um
+      (shape (rect Dessus.Cu -1270 -1270 1270 1270))
+      (shape (rect Dessous.Cu -1270 -1270 1270 1270))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect Dessus.Cu -850 -850 850 850))
+      (shape (rect Dessous.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle Dessus.Cu 889))
+      (shape (circle Dessous.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net "N-000001"
+      (pins CONN2-6 RJ2-2 R3-2)
+    )
+    (net "N-0000010"
+      (pins BMP180-3 ARD1-2)
+    )
+    (net "N-0000011"
+      (pins BMP180-4 ARD1-3)
+    )
+    (net "N-0000012"
+      (pins CONN1-6 P1-4)
+    )
+    (net "N-0000013"
+      (pins P1-15 R6-2)
+    )
+    (net "N-0000015"
+      (pins CONN1-7 R5-2 JP1-2)
+    )
+    (net "N-0000016"
+      (pins CONN1-1 P1-14)
+    )
+    (net "N-0000017"
+      (pins CONN1-2 P1-13)
+    )
+    (net "N-0000018"
+      (pins CONN1-4 P1-11)
+    )
+    (net "N-0000019"
+      (pins CONN2-1 CONN2-2 R4-1 R3-1 R2-1 R1-1)
+    )
+    (net "N-000002"
+      (pins BP1-2@1 CONN2-5 R1-2)
+    )
+    (net "N-0000020"
+      (pins P1-3 RV1-2)
+    )
+    (net "N-0000021"
+      (pins BMP180-2 TMP36-3 +1-2 P1-1 P1-5 P1-16 RJ1-4 RJ2-3 RJ2-4 RV1-3 R5-1)
+    )
+    (net "N-0000022"
+      (pins CONN1-5 P1-6)
+    )
+    (net "N-0000027"
+      (pins CONN1-3 P1-12)
+    )
+    (net "N-000003"
+      (pins CONN2-7 RJ2-5 R4-2)
+    )
+    (net "N-000004"
+      (pins CONN2-4 RJ1-3 R2-2)
+    )
+    (net "N-000005"
+      (pins BP1-1 CONN2-3)
+    )
+    (net "N-000006"
+      (pins BMP180-1 TMP36-1 +1-1 P1-2 RV1-1 R6-1 JP1-1)
+    )
+    (net "N-000009"
+      (pins ARD1-1 TMP36-2)
+    )
+    (class kicad_default "N-000001" "N-0000010" "N-0000011" "N-0000012" "N-0000013"
+      "N-0000015" "N-0000016" "N-0000017" "N-0000018" "N-0000019" "N-000002"
+      "N-0000020" "N-0000021" "N-0000022" "N-0000027" "N-000003" "N-000004"
+      "N-000005" "N-000006" "N-000009"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 800)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path Dessous.Cu 800  109220 -83820  107950 -83820)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  111760 -99060  113030 -100330)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  111760 -93980  111760 -99060)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  110490 -92710  111760 -93980)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  107950 -92710  110490 -92710)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  106680 -91440  107950 -92710)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  106680 -85090  106680 -91440)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  107950 -83820  106680 -85090)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  109220 -83820  123190 -83820)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  125730 -74930  121920 -71120)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  125730 -81280  125730 -74930)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  123190 -83820  125730 -81280)(net "N-000001")(type route))
+    (wire (path Dessous.Cu 800  125730 -59690  119380 -59690)(net "N-0000010")(type route))
+    (wire (path Dessous.Cu 800  113030 -59690  119380 -59690)(net "N-0000010")(type route))
+    (wire (path Dessous.Cu 800  111760 -58420  113030 -59690)(net "N-0000010")(type route))
+    (wire (path Dessous.Cu 800  95250 -58420  111760 -58420)(net "N-0000010")(type route))
+    (wire (path Dessous.Cu 800  93980 -59690  95250 -58420)(net "N-0000010")(type route))
+    (wire (path Dessous.Cu 800  93980 -59690  86360 -59690)(net "N-0000010")(type route))
+    (wire (path Dessous.Cu 800  125730 -57150  119380 -57150)(net "N-0000011")(type route))
+    (wire (path Dessous.Cu 800  114300 -57150  119380 -57150)(net "N-0000011")(type route))
+    (wire (path Dessous.Cu 800  113030 -55880  114300 -57150)(net "N-0000011")(type route))
+    (wire (path Dessous.Cu 800  93980 -55880  113030 -55880)(net "N-0000011")(type route))
+    (wire (path Dessous.Cu 800  92710 -57150  93980 -55880)(net "N-0000011")(type route))
+    (wire (path Dessous.Cu 800  92710 -57150  86360 -57150)(net "N-0000011")(type route))
+    (wire (path Dessous.Cu 800  77470 -97790  78740 -97790  81280 -95250  81280 -86360
+            82550 -85090  83820 -85090)(net "N-0000012")(type route))
+    (wire (path Dessous.Cu 800  77470 -69850  88900 -69850)(net "N-0000013")(type route))
+    (wire (path Dessous.Cu 800  96520 -90170  101600 -90170)(net "N-0000015")(type route))
+    (wire (path Dessous.Cu 800  83820 -87630  85090 -87630)(net "N-0000015")(type route))
+    (wire (path Dessous.Cu 800  96520 -92710  96520 -90170)(net "N-0000015")(type route))
+    (wire (path Dessous.Cu 800  95250 -93980  96520 -92710)(net "N-0000015")(type route))
+    (wire (path Dessous.Cu 800  90170 -93980  95250 -93980)(net "N-0000015")(type route))
+    (wire (path Dessous.Cu 800  88900 -92710  90170 -93980)(net "N-0000015")(type route))
+    (wire (path Dessous.Cu 800  88900 -91440  88900 -92710)(net "N-0000015")(type route))
+    (wire (path Dessous.Cu 800  85090 -87630  88900 -91440)(net "N-0000015")(type route))
+    (wire (path Dessous.Cu 800  77470 -72390  83820 -72390)(net "N-0000016")(type route))
+    (wire (path Dessous.Cu 800  77470 -74930  83820 -74930)(net "N-0000017")(type route))
+    (wire (path Dessous.Cu 800  77470 -80010  83820 -80010)(net "N-0000018")(type route))
+    (wire (path Dessous.Cu 800  121920 -80010  119380 -80010)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  114300 -76200  114300 -74930)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  116840 -78740  114300 -76200)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  118110 -78740  116840 -78740)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  119380 -80010  118110 -78740)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  109220 -71120  114300 -71120)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  114300 -74930  114300 -71120)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  109220 -73660  101600 -73660)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  109220 -73660  109220 -71120)(net "N-0000019")(type route))
+    (wire (path Dessous.Cu 800  109220 -81280  111760 -81280)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  96520 -71120  93980 -73660)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  105410 -71120  96520 -71120)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  107950 -68580  105410 -71120)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  114300 -68580  107950 -68580)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  116840 -71120  114300 -68580)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  116840 -76200  116840 -71120)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  118110 -77470  116840 -76200)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  123190 -77470  118110 -77470)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  124460 -78740  123190 -77470)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  124460 -80010  124460 -78740)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  121920 -82550  124460 -80010)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  113030 -82550  121920 -82550)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  111760 -81280  113030 -82550)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  93980 -83820  93980 -81280)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  96520 -76200  93980 -73660)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  96520 -78740  96520 -76200)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  93980 -81280  96520 -78740)(net "N-000002")(type route))
+    (wire (path Dessous.Cu 800  77470 -100330  78740 -100330  80010 -99060  82550 -96520
+            85090 -96520)(net "N-0000020")(type route))
+    (wire (path Dessous.Cu 800  124460 -67310  128270 -67310)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  125730 -62230  127000 -62230  128270 -63500  128270 -67310
+            128270 -71120)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  104140 -60960  111760 -60960)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  113030 -62230  125730 -62230)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  111760 -60960  113030 -62230)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  115570 -100330  115570 -102870)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  87630 -102870  87630 -105410)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  86360 -106680  83820 -106680)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  87630 -105410  86360 -106680)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  77470 -105410  81280 -105410  82550 -106680  83820 -106680)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  121920 -67310  124460 -67310)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  90170 -67310  91440 -68580  105410 -68580  106680 -67310
+            121920 -67310)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  77470 -67310  90170 -67310)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  118110 -102870  115570 -102870)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  128270 -71120  128270 -83820  119380 -92710  119380 -101600
+            118110 -102870)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  115570 -102870  114300 -102870)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  100330 -102870  114300 -102870)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  109220 -90170  113030 -90170)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  114300 -91440  114300 -97790)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  113030 -90170  114300 -91440)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  100330 -102870  88900 -102870  87630 -102870)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  87630 -99060  87630 -102870)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  100330 -100330  100330 -102870)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  114300 -97790  114300 -99060  115570 -100330)(net "N-0000021")(type route))
+    (wire (path Dessus.Cu 800  78974 -68814  77470 -67310)(net "N-0000021")(type route))
+    (wire (path Dessus.Cu 800  78974 -93746  78974 -68814)(net "N-0000021")(type route))
+    (wire (path Dessus.Cu 800  77470 -95250  78974 -93746)(net "N-0000021")(type route))
+    (wire (path Dessous.Cu 800  77470 -92710  80010 -90170)(net "N-0000022")(type route))
+    (wire (path Dessous.Cu 800  82550 -82550  83820 -82550)(net "N-0000022")(type route))
+    (wire (path Dessous.Cu 800  80010 -85090  82550 -82550)(net "N-0000022")(type route))
+    (wire (path Dessous.Cu 800  80010 -90170  80010 -85090)(net "N-0000022")(type route))
+    (wire (path Dessous.Cu 800  77470 -77470  83820 -77470)(net "N-0000027")(type route))
+    (wire (path Dessous.Cu 800  121920 -74930  120650 -74930)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  123190 -86360  116840 -86360)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  127000 -82550  123190 -86360)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  127000 -72390  127000 -82550)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  123190 -68580  127000 -72390)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  120650 -68580  123190 -68580)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  119380 -69850  120650 -68580)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  119380 -73660  119380 -69850)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  120650 -74930  119380 -73660)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  116840 -97790  116840 -86360  109220 -86360)(net "N-000003")(type route))
+    (wire (path Dessous.Cu 800  109220 -78740  107950 -78740)(net "N-000004")(type route))
+    (wire (path Dessous.Cu 800  100330 -96520  101600 -95250  104140 -95250  105410 -93980
+            105410 -81280  107950 -78740)(net "N-000004")(type route))
+    (wire (path Dessous.Cu 800  100330 -96520  99060 -97790)(net "N-000004")(type route))
+    (wire (path Dessous.Cu 800  109220 -78740  113030 -78740  114300 -80010)(net "N-000004")(type route))
+    (wire (path Dessous.Cu 800  101600 -78740  104140 -76200  109220 -76200)(net "N-000005")(type route))
+    (wire (path Dessous.Cu 800  104140 -66040  95250 -66040)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  76200 -102870  77470 -102870)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  74930 -101600  76200 -102870)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  74930 -60960  74930 -101600)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  76200 -59690  74930 -60960)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  80010 -59690  76200 -59690)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  81280 -60960  80010 -59690)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  81280 -63500  81280 -60960)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  82550 -64770  81280 -63500)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  93980 -64770  82550 -64770)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  95250 -66040  93980 -64770)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  104140 -66040  105410 -66040)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  106680 -64770  125730 -64770)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  105410 -66040  106680 -64770)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  83820 -104140  82550 -102870)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  82550 -100330  82550 -102870)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  82550 -99060  82550 -100330)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  77470 -102870  82550 -102870)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  91440 -90170  93980 -87630)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  85090 -99060  82550 -99060)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  87630 -96520  85090 -99060)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  95250 -96520  87630 -96520)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  99060 -92710  95250 -96520)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  102870 -92710  99060 -92710)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  104140 -91440  102870 -92710)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  104140 -88900  104140 -91440)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  102870 -87630  104140 -88900)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  101600 -87630  102870 -87630)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  93980 -87630  101600 -87630)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  88900 -77470  88900 -78740)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  91440 -81280  91440 -90170)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  88900 -78740  91440 -81280)(net "N-000006")(type route))
+    (wire (path Dessous.Cu 800  104140 -63500  102870 -63500)(net "N-000009")(type route))
+    (wire (path Dessous.Cu 800  100330 -63500  102870 -63500)(net "N-000009")(type route))
+    (wire (path Dessous.Cu 800  99060 -62230  100330 -63500)(net "N-000009")(type route))
+    (wire (path Dessous.Cu 800  99060 -62230  86360 -62230)(net "N-000009")(type route))
+  )
+)

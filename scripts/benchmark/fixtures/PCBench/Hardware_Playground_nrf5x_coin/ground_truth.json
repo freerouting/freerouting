@@ -1,0 +1,30 @@
+{
+  "board": "Hardware_Playground_nrf5x_coin",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_nrf5x_coin\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 60,
+  "segment_count": 286,
+  "approximate_track_length_mm": 640.26,
+  "kicad_drc_violations": 262,
+  "generated_at": "2026-08-18T18:54:39.728738+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 262,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 31,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 41,
+      "silk_edge_clearance": 22,
+      "silk_over_copper": 27,
+      "silk_overlap": 69,
+      "solder_mask_bridge": 47,
+      "text_height": 22,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 80,
+      "warning": 182
+    }
+  }
+}

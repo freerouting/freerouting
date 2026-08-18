@@ -1,0 +1,50 @@
+{
+  "board_id": "RoBoC_CameraAdaptor",
+  "display_name": "RoBoC_CameraAdaptor",
+  "pcbench_directory": "PCBs/RoBoC_CameraAdaptor",
+  "source": "https://github.com/KolijnWolfaardt/RoBoC",
+  "author": "KolijnWolfaardt",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.358149+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 144,
+    "vias": 16,
+    "track_length_mm": 705.49,
+    "kicad_drc_violations": 100,
+    "kicad_drc_breakdown": {
+      "total_violations": 100,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 83,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 6,
+        "silk_over_copper": 8,
+        "silk_overlap": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 84,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

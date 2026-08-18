@@ -1,0 +1,53 @@
+{
+  "board_id": "kitspace_120-channel-pogo-pin-board",
+  "display_name": "kitspace_120-channel-pogo-pin-board",
+  "pcbench_directory": "PCBs/kitspace_120-channel-pogo-pin-board",
+  "source": "https://github.com/sci-bots/dropbot-120-channel-pogo-pin-board.kicad",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/sci-bots/dropbot-120-channel-pogo-pin-board.kicad/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:21:05.724054+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 1,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 183.45,
+      "height": 73.25
+    },
+    "area_cm2": 134.38,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 1648,
+    "vias": 105,
+    "track_length_mm": 8798.6,
+    "kicad_drc_violations": 266,
+    "kicad_drc_breakdown": {
+      "total_violations": 266,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 2,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 17,
+        "silk_over_copper": 2,
+        "silk_overlap": 27,
+        "solder_mask_bridge": 139,
+        "text_height": 18,
+        "track_dangling": 56,
+        "tracks_crossing": 4
+      },
+      "by_severity": {
+        "error": 146,
+        "warning": 120
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

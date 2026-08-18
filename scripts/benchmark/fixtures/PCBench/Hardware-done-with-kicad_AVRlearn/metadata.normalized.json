@@ -1,0 +1,47 @@
+{
+  "board_id": "Hardware-done-with-kicad_AVRlearn",
+  "display_name": "Hardware-done-with-kicad_AVRlearn",
+  "pcbench_directory": "PCBs/Hardware-done-with-kicad_AVRlearn",
+  "source": "https://github.com/jstodberg/Hardware-done-with-kicad",
+  "author": "jstodberg",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.702153+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 50.8
+    },
+    "area_cm2": 34.84,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 81,
+    "vias": 5,
+    "track_length_mm": 381.44,
+    "kicad_drc_violations": 66,
+    "kicad_drc_breakdown": {
+      "total_violations": 66,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 13,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 48,
+        "silk_overlap": 4
+      },
+      "by_severity": {
+        "warning": 66
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

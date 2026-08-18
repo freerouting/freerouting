@@ -1,0 +1,52 @@
+{
+  "board_id": "phone_amp_phone_amp",
+  "display_name": "phone_amp_phone_amp",
+  "pcbench_directory": "PCBs/phone_amp_phone_amp",
+  "source": "https://github.com/iocapa/phone_amp",
+  "author": "iocapa",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.334149+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 27,
+    "components": 42,
+    "dimensions_mm": {
+      "width": 11.62,
+      "height": 56.15
+    },
+    "area_cm2": 6.52,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 561,
+    "vias": 32,
+    "track_length_mm": 632.97,
+    "kicad_drc_violations": 537,
+    "kicad_drc_breakdown": {
+      "total_violations": 537,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 183,
+        "copper_edge_clearance": 173,
+        "hole_clearance": 15,
+        "lib_footprint_issues": 42,
+        "malformed_courtyard": 82,
+        "solder_mask_bridge": 31,
+        "starved_thermal": 1,
+        "track_dangling": 10
+      },
+      "by_severity": {
+        "error": 485,
+        "warning": 52
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

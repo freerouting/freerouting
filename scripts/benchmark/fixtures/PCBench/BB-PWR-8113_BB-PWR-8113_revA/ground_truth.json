@@ -1,0 +1,29 @@
+{
+  "board": "BB-PWR-8113_BB-PWR-8113_revA",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BB-PWR-8113_BB-PWR-8113_revA\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 81,
+  "approximate_track_length_mm": 122.24,
+  "kicad_drc_violations": 115,
+  "generated_at": "2026-08-18T18:32:32.721640+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 115,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 3,
+      "clearance": 19,
+      "copper_edge_clearance": 15,
+      "lib_footprint_issues": 27,
+      "silk_over_copper": 36,
+      "silk_overlap": 6,
+      "starved_thermal": 1,
+      "text_height": 8
+    },
+    "by_severity": {
+      "error": 38,
+      "warning": 77
+    }
+  }
+}

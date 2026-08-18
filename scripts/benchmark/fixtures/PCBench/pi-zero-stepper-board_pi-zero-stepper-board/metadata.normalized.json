@@ -1,0 +1,47 @@
+{
+  "board_id": "pi-zero-stepper-board_pi-zero-stepper-board",
+  "display_name": "pi-zero-stepper-board_pi-zero-stepper-board",
+  "pcbench_directory": "PCBs/pi-zero-stepper-board_pi-zero-stepper-board",
+  "source": "https://github.com/MarkJB/pi-zero-stepper-board",
+  "author": "MarkJB",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.234019+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 39,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 83.82,
+      "height": 74.3
+    },
+    "area_cm2": 62.28,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 301,
+    "vias": 0,
+    "track_length_mm": 1565.34,
+    "kicad_drc_violations": 192,
+    "kicad_drc_breakdown": {
+      "total_violations": 192,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 148,
+        "lib_footprint_issues": 25,
+        "silk_overlap": 19
+      },
+      "by_severity": {
+        "error": 148,
+        "warning": 44
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

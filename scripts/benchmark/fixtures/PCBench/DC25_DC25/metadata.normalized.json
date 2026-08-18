@@ -1,0 +1,51 @@
+{
+  "board_id": "DC25_DC25",
+  "display_name": "DC25_DC25",
+  "pcbench_directory": "PCBs/DC25_DC25",
+  "source": "https://github.com/TeamBazooka/DC25",
+  "author": "TeamBazooka",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.646094+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 28,
+    "dimensions_mm": {
+      "width": 101.6,
+      "height": 55.88
+    },
+    "area_cm2": 56.77,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 189,
+    "vias": 26,
+    "track_length_mm": 862.78,
+    "kicad_drc_violations": 169,
+    "kicad_drc_breakdown": {
+      "total_violations": 169,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 7,
+        "clearance": 85,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 28,
+        "silk_over_copper": 16,
+        "silk_overlap": 4,
+        "solder_mask_bridge": 28
+      },
+      "by_severity": {
+        "error": 121,
+        "warning": 48
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

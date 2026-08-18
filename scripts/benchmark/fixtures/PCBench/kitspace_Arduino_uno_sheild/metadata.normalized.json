@@ -1,0 +1,48 @@
+{
+  "board_id": "kitspace_Arduino_uno_sheild",
+  "display_name": "kitspace_Arduino_uno_sheild",
+  "pcbench_directory": "PCBs/kitspace_Arduino_uno_sheild",
+  "source": "https://github.com/nasa-jpl/open-source-rover",
+  "author": "",
+  "license": "[{'name': 'Apache', 'link': 'https://raw.githubusercontent.com/nasa-jpl/open-source-rover/master/LICENSE.txt'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:09:00.640241+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.28
+    },
+    "area_cm2": 36.54,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 166,
+    "vias": 3,
+    "track_length_mm": 949.06,
+    "kicad_drc_violations": 23,
+    "kicad_drc_breakdown": {
+      "total_violations": 23,
+      "unconnected_count": 1,
+      "by_type": {
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 8,
+        "malformed_courtyard": 3,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 7,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

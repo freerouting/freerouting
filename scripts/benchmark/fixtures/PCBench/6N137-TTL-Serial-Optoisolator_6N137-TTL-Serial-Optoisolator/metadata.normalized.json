@@ -1,0 +1,52 @@
+{
+  "board_id": "6N137-TTL-Serial-Optoisolator_6N137-TTL-Serial-Optoisolator",
+  "display_name": "6N137-TTL-Serial-Optoisolator_6N137-TTL-Serial-Optoisolator",
+  "pcbench_directory": "PCBs/6N137-TTL-Serial-Optoisolator_6N137-TTL-Serial-Optoisolator",
+  "source": "https://github.com/pepaslabs/6N137-TTL-Serial-Optoisolator",
+  "author": "pepaslabs",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:44.741966+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 40.64,
+      "height": 22.86
+    },
+    "area_cm2": 9.29,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 79,
+    "vias": 0,
+    "track_length_mm": 208.81,
+    "kicad_drc_violations": 126,
+    "kicad_drc_breakdown": {
+      "total_violations": 126,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 28,
+        "copper_edge_clearance": 5,
+        "padstack": 4,
+        "silk_edge_clearance": 6,
+        "silk_overlap": 32,
+        "starved_thermal": 2,
+        "text_height": 45
+      },
+      "by_severity": {
+        "error": 39,
+        "warning": 87
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "board_id": "nodemcu-backstage_NodeMCU Backstage",
+  "display_name": "nodemcu-backstage_NodeMCU Backstage",
+  "pcbench_directory": "PCBs/nodemcu-backstage_NodeMCU Backstage",
+  "source": "https://github.com/mplewis/nodemcu-backstage",
+  "author": "mplewis",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.258148+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 22,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 31.75,
+      "height": 54.86
+    },
+    "area_cm2": 17.42,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 76,
+    "vias": 4,
+    "track_length_mm": 249.46,
+    "kicad_drc_violations": 40,
+    "kicad_drc_breakdown": {
+      "total_violations": 40,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 22,
+        "lib_footprint_issues": 8,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 8
+      },
+      "by_severity": {
+        "error": 22,
+        "warning": 18
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "board": "PowerGloveUHID_main_board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\PowerGloveUHID_main_board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 74,
+  "segment_count": 420,
+  "approximate_track_length_mm": 2130.99,
+  "kicad_drc_violations": 557,
+  "generated_at": "2026-08-18T19:35:13.125867+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 557,
+    "unconnected_count": 16,
+    "by_type": {
+      "clearance": 96,
+      "lib_footprint_issues": 57,
+      "malformed_courtyard": 8,
+      "shorting_items": 39,
+      "silk_edge_clearance": 30,
+      "silk_over_copper": 84,
+      "silk_overlap": 35,
+      "solder_mask_bridge": 202,
+      "via_dangling": 6
+    },
+    "by_severity": {
+      "error": 345,
+      "warning": 212
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "board_id": "filament_extruder_sensor",
+  "display_name": "filament_extruder_sensor",
+  "pcbench_directory": "PCBs/filament_extruder_sensor",
+  "source": "https://github.com/mtu-most/filament_extruder",
+  "author": "mtu-most",
+  "license": "GNU Affero General Public License v3.0",
+  "license_spdx": "AGPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:26.033746+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 25.0,
+      "height": 80.0
+    },
+    "area_cm2": 20.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 111,
+    "vias": 0,
+    "track_length_mm": 473.03,
+    "kicad_drc_violations": 17,
+    "kicad_drc_breakdown": {
+      "total_violations": 17,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 5,
+        "silk_edge_clearance": 12
+      },
+      "by_severity": {
+        "warning": 17
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

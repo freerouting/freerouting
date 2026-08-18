@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "MAVRIC_Hardware_pcieduino",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 196403,
+      "sha256": "eba7995bbf96bdc54ddc1f9d1e7335a94efc3d33d8be558840678388c44fedc4"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 137757,
+      "sha256": "b176bf502decb18a8e81eb60e998f5deef6f9e78ba2d5e7bf2955c19df3399bc"
+    },
+    "metadata_json": {
+      "bytes": 488,
+      "sha256": "1dfd15aabed03efaef94928031e0ac002c1dca8a012c4aaa1a3ea62be65028e7"
+    },
+    "final_json": {
+      "bytes": 138625,
+      "sha256": "8a08c71fcdffcbfcbb6db3110938634246dc39c817dc80669c6b562eba378827"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:20:28.522389+00:00"
+  }
+}

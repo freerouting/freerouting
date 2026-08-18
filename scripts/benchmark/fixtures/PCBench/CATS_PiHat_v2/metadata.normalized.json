@@ -1,0 +1,60 @@
+{
+  "board_id": "CATS_PiHat_v2",
+  "display_name": "CATS_PiHat_v2",
+  "pcbench_directory": "PCBs/CATS_PiHat_v2",
+  "source": "https://github.com/clemsonMakerspace/CATS",
+  "author": "clemsonMakerspace",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:47.465998+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 64.0,
+      "height": 55.0
+    },
+    "area_cm2": 35.2,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 447,
+    "vias": 44,
+    "track_length_mm": 1469.47,
+    "kicad_drc_violations": 296,
+    "kicad_drc_breakdown": {
+      "total_violations": 296,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 146,
+        "copper_edge_clearance": 21,
+        "courtyards_overlap": 1,
+        "hole_clearance": 1,
+        "holes_co_located": 2,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 36,
+        "mirrored_text_on_front_layer": 5,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 8,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 28,
+        "starved_thermal": 3,
+        "text_height": 17,
+        "text_thickness": 8,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 203,
+        "warning": 93
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

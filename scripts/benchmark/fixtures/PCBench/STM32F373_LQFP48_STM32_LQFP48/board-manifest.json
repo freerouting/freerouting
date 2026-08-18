@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "STM32F373_LQFP48_STM32_LQFP48",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 192908,
+      "sha256": "0a52e194ffa7b26cf5eed23ac5eccbc587329f4aee1c3f1512e7d7aa13d7e7fa"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 162180,
+      "sha256": "a5b6206854faa646f6a7e28bc9087e6826386064508a268ffb4773a523f67cd6"
+    },
+    "metadata_json": {
+      "bytes": 505,
+      "sha256": "211854aeb29f93f871992b2dac20bff1a14e386516215a55010ad768514f5c62"
+    },
+    "final_json": {
+      "bytes": 123714,
+      "sha256": "6dfe97c7721b9cd3b43b29715b204c0bf9ae4484b827bdb4060a74f23031f8e3"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:48:42.276235+00:00"
+  }
+}

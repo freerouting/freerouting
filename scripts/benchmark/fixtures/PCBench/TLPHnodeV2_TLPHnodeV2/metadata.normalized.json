@@ -1,0 +1,53 @@
+{
+  "board_id": "TLPHnodeV2_TLPHnodeV2",
+  "display_name": "TLPHnodeV2_TLPHnodeV2",
+  "pcbench_directory": "PCBs/TLPHnodeV2_TLPHnodeV2",
+  "source": "https://github.com/jdunmire/TLPHnodeV2",
+  "author": "jdunmire",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:38.773896+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 11,
+    "components": 35,
+    "dimensions_mm": {
+      "width": 28.0,
+      "height": 20.5
+    },
+    "area_cm2": 5.74,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 271,
+    "vias": 27,
+    "track_length_mm": 329.19,
+    "kicad_drc_violations": 215,
+    "kicad_drc_breakdown": {
+      "total_violations": 215,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 36,
+        "lib_footprint_issues": 35,
+        "malformed_courtyard": 6,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 6,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 81,
+        "starved_thermal": 1,
+        "text_height": 39
+      },
+      "by_severity": {
+        "error": 124,
+        "warning": 91
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

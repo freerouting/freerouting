@@ -1,0 +1,52 @@
+{
+  "board_id": "hardware-designs_nixie-combo",
+  "display_name": "hardware-designs_nixie-combo",
+  "pcbench_directory": "PCBs/hardware-designs_nixie-combo",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 99.0,
+      "height": 70.0
+    },
+    "area_cm2": 69.3,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 525,
+    "vias": 35,
+    "track_length_mm": 2913.67,
+    "kicad_drc_violations": 191,
+    "kicad_drc_breakdown": {
+      "total_violations": 191,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 130,
+        "copper_edge_clearance": 6,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 28,
+        "silk_overlap": 14,
+        "starved_thermal": 3,
+        "text_height": 8,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 139,
+        "warning": 52
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

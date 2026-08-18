@@ -1,0 +1,56 @@
+{
+  "board_id": "mavbridge_mavbridge",
+  "display_name": "mavbridge_mavbridge",
+  "pcbench_directory": "PCBs/mavbridge_mavbridge",
+  "source": "https://github.com/festlv/mavbridge",
+  "author": "festlv",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:22.633706+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 38,
+    "dimensions_mm": {
+      "width": 34.0,
+      "height": 23.75
+    },
+    "area_cm2": 8.07,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 263,
+    "vias": 34,
+    "track_length_mm": 479.6,
+    "kicad_drc_violations": 161,
+    "kicad_drc_breakdown": {
+      "total_violations": 161,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 80,
+        "lib_footprint_issues": 38,
+        "malformed_courtyard": 8,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 6,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 3,
+        "starved_thermal": 1,
+        "text_height": 18,
+        "text_thickness": 1,
+        "track_dangling": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 92,
+        "warning": 69
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

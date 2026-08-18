@@ -1,0 +1,55 @@
+{
+  "board_id": "UCCBPCB_USB_CAN_CONVERTER_BASIC",
+  "display_name": "UCCBPCB_USB_CAN_CONVERTER_BASIC",
+  "pcbench_directory": "PCBs/UCCBPCB_USB_CAN_CONVERTER_BASIC",
+  "source": "https://github.com/UsbCANConverter-UCCbasic/UCCBPCB",
+  "author": "UsbCANConverter-UCCbasic",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:38.721895+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 26.61,
+      "height": 14.61
+    },
+    "area_cm2": 3.89,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 291,
+    "vias": 10,
+    "track_length_mm": 278.12,
+    "kicad_drc_violations": 188,
+    "kicad_drc_breakdown": {
+      "total_violations": 188,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 51,
+        "copper_edge_clearance": 14,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 22,
+        "mirrored_text_on_front_layer": 1,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 1,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 55,
+        "starved_thermal": 2,
+        "text_height": 28
+      },
+      "by_severity": {
+        "error": 125,
+        "warning": 63
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

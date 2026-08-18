@@ -1,0 +1,49 @@
+{
+  "board_id": "avr_frs_shield_avr_frs",
+  "display_name": "avr_frs_shield_avr_frs",
+  "pcbench_directory": "PCBs/avr_frs_shield_avr_frs",
+  "source": "https://github.com/4x1md/avr_frs_shield",
+  "author": "4x1md",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:38.405891+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 34,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 216,
+    "vias": 6,
+    "track_length_mm": 800.27,
+    "kicad_drc_violations": 138,
+    "kicad_drc_breakdown": {
+      "total_violations": 138,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "courtyards_overlap": 8,
+        "lib_footprint_issues": 34,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 92
+      },
+      "by_severity": {
+        "error": 10,
+        "warning": 128
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

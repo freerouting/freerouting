@@ -1,0 +1,51 @@
+{
+  "board_id": "tessel-ice40__autosave-project",
+  "display_name": "tessel-ice40__autosave-project",
+  "pcbench_directory": "PCBs/tessel-ice40__autosave-project",
+  "source": "https://github.com/tcr/tessel-ice40",
+  "author": "tcr",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.373891+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 43.18,
+      "height": 27.94
+    },
+    "area_cm2": 12.06,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 395,
+    "vias": 46,
+    "track_length_mm": 872.44,
+    "kicad_drc_violations": 280,
+    "kicad_drc_breakdown": {
+      "total_violations": 280,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 101,
+        "lib_footprint_issues": 19,
+        "silk_edge_clearance": 52,
+        "silk_over_copper": 4,
+        "silk_overlap": 4,
+        "solder_mask_bridge": 96,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 197,
+        "warning": 83
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "board_id": "avr-divecomputer_dc",
+  "display_name": "avr-divecomputer_dc",
+  "pcbench_directory": "PCBs/avr-divecomputer_dc",
+  "source": "https://github.com/jothan/avr-divecomputer",
+  "author": "jothan",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.446092+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 60,
+    "dimensions_mm": {
+      "width": 101.6,
+      "height": 96.52
+    },
+    "area_cm2": 98.06,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 396,
+    "vias": 37,
+    "track_length_mm": 1994.26,
+    "kicad_drc_violations": 346,
+    "kicad_drc_breakdown": {
+      "total_violations": 346,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 262,
+        "copper_edge_clearance": 4,
+        "invalid_outline": 2,
+        "padstack": 3,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 14,
+        "silk_overlap": 42,
+        "solder_mask_bridge": 10,
+        "starved_thermal": 1,
+        "text_height": 4
+      },
+      "by_severity": {
+        "error": 279,
+        "warning": 67
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

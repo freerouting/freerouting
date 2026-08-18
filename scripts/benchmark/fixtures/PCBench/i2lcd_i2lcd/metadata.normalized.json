@@ -1,0 +1,52 @@
+{
+  "board_id": "i2lcd_i2lcd",
+  "display_name": "i2lcd_i2lcd",
+  "pcbench_directory": "PCBs/i2lcd_i2lcd",
+  "source": "https://github.com/lucidm/i2lcd",
+  "author": "lucidm",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:52.126053+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 44.0,
+      "height": 25.0
+    },
+    "area_cm2": 11.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 443,
+    "vias": 36,
+    "track_length_mm": 704.64,
+    "kicad_drc_violations": 177,
+    "kicad_drc_breakdown": {
+      "total_violations": 177,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 86,
+        "invalid_outline": 7,
+        "lib_footprint_issues": 19,
+        "silk_over_copper": 1,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 50,
+        "text_height": 6,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 143,
+        "warning": 34
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

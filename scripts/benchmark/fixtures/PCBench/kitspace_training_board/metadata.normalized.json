@@ -1,0 +1,51 @@
+{
+  "board_id": "kitspace_training_board",
+  "display_name": "kitspace_training_board",
+  "pcbench_directory": "PCBs/kitspace_training_board",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:29.375826+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 62,
+    "components": 77,
+    "dimensions_mm": {
+      "width": 99.08,
+      "height": 99.08
+    },
+    "area_cm2": 98.17,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 278,
+    "vias": 1,
+    "track_length_mm": 1141.37,
+    "kicad_drc_violations": 83,
+    "kicad_drc_breakdown": {
+      "total_violations": 83,
+      "unconnected_count": 9,
+      "by_type": {
+        "invalid_outline": 2,
+        "items_not_allowed": 4,
+        "lib_footprint_issues": 4,
+        "lib_footprint_mismatch": 65,
+        "silk_over_copper": 1,
+        "silk_overlap": 5,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

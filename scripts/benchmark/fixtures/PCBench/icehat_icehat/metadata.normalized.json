@@ -1,0 +1,51 @@
+{
+  "board_id": "icehat_icehat",
+  "display_name": "icehat_icehat",
+  "pcbench_directory": "PCBs/icehat_icehat",
+  "source": "https://github.com/emeb/icehat",
+  "author": "emeb",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:22.749707+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 59,
+    "components": 40,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 30.0
+    },
+    "area_cm2": 19.5,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 519,
+    "vias": 41,
+    "track_length_mm": 1251.21,
+    "kicad_drc_violations": 165,
+    "kicad_drc_breakdown": {
+      "total_violations": 165,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 62,
+        "courtyards_overlap": 10,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 40,
+        "silk_overlap": 5,
+        "text_height": 41,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 74,
+        "warning": 91
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

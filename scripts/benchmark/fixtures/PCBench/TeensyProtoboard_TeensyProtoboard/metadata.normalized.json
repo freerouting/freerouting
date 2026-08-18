@@ -1,0 +1,48 @@
+{
+  "board_id": "TeensyProtoboard_TeensyProtoboard",
+  "display_name": "TeensyProtoboard_TeensyProtoboard",
+  "pcbench_directory": "PCBs/TeensyProtoboard_TeensyProtoboard",
+  "source": "https://github.com/NorbotNorway/TeensyProtoboard",
+  "author": "NorbotNorway",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.298149+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 48.26,
+      "height": 62.23
+    },
+    "area_cm2": 30.03,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 192,
+    "vias": 0,
+    "track_length_mm": 557.8,
+    "kicad_drc_violations": 309,
+    "kicad_drc_breakdown": {
+      "total_violations": 309,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 32,
+        "lib_footprint_issues": 43,
+        "silk_over_copper": 35,
+        "silk_overlap": 199
+      },
+      "by_severity": {
+        "error": 32,
+        "warning": 277
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

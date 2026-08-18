@@ -1,0 +1,52 @@
+{
+  "board_id": "ESP-12-breakout_ESP12E-breakout",
+  "display_name": "ESP-12-breakout_ESP12E-breakout",
+  "pcbench_directory": "PCBs/ESP-12-breakout_ESP12E-breakout",
+  "source": "https://github.com/Black-Electronics/ESP-12-breakout",
+  "author": "Black-Electronics",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:42.393938+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 31.62,
+      "height": 26.67
+    },
+    "area_cm2": 8.43,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 162,
+    "vias": 0,
+    "track_length_mm": 382.89,
+    "kicad_drc_violations": 74,
+    "kicad_drc_breakdown": {
+      "total_violations": 74,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 9,
+        "lib_footprint_issues": 17,
+        "malformed_courtyard": 8,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 26,
+        "text_height": 10,
+        "text_thickness": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 17,
+        "warning": 57
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

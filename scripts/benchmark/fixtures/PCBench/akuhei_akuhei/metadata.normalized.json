@@ -1,0 +1,49 @@
+{
+  "board_id": "akuhei_akuhei",
+  "display_name": "akuhei_akuhei",
+  "pcbench_directory": "PCBs/akuhei_akuhei",
+  "source": "https://github.com/Sakura-IT/akuhei",
+  "author": "Sakura-IT",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.769895+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 22.99,
+      "height": 23.43
+    },
+    "area_cm2": 5.39,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 151,
+    "vias": 14,
+    "track_length_mm": 293.69,
+    "kicad_drc_violations": 69,
+    "kicad_drc_breakdown": {
+      "total_violations": 69,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 44,
+        "copper_edge_clearance": 8,
+        "lib_footprint_issues": 8,
+        "text_height": 8,
+        "text_thickness": 1
+      },
+      "by_severity": {
+        "error": 52,
+        "warning": 17
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

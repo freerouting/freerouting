@@ -1,0 +1,46 @@
+{
+  "board_id": "sms-cart-32k_cart",
+  "display_name": "sms-cart-32k_cart",
+  "pcbench_directory": "PCBs/sms-cart-32k_cart",
+  "source": "https://github.com/reidrac/sms-cart-32k",
+  "author": "reidrac",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.733895+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 66.04,
+      "height": 40.0
+    },
+    "area_cm2": 26.42,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 207,
+    "vias": 4,
+    "track_length_mm": 1077.08,
+    "kicad_drc_violations": 84,
+    "kicad_drc_breakdown": {
+      "total_violations": 84,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 77,
+        "lib_footprint_issues": 7
+      },
+      "by_severity": {
+        "error": 77,
+        "warning": 7
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

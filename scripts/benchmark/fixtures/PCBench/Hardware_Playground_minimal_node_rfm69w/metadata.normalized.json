@@ -1,0 +1,53 @@
+{
+  "board_id": "Hardware_Playground_minimal_node_rfm69w",
+  "display_name": "Hardware_Playground_minimal_node_rfm69w",
+  "pcbench_directory": "PCBs/Hardware_Playground_minimal_node_rfm69w",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 58,
+    "dimensions_mm": {
+      "width": 27.6,
+      "height": 25.1
+    },
+    "area_cm2": 6.93,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 321,
+    "vias": 33,
+    "track_length_mm": 528.32,
+    "kicad_drc_violations": 226,
+    "kicad_drc_breakdown": {
+      "total_violations": 226,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 36,
+        "clearance": 82,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 22,
+        "pth_inside_courtyard": 9,
+        "silk_over_copper": 14,
+        "starved_thermal": 2,
+        "text_height": 57
+      },
+      "by_severity": {
+        "error": 133,
+        "warning": 93
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

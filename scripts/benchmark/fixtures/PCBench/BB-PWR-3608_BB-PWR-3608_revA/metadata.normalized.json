@@ -1,0 +1,50 @@
+{
+  "board_id": "BB-PWR-3608_BB-PWR-3608_revA",
+  "display_name": "BB-PWR-3608_BB-PWR-3608_revA",
+  "pcbench_directory": "PCBs/BB-PWR-3608_BB-PWR-3608_revA",
+  "source": "https://github.com/OLIMEX/BB-PWR-3608",
+  "author": "OLIMEX",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:48.606011+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 15.19,
+      "height": 11.75
+    },
+    "area_cm2": 1.78,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 73,
+    "vias": 3,
+    "track_length_mm": 80.0,
+    "kicad_drc_violations": 74,
+    "kicad_drc_breakdown": {
+      "total_violations": 74,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 7,
+        "copper_edge_clearance": 15,
+        "lib_footprint_issues": 18,
+        "silk_over_copper": 32,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 23,
+        "warning": 51
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

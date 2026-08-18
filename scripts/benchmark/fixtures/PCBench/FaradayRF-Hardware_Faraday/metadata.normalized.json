@@ -1,0 +1,56 @@
+{
+  "board_id": "FaradayRF-Hardware_Faraday",
+  "display_name": "FaradayRF-Hardware_Faraday",
+  "pcbench_directory": "PCBs/FaradayRF-Hardware_Faraday",
+  "source": "https://github.com/FaradayRF/FaradayRF-Hardware",
+  "author": "FaradayRF",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:21.749695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 29,
+    "components": 141,
+    "dimensions_mm": {
+      "width": 74.93,
+      "height": 53.34
+    },
+    "area_cm2": 39.97,
+    "zones": 15
+  },
+  "reference": {
+    "segments": 1713,
+    "vias": 428,
+    "track_length_mm": 3212.52,
+    "kicad_drc_violations": 895,
+    "kicad_drc_breakdown": {
+      "total_violations": 895,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 505,
+        "copper_edge_clearance": 9,
+        "shorting_items": 6,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 41,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 121,
+        "starved_thermal": 1,
+        "text_height": 199,
+        "track_dangling": 2,
+        "tracks_crossing": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 644,
+        "warning": 251
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

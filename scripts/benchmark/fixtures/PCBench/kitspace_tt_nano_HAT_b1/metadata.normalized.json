@@ -1,0 +1,54 @@
+{
+  "board_id": "kitspace_tt_nano_HAT_b1",
+  "display_name": "kitspace_tt_nano_HAT_b1",
+  "pcbench_directory": "PCBs/kitspace_tt_nano_HAT_b1",
+  "source": "https://github.com/vektorious/test_tube_photometer",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/vektorious/test_tube_photometer/master/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:17:47.613466+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 35.56,
+      "height": 49.53
+    },
+    "area_cm2": 17.61,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 117,
+    "vias": 0,
+    "track_length_mm": 379.83,
+    "kicad_drc_violations": 104,
+    "kicad_drc_breakdown": {
+      "total_violations": 104,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 17,
+        "courtyards_overlap": 12,
+        "hole_clearance": 12,
+        "lib_footprint_issues": 7,
+        "lib_footprint_mismatch": 12,
+        "pth_inside_courtyard": 26,
+        "silk_over_copper": 3,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 8,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 75,
+        "warning": 29
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

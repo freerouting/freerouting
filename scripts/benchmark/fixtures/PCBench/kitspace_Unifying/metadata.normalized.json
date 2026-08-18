@@ -1,0 +1,48 @@
+{
+  "board_id": "kitspace_Unifying",
+  "display_name": "kitspace_Unifying",
+  "pcbench_directory": "PCBs/kitspace_Unifying",
+  "source": "https://github.com/balthazar-space/Unifying-PCB",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/balthazar-space/Unifying-PCB/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:14:24.595714+00:00",
+  "cad": {
+    "source_version": "KiCad 20220914",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 261,
+    "components": 132,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 11
+  },
+  "reference": {
+    "segments": 4766,
+    "vias": 425,
+    "track_length_mm": 7392.06,
+    "kicad_drc_violations": 73,
+    "kicad_drc_breakdown": {
+      "total_violations": 73,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 1,
+        "nonmirrored_text_on_back_layer": 2,
+        "silk_over_copper": 68,
+        "zones_intersect": 2
+      },
+      "by_severity": {
+        "error": 71,
+        "warning": 2
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

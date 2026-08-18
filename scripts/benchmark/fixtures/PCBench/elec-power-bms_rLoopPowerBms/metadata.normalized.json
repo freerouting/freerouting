@@ -1,0 +1,58 @@
+{
+  "board_id": "elec-power-bms_rLoopPowerBms",
+  "display_name": "elec-power-bms_rLoopPowerBms",
+  "pcbench_directory": "PCBs/elec-power-bms_rLoopPowerBms",
+  "source": "https://github.com/rLoopTeam/elec-power-bms",
+  "author": "rLoopTeam",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.818096+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 41,
+    "components": 87,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 60.0
+    },
+    "area_cm2": 42.0,
+    "zones": 22
+  },
+  "reference": {
+    "segments": 1157,
+    "vias": 205,
+    "track_length_mm": 2118.65,
+    "kicad_drc_violations": 634,
+    "kicad_drc_breakdown": {
+      "total_violations": 634,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 380,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 3,
+        "hole_clearance": 4,
+        "holes_co_located": 64,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 79,
+        "shorting_items": 4,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 48,
+        "silk_overlap": 10,
+        "solder_mask_bridge": 10,
+        "text_height": 7,
+        "track_dangling": 20
+      },
+      "by_severity": {
+        "error": 404,
+        "warning": 230
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

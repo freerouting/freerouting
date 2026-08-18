@@ -1,0 +1,53 @@
+{
+  "board_id": "espalarm_alarm",
+  "display_name": "espalarm_alarm",
+  "pcbench_directory": "PCBs/espalarm_alarm",
+  "source": "https://github.com/limpkin/espalarm",
+  "author": "limpkin",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:27.617764+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 39,
+    "dimensions_mm": {
+      "width": 85.6,
+      "height": 85.6
+    },
+    "area_cm2": 73.27,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 540,
+    "vias": 85,
+    "track_length_mm": 1966.47,
+    "kicad_drc_violations": 248,
+    "kicad_drc_breakdown": {
+      "total_violations": 248,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 60,
+        "copper_edge_clearance": 27,
+        "invalid_outline": 4,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 52,
+        "silk_overlap": 64,
+        "starved_thermal": 1,
+        "text_height": 35,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 92,
+        "warning": 156
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

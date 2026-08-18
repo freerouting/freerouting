@@ -1,0 +1,49 @@
+{
+  "board_id": "ID-FIX_scanConnect",
+  "display_name": "ID-FIX_scanConnect",
+  "pcbench_directory": "PCBs/ID-FIX_scanConnect",
+  "source": "https://github.com/volab/ID-FIX",
+  "author": "volab",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:51.314043+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 35.39,
+      "height": 31.22
+    },
+    "area_cm2": 11.05,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 19,
+    "vias": 0,
+    "track_length_mm": 44.12,
+    "kicad_drc_violations": 38,
+    "kicad_drc_breakdown": {
+      "total_violations": 38,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 18,
+        "copper_edge_clearance": 5,
+        "lib_footprint_issues": 8,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 5
+      },
+      "by_severity": {
+        "error": 23,
+        "warning": 15
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

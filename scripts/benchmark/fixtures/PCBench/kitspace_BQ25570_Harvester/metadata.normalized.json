@@ -1,0 +1,49 @@
+{
+  "board_id": "kitspace_BQ25570_Harvester",
+  "display_name": "kitspace_BQ25570_Harvester",
+  "pcbench_directory": "PCBs/kitspace_BQ25570_Harvester",
+  "source": "https://github.com/kitspace-forks/BQ25570_Harvester",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:23:07.989862+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 12.7,
+      "height": 20.83
+    },
+    "area_cm2": 2.65,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 176,
+    "vias": 10,
+    "track_length_mm": 193.99,
+    "kicad_drc_violations": 127,
+    "kicad_drc_breakdown": {
+      "total_violations": 127,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 70,
+        "copper_edge_clearance": 11,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 20,
+        "text_height": 24
+      },
+      "by_severity": {
+        "error": 83,
+        "warning": 44
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

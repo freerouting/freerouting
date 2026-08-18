@@ -1,0 +1,50 @@
+{
+  "board_id": "cat-trainer_teensy_base_pcb",
+  "display_name": "cat-trainer_teensy_base_pcb",
+  "pcbench_directory": "PCBs/cat-trainer_teensy_base_pcb",
+  "source": "https://github.com/james481/cat-trainer",
+  "author": "james481",
+  "license": "BSD 3-Clause Clear License",
+  "license_spdx": "BSD-3-Clause-Clear",
+  "retrieved_at": "2023-08-17T17:22:31.657812+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 28,
+    "dimensions_mm": {
+      "width": 69.85,
+      "height": 52.07
+    },
+    "area_cm2": 36.37,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 126,
+    "vias": 3,
+    "track_length_mm": 778.7,
+    "kicad_drc_violations": 75,
+    "kicad_drc_breakdown": {
+      "total_violations": 75,
+      "unconnected_count": 5,
+      "by_type": {
+        "clearance": 28,
+        "lib_footprint_issues": 28,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 5,
+        "text_height": 5
+      },
+      "by_severity": {
+        "error": 33,
+        "warning": 42
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

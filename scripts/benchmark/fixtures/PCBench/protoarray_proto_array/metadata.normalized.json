@@ -1,0 +1,56 @@
+{
+  "board_id": "protoarray_proto_array",
+  "display_name": "protoarray_proto_array",
+  "pcbench_directory": "PCBs/protoarray_proto_array",
+  "source": "https://github.com/lfochamon/protoarray",
+  "author": "lfochamon",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.774084+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 109,
+    "components": 76,
+    "dimensions_mm": {
+      "width": 99.06,
+      "height": 129.54
+    },
+    "area_cm2": 128.32,
+    "zones": 11
+  },
+  "reference": {
+    "segments": 409,
+    "vias": 4,
+    "track_length_mm": 1813.14,
+    "kicad_drc_violations": 334,
+    "kicad_drc_breakdown": {
+      "total_violations": 334,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 181,
+        "copper_edge_clearance": 4,
+        "items_not_allowed": 5,
+        "lib_footprint_issues": 76,
+        "malformed_courtyard": 6,
+        "padstack": 16,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 4,
+        "silk_overlap": 4,
+        "solder_mask_bridge": 7,
+        "starved_thermal": 7,
+        "track_dangling": 19
+      },
+      "by_severity": {
+        "error": 210,
+        "warning": 124
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

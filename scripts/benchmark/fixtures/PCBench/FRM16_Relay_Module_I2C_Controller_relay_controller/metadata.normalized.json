@@ -1,0 +1,50 @@
+{
+  "board_id": "FRM16_Relay_Module_I2C_Controller_relay_controller",
+  "display_name": "FRM16_Relay_Module_I2C_Controller_relay_controller",
+  "pcbench_directory": "PCBs/FRM16_Relay_Module_I2C_Controller_relay_controller",
+  "source": "https://github.com/Junes-PhD/FRM16_Relay_Module_I2C_Controller",
+  "author": "Junes-PhD",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:59.830143+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 36,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 137.16,
+      "height": 15.24
+    },
+    "area_cm2": 20.9,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 269,
+    "vias": 6,
+    "track_length_mm": 1330.49,
+    "kicad_drc_violations": 64,
+    "kicad_drc_breakdown": {
+      "total_violations": 64,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "copper_edge_clearance": 18,
+        "lib_footprint_issues": 31,
+        "silk_overlap": 2,
+        "starved_thermal": 3,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 29,
+        "warning": 35
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

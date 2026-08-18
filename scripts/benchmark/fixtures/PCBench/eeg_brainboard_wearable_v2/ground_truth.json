@@ -1,0 +1,34 @@
+{
+  "board": "eeg_brainboard_wearable_v2",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\eeg_brainboard_wearable_v2\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 126,
+  "segment_count": 1270,
+  "approximate_track_length_mm": 1792.0,
+  "kicad_drc_violations": 872,
+  "generated_at": "2026-08-18T18:15:07.082790+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 872,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 499,
+      "copper_edge_clearance": 9,
+      "hole_clearance": 8,
+      "hole_to_hole": 4,
+      "invalid_outline": 7,
+      "lib_footprint_issues": 1,
+      "padstack": 5,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 199,
+      "starved_thermal": 5,
+      "text_height": 121,
+      "text_thickness": 6,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 528,
+      "warning": 344
+    }
+  }
+}

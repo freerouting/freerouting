@@ -1,0 +1,47 @@
+{
+  "board_id": "PCB_serie_led_strip",
+  "display_name": "PCB_serie_led_strip",
+  "pcbench_directory": "PCBs/PCB_serie_led_strip",
+  "source": "https://github.com/theopenbar/PCB",
+  "author": "theopenbar",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:59.518140+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 91.0,
+      "height": 10.0
+    },
+    "area_cm2": 9.1,
+    "zones": 13
+  },
+  "reference": {
+    "segments": 9,
+    "vias": 0,
+    "track_length_mm": 42.66,
+    "kicad_drc_violations": 15,
+    "kicad_drc_breakdown": {
+      "total_violations": 15,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "lib_footprint_issues": 12,
+        "silk_overlap": 1
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "board_id": "oskirby_logicbone",
+  "display_name": "oskirby_logicbone",
+  "pcbench_directory": "PCBs/oskirby_logicbone",
+  "source": "https://github.com/oskirby/logicbone",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 8,
+    "nets": 328,
+    "components": 275,
+    "dimensions_mm": {
+      "width": 86.36,
+      "height": 54.61
+    },
+    "area_cm2": 47.16,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 9875,
+    "vias": 658,
+    "track_length_mm": 10496.78,
+    "kicad_drc_violations": 652,
+    "kicad_drc_breakdown": {
+      "total_violations": 652,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 5,
+        "hole_clearance": 199,
+        "lib_footprint_issues": 14,
+        "lib_footprint_mismatch": 199,
+        "npth_inside_courtyard": 1,
+        "silk_edge_clearance": 2,
+        "solder_mask_bridge": 199,
+        "text_height": 1,
+        "track_dangling": 20,
+        "tracks_crossing": 2,
+        "via_dangling": 8
+      },
+      "by_severity": {
+        "error": 408,
+        "warning": 244
+      }
+    }
+  },
+  "tags": [
+    "8-layer"
+  ]
+}

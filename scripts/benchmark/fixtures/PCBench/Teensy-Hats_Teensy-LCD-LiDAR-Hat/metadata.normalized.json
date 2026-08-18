@@ -1,0 +1,49 @@
+{
+  "board_id": "Teensy-Hats_Teensy-LCD-LiDAR-Hat",
+  "display_name": "Teensy-Hats_Teensy-LCD-LiDAR-Hat",
+  "pcbench_directory": "PCBs/Teensy-Hats_Teensy-LCD-LiDAR-Hat",
+  "source": "https://github.com/wickerbox/Teensy-Hats",
+  "author": "wickerbox",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:03.170182+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 80.01,
+      "height": 36.19
+    },
+    "area_cm2": 28.96,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 133,
+    "vias": 7,
+    "track_length_mm": 574.7,
+    "kicad_drc_violations": 119,
+    "kicad_drc_breakdown": {
+      "total_violations": 119,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 89,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 16,
+        "silk_edge_clearance": 8,
+        "solder_mask_bridge": 3
+      },
+      "by_severity": {
+        "error": 95,
+        "warning": 24
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

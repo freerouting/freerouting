@@ -1,0 +1,53 @@
+{
+  "board_id": "gamelights_leds",
+  "display_name": "gamelights_leds",
+  "pcbench_directory": "PCBs/gamelights_leds",
+  "source": "https://github.com/skorokithakis/gamelights",
+  "author": "skorokithakis",
+  "license": "BSD 2-Clause \"Simplified\" License",
+  "license_spdx": "BSD-2-Clause",
+  "retrieved_at": "2023-08-17T17:22:32.357820+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 24.3,
+      "height": 24.0
+    },
+    "area_cm2": 5.83,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 125,
+    "vias": 10,
+    "track_length_mm": 239.4,
+    "kicad_drc_violations": 66,
+    "kicad_drc_breakdown": {
+      "total_violations": 66,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 17,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 15,
+        "malformed_courtyard": 8,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 6,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 2,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 28,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

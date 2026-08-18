@@ -1,0 +1,52 @@
+{
+  "board_id": "hardware-designs_spirit1-board",
+  "display_name": "hardware-designs_spirit1-board",
+  "pcbench_directory": "PCBs/hardware-designs_spirit1-board",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 23,
+    "dimensions_mm": {
+      "width": 27.0,
+      "height": 24.0
+    },
+    "area_cm2": 6.48,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 229,
+    "vias": 39,
+    "track_length_mm": 358.63,
+    "kicad_drc_violations": 133,
+    "kicad_drc_breakdown": {
+      "total_violations": 133,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 59,
+        "copper_edge_clearance": 10,
+        "padstack": 2,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 22,
+        "silk_overlap": 5,
+        "text_height": 22,
+        "text_thickness": 10
+      },
+      "by_severity": {
+        "error": 69,
+        "warning": 64
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

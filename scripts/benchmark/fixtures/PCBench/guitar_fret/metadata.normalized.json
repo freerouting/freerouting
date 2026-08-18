@@ -1,0 +1,53 @@
+{
+  "board_id": "guitar_fret",
+  "display_name": "guitar_fret",
+  "pcbench_directory": "PCBs/guitar_fret",
+  "source": "https://github.com/amstan/guitar",
+  "author": "amstan",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:34.093840+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 471,
+    "vias": 55,
+    "track_length_mm": 1131.44,
+    "kicad_drc_violations": 309,
+    "kicad_drc_breakdown": {
+      "total_violations": 309,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 173,
+        "copper_edge_clearance": 2,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 51,
+        "malformed_courtyard": 48,
+        "silk_over_copper": 13,
+        "silk_overlap": 19,
+        "starved_thermal": 1,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 225,
+        "warning": 84
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

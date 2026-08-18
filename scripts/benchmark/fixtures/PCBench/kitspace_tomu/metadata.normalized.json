@@ -1,0 +1,53 @@
+{
+  "board_id": "kitspace_tomu",
+  "display_name": "kitspace_tomu",
+  "pcbench_directory": "PCBs/kitspace_tomu",
+  "source": "https://github.com/im-tomu/tomu-hardware",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/im-tomu/tomu-hardware/master/LICENSE'}, {'name': 'TAPR', 'link': 'https://raw.githubusercontent.com/im-tomu/tomu-hardware/master/LICENSE.TAPR'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:15:27.106255+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 13.0,
+      "height": 11.0
+    },
+    "area_cm2": 1.43,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 176,
+    "vias": 13,
+    "track_length_mm": 155.63,
+    "kicad_drc_violations": 210,
+    "kicad_drc_breakdown": {
+      "total_violations": 210,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 29,
+        "copper_edge_clearance": 56,
+        "courtyards_overlap": 1,
+        "hole_clearance": 6,
+        "invalid_outline": 4,
+        "lib_footprint_issues": 15,
+        "silk_over_copper": 4,
+        "solder_mask_bridge": 90,
+        "text_height": 5
+      },
+      "by_severity": {
+        "error": 186,
+        "warning": 24
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

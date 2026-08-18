@@ -1,0 +1,53 @@
+{
+  "board_id": "domotics_power-supply",
+  "display_name": "domotics_power-supply",
+  "pcbench_directory": "PCBs/domotics_power-supply",
+  "source": "https://github.com/dmachtey/domotics",
+  "author": "dmachtey",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.213771+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 80.55,
+      "height": 75.03
+    },
+    "area_cm2": 60.44,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 231,
+    "vias": 0,
+    "track_length_mm": 974.95,
+    "kicad_drc_violations": 155,
+    "kicad_drc_breakdown": {
+      "total_violations": 155,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 12,
+        "clearance": 39,
+        "copper_edge_clearance": 1,
+        "hole_to_hole": 9,
+        "invalid_outline": 4,
+        "lib_footprint_issues": 25,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 3,
+        "silk_overlap": 56
+      },
+      "by_severity": {
+        "error": 56,
+        "warning": 99
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

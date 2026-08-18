@@ -1,0 +1,51 @@
+{
+  "board_id": "WS2811LEDMatrix_matrixcontrol",
+  "display_name": "WS2811LEDMatrix_matrixcontrol",
+  "pcbench_directory": "PCBs/WS2811LEDMatrix_matrixcontrol",
+  "source": "https://github.com/Jeija/WS2811LEDMatrix",
+  "author": "Jeija",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.345891+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 30,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 492,
+    "vias": 25,
+    "track_length_mm": 1348.08,
+    "kicad_drc_violations": 317,
+    "kicad_drc_breakdown": {
+      "total_violations": 317,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 109,
+        "copper_edge_clearance": 17,
+        "lib_footprint_issues": 43,
+        "silk_over_copper": 136,
+        "silk_overlap": 8,
+        "starved_thermal": 1,
+        "text_height": 3
+      },
+      "by_severity": {
+        "error": 127,
+        "warning": 190
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

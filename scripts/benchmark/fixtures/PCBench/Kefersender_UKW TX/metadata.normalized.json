@@ -1,0 +1,54 @@
+{
+  "board_id": "Kefersender_UKW TX",
+  "display_name": "Kefersender_UKW TX",
+  "pcbench_directory": "PCBs/Kefersender_UKW TX",
+  "source": "https://github.com/Virtex7/Kefersender",
+  "author": "Virtex7",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:51.938050+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 40,
+    "dimensions_mm": {
+      "width": 38.5,
+      "height": 27.0
+    },
+    "area_cm2": 10.39,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 337,
+    "vias": 74,
+    "track_length_mm": 445.87,
+    "kicad_drc_violations": 277,
+    "kicad_drc_breakdown": {
+      "total_violations": 277,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 167,
+        "copper_edge_clearance": 11,
+        "courtyards_overlap": 1,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 40,
+        "padstack": 4,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 22,
+        "silk_overlap": 6
+      },
+      "by_severity": {
+        "error": 185,
+        "warning": 92
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

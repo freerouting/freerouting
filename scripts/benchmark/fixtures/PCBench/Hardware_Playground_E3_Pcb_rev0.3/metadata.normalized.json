@@ -1,0 +1,54 @@
+{
+  "board_id": "Hardware_Playground_E3_Pcb_rev0.3",
+  "display_name": "Hardware_Playground_E3_Pcb_rev0.3",
+  "pcbench_directory": "PCBs/Hardware_Playground_E3_Pcb_rev0.3",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 140,
+    "dimensions_mm": {
+      "width": 99.95,
+      "height": 70.1
+    },
+    "area_cm2": 70.06,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 937,
+    "vias": 349,
+    "track_length_mm": 2842.79,
+    "kicad_drc_violations": 252,
+    "kicad_drc_breakdown": {
+      "total_violations": 252,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 32,
+        "lib_footprint_issues": 139,
+        "shorting_items": 1,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 25,
+        "silk_overlap": 40,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 7,
+        "text_height": 4,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 41,
+        "warning": 211
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

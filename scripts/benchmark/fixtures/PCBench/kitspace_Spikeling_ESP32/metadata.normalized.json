@@ -1,0 +1,51 @@
+{
+  "board_id": "kitspace_Spikeling_ESP32",
+  "display_name": "kitspace_Spikeling_ESP32",
+  "pcbench_directory": "PCBs/kitspace_Spikeling_ESP32",
+  "source": "https://github.com/MaxZimmer/Spikeling-V2",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/MaxZimmer/Spikeling-V2/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:18:49.917214+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 44,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 120.0,
+      "height": 80.0
+    },
+    "area_cm2": 96.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 328,
+    "vias": 30,
+    "track_length_mm": 2593.12,
+    "kicad_drc_violations": 56,
+    "kicad_drc_breakdown": {
+      "total_violations": 56,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 2,
+        "courtyards_overlap": 1,
+        "footprint_type_mismatch": 5,
+        "lib_footprint_issues": 6,
+        "lib_footprint_mismatch": 23,
+        "malformed_courtyard": 13,
+        "silk_over_copper": 6
+      },
+      "by_severity": {
+        "error": 21,
+        "warning": 35
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

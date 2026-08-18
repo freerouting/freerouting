@@ -1,0 +1,50 @@
+{
+  "board_id": "DerKnopf_led-ring",
+  "display_name": "DerKnopf_led-ring",
+  "pcbench_directory": "PCBs/DerKnopf_led-ring",
+  "source": "https://github.com/hzeller/DerKnopf",
+  "author": "hzeller",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.781990+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 16.68,
+      "height": 16.8
+    },
+    "area_cm2": 2.8,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 393,
+    "vias": 36,
+    "track_length_mm": 550.27,
+    "kicad_drc_violations": 108,
+    "kicad_drc_breakdown": {
+      "total_violations": 108,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 47,
+        "hole_clearance": 3,
+        "lib_footprint_issues": 33,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 4,
+        "solder_mask_bridge": 20
+      },
+      "by_severity": {
+        "error": 70,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

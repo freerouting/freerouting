@@ -1,0 +1,53 @@
+{
+  "board_id": "m2-electronics_m2pa-tiny",
+  "display_name": "m2-electronics_m2pa-tiny",
+  "pcbench_directory": "PCBs/m2-electronics_m2pa-tiny",
+  "source": "https://github.com/cuspaceflight/m2-electronics",
+  "author": "cuspaceflight",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:40.729918+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 44.75,
+      "height": 16.0
+    },
+    "area_cm2": 7.16,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 157,
+    "vias": 87,
+    "track_length_mm": 303.11,
+    "kicad_drc_violations": 138,
+    "kicad_drc_breakdown": {
+      "total_violations": 138,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 4,
+        "copper_edge_clearance": 16,
+        "drill_out_of_range": 21,
+        "hole_to_hole": 6,
+        "lib_footprint_issues": 19,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 50,
+        "silk_overlap": 18,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 42,
+        "warning": 96
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

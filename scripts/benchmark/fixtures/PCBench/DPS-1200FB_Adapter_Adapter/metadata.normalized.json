@@ -1,0 +1,49 @@
+{
+  "board_id": "DPS-1200FB_Adapter_Adapter",
+  "display_name": "DPS-1200FB_Adapter_Adapter",
+  "pcbench_directory": "PCBs/DPS-1200FB_Adapter_Adapter",
+  "source": "https://github.com/jasiek/DPS-1200FB_Adapter",
+  "author": "jasiek",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.202183+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 84.0,
+      "height": 81.0
+    },
+    "area_cm2": 68.04,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 26,
+    "vias": 0,
+    "track_length_mm": 162.6,
+    "kicad_drc_violations": 34,
+    "kicad_drc_breakdown": {
+      "total_violations": 34,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "lib_footprint_issues": 22,
+        "nonmirrored_text_on_back_layer": 1,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 2
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 32
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

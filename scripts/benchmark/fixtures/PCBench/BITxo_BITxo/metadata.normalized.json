@@ -1,0 +1,56 @@
+{
+  "board_id": "BITxo_BITxo",
+  "display_name": "BITxo_BITxo",
+  "pcbench_directory": "PCBs/BITxo_BITxo",
+  "source": "https://github.com/davidanton/BITxo",
+  "author": "davidanton",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:59.970145+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 73.39,
+      "height": 62.61
+    },
+    "area_cm2": 45.95,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 222,
+    "vias": 17,
+    "track_length_mm": 395.42,
+    "kicad_drc_violations": 392,
+    "kicad_drc_breakdown": {
+      "total_violations": 392,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 118,
+        "copper_edge_clearance": 24,
+        "courtyards_overlap": 3,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 30,
+        "silk_edge_clearance": 15,
+        "silk_over_copper": 50,
+        "silk_overlap": 102,
+        "solder_mask_bridge": 12,
+        "starved_thermal": 2,
+        "text_height": 26,
+        "track_dangling": 8
+      },
+      "by_severity": {
+        "error": 161,
+        "warning": 231
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

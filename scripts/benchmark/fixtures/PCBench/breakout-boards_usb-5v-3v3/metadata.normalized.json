@@ -1,0 +1,53 @@
+{
+  "board_id": "breakout-boards_usb-5v-3v3",
+  "display_name": "breakout-boards_usb-5v-3v3",
+  "pcbench_directory": "PCBs/breakout-boards_usb-5v-3v3",
+  "source": "https://github.com/myelin/breakout-boards",
+  "author": "myelin",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:24.229724+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 25.0,
+      "height": 18.0
+    },
+    "area_cm2": 4.5,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 20,
+    "vias": 0,
+    "track_length_mm": 49.62,
+    "kicad_drc_violations": 58,
+    "kicad_drc_breakdown": {
+      "total_violations": 58,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 11,
+        "copper_edge_clearance": 6,
+        "courtyards_overlap": 2,
+        "drill_out_of_range": 2,
+        "lib_footprint_issues": 10,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 5,
+        "silk_overlap": 18,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 21,
+        "warning": 37
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

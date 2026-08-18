@@ -1,0 +1,56 @@
+{
+  "board_id": "Pi-Zero-SD-and-Audio-Out_BaseBoard",
+  "display_name": "Pi-Zero-SD-and-Audio-Out_BaseBoard",
+  "pcbench_directory": "PCBs/Pi-Zero-SD-and-Audio-Out_BaseBoard",
+  "source": "https://github.com/Ralim/Pi-Zero-SD-and-Audio-Out",
+  "author": "Ralim",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.789990+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 64.0,
+      "height": 40.0
+    },
+    "area_cm2": 25.6,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 537,
+    "vias": 87,
+    "track_length_mm": 1265.01,
+    "kicad_drc_violations": 357,
+    "kicad_drc_breakdown": {
+      "total_violations": 357,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 16,
+        "clearance": 129,
+        "copper_edge_clearance": 28,
+        "courtyards_overlap": 7,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 57,
+        "silk_edge_clearance": 16,
+        "silk_over_copper": 53,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 34,
+        "starved_thermal": 1,
+        "via_dangling": 5
+      },
+      "by_severity": {
+        "error": 219,
+        "warning": 138
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

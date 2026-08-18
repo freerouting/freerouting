@@ -1,0 +1,26 @@
+{
+  "board": "SmartLaserCO2-PCB__autosave-SmartLaserShield",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SmartLaserCO2-PCB__autosave-SmartLaserShield\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 50,
+  "segment_count": 403,
+  "approximate_track_length_mm": 1430.14,
+  "kicad_drc_violations": 242,
+  "generated_at": "2026-08-18T19:45:34.225249+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 242,
+    "unconnected_count": 0,
+    "by_type": {
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 153,
+      "silk_overlap": 13,
+      "text_height": 36,
+      "text_thickness": 26,
+      "via_dangling": 13
+    },
+    "by_severity": {
+      "warning": 242
+    }
+  }
+}

@@ -1,0 +1,110 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\breakout-boards_avr-isp-x2\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  152400 -113030  152398 -113141  152359 -113359  152283 -113568
+            152172 -113760  152030 -113930  151860 -114072  151668 -114183
+            151459 -114259  151241 -114298  151130 -114300  143510 -114300
+            143510 -104140  143512 -104029  143551 -103811  143627 -103602
+            143738 -103410  143880 -103240  144050 -103098  144242 -102987
+            144451 -102911  144669 -102872  144780 -102870  152400 -102870
+            152400 -113030)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 177.8)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_2x03
+      (place CON1 147320 -111760 front 0 (PN "AVR-ISP-6"))
+      (place CON2 148590 -105410 front 0 (PN "AVR-ISP-6"))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_2x03
+      (outline (path signal 150  -3810 0  -1270 0))
+      (outline (path signal 150  -1270 0  -1270 -2540))
+      (outline (path signal 150  -3810 -2540  3810 -2540))
+      (outline (path signal 150  3810 -2540  3810 2540))
+      (outline (path signal 150  3810 2540  -1270 2540))
+      (outline (path signal 150  -3810 -2540  -3810 0))
+      (outline (path signal 150  -3810 2540  -3810 0))
+      (outline (path signal 150  -1270 2540  -3810 2540))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 -2540 -1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 -2540 1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 0 -1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 0 1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 2540 -1270)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 2540 1270)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(CON1-Pad1)"
+      (pins CON1-1 CON2-1)
+    )
+    (net "Net-(CON1-Pad2)"
+      (pins CON1-2 CON2-2)
+    )
+    (net "Net-(CON1-Pad3)"
+      (pins CON1-3 CON2-3)
+    )
+    (net "Net-(CON1-Pad4)"
+      (pins CON1-4 CON2-4)
+    )
+    (net "Net-(CON1-Pad5)"
+      (pins CON1-5 CON2-5)
+    )
+    (net "Net-(CON1-Pad6)"
+      (pins CON1-6 CON2-6)
+    )
+    (class kicad_default "Net-(CON1-Pad1)" "Net-(CON1-Pad2)" "Net-(CON1-Pad3)"
+      "Net-(CON1-Pad4)" "Net-(CON1-Pad5)" "Net-(CON1-Pad6)"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 177.8)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

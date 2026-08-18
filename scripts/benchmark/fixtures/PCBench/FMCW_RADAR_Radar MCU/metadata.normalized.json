@@ -1,0 +1,56 @@
+{
+  "board_id": "FMCW_RADAR_Radar MCU",
+  "display_name": "FMCW_RADAR_Radar MCU",
+  "pcbench_directory": "PCBs/FMCW_RADAR_Radar MCU",
+  "source": "https://github.com/ckflight/FMCW_RADAR",
+  "author": "ckflight",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:42.293937+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 54,
+    "components": 104,
+    "dimensions_mm": {
+      "width": 36.91,
+      "height": 32.94
+    },
+    "area_cm2": 12.16,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 977,
+    "vias": 144,
+    "track_length_mm": 1178.45,
+    "kicad_drc_violations": 602,
+    "kicad_drc_breakdown": {
+      "total_violations": 602,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "copper_edge_clearance": 21,
+        "lib_footprint_issues": 104,
+        "nonmirrored_text_on_back_layer": 2,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 199,
+        "silk_overlap": 5,
+        "starved_thermal": 1,
+        "text_height": 153,
+        "text_thickness": 107,
+        "track_dangling": 5,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 23,
+        "warning": 579
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

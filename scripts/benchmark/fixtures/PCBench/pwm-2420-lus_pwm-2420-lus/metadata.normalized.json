@@ -1,0 +1,55 @@
+{
+  "board_id": "pwm-2420-lus_pwm-2420-lus",
+  "display_name": "pwm-2420-lus_pwm-2420-lus",
+  "pcbench_directory": "PCBs/pwm-2420-lus_pwm-2420-lus",
+  "source": "https://github.com/LibreSolar/pwm-2420-lus",
+  "author": "LibreSolar",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:25.949744+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 47,
+    "components": 130,
+    "dimensions_mm": {
+      "width": 90.0,
+      "height": 85.0
+    },
+    "area_cm2": 76.5,
+    "zones": 21
+  },
+  "reference": {
+    "segments": 1018,
+    "vias": 303,
+    "track_length_mm": 2606.65,
+    "kicad_drc_violations": 423,
+    "kicad_drc_breakdown": {
+      "total_violations": 423,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 35,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 3,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 107,
+        "lib_footprint_mismatch": 10,
+        "silk_edge_clearance": 19,
+        "silk_over_copper": 25,
+        "silk_overlap": 172,
+        "solder_mask_bridge": 45,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 90,
+        "warning": 333
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "board_id": "MySRaspiGW_MySRaspiGW_PA_LNA_Pimoroni",
+  "display_name": "MySRaspiGW_MySRaspiGW_PA_LNA_Pimoroni",
+  "pcbench_directory": "PCBs/MySRaspiGW_MySRaspiGW_PA_LNA_Pimoroni",
+  "source": "https://github.com/emc2cube/MySRaspiGW",
+  "author": "emc2cube",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.269960+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 11.8,
+      "height": 15.5
+    },
+    "area_cm2": 1.83,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 69,
+    "vias": 2,
+    "track_length_mm": 95.99,
+    "kicad_drc_violations": 25,
+    "kicad_drc_breakdown": {
+      "total_violations": 25,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 5,
+        "malformed_courtyard": 3,
+        "silk_edge_clearance": 2,
+        "text_height": 12
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -72,52 +72,98 @@ def parse_kicad_drc_report(drc_json_path: Path | None) -> dict[str, Any] | None:
         return None
 
 
-def parse_kicad_pcb_metrics(pcb_text: str) -> dict[str, Any]:
-    # 1. Nets
-    nets = re.findall(r'\(net\s+(\d+)\s+"([^"]*)"\)', pcb_text)
-    named_nets = [name for num, name in nets if name.strip()]
+def extract_pcb_metrics_with_pcbnew(pcb_path: Path) -> dict[str, Any] | None:
+    """Extract metrics directly using KiCad's C++ pcbnew library when available."""
+    try:
+        import wx  # type: ignore
+        app = wx.App(False)
+        wx.Log.EnableLogging(False)
+        import pcbnew  # type: ignore
 
-    # 2. Footprints / modules
-    footprints = len(re.findall(r'\((?:footprint|module)\s+', pcb_text))
+        board = pcbnew.LoadBoard(str(pcb_path))
+        if not board:
+            return None
 
-    # 3. Layers
-    layers_match = re.search(r'\(layers[\s\S]*?\n\s*\)', pcb_text)
-    copper_layers = 0
-    if layers_match:
-        copper_layers = len(re.findall(r'\(\d+\s+"?[FIB]\.?[\w.]+"?\s+signal', layers_match.group(0), re.IGNORECASE))
-        if copper_layers == 0:
-            copper_layers = len(re.findall(r'\(\d+\s+"?[FIB]\.?[\w.]+"?\s+(?:signal|power|user)', layers_match.group(0), re.IGNORECASE))
-    if copper_layers == 0:
-        if "F.Cu" in pcb_text and "B.Cu" in pcb_text:
-            copper_layers = 2
+        via_count = 0
+        seg_count = 0
+        track_len_mm = 0.0
+        for item in board.GetTracks():
+            type_name = str(type(item).__name__).lower()
+            if "via" in type_name or hasattr(item, "GetViaType"):
+                via_count += 1
+            else:
+                seg_count += 1
+                if hasattr(item, "GetLength"):
+                    track_len_mm += item.GetLength() / 1e6
 
-    # 4. Zones
-    zones = len(re.findall(r'\(zone\s+', pcb_text))
+        footprints = len(list(board.GetFootprints())) if hasattr(board, "GetFootprints") else (len(list(board.GetModules())) if hasattr(board, "GetModules") else 0)
+        nets = board.GetNetInfo().GetNetCount() if hasattr(board, "GetNetInfo") else 0
+        zones = len(list(board.Zones())) if hasattr(board, "Zones") else (len(list(board.GetZones())) if hasattr(board, "GetZones") else 0)
+        layers = board.GetCopperLayerCount() if hasattr(board, "GetCopperLayerCount") else 2
 
-    # 5. Vias & Segments
-    via_count = len(re.findall(r'\(via\s+', pcb_text))
-    segments = re.findall(r'\(segment\b[\s\S]*?\(start\s+([\d.-]+)\s+([\d.-]+)\)[\s\S]*?\(end\s+([\d.-]+)\s+([\d.-]+)\)', pcb_text)
-    seg_count = len(segments)
+        bbox = board.ComputeBoundingBox(False) if hasattr(board, "ComputeBoundingBox") else board.GetBoardEdgesBoundingBox()
+        w_mm = round(bbox.GetWidth() / 1e6, 2)
+        h_mm = round(bbox.GetHeight() / 1e6, 2)
+        area_cm2 = round((w_mm * h_mm) / 100.0, 2)
+
+        return {
+            "copper_layers": layers,
+            "nets_count": nets,
+            "components_count": footprints,
+            "zones_count": zones,
+            "via_count": via_count,
+            "segment_count": seg_count,
+            "track_length_mm": round(track_len_mm, 2),
+            "width_mm": w_mm,
+            "height_mm": h_mm,
+            "area_cm2": area_cm2,
+        }
+    except Exception:
+        return None
+
+
+def parse_kicad_pcb_metrics_fallback(pcb_text: str) -> dict[str, Any]:
+    """Safe, single-pass line scanner without unbounded regex backtracking."""
+    via_count = 0
+    seg_count = 0
     track_len_mm = 0.0
-    for x1_s, y1_s, x2_s, y2_s in segments:
-        try:
-            x1, y1, x2, y2 = float(x1_s), float(y1_s), float(x2_s), float(y2_s)
-            track_len_mm += math.hypot(x2 - x1, y2 - y1)
-        except ValueError:
-            pass
-
-    # 6. Dimensions from Edge.Cuts
+    footprints = 0
+    zones = 0
+    nets: set[str] = set()
     edge_pts: list[tuple[float, float]] = []
-    for m in re.finditer(r'\(gr_line[\s\S]*?\(start\s+([\d.-]+)\s+([\d.-]+)\)[\s\S]*?\(end\s+([\d.-]+)\s+([\d.-]+)\)[\s\S]*?\(layer\s+"?Edge\.Cuts"?\)', pcb_text, re.IGNORECASE):
-        edge_pts.append((float(m.group(1)), float(m.group(2))))
-        edge_pts.append((float(m.group(3)), float(m.group(4))))
-    for m in re.finditer(r'\(gr_rect[\s\S]*?\(start\s+([\d.-]+)\s+([\d.-]+)\)[\s\S]*?\(end\s+([\d.-]+)\s+([\d.-]+)\)[\s\S]*?\(layer\s+"?Edge\.Cuts"?\)', pcb_text, re.IGNORECASE):
-        edge_pts.append((float(m.group(1)), float(m.group(2))))
-        edge_pts.append((float(m.group(3)), float(m.group(4))))
-    for m in re.finditer(r'\(gr_circle[\s\S]*?\(center\s+([\d.-]+)\s+([\d.-]+)\)[\s\S]*?\(end\s+([\d.-]+)\s+([\d.-]+)\)[\s\S]*?\(layer\s+"?Edge\.Cuts"?\)', pcb_text, re.IGNORECASE):
-        cx, cy, ex, ey = float(m.group(1)), float(m.group(2)), float(m.group(3)), float(m.group(4))
-        r = math.hypot(ex - cx, ey - cy)
-        edge_pts.extend([(cx - r, cy - r), (cx + r, cy + r)])
+
+    for line in pcb_text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("(via ") or " (via " in line:
+            via_count += 1
+        elif line.startswith("(segment ") or " (segment " in line:
+            seg_count += 1
+            m_start = re.search(r'\(start\s+([\d.-]+)\s+([\d.-]+)\)', line)
+            m_end = re.search(r'\(end\s+([\d.-]+)\s+([\d.-]+)\)', line)
+            if m_start and m_end:
+                try:
+                    x1, y1 = float(m_start.group(1)), float(m_start.group(2))
+                    x2, y2 = float(m_end.group(1)), float(m_end.group(2))
+                    track_len_mm += math.hypot(x2 - x1, y2 - y1)
+                except ValueError:
+                    pass
+        elif line.startswith("(footprint ") or line.startswith("(module ") or " (footprint " in line or " (module " in line:
+            footprints += 1
+        elif line.startswith("(zone ") or " (zone " in line:
+            zones += 1
+        elif "(net " in line:
+            m_net = re.search(r'\(net\s+(\d+)\s+"([^"]*)"\)', line)
+            if m_net and m_net.group(2).strip():
+                nets.add(m_net.group(2))
+        elif "Edge.Cuts" in line:
+            m_xy = re.findall(r'\((?:start|end|center|xy)\s+([\d.-]+)\s+([\d.-]+)\)', line)
+            for x_s, y_s in m_xy:
+                try:
+                    edge_pts.append((float(x_s), float(y_s)))
+                except ValueError:
+                    pass
 
     width_mm = 0.0
     height_mm = 0.0
@@ -130,8 +176,8 @@ def parse_kicad_pcb_metrics(pcb_text: str) -> dict[str, Any]:
         area_cm2 = round((width_mm * height_mm) / 100.0, 2)
 
     return {
-        "copper_layers": copper_layers,
-        "nets_count": len(named_nets) if named_nets else len(nets),
+        "copper_layers": 2,
+        "nets_count": len(nets),
         "components_count": footprints,
         "zones_count": zones,
         "via_count": via_count,
@@ -161,12 +207,17 @@ def main() -> int:
     meta_path = board_dir / "metadata.json"
     final_json = board_dir / "final.json"
 
-    if not raw_pcb.exists():
-        print(f"Error: {raw_pcb} not found", file=sys.stderr)
+    if not raw_pcb.exists() and not processed_pcb.exists():
+        print(f"Error: Neither {raw_pcb} nor {processed_pcb} found", file=sys.stderr)
         return 1
 
-    pcb_text = raw_pcb.read_text(encoding="utf-8", errors="replace")
-    metrics = parse_kicad_pcb_metrics(pcb_text)
+    inspect_pcb = raw_pcb if raw_pcb.exists() else processed_pcb
+
+    # 1. Try extracting with pcbnew first, fallback to line scanner
+    metrics = extract_pcb_metrics_with_pcbnew(inspect_pcb)
+    if not metrics:
+        pcb_text = inspect_pcb.read_text(encoding="utf-8", errors="replace")
+        metrics = parse_kicad_pcb_metrics_fallback(pcb_text)
 
     pcbench_meta: dict[str, Any] = {}
     if meta_path.exists():
@@ -175,7 +226,7 @@ def main() -> int:
         except Exception:
             pass
 
-    layers = pcbench_meta.get("layers") or metrics["copper_layers"] or 2
+    layers = pcbench_meta.get("layers") or metrics.get("copper_layers") or 2
     raw_retrieved_at = pcbench_meta.get("retrieved at", "")
     iso_retrieved_at = normalize_iso_timestamp(raw_retrieved_at)
 
@@ -224,7 +275,7 @@ def main() -> int:
     # 2. ground_truth.json
     ground_truth: dict[str, Any] = {
         "board": board_name,
-        "source_pcb": str(raw_pcb),
+        "source_pcb": str(inspect_pcb),
         "layers": layers,
         "via_count": metrics["via_count"],
         "segment_count": metrics["segment_count"],

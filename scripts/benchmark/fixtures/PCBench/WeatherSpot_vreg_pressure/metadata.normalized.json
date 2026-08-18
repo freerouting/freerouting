@@ -1,0 +1,49 @@
+{
+  "board_id": "WeatherSpot_vreg_pressure",
+  "display_name": "WeatherSpot_vreg_pressure",
+  "pcbench_directory": "PCBs/WeatherSpot_vreg_pressure",
+  "source": "https://github.com/hak8or/WeatherSpot",
+  "author": "hak8or",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:44.045958+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 16.0,
+      "height": 14.01
+    },
+    "area_cm2": 2.24,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 35,
+    "vias": 0,
+    "track_length_mm": 80.31,
+    "kicad_drc_violations": 15,
+    "kicad_drc_breakdown": {
+      "total_violations": 15,
+      "unconnected_count": 0,
+      "by_type": {
+        "invalid_outline": 3,
+        "lib_footprint_issues": 6,
+        "silk_edge_clearance": 1,
+        "silk_overlap": 1,
+        "text_height": 4
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

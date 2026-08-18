@@ -1,0 +1,55 @@
+{
+  "board_id": "zx-sizif-128_sizif128",
+  "display_name": "zx-sizif-128_sizif128",
+  "pcbench_directory": "PCBs/zx-sizif-128_sizif128",
+  "source": "https://github.com/UzixLS/zx-sizif-128",
+  "author": "UzixLS",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:25.797743+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 28,
+    "components": 112,
+    "dimensions_mm": {
+      "width": 140.0,
+      "height": 85.0
+    },
+    "area_cm2": 119.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1898,
+    "vias": 203,
+    "track_length_mm": 8328.9,
+    "kicad_drc_violations": 166,
+    "kicad_drc_breakdown": {
+      "total_violations": 166,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 22,
+        "courtyards_overlap": 1,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 5,
+        "lib_footprint_mismatch": 98,
+        "silk_edge_clearance": 8,
+        "silk_over_copper": 8,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 12,
+        "starved_thermal": 5,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 42,
+        "warning": 124
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

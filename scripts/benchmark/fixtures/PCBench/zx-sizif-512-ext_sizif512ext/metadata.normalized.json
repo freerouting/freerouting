@@ -1,0 +1,56 @@
+{
+  "board_id": "zx-sizif-512-ext_sizif512ext",
+  "display_name": "zx-sizif-512-ext_sizif512ext",
+  "pcbench_directory": "PCBs/zx-sizif-512-ext_sizif512ext",
+  "source": "https://github.com/UzixLS/zx-sizif-512-ext",
+  "author": "UzixLS",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:31.645812+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 45,
+    "components": 156,
+    "dimensions_mm": {
+      "width": 213.0,
+      "height": 64.0
+    },
+    "area_cm2": 136.32,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 2519,
+    "vias": 294,
+    "track_length_mm": 10955.95,
+    "kicad_drc_violations": 470,
+    "kicad_drc_breakdown": {
+      "total_violations": 470,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 19,
+        "copper_edge_clearance": 65,
+        "courtyards_overlap": 8,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 24,
+        "lib_footprint_mismatch": 123,
+        "pth_inside_courtyard": 22,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 182,
+        "starved_thermal": 19,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 316,
+        "warning": 154
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

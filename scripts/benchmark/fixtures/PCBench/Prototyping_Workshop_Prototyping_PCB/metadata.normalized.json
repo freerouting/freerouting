@@ -1,0 +1,51 @@
+{
+  "board_id": "Prototyping_Workshop_Prototyping_PCB",
+  "display_name": "Prototyping_Workshop_Prototyping_PCB",
+  "pcbench_directory": "PCBs/Prototyping_Workshop_Prototyping_PCB",
+  "source": "https://github.com/Drc3p0/Prototyping_Workshop",
+  "author": "Drc3p0",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:55.622094+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 33,
+    "components": 47,
+    "dimensions_mm": {
+      "width": 160.0,
+      "height": 32.59
+    },
+    "area_cm2": 52.14,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 259,
+    "vias": 1,
+    "track_length_mm": 699.08,
+    "kicad_drc_violations": 179,
+    "kicad_drc_breakdown": {
+      "total_violations": 179,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 9,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 47,
+        "silk_over_copper": 42,
+        "silk_overlap": 21,
+        "text_height": 56,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 12,
+        "warning": 167
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

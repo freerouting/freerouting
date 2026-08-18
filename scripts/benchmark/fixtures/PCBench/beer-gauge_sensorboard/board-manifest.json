@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "beer-gauge_sensorboard",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 39175,
+      "sha256": "14db6cfde244dcaf6c4e6e367291209cc4c4cb620b69c331d384dc03974b98bb"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 37845,
+      "sha256": "3e8835eb2c0bb888606e3940ef19f0fbacf4d0ef14babe673ebe5b4a62413ab3"
+    },
+    "metadata_json": {
+      "bytes": 623,
+      "sha256": "5de3dc501a0a0ac925582e11f1c327d56f6da9d0842921879a1227f7d794a15c"
+    },
+    "final_json": {
+      "bytes": 35051,
+      "sha256": "1fbf4d4640637b24b4c309f0811e8f4901a8f6ac87d0d6d55620010d464247ee"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:32:51.758411+00:00"
+  }
+}

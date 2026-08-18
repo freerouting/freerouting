@@ -1,0 +1,52 @@
+{
+  "board_id": "NRC2016_banked_ram",
+  "display_name": "NRC2016_banked_ram",
+  "pcbench_directory": "PCBs/NRC2016_banked_ram",
+  "source": "https://github.com/alangarf/NRC2016",
+  "author": "alangarf",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:42.389938+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 104.14,
+      "height": 53.96
+    },
+    "area_cm2": 56.19,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 631,
+    "vias": 32,
+    "track_length_mm": 3263.11,
+    "kicad_drc_violations": 445,
+    "kicad_drc_breakdown": {
+      "total_violations": 445,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 364,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 24,
+        "malformed_courtyard": 1,
+        "silk_edge_clearance": 45,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 3,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 375,
+        "warning": 70
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

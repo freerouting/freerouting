@@ -1,0 +1,49 @@
+{
+  "board_id": "kitspace_12V5A_breakout",
+  "display_name": "kitspace_12V5A_breakout",
+  "pcbench_directory": "PCBs/kitspace_12V5A_breakout",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:28.500614+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 48.5,
+      "height": 45.5
+    },
+    "area_cm2": 22.07,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 23,
+    "vias": 0,
+    "track_length_mm": 130.21,
+    "kicad_drc_violations": 16,
+    "kicad_drc_breakdown": {
+      "total_violations": 16,
+      "unconnected_count": 0,
+      "by_type": {
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 11,
+        "silk_overlap": 2,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 15
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

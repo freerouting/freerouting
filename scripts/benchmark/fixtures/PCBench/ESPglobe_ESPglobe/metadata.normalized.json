@@ -1,0 +1,50 @@
+{
+  "board_id": "ESPglobe_ESPglobe",
+  "display_name": "ESPglobe_ESPglobe",
+  "pcbench_directory": "PCBs/ESPglobe_ESPglobe",
+  "source": "https://github.com/mage0r/ESPglobe",
+  "author": "mage0r",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.098182+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 23,
+    "dimensions_mm": {
+      "width": 22.08,
+      "height": 47.83
+    },
+    "area_cm2": 10.56,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 151,
+    "vias": 0,
+    "track_length_mm": 305.55,
+    "kicad_drc_violations": 106,
+    "kicad_drc_breakdown": {
+      "total_violations": 106,
+      "unconnected_count": 17,
+      "by_type": {
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 23,
+        "shorting_items": 7,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 7,
+        "text_height": 64
+      },
+      "by_severity": {
+        "error": 16,
+        "warning": 90
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

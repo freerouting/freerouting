@@ -1,0 +1,26 @@
+{
+  "board": "LaundryMeasure_ac-ac",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LaundryMeasure_ac-ac\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 20,
+  "approximate_track_length_mm": 85.14,
+  "kicad_drc_violations": 23,
+  "generated_at": "2026-08-18T19:14:59.061269+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 23,
+    "unconnected_count": 0,
+    "by_type": {
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 6,
+      "shorting_items": 3,
+      "silk_edge_clearance": 9,
+      "solder_mask_bridge": 3
+    },
+    "by_severity": {
+      "error": 8,
+      "warning": 15
+    }
+  }
+}

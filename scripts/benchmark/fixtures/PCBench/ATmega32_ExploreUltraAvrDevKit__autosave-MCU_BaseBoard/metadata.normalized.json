@@ -1,0 +1,61 @@
+{
+  "board_id": "ATmega32_ExploreUltraAvrDevKit__autosave-MCU_BaseBoard",
+  "display_name": "ATmega32_ExploreUltraAvrDevKit__autosave-MCU_BaseBoard",
+  "pcbench_directory": "PCBs/ATmega32_ExploreUltraAvrDevKit__autosave-MCU_BaseBoard",
+  "source": "https://github.com/ExploreEmbedded/ATmega32_ExploreUltraAvrDevKit",
+  "author": "ExploreEmbedded",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.601717+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 139,
+    "components": 149,
+    "dimensions_mm": {
+      "width": 180.0,
+      "height": 125.0
+    },
+    "area_cm2": 225.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1826,
+    "vias": 74,
+    "track_length_mm": 8220.81,
+    "kicad_drc_violations": 1013,
+    "kicad_drc_breakdown": {
+      "total_violations": 1013,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 506,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 4,
+        "hole_clearance": 1,
+        "hole_to_hole": 1,
+        "invalid_outline": 6,
+        "lib_footprint_issues": 148,
+        "lib_footprint_mismatch": 1,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 199,
+        "silk_overlap": 93,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 2,
+        "text_height": 2,
+        "track_dangling": 29,
+        "tracks_crossing": 1
+      },
+      "by_severity": {
+        "error": 531,
+        "warning": 482
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

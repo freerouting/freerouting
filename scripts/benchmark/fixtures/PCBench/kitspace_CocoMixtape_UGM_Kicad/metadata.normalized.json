@@ -1,0 +1,55 @@
+{
+  "board_id": "kitspace_CocoMixtape_UGM_Kicad",
+  "display_name": "kitspace_CocoMixtape_UGM_Kicad",
+  "pcbench_directory": "PCBs/kitspace_CocoMixtape_UGM_Kicad",
+  "source": "https://github.com/GenericLab/GOSH-Board_UGM/",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:19:57.263655+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 86.8,
+      "height": 45.51
+    },
+    "area_cm2": 39.5,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 184,
+    "vias": 0,
+    "track_length_mm": 611.03,
+    "kicad_drc_violations": 333,
+    "kicad_drc_breakdown": {
+      "total_violations": 333,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 157,
+        "courtyards_overlap": 1,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 30,
+        "pth_inside_courtyard": 4,
+        "silk_edge_clearance": 8,
+        "silk_over_copper": 27,
+        "silk_overlap": 97,
+        "solder_mask_bridge": 5,
+        "track_dangling": 1,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 170,
+        "warning": 163
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

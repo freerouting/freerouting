@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "DiscoDanceFloorV1_DiscoDongle",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 102839,
+      "sha256": "ea43f6ddb969816a6ed7b9b3ef9a1e0ebed3cfdf59c609ff0cd0d8c45b02eaf2"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 64326,
+      "sha256": "801a42181ca2290e8712b02db18c4fec8be736f2a8d0469686038c3658bbec40"
+    },
+    "metadata_json": {
+      "bytes": 503,
+      "sha256": "243fbe8ad635348a31c55980b0906298e72fe7859ce0bd32a0cbbdc4565b30a5"
+    },
+    "final_json": {
+      "bytes": 58511,
+      "sha256": "f573c0a83dc3aabf40a73a8765fefbe644ee67f5c3fa43c6954e93fac7f0a846"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:42:01.527160+00:00"
+  }
+}

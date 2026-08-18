@@ -1,0 +1,49 @@
+{
+  "board_id": "marlin-neopixel-bridge_ATtiny85_Marneo",
+  "display_name": "marlin-neopixel-bridge_ATtiny85_Marneo",
+  "pcbench_directory": "PCBs/marlin-neopixel-bridge_ATtiny85_Marneo",
+  "source": "https://github.com/c-/marlin-neopixel-bridge",
+  "author": "c-",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:38.449892+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 34.8,
+      "height": 18.03
+    },
+    "area_cm2": 6.27,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 42,
+    "vias": 0,
+    "track_length_mm": 130.25,
+    "kicad_drc_violations": 36,
+    "kicad_drc_breakdown": {
+      "total_violations": 36,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 11,
+        "lib_footprint_issues": 8,
+        "silk_edge_clearance": 12,
+        "silk_overlap": 2,
+        "starved_thermal": 3
+      },
+      "by_severity": {
+        "error": 14,
+        "warning": 22
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

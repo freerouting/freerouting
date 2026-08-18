@@ -86,17 +86,27 @@ if ($IncludeBoards.Count -gt 0) {
     if ($highLayer.Count -gt 0) { $selected += $highLayer[0] }
     foreach ($bucket in @($midLayer, $twoLayer, $highLayer, $rest)) {
         foreach ($b in $bucket) {
-            if ($selected.Count -ge $MaxBoards) { break }
+            if ($MaxBoards -gt 0 -and $selected.Count -ge $MaxBoards) { break }
             if ($selected.Name -notcontains $b.Name) { $selected += $b }
         }
-        if ($selected.Count -ge $MaxBoards) { break }
+        if ($MaxBoards -gt 0 -and $selected.Count -ge $MaxBoards) { break }
     }
-    $selected = @($selected | Select-Object -First $MaxBoards)
+    if ($MaxBoards -gt 0) {
+        $selected = @($selected | Select-Object -First $MaxBoards)
+    }
 }
 
-Write-Host "Selected $($selected.Count) board(s) for conversion:"
-foreach ($s in $selected) {
-    Write-Host "  - $($s.Name)"
+Write-Host "Selected $($selected.Count) board(s) for conversion."
+if ($selected.Count -le 20) {
+    foreach ($s in $selected) {
+        Write-Host "  - $($s.Name)"
+    }
+} else {
+    Write-Host "Showing first 5 boards:"
+    foreach ($s in ($selected | Select-Object -First 5)) {
+        Write-Host "  - $($s.Name)"
+    }
+    Write-Host "  ... and $($selected.Count - 5) more."
 }
 
 $converted = @()
@@ -135,91 +145,109 @@ foreach ($board in $selected) {
     Write-Host "[$boardIndex/$($selected.Count)] $name : Starting conversion..."
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
-    # 1. Copy original KiCad PCB files into fixture directory
-    if (Test-Path $rawPcb) {
-        Copy-Item $rawPcb $fixtureRawPcb -Force
-    }
-    if (Test-Path $sourcePcb) {
-        Copy-Item $sourcePcb $fixtureProcessedPcb -Force
-    }
+    try {
+        # 1. Copy original KiCad PCB files into fixture directory
+        if (Test-Path $rawPcb) {
+            Copy-Item $rawPcb $fixtureRawPcb -Force
+        }
+        if (Test-Path $sourcePcb) {
+            Copy-Item $sourcePcb $fixtureProcessedPcb -Force
+        }
 
-    # 2. Export reference-routed.dsn from raw.kicad_pcb (with fallback to processed.kicad_pcb)
-    if (Test-Path $rawPcb) {
-        Write-Host "  [$name] Exporting reference-routed.dsn..."
+        # 2. Export reference-routed.dsn from raw.kicad_pcb (with fallback to processed.kicad_pcb)
+        if (Test-Path $rawPcb) {
+            Write-Host "  [$name] Exporting reference-routed.dsn..."
+            $prevEap = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            & $kicadPython $exportScript $rawPcb $refDsn --fallback $sourcePcb 2>$null | Out-Null
+            $ErrorActionPreference = $prevEap
+            if (-not (Test-Path $refDsn)) {
+                Write-Warning "Reference DSN export failed for $name"
+            }
+        }
+
+        # 3. Strip processed.kicad_pcb and export unrouted.dsn
+        Write-Host "  [$name] Stripping routing elements & zone fills..."
         $prevEap = $ErrorActionPreference
         $ErrorActionPreference = "Continue"
-        & $kicadPython $exportScript $rawPcb $refDsn --fallback $sourcePcb 2>&1 | Out-Null
+        python $stripScript $sourcePcb $fixtureUnroutedPcb 2>$null
         $ErrorActionPreference = $prevEap
-        if (-not (Test-Path $refDsn)) {
-            Write-Warning "Reference DSN export failed for $name"
+        if (-not (Test-Path $fixtureUnroutedPcb)) {
+            Write-Warning "Strip failed for $name"
+            $failed += $name
+            Remove-Item -Recurse -Force $boardFixtureDir -ErrorAction SilentlyContinue
+            continue
         }
-    }
+        Copy-Item $fixtureUnroutedPcb $stripped -Force
 
-    # 3. Strip processed.kicad_pcb and export unrouted.dsn
-    Write-Host "  [$name] Stripping routing elements & zone fills..."
-    python $stripScript $sourcePcb $fixtureUnroutedPcb
-    if ($LASTEXITCODE -ne 0 -or -not (Test-Path $fixtureUnroutedPcb)) {
-        Write-Warning "Strip failed for $name"
-        $failed += $name
-        continue
-    }
-    Copy-Item $fixtureUnroutedPcb $stripped -Force
+        Write-Host "  [$name] Exporting unrouted.dsn..."
+        $prevEap = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        & $kicadPython $exportScript $fixtureUnroutedPcb $unroutedDsn 2>$null | Out-Null
+        $ErrorActionPreference = $prevEap
+        if (-not (Test-Path $unroutedDsn)) {
+            Write-Warning "Unrouted DSN export failed for $name (pcbnew.ExportSpecctraDSN - Tier E candidate)"
+            $failed += $name
+            Remove-Item -Recurse -Force $boardFixtureDir -ErrorAction SilentlyContinue
+            continue
+        }
 
-    Write-Host "  [$name] Exporting unrouted.dsn..."
-    & $kicadPython $exportScript $fixtureUnroutedPcb $unroutedDsn 2>&1 | Out-Null
-    if (-not (Test-Path $unroutedDsn)) {
-        Write-Warning "Unrouted DSN export failed for $name (pcbnew.ExportSpecctraDSN)"
-        $failed += $name
-        continue
-    }
+        $dsnText = Get-Content $unroutedDsn -Raw -ErrorAction SilentlyContinue
+        $looksLikeDsn = $dsnText -and ($dsnText -match '\(pcb') -and ($dsnText -match '\(parser')
+        if (-not $looksLikeDsn) {
+            Write-Warning "Smoke-load (text) failed for $name - DSN missing pcb/parser scopes"
+            $failed += $name
+            Remove-Item -Recurse -Force $boardFixtureDir -ErrorAction SilentlyContinue
+            continue
+        }
 
-    $dsnText = Get-Content $unroutedDsn -Raw -ErrorAction SilentlyContinue
-    $looksLikeDsn = $dsnText -and ($dsnText -match '\(pcb') -and ($dsnText -match '\(parser')
-    if (-not $looksLikeDsn) {
-        Write-Warning "Smoke-load (text) failed for $name - DSN missing pcb/parser scopes"
-        $failed += $name
-        continue
-    }
-
-    # 3. KiCad DRC on raw.kicad_pcb if available
-    $drcViolations = $null
-    if (-not $SkipDrc -and $kicadCli -and (Test-Path $rawPcb)) {
-        Write-Host "  [$name] Running KiCad DRC on raw.kicad_pcb..."
+        # 4. KiCad DRC on raw.kicad_pcb if available
+        $drcViolations = $null
         $drcJson = Join-Path $StrippedDir "$name-kicad-drc.json"
+        if (-not $SkipDrc -and $kicadCli -and (Test-Path $rawPcb)) {
+            Write-Host "  [$name] Running KiCad DRC on raw.kicad_pcb..."
+            $prevEap = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            & $kicadCli pcb drc --format json --output $drcJson $rawPcb 2>$null | Out-Null
+            $ErrorActionPreference = $prevEap
+            if (Test-Path $drcJson) {
+                try {
+                    $drcData = Get-Content $drcJson -Raw | ConvertFrom-Json
+                    if ($drcData.violations) {
+                        $drcViolations = @($drcData.violations).Count
+                    } elseif ($drcData.errors) {
+                        $drcViolations = @($drcData.errors).Count
+                    }
+                } catch {}
+            }
+        }
+
+        # 5. Generate normalized metadata, ground truth, and manifest
+        Write-Host "  [$name] Generating metadata, ground truth, and manifest..."
+        $metaArgs = @(
+            (Join-Path $PSScriptRoot "generate_board_metadata.py"),
+            "--board-dir", $boardDir,
+            "--output-dir", $boardFixtureDir,
+            "--kicad-version", "10.0.2"
+        )
+        if ($drcJson -and (Test-Path $drcJson)) {
+            $metaArgs += @("--kicad-drc-json", $drcJson)
+        } elseif ($null -ne $drcViolations) {
+            $metaArgs += @("--kicad-drc-violations", [string]$drcViolations)
+        }
         $prevEap = $ErrorActionPreference
         $ErrorActionPreference = "Continue"
-        & $kicadCli pcb drc --format json --output $drcJson $rawPcb 2>&1 | Out-Null
+        python @metaArgs 2>$null
         $ErrorActionPreference = $prevEap
-        if (Test-Path $drcJson) {
-            try {
-                $drcData = Get-Content $drcJson -Raw | ConvertFrom-Json
-                if ($drcData.violations) {
-                    $drcViolations = @($drcData.violations).Count
-                } elseif ($drcData.errors) {
-                    $drcViolations = @($drcData.errors).Count
-                }
-            } catch {}
-        }
-    }
 
-    # 4. Generate normalized metadata, ground truth, and manifest
-    Write-Host "  [$name] Generating metadata, ground truth, and manifest..."
-    $metaArgs = @(
-        (Join-Path $PSScriptRoot "generate_board_metadata.py"),
-        "--board-dir", $boardDir,
-        "--output-dir", $boardFixtureDir,
-        "--kicad-version", "10.0.2"
-    )
-    if ($drcJson -and (Test-Path $drcJson)) {
-        $metaArgs += @("--kicad-drc-json", $drcJson)
-    } elseif ($null -ne $drcViolations) {
-        $metaArgs += @("--kicad-drc-violations", [string]$drcViolations)
+        $sw.Stop()
+        $converted += $name
+        Write-Host "  [$name] SUCCESS in $([math]::Round($sw.Elapsed.TotalSeconds, 1))s (drc_violations=$drcViolations)" -ForegroundColor Green
+    } catch {
+        Write-Warning "Unexpected error during conversion of $name : $_"
+        $failed += $name
+        Remove-Item -Recurse -Force $boardFixtureDir -ErrorAction SilentlyContinue
     }
-    python @metaArgs
-
-    $sw.Stop()
-    $converted += $name
-    Write-Host "  [$name] SUCCESS in $([math]::Round($sw.Elapsed.TotalSeconds, 1))s (drc_violations=$drcViolations)" -ForegroundColor Green
 }
 
 if ($JarPath -and (Test-Path $JarPath) -and $converted.Count -gt 0) {

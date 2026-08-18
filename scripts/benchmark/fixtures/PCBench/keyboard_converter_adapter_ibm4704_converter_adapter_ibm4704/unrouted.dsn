@@ -1,0 +1,231 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\keyboard_converter_adapter_ibm4704_converter_adapter_ibm4704\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  115250 -85750  113000 -88000  113000 -102250  87000 -102250
+            87000 -88000  84750 -85750  84750 -73250  115250 -73250  115250 -85750)
+    )
+    (keepout "" (polygon signal 0  90252.7 -96767.9  90012.1 -96828.8  89784.9 -96928.5
+            89577.1 -97064.3  89394.5 -97232.3  89242.1 -97428.2  89124 -97646.4
+            89043.4 -97881.1  89002.6 -98125.9  89002.6 -98374.1  89043.4 -98618.9
+            89124 -98853.6  89242.1 -99071.8  89394.5 -99267.7  89577.1 -99435.7
+            89784.9 -99571.5  90012.1 -99671.2  90252.7 -99732.1  90500 -99752.6
+            90747.3 -99732.1  90987.9 -99671.2  91215.1 -99571.5  91422.9 -99435.7
+            91605.5 -99267.7  91757.9 -99071.8  91876 -98853.6  91956.6 -98618.9
+            91997.4 -98374.1  92000 -98250  91997.4 -98125.9  91956.6 -97881.1
+            91876 -97646.4  91757.9 -97428.2  91605.5 -97232.3  91422.9 -97064.3
+            91215.1 -96928.5  90987.9 -96828.8  90747.3 -96767.9  90500 -96747.4
+            90252.7 -96767.9))
+    (keepout "" (polygon signal 0  109253 -96767.9  109012 -96828.8  108785 -96928.5  108577 -97064.3
+            108395 -97232.3  108242 -97428.2  108124 -97646.4  108043 -97881.1
+            108003 -98125.9  108003 -98374.1  108043 -98618.9  108124 -98853.6
+            108242 -99071.8  108395 -99267.7  108577 -99435.7  108785 -99571.5
+            109012 -99671.2  109253 -99732.1  109500 -99752.6  109747 -99732.1
+            109988 -99671.2  110215 -99571.5  110423 -99435.7  110605 -99267.7
+            110758 -99071.8  110876 -98853.6  110957 -98618.9  110997 -98374.1
+            111000 -98250  110997 -98125.9  110957 -97881.1  110876 -97646.4
+            110758 -97428.2  110605 -97232.3  110423 -97064.3  110215 -96928.5
+            109988 -96828.8  109747 -96767.9  109500 -96747.4  109253 -96767.9))
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component MINI_DIN_8
+      (place CN1 100000 -93300 front 0 (PN MINI_DIN_8P_JACK))
+    )
+    (component keyboard_parts:DSUB9P
+      (place P1 100000 -81300 front 180 (PN CONN_01X10))
+    )
+    (component keyboard_parts:SOLDER_JUMPER_2
+      (place SJ1 100250 -88000 back 270 (PN SOLDER_JUMPER))
+      (place SJ2 109000 -88000 back 270 (PN SOLDER_JUMPER))
+      (place SJ3 103250 -88000 back 270 (PN SOLDER_JUMPER))
+      (place SJ4 106250 -88000 back 270 (PN SOLDER_JUMPER))
+      (place SJ5 92750 -88000 back 270 (PN SOLDER_JUMPER))
+      (place SJ6 95750 -88000 back 270 (PN SOLDER_JUMPER))
+      (place SJ7 89750 -88000 back 270 (PN SOLDER_JUMPER))
+    )
+    (component keyboard_parts:tmk2016
+      (place G*** 99060 -78740 back 0 (PN LOGO))
+    )
+  )
+  (library
+    (image MINI_DIN_8
+      (outline (path signal 381  -6750 -8150  6750 -8150))
+      (outline (path signal 381  6750 -800  6750 -8150))
+      (outline (path signal 381  -6750 -800  -6750 -8150))
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 3 -3400 -3800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 5 3400 -3800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 6 -3400 -6300)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 8 3400 -6300)
+      (pin Round[A]Pad_3200.000000_um (rotate 180) 9 0 0)
+      (pin Round[A]Pad_3200.000000_um (rotate 180) 9@1 -6750 -800)
+      (pin Round[A]Pad_3200.000000_um (rotate 180) 9@2 6750 -800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 1 -1300 -3800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 2 1300 -3800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 4 -1300 -6300)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 7 900 -6300)
+    )
+    (image keyboard_parts:DSUB9P
+      (pin Round[A]Pad_1400.000000_um 3 0 1420)
+      (pin Round[A]Pad_1400.000000_um 8 -1385 -1420)
+      (pin Round[A]Pad_1400.000000_um 7 1385 -1420)
+      (pin Round[A]Pad_1400.000000_um 6 4155 -1420)
+      (pin Round[A]Pad_1400.000000_um 9 -4155 -1420)
+      (pin Round[A]Pad_1400.000000_um 2 2770 1420)
+      (pin Round[A]Pad_1400.000000_um 1 5540 1420)
+      (pin Round[A]Pad_1400.000000_um 4 -2770 1420)
+      (pin Round[A]Pad_1400.000000_um 5 -5540 1420)
+      (pin Round[A]Pad_4400.000000_um 10 12500 0)
+      (pin Round[A]Pad_4400.000000_um 10@1 -12500 0)
+    )
+    (image keyboard_parts:SOLDER_JUMPER_2
+      (outline (path signal 200  -650 -850  650 -850))
+      (outline (path signal 200  -950 -600  -950 600))
+      (outline (path signal 200  -700 850  700 850))
+      (outline (path signal 200  950 600  950 -550))
+      (outline (polygon signal 0  -700 -750  -650 -763.397  -613.398 -800  -600 -850  -613.397 -900
+            -650 -936.602  -700 -950  -790.586 -938.074  -875 -903.109  -947.488 -847.488
+            -1003.11 -775  -1038.07 -690.586  -1050 -600  -1036.6 -550  -1000 -513.397
+            -950 -500  -900 -513.398  -863.397 -550  -850 -600  -850 -629.837
+            -827.164 -684.969  -784.969 -727.164  -729.837 -750  -700 -750))
+      (outline (polygon signal 0  -850 600  -863.397 550  -900 513.398  -950 500  -1000 513.397
+            -1036.6 550  -1050 600  -1038.07 690.586  -1003.11 775  -947.488 847.488
+            -875 903.109  -790.586 938.074  -700 950  -650 936.602  -613.397 900
+            -600 850  -613.398 800  -650 763.397  -700 750  -729.837 750
+            -784.969 727.164  -827.164 684.969  -850 629.837  -850 600))
+      (outline (polygon signal 0  700 750  650 763.397  613.398 800  600 850  613.397 900
+            650 936.602  700 950  790.586 938.074  875 903.109  947.488 847.488
+            1003.11 775  1038.07 690.586  1050 600  1036.6 550  1000 513.397
+            950 500  900 513.398  863.397 550  850 600  850 629.837  827.164 684.969
+            784.969 727.164  729.837 750  700 750))
+      (outline (polygon signal 0  850 -600  863.397 -550  900 -513.398  950 -500  1000 -513.397
+            1036.6 -550  1050 -600  1038.07 -690.586  1003.11 -775  947.488 -847.488
+            875 -903.109  790.586 -938.074  700 -950  650 -936.602  613.397 -900
+            600 -850  613.398 -800  650 -763.397  700 -750  729.837 -750
+            784.969 -727.164  827.164 -684.969  850 -629.837  850 -600))
+      (pin Rect[T]Pad_600.000000x1200.000000_um 2 400 0)
+      (pin Rect[T]Pad_600.000000x1200.000000_um 1 -400 0)
+    )
+    (image keyboard_parts:tmk2016
+    )
+    (padstack Round[A]Pad_1400.000000_um
+      (shape (circle F.Cu 1400))
+      (shape (circle B.Cu 1400))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1600.000000_um
+      (shape (circle F.Cu 1600))
+      (shape (circle B.Cu 1600))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3200.000000_um
+      (shape (circle F.Cu 3200))
+      (shape (circle B.Cu 3200))
+      (attach off)
+    )
+    (padstack Round[A]Pad_4400.000000_um
+      (shape (circle F.Cu 4400))
+      (shape (circle B.Cu 4400))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x1200.000000_um
+      (shape (rect F.Cu -300 -600 300 600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net /D0
+      (pins CN1-3 SJ3-1 SJ6-1)
+    )
+    (net /D1
+      (pins CN1-5 SJ4-1)
+    )
+    (net /VCC
+      (pins CN1-6 SJ2-1 SJ5-1)
+    )
+    (net GND
+      (pins CN1-8 CN1-9 CN1-9@1 CN1-9@2 P1-10 P1-10@1 SJ1-1 SJ7-1)
+    )
+    (net "Net-(CN1-Pad1)"
+      (pins CN1-1)
+    )
+    (net "Net-(CN1-Pad2)"
+      (pins CN1-2)
+    )
+    (net "Net-(CN1-Pad4)"
+      (pins CN1-4)
+    )
+    (net "Net-(CN1-Pad7)"
+      (pins CN1-7)
+    )
+    (net /DS_3
+      (pins P1-3 SJ2-2 SJ6-2)
+    )
+    (net "Net-(P1-Pad8)"
+      (pins P1-8)
+    )
+    (net "Net-(P1-Pad7)"
+      (pins P1-7)
+    )
+    (net "Net-(P1-Pad6)"
+      (pins P1-6)
+    )
+    (net /DS_9
+      (pins P1-9 SJ7-2)
+    )
+    (net /DS_2
+      (pins P1-2 SJ1-2)
+    )
+    (net /DS_1
+      (pins P1-1 SJ5-2)
+    )
+    (net /DS_4
+      (pins P1-4 SJ3-2)
+    )
+    (net /DS_5
+      (pins P1-5 SJ4-2)
+    )
+    (class kicad_default /D0 /D1 /DS_1 /DS_2 /DS_3 /DS_4 /DS_5 /DS_9 /VCC
+      GND "Net-(CN1-Pad1)" "Net-(CN1-Pad2)" "Net-(CN1-Pad4)" "Net-(CN1-Pad7)"
+      "Net-(P1-Pad6)" "Net-(P1-Pad7)" "Net-(P1-Pad8)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

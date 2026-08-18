@@ -1,0 +1,53 @@
+{
+  "board_id": "smt-zvs-driver_IH10",
+  "display_name": "smt-zvs-driver_IH10",
+  "pcbench_directory": "PCBs/smt-zvs-driver_IH10",
+  "source": "https://github.com/hardboiledfrog/smt-zvs-driver",
+  "author": "hardboiledfrog",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:27.197759+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 28,
+    "dimensions_mm": {
+      "width": 23.75,
+      "height": 3.0
+    },
+    "area_cm2": 0.71,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 259,
+    "vias": 112,
+    "track_length_mm": 456.24,
+    "kicad_drc_violations": 163,
+    "kicad_drc_breakdown": {
+      "total_violations": 163,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "copper_edge_clearance": 28,
+        "hole_clearance": 6,
+        "nonmirrored_text_on_back_layer": 2,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 76,
+        "silk_overlap": 24,
+        "text_height": 14,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 42,
+        "warning": 121
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

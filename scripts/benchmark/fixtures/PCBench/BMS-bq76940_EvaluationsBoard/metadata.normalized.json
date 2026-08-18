@@ -1,0 +1,51 @@
+{
+  "board_id": "BMS-bq76940_EvaluationsBoard",
+  "display_name": "BMS-bq76940_EvaluationsBoard",
+  "pcbench_directory": "PCBs/BMS-bq76940_EvaluationsBoard",
+  "source": "https://github.com/kevinxusz/BMS-bq76940",
+  "author": "kevinxusz",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:32.357820+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 134,
+    "dimensions_mm": {
+      "width": 67.94,
+      "height": 75.57
+    },
+    "area_cm2": 51.34,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 826,
+    "vias": 6,
+    "track_length_mm": 2069.9,
+    "kicad_drc_violations": 638,
+    "kicad_drc_breakdown": {
+      "total_violations": 638,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 41,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "starved_thermal": 5,
+        "text_height": 191,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 46,
+        "warning": 592
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

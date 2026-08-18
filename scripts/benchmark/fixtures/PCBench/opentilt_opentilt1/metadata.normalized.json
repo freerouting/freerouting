@@ -1,0 +1,44 @@
+{
+  "board_id": "opentilt_opentilt1",
+  "display_name": "opentilt_opentilt1",
+  "pcbench_directory": "PCBs/opentilt_opentilt1",
+  "source": "https://github.com/Juerd/opentilt",
+  "author": "Juerd",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:37.721883+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 100.33,
+      "height": 36.83
+    },
+    "area_cm2": 36.95,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 77,
+    "vias": 14,
+    "track_length_mm": 622.66,
+    "kicad_drc_violations": 72,
+    "kicad_drc_breakdown": {
+      "total_violations": 72,
+      "unconnected_count": 1,
+      "by_type": {
+        "silk_overlap": 72
+      },
+      "by_severity": {
+        "warning": 72
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

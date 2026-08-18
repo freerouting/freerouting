@@ -1,0 +1,49 @@
+{
+  "board_id": "ProtoHead_v4_Protohead_v4_FAB_rc1",
+  "display_name": "ProtoHead_v4_Protohead_v4_FAB_rc1",
+  "pcbench_directory": "PCBs/ProtoHead_v4_Protohead_v4_FAB_rc1",
+  "source": "https://github.com/imarin2/ProtoHead_v4",
+  "author": "imarin2",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.630164+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 53.0,
+      "height": 14.0
+    },
+    "area_cm2": 7.42,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 94,
+    "vias": 0,
+    "track_length_mm": 196.82,
+    "kicad_drc_violations": 89,
+    "kicad_drc_breakdown": {
+      "total_violations": 89,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 17,
+        "copper_edge_clearance": 26,
+        "lib_footprint_issues": 7,
+        "silk_over_copper": 33,
+        "silk_overlap": 6
+      },
+      "by_severity": {
+        "error": 43,
+        "warning": 46
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

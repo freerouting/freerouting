@@ -1,0 +1,27 @@
+{
+  "board": "Shift-out-32-HC595_Shift-out",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Shift-out-32-HC595_Shift-out\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 16,
+  "segment_count": 452,
+  "approximate_track_length_mm": 1471.85,
+  "kicad_drc_violations": 331,
+  "generated_at": "2026-08-18T19:44:26.395350+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 331,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 217,
+      "copper_edge_clearance": 1,
+      "courtyards_overlap": 8,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 27,
+      "silk_overlap": 77
+    },
+    "by_severity": {
+      "error": 227,
+      "warning": 104
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "board_id": "NightClock_ESPBoard",
+  "display_name": "NightClock_ESPBoard",
+  "pcbench_directory": "PCBs/NightClock_ESPBoard",
+  "source": "https://github.com/vanceb/NightClock",
+  "author": "vanceb",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.865720+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 49.53,
+      "height": 45.72
+    },
+    "area_cm2": 22.65,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 146,
+    "vias": 10,
+    "track_length_mm": 510.66,
+    "kicad_drc_violations": 171,
+    "kicad_drc_breakdown": {
+      "total_violations": 171,
+      "unconnected_count": 4,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 95,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 25,
+        "malformed_courtyard": 8,
+        "padstack": 4,
+        "silk_edge_clearance": 4,
+        "silk_overlap": 28,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 109,
+        "warning": 62
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

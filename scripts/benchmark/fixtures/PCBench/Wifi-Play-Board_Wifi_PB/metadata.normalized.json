@@ -1,0 +1,57 @@
+{
+  "board_id": "Wifi-Play-Board_Wifi_PB",
+  "display_name": "Wifi-Play-Board_Wifi_PB",
+  "pcbench_directory": "PCBs/Wifi-Play-Board_Wifi_PB",
+  "source": "https://github.com/AntonioMR/Wifi-Play-Board",
+  "author": "AntonioMR",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.817743+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 70,
+    "components": 207,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 49.7
+    },
+    "area_cm2": 49.7,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1515,
+    "vias": 74,
+    "track_length_mm": 3097.09,
+    "kicad_drc_violations": 881,
+    "kicad_drc_breakdown": {
+      "total_violations": 881,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 507,
+        "copper_edge_clearance": 6,
+        "hole_clearance": 4,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 199,
+        "malformed_courtyard": 6,
+        "pth_inside_courtyard": 10,
+        "silk_edge_clearance": 64,
+        "silk_over_copper": 6,
+        "solder_mask_bridge": 71,
+        "text_height": 1,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 606,
+        "warning": 275
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

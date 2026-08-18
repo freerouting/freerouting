@@ -1,0 +1,30 @@
+{
+  "board": "sweet-sixteen_sweet-sixteen",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\sweet-sixteen_sweet-sixteen\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 167,
+  "segment_count": 1465,
+  "approximate_track_length_mm": 5357.64,
+  "kicad_drc_violations": 848,
+  "generated_at": "2026-08-18T19:49:26.249087+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 848,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 501,
+      "copper_edge_clearance": 24,
+      "holes_co_located": 3,
+      "lib_footprint_issues": 87,
+      "silk_over_copper": 199,
+      "silk_overlap": 1,
+      "solder_mask_bridge": 28,
+      "starved_thermal": 4,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 557,
+      "warning": 291
+    }
+  }
+}

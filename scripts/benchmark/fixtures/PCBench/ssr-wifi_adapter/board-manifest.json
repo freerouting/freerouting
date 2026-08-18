@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ssr-wifi_adapter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 110384,
+      "sha256": "82fcb007953d41121d1524504443389bdae99ac52b45c3e2b98412369cf824ec"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 62844,
+      "sha256": "ae761b63b61f8be39b6080ec96585107985a8a84881235bafbc2a50ed524ec9f"
+    },
+    "metadata_json": {
+      "bytes": 439,
+      "sha256": "2719688159acd6268e03e3ff93d95e6356a92ffff630a21925995747e074d4df"
+    },
+    "final_json": {
+      "bytes": 54926,
+      "sha256": "0f4efd68775897172db472b8cdd64b0db4614d59d7e7316f5eb181bf67e41bba"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:47:32.948510+00:00"
+  }
+}

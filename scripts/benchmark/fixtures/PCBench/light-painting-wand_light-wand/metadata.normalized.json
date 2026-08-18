@@ -1,0 +1,52 @@
+{
+  "board_id": "light-painting-wand_light-wand",
+  "display_name": "light-painting-wand_light-wand",
+  "pcbench_directory": "PCBs/light-painting-wand_light-wand",
+  "source": "https://github.com/mpetroff/light-painting-wand",
+  "author": "mpetroff",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:40.805919+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 47,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 50.8,
+      "height": 38.1
+    },
+    "area_cm2": 19.35,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 213,
+    "vias": 25,
+    "track_length_mm": 366.11,
+    "kicad_drc_violations": 163,
+    "kicad_drc_breakdown": {
+      "total_violations": 163,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 81,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 24,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 14,
+        "silk_overlap": 20,
+        "text_height": 16,
+        "text_thickness": 1
+      },
+      "by_severity": {
+        "error": 82,
+        "warning": 81
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

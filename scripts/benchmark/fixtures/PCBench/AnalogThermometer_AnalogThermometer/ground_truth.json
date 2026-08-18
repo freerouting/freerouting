@@ -1,0 +1,24 @@
+{
+  "board": "AnalogThermometer_AnalogThermometer",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\AnalogThermometer_AnalogThermometer\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 51,
+  "approximate_track_length_mm": 80.62,
+  "kicad_drc_violations": 37,
+  "generated_at": "2026-08-18T18:28:06.528221+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 37,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 16,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 19
+    },
+    "by_severity": {
+      "error": 18,
+      "warning": 19
+    }
+  }
+}

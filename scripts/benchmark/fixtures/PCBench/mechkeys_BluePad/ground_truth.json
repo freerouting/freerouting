@@ -1,0 +1,35 @@
+{
+  "board": "mechkeys_BluePad",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mechkeys_BluePad\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 104,
+  "segment_count": 1052,
+  "approximate_track_length_mm": 4240.48,
+  "kicad_drc_violations": 1273,
+  "generated_at": "2026-08-18T19:21:24.267402+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1273,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 113,
+      "clearance": 499,
+      "copper_edge_clearance": 11,
+      "courtyards_overlap": 6,
+      "drill_out_of_range": 113,
+      "hole_clearance": 19,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 148,
+      "padstack": 113,
+      "pth_inside_courtyard": 22,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 16,
+      "silk_overlap": 36,
+      "solder_mask_bridge": 174
+    },
+    "by_severity": {
+      "error": 958,
+      "warning": 315
+    }
+  }
+}

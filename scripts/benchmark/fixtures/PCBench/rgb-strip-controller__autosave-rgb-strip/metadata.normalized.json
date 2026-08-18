@@ -1,0 +1,48 @@
+{
+  "board_id": "rgb-strip-controller__autosave-rgb-strip",
+  "display_name": "rgb-strip-controller__autosave-rgb-strip",
+  "pcbench_directory": "PCBs/rgb-strip-controller__autosave-rgb-strip",
+  "source": "https://github.com/LuisDiazUgena/rgb-strip-controller",
+  "author": "LuisDiazUgena",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.246148+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 41.66,
+      "height": 40.54
+    },
+    "area_cm2": 16.89,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 108,
+    "vias": 8,
+    "track_length_mm": 337.76,
+    "kicad_drc_violations": 124,
+    "kicad_drc_breakdown": {
+      "total_violations": 124,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 82,
+        "lib_footprint_issues": 20,
+        "silk_overlap": 12,
+        "text_height": 10
+      },
+      "by_severity": {
+        "error": 82,
+        "warning": 42
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "board_id": "pcb-ice40-vga_VGA expansion",
+  "display_name": "pcb-ice40-vga_VGA expansion",
+  "pcbench_directory": "PCBs/pcb-ice40-vga_VGA expansion",
+  "source": "https://github.com/flummer/pcb-ice40-vga",
+  "author": "flummer",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.266160+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 38,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 76.2,
+      "height": 48.0
+    },
+    "area_cm2": 36.58,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 83,
+    "vias": 0,
+    "track_length_mm": 431.1,
+    "kicad_drc_violations": 81,
+    "kicad_drc_breakdown": {
+      "total_violations": 81,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 13,
+        "copper_edge_clearance": 42,
+        "lib_footprint_issues": 24,
+        "silk_edge_clearance": 2
+      },
+      "by_severity": {
+        "error": 55,
+        "warning": 26
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "board": "dust_sensor_dust_sensor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\dust_sensor_dust_sensor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 39,
+  "segment_count": 475,
+  "approximate_track_length_mm": 1268.6,
+  "kicad_drc_violations": 286,
+  "generated_at": "2026-08-18T18:43:30.285027+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 286,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 135,
+      "copper_edge_clearance": 4,
+      "lib_footprint_issues": 32,
+      "malformed_courtyard": 8,
+      "silk_edge_clearance": 65,
+      "silk_overlap": 23,
+      "solder_mask_bridge": 6,
+      "starved_thermal": 9
+    },
+    "by_severity": {
+      "error": 166,
+      "warning": 120
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "board_id": "kitspace_piezo_amplifier",
+  "display_name": "kitspace_piezo_amplifier",
+  "pcbench_directory": "PCBs/kitspace_piezo_amplifier",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:29.893292+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 29,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 0,
+    "vias": 0,
+    "track_length_mm": 0.0,
+    "kicad_drc_violations": 54,
+    "kicad_drc_breakdown": {
+      "total_violations": 54,
+      "unconnected_count": 74,
+      "by_type": {
+        "invalid_outline": 1,
+        "lib_footprint_mismatch": 37,
+        "silk_overlap": 16
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 53
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

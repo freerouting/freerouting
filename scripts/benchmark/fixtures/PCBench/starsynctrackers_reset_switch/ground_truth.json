@@ -1,0 +1,22 @@
+{
+  "board": "starsynctrackers_reset_switch",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\starsynctrackers_reset_switch\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 51,
+  "approximate_track_length_mm": 83.6,
+  "kicad_drc_violations": 13,
+  "generated_at": "2026-08-18T19:48:06.498206+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 13,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 9,
+      "silk_over_copper": 4
+    },
+    "by_severity": {
+      "warning": 13
+    }
+  }
+}

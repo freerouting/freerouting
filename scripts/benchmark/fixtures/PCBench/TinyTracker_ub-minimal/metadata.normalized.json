@@ -1,0 +1,56 @@
+{
+  "board_id": "TinyTracker_ub-minimal",
+  "display_name": "TinyTracker_ub-minimal",
+  "pcbench_directory": "PCBs/TinyTracker_ub-minimal",
+  "source": "https://github.com/daveshah1/TinyTracker",
+  "author": "daveshah1",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:26.313749+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 34,
+    "components": 65,
+    "dimensions_mm": {
+      "width": 38.0,
+      "height": 16.0
+    },
+    "area_cm2": 6.08,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 769,
+    "vias": 131,
+    "track_length_mm": 657.9,
+    "kicad_drc_violations": 718,
+    "kicad_drc_breakdown": {
+      "total_violations": 718,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 102,
+        "copper_edge_clearance": 91,
+        "courtyards_overlap": 9,
+        "hole_to_hole": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 65,
+        "silk_edge_clearance": 12,
+        "silk_over_copper": 183,
+        "silk_overlap": 95,
+        "solder_mask_bridge": 145,
+        "starved_thermal": 6,
+        "track_dangling": 8
+      },
+      "by_severity": {
+        "error": 354,
+        "warning": 364
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

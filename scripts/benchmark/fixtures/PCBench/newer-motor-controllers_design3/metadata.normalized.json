@@ -1,0 +1,53 @@
+{
+  "board_id": "newer-motor-controllers_design3",
+  "display_name": "newer-motor-controllers_design3",
+  "pcbench_directory": "PCBs/newer-motor-controllers_design3",
+  "source": "https://github.com/lizardmech/newer-motor-controllers",
+  "author": "lizardmech",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.046016+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 9,
+    "components": 32,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 50.0
+    },
+    "area_cm2": 50.0,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 150,
+    "vias": 10,
+    "track_length_mm": 383.52,
+    "kicad_drc_violations": 249,
+    "kicad_drc_breakdown": {
+      "total_violations": 249,
+      "unconnected_count": 13,
+      "by_type": {
+        "clearance": 51,
+        "copper_edge_clearance": 1,
+        "hole_clearance": 25,
+        "lib_footprint_issues": 32,
+        "silk_edge_clearance": 50,
+        "silk_over_copper": 28,
+        "silk_overlap": 15,
+        "solder_mask_bridge": 45,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 122,
+        "warning": 127
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

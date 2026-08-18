@@ -1,0 +1,49 @@
+{
+  "board_id": "Retro1DecodingModules_AddressDecoderModule",
+  "display_name": "Retro1DecodingModules_AddressDecoderModule",
+  "pcbench_directory": "PCBs/Retro1DecodingModules_AddressDecoderModule",
+  "source": "https://github.com/jonthomasson/Retro1DecodingModules",
+  "author": "jonthomasson",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.334090+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 12,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 51.05,
+      "height": 18.03
+    },
+    "area_cm2": 9.2,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 202,
+    "vias": 1,
+    "track_length_mm": 524.99,
+    "kicad_drc_violations": 135,
+    "kicad_drc_breakdown": {
+      "total_violations": 135,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 52,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 4,
+        "silk_overlap": 65,
+        "text_height": 12
+      },
+      "by_severity": {
+        "error": 54,
+        "warning": 81
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

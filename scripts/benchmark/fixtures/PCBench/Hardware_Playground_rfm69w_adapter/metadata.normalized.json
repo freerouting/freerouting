@@ -1,0 +1,54 @@
+{
+  "board_id": "Hardware_Playground_rfm69w_adapter",
+  "display_name": "Hardware_Playground_rfm69w_adapter",
+  "pcbench_directory": "PCBs/Hardware_Playground_rfm69w_adapter",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 87,
+    "dimensions_mm": {
+      "width": 20.0,
+      "height": 16.0
+    },
+    "area_cm2": 3.2,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 304,
+    "vias": 30,
+    "track_length_mm": 328.3,
+    "kicad_drc_violations": 305,
+    "kicad_drc_breakdown": {
+      "total_violations": 305,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 52,
+        "clearance": 32,
+        "copper_edge_clearance": 45,
+        "courtyards_overlap": 26,
+        "lib_footprint_issues": 35,
+        "pth_inside_courtyard": 11,
+        "silk_over_copper": 10,
+        "solder_mask_bridge": 72,
+        "starved_thermal": 3,
+        "text_height": 19
+      },
+      "by_severity": {
+        "error": 241,
+        "warning": 64
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

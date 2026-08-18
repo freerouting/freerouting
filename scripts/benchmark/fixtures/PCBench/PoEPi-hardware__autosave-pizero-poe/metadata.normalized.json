@@ -1,0 +1,59 @@
+{
+  "board_id": "PoEPi-hardware__autosave-pizero-poe",
+  "display_name": "PoEPi-hardware__autosave-pizero-poe",
+  "pcbench_directory": "PCBs/PoEPi-hardware__autosave-pizero-poe",
+  "source": "https://github.com/julien8/PoEPi-hardware",
+  "author": "julien8",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.753695+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 66,
+    "components": 85,
+    "dimensions_mm": {
+      "width": 93.8,
+      "height": 30.0
+    },
+    "area_cm2": 28.14,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 945,
+    "vias": 79,
+    "track_length_mm": 1266.54,
+    "kicad_drc_violations": 539,
+    "kicad_drc_breakdown": {
+      "total_violations": 539,
+      "unconnected_count": 3,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 48,
+        "copper_edge_clearance": 5,
+        "hole_clearance": 4,
+        "hole_to_hole": 1,
+        "lib_footprint_issues": 85,
+        "padstack": 4,
+        "shorting_items": 12,
+        "silk_over_copper": 199,
+        "silk_overlap": 63,
+        "solder_mask_bridge": 18,
+        "text_height": 81,
+        "text_thickness": 12,
+        "tracks_crossing": 1,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 92,
+        "warning": 447
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

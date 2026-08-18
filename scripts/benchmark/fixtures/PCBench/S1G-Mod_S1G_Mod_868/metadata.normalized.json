@@ -1,0 +1,58 @@
+{
+  "board_id": "S1G-Mod_S1G_Mod_868",
+  "display_name": "S1G-Mod_S1G_Mod_868",
+  "pcbench_directory": "PCBs/S1G-Mod_S1G_Mod_868",
+  "source": "https://github.com/adamjvr/S1G-Mod",
+  "author": "adamjvr",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.297890+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 91,
+    "components": 91,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 33.3
+    },
+    "area_cm2": 19.98,
+    "zones": 15
+  },
+  "reference": {
+    "segments": 822,
+    "vias": 244,
+    "track_length_mm": 1049.69,
+    "kicad_drc_violations": 736,
+    "kicad_drc_breakdown": {
+      "total_violations": 736,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 283,
+        "copper_edge_clearance": 96,
+        "hole_clearance": 23,
+        "holes_co_located": 9,
+        "lib_footprint_issues": 91,
+        "padstack": 5,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 26,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 95,
+        "text_height": 91,
+        "track_dangling": 1,
+        "via_dangling": 1,
+        "zones_intersect": 5
+      },
+      "by_severity": {
+        "error": 502,
+        "warning": 234
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

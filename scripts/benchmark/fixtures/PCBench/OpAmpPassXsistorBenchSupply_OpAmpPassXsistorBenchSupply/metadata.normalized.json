@@ -1,0 +1,50 @@
+{
+  "board_id": "OpAmpPassXsistorBenchSupply_OpAmpPassXsistorBenchSupply",
+  "display_name": "OpAmpPassXsistorBenchSupply_OpAmpPassXsistorBenchSupply",
+  "pcbench_directory": "PCBs/OpAmpPassXsistorBenchSupply_OpAmpPassXsistorBenchSupply",
+  "source": "https://github.com/pepaslabs/OpAmpPassXsistorBenchSupply",
+  "author": "pepaslabs",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:53.894073+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 89,
+    "dimensions_mm": {
+      "width": 99.69,
+      "height": 99.69
+    },
+    "area_cm2": 99.38,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 355,
+    "vias": 15,
+    "track_length_mm": 1195.46,
+    "kicad_drc_violations": 616,
+    "kicad_drc_breakdown": {
+      "total_violations": 616,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 136,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 61,
+        "silk_overlap": 199,
+        "text_height": 199,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 136,
+        "warning": 480
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

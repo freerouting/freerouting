@@ -1,0 +1,47 @@
+{
+  "board_id": "bobc_LCD-panel-adapter-lvc",
+  "display_name": "bobc_LCD-panel-adapter-lvc",
+  "pcbench_directory": "PCBs/bobc_LCD-panel-adapter-lvc",
+  "source": "https://github.com/bobc/bobc_hardware",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 40.64,
+      "height": 48.26
+    },
+    "area_cm2": 19.61,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 261,
+    "vias": 9,
+    "track_length_mm": 838.34,
+    "kicad_drc_violations": 36,
+    "kicad_drc_breakdown": {
+      "total_violations": 36,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 6,
+        "silk_overlap": 23,
+        "text_height": 7
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 30
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

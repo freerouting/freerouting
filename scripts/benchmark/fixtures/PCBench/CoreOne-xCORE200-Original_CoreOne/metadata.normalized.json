@@ -1,0 +1,55 @@
+{
+  "board_id": "CoreOne-xCORE200-Original_CoreOne",
+  "display_name": "CoreOne-xCORE200-Original_CoreOne",
+  "pcbench_directory": "PCBs/CoreOne-xCORE200-Original_CoreOne",
+  "source": "https://github.com/ohdsp/CoreOne-xCORE200-Original",
+  "author": "ohdsp",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.629741+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 133,
+    "components": 389,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 15
+  },
+  "reference": {
+    "segments": 3376,
+    "vias": 428,
+    "track_length_mm": 7325.54,
+    "kicad_drc_violations": 911,
+    "kicad_drc_breakdown": {
+      "total_violations": 911,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 508,
+        "copper_edge_clearance": 2,
+        "hole_clearance": 2,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 199,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 100,
+        "silk_overlap": 55,
+        "starved_thermal": 20,
+        "track_dangling": 18,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 533,
+        "warning": 378
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

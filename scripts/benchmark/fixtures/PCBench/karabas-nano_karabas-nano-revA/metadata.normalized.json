@@ -1,0 +1,57 @@
+{
+  "board_id": "karabas-nano_karabas-nano-revA",
+  "display_name": "karabas-nano_karabas-nano-revA",
+  "pcbench_directory": "PCBs/karabas-nano_karabas-nano-revA",
+  "source": "https://github.com/andykarpov/karabas-nano",
+  "author": "andykarpov",
+  "license": "Do What The F*ck You Want To Public License",
+  "license_spdx": "WTFPL",
+  "retrieved_at": "2023-08-17T17:22:32.125817+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 23,
+    "components": 136,
+    "dimensions_mm": {
+      "width": 101.6,
+      "height": 99.7
+    },
+    "area_cm2": 101.3,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 3741,
+    "vias": 434,
+    "track_length_mm": 9662.22,
+    "kicad_drc_violations": 525,
+    "kicad_drc_breakdown": {
+      "total_violations": 525,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 92,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 51,
+        "lib_footprint_mismatch": 71,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 14,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 198,
+        "starved_thermal": 8,
+        "text_height": 68,
+        "track_dangling": 3,
+        "via_dangling": 12
+      },
+      "by_severity": {
+        "error": 302,
+        "warning": 223
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

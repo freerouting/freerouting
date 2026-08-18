@@ -1,0 +1,51 @@
+{
+  "board_id": "IGN01A_IGN01A",
+  "display_name": "IGN01A_IGN01A",
+  "pcbench_directory": "PCBs/IGN01A_IGN01A",
+  "source": "https://github.com/AstronomickaExpedice/IGN01A",
+  "author": "AstronomickaExpedice",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.734095+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 45.0
+    },
+    "area_cm2": 22.5,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 224,
+    "vias": 0,
+    "track_length_mm": 651.41,
+    "kicad_drc_violations": 115,
+    "kicad_drc_breakdown": {
+      "total_violations": 115,
+      "unconnected_count": 3,
+      "by_type": {
+        "clearance": 43,
+        "lib_footprint_issues": 24,
+        "nonmirrored_text_on_back_layer": 4,
+        "silk_edge_clearance": 41,
+        "starved_thermal": 1,
+        "text_height": 1,
+        "text_thickness": 1
+      },
+      "by_severity": {
+        "error": 44,
+        "warning": 71
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

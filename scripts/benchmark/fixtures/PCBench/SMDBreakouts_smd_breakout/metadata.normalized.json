@@ -1,0 +1,50 @@
+{
+  "board_id": "SMDBreakouts_smd_breakout",
+  "display_name": "SMDBreakouts_smd_breakout",
+  "pcbench_directory": "PCBs/SMDBreakouts_smd_breakout",
+  "source": "https://github.com/IGBC/SMDBreakouts",
+  "author": "IGBC",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:55.538093+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 21.59,
+      "height": 21.46
+    },
+    "area_cm2": 4.63,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 126,
+    "vias": 0,
+    "track_length_mm": 277.35,
+    "kicad_drc_violations": 65,
+    "kicad_drc_breakdown": {
+      "total_violations": 65,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 16,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 8,
+        "silk_over_copper": 10,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 28
+      },
+      "by_severity": {
+        "error": 46,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

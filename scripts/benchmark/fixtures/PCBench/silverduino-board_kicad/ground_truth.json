@@ -1,0 +1,30 @@
+{
+  "board": "silverduino-board_kicad",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\silverduino-board_kicad\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 5,
+  "segment_count": 126,
+  "approximate_track_length_mm": 570.53,
+  "kicad_drc_violations": 87,
+  "generated_at": "2026-08-18T19:44:36.533965+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 87,
+    "unconnected_count": 4,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 51,
+      "holes_co_located": 2,
+      "item_on_disabled_layer": 4,
+      "lib_footprint_issues": 16,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 2,
+      "silk_overlap": 2,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 57,
+      "warning": 30
+    }
+  }
+}

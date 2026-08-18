@@ -1,0 +1,49 @@
+{
+  "board_id": "Arduino_Lipo_Storage_Discharger_Lipo_Storage_Discharger",
+  "display_name": "Arduino_Lipo_Storage_Discharger_Lipo_Storage_Discharger",
+  "pcbench_directory": "PCBs/Arduino_Lipo_Storage_Discharger_Lipo_Storage_Discharger",
+  "source": "https://github.com/KaeptnBalu/Arduino_Lipo_Storage_Discharger",
+  "author": "KaeptnBalu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:27.513763+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 31,
+    "components": 42,
+    "dimensions_mm": {
+      "width": 99.0,
+      "height": 49.0
+    },
+    "area_cm2": 48.51,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 245,
+    "vias": 19,
+    "track_length_mm": 960.38,
+    "kicad_drc_violations": 161,
+    "kicad_drc_breakdown": {
+      "total_violations": 161,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 81,
+        "lib_footprint_issues": 42,
+        "silk_over_copper": 5,
+        "silk_overlap": 31,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 81,
+        "warning": 80
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

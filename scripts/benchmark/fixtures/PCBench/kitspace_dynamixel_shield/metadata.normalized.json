@@ -1,0 +1,51 @@
+{
+  "board_id": "kitspace_dynamixel_shield",
+  "display_name": "kitspace_dynamixel_shield",
+  "pcbench_directory": "PCBs/kitspace_dynamixel_shield",
+  "source": "https://github.com/descampsa/DynamixelShield",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/descampsa/DynamixelShield/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:21:13.095512+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 32,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 258,
+    "vias": 20,
+    "track_length_mm": 851.25,
+    "kicad_drc_violations": 363,
+    "kicad_drc_breakdown": {
+      "total_violations": 363,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 260,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 32,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 7,
+        "silk_overlap": 48
+      },
+      "by_severity": {
+        "error": 265,
+        "warning": 98
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

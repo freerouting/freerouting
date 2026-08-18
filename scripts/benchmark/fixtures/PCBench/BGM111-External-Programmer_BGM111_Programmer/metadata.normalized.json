@@ -1,0 +1,51 @@
+{
+  "board_id": "BGM111-External-Programmer_BGM111_Programmer",
+  "display_name": "BGM111-External-Programmer_BGM111_Programmer",
+  "pcbench_directory": "PCBs/BGM111-External-Programmer_BGM111_Programmer",
+  "source": "https://github.com/EmbeddedDesign/BGM111-External-Programmer",
+  "author": "EmbeddedDesign",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:38.957898+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 31.98,
+      "height": 21.77
+    },
+    "area_cm2": 6.96,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 19,
+    "vias": 2,
+    "track_length_mm": 63.75,
+    "kicad_drc_violations": 56,
+    "kicad_drc_breakdown": {
+      "total_violations": 56,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 4,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 40,
+        "starved_thermal": 1,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 10,
+        "warning": 46
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

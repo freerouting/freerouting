@@ -1,0 +1,26 @@
+{
+  "board": "spisolator_spisolator",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\spisolator_spisolator\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 138,
+  "approximate_track_length_mm": 239.58,
+  "kicad_drc_violations": 47,
+  "generated_at": "2026-08-18T19:47:17.564164+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 47,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 34,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 8,
+      "silk_overlap": 2,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 37,
+      "warning": 10
+    }
+  }
+}

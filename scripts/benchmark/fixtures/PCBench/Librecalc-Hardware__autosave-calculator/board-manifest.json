@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Librecalc-Hardware__autosave-calculator",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1173112,
+      "sha256": "4a390a5bd1607967b2925405497cad9b536cd79fa7037ff1caaa306867b7cf0c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 571120,
+      "sha256": "669a19348fdff18ea5dc936f96301aeb8dea4ae65cab66f3bd6533e44b5ced8b"
+    },
+    "metadata_json": {
+      "bytes": 537,
+      "sha256": "4a0ea8e6b4cda84e3f9e7a7f871f8c91c1bf2bc34939c5e99db1b703fdc2e4e5"
+    },
+    "final_json": {
+      "bytes": 704252,
+      "sha256": "1c7de27d404d7ae55f531f406489fd574f40e8cb1141d40c13a95baeeec28bae"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:19:44.754784+00:00"
+  }
+}

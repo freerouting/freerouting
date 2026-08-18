@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "S4A-Mini-board_s4a-mini-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 202997,
+      "sha256": "da542de5cdd53654a5f041235af2ea70bb8010235991e2307dbdb24683cda4df"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 134019,
+      "sha256": "78974494cc991d74249359db3f5a78205efe430915acaf58cd0075e7a713644b"
+    },
+    "metadata_json": {
+      "bytes": 695,
+      "sha256": "519992c2df3480016ed69f957795cb105af66a64127fa527fcfde1930959cc65"
+    },
+    "final_json": {
+      "bytes": 55161,
+      "sha256": "0940e9b80e1c9715c29f88953156dda81e3770d6c2b77088417f184491c16a08"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:43:10.821341+00:00"
+  }
+}

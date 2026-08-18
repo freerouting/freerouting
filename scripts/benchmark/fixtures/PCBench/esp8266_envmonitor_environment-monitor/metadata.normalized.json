@@ -1,0 +1,51 @@
+{
+  "board_id": "esp8266_envmonitor_environment-monitor",
+  "display_name": "esp8266_envmonitor_environment-monitor",
+  "pcbench_directory": "PCBs/esp8266_envmonitor_environment-monitor",
+  "source": "https://github.com/theopensourcerer/esp8266_envmonitor",
+  "author": "theopensourcerer",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.633776+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 31.11,
+      "height": 43.18
+    },
+    "area_cm2": 13.43,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 68,
+    "vias": 7,
+    "track_length_mm": 214.87,
+    "kicad_drc_violations": 121,
+    "kicad_drc_breakdown": {
+      "total_violations": 121,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 71,
+        "lib_footprint_issues": 14,
+        "malformed_courtyard": 6,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 24,
+        "track_dangling": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 77,
+        "warning": 44
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

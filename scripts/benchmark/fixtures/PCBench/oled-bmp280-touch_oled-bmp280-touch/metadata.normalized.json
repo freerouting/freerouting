@@ -1,0 +1,51 @@
+{
+  "board_id": "oled-bmp280-touch_oled-bmp280-touch",
+  "display_name": "oled-bmp280-touch_oled-bmp280-touch",
+  "pcbench_directory": "PCBs/oled-bmp280-touch_oled-bmp280-touch",
+  "source": "https://github.com/pdp7/oled-bmp280-touch",
+  "author": "pdp7",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:51.878050+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 50.04,
+      "height": 51.69
+    },
+    "area_cm2": 25.87,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 126,
+    "vias": 21,
+    "track_length_mm": 419.0,
+    "kicad_drc_violations": 119,
+    "kicad_drc_breakdown": {
+      "total_violations": 119,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 30,
+        "copper_edge_clearance": 2,
+        "invalid_outline": 16,
+        "lib_footprint_issues": 10,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 57,
+        "silk_overlap": 1
+      },
+      "by_severity": {
+        "error": 48,
+        "warning": 71
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

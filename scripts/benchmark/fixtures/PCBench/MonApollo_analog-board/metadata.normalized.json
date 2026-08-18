@@ -1,0 +1,55 @@
+{
+  "board_id": "MonApollo_analog-board",
+  "display_name": "MonApollo_analog-board",
+  "pcbench_directory": "PCBs/MonApollo_analog-board",
+  "source": "https://github.com/minisystem/MonApollo",
+  "author": "minisystem",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.726001+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 303,
+    "components": 506,
+    "dimensions_mm": {
+      "width": 200.0,
+      "height": 150.0
+    },
+    "area_cm2": 300.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 3858,
+    "vias": 262,
+    "track_length_mm": 16043.41,
+    "kicad_drc_violations": 1346,
+    "kicad_drc_breakdown": {
+      "total_violations": 1346,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 509,
+        "copper_edge_clearance": 5,
+        "lib_footprint_issues": 199,
+        "silk_edge_clearance": 14,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "starved_thermal": 14,
+        "text_height": 199,
+        "track_dangling": 3,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 532,
+        "warning": 814
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

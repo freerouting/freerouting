@@ -1,0 +1,51 @@
+{
+  "board_id": "avr-fuser-32_adapter",
+  "display_name": "avr-fuser-32_adapter",
+  "pcbench_directory": "PCBs/avr-fuser-32_adapter",
+  "source": "https://github.com/emard/avr-fuser-32",
+  "author": "emard",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.258089+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 159.38,
+      "height": 79.38
+    },
+    "area_cm2": 126.52,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 923,
+    "vias": 145,
+    "track_length_mm": 5792.67,
+    "kicad_drc_violations": 572,
+    "kicad_drc_breakdown": {
+      "total_violations": 572,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 153,
+        "silk_over_copper": 39,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 173,
+        "starved_thermal": 1,
+        "text_height": 5,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 327,
+        "warning": 245
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

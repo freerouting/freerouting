@@ -1,0 +1,46 @@
+{
+  "board_id": "xwhatits-capsense-controller_model-f-3178-adaptor",
+  "display_name": "xwhatits-capsense-controller_model-f-3178-adaptor",
+  "pcbench_directory": "PCBs/xwhatits-capsense-controller_model-f-3178-adaptor",
+  "source": "https://github.com/BASLQC/xwhatits-capsense-controller",
+  "author": "BASLQC",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:25.393738+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 2,
+    "dimensions_mm": {
+      "width": 127.0,
+      "height": 6.5
+    },
+    "area_cm2": 8.26,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 40,
+    "vias": 0,
+    "track_length_mm": 92.22,
+    "kicad_drc_violations": 34,
+    "kicad_drc_breakdown": {
+      "total_violations": 34,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 31,
+        "text_height": 3
+      },
+      "by_severity": {
+        "error": 31,
+        "warning": 3
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

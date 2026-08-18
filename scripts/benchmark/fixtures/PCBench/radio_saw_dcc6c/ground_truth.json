@@ -1,0 +1,27 @@
+{
+  "board": "radio_saw_dcc6c",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\radio_saw_dcc6c\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 131,
+  "segment_count": 156,
+  "approximate_track_length_mm": 184.92,
+  "kicad_drc_violations": 113,
+  "generated_at": "2026-08-18T18:23:52.748989+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 113,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 15,
+      "lib_footprint_issues": 7,
+      "silk_edge_clearance": 20,
+      "silk_over_copper": 47,
+      "silk_overlap": 11,
+      "text_height": 13
+    },
+    "by_severity": {
+      "error": 15,
+      "warning": 98
+    }
+  }
+}

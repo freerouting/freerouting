@@ -1,0 +1,59 @@
+{
+  "board_id": "kitspace_USB-C-Screen-Adapter",
+  "display_name": "kitspace_USB-C-Screen-Adapter",
+  "pcbench_directory": "PCBs/kitspace_USB-C-Screen-Adapter",
+  "source": "https://github.com/Jana-Marie/OtterScreenAdapter",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Jana-Marie/OtterScreenAdapter/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:15:54.789027+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 33,
+    "components": 65,
+    "dimensions_mm": {
+      "width": 40.0,
+      "height": 20.8
+    },
+    "area_cm2": 8.32,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 746,
+    "vias": 175,
+    "track_length_mm": 952.62,
+    "kicad_drc_violations": 394,
+    "kicad_drc_breakdown": {
+      "total_violations": 394,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 72,
+        "copper_edge_clearance": 34,
+        "courtyards_overlap": 13,
+        "hole_clearance": 53,
+        "lib_footprint_issues": 5,
+        "lib_footprint_mismatch": 54,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 3,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 83,
+        "starved_thermal": 5,
+        "text_height": 55,
+        "track_dangling": 5,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 264,
+        "warning": 130
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

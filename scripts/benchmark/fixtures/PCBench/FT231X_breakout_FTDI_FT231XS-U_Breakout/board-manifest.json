@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "FT231X_breakout_FTDI_FT231XS-U_Breakout",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 218335,
+      "sha256": "68edd1dfab79b5b52fee4e761cfb79b0e686b843c1ee2954b0aa07cd52f7e975"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 168227,
+      "sha256": "4b4f258f26c797ad7700478ce9eb9826dc38b28ee7e53435cd57b612be5afde8"
+    },
+    "metadata_json": {
+      "bytes": 650,
+      "sha256": "f075ead73719ce274622d6af6f29ff8934082464276e2a8b73f7cf6dace051b3"
+    },
+    "final_json": {
+      "bytes": 60037,
+      "sha256": "17ce0e5697cf646685604d0579aab5a52e1f8ad80fbdc0c27c6dc2d9482a41ab"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:50:51.103956+00:00"
+  }
+}

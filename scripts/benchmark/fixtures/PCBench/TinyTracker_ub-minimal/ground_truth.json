@@ -1,0 +1,33 @@
+{
+  "board": "TinyTracker_ub-minimal",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\TinyTracker_ub-minimal\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 131,
+  "segment_count": 769,
+  "approximate_track_length_mm": 657.9,
+  "kicad_drc_violations": 718,
+  "generated_at": "2026-08-18T18:25:09.081993+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 718,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 102,
+      "copper_edge_clearance": 91,
+      "courtyards_overlap": 9,
+      "hole_to_hole": 1,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 65,
+      "silk_edge_clearance": 12,
+      "silk_over_copper": 183,
+      "silk_overlap": 95,
+      "solder_mask_bridge": 145,
+      "starved_thermal": 6,
+      "track_dangling": 8
+    },
+    "by_severity": {
+      "error": 354,
+      "warning": 364
+    }
+  }
+}

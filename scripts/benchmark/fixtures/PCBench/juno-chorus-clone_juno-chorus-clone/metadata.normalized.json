@@ -1,0 +1,49 @@
+{
+  "board_id": "juno-chorus-clone_juno-chorus-clone",
+  "display_name": "juno-chorus-clone_juno-chorus-clone",
+  "pcbench_directory": "PCBs/juno-chorus-clone_juno-chorus-clone",
+  "source": "https://github.com/gligli/juno-chorus-clone",
+  "author": "gligli",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:21.757695+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 172,
+    "dimensions_mm": {
+      "width": 149.86,
+      "height": 101.6
+    },
+    "area_cm2": 152.26,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 915,
+    "vias": 10,
+    "track_length_mm": 4239.27,
+    "kicad_drc_violations": 426,
+    "kicad_drc_breakdown": {
+      "total_violations": 426,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "silk_edge_clearance": 26,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 425
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

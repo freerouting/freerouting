@@ -1,0 +1,53 @@
+{
+  "board_id": "Practicas-Curso-Kicad_Ejercicio2",
+  "display_name": "Practicas-Curso-Kicad_Ejercicio2",
+  "pcbench_directory": "PCBs/Practicas-Curso-Kicad_Ejercicio2",
+  "source": "https://github.com/INTI-CMNB/Practicas-Curso-Kicad",
+  "author": "INTI-CMNB",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.878073+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 40.64,
+      "height": 60.96
+    },
+    "area_cm2": 24.77,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 253,
+    "vias": 11,
+    "track_length_mm": 703.0,
+    "kicad_drc_violations": 214,
+    "kicad_drc_breakdown": {
+      "total_violations": 214,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 146,
+        "copper_edge_clearance": 5,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 15,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 10,
+        "silk_overlap": 14,
+        "starved_thermal": 4,
+        "text_height": 14
+      },
+      "by_severity": {
+        "error": 158,
+        "warning": 56
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "board_id": "UniversalBoard4Nucleo_Nucleo_Universal_Board",
+  "display_name": "UniversalBoard4Nucleo_Nucleo_Universal_Board",
+  "pcbench_directory": "PCBs/UniversalBoard4Nucleo_Nucleo_Universal_Board",
+  "source": "https://github.com/noritsuna/UniversalBoard4Nucleo",
+  "author": "noritsuna",
+  "license": "Creative Commons Zero v1.0 Universal",
+  "license_spdx": "CC0-1.0",
+  "retrieved_at": "2023-08-17T17:22:47.037993+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 68,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 57.54
+    },
+    "area_cm2": 40.28,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 634,
+    "vias": 3,
+    "track_length_mm": 1263.88,
+    "kicad_drc_violations": 87,
+    "kicad_drc_breakdown": {
+      "total_violations": 87,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 68,
+        "pth_inside_courtyard": 1,
+        "silk_overlap": 8,
+        "text_height": 5
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 81
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

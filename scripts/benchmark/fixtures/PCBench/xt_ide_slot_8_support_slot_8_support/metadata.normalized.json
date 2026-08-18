@@ -1,0 +1,49 @@
+{
+  "board_id": "xt_ide_slot_8_support_slot_8_support",
+  "display_name": "xt_ide_slot_8_support_slot_8_support",
+  "pcbench_directory": "PCBs/xt_ide_slot_8_support_slot_8_support",
+  "source": "https://github.com/glitchwrks/xt_ide_slot_8_support",
+  "author": "glitchwrks",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:44.365961+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 15.49,
+      "height": 35.56
+    },
+    "area_cm2": 5.51,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 75,
+    "vias": 0,
+    "track_length_mm": 113.21,
+    "kicad_drc_violations": 56,
+    "kicad_drc_breakdown": {
+      "total_violations": 56,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 30,
+        "copper_edge_clearance": 10,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 11,
+        "silk_edge_clearance": 4
+      },
+      "by_severity": {
+        "error": 41,
+        "warning": 15
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "rfcx-sentinel-pcb_MPPT",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 273610,
+      "sha256": "b749d098c7786ae9a3f4cd2e3584d4de337d0b364ae90be21db0e4cfd291685e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 199481,
+      "sha256": "011215f7ad704848f7dc45b5aa5426bc2eaa62515d303c973c059700c7b7a23d"
+    },
+    "metadata_json": {
+      "bytes": 649,
+      "sha256": "8d6536558bae8c7a9eb971c40e712443f0fc4ce6494006da753b1a429218ea2e"
+    },
+    "final_json": {
+      "bytes": 131403,
+      "sha256": "bf691e592bf808198c7bd26adc62a5978f197b575c2ca2c0cb34d0b5cad138f0"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:40:14.200619+00:00"
+  }
+}

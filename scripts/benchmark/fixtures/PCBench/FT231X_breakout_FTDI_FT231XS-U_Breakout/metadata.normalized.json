@@ -1,0 +1,54 @@
+{
+  "board_id": "FT231X_breakout_FTDI_FT231XS-U_Breakout",
+  "display_name": "FT231X_breakout_FTDI_FT231XS-U_Breakout",
+  "pcbench_directory": "PCBs/FT231X_breakout_FTDI_FT231XS-U_Breakout",
+  "source": "https://github.com/DeuxVis/FT231X_breakout",
+  "author": "DeuxVis",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:38.445892+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 37.08,
+      "height": 21.84
+    },
+    "area_cm2": 8.1,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 242,
+    "vias": 24,
+    "track_length_mm": 407.71,
+    "kicad_drc_violations": 206,
+    "kicad_drc_breakdown": {
+      "total_violations": 206,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 118,
+        "copper_edge_clearance": 5,
+        "lib_footprint_issues": 13,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 11,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 22,
+        "text_height": 27,
+        "text_thickness": 4,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 145,
+        "warning": 61
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

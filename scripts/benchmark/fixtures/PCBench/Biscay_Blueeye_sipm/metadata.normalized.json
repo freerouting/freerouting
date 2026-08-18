@@ -1,0 +1,56 @@
+{
+  "board_id": "Biscay_Blueeye_sipm",
+  "display_name": "Biscay_Blueeye_sipm",
+  "pcbench_directory": "PCBs/Biscay_Blueeye_sipm",
+  "source": "https://github.com/team-impulse/Biscay_Blueeye",
+  "author": "team-impulse",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.166088+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 84,
+    "components": 145,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 994,
+    "vias": 114,
+    "track_length_mm": 1518.43,
+    "kicad_drc_violations": 1158,
+    "kicad_drc_breakdown": {
+      "total_violations": 1158,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 114,
+        "clearance": 509,
+        "copper_edge_clearance": 20,
+        "courtyards_overlap": 1,
+        "hole_clearance": 4,
+        "hole_to_hole": 3,
+        "lib_footprint_issues": 145,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 199,
+        "silk_overlap": 140,
+        "starved_thermal": 6,
+        "track_dangling": 14
+      },
+      "by_severity": {
+        "error": 654,
+        "warning": 504
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

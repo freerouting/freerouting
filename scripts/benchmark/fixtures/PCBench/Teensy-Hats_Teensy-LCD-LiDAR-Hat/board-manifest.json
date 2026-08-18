@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Teensy-Hats_Teensy-LCD-LiDAR-Hat",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 116074,
+      "sha256": "1af3a601275680de7dc1890d0e1de9e15f95fa79c45a1dc5f6a2ac5f2af3809f"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 61910,
+      "sha256": "889925edcf960bf7a704ad1e652fbfc036a7890eb2d153d0f3a3ed2eba9404fb"
+    },
+    "metadata_json": {
+      "bytes": 692,
+      "sha256": "bc0aeb8e29402e8a899ef26820221c2bca83e82d723be785c181122bdb6fc0af"
+    },
+    "final_json": {
+      "bytes": 54519,
+      "sha256": "3f4c69223648e97f28e85f622fa332e1c7100c81e44195cdcb347e8267a4a266"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:50:45.380612+00:00"
+  }
+}

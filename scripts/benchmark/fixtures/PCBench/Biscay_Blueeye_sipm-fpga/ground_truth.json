@@ -1,0 +1,28 @@
+{
+  "board": "Biscay_Blueeye_sipm-fpga",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Biscay_Blueeye_sipm-fpga\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 37,
+  "segment_count": 658,
+  "approximate_track_length_mm": 1496.41,
+  "kicad_drc_violations": 313,
+  "generated_at": "2026-08-18T18:33:30.621910+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 313,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 173,
+      "copper_edge_clearance": 12,
+      "lib_footprint_issues": 24,
+      "silk_over_copper": 58,
+      "silk_overlap": 11,
+      "starved_thermal": 8,
+      "track_dangling": 27
+    },
+    "by_severity": {
+      "error": 193,
+      "warning": 120
+    }
+  }
+}

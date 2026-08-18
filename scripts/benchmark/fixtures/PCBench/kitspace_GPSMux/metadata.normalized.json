@@ -1,0 +1,52 @@
+{
+  "board_id": "kitspace_GPSMux",
+  "display_name": "kitspace_GPSMux",
+  "pcbench_directory": "PCBs/kitspace_GPSMux",
+  "source": "https://github.com/weirdgyn/GPSMux",
+  "author": "",
+  "license": "[{'name': 'Apache', 'link': 'https://raw.githubusercontent.com/weirdgyn/GPSMux/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:23:15.698609+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 20.0,
+      "height": 26.0
+    },
+    "area_cm2": 5.2,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 87,
+    "vias": 8,
+    "track_length_mm": 115.94,
+    "kicad_drc_violations": 73,
+    "kicad_drc_breakdown": {
+      "total_violations": 73,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 6,
+        "lib_footprint_issues": 20,
+        "silk_edge_clearance": 16,
+        "silk_over_copper": 9,
+        "solder_mask_bridge": 14,
+        "starved_thermal": 2,
+        "text_height": 5,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 22,
+        "warning": 51
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

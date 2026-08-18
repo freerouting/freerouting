@@ -1,0 +1,171 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\WeatherSpot_vreg_pressure\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  149999 -111494  133896 -111494  133896 -97384.4  149999 -97384.4
+            149999 -111494)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component Capacitors_SMD:C_0402
+      (place C3 142900.4 -106870.5 front 90 (PN 0.1uF))
+      (place C4 146964.4 -108140.5 front 90 (PN 10uF))
+      (place C5 145186.4 -108140.5 front 90 (PN 0.1uF))
+    )
+    (component custom:I2C_CONN
+      (place conn1 142011.4 -100393.5 front 0 (PN I2C_CONN))
+    )
+    (component custom:MPL3115A2
+      (place U1 137820.4 -108648.5 front 180 (PN MPL3115A2))
+    )
+    (component custom:VIA_HOME_ETCH
+      (place VIA_HOME_ETCH 146446.4 -104444.5 front 0 (PN VAL**))
+    )
+  )
+  (library
+    (image Capacitors_SMD:C_0402
+      (outline (polygon signal 0  -1145 -595  -1145 595  1145 595  1145 -595))
+      (outline (path signal 150  250 475  -250 475))
+      (outline (path signal 150  -250 -475  250 -475))
+      (pin Rect[T]Pad_600.000000x500.000000_um 1 -550 0)
+      (pin Rect[T]Pad_600.000000x500.000000_um 2 550 0)
+    )
+    (image custom:I2C_CONN
+      (outline (path signal 150  1206.5 952.5  1206.5 -952.5))
+      (outline (path signal 150  3556 1016  3556 -1016))
+      (outline (path signal 150  3556 -1016  -6096 -1016))
+      (outline (path signal 150  -6096 -1016  -6096 1016))
+      (outline (path signal 150  -6096 1016  3556 1016))
+      (pin Round[A]Pad_1600.000000_um 1 -5080 0)
+      (pin Round[A]Pad_1600.000000_um 2 -2540 0)
+      (pin Round[A]Pad_1600.000000_um 3 0 0)
+      (pin Rect[A]Pad_1600.000000x1600.000000_um 4 2540 0)
+    )
+    (image custom:MPL3115A2
+      (outline (path signal 150  -1016 -635  -2921 -635))
+      (outline (path signal 150  -1016 609.6  -1016 -609.6))
+      (outline (path signal 150  -2946.4 609.6  -2946.4 -4470.4))
+      (outline (path signal 150  -2946.4 -4470.4  914.4 -4470.4))
+      (outline (path signal 150  914.4 -4470.4  914.4 660.4))
+      (outline (path signal 150  914.4 660.4  -2946.4 660.4))
+      (pin Rect[T]Pad_1000.000000x550.000000_um 8 0 0)
+      (pin Rect[T]Pad_1000.000000x550.000000_um 7 0 -1250)
+      (pin Rect[T]Pad_1000.000000x550.000000_um 6 0 -2500)
+      (pin Rect[T]Pad_1000.000000x550.000000_um 5 0 -3750)
+      (pin Rect[T]Pad_1000.000000x550.000000_um 4 -2000 -3750)
+      (pin Rect[T]Pad_1000.000000x550.000000_um 3 -2000 -2500)
+      (pin Rect[T]Pad_1000.000000x550.000000_um 2 -2000 -1250)
+      (pin Rect[T]Pad_1000.000000x550.000000_um 1 -2000 0)
+    )
+    (image custom:VIA_HOME_ETCH
+      (pin Round[A]Pad_1600.000000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1600.000000_um
+      (shape (circle F.Cu 1600))
+      (shape (circle B.Cu 1600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x500.000000_um
+      (shape (rect F.Cu -300 -250 300 250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x550.000000_um
+      (shape (rect F.Cu -500 -275 500 275))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1600.000000x1600.000000_um
+      (shape (rect F.Cu -800 -800 800 800))
+      (shape (rect B.Cu -800 -800 800 800))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net 3V3
+      (pins C4-1 C5-1 conn1-3 U1-4 U1-1)
+    )
+    (net GND
+      (pins C3-2 C4-2 C5-2 conn1-4 U1-3 VIA_HOME_ETCH-1)
+    )
+    (net "Net-(C3-Pad1)"
+      (pins C3-1 U1-2)
+    )
+    (net "Net-(U1-Pad7)"
+      (pins conn1-1 U1-7)
+    )
+    (net "Net-(U1-Pad8)"
+      (pins conn1-2 U1-8)
+    )
+    (net "Net-(U1-Pad6)"
+      (pins U1-6)
+    )
+    (net "Net-(U1-Pad5)"
+      (pins U1-5)
+    )
+    (class kicad_default 3V3 GND "Net-(C3-Pad1)" "Net-(U1-Pad5)" "Net-(U1-Pad6)"
+      "Net-(U1-Pad7)" "Net-(U1-Pad8)"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 609.6  142011 -100394  142011 -99148.9)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  148742 -108140  148742 -99758.5)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  148192 -108690  148742 -108140)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  148192 -108690  146964 -108690)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  148742 -99352.1  148742 -99758.5)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  147777 -98386.9  148742 -99352.1)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  142773 -98386.9  147777 -98386.9)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  142011 -99148.9  142773 -98386.9)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  145186 -108690  146964 -108690)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  139820 -108648  145144 -108648  145186 -108690)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  139820 -104898  139820 -102584  142011 -100394)(net 3V3)(type route))
+    (wire (path F.Cu 609.6  145186 -104432  145186 -101028)(net GND)(type route))
+    (wire (path F.Cu 609.6  145186 -107590  145186 -104432)(net GND)(type route))
+    (wire (path F.Cu 609.6  145186 -101028  144551 -100394)(net GND)(type route))
+    (wire (path F.Cu 609.6  146964 -107590  145186 -107590)(net GND)(type route))
+    (wire (path F.Cu 609.6  142900 -106320  142900 -102044  144551 -100394)(net GND)(type route))
+    (wire (path F.Cu 609.6  139820 -106148  142728 -106148  142900 -106320)(net GND)(type route))
+    (wire (path F.Cu 609.6  146434 -104432  146446 -104444)(net GND)(type route))
+    (wire (path F.Cu 609.6  145186 -104432  146434 -104432)(net GND)(type route))
+    (wire (path F.Cu 609.6  139820 -107398  142878 -107398  142900 -107420)(net "Net-(C3-Pad1)")(type route))
+    (wire (path F.Cu 406.4  135788 -106273  135788 -101536  136931 -100394)(net "Net-(U1-Pad7)")(type route))
+    (wire (path F.Cu 406.4  137820 -107398  136914 -107398  135788 -106273)(net "Net-(U1-Pad7)")(type route))
+    (wire (path F.Cu 406.4  139471 -100394  138074 -98996.5  136296 -98996.5  134772 -100520
+            134772 -106870  136550 -108648  137820 -108648)(net "Net-(U1-Pad8)")(type route))
+  )
+)

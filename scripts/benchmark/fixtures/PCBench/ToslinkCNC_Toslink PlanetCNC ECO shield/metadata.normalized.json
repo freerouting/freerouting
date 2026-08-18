@@ -1,0 +1,51 @@
+{
+  "board_id": "ToslinkCNC_Toslink PlanetCNC ECO shield",
+  "display_name": "ToslinkCNC_Toslink PlanetCNC ECO shield",
+  "pcbench_directory": "PCBs/ToslinkCNC_Toslink PlanetCNC ECO shield",
+  "source": "https://github.com/IRNAS/ToslinkCNC",
+  "author": "IRNAS",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:23.305713+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 59.05,
+      "height": 60.0
+    },
+    "area_cm2": 35.43,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 227,
+    "vias": 33,
+    "track_length_mm": 1262.68,
+    "kicad_drc_violations": 198,
+    "kicad_drc_breakdown": {
+      "total_violations": 198,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 8,
+        "clearance": 150,
+        "copper_edge_clearance": 10,
+        "lib_footprint_issues": 5,
+        "silk_edge_clearance": 21,
+        "silk_overlap": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 168,
+        "warning": 30
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

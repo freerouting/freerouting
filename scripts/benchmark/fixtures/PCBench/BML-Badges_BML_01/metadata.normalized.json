@@ -1,0 +1,49 @@
+{
+  "board_id": "BML-Badges_BML_01",
+  "display_name": "BML-Badges_BML_01",
+  "pcbench_directory": "PCBs/BML-Badges_BML_01",
+  "source": "https://github.com/CalmDownKarm/BML-Badges",
+  "author": "CalmDownKarm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.710154+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 43.18,
+      "height": 45.72
+    },
+    "area_cm2": 19.74,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 80,
+    "vias": 0,
+    "track_length_mm": 428.95,
+    "kicad_drc_violations": 49,
+    "kicad_drc_breakdown": {
+      "total_violations": 49,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 2,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 2,
+        "silk_overlap": 41
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 48
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

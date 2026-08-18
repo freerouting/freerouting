@@ -1,0 +1,50 @@
+{
+  "board_id": "OpenMPPT_OpenMPPT",
+  "display_name": "OpenMPPT_OpenMPPT",
+  "pcbench_directory": "PCBs/OpenMPPT_OpenMPPT",
+  "source": "https://github.com/Ralim/OpenMPPT",
+  "author": "Ralim",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:26.021745+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 42,
+    "dimensions_mm": {
+      "width": 74.8,
+      "height": 47.0
+    },
+    "area_cm2": 35.16,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 460,
+    "vias": 136,
+    "track_length_mm": 1073.31,
+    "kicad_drc_violations": 280,
+    "kicad_drc_breakdown": {
+      "total_violations": 280,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 41,
+        "lib_footprint_issues": 42,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 30,
+        "solder_mask_bridge": 33,
+        "via_diameter": 130
+      },
+      "by_severity": {
+        "error": 204,
+        "warning": 76
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

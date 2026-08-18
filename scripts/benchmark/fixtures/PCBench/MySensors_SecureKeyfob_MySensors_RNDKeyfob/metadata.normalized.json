@@ -1,0 +1,58 @@
+{
+  "board_id": "MySensors_SecureKeyfob_MySensors_RNDKeyfob",
+  "display_name": "MySensors_SecureKeyfob_MySensors_RNDKeyfob",
+  "pcbench_directory": "PCBs/MySensors_SecureKeyfob_MySensors_RNDKeyfob",
+  "source": "https://github.com/kvoit/MySensors_SecureKeyfob",
+  "author": "kvoit",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:46.733989+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 27.0,
+      "height": 42.9
+    },
+    "area_cm2": 11.58,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 436,
+    "vias": 44,
+    "track_length_mm": 672.7,
+    "kicad_drc_violations": 498,
+    "kicad_drc_breakdown": {
+      "total_violations": 498,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 121,
+        "copper_edge_clearance": 19,
+        "lib_footprint_issues": 26,
+        "nonmirrored_text_on_back_layer": 2,
+        "shorting_items": 44,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 61,
+        "silk_overlap": 11,
+        "solder_mask_bridge": 201,
+        "starved_thermal": 2,
+        "text_height": 2,
+        "text_thickness": 2,
+        "track_dangling": 1,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 388,
+        "warning": 110
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

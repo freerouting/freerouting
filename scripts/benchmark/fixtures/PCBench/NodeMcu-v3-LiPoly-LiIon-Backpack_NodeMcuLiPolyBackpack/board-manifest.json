@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "NodeMcu-v3-LiPoly-LiIon-Backpack_NodeMcuLiPolyBackpack",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1407940,
+      "sha256": "bd47e25abec85047089dcbdebdf435423e2d71fdf642c37ddae186ec8706d00d"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 1412307,
+      "sha256": "782464ebc58c838711a1b1ff8cd0a61997b98128c560bc058c73eb522effbb2c"
+    },
+    "metadata_json": {
+      "bytes": 613,
+      "sha256": "2ddffa58531617fe578711ab7d4f4e005424180f5e32c4f3811fa1c5dd9eeb75"
+    },
+    "final_json": {
+      "bytes": 28742,
+      "sha256": "b8ac85edd762f93d03ad0afeb725199b2a87abe7f047470297b0fc67a317d8b8"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:28:10.715679+00:00"
+  }
+}

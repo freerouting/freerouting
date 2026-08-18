@@ -1,0 +1,50 @@
+{
+  "board_id": "ESP_WiFiSwitch_WifiSwitch",
+  "display_name": "ESP_WiFiSwitch_WifiSwitch",
+  "pcbench_directory": "PCBs/ESP_WiFiSwitch_WifiSwitch",
+  "source": "https://github.com/biohazardxxx/ESP_WiFiSwitch",
+  "author": "biohazardxxx",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:21.201689+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 36.58,
+      "height": 41.66
+    },
+    "area_cm2": 15.24,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 90,
+    "vias": 12,
+    "track_length_mm": 250.91,
+    "kicad_drc_violations": 80,
+    "kicad_drc_breakdown": {
+      "total_violations": 80,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 38,
+        "invalid_outline": 4,
+        "lib_footprint_issues": 9,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 16,
+        "silk_overlap": 3
+      },
+      "by_severity": {
+        "error": 42,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

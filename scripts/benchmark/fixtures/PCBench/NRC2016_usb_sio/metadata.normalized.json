@@ -1,0 +1,51 @@
+{
+  "board_id": "NRC2016_usb_sio",
+  "display_name": "NRC2016_usb_sio",
+  "pcbench_directory": "PCBs/NRC2016_usb_sio",
+  "source": "https://github.com/alangarf/NRC2016",
+  "author": "alangarf",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:42.389938+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 21,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 104.14,
+      "height": 33.02
+    },
+    "area_cm2": 34.39,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 297,
+    "vias": 24,
+    "track_length_mm": 1637.93,
+    "kicad_drc_violations": 267,
+    "kicad_drc_breakdown": {
+      "total_violations": 267,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 173,
+        "courtyards_overlap": 7,
+        "lib_footprint_issues": 25,
+        "silk_edge_clearance": 45,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 4
+      },
+      "by_severity": {
+        "error": 185,
+        "warning": 82
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

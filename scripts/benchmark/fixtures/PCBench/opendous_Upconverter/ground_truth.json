@@ -1,0 +1,28 @@
+{
+  "board": "opendous_Upconverter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\opendous_Upconverter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 1184,
+  "approximate_track_length_mm": 2206.06,
+  "kicad_drc_violations": 576,
+  "generated_at": "2026-08-18T19:30:08.052466+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 576,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 284,
+      "silk_edge_clearance": 9,
+      "silk_over_copper": 128,
+      "silk_overlap": 29,
+      "solder_mask_bridge": 20,
+      "text_height": 99,
+      "track_dangling": 7
+    },
+    "by_severity": {
+      "error": 304,
+      "warning": 272
+    }
+  }
+}

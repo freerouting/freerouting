@@ -1,0 +1,51 @@
+{
+  "board_id": "Inkjet_InkjetDriver",
+  "display_name": "Inkjet_InkjetDriver",
+  "pcbench_directory": "PCBs/Inkjet_InkjetDriver",
+  "source": "https://github.com/danielprint/Inkjet",
+  "author": "danielprint",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.033993+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 76,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 36.83,
+      "height": 88.9
+    },
+    "area_cm2": 32.74,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 317,
+    "vias": 49,
+    "track_length_mm": 1205.36,
+    "kicad_drc_violations": 396,
+    "kicad_drc_breakdown": {
+      "total_violations": 396,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 335,
+        "courtyards_overlap": 1,
+        "isolated_copper": 1,
+        "lib_footprint_issues": 19,
+        "silk_over_copper": 29,
+        "silk_overlap": 8,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 336,
+        "warning": 60
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

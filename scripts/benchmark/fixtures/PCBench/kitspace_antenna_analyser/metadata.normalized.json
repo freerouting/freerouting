@@ -1,0 +1,54 @@
+{
+  "board_id": "kitspace_antenna_analyser",
+  "display_name": "kitspace_antenna_analyser",
+  "pcbench_directory": "PCBs/kitspace_antenna_analyser",
+  "source": "https://github.com/jasiek/antenna-analyser",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:22:53.470475+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 51,
+    "components": 34,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 50.0
+    },
+    "area_cm2": 50.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 306,
+    "vias": 0,
+    "track_length_mm": 1303.28,
+    "kicad_drc_violations": 351,
+    "kicad_drc_breakdown": {
+      "total_violations": 351,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 241,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 34,
+        "pth_inside_courtyard": 4,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 12,
+        "silk_overlap": 46,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 2,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 252,
+        "warning": 99
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

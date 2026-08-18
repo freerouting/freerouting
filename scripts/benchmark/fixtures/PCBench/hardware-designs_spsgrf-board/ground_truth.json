@@ -1,0 +1,21 @@
+{
+  "board": "hardware-designs_spsgrf-board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\hardware-designs_spsgrf-board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 7,
+  "segment_count": 74,
+  "approximate_track_length_mm": 234.61,
+  "kicad_drc_violations": 2,
+  "generated_at": "2026-08-18T18:52:59.311978+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 2,
+    "unconnected_count": 0,
+    "by_type": {
+      "text_height": 2
+    },
+    "by_severity": {
+      "warning": 2
+    }
+  }
+}

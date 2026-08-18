@@ -1,0 +1,27 @@
+{
+  "board": "Minitel_video_output_stage",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Minitel_video_output_stage\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 47,
+  "approximate_track_length_mm": 334.36,
+  "kicad_drc_violations": 32,
+  "generated_at": "2026-08-18T19:24:14.151230+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 32,
+    "unconnected_count": 17,
+    "by_type": {
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 21,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 2,
+      "silk_overlap": 6,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 1,
+      "warning": 31
+    }
+  }
+}

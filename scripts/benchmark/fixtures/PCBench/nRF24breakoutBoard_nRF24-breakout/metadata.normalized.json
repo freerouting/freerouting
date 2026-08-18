@@ -1,0 +1,52 @@
+{
+  "board_id": "nRF24breakoutBoard_nRF24-breakout",
+  "display_name": "nRF24breakoutBoard_nRF24-breakout",
+  "pcbench_directory": "PCBs/nRF24breakoutBoard_nRF24-breakout",
+  "source": "https://github.com/pilinux/nRF24breakoutBoard",
+  "author": "pilinux",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:23:01.262160+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 3,
+    "dimensions_mm": {
+      "width": 25.02,
+      "height": 21.59
+    },
+    "area_cm2": 5.4,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 116,
+    "vias": 0,
+    "track_length_mm": 132.05,
+    "kicad_drc_violations": 219,
+    "kicad_drc_breakdown": {
+      "total_violations": 219,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 3,
+        "pth_inside_courtyard": 3,
+        "silk_over_copper": 46,
+        "silk_overlap": 123,
+        "text_height": 19,
+        "text_thickness": 16
+      },
+      "by_severity": {
+        "error": 12,
+        "warning": 207
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

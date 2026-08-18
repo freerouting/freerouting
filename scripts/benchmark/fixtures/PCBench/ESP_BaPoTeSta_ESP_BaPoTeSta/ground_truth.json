@@ -1,0 +1,30 @@
+{
+  "board": "ESP_BaPoTeSta_ESP_BaPoTeSta",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ESP_BaPoTeSta_ESP_BaPoTeSta\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 34,
+  "segment_count": 317,
+  "approximate_track_length_mm": 677.35,
+  "kicad_drc_violations": 369,
+  "generated_at": "2026-08-18T18:48:16.796465+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 369,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 117,
+      "courtyards_overlap": 14,
+      "items_not_allowed": 3,
+      "lib_footprint_issues": 50,
+      "malformed_courtyard": 6,
+      "silk_over_copper": 7,
+      "silk_overlap": 51,
+      "solder_mask_bridge": 37,
+      "text_height": 84
+    },
+    "by_severity": {
+      "error": 177,
+      "warning": 192
+    }
+  }
+}

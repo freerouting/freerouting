@@ -1,0 +1,240 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Practicas-Curso-Kicad_Ivan-Dmytrow\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  163195 -123190  158750 -123190  135890 -123190  135890 -105410
+            158750 -105410  163195 -105410  163195 -123190)
+    )
+    (via "Via[0-1]_600:400_um" "Via[0-1]_1651:812.8_um")
+    (rule
+      (width 812.8)
+      (clearance 812.8)
+      (clearance 203.2 (type smd_smd))
+    )
+  )
+  (placement
+    (component ej1:C_Rect_L7_W3.5_P5
+      (place C1 147320 -115570 front 0 (PN "100 nF"))
+    )
+    (component "ej1:LED-3MM"
+      (place D1 149860 -109220 front 180 (PN "LED ROJO"))
+    )
+    (component "ej1:Diode_DO-35_SOD27_Horizontal_RM10"
+      (place D2 147320 -120650 front 0 (PN 1N4148))
+    )
+    (component ej1:bornier3
+      (place K1 140970 -114300 front -90 (PN CONN_3))
+    )
+    (component "ej1:R3-LARGE_PADS"
+      (place R1 157480 -114300 front -90 (PN 100K))
+      (place R2 161290 -114300 front -90 (PN 200K))
+    )
+  )
+  (library
+    (image ej1:C_Rect_L7_W3.5_P5
+      (outline (polygon signal 0  6245 -1995  -1245 -1995  -1245 1995  6245 1995))
+      (outline (path signal 150  -1000 1750  6000 1750))
+      (outline (path signal 150  6000 1750  6000 -1750))
+      (outline (path signal 150  6000 -1750  -1000 -1750))
+      (outline (path signal 150  -1000 -1750  -1000 1750))
+      (pin Rect[A]Pad_1300.000000x1300.000000_um 1 0 0)
+      (pin Round[A]Pad_1300.000000_um 2 5000 0)
+    )
+    (image "ej1:LED-3MM"
+      (outline (polygon signal 0  -1195 2195  3795 2195  3795 -2295  -1195 -2295))
+      (outline (path signal 150  -199 -1314  -199 -1114))
+      (outline (path signal 150  -199 1280  -199 1100))
+      (outline (polygon signal 0  -142.696 1236.45  -182.573 1212.82  -228.723 1217.14
+            -263.521 1247.76  -273.674 1292.99  -255.304 1335.55  -70.478 1520.6
+            136.178 1680.91  361.373 1813.93  601.525 1917.53  852.809 1990.07
+            1111.23 2030.39  1372.67 2037.86  1632.97 2012.35  1887.98 1954.27
+            2133.65 1864.53  2366.07 1744.59  2581.54 1596.33  2776.62 1422.12
+            2948.22 1224.73  3093.6 1007.32  3103.35 962.002  3084.61 919.606
+            3044.53 896.324  2998.42 901.046  2963.89 931.971  2898.53 1044.65
+            2738.49 1250.23  2552.18 1432.35  2343.01 1587.68  2114.81 1713.38
+            1871.74 1807.16  1618.24 1867.31  1358.95 1892.72  1098.6 1882.94
+            841.949 1838.13  593.683 1759.13  358.338 1647.37  140.214 1504.89
+            -56.704 1334.3  -142.696 1236.45))
+      (outline (polygon signal 0  300.982 1044.99  258.912 1025.53  213.439 1034.52  181.93 1068.51
+            176.422 1114.54  199.018 1155.01  370.37 1293.41  558.903 1407.32
+            761.136 1494.61  973.335 1553.68  1191.58 1583.44  1411.85 1583.35
+            1630.07 1553.39  1842.22 1494.13  2044.38 1406.66  2232.81 1292.59
+            2404.03 1154.03  2426.6 1113.54  2421.05 1067.52  2389.51 1033.55
+            2344.03 1024.61  2301.97 1044.1  2221.2 1119.11  2039.09 1243.36
+            1840.5 1339.08  1629.86 1404.15  1411.88 1437.09  1191.42 1437.19
+            973.414 1404.44  762.719 1339.56  564.044 1244.01  381.827 1119.92
+            300.982 1044.99))
+      (outline (polygon signal 0  2985.33 -957.769  3019.17 -926.09  3065.16 -920.35  3105.75 -942.742
+            3125.42 -984.712  3116.67 -1030.23  2974.74 -1252.56  2805.59 -1454.95
+            2611.99 -1634.1  2397.11 -1787.08  2164.46 -1911.37  1917.85 -2004.95
+            1661.31 -2066.29  1399.04 -2094.38  1135.33 -2088.76  874.493 -2049.53
+            620.797 -1977.33  378.393 -1873.34  151.245 -1739.25  -56.929 -1577.27
+            -242.726 -1390.04  -260.922 -1347.41  -250.584 -1302.22  -215.661 -1271.75
+            -169.493 -1267.62  -129.714 -1291.41  -43.337 -1390.32  154.792 -1562.73
+            374.629 -1706.44  612.049 -1818.74  862.591 -1897.54  1121.55 -1941.34
+            1384.07 -1949.33  1645.22 -1921.36  1900.09 -1857.96  2143.9 -1760.3
+            2372.07 -1630.23  2580.32 -1470.2  2764.74 -1283.19  2921.86 -1072.73
+            2985.33 -957.769))
+      (outline (polygon signal 0  2282.63 -1040.31  2324.19 -1019.78  2369.88 -1027.6  2402.24 -1060.78
+            2408.93 -1106.65  2387.37 -1147.69  2222.8 -1287.31  2040.48 -1402.82
+            1843.94 -1491.98  1636.95 -1553.09  1423.5 -1584.97  1207.68 -1586.99
+            993.667 -1559.14  785.564 -1501.93  587.38 -1416.48  402.928 -1304.42
+            235.759 -1167.91  213.437 -1127.29  219.255 -1081.31  250.993 -1047.52
+            296.526 -1038.85  338.463 -1058.59  416.833 -1132.25  594.193 -1253.97
+            788.006 -1347.3  993.76 -1410.05  1206.66 -1440.77  1421.77 -1438.75
+            1634.06 -1404.03  1838.59 -1337.42  2030.62 -1240.47  2205.66 -1115.44
+            2282.63 -1040.31))
+      (pin Rect[A]Pad_2000.000000x2000.000000_um (rotate 90) 1 0 0)
+      (pin Round[A]Pad_2000.000000_um 2 2540 0)
+    )
+    (image "ej1:Diode_DO-35_SOD27_Horizontal_RM10"
+      (outline (path signal 150  7366.52 2.54  8763.52 2.54))
+      (outline (path signal 150  2921.52 2.54  1397.52 2.54))
+      (outline (path signal 150  3302.52 764.54  3302.52 -759.46))
+      (outline (path signal 150  3048.52 764.54  3048.52 -759.46))
+      (outline (path signal 150  2794.52 2.54  2794.52 -759.46))
+      (outline (path signal 150  2794.52 -759.46  7366.52 -759.46))
+      (outline (path signal 150  7366.52 -759.46  7366.52 764.54))
+      (outline (path signal 150  7366.52 764.54  2794.52 764.54))
+      (outline (path signal 150  2794.52 764.54  2794.52 2.54))
+      (pin Round[A]Pad_1699.260000_um (rotate 180) 2 10160.5 2.54)
+      (pin Rect[A]Pad_1699.260000x1699.260000_um (rotate 180) 1 0.52 2.54)
+    )
+    (image ej1:bornier3
+      (outline (path signal 150  -7620 -3810  -7620 3810))
+      (outline (path signal 150  7620 -3810  7620 3810))
+      (outline (path signal 150  -7620 -2540  7620 -2540))
+      (outline (path signal 150  -7620 3810  7620 3810))
+      (outline (path signal 150  -7620 -3810  7620 -3810))
+      (pin Rect[A]Pad_2540.000000x2540.000000_um 1 -5080 0)
+      (pin Round[A]Pad_2540.000000_um 2 0 0)
+      (pin Round[A]Pad_2540.000000_um 3 5080 0)
+    )
+    (image "ej1:R3-LARGE_PADS"
+      (outline (path signal 150  -3810 0  -3302 0))
+      (outline (path signal 150  3810 0  3302 0))
+      (outline (path signal 150  3302 0  3302 1016))
+      (outline (path signal 150  3302 1016  -3302 1016))
+      (outline (path signal 150  -3302 1016  -3302 -1016))
+      (outline (path signal 150  -3302 -1016  3302 -1016))
+      (outline (path signal 150  3302 -1016  3302 0))
+      (outline (path signal 150  -3302 508  -2794 1016))
+      (pin Round[A]Pad_1651.000000_um 1 -3810 0)
+      (pin Round[A]Pad_1651.000000_um 2 3810 0)
+    )
+    (padstack Round[A]Pad_1300.000000_um
+      (shape (circle F.Cu 1300))
+      (shape (circle B.Cu 1300))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1651.000000_um
+      (shape (circle F.Cu 1651))
+      (shape (circle B.Cu 1651))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1699.260000_um
+      (shape (circle F.Cu 1699.26))
+      (shape (circle B.Cu 1699.26))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2000.000000_um
+      (shape (circle F.Cu 2000))
+      (shape (circle B.Cu 2000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2540.000000_um
+      (shape (circle F.Cu 2540))
+      (shape (circle B.Cu 2540))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2000.000000x2000.000000_um
+      (shape (rect F.Cu -1000 -1000 1000 1000))
+      (shape (rect B.Cu -1000 -1000 1000 1000))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2540.000000x2540.000000_um
+      (shape (rect F.Cu -1270 -1270 1270 1270))
+      (shape (rect B.Cu -1270 -1270 1270 1270))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1300.000000x1300.000000_um
+      (shape (rect F.Cu -650 -650 650 650))
+      (shape (rect B.Cu -650 -650 650 650))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1699.260000x1699.260000_um
+      (shape (rect F.Cu -849.63 -849.63 849.63 849.63))
+      (shape (rect B.Cu -849.63 -849.63 849.63 849.63))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_1651:812.8_um"
+      (shape (circle F.Cu 1651))
+      (shape (circle B.Cu 1651))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(C1-Pad1)"
+      (pins C1-1 D1-2 K1-1)
+    )
+    (net "Net-(C1-Pad2)"
+      (pins C1-2 D1-1 R1-1 R2-1)
+    )
+    (net "Net-(D2-Pad2)"
+      (pins D2-2 R1-2 R2-2)
+    )
+    (net "Net-(D2-Pad1)"
+      (pins D2-1 K1-3)
+    )
+    (net "Net-(K1-Pad2)"
+      (pins K1-2)
+    )
+    (class kicad_default "Net-(C1-Pad1)" "Net-(C1-Pad2)" "Net-(D2-Pad1)" "Net-(D2-Pad2)"
+      "Net-(K1-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 812.8)
+        (clearance 812.8)
+      )
+    )
+  )
+  (wiring
+    (wire (path B.Cu 812.8  140970 -109220  147320 -109220  147320 -115570)(net "Net-(C1-Pad1)")(type route))
+    (wire (path B.Cu 812.8  161290 -110490  157480 -110490)(net "Net-(C1-Pad2)")(type route))
+    (wire (path B.Cu 812.8  149860 -109220  153035 -109220)(net "Net-(C1-Pad2)")(type route))
+    (wire (path F.Cu 812.8  153035 -109220  155575 -109220)(net "Net-(C1-Pad2)")(type route))
+    (wire (path B.Cu 812.8  155575 -109220  156845 -110490  157480 -110490)(net "Net-(C1-Pad2)")(type route))
+    (wire (path B.Cu 812.8  152320 -115570  152320 -115490  149860 -113030  149860 -109220)(net "Net-(C1-Pad2)")(type route))
+    (wire (path B.Cu 812.8  161290 -118110  157480 -118110)(net "Net-(D2-Pad2)")(type route))
+    (wire (path B.Cu 812.8  157481 -120647  157481 -118111  157480 -118110)(net "Net-(D2-Pad2)")(type route))
+    (wire (path B.Cu 812.8  140970 -119380  142240 -120650  147318 -120650  147321 -120647)(net "Net-(D2-Pad1)")(type route))
+    (via "Via[0-1]_1651:812.8_um"  153035 -109220 (net "Net-(C1-Pad2)")(type route))
+    (via "Via[0-1]_1651:812.8_um"  155575 -109220 (net "Net-(C1-Pad2)")(type route))
+  )
+)

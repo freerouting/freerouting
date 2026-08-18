@@ -1,0 +1,52 @@
+{
+  "board_id": "ReST32_ReST SD-Module",
+  "display_name": "ReST32_ReST SD-Module",
+  "pcbench_directory": "PCBs/ReST32_ReST SD-Module",
+  "source": "https://github.com/berryelectronics/ReST32",
+  "author": "berryelectronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:35.817861+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 33.0,
+      "height": 40.0
+    },
+    "area_cm2": 13.2,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 86,
+    "vias": 11,
+    "track_length_mm": 305.31,
+    "kicad_drc_violations": 125,
+    "kicad_drc_breakdown": {
+      "total_violations": 125,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 84,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 15,
+        "npth_inside_courtyard": 4,
+        "pth_inside_courtyard": 12,
+        "silk_over_copper": 1,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 2
+      },
+      "by_severity": {
+        "error": 103,
+        "warning": 22
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

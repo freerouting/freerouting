@@ -1,0 +1,53 @@
+{
+  "board_id": "kelvindmmwifi_kelvindmmwifi",
+  "display_name": "kelvindmmwifi_kelvindmmwifi",
+  "pcbench_directory": "PCBs/kelvindmmwifi_kelvindmmwifi",
+  "source": "https://github.com/cnlohr/kelvindmmwifi",
+  "author": "cnlohr",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:26.313749+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 46.99,
+      "height": 20.32
+    },
+    "area_cm2": 9.55,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 133,
+    "vias": 0,
+    "track_length_mm": 310.65,
+    "kicad_drc_violations": 149,
+    "kicad_drc_breakdown": {
+      "total_violations": 149,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 78,
+        "copper_edge_clearance": 10,
+        "courtyards_overlap": 2,
+        "isolated_copper": 1,
+        "lib_footprint_issues": 1,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 42,
+        "silk_overlap": 10,
+        "solder_mask_bridge": 3
+      },
+      "by_severity": {
+        "error": 93,
+        "warning": 56
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

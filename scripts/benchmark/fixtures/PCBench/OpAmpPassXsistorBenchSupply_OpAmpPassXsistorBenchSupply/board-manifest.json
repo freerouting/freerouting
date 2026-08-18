@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "OpAmpPassXsistorBenchSupply_OpAmpPassXsistorBenchSupply",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 356896,
+      "sha256": "854619ab62abf2072156c4b706d1a2728c1caf983e375fa6fbdb8dff836b08a7"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 197446,
+      "sha256": "e051bc3055fd5b46f50d490fce6df12225acb9ae2ce1a508a221bc7fd0171df2"
+    },
+    "metadata_json": {
+      "bytes": 752,
+      "sha256": "a125d4e628ccf8d2f2a75bf9b233994f52bf7254c9d59da932bf38ce1634eb6b"
+    },
+    "final_json": {
+      "bytes": 130873,
+      "sha256": "7174ff8956d4ebc8f741510b7fe3c0ab8aa6a5aa4afe1a3d54eee09928a9e6bc"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:29:34.760611+00:00"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "board": "stm32_mech_keyboard_TCKB",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\stm32_mech_keyboard_TCKB\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 220,
+  "segment_count": 2435,
+  "approximate_track_length_mm": 11185.34,
+  "kicad_drc_violations": 907,
+  "generated_at": "2026-08-18T19:48:54.654492+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 907,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 509,
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 10,
+      "hole_clearance": 7,
+      "hole_to_hole": 8,
+      "lib_footprint_issues": 199,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 9,
+      "silk_overlap": 46,
+      "solder_mask_bridge": 64,
+      "starved_thermal": 3,
+      "text_height": 18,
+      "track_dangling": 29,
+      "via_dangling": 2
+    },
+    "by_severity": {
+      "error": 595,
+      "warning": 312
+    }
+  }
+}

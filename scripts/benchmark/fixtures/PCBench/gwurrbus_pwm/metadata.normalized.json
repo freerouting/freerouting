@@ -1,0 +1,51 @@
+{
+  "board_id": "gwurrbus_pwm",
+  "display_name": "gwurrbus_pwm",
+  "pcbench_directory": "PCBs/gwurrbus_pwm",
+  "source": "https://github.com/gwurr3/gwurrbus",
+  "author": "gwurr3",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.274184+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 146.98,
+      "height": 87.12
+    },
+    "area_cm2": 128.05,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 129,
+    "vias": 0,
+    "track_length_mm": 821.76,
+    "kicad_drc_violations": 118,
+    "kicad_drc_breakdown": {
+      "total_violations": 118,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 63,
+        "copper_edge_clearance": 1,
+        "invalid_outline": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 37,
+        "silk_edge_clearance": 10,
+        "silk_overlap": 5
+      },
+      "by_severity": {
+        "error": 66,
+        "warning": 52
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

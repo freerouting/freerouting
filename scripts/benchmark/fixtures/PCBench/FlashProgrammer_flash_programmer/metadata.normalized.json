@@ -1,0 +1,52 @@
+{
+  "board_id": "FlashProgrammer_flash_programmer",
+  "display_name": "FlashProgrammer_flash_programmer",
+  "pcbench_directory": "PCBs/FlashProgrammer_flash_programmer",
+  "source": "https://github.com/jdisanti/FlashProgrammer",
+  "author": "jdisanti",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:55.634094+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 50,
+    "components": 49,
+    "dimensions_mm": {
+      "width": 60.96,
+      "height": 38.1
+    },
+    "area_cm2": 23.23,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 627,
+    "vias": 89,
+    "track_length_mm": 1335.28,
+    "kicad_drc_violations": 489,
+    "kicad_drc_breakdown": {
+      "total_violations": 489,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 89,
+        "clearance": 262,
+        "courtyards_overlap": 5,
+        "lib_footprint_issues": 49,
+        "silk_overlap": 3,
+        "starved_thermal": 1,
+        "text_height": 79,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 357,
+        "warning": 132
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

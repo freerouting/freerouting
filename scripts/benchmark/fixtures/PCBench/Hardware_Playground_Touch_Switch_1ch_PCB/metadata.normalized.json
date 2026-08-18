@@ -1,0 +1,55 @@
+{
+  "board_id": "Hardware_Playground_Touch_Switch_1ch_PCB",
+  "display_name": "Hardware_Playground_Touch_Switch_1ch_PCB",
+  "pcbench_directory": "PCBs/Hardware_Playground_Touch_Switch_1ch_PCB",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 49,
+    "dimensions_mm": {
+      "width": 43.43,
+      "height": 43.18
+    },
+    "area_cm2": 18.75,
+    "zones": 246
+  },
+  "reference": {
+    "segments": 300,
+    "vias": 90,
+    "track_length_mm": 495.74,
+    "kicad_drc_violations": 136,
+    "kicad_drc_breakdown": {
+      "total_violations": 136,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 7,
+        "hole_clearance": 5,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 49,
+        "silk_over_copper": 8,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 3,
+        "text_height": 52,
+        "track_dangling": 1,
+        "via_dangling": 4
+      },
+      "by_severity": {
+        "error": 21,
+        "warning": 115
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

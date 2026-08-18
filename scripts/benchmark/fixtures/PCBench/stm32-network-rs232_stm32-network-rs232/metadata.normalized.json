@@ -1,0 +1,52 @@
+{
+  "board_id": "stm32-network-rs232_stm32-network-rs232",
+  "display_name": "stm32-network-rs232_stm32-network-rs232",
+  "pcbench_directory": "PCBs/stm32-network-rs232_stm32-network-rs232",
+  "source": "https://github.com/joeferner/stm32-network-rs232",
+  "author": "joeferner",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.685894+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 63,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 85.2,
+      "height": 47.2
+    },
+    "area_cm2": 40.21,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 587,
+    "vias": 61,
+    "track_length_mm": 1221.47,
+    "kicad_drc_violations": 569,
+    "kicad_drc_breakdown": {
+      "total_violations": 569,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 6,
+        "clearance": 217,
+        "hole_clearance": 6,
+        "lib_footprint_issues": 57,
+        "silk_over_copper": 85,
+        "silk_overlap": 64,
+        "starved_thermal": 7,
+        "text_height": 127
+      },
+      "by_severity": {
+        "error": 236,
+        "warning": 333
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

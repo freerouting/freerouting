@@ -1,0 +1,59 @@
+{
+  "board_id": "PiZeroHub_PiZeroHub",
+  "display_name": "PiZeroHub_PiZeroHub",
+  "pcbench_directory": "PCBs/PiZeroHub_PiZeroHub",
+  "source": "https://github.com/IdleHandsProject/PiZeroHub",
+  "author": "IdleHandsProject",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:22.017698+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 26.0
+    },
+    "area_cm2": 16.9,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 406,
+    "vias": 56,
+    "track_length_mm": 549.63,
+    "kicad_drc_violations": 474,
+    "kicad_drc_breakdown": {
+      "total_violations": 474,
+      "unconnected_count": 23,
+      "by_type": {
+        "annular_width": 14,
+        "clearance": 187,
+        "copper_edge_clearance": 6,
+        "courtyards_overlap": 1,
+        "hole_clearance": 20,
+        "holes_co_located": 17,
+        "lib_footprint_issues": 37,
+        "malformed_courtyard": 6,
+        "padstack": 2,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 136,
+        "silk_overlap": 24,
+        "text_height": 15,
+        "track_dangling": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 234,
+        "warning": 240
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

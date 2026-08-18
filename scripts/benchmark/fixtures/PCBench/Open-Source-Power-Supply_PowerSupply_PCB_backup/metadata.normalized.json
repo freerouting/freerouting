@@ -1,0 +1,49 @@
+{
+  "board_id": "Open-Source-Power-Supply_PowerSupply_PCB_backup",
+  "display_name": "Open-Source-Power-Supply_PowerSupply_PCB_backup",
+  "pcbench_directory": "PCBs/Open-Source-Power-Supply_PowerSupply_PCB_backup",
+  "source": "https://github.com/Ardelean-Calin/Open-Source-Power-Supply",
+  "author": "Ardelean-Calin",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:48.646012+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 55,
+    "dimensions_mm": {
+      "width": 86.99,
+      "height": 83.19
+    },
+    "area_cm2": 72.37,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 0,
+    "vias": 0,
+    "track_length_mm": 0.0,
+    "kicad_drc_violations": 136,
+    "kicad_drc_breakdown": {
+      "total_violations": 136,
+      "unconnected_count": 90,
+      "by_type": {
+        "lib_footprint_issues": 55,
+        "silk_edge_clearance": 43,
+        "silk_over_copper": 8,
+        "silk_overlap": 18,
+        "solder_mask_bridge": 12
+      },
+      "by_severity": {
+        "error": 12,
+        "warning": 124
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

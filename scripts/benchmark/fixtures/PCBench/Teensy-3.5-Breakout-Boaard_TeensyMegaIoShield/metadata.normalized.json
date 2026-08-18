@@ -1,0 +1,48 @@
+{
+  "board_id": "Teensy-3.5-Breakout-Boaard_TeensyMegaIoShield",
+  "display_name": "Teensy-3.5-Breakout-Boaard_TeensyMegaIoShield",
+  "pcbench_directory": "PCBs/Teensy-3.5-Breakout-Boaard_TeensyMegaIoShield",
+  "source": "https://github.com/mjs513/Teensy-3.5-Breakout-Boaard",
+  "author": "mjs513",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.414138+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 29,
+    "components": 47,
+    "dimensions_mm": {
+      "width": 101.6,
+      "height": 59.3
+    },
+    "area_cm2": 60.25,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 1140,
+    "vias": 26,
+    "track_length_mm": 3392.44,
+    "kicad_drc_violations": 219,
+    "kicad_drc_breakdown": {
+      "total_violations": 219,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 6,
+        "courtyards_overlap": 21,
+        "lib_footprint_issues": 47,
+        "silk_overlap": 145
+      },
+      "by_severity": {
+        "error": 27,
+        "warning": 192
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

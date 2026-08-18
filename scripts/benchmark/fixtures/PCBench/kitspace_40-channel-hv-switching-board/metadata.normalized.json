@@ -1,0 +1,54 @@
+{
+  "board_id": "kitspace_40-channel-hv-switching-board",
+  "display_name": "kitspace_40-channel-hv-switching-board",
+  "pcbench_directory": "PCBs/kitspace_40-channel-hv-switching-board",
+  "source": "https://github.com/sci-bots/dropbot-40-channel-HV-switching-board.kicad",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/sci-bots/dropbot-40-channel-HV-switching-board.kicad/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:09:49.576693+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 109,
+    "components": 204,
+    "dimensions_mm": {
+      "width": 84.0,
+      "height": 92.0
+    },
+    "area_cm2": 77.28,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 2629,
+    "vias": 474,
+    "track_length_mm": 7087.12,
+    "kicad_drc_violations": 460,
+    "kicad_drc_breakdown": {
+      "total_violations": 460,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 199,
+        "mirrored_text_on_front_layer": 1,
+        "silk_over_copper": 1,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 201,
+        "text_height": 7,
+        "track_dangling": 28,
+        "via_dangling": 9
+      },
+      "by_severity": {
+        "error": 209,
+        "warning": 251
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

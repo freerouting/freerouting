@@ -1,0 +1,49 @@
+{
+  "board_id": "kitspace_OtterPill",
+  "display_name": "kitspace_OtterPill",
+  "pcbench_directory": "PCBs/kitspace_OtterPill",
+  "source": "https://github.com/Jana-Marie/OtterPill",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/Jana-Marie/OtterPill/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:13:15.523346+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 57,
+    "components": 45,
+    "dimensions_mm": {
+      "width": 43.2,
+      "height": 17.6
+    },
+    "area_cm2": 7.6,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 519,
+    "vias": 144,
+    "track_length_mm": 651.54,
+    "kicad_drc_violations": 158,
+    "kicad_drc_breakdown": {
+      "total_violations": 158,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "lib_footprint_issues": 4,
+        "lib_footprint_mismatch": 39,
+        "silk_edge_clearance": 5,
+        "text_height": 107
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 155
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

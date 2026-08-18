@@ -1,0 +1,50 @@
+{
+  "board_id": "kitspace_hum_temp_sensor",
+  "display_name": "kitspace_hum_temp_sensor",
+  "pcbench_directory": "PCBs/kitspace_hum_temp_sensor",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:29.628051+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 48.5,
+      "height": 27.5
+    },
+    "area_cm2": 13.34,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 27,
+    "vias": 0,
+    "track_length_mm": 83.11,
+    "kicad_drc_violations": 12,
+    "kicad_drc_breakdown": {
+      "total_violations": 12,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 5,
+        "silk_overlap": 3,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 10
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

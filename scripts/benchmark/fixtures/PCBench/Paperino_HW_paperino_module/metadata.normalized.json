@@ -1,0 +1,52 @@
+{
+  "board_id": "Paperino_HW_paperino_module",
+  "display_name": "Paperino_HW_paperino_module",
+  "pcbench_directory": "PCBs/Paperino_HW_paperino_module",
+  "source": "https://github.com/JohnnyKaramello/Paperino_HW",
+  "author": "JohnnyKaramello",
+  "license": "Creative Commons Attribution 4.0 International",
+  "license_spdx": "CC-BY-4.0",
+  "retrieved_at": "2023-08-17T17:22:55.230089+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 22.0
+    },
+    "area_cm2": 5.59,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 256,
+    "vias": 33,
+    "track_length_mm": 421.65,
+    "kicad_drc_violations": 166,
+    "kicad_drc_breakdown": {
+      "total_violations": 166,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 101,
+        "copper_edge_clearance": 36,
+        "courtyards_overlap": 2,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 20,
+        "silk_over_copper": 3,
+        "silk_overlap": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 140,
+        "warning": 26
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

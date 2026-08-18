@@ -1,0 +1,53 @@
+{
+  "board_id": "radio_antenna-iridium",
+  "display_name": "radio_antenna-iridium",
+  "pcbench_directory": "PCBs/radio_antenna-iridium",
+  "source": "https://github.com/hedj/radio",
+  "author": "hedj",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:23.353714+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 21,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 60.0
+    },
+    "area_cm2": 36.0,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 265,
+    "vias": 175,
+    "track_length_mm": 520.99,
+    "kicad_drc_violations": 295,
+    "kicad_drc_breakdown": {
+      "total_violations": 295,
+      "unconnected_count": 28,
+      "by_type": {
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 5,
+        "lib_footprint_issues": 37,
+        "pth_inside_courtyard": 2,
+        "silk_over_copper": 16,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 12,
+        "text_height": 40,
+        "via_dangling": 175
+      },
+      "by_severity": {
+        "error": 21,
+        "warning": 274
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

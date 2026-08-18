@@ -1,0 +1,47 @@
+{
+  "board_id": "clock_lcdb4",
+  "display_name": "clock_lcdb4",
+  "pcbench_directory": "PCBs/clock_lcdb4",
+  "source": "https://github.com/gtaubman/clock",
+  "author": "gtaubman",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.522081+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 105.41,
+      "height": 33.02
+    },
+    "area_cm2": 34.81,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 315,
+    "vias": 1,
+    "track_length_mm": 1378.01,
+    "kicad_drc_violations": 127,
+    "kicad_drc_breakdown": {
+      "total_violations": 127,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 115,
+        "lib_footprint_issues": 11,
+        "silk_edge_clearance": 1
+      },
+      "by_severity": {
+        "error": 115,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

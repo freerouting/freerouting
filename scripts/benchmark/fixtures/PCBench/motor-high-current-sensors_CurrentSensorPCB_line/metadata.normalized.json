@@ -1,0 +1,60 @@
+{
+  "board_id": "motor-high-current-sensors_CurrentSensorPCB_line",
+  "display_name": "motor-high-current-sensors_CurrentSensorPCB_line",
+  "pcbench_directory": "PCBs/motor-high-current-sensors_CurrentSensorPCB_line",
+  "source": "https://github.com/jonblissett/motor-high-current-sensors",
+  "author": "jonblissett",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:27.621764+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 76,
+    "components": 222,
+    "dimensions_mm": {
+      "width": 182.75,
+      "height": 54.0
+    },
+    "area_cm2": 98.69,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 1552,
+    "vias": 117,
+    "track_length_mm": 3180.36,
+    "kicad_drc_violations": 1067,
+    "kicad_drc_breakdown": {
+      "total_violations": 1067,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 506,
+        "copper_edge_clearance": 23,
+        "courtyards_overlap": 57,
+        "hole_clearance": 59,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 199,
+        "mirrored_text_on_front_layer": 5,
+        "nonmirrored_text_on_back_layer": 1,
+        "npth_inside_courtyard": 1,
+        "silk_edge_clearance": 44,
+        "silk_over_copper": 56,
+        "silk_overlap": 40,
+        "solder_mask_bridge": 17,
+        "starved_thermal": 4,
+        "text_height": 46,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 669,
+        "warning": 398
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

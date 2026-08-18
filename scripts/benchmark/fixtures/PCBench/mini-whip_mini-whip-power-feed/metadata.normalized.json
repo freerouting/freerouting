@@ -1,0 +1,53 @@
+{
+  "board_id": "mini-whip_mini-whip-power-feed",
+  "display_name": "mini-whip_mini-whip-power-feed",
+  "pcbench_directory": "PCBs/mini-whip_mini-whip-power-feed",
+  "source": "https://github.com/vlad-ivanov-name/mini-whip",
+  "author": "vlad-ivanov-name",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.098088+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 62.0,
+      "height": 25.0
+    },
+    "area_cm2": 15.5,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 114,
+    "vias": 32,
+    "track_length_mm": 291.32,
+    "kicad_drc_violations": 104,
+    "kicad_drc_breakdown": {
+      "total_violations": 104,
+      "unconnected_count": 2,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 57,
+        "copper_edge_clearance": 6,
+        "hole_clearance": 12,
+        "lib_footprint_issues": 14,
+        "padstack": 2,
+        "silk_overlap": 2,
+        "starved_thermal": 1,
+        "zones_intersect": 8
+      },
+      "by_severity": {
+        "error": 86,
+        "warning": 18
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

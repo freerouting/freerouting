@@ -1,0 +1,54 @@
+{
+  "board_id": "WemosLoraTracker_wemosGPSrfm",
+  "display_name": "WemosLoraTracker_wemosGPSrfm",
+  "pcbench_directory": "PCBs/WemosLoraTracker_wemosGPSrfm",
+  "source": "https://github.com/jpmeijers/WemosLoraTracker",
+  "author": "jpmeijers",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.473998+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 26.42,
+      "height": 82.8
+    },
+    "area_cm2": 21.88,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 310,
+    "vias": 95,
+    "track_length_mm": 1057.87,
+    "kicad_drc_violations": 219,
+    "kicad_drc_breakdown": {
+      "total_violations": 219,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 77,
+        "copper_edge_clearance": 30,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 20,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 43,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 23,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 133,
+        "warning": 86
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

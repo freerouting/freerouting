@@ -1,0 +1,55 @@
+{
+  "board_id": "STM32F373_LQFP48_STM32_LQFP48",
+  "display_name": "STM32F373_LQFP48_STM32_LQFP48",
+  "pcbench_directory": "PCBs/STM32F373_LQFP48_STM32_LQFP48",
+  "source": "https://github.com/meerstern/STM32F373_LQFP48",
+  "author": "meerstern",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.326090+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 26.4
+    },
+    "area_cm2": 13.2,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 482,
+    "vias": 41,
+    "track_length_mm": 1088.2,
+    "kicad_drc_violations": 740,
+    "kicad_drc_breakdown": {
+      "total_violations": 740,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 157,
+        "copper_edge_clearance": 45,
+        "lib_footprint_issues": 20,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 95,
+        "starved_thermal": 1,
+        "text_thickness": 11,
+        "track_dangling": 3,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 298,
+        "warning": 442
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

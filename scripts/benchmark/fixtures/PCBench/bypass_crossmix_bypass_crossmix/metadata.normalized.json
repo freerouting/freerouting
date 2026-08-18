@@ -1,0 +1,55 @@
+{
+  "board_id": "bypass_crossmix_bypass_crossmix",
+  "display_name": "bypass_crossmix_bypass_crossmix",
+  "pcbench_directory": "PCBs/bypass_crossmix_bypass_crossmix",
+  "source": "https://github.com/cosmoproject/bypass_crossmix",
+  "author": "cosmoproject",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.566081+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 33,
+    "components": 61,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 50.0
+    },
+    "area_cm2": 35.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 641,
+    "vias": 86,
+    "track_length_mm": 1531.33,
+    "kicad_drc_violations": 395,
+    "kicad_drc_breakdown": {
+      "total_violations": 395,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 266,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 3,
+        "holes_co_located": 1,
+        "lib_footprint_issues": 61,
+        "silk_over_copper": 3,
+        "silk_overlap": 9,
+        "solder_mask_bridge": 36,
+        "text_height": 4,
+        "text_thickness": 4,
+        "via_dangling": 3
+      },
+      "by_severity": {
+        "error": 310,
+        "warning": 85
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "board": "WemosLoraTracker_wemosGPSrfm",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\WemosLoraTracker_wemosGPSrfm\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 95,
+  "segment_count": 310,
+  "approximate_track_length_mm": 1057.87,
+  "kicad_drc_violations": 219,
+  "generated_at": "2026-08-18T19:56:37.434206+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 219,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 1,
+      "clearance": 77,
+      "copper_edge_clearance": 30,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 20,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 43,
+      "silk_overlap": 12,
+      "solder_mask_bridge": 23,
+      "text_height": 8
+    },
+    "by_severity": {
+      "error": 133,
+      "warning": 86
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "gamelights_leds",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 41965,
+      "sha256": "b9f11b1fb11689478e5aab377ad720e2b74d388332682b609e7d3cb57a31169b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 52280,
+      "sha256": "8cb6918120bd5a0596ed10bfdfcefe54c4062aafa107b3676bc71f408d469f42"
+    },
+    "metadata_json": {
+      "bytes": 671,
+      "sha256": "8a89301b7cef47fea5974671f6316186f0f3e920ed6fef12437d45c3369a66b0"
+    },
+    "final_json": {
+      "bytes": 33978,
+      "sha256": "016361cf7e726a4ea5cc90e7a29e722fd1b0294ac54fb7139a4698da1769933f"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:51:09.966803+00:00"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "board_id": "Hardware_Playground_nrf52832_uno",
+  "display_name": "Hardware_Playground_nrf52832_uno",
+  "pcbench_directory": "PCBs/Hardware_Playground_nrf52832_uno",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 320,
+    "vias": 42,
+    "track_length_mm": 1451.73,
+    "kicad_drc_violations": 122,
+    "kicad_drc_breakdown": {
+      "total_violations": 122,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 33,
+        "silk_edge_clearance": 14,
+        "silk_over_copper": 12,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 42,
+        "text_height": 9,
+        "track_dangling": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 44,
+        "warning": 78
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

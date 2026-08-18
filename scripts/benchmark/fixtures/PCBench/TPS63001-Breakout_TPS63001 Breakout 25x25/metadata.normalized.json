@@ -1,0 +1,50 @@
+{
+  "board_id": "TPS63001-Breakout_TPS63001 Breakout 25x25",
+  "display_name": "TPS63001-Breakout_TPS63001 Breakout 25x25",
+  "pcbench_directory": "PCBs/TPS63001-Breakout_TPS63001 Breakout 25x25",
+  "source": "https://github.com/kugel2/TPS63001-Breakout",
+  "author": "kugel2",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.046087+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 25.0,
+      "height": 25.0
+    },
+    "area_cm2": 6.25,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 132,
+    "vias": 56,
+    "track_length_mm": 218.73,
+    "kicad_drc_violations": 73,
+    "kicad_drc_breakdown": {
+      "total_violations": 73,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 20,
+        "copper_edge_clearance": 19,
+        "courtyards_overlap": 10,
+        "lib_footprint_issues": 12,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 10
+      },
+      "by_severity": {
+        "error": 59,
+        "warning": 14
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

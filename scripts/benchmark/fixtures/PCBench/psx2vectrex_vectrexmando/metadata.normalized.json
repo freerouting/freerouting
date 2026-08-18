@@ -1,0 +1,55 @@
+{
+  "board_id": "psx2vectrex_vectrexmando",
+  "display_name": "psx2vectrex_vectrexmando",
+  "pcbench_directory": "PCBs/psx2vectrex_vectrexmando",
+  "source": "https://github.com/svofski/psx2vectrex",
+  "author": "svofski",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.685953+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 41,
+    "dimensions_mm": {
+      "width": 33.02,
+      "height": 57.4
+    },
+    "area_cm2": 18.95,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 438,
+    "vias": 21,
+    "track_length_mm": 815.28,
+    "kicad_drc_violations": 365,
+    "kicad_drc_breakdown": {
+      "total_violations": 365,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 38,
+        "copper_edge_clearance": 3,
+        "hole_clearance": 1,
+        "shorting_items": 2,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 197,
+        "silk_overlap": 58,
+        "solder_mask_bridge": 3,
+        "text_height": 54,
+        "text_thickness": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 47,
+        "warning": 318
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

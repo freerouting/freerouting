@@ -1,0 +1,55 @@
+{
+  "board_id": "powersupply_5v_v1_powersupply_5v_v1",
+  "display_name": "powersupply_5v_v1_powersupply_5v_v1",
+  "pcbench_directory": "PCBs/powersupply_5v_v1_powersupply_5v_v1",
+  "source": "https://github.com/jjrh/powersupply_5v_v1",
+  "author": "jjrh",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:23:01.546163+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 160.1,
+      "height": 100.0
+    },
+    "area_cm2": 160.1,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 118,
+    "vias": 1,
+    "track_length_mm": 776.9,
+    "kicad_drc_violations": 302,
+    "kicad_drc_breakdown": {
+      "total_violations": 302,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 119,
+        "copper_edge_clearance": 6,
+        "hole_clearance": 25,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 57,
+        "nonmirrored_text_on_back_layer": 4,
+        "shorting_items": 2,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 3,
+        "silk_overlap": 75,
+        "solder_mask_bridge": 8
+      },
+      "by_severity": {
+        "error": 161,
+        "warning": 141
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

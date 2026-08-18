@@ -1,0 +1,53 @@
+{
+  "board_id": "perfplusplus_Ard-perf++",
+  "display_name": "perfplusplus_Ard-perf++",
+  "pcbench_directory": "PCBs/perfplusplus_Ard-perf++",
+  "source": "https://github.com/FyberLabs/perfplusplus",
+  "author": "FyberLabs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.169888+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 421,
+    "components": 457,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 939,
+    "vias": 0,
+    "track_length_mm": 2282.12,
+    "kicad_drc_violations": 1825,
+    "kicad_drc_breakdown": {
+      "total_violations": 1825,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 500,
+        "hole_clearance": 199,
+        "lib_footprint_issues": 199,
+        "shorting_items": 199,
+        "silk_over_copper": 199,
+        "silk_overlap": 125,
+        "solder_mask_bridge": 203,
+        "text_height": 199,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 1101,
+        "warning": 724
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

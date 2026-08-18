@@ -1,0 +1,51 @@
+{
+  "board_id": "S1G-Mod_JST_Adapter",
+  "display_name": "S1G-Mod_JST_Adapter",
+  "pcbench_directory": "PCBs/S1G-Mod_JST_Adapter",
+  "source": "https://github.com/adamjvr/S1G-Mod",
+  "author": "adamjvr",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.297890+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 30.75,
+      "height": 28.0
+    },
+    "area_cm2": 8.61,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 81,
+    "vias": 37,
+    "track_length_mm": 243.85,
+    "kicad_drc_violations": 140,
+    "kicad_drc_breakdown": {
+      "total_violations": 140,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 41,
+        "copper_edge_clearance": 42,
+        "holes_co_located": 1,
+        "lib_footprint_issues": 7,
+        "silk_edge_clearance": 1,
+        "solder_mask_bridge": 42,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 125,
+        "warning": 15
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

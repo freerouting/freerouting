@@ -1,0 +1,51 @@
+{
+  "board_id": "linklayer_contact",
+  "display_name": "linklayer_contact",
+  "pcbench_directory": "PCBs/linklayer_contact",
+  "source": "https://github.com/linklayer/cantact-hw",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 46,
+    "components": 40,
+    "dimensions_mm": {
+      "width": 36.0,
+      "height": 61.1
+    },
+    "area_cm2": 22.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 335,
+    "vias": 22,
+    "track_length_mm": 783.19,
+    "kicad_drc_violations": 101,
+    "kicad_drc_breakdown": {
+      "total_violations": 101,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "lib_footprint_issues": 40,
+        "padstack": 2,
+        "silk_over_copper": 41,
+        "silk_overlap": 2,
+        "text_height": 7,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 99
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "board_id": "lea-m8f-board_lea-m8f",
+  "display_name": "lea-m8f-board_lea-m8f",
+  "pcbench_directory": "PCBs/lea-m8f-board_lea-m8f",
+  "source": "https://github.com/Opendigitalradio/lea-m8f-board",
+  "author": "Opendigitalradio",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:26.037746+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 338,
+    "vias": 76,
+    "track_length_mm": 726.39,
+    "kicad_drc_violations": 207,
+    "kicad_drc_breakdown": {
+      "total_violations": 207,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 125,
+        "copper_edge_clearance": 15,
+        "courtyards_overlap": 1,
+        "drill_out_of_range": 2,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 33,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 18,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 5,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 149,
+        "warning": 58
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "board_id": "ESP_nRF_Relay_Relay_WiFi_nRF24",
+  "display_name": "ESP_nRF_Relay_Relay_WiFi_nRF24",
+  "pcbench_directory": "PCBs/ESP_nRF_Relay_Relay_WiFi_nRF24",
+  "source": "https://github.com/dobrMAN/ESP_nRF_Relay",
+  "author": "dobrMAN",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.890156+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 50.8,
+      "height": 50.8
+    },
+    "area_cm2": 25.81,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 230,
+    "vias": 28,
+    "track_length_mm": 712.37,
+    "kicad_drc_violations": 106,
+    "kicad_drc_breakdown": {
+      "total_violations": 106,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 10,
+        "copper_edge_clearance": 9,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 15,
+        "pth_inside_courtyard": 8,
+        "silk_edge_clearance": 15,
+        "silk_over_copper": 26,
+        "silk_overlap": 21,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 28,
+        "warning": 78
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

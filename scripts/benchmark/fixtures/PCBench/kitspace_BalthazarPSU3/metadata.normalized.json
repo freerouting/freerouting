@@ -1,0 +1,49 @@
+{
+  "board_id": "kitspace_BalthazarPSU3",
+  "display_name": "kitspace_BalthazarPSU3",
+  "pcbench_directory": "PCBs/kitspace_BalthazarPSU3",
+  "source": "https://github.com/balthazar-space/balthazarPSU3",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/balthazar-space/balthazarPSU3/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:18:16.780844+00:00",
+  "cad": {
+    "source_version": "KiCad 20220914",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 52,
+    "components": 84,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 16
+  },
+  "reference": {
+    "segments": 509,
+    "vias": 83,
+    "track_length_mm": 656.24,
+    "kicad_drc_violations": 104,
+    "kicad_drc_breakdown": {
+      "total_violations": 104,
+      "unconnected_count": 0,
+      "by_type": {
+        "footprint_type_mismatch": 2,
+        "lib_footprint_issues": 5,
+        "lib_footprint_mismatch": 74,
+        "silk_over_copper": 21,
+        "silk_overlap": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "warning": 104
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "board_id": "Raspberry-Pi-Soft-Power-Controller_Zero Current Soft Power",
+  "display_name": "Raspberry-Pi-Soft-Power-Controller_Zero Current Soft Power",
+  "pcbench_directory": "PCBs/Raspberry-Pi-Soft-Power-Controller_Zero Current Soft Power",
+  "source": "https://github.com/baldengineer/Raspberry-Pi-Soft-Power-Controller",
+  "author": "baldengineer",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.649718+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 64.6,
+      "height": 28.5
+    },
+    "area_cm2": 18.41,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 90,
+    "vias": 5,
+    "track_length_mm": 241.42,
+    "kicad_drc_violations": 99,
+    "kicad_drc_breakdown": {
+      "total_violations": 99,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 65,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 27,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 1,
+        "starved_thermal": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 67,
+        "warning": 32
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

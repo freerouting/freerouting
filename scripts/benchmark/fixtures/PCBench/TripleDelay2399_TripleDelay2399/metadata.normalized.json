@@ -1,0 +1,48 @@
+{
+  "board_id": "TripleDelay2399_TripleDelay2399",
+  "display_name": "TripleDelay2399_TripleDelay2399",
+  "pcbench_directory": "PCBs/TripleDelay2399_TripleDelay2399",
+  "source": "https://github.com/UEPro/TripleDelay2399",
+  "author": "UEPro",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:50.654035+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 157,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 80.0
+    },
+    "area_cm2": 68.0,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 560,
+    "vias": 42,
+    "track_length_mm": 1903.95,
+    "kicad_drc_violations": 342,
+    "kicad_drc_breakdown": {
+      "total_violations": 342,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 30,
+        "silk_over_copper": 110,
+        "silk_overlap": 199,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 30,
+        "warning": 312
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

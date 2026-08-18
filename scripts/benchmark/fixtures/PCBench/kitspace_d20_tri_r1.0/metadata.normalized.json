@@ -1,0 +1,55 @@
+{
+  "board_id": "kitspace_d20_tri_r1.0",
+  "display_name": "kitspace_d20_tri_r1.0",
+  "pcbench_directory": "PCBs/kitspace_d20_tri_r1.0",
+  "source": "https://github.com/gregdavill/d20-hardware",
+  "author": "",
+  "license": "[{'name': 'BSD', 'link': 'https://raw.githubusercontent.com/gregdavill/d20-hardware/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:15.657361+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 93,
+    "components": 152,
+    "dimensions_mm": {
+      "width": 36.07,
+      "height": 31.24
+    },
+    "area_cm2": 11.27,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 4396,
+    "vias": 262,
+    "track_length_mm": 2951.98,
+    "kicad_drc_violations": 496,
+    "kicad_drc_breakdown": {
+      "total_violations": 496,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 8,
+        "footprint_type_mismatch": 122,
+        "hole_clearance": 199,
+        "lib_footprint_issues": 129,
+        "lib_footprint_mismatch": 6,
+        "shorting_items": 4,
+        "silk_over_copper": 4,
+        "silk_overlap": 11,
+        "solder_mask_bridge": 4,
+        "track_dangling": 8,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 337,
+        "warning": 159
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

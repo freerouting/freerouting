@@ -1,0 +1,28 @@
+{
+  "board": "L6235-PCB_L6235",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\L6235-PCB_L6235\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 221,
+  "approximate_track_length_mm": 939.5,
+  "kicad_drc_violations": 176,
+  "generated_at": "2026-08-18T19:14:16.597744+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 176,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 91,
+      "courtyards_overlap": 5,
+      "invalid_outline": 3,
+      "lib_footprint_issues": 34,
+      "silk_edge_clearance": 1,
+      "silk_overlap": 37,
+      "track_dangling": 5
+    },
+    "by_severity": {
+      "error": 99,
+      "warning": 77
+    }
+  }
+}

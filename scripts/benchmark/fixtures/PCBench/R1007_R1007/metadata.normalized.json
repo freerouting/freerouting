@@ -1,0 +1,51 @@
+{
+  "board_id": "R1007_R1007",
+  "display_name": "R1007_R1007",
+  "pcbench_directory": "PCBs/R1007_R1007",
+  "source": "https://github.com/pluggee/R1007",
+  "author": "pluggee",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:00.374150+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 4,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 69.0,
+      "height": 38.6
+    },
+    "area_cm2": 26.63,
+    "zones": 18
+  },
+  "reference": {
+    "segments": 327,
+    "vias": 117,
+    "track_length_mm": 641.58,
+    "kicad_drc_violations": 219,
+    "kicad_drc_breakdown": {
+      "total_violations": 219,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 20,
+        "clearance": 112,
+        "copper_edge_clearance": 18,
+        "hole_clearance": 14,
+        "lib_footprint_issues": 36,
+        "solder_mask_bridge": 3,
+        "text_height": 16
+      },
+      "by_severity": {
+        "error": 167,
+        "warning": 52
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

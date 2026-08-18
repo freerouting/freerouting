@@ -1,0 +1,53 @@
+{
+  "board_id": "draco_draco",
+  "display_name": "draco_draco",
+  "pcbench_directory": "PCBs/draco_draco",
+  "source": "https://github.com/xdandys/draco",
+  "author": "xdandys",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:37.949886+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 0,
+    "components": 172,
+    "dimensions_mm": {
+      "width": 47.5,
+      "height": 62.0
+    },
+    "area_cm2": 29.45,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1658,
+    "vias": 189,
+    "track_length_mm": 2416.96,
+    "kicad_drc_violations": 1053,
+    "kicad_drc_breakdown": {
+      "total_violations": 1053,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 399,
+        "copper_edge_clearance": 2,
+        "silk_edge_clearance": 75,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 6,
+        "starved_thermal": 2,
+        "text_height": 170,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 409,
+        "warning": 644
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

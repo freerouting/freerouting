@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Horticulture_Light_EQ_3-Band_3 channel led driver rev0.4",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 391517,
+      "sha256": "20decbaf6b9acccdba6187d1a3449a5c1393f5bf53ef9894b0b3c1e72598df02"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 337945,
+      "sha256": "a0a118e83cceb2a1c7af5840d8ecefbd3b6785550675d8b85d10d3b5657b43f7"
+    },
+    "metadata_json": {
+      "bytes": 796,
+      "sha256": "bff1e86f86cd464671a5580c4d3b063144119f3c1eb6208b079f1272b5a11a3c"
+    },
+    "final_json": {
+      "bytes": 258202,
+      "sha256": "4f780e7d0647ea140052e8bb85d0f797d6574b47ffa4b45dc222b2a7e5fe6add"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:57:09.991804+00:00"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Hardware_Playground_Touch_Switch_1ch_PCB",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 641584,
+      "sha256": "3a0cf0f2676ee34f2b53ce6294dc70de58f8e00b800bcfc814b727188a539e20"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 140248,
+      "sha256": "56649cf41ebb12be966b4e37f72b3859c0a05c0c171a7c57bc9e00e36b351494"
+    },
+    "metadata_json": {
+      "bytes": 535,
+      "sha256": "ee51a9ad24b6cf02e2e920819d1177a80230e17fe44f8fede30ced5f909cfc70"
+    },
+    "final_json": {
+      "bytes": 121766,
+      "sha256": "9e072625c2cf7294908e0550caf32d8ddfbc5e23834079936621082880fb499b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:55:34.698514+00:00"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "board_id": "P8000_WDC_Emulator_P8000_WDC_Emulator",
+  "display_name": "P8000_WDC_Emulator_P8000_WDC_Emulator",
+  "pcbench_directory": "PCBs/P8000_WDC_Emulator_P8000_WDC_Emulator",
+  "source": "https://github.com/OlliL/P8000_WDC_Emulator",
+  "author": "OlliL",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.602093+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 73,
+    "components": 214,
+    "dimensions_mm": {
+      "width": 144.0,
+      "height": 160.4
+    },
+    "area_cm2": 230.98,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1503,
+    "vias": 27,
+    "track_length_mm": 9162.25,
+    "kicad_drc_violations": 878,
+    "kicad_drc_breakdown": {
+      "total_violations": 878,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 426,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 7,
+        "drill_out_of_range": 163,
+        "hole_clearance": 16,
+        "lib_footprint_issues": 199,
+        "pth_inside_courtyard": 7,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 4,
+        "silk_overlap": 43,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 3,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 626,
+        "warning": 252
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

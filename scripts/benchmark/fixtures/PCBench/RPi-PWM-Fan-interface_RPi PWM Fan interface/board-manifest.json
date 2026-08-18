@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "RPi-PWM-Fan-interface_RPi PWM Fan interface",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 33483,
+      "sha256": "4a399a9f04e28d7f4a2e03efdd24ea36330c89fbb317caf21782c3c154e874cb"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 18925,
+      "sha256": "2b119dbe99825e5fdbeb2d12e2939255118a58b25f2a3a7a81167af15c640362"
+    },
+    "metadata_json": {
+      "bytes": 723,
+      "sha256": "4586b483dd30477ede44c21ea43c17858a883e317b4476caca75a02e2481571f"
+    },
+    "final_json": {
+      "bytes": 10376,
+      "sha256": "f4bc347f117a053b5c78f818c1ee92247e8b58e0b921fe5ec2faa26fd2da71f5"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:42:11.133726+00:00"
+  }
+}

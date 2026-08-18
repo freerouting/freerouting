@@ -1,0 +1,29 @@
+{
+  "board": "kitspace_sympetrum-v2%20NFF1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_sympetrum-v2%20NFF1\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 9,
+  "segment_count": 380,
+  "approximate_track_length_mm": 832.64,
+  "kicad_drc_violations": 311,
+  "generated_at": "2026-08-18T19:11:52.650139+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 311,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 70,
+      "copper_edge_clearance": 39,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 47,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 14,
+      "silk_overlap": 14,
+      "solder_mask_bridge": 123
+    },
+    "by_severity": {
+      "error": 233,
+      "warning": 78
+    }
+  }
+}

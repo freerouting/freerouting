@@ -1,0 +1,312 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\MSGEQ7-Breakout-Board_MSGEQ7_Breakout_Board\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  228044 -128540  228346 -128599  228638 -128693  228917 -128823
+            229179 -128984  229419 -129176  229634 -129396  229821 -129640
+            229977 -129905  230100 -130186  230189 -130481  230241 -130784
+            230251 -130937  230251 -151384  230249 -151538  230212 -151842
+            230138 -152140  230029 -152427  229887 -152699  229712 -152952
+            229509 -153182  229279 -153385  229026 -153560  228754 -153702
+            228467 -153811  228169 -153885  227865 -153922  227711 -153924
+            189738 -153924  189584 -153922  189280 -153885  188982 -153811
+            188695 -153702  188423 -153560  188170 -153385  187940 -153182
+            187737 -152952  187562 -152699  187420 -152427  187311 -152140
+            187237 -151842  187200 -151538  187198 -151384  187198 -131064
+            187200 -130910  187237 -130606  187311 -130308  187420 -130021
+            187562 -129749  187737 -129496  187940 -129266  188170 -129063
+            188423 -128888  188695 -128746  188982 -128637  189280 -128563
+            189584 -128526  189738 -128524  227584 -128524  227738 -128519
+            228044 -128540)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component "3.5mm_Stereo_Jack_SJ1-3523NG"
+      (place J2 226568 -141224 front 180 (PN STEREO_MINI_JACK))
+    )
+    (component Logo_RH_Circle_R__F.Cu_.2in
+      (place VAL_3 192786 -150368 front 0 (PN REF))
+      (place VAL_2 192786 -150368 front 0 (PN REF))
+      (place VAL 208788 -141224 front 0 (PN REF))
+    )
+    (component Capacitors_ThroughHole:C_Disc_D3_P2.5
+      (place C3 198692 -132334 front 0 (PN 33pF))
+    )
+    (component Capacitors_ThroughHole:C_Disc_D6_P5
+      (place C1 203708 -150114 front 180 (PN 0.1uF))
+    )
+    (component Capacitors_ThroughHole:C_Disc_D6_P5::1
+      (place C2 216408 -138684 front -90 (PN 0.1uF))
+      (place C4 211328 -138684 front -90 (PN 0.1uF))
+    )
+    (component "Housings_DIP:DIP-8_W7.62mm_LongPads"
+      (place U1 198628 -145034 front 90 (PN MSGEQ7))
+    )
+    (component Project_Footprints:PTH_Resistor
+      (place R1 194818 -141224 front -90 (PN 200K))
+      (place R2 213868 -132334 front 0 (PN 22K))
+      (place R3 213868 -150114 front 0 (PN 22K))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x05
+      (place J1 189103 -146304 front 180 (PN BREAKOUT_BOARD_HEADER))
+    )
+  )
+  (library
+    (image "3.5mm_Stereo_Jack_SJ1-3523NG"
+      (outline (path signal 150  -3300 -2000  -4500 -2000))
+      (outline (path signal 150  -3300 2000  -3300 -2000))
+      (outline (path signal 150  -4500 2000  -3300 2000))
+      (outline (path signal 150  -4500 4500  -4500 2000))
+      (outline (path signal 150  -4500 -4500  -4500 -2000))
+      (outline (path signal 150  7500 6300  7500 -6300))
+      (outline (path signal 150  7500 6300  -3500 6300))
+      (outline (path signal 150  7500 -6300  -3500 -6300))
+      (outline (path signal 150  -3800 -6300  -3800 -4500))
+      (outline (path signal 150  -3500 -6300  -3800 -6300))
+      (outline (path signal 150  -3800 -4500  -4500 -4500))
+      (outline (path signal 150  -3800 4500  -3800 6300))
+      (outline (path signal 150  -3500 6300  -3800 6300))
+      (outline (path signal 150  -3800 4500  -4500 4500))
+      (pin Round[A]Pad_2900.000000_um 1 0 0)
+      (pin Round[A]Pad_2900.000000_um 2 5000 -5000)
+      (pin Round[A]Pad_2900.000000_um 3 5000 5000)
+      (pin Round[A]Pad_1250.000000_um @1 5000 0)
+      (pin Round[A]Pad_1250.000000_um @2 0 5000)
+      (pin Round[A]Pad_1250.000000_um @3 0 -5000)
+      (pin Round[A]Pad_1250.000000_um @4 -2500 -5000)
+      (pin Round[A]Pad_1250.000000_um @5 -2500 5000)
+    )
+    (image Logo_RH_Circle_R__F.Cu_.2in
+    )
+    (image Capacitors_ThroughHole:C_Disc_D3_P2.5
+      (outline (polygon signal 0  3395 -1495  -895 -1495  -895 1495  3395 1495))
+      (outline (path signal 150  2750 -1250  -250 -1250))
+      (outline (path signal 150  -250 1250  2750 1250))
+      (pin Rect[A]Pad_1300.000000x1300.000000_um 1 0 0)
+      (pin Round[A]Pad_1300.000000_um 2 2500 0)
+    )
+    (image Capacitors_ThroughHole:C_Disc_D6_P5
+      (outline (polygon signal 0  -945 2495  5945 2495  5945 -2495  -945 -2495))
+      (outline (path signal 150  5500 -2250  -500 -2250))
+      (outline (path signal 150  -500 2250  5500 2250))
+      (pin Rect[A]Pad_1400.000000x1400.000000_um 1 0 0)
+      (pin Round[A]Pad_1400.000000_um 2 5000 0)
+    )
+    (image Capacitors_ThroughHole:C_Disc_D6_P5::1
+      (outline (polygon signal 0  5945 2495  5945 -2495  -945 -2495  -945 2495))
+      (outline (path signal 150  5500 -2250  -500 -2250))
+      (outline (path signal 150  -500 2250  5500 2250))
+      (pin Rect[A]Pad_1400.000000x1400.000000_um 1 0 0)
+      (pin Round[A]Pad_1400.000000_um 2 5000 0)
+    )
+    (image "Housings_DIP:DIP-8_W7.62mm_LongPads"
+      (outline (polygon signal 0  -1395 -10095  -1395 2445  8995 2445  8995 -10095))
+      (outline (path signal 150  135 1025  -1150 1025))
+      (outline (path signal 150  135 -9915  7485 -9915))
+      (outline (path signal 150  135 2295  7485 2295))
+      (outline (path signal 150  135 -9915  135 -8645))
+      (outline (path signal 150  7485 -9915  7485 -8645))
+      (outline (path signal 150  7485 2295  7485 1025))
+      (outline (path signal 150  135 2295  135 1025))
+      (pin Oval[A]Pad_2300.000000x1600.000000_um 1 0 0)
+      (pin Oval[A]Pad_2300.000000x1600.000000_um 2 0 -2540)
+      (pin Oval[A]Pad_2300.000000x1600.000000_um 3 0 -5080)
+      (pin Oval[A]Pad_2300.000000x1600.000000_um 4 0 -7620)
+      (pin Oval[A]Pad_2300.000000x1600.000000_um 5 7620 -7620)
+      (pin Oval[A]Pad_2300.000000x1600.000000_um 6 7620 -5080)
+      (pin Oval[A]Pad_2300.000000x1600.000000_um 7 7620 -2540)
+      (pin Oval[A]Pad_2300.000000x1600.000000_um 8 7620 0)
+    )
+    (image Project_Footprints:PTH_Resistor
+      (outline (path signal 203.2  3302 -1016  3302 0))
+      (outline (path signal 203.2  -3302 -1016  3302 -1016))
+      (outline (path signal 203.2  -3302 1016  -3302 -1016))
+      (outline (path signal 203.2  3302 1016  -3302 1016))
+      (outline (path signal 203.2  3302 0  3302 1016))
+      (outline (path signal 203.2  3810 0  3302 0))
+      (outline (path signal 203.2  -3810 0  -3302 0))
+      (pin Round[A]Pad_1397.000000_um 1 -4445 0)
+      (pin Round[A]Pad_1397.000000_um 2 4445 0)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x05
+      (outline (polygon signal 0  -1745 1745  1745 1745  1745 -11945  -1745 -11945))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1270 -11430  -1270 -1270))
+      (outline (path signal 150  1270 -11430  -1270 -11430))
+      (outline (path signal 150  1270 -1270  1270 -11430))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+    )
+    (padstack Round[A]Pad_1250.000000_um
+      (shape (circle F.Cu 1250))
+      (shape (circle B.Cu 1250))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1300.000000_um
+      (shape (circle F.Cu 1300))
+      (shape (circle B.Cu 1300))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1397.000000_um
+      (shape (circle F.Cu 1397))
+      (shape (circle B.Cu 1397))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1400.000000_um
+      (shape (circle F.Cu 1400))
+      (shape (circle B.Cu 1400))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2900.000000_um
+      (shape (circle F.Cu 2900))
+      (shape (circle B.Cu 2900))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2300.000000x1600.000000_um
+      (shape (path F.Cu 1600  -350 0  350 0))
+      (shape (path B.Cu 1600  -350 0  350 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1300.000000x1300.000000_um
+      (shape (rect F.Cu -650 -650 650 650))
+      (shape (rect B.Cu -650 -650 650 650))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1400.000000x1400.000000_um
+      (shape (rect F.Cu -700 -700 700 700))
+      (shape (rect B.Cu -700 -700 700 700))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net +5V
+      (pins C1-2 U1-1 R1-2 J1-1)
+    )
+    (net GND
+      (pins J2-1 C3-2 C1-1 C4-2 U1-2 J1-5)
+    )
+    (net OUT
+      (pins U1-3 J1-2)
+    )
+    (net RESET_IN
+      (pins U1-7 J1-4)
+    )
+    (net STROBE
+      (pins U1-4 J1-3)
+    )
+    (net "Net-(C2-Pad1)"
+      (pins C2-1 R2-1 R3-1)
+    )
+    (net "Net-(C2-Pad2)"
+      (pins C2-2 U1-5)
+    )
+    (net "Net-(C3-Pad1)"
+      (pins C3-1 U1-8 R1-1)
+    )
+    (net "Net-(C4-Pad1)"
+      (pins C4-1 U1-6)
+    )
+    (net "Net-(J2-Pad2)"
+      (pins J2-2 R2-2)
+    )
+    (net "Net-(J2-Pad3)"
+      (pins J2-3 R3-2)
+    )
+    (class kicad_default +5V GND "Net-(C2-Pad1)" "Net-(C2-Pad2)" "Net-(C3-Pad1)"
+      "Net-(C4-Pad1)" "Net-(J2-Pad2)" "Net-(J2-Pad3)" OUT RESET_IN STROBE
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path B.Cu 254  198628 -145034  198628 -150034  198708 -150114)(net +5V)(type route))
+    (wire (path F.Cu 254  194818 -145669  196812 -145669  197447 -145034)(net +5V)(type route))
+    (wire (path F.Cu 254  189103 -146304  194183 -146304  194818 -145669)(net +5V)(type route))
+    (wire (path F.Cu 254  198628 -145034  197447 -145034)(net +5V)(type route))
+    (wire (path B.Cu 254  211328 -143684  212436 -142576  225216 -142576  226568 -141224)(net GND)(type route))
+    (wire (path B.Cu 254  203708 -149033  205979 -149033  211328 -143684)(net GND)(type route))
+    (wire (path B.Cu 254  198627 -134899  201192 -132334)(net GND)(type route))
+    (wire (path B.Cu 254  189103 -134899  198627 -134899)(net GND)(type route))
+    (wire (path B.Cu 254  199987 -145034  199987 -136260  198627 -134899)(net GND)(type route))
+    (wire (path B.Cu 254  201168 -145034  199987 -145034)(net GND)(type route))
+    (wire (path B.Cu 254  201168 -145800  201168 -145034)(net GND)(type route))
+    (wire (path B.Cu 254  201168 -145800  201168 -146565)(net GND)(type route))
+    (wire (path B.Cu 254  203708 -150114  203708 -149033)(net GND)(type route))
+    (wire (path B.Cu 254  201168 -146565  201240 -146565  203708 -149033)(net GND)(type route))
+    (wire (path B.Cu 254  189103 -136144  189103 -134899)(net GND)(type route))
+    (wire (path F.Cu 254  203708 -145034  203708 -143256  202692 -142240  192278 -142240
+            190754 -143764  189103 -143764)(net OUT)(type route))
+    (wire (path F.Cu 254  201168 -137414  201168 -138684  200533 -139319  191643 -139319
+            191008 -138684  189103 -138684)(net RESET_IN)(type route))
+    (wire (path F.Cu 254  206248 -145034  206248 -142494  204978 -141224  189103 -141224)(net STROBE)(type route))
+    (wire (path F.Cu 254  209423 -150114  209423 -148082  209931 -147574  217678 -147574
+            218440 -146812  218440 -139192  217932 -138684  216408 -138684
+            215138 -138684  214376 -137922  214376 -134620  213868 -134112
+            210566 -134112  209423 -132969  209423 -132334)(net "Net-(C2-Pad1)")(type route))
+    (wire (path F.Cu 254  216328 -143764  216408 -143684)(net "Net-(C2-Pad2)")(type route))
+    (wire (path F.Cu 254  216328 -143764  215138 -143764  214630 -143256  214630 -141986
+            213868 -141224  207010 -141224  206248 -140462  206248 -137414)(net "Net-(C2-Pad2)")(type route))
+    (wire (path F.Cu 254  216408 -143764  216328 -143764)(net "Net-(C2-Pad2)")(type route))
+    (wire (path F.Cu 254  198628 -134874  198692 -134810  198692 -132334)(net "Net-(C3-Pad1)")(type route))
+    (wire (path F.Cu 254  198628 -134874  198628 -132334)(net "Net-(C3-Pad1)")(type route))
+    (wire (path F.Cu 254  198628 -137414  198628 -134874)(net "Net-(C3-Pad1)")(type route))
+    (wire (path F.Cu 254  194818 -136779  197993 -136779  198628 -137414)(net "Net-(C3-Pad1)")(type route))
+    (wire (path F.Cu 254  211328 -138049  211328 -138684)(net "Net-(C4-Pad1)")(type route))
+    (wire (path F.Cu 254  211328 -138049  211328 -136779  210058 -135509  204343 -135509
+            203708 -136144  203708 -137414)(net "Net-(C4-Pad1)")(type route))
+    (wire (path F.Cu 254  218313 -132334  220853 -132334  221568 -133049  221568 -136224)(net "Net-(J2-Pad2)")(type route))
+    (wire (path F.Cu 254  217678 -132334  218313 -132334)(net "Net-(J2-Pad2)")(type route))
+    (wire (path F.Cu 254  218313 -150114  220853 -150114  221568 -149399  221568 -146224)(net "Net-(J2-Pad3)")(type route))
+  )
+)

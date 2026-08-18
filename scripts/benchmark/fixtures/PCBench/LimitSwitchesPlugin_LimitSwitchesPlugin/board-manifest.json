@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "LimitSwitchesPlugin_LimitSwitchesPlugin",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 59625,
+      "sha256": "4e2fea7c8ce85248d6180ff323de793dd61cb427efe61ca2e00c651b8921e002"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 76435,
+      "sha256": "fbf6f34a9c16ce4e5bf58bb4d51cce5a302c48620a7c90b832b3ef45b9f1ebe5"
+    },
+    "metadata_json": {
+      "bytes": 534,
+      "sha256": "61fb27e638727d82c9f7e54d3e3fe1aa79c55821894d78ea1591eff9325db063"
+    },
+    "final_json": {
+      "bytes": 42969,
+      "sha256": "772f36f786b0117e9745ed5ec085a920d2f5478a9646c2c08bd4b05b84c44690"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:16:52.234145+00:00"
+  }
+}

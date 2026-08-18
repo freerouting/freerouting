@@ -1,0 +1,48 @@
+{
+  "board_id": "f.60_keyboard",
+  "display_name": "f.60_keyboard",
+  "pcbench_directory": "PCBs/f.60_keyboard",
+  "source": "https://github.com/robertcalvert/f.60",
+  "author": "robertcalvert",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.938074+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 62,
+    "components": 129,
+    "dimensions_mm": {
+      "width": 285.75,
+      "height": 95.25
+    },
+    "area_cm2": 272.18,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 489,
+    "vias": 18,
+    "track_length_mm": 4212.41,
+    "kicad_drc_violations": 453,
+    "kicad_drc_breakdown": {
+      "total_violations": 453,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 328,
+        "copper_edge_clearance": 2,
+        "isolated_copper": 2,
+        "lib_footprint_issues": 121
+      },
+      "by_severity": {
+        "error": 330,
+        "warning": 123
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

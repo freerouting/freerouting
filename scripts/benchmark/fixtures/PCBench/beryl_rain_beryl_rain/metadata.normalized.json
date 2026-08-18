@@ -1,0 +1,53 @@
+{
+  "board_id": "beryl_rain_beryl_rain",
+  "display_name": "beryl_rain_beryl_rain",
+  "pcbench_directory": "PCBs/beryl_rain_beryl_rain",
+  "source": "https://github.com/timhawes/beryl_rain",
+  "author": "timhawes",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.126088+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 26.67,
+      "height": 49.53
+    },
+    "area_cm2": 13.21,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 174,
+    "vias": 17,
+    "track_length_mm": 468.68,
+    "kicad_drc_violations": 75,
+    "kicad_drc_breakdown": {
+      "total_violations": 75,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 26,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 18,
+        "malformed_courtyard": 8,
+        "silk_edge_clearance": 5,
+        "silk_overlap": 14,
+        "starved_thermal": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 37,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

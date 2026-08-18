@@ -1,0 +1,55 @@
+{
+  "board_id": "Simple_84_Keyboard_84",
+  "display_name": "Simple_84_Keyboard_84",
+  "pcbench_directory": "PCBs/Simple_84_Keyboard_84",
+  "source": "https://github.com/AdamYoung1234/Simple_84_Keyboard",
+  "author": "AdamYoung1234",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.278160+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 100,
+    "components": 194,
+    "dimensions_mm": {
+      "width": 307.34,
+      "height": 114.3
+    },
+    "area_cm2": 351.29,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 1446,
+    "vias": 167,
+    "track_length_mm": 7916.71,
+    "kicad_drc_violations": 814,
+    "kicad_drc_breakdown": {
+      "total_violations": 814,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 199,
+        "copper_edge_clearance": 7,
+        "holes_co_located": 8,
+        "lib_footprint_issues": 194,
+        "padstack": 199,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 56,
+        "silk_overlap": 91,
+        "solder_mask_bridge": 46,
+        "track_dangling": 4,
+        "via_dangling": 6
+      },
+      "by_severity": {
+        "error": 252,
+        "warning": 562
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

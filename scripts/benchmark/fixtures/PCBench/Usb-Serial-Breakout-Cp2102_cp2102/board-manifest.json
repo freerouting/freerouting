@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Usb-Serial-Breakout-Cp2102_cp2102",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1593597,
+      "sha256": "0a28c1b1e328ce0b84628b265deaaca2583d66354b3670aef74791d6ee36d80a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 1574574,
+      "sha256": "111b40fd2aac68b8aa89be7249943498ccb0ffd2922256d33e3c5a14d96c87b8"
+    },
+    "metadata_json": {
+      "bytes": 676,
+      "sha256": "b515c507c4ed7f43227b7bf3fb3b93416f28c0cb676449a16d009addaef1e986"
+    },
+    "final_json": {
+      "bytes": 39611,
+      "sha256": "6c7226686834e8a3c4df0267b2e3ad734d3e56854c29a3db157ee1e90cf129d4"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:55:08.458915+00:00"
+  }
+}

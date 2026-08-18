@@ -1,0 +1,54 @@
+{
+  "board_id": "Microdox-PCB_Print-Microdox",
+  "display_name": "Microdox-PCB_Print-Microdox",
+  "pcbench_directory": "PCBs/Microdox-PCB_Print-Microdox",
+  "source": "https://github.com/PietPtr/Microdox-PCB",
+  "author": "PietPtr",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:54.826084+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 38,
+    "dimensions_mm": {
+      "width": 153.31,
+      "height": 135.48
+    },
+    "area_cm2": 207.7,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 756,
+    "vias": 24,
+    "track_length_mm": 3289.58,
+    "kicad_drc_violations": 742,
+    "kicad_drc_breakdown": {
+      "total_violations": 742,
+      "unconnected_count": 7,
+      "by_type": {
+        "annular_width": 82,
+        "clearance": 134,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 38,
+        "padstack": 58,
+        "shorting_items": 202,
+        "silk_edge_clearance": 9,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 204,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 624,
+        "warning": 118
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "board_id": "kitspace_hbridge_driver",
+  "display_name": "kitspace_hbridge_driver",
+  "pcbench_directory": "PCBs/kitspace_hbridge_driver",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:29.051306+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 71.0,
+      "height": 45.5
+    },
+    "area_cm2": 32.3,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 112,
+    "vias": 0,
+    "track_length_mm": 427.58,
+    "kicad_drc_violations": 55,
+    "kicad_drc_breakdown": {
+      "total_violations": 55,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 4,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 29,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 4,
+        "silk_overlap": 11,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 50
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

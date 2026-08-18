@@ -1,0 +1,51 @@
+{
+  "board_id": "kitspace_CA3306E",
+  "display_name": "kitspace_CA3306E",
+  "pcbench_directory": "PCBs/kitspace_CA3306E",
+  "source": "https://github.com/kelu124/bomanz",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:24:13.322740+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 30.0
+    },
+    "area_cm2": 19.5,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 206,
+    "vias": 7,
+    "track_length_mm": 756.81,
+    "kicad_drc_violations": 151,
+    "kicad_drc_breakdown": {
+      "total_violations": 151,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 127,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 10,
+        "silk_edge_clearance": 4,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 5,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 136,
+        "warning": 15
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

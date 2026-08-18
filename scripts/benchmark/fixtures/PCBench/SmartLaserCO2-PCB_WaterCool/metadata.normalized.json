@@ -1,0 +1,51 @@
+{
+  "board_id": "SmartLaserCO2-PCB_WaterCool",
+  "display_name": "SmartLaserCO2-PCB_WaterCool",
+  "pcbench_directory": "PCBs/SmartLaserCO2-PCB_WaterCool",
+  "source": "https://github.com/smartDIYs/SmartLaserCO2-PCB",
+  "author": "smartDIYs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.450080+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 36.58,
+      "height": 37.34
+    },
+    "area_cm2": 13.66,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 29,
+    "vias": 1,
+    "track_length_mm": 111.97,
+    "kicad_drc_violations": 26,
+    "kicad_drc_breakdown": {
+      "total_violations": 26,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 9,
+        "holes_co_located": 2,
+        "padstack": 4,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 2,
+        "text_height": 3
+      },
+      "by_severity": {
+        "error": 13,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

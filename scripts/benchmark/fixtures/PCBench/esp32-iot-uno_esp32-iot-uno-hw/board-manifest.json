@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "esp32-iot-uno_esp32-iot-uno-hw",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 701341,
+      "sha256": "7ab9de540671387ca383ff9a0c67f4581610ca0849b83b6a10a792a5c82d9d5f"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 468691,
+      "sha256": "1bd89d356cf2724b307788ff82b594c64db4de78ed99a8127c7c414b92e80151"
+    },
+    "metadata_json": {
+      "bytes": 499,
+      "sha256": "f36d3b9cd242a6eb5a3878a7d324f9190b24839d70080efa72df1e4de200d54f"
+    },
+    "final_json": {
+      "bytes": 367050,
+      "sha256": "545ded117b7d4bde3127b21ca39f5df7d91816ca49c6a69c5c14c515dc5e8ddf"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:46:15.701747+00:00"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "board_id": "bullion_bullion",
+  "display_name": "bullion_bullion",
+  "pcbench_directory": "PCBs/bullion_bullion",
+  "source": "https://github.com/coddingtonbear/bullion",
+  "author": "coddingtonbear",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:58.694130+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 38,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 45.14,
+      "height": 33.54
+    },
+    "area_cm2": 15.14,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 226,
+    "vias": 22,
+    "track_length_mm": 545.86,
+    "kicad_drc_violations": 199,
+    "kicad_drc_breakdown": {
+      "total_violations": 199,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 5,
+        "clearance": 98,
+        "copper_edge_clearance": 7,
+        "lib_footprint_issues": 21,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 21,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 35,
+        "text_height": 2,
+        "text_thickness": 2
+      },
+      "by_severity": {
+        "error": 145,
+        "warning": 54
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

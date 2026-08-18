@@ -1,0 +1,49 @@
+{
+  "board_id": "domotics_relay-board",
+  "display_name": "domotics_relay-board",
+  "pcbench_directory": "PCBs/domotics_relay-board",
+  "source": "https://github.com/dmachtey/domotics",
+  "author": "dmachtey",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.213771+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 29,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 80.0
+    },
+    "area_cm2": 48.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 206,
+    "vias": 0,
+    "track_length_mm": 871.66,
+    "kicad_drc_violations": 163,
+    "kicad_drc_breakdown": {
+      "total_violations": 163,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 17,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 26,
+        "silk_edge_clearance": 23,
+        "silk_overlap": 96
+      },
+      "by_severity": {
+        "error": 18,
+        "warning": 145
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

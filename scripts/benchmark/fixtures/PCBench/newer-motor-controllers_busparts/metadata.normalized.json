@@ -1,0 +1,54 @@
+{
+  "board_id": "newer-motor-controllers_busparts",
+  "display_name": "newer-motor-controllers_busparts",
+  "pcbench_directory": "PCBs/newer-motor-controllers_busparts",
+  "source": "https://github.com/lizardmech/newer-motor-controllers",
+  "author": "lizardmech",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.046016+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 55,
+    "components": 760,
+    "dimensions_mm": {
+      "width": 102.0,
+      "height": 100.0
+    },
+    "area_cm2": 102.0,
+    "zones": 65
+  },
+  "reference": {
+    "segments": 1062,
+    "vias": 84,
+    "track_length_mm": 3530.24,
+    "kicad_drc_violations": 659,
+    "kicad_drc_breakdown": {
+      "total_violations": 659,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 108,
+        "copper_edge_clearance": 16,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 119,
+        "pth_inside_courtyard": 41,
+        "silk_over_copper": 199,
+        "silk_overlap": 112,
+        "solder_mask_bridge": 46,
+        "track_dangling": 13,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 215,
+        "warning": 444
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

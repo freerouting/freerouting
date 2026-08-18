@@ -1,0 +1,50 @@
+{
+  "board_id": "LED-Square_PT4115_LED-Square_PT4115",
+  "display_name": "LED-Square_PT4115_LED-Square_PT4115",
+  "pcbench_directory": "PCBs/LED-Square_PT4115_LED-Square_PT4115",
+  "source": "https://github.com/madworm/LED-Square_PT4115",
+  "author": "madworm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.517940+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 23
+  },
+  "reference": {
+    "segments": 325,
+    "vias": 176,
+    "track_length_mm": 530.88,
+    "kicad_drc_violations": 198,
+    "kicad_drc_breakdown": {
+      "total_violations": 198,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 69,
+        "copper_edge_clearance": 3,
+        "hole_to_hole": 3,
+        "lib_footprint_issues": 24,
+        "silk_edge_clearance": 8,
+        "silk_over_copper": 91
+      },
+      "by_severity": {
+        "error": 72,
+        "warning": 126
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "board": "PSU-5V-6V-Dual9V_PSU-5V-6V-Dual9V",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\PSU-5V-6V-Dual9V_PSU-5V-6V-Dual9V\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 132,
+  "segment_count": 394,
+  "approximate_track_length_mm": 1296.15,
+  "kicad_drc_violations": 243,
+  "generated_at": "2026-08-18T19:36:34.712540+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 243,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 117,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 103,
+      "silk_over_copper": 14,
+      "solder_mask_bridge": 8
+    },
+    "by_severity": {
+      "error": 126,
+      "warning": 117
+    }
+  }
+}

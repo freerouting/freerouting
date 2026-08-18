@@ -1,0 +1,54 @@
+{
+  "board_id": "minima-hardware_FrontPanel",
+  "display_name": "minima-hardware_FrontPanel",
+  "pcbench_directory": "PCBs/minima-hardware_FrontPanel",
+  "source": "https://github.com/sarfata/minima-hardware",
+  "author": "sarfata",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.622082+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 49,
+    "dimensions_mm": {
+      "width": 140.0,
+      "height": 62.0
+    },
+    "area_cm2": 86.8,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 125,
+    "vias": 6,
+    "track_length_mm": 964.4,
+    "kicad_drc_violations": 341,
+    "kicad_drc_breakdown": {
+      "total_violations": 341,
+      "unconnected_count": 104,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 16,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 48,
+        "lib_footprint_mismatch": 1,
+        "padstack": 8,
+        "silk_edge_clearance": 82,
+        "silk_over_copper": 4,
+        "silk_overlap": 175,
+        "text_thickness": 1
+      },
+      "by_severity": {
+        "error": 22,
+        "warning": 319
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

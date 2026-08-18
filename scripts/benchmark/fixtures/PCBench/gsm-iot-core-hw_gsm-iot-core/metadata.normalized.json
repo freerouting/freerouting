@@ -1,0 +1,58 @@
+{
+  "board_id": "gsm-iot-core-hw_gsm-iot-core",
+  "display_name": "gsm-iot-core-hw_gsm-iot-core",
+  "pcbench_directory": "PCBs/gsm-iot-core-hw_gsm-iot-core",
+  "source": "https://github.com/iotmakervn/gsm-iot-core-hw",
+  "author": "iotmakervn",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.214018+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 92,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 64.77
+    },
+    "area_cm2": 16.45,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1116,
+    "vias": 114,
+    "track_length_mm": 1792.36,
+    "kicad_drc_violations": 605,
+    "kicad_drc_breakdown": {
+      "total_violations": 605,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 108,
+        "copper_edge_clearance": 42,
+        "drill_out_of_range": 1,
+        "hole_clearance": 7,
+        "lib_footprint_issues": 92,
+        "malformed_courtyard": 3,
+        "padstack": 2,
+        "pth_inside_courtyard": 2,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 29,
+        "silk_overlap": 199,
+        "starved_thermal": 2,
+        "text_height": 115
+      },
+      "by_severity": {
+        "error": 167,
+        "warning": 438
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

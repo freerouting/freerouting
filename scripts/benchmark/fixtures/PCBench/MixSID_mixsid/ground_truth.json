@@ -1,0 +1,33 @@
+{
+  "board": "MixSID_mixsid",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MixSID_mixsid\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 25,
+  "segment_count": 1114,
+  "approximate_track_length_mm": 2771.86,
+  "kicad_drc_violations": 1419,
+  "generated_at": "2026-08-18T19:24:20.366414+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1419,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 501,
+      "copper_edge_clearance": 25,
+      "courtyards_overlap": 34,
+      "lib_footprint_issues": 76,
+      "pth_inside_courtyard": 80,
+      "silk_edge_clearance": 10,
+      "silk_over_copper": 199,
+      "silk_overlap": 199,
+      "solder_mask_bridge": 204,
+      "starved_thermal": 2,
+      "text_height": 55,
+      "track_dangling": 34
+    },
+    "by_severity": {
+      "error": 846,
+      "warning": 573
+    }
+  }
+}

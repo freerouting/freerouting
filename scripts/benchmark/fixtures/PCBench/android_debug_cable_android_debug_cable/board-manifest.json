@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "android_debug_cable_android_debug_cable",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 55345,
+      "sha256": "eb1a2ac42542c584682ef3a58849654feffc39879d0644f6f0361448c9322b96"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 68968,
+      "sha256": "3b54d7d89e5124a313a6f1c3b88508027bf0e7aba96566dc0b7eb9361606ebd5"
+    },
+    "metadata_json": {
+      "bytes": 541,
+      "sha256": "18e749aa7856872cdf154bc2d41c8c930c870da00f94e13ad6d6a7e2a944ac76"
+    },
+    "final_json": {
+      "bytes": 53318,
+      "sha256": "2ece4ecc7374faa61405ce3c571cd959b73ff7f4b99ee215f1535996e80e6ae3"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:28:22.672592+00:00"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "board_id": "Usb_dac_dac",
+  "display_name": "Usb_dac_dac",
+  "pcbench_directory": "PCBs/Usb_dac_dac",
+  "source": "https://github.com/Zidit/Usb_dac",
+  "author": "Zidit",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.586082+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 57,
+    "components": 91,
+    "dimensions_mm": {
+      "width": 74.4,
+      "height": 99.6
+    },
+    "area_cm2": 74.1,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 603,
+    "vias": 65,
+    "track_length_mm": 1722.24,
+    "kicad_drc_violations": 577,
+    "kicad_drc_breakdown": {
+      "total_violations": 577,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 3,
+        "clearance": 220,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 11,
+        "lib_footprint_issues": 91,
+        "padstack": 3,
+        "shorting_items": 3,
+        "silk_over_copper": 199,
+        "silk_overlap": 31,
+        "starved_thermal": 2,
+        "text_height": 4,
+        "track_dangling": 8
+      },
+      "by_severity": {
+        "error": 241,
+        "warning": 336
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

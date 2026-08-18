@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "typec-charger_TypeC-DC-Charger",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 557251,
+      "sha256": "f3056dfcaf1fc4c5702f877168ea1e42becebb07597ca8c75a71bc65edd789bd"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 349636,
+      "sha256": "3139e8f8184e13fb1c890ea2b65fcb294b676f9160a5a99bc51d092156afd620"
+    },
+    "metadata_json": {
+      "bytes": 517,
+      "sha256": "ccc4f4c9c8098bad741c027d81c773b9b149ec85bc7e352d6c3af4afd93d8889"
+    },
+    "final_json": {
+      "bytes": 233807,
+      "sha256": "8fdcc170ae00129e4a20b475bb53eb361c6adebe3ee4a1f34a151c5f0c792c8c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:25:35.861056+00:00"
+  }
+}

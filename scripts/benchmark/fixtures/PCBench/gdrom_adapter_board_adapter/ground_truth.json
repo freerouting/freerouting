@@ -1,0 +1,25 @@
+{
+  "board": "gdrom_adapter_board_adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\gdrom_adapter_board_adapter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 27,
+  "segment_count": 601,
+  "approximate_track_length_mm": 3617.86,
+  "kicad_drc_violations": 116,
+  "generated_at": "2026-08-18T18:51:14.409044+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 116,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 10,
+      "silk_overlap": 46,
+      "solder_mask_bridge": 48,
+      "track_dangling": 12
+    },
+    "by_severity": {
+      "error": 48,
+      "warning": 68
+    }
+  }
+}

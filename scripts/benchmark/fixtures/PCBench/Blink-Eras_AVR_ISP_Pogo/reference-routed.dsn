@@ -1,0 +1,158 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Blink-Eras_AVR_ISP_Pogo\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Bottom
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  157391 -116434  139611 -116434  139611 -93573.6  157391 -93573.6
+            157391 -116434)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component "AVR-ISP-6"
+      (place JP1 148501.1 -112623.6 front 0 (PN "AVR-ISP-6VERT"))
+    )
+    (component "AVR-PPINS-46-6ISP"
+      (place JP2 148501.1 -97383.6 front 0 (PN "POGO-PIN-ISP46MIL"))
+    )
+    (component "STAND-OFF"
+      (place U$1 142786.1 -104368.6 front 0)
+      (place U$2 154216.1 -104368.6 front 0)
+    )
+  )
+  (library
+    (image "AVR-ISP-6"
+      (outline (path signal 254  -3810 2540  3810 2540))
+      (outline (path signal 254  3810 2540  3810 -2540))
+      (outline (path signal 254  3810 -2540  -3810 -2540))
+      (outline (path signal 254  -3810 -2540  -3810 2540))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -2540 -1270)
+      (pin Round[A]Pad_1524.000000_um 2 -2540 1270)
+      (pin Round[A]Pad_1524.000000_um 3 0 -1270)
+      (pin Round[A]Pad_1524.000000_um 4 0 1270)
+      (pin Round[A]Pad_1524.000000_um 5 2540 -1270)
+      (pin Round[A]Pad_1524.000000_um 6 2540 1270)
+    )
+    (image "AVR-PPINS-46-6ISP"
+      (outline (path signal 254  -3810 2540  3810 2540))
+      (outline (path signal 254  3810 2540  3810 -2540))
+      (outline (path signal 254  3810 -2540  -3810 -2540))
+      (outline (path signal 254  -3810 -2540  -3810 2540))
+      (pin Rect[A]Pad_1752.600000x1752.600000_um 1 -2540 -1270)
+      (pin Round[A]Pad_1752.600000_um 2 -2540 1270)
+      (pin Round[A]Pad_1752.600000_um 3 0 -1270)
+      (pin Round[A]Pad_1752.600000_um 4 0 1270)
+      (pin Round[A]Pad_1752.600000_um 5 2540 -1270)
+      (pin Round[A]Pad_1752.600000_um 6 2540 1270)
+    )
+    (image "STAND-OFF"
+      (outline (path signal 127  2794 0  2775.11 -324.364  2718.69 -644.341  2625.5 -955.604
+            2496.81 -1253.94  2334.35 -1535.33  2140.33 -1795.95  1917.36 -2032.28
+            1668.46 -2241.13  1397 -2419.68  1106.65 -2565.5  801.328 -2676.62
+            485.173 -2751.55  162.457 -2789.27  -162.457 -2789.27  -485.173 -2751.55
+            -801.328 -2676.62  -1106.65 -2565.5  -1397 -2419.68  -1668.46 -2241.13
+            -1917.36 -2032.28  -2140.33 -1795.95  -2334.35 -1535.33  -2496.81 -1253.94
+            -2625.5 -955.604  -2718.69 -644.341  -2775.11 -324.364  -2794 0
+            -2775.11 324.364  -2718.69 644.341  -2625.5 955.604  -2496.81 1253.94
+            -2334.35 1535.33  -2140.33 1795.95  -1917.36 2032.28  -1668.46 2241.13
+            -1397 2419.68  -1106.65 2565.5  -801.328 2676.62  -485.173 2751.55
+            -162.457 2789.27  162.457 2789.27  485.173 2751.55  801.328 2676.62
+            1106.65 2565.5  1397 2419.68  1668.46 2241.13  1917.36 2032.28
+            2140.33 1795.95  2334.35 1535.33  2496.81 1253.94  2625.5 955.604
+            2718.69 644.341  2775.11 324.364  2794 0))
+      (keepout "" (circle Top 3802))
+      (keepout "" (circle Bottom 3802))
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle Top 1524))
+      (shape (circle Bottom 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1752.600000_um
+      (shape (circle Top 1752.6))
+      (shape (circle Bottom 1752.6))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect Top -762 -762 762 762))
+      (shape (rect Bottom -762 -762 762 762))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1752.600000x1752.600000_um
+      (shape (rect Top -876.3 -876.3 876.3 876.3))
+      (shape (rect Bottom -876.3 -876.3 876.3 876.3))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle Top 600))
+      (shape (circle Bottom 600))
+      (attach off)
+    )
+  )
+  (network
+    (net N$1
+      (pins JP1-2 JP2-2)
+    )
+    (net N$2
+      (pins JP1-4 JP2-4)
+    )
+    (net N$3
+      (pins JP1-6 JP2-6)
+    )
+    (net N$4
+      (pins JP1-1 JP2-1)
+    )
+    (net N$5
+      (pins JP1-3 JP2-3)
+    )
+    (net N$6
+      (pins JP1-5 JP2-5)
+    )
+    (class kicad_default N$1 N$2 N$3 N$4 N$5 N$6
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+    (wire (path Bottom 406.4  145961 -111354  145961 -108814  146596 -108179  146596 -101829
+            144691 -99923.6  144691 -97383.6  145961 -96113.6)(net N$1)(type route))
+    (wire (path Top 406.4  148501 -96113.6  149771 -97383.6  149771 -100559  148501 -101829
+            148501 -111354)(net N$2)(type route))
+    (wire (path Top 406.4  151041 -96113.6  152311 -97383.6  152311 -99923.6  150406 -101829
+            150406 -109449  151041 -110084  151041 -111354)(net N$3)(type route))
+    (wire (path Top 406.4  145961 -113894  144056 -111989  144056 -110719  146596 -108179
+            146596 -101829  145961 -101194  145961 -98653.6)(net N$4)(type route))
+    (wire (path Bottom 406.4  148501 -108179  148501 -98653.6)(net N$5)(type route))
+    (wire (path Bottom 406.4  148501 -113894  149771 -112624  149771 -109449  148501 -108179)(net N$5)(type route))
+    (wire (path Bottom 406.4  151041 -113894  152946 -111989  152946 -108814  150406 -106274
+            150406 -101829  151041 -101194  151041 -98653.6)(net N$6)(type route))
+  )
+)

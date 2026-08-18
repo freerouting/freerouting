@@ -1,0 +1,991 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\LoRaWAN_GPS_MINI-ULTRA-PRO\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  150631 -71122.4  150900 -71161.2  151162 -71237.8  151409 -71350.9
+            151638 -71498  151844 -71676.2  152022 -71881.9  152169 -72110.9
+            152282 -72358.4  152359 -72619.5  152398 -72888.9  152400 -73025
+            152400 -125095  152398 -125231  152359 -125500  152282 -125762
+            152169 -126009  152022 -126238  151844 -126444  151638 -126622
+            151409 -126769  151162 -126882  150900 -126959  150631 -126998
+            150495 -127000  128905 -127000  128769 -126998  128500 -126959
+            128238 -126882  127991 -126769  127762 -126622  127556 -126444
+            127378 -126238  127231 -126009  127118 -125762  127041 -125500
+            127002 -125231  127000 -125095  127000 -73025  127002 -72888.9
+            127041 -72619.5  127118 -72358.4  127231 -72110.9  127378 -71881.9
+            127556 -71676.2  127762 -71498  127991 -71350.9  128238 -71237.8
+            128500 -71161.2  128769 -71122.4  128905 -71120  150495 -71120
+            150631 -71122.4)
+    )
+    (via "Via[0-1]_500:300_um")
+    (rule
+      (width 254)
+      (clearance 203.2)
+      (clearance 50.8 (type smd_smd))
+    )
+  )
+  (placement
+    (component "RocketScreamKicadLibrary:TQFP-48_7x7mm_Pitch0.5mm"
+      (place U1 139700 -91440 front -45 (PN "ATSAMD21G18A-AU"))
+    )
+    (component "RocketScreamKicadLibrary:LED-1615"
+      (place D2 144526 -112141 front 180 (PN "LED-DUAL"))
+    )
+    (component "RocketScreamKicadLibrary:MICRO-USB"
+      (place J2 144272 -123698 front 0 (PN "MICRO-USB"))
+    )
+    (component "RocketScreamKicadLibrary:RF-SMA-EDGE"
+      (place J3 133858 -73406 back 270 (PN "RF-SMA-EDGE"))
+    )
+    (component "RocketScreamKicadLibrary:SOT-89"
+      (place U4 143280 -107414 front 180 (PN "MCP1700T-3302E/MB"))
+    )
+    (component "RocketScreamKicadLibrary:SOIC-8-N"
+      (place U5 136144 -102616 front 90 (PN S25FL116K0XMFI041))
+    )
+    (component RocketScreamKicadLibrary:ABS07
+      (place Y1 138938 -83566 front -45 (PN "FC-135"))
+    )
+    (component "RocketScreamKicadLibrary:SOT-143B"
+      (place D3 146558 -117602 front 90 (PN PRTR5V0U2X))
+    )
+    (component "RocketScreamKicadLibrary:MF-PSMF020X"
+      (place F1 143086 -118110 front 0 (PN "MF-PSMF050X-2"))
+    )
+    (component "RocketScreamKicadLibrary:CAP-0402"
+      (place C1 139192 -81280 front -45 (PN 18pF))
+    )
+    (component "RocketScreamKicadLibrary:CAP-0402::1"
+      (place C2 141224 -83312 front 135 (PN 18pF))
+    )
+    (component "RocketScreamKicadLibrary:CAP-0402::2"
+      (place C3 145034 -84836 front 90 (PN 100nF))
+      (place C4 132461 -85852 front 90 (PN 100nF))
+      (place C5 146304 -84836 front 90 (PN "1uF 10V X5R"))
+      (place C17 137668 -108966 front 90 (PN "4.7uF 10V X5R"))
+      (place R4 144526 -80010 front 90 (PN 10K))
+      (place L2 131191 -85852 front 90 (PN "BKP1005TS121-T"))
+      (place R2 145796 -80010 front 90 (PN 330R))
+      (place C6 135001 -85344 front 90 (PN 100nF))
+      (place C14 133731 -85344 front 90 (PN "4.7uF 10V X5R"))
+      (place C15 139192 -108966 front 90 (PN "1uF 10V X5R"))
+      (place C19 139954 -104648 front 90 (PN "1uF 10V X5R"))
+    )
+    (component "RocketScreamKicadLibrary:CAP-0402::3"
+      (place C7 147320 -93360 front -90 (PN 100nF))
+      (place C8 131572 -95504 front -90 (PN 100nF))
+      (place C10 139446 -117348 front -90 (PN "4.7uF 10V X5R"))
+      (place R6 135890 -108966 front -90 (PN 1K18))
+      (place L1 140716 -117348 front -90 (PN "BKP1005TS121-T"))
+      (place C13 132588 -102616 front -90 (PN 100nF))
+    )
+    (component "RocketScreamKicadLibrary:CAP-0402::4"
+      (place C12 139446 -76454 front 180 (PN 100nF))
+      (place C18 140462 -120904 front 180 (PN "4.7nF 25V X7R"))
+      (place R1 144526 -101346 front 180 (PN 2K2))
+      (place R11 147320 -91186 front 180 (PN 100K))
+      (place C11 139446 -77724 front 180 (PN "4.7uF 10V X5R"))
+      (place R3 147320 -89916 front 180 (PN 330R))
+      (place R5 140462 -119634 front 180 (PN 1M))
+      (place R8 132080 -116840 front 180 (PN 10K))
+    )
+    (component "RocketScreamKicadLibrary:CAP-0402::5"
+      (place C16 136398 -116586 front 0 (PN "4.7uF 10V X5R"))
+      (place R7 132080 -113030 front 0 (PN 46K4))
+      (place R9 132080 -114300 front 0 (PN 2K94))
+      (place R10 132080 -115570 front 0 (PN 2K2))
+      (place R12 141986 -112776 front 0 (PN 10K))
+      (place R13 141986 -111506 front 0 (PN 2K2))
+    )
+    (component RocketScreamKicadLibrary:HOLE_NPTH_2.2MM
+      (place M1 128905 -125095 front 0 (PN MOUNT_HOLE))
+      (place M2 150495 -125095 front 0 (PN MOUNT_HOLE))
+      (place M3 128905 -73025 front 0 (PN MOUNT_HOLE))
+      (place M4 150495 -73025 front 0 (PN MOUNT_HOLE))
+    )
+    (component RocketScreamKicadLibrary:HDR_2x5_Pitch1.27mm
+      (place J6 145034 -76581 front 0 (PN "CONN-HDR-2x5"))
+    )
+    (component "RocketScreamKicadLibrary:LOGO-OSHW_Small"
+      (place LOGO2 134620 -122682 back 0 (PN "LOGO-OSHW"))
+      (place LOGO1 139954 -109474 back 0 (PN "LOGO-ROCKET-SCREAM"))
+      (place LOGO3 131572 -113538 back 90 (PN "LOGO-KICAD"))
+    )
+    (component "RocketScreamKicadLibrary:FIDUCIAL-1MM"
+      (place M5 143764 -115316 front 0 (PN FIDUCIAL))
+      (place M6 139700 -72898 front 0 (PN FIDUCIAL))
+    )
+    (component "RocketScreamKicadLibrary:LED-0603"
+      (place D1 144526 -102870 front 180 (PN Orange))
+    )
+    (component "RocketScreamKicadLibrary:SOT-1016"
+      (place D4 131826 -110744 front -90 (PN PMEG3020CPA))
+    )
+    (component "RocketScreamKicadLibrary:S2B-PH-SM4-TB"
+      (place J1 134874 -122428 front 0 (PN "S2B-PH-SM4-TB"))
+    )
+    (component RocketScreamKicadLibrary:HDR_1x19_Pitch2.54mm_WithoutSilk
+      (place J4 128270 -99060 front -90 (PN "CONN-HDR-1x19"))
+      (place J5 151130 -99060 front -90 (PN "CONN-HDR-1x19"))
+    )
+    (component "RocketScreamKicadLibrary:TS-018"
+      (place SW1 145034 -71882 front 0 (PN SPNO))
+    )
+    (component "RocketScreamKicadLibrary:CAP-0603"
+      (place C9 134112 -108966 front -90 (PN "1uF 50V X5R"))
+    )
+    (component RocketScreamKicadLibrary:RFM9xW
+      (place U3 139700 -87630 back 270 (PN RFM95W))
+    )
+    (component "RocketScreamKicadLibrary:SOT-23"
+      (place Q1 140970 -101346 front -90 (PN 2N7002LT1G))
+    )
+    (component "RocketScreamKicadLibrary:QFN-16_3x3mm"
+      (place U2 137039 -113042 front 90 (PN BQ24074RGTT))
+    )
+  )
+  (library
+    (image "RocketScreamKicadLibrary:TQFP-48_7x7mm_Pitch0.5mm"
+      (outline (polygon signal 0  5245 5245  5245 -5245  -5245 -5245  -5245 5245))
+      (outline (path signal 300  -4300 3250  -4279.56 3206.16  -4292.08 3159.44  -4331.7 3131.7
+            -4379.88 3135.91  -4414.09 3170.12  -4418.3 3218.3  -4390.56 3257.92
+            -4343.84 3270.44  -4300 3250))
+      (outline (path signal 150  3500 -3500  3500 3500))
+      (outline (path signal 150  -3500 -3500  -3500 3500))
+      (outline (path signal 150  -3500 3500  3500 3500))
+      (outline (path signal 150  -3500 -3500  3500 -3500))
+      (pin Rect[T]Pad_1300.000000x250.000000_um 1 -4350 2750)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 2 -4350 2250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 3 -4350 1750)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 4 -4350 1250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 5 -4350 750.001)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 6 -4350 250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 7 -4350 -250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 8 -4350 -750.001)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 9 -4350 -1250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 10 -4350 -1750)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 11 -4350 -2250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 12 -4350 -2750)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 13 -2750 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 14 -2250 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 15 -1750 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 16 -1250 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 17 -750.001 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 18 -250 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 19 250 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 20 750.001 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 21 1250 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 22 1750 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 23 2250 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 24 2750 -4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 25 4350 -2750)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 26 4350 -2250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 27 4350 -1750)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 28 4350 -1250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 29 4350 -750.001)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 30 4350 -250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 31 4350 250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 32 4350 750.001)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 33 4350 1250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 34 4350 1750)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 35 4350 2250)
+      (pin Rect[T]Pad_1300.000000x250.000000_um 36 4350 2750)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 37 2750 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 38 2250 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 39 1750 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 40 1250 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 41 750.001 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 42 250 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 43 -250 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 44 -750.001 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 45 -1250 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 46 -1750 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 47 -2250 4350)
+      (pin Rect[T]Pad_1300.000000x250.000000_um (rotate 90) 48 -2750 4350)
+    )
+    (image "RocketScreamKicadLibrary:LED-1615"
+      (outline (polygon signal 0  -1195 995  1195 995  1195 -995  -1195 -995))
+      (outline (path signal 150  -1397 0  -1143 0))
+      (outline (path signal 150  -1143 254  -1143 -254))
+      (outline (path signal 150  -1397 0  -1143 254))
+      (outline (path signal 150  -1143 -254  -1397 0))
+      (pin Rect[T]Pad_800.000000x650.000000_um 1 -550 425)
+      (pin Rect[T]Pad_800.000000x650.000000_um 2 -550 -425)
+      (pin Rect[T]Pad_800.000000x650.000000_um 3 550 -425)
+      (pin Rect[T]Pad_800.000000x650.000000_um 4 550 425)
+    )
+    (image "RocketScreamKicadLibrary:MICRO-USB"
+      (outline (polygon signal 0  4545 -3445  -4545 -3445  -4545 2395  4545 2395))
+      (outline (path signal 300  -1675.29 2608  -1691.83 2562.55  -1733.72 2538.36  -1781.36 2546.76
+            -1812.45 2583.82  -1812.45 2632.18  -1781.36 2669.24  -1733.72 2677.64
+            -1691.83 2653.45  -1675.29 2608))
+      (outline (path signal 150  3800 0  3800 1550))
+      (outline (path signal 150  3800 1550  3250 1550))
+      (outline (path signal 150  -3800 0  -3800 1550))
+      (outline (path signal 150  -3800 1550  -3250 1550))
+      (outline (path signal 150  3800 -2200  3800 -3300))
+      (outline (path signal 150  -3800 -3300  -3800 -2200))
+      (outline (path signal 150  -3800 -3300  3800 -3300))
+      (pin Rect[T]Pad_400.000000x1350.000000_um 1 -1300 1450)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 2 -650 1450)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 3 0 1450)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 4 650 1450)
+      (pin Rect[T]Pad_400.000000x1350.000000_um 5 1300 1450)
+      (pin Round[A]Pad_1200.000000_um 6 -2425 1525)
+      (pin Round[A]Pad_1200.000000_um 7 2425 1525)
+      (pin Oval[A]Pad_1300.000000x1700.000000_um 8 -3625 -1125)
+      (pin Oval[A]Pad_1300.000000x1700.000000_um 9 3625 -1125)
+    )
+    (image "RocketScreamKicadLibrary:RF-SMA-EDGE"
+      (outline (path signal 150  7050 2750  7050 -2750))
+      (outline (path signal 150  8050 2750  8050 -2750))
+      (outline (path signal 150  9050 2750  9050 -2750))
+      (outline (path signal 150  10050 2750  10050 -2750))
+      (outline (path signal 150  11050 2750  11050 -2750))
+      (outline (path signal 150  4000 -2750  12050 -2750))
+      (outline (path signal 150  12050 -2750  12050 2750))
+      (outline (path signal 150  12050 2750  4000 2750))
+      (outline (path signal 150  2400 3235  2400 -3235))
+      (outline (path signal 150  2400 -3235  4000 -3235))
+      (outline (path signal 150  4000 -3235  4000 3235))
+      (outline (path signal 150  4000 3235  2400 3235))
+      (pin Rect[T]Pad_4200.000000x1270.000000_um 1 0 0)
+      (pin Rect[T]Pad_4200.000000x1270.000000_um 2 0 -2500)
+      (pin Rect[T]Pad_4200.000000x1270.000000_um 3 0 2500)
+      (pin Rect[B]Pad_4200.000000x1270.000000_um 5 0 2500)
+      (pin Rect[B]Pad_4200.000000x1270.000000_um 4 0 -2500)
+    )
+    (image "RocketScreamKicadLibrary:SOT-89"
+      (outline (polygon signal 0  -2745 3245  2745 3245  2745 -3245  -2745 -3245))
+      (outline (path signal 150  -2500 3000  -2500 -3000))
+      (outline (path signal 150  -2500 3000  2500 3000))
+      (outline (path signal 150  2500 3000  2500 -3000))
+      (outline (path signal 150  2500 -3000  -2500 -3000))
+      (pin Rect[T]Pad_800.000000x1200.000000_um 1 -1500 -1750)
+      (pin "Rect[T][0.000000,-150.000000]Pad_800.000000x2200.000000_um" 2 0 -1100)
+      (pin Rect[T]Pad_800.000000x1200.000000_um 3 1500 -1750)
+      (pin Rect[T][0.000000,1100.000000]Pad_2000.000000x2500.000000_um 2@1 0 0)
+    )
+    (image "RocketScreamKicadLibrary:SOIC-8-N"
+      (outline (polygon signal 0  -3945 -2695  -3945 2695  3945 2695  3945 -2695))
+      (outline (path signal 300  -2700 2429.29  -2745.45 2445.83  -2769.64 2487.72  -2761.24 2535.36
+            -2724.18 2566.45  -2675.82 2566.45  -2638.76 2535.36  -2630.36 2487.72
+            -2654.55 2445.83  -2700 2429.29))
+      (outline (path signal 150  -1500 2450  -1500 -2450))
+      (outline (path signal 150  -1500 -2450  1500 -2450))
+      (outline (path signal 150  1500 -2450  1500 2450))
+      (outline (path signal 150  1500 2450  -1500 2450))
+      (pin Rect[T]Pad_2000.000000x600.000000_um 8 2700 1905)
+      (pin Rect[T]Pad_2000.000000x600.000000_um 7 2700 635)
+      (pin Rect[T]Pad_2000.000000x600.000000_um 6 2700 -635)
+      (pin Rect[T]Pad_2000.000000x600.000000_um 5 2700 -1905)
+      (pin Rect[T]Pad_2000.000000x600.000000_um 4 -2700 -1905)
+      (pin Rect[T]Pad_2000.000000x600.000000_um 3 -2700 -635)
+      (pin Rect[T]Pad_2000.000000x600.000000_um 2 -2700 635)
+      (pin Rect[T]Pad_2000.000000x600.000000_um 1 -2700 1905)
+    )
+    (image RocketScreamKicadLibrary:ABS07
+      (outline (polygon signal 0  2045 1195  2045 -1195  -2045 -1195  -2045 1195))
+      (outline (path signal 150  -499.999 -750  499.999 -750))
+      (outline (path signal 150  -499.999 750  499.999 750))
+      (pin Rect[T]Pad_1100.000000x1900.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1100.000000x1900.000000_um 2 1250 0)
+    )
+    (image "RocketScreamKicadLibrary:SOT-143B"
+      (outline (polygon signal 0  -1695 -1595  -1695 1595  1695 1595  1695 -1595))
+      (outline (path signal 150  -1500 -1070.71  -1545.45 -1054.17  -1569.64 -1012.28  -1561.24 -964.645
+            -1524.18 -933.553  -1475.82 -933.553  -1438.76 -964.645  -1430.36 -1012.28
+            -1454.55 -1054.17  -1500 -1070.71))
+      (outline (path signal 150  -50 -650  400 -650))
+      (outline (path signal 150  -450 650  450 650))
+      (outline (path signal 150  1450 650  1450 -650))
+      (outline (path signal 150  -1450 650  -1450 -650))
+      (pin Rect[T]Pad_1000.000000x700.000000_um 1 -750 -1000)
+      (pin Rect[T]Pad_600.000000x700.000000_um 2 950 -1000)
+      (pin Rect[T]Pad_600.000000x700.000000_um 3 950 1000)
+      (pin Rect[T]Pad_600.000000x700.000000_um 4 -950 1000)
+    )
+    (image "RocketScreamKicadLibrary:MF-PSMF020X"
+      (outline (polygon signal 0  1845 -995  -1845 -995  -1845 995  1845 995))
+      (outline (path signal 150  -400 -675  400 -675))
+      (outline (path signal 150  -400 675  400 675))
+      (pin Rect[T]Pad_1000.000000x1500.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1000.000000x1500.000000_um 2 1100 0)
+    )
+    (image "RocketScreamKicadLibrary:CAP-0402"
+      (outline (polygon signal 0  1245 494.999  1245 -494.999  -1245 -494.999  -1245 494.999))
+      (outline (path signal 150  -1300 550  1300 550))
+      (outline (path signal 150  1300 550  1300 -550))
+      (outline (path signal 150  1300 -550  -1300 -550))
+      (outline (path signal 150  -1300 -550  -1300 550))
+      (pin Rect[T]Pad_900.000000x700.000000_um 1 -649.999 0)
+      (pin Rect[T]Pad_900.000000x700.000000_um 2 649.999 0)
+    )
+    (image "RocketScreamKicadLibrary:CAP-0402::1"
+      (outline (polygon signal 0  -1245 -494.999  -1245 494.999  1245 494.999  1245 -494.999))
+      (outline (path signal 150  -1300 550  1300 550))
+      (outline (path signal 150  1300 550  1300 -550))
+      (outline (path signal 150  1300 -550  -1300 -550))
+      (outline (path signal 150  -1300 -550  -1300 550))
+      (pin Rect[T]Pad_900.000000x700.000000_um 1 -649.999 0)
+      (pin Rect[T]Pad_900.000000x700.000000_um 2 649.999 0)
+    )
+    (image "RocketScreamKicadLibrary:CAP-0402::2"
+      (outline (polygon signal 0  -1245 -495  -1245 495  1245 495  1245 -495))
+      (outline (path signal 150  -1300 550  1300 550))
+      (outline (path signal 150  1300 550  1300 -550))
+      (outline (path signal 150  1300 -550  -1300 -550))
+      (outline (path signal 150  -1300 -550  -1300 550))
+      (pin Rect[T]Pad_900.000000x700.000000_um 1 -650 0)
+      (pin Rect[T]Pad_900.000000x700.000000_um 2 650 0)
+    )
+    (image "RocketScreamKicadLibrary:CAP-0402::3"
+      (outline (polygon signal 0  1245 495  1245 -495  -1245 -495  -1245 495))
+      (outline (path signal 150  -1300 550  1300 550))
+      (outline (path signal 150  1300 550  1300 -550))
+      (outline (path signal 150  1300 -550  -1300 -550))
+      (outline (path signal 150  -1300 -550  -1300 550))
+      (pin Rect[T]Pad_900.000000x700.000000_um 1 -650 0)
+      (pin Rect[T]Pad_900.000000x700.000000_um 2 650 0)
+    )
+    (image "RocketScreamKicadLibrary:CAP-0402::4"
+      (outline (polygon signal 0  -1245 495  1245 495  1245 -495  -1245 -495))
+      (outline (path signal 150  -1300 550  1300 550))
+      (outline (path signal 150  1300 550  1300 -550))
+      (outline (path signal 150  1300 -550  -1300 -550))
+      (outline (path signal 150  -1300 -550  -1300 550))
+      (pin Rect[T]Pad_900.000000x700.000000_um 1 -650 0)
+      (pin Rect[T]Pad_900.000000x700.000000_um 2 650 0)
+    )
+    (image "RocketScreamKicadLibrary:CAP-0402::5"
+      (outline (polygon signal 0  1245 -495  -1245 -495  -1245 495  1245 495))
+      (outline (path signal 150  -1300 550  1300 550))
+      (outline (path signal 150  1300 550  1300 -550))
+      (outline (path signal 150  1300 -550  -1300 -550))
+      (outline (path signal 150  -1300 -550  -1300 550))
+      (pin Rect[T]Pad_900.000000x700.000000_um 1 -650 0)
+      (pin Rect[T]Pad_900.000000x700.000000_um 2 650 0)
+    )
+    (image RocketScreamKicadLibrary:HOLE_NPTH_2.2MM
+      (keepout "" (circle F.Cu 2700))
+      (keepout "" (circle B.Cu 2700))
+    )
+    (image RocketScreamKicadLibrary:HDR_2x5_Pitch1.27mm
+      (outline (polygon signal 0  3445 -1945  -3445 -1945  -3445 1945  3445 1945))
+      (outline (path signal 150  -3175 -1325  -2800 -1700))
+      (outline (path signal 150  -3175 -1525  -3000 -1700))
+      (outline (path signal 150  -3175 -1700  -3175 1700))
+      (outline (path signal 150  3175 -1700  -3175 -1700))
+      (outline (path signal 150  3175 1700  3175 -1700))
+      (outline (path signal 150  -3175 1700  3175 1700))
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 1 -2540 -635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 2 -2540 635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 3 -1270 -635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 4 -1270 635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 5 0 -635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 6 0 635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 7 1270 -635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 8 1270 635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 9 2540 -635)
+      (pin Oval[A]Pad_1050.000000x1050.000000_um 10 2540 635)
+    )
+    (image "RocketScreamKicadLibrary:LOGO-OSHW_Small"
+    )
+    (image "RocketScreamKicadLibrary:FIDUCIAL-1MM"
+      (pin Round[T]Pad_1000.000000_um ~ 0 0)
+    )
+    (image "RocketScreamKicadLibrary:LED-0603"
+      (outline (polygon signal 0  -1645 745  1645 745  1645 -745  -1645 -745))
+      (outline (path signal 150  -1600 700  1600 700))
+      (outline (path signal 150  1600 700  1600 -700))
+      (outline (path signal 150  1600 -700  -1600 -700))
+      (outline (path signal 150  -1600 -700  -1600 700))
+      (outline (path signal 150  -1600 700  -1800 700))
+      (outline (path signal 150  -1800 700  -1800 -700))
+      (outline (path signal 150  -1800 -700  -1600 -700))
+      (pin Rect[T]Pad_1100.000000x1000.000000_um (rotate 180) 2 850 0)
+      (pin Rect[T]Pad_1100.000000x1000.000000_um (rotate 180) 1 -850 0)
+    )
+    (image "RocketScreamKicadLibrary:SOT-1016"
+      (outline (polygon signal 0  1245 1295  1245 -1295  -1245 -1295  -1245 1295))
+      (outline (path signal 150  -400 1000  -1000 1000))
+      (outline (path signal 150  1000 -1000  1000 1000))
+      (outline (path signal 150  -250 -1000  250 -1000))
+      (outline (path signal 150  -1000 1000  -1000 -1000))
+      (outline (path signal 150  1000 1000  400 1000))
+      (pin Rect[T]Pad_400.000000x500.000000_um 1 -650 -800)
+      (pin Rect[T]Pad_400.000000x500.000000_um 2 650 -800)
+      (pin Rect[T]Pad_1600.000000x1100.000000_um 3 0 250)
+      (pin Rect[T]Pad_400.000000x250.000000_um 3@1 0 925)
+    )
+    (image "RocketScreamKicadLibrary:S2B-PH-SM4-TB"
+      (outline (polygon signal 0  4345 -4795  -4345 -4795  -4345 4795  4345 4795))
+      (outline (path signal 150  3150 1450  3150 3050))
+      (outline (path signal 150  3150 3050  3950 3050))
+      (outline (path signal 150  3950 3050  3950 -800))
+      (outline (path signal 150  -2300 -4550  2300 -4550))
+      (outline (path signal 150  -3150 1450  -3150 3050))
+      (outline (path signal 150  -3150 3050  -3950 3050))
+      (outline (path signal 150  -3950 3050  -3950 -800))
+      (outline (path signal 150  3150 1450  1900 1450))
+      (outline (path signal 150  -3150 1450  -1900 1450))
+      (pin Rect[T]Pad_1000.000000x3500.000000_um 1 -1000 2750)
+      (pin Rect[T]Pad_1000.000000x3500.000000_um 2 1000 2750)
+      (pin Rect[T]Pad_1500.000000x3400.000000_um 3 -3350 -2800)
+      (pin Rect[T]Pad_1500.000000x3400.000000_um 4 3350 -2800)
+    )
+    (image RocketScreamKicadLibrary:HDR_1x19_Pitch2.54mm_WithoutSilk
+      (outline (polygon signal 0  24395 1495  24395 -1495  -24395 -1495  -24395 1495))
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 14 10160 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 13 7620 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 12 5080 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 11 2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 1 -22860 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 -20320 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 -17780 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 -15240 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 -12700 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 -10160 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 7 -7620 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 8 -5080 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 9 -2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 10 0 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 15 12700 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 16 15240 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 17 17780 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 18 20320 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 19 22860 0)
+    )
+    (image "RocketScreamKicadLibrary:TS-018"
+      (outline (polygon signal 0  2995 -2645  -2995 -2645  -2995 945  2995 945))
+      (outline (path signal 150  -975 1900  975 1900))
+      (outline (path signal 150  -975 700  -975 1900))
+      (outline (path signal 150  -2250 700  2250 700))
+      (outline (path signal 150  -2250 550  -2250 700))
+      (outline (path signal 150  -800 -1900  800 -1900))
+      (outline (path signal 150  2250 700  2250 550))
+      (outline (path signal 150  975 700  975 1900))
+      (pin Rect[T]Pad_1150.000000x1300.000000_um 1 -1675 -1750)
+      (pin Rect[T]Pad_1150.000000x1300.000000_um 2 1675 -1750)
+      (pin Rect[T]Pad_900.000000x1200.000000_um 3 2300 -200)
+      (pin Rect[T]Pad_900.000000x1200.000000_um 4 -2300 -200)
+      (keepout "" (circle F.Cu 1300 -850 -200))
+      (keepout "" (circle B.Cu 1300 -850 -200))
+      (keepout "" (circle F.Cu 1300 850 -200))
+      (keepout "" (circle B.Cu 1300 850 -200))
+    )
+    (image "RocketScreamKicadLibrary:CAP-0603"
+      (outline (polygon signal 0  1645 745  1645 -745  -1645 -745  -1645 745))
+      (outline (path signal 150  -1600 700  -1600 -700))
+      (outline (path signal 150  1600 700  1600 -700))
+      (outline (path signal 150  -1600 700  1600 700))
+      (outline (path signal 150  1600 -700  -1600 -700))
+      (pin Rect[T]Pad_1100.000000x1000.000000_um 1 -850 0)
+      (pin Rect[T]Pad_1100.000000x1000.000000_um 2 850 0)
+    )
+    (image RocketScreamKicadLibrary:RFM9xW
+      (outline (path signal 300  -8600 8170.71  -8554.55 8154.17  -8530.36 8112.28  -8538.76 8064.65
+            -8575.82 8033.55  -8624.18 8033.55  -8661.24 8064.65  -8669.64 8112.28
+            -8645.45 8154.17  -8600 8170.71))
+      (outline (path signal 150  -8000 8000  8000 8000))
+      (outline (path signal 150  -8000 -8000  8000 -8000))
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 1 -8000 7000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 2 -8000 5000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 3 -8000 3000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 4 -8000 1000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 5 -8000 -1000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 6 -8000 -3000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 7 -8000 -5000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 8 -8000 -7000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 9 8000 -7000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 10 8000 -5000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 11 8000 -3000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 12 8000 -1000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 13 8000 1000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 14 8000 3000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 15 8000 5000)
+      (pin Rect[T]Pad_2000.000000x1300.000000_um 16 8000 7000)
+    )
+    (image "RocketScreamKicadLibrary:SOT-23"
+      (outline (polygon signal 0  1745 1945  1745 -1945  -1745 -1945  -1745 1945))
+      (outline (path signal 150  1500 -800  1500 600))
+      (outline (path signal 150  600 600  1500 600))
+      (outline (path signal 150  -1500 600  -500 600))
+      (outline (path signal 150  -1500 -800  -1500 600))
+      (outline (path signal 150  -400 -800  400 -800))
+      (pin Rect[T]Pad_650.000000x1050.000000_um 1 -950 -1150)
+      (pin Rect[T]Pad_650.000000x1050.000000_um 2 950 -1150)
+      (pin Rect[T]Pad_650.000000x1050.000000_um 3 0 1150)
+    )
+    (image "RocketScreamKicadLibrary:QFN-16_3x3mm"
+      (outline (polygon signal 0  -2145 -2145  -2145 2145  2145 2145  2145 -2145))
+      (outline (path signal 300  -2000 1229.29  -2045.45 1245.83  -2069.64 1287.72  -2061.24 1335.36
+            -2024.18 1366.45  -1975.82 1366.45  -1938.76 1335.36  -1930.36 1287.72
+            -1954.55 1245.83  -2000 1229.29))
+      (outline (path signal 150  1100 1500  1500 1500))
+      (outline (path signal 150  1500 1500  1500 1100))
+      (outline (path signal 150  1100 -1500  1500 -1500))
+      (outline (path signal 150  1500 -1500  1500 -1100))
+      (outline (path signal 150  -1500 -1100  -1500 -1500))
+      (outline (path signal 150  -1500 -1500  -1100 -1500))
+      (outline (path signal 150  -1100 1500  -1500 1500))
+      (outline (path signal 150  -1500 1500  -1500 1100))
+      (pin Rect[T]Pad_750.000000x750.000000_um 17 375 -375)
+      (pin Rect[T]Pad_750.000000x750.000000_um 17@1 375 375)
+      (pin Rect[T]Pad_750.000000x750.000000_um 17@2 -375 375)
+      (pin Rect[T]Pad_750.000000x750.000000_um 17@3 -375 -375)
+      (pin Rect[T]Pad_850.000000x280.000000_um 1 -1475 750)
+      (pin Rect[T]Pad_850.000000x280.000000_um 2 -1475 250)
+      (pin Rect[T]Pad_850.000000x280.000000_um 3 -1475 -250)
+      (pin Rect[T]Pad_850.000000x280.000000_um 4 -1475 -750)
+      (pin Rect[T]Pad_850.000000x280.000000_um (rotate 90) 5 -750 -1475)
+      (pin Rect[T]Pad_850.000000x280.000000_um (rotate 90) 6 -250 -1475)
+      (pin Rect[T]Pad_850.000000x300.000000_um (rotate 90) 7 250 -1475)
+      (pin Rect[T]Pad_850.000000x280.000000_um (rotate 90) 8 750 -1475)
+      (pin Rect[T]Pad_850.000000x280.000000_um 9 1475 -750)
+      (pin Rect[T]Pad_850.000000x280.000000_um 10 1475 -250)
+      (pin Rect[T]Pad_850.000000x280.000000_um 11 1475 250)
+      (pin Rect[T]Pad_850.000000x280.000000_um 12 1475 750)
+      (pin Rect[T]Pad_850.000000x280.000000_um (rotate 90) 13 750 1475)
+      (pin Rect[T]Pad_850.000000x280.000000_um (rotate 90) 14 250 1475)
+      (pin Rect[T]Pad_850.000000x280.000000_um (rotate 90) 15 -250 1475)
+      (pin Rect[T]Pad_850.000000x300.000000_um (rotate 90) 16 -750 1475)
+    )
+    (padstack Round[T]Pad_1000.000000_um
+      (shape (circle F.Cu 1000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1200.000000_um
+      (shape (circle F.Cu 1200))
+      (shape (circle B.Cu 1200))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1050.000000x1050.000000_um
+      (shape (path F.Cu 1050  0 0  0 0))
+      (shape (path B.Cu 1050  0 0  0 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1300.000000x1700.000000_um
+      (shape (path F.Cu 1300  0 -200  0 200))
+      (shape (path B.Cu 1300  0 -200  0 200))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[B]Pad_4200.000000x1270.000000_um
+      (shape (rect B.Cu -2100 -635 2100 635))
+      (attach off)
+    )
+    (padstack Rect[T][0.000000,1100.000000]Pad_2000.000000x2500.000000_um
+      (shape (rect F.Cu -1000 -150 1000 2350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x600.000000_um
+      (shape (rect F.Cu -1000 -300 1000 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1300.000000_um
+      (shape (rect F.Cu -1000 -650 1000 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x250.000000_um
+      (shape (rect F.Cu -200 -125 200 125))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x500.000000_um
+      (shape (rect F.Cu -200 -250 200 250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x1350.000000_um
+      (shape (rect F.Cu -200 -675 200 675))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_4200.000000x1270.000000_um
+      (shape (rect F.Cu -2100 -635 2100 635))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x700.000000_um
+      (shape (rect F.Cu -300 -350 300 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_650.000000x1050.000000_um
+      (shape (rect F.Cu -325 -525 325 525))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_750.000000x750.000000_um
+      (shape (rect F.Cu -375 -375 375 375))
+      (attach off)
+    )
+    (padstack "Rect[T][0.000000,-150.000000]Pad_800.000000x2200.000000_um"
+      (shape (rect F.Cu -400 -1250 400 950))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x650.000000_um
+      (shape (rect F.Cu -400 -325 400 325))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x1200.000000_um
+      (shape (rect F.Cu -400 -600 400 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_850.000000x280.000000_um
+      (shape (rect F.Cu -425 -140 425 140))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_850.000000x300.000000_um
+      (shape (rect F.Cu -425 -150 425 150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_900.000000x700.000000_um
+      (shape (rect F.Cu -450 -350 450 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_900.000000x1200.000000_um
+      (shape (rect F.Cu -450 -600 450 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x3500.000000_um
+      (shape (rect F.Cu -500 -1750 500 1750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x700.000000_um
+      (shape (rect F.Cu -500 -350 500 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1500.000000_um
+      (shape (rect F.Cu -500 -750 500 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100.000000x1000.000000_um
+      (shape (rect F.Cu -550 -500 550 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100.000000x1900.000000_um
+      (shape (rect F.Cu -550 -950 550 950))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1150.000000x1300.000000_um
+      (shape (rect F.Cu -575 -650 575 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1300.000000x250.000000_um
+      (shape (rect F.Cu -650 -125 650 125))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x3400.000000_um
+      (shape (rect F.Cu -750 -1700 750 1700))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x1100.000000_um
+      (shape (rect F.Cu -800 -550 800 550))
+      (attach off)
+    )
+    (padstack "Via[0-1]_500:300_um"
+      (shape (circle F.Cu 500))
+      (shape (circle B.Cu 500))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(D1-Pad1)"
+      (pins R1-1 D1-1)
+    )
+    (net "Net-(D2-Pad3)"
+      (pins D2-3 R13-2)
+    )
+    (net "Net-(D2-Pad4)"
+      (pins D2-4 R12-2)
+    )
+    (net "Net-(J1-Pad3)"
+      (pins J1-3)
+    )
+    (net "Net-(J1-Pad4)"
+      (pins J1-4)
+    )
+    (net "Net-(J3-Pad1)"
+      (pins J3-1 U3-9)
+    )
+    (net GND
+      (pins U1-5 U1-18 U1-35 U1-42 J2-5 J3-2 J3-3 J3-5 J3-4 U4-1 U5-4 D3-1 C1-1 C2-1
+        C3-2 C4-2 C5-2 C7-2 C8-2 C10-2 C12-2 C16-2 C17-2 C18-2 R6-1 R7-1 R9-1 R10-1
+        J6-3 J6-5 J6-9 J1-2 C11-2 J4-1 J4-17 J4-19 SW1-1 C9-1 U3-1 U3-8 U3-10 Q1-2
+        R5-2 R8-2 C6-2 C13-2 C14-2 C15-2 C19-2 U2-17 U2-17@1 U2-17@2 U2-17@3 U2-4
+        U2-6 U2-8)
+    )
+    (net "Net-(C1-Pad2)"
+      (pins U1-2 Y1-1 C1-2)
+    )
+    (net "Net-(C2-Pad2)"
+      (pins U1-1 Y1-2 C2-2)
+    )
+    (net 3V3
+      (pins U1-17 U1-36 U1-44 U4-3 U5-8 U5-7 U5-3 C3-1 C7-1 C8-1 C12-1 R4-1 R11-2
+        J6-1 D1-2 L2-2 C11-1 J4-13 U3-13 C13-1 C19-1)
+    )
+    (net "Net-(C4-Pad1)"
+      (pins U1-6 C4-1 L2-1)
+    )
+    (net "Net-(C5-Pad1)"
+      (pins U1-43 C5-1)
+    )
+    (net VBUS
+      (pins D2-1 D2-2 U4-2 U4-2@1 C17-1 J4-14 C15-1 U2-5 U2-10 U2-11)
+    )
+    (net VBAT
+      (pins C16-1 J1-1 J4-18 U2-2 U2-3)
+    )
+    (net "Net-(C18-Pad1)"
+      (pins J2-6 C18-1 R5-1)
+    )
+    (net VUSB
+      (pins J2-1 D3-4 F1-2)
+    )
+    (net /D13
+      (pins U1-26 J5-17 Q1-1)
+    )
+    (net VIN
+      (pins D4-2 J4-16)
+    )
+    (net /TX_LED
+      (pins U1-39)
+    )
+    (net /RX_LED
+      (pins U1-48)
+    )
+    (net /RESET
+      (pins U1-40 R2-1)
+    )
+    (net "Net-(R6-Pad2)"
+      (pins R6-2 U2-12)
+    )
+    (net "Net-(R7-Pad2)"
+      (pins R7-2 U2-14)
+    )
+    (net "Net-(R9-Pad2)"
+      (pins R9-2 U2-15)
+    )
+    (net "Net-(R10-Pad2)"
+      (pins R10-2 U2-16)
+    )
+    (net /A0
+      (pins U1-3 J4-3)
+    )
+    (net /A1
+      (pins U1-7 J4-4)
+    )
+    (net /A2
+      (pins U1-8 J4-5)
+    )
+    (net /A3
+      (pins U1-9 J4-6)
+    )
+    (net /A4
+      (pins U1-10 J4-7)
+    )
+    (net /D8
+      (pins U1-11 J5-12)
+    )
+    (net /D9
+      (pins U1-12 J5-13)
+    )
+    (net /D4
+      (pins U1-13 U5-1 J5-8)
+    )
+    (net /D3
+      (pins U1-14 J5-7)
+    )
+    (net /D1
+      (pins U1-15 J5-5)
+    )
+    (net /D0
+      (pins U1-16 J5-4)
+    )
+    (net /MOSI
+      (pins U1-19 U5-5 J4-9 U3-3)
+    )
+    (net /SCK
+      (pins U1-20 U5-6 J4-10 U3-4)
+    )
+    (net /MISO
+      (pins U1-21 U5-2 J4-11 U3-2)
+    )
+    (net /ATN
+      (pins U1-22 J4-12)
+    )
+    (net /D2
+      (pins U1-23 J5-6 U3-14)
+    )
+    (net /D5
+      (pins U1-24 J5-9 U3-5)
+    )
+    (net /D11
+      (pins U1-25 J5-15)
+    )
+    (net /D10
+      (pins U1-27 J5-14)
+    )
+    (net /D12
+      (pins U1-28 J5-16)
+    )
+    (net /D6
+      (pins U1-29 J5-10)
+    )
+    (net /D7
+      (pins U1-30 J5-11)
+    )
+    (net /SDA
+      (pins U1-31 J5-19)
+    )
+    (net /SCL
+      (pins U1-32 J5-18)
+    )
+    (net "/USB-"
+      (pins U1-33 J2-2 D3-3)
+    )
+    (net /USB+
+      (pins U1-34 J2-3 D3-2)
+    )
+    (net /SWCLK
+      (pins U1-45 J6-4)
+    )
+    (net /SWDIO
+      (pins U1-46 J6-2)
+    )
+    (net /A5
+      (pins U1-47 J4-8)
+    )
+    (net /USB_ID
+      (pins U1-41 R3-2)
+    )
+    (net AREF
+      (pins U1-4 J4-2 C6-1 C14-1)
+    )
+    (net VEXT
+      (pins D4-3 D4-3@1 C9-2 U2-13)
+    )
+    (net /RST
+      (pins R4-2 J6-10 J5-1 SW1-2 R2-2)
+    )
+    (net "Net-(J6-Pad6)"
+      (pins J6-6)
+    )
+    (net "Net-(J6-Pad7)"
+      (pins J6-7)
+    )
+    (net "Net-(J6-Pad8)"
+      (pins J6-8)
+    )
+    (net "Net-(J2-Pad8)"
+      (pins J2-8)
+    )
+    (net "Net-(J2-Pad9)"
+      (pins J2-9)
+    )
+    (net "Net-(F1-Pad1)"
+      (pins F1-1 L1-2)
+    )
+    (net "Net-(M5-Pad~{})"
+      (pins M5-~)
+    )
+    (net "Net-(M6-Pad~{})"
+      (pins M6-~)
+    )
+    (net "Net-(J2-Pad4)"
+      (pins J2-4 R11-1 R3-1)
+    )
+    (net /D30
+      (pins U1-37 J5-3)
+    )
+    (net /D31
+      (pins U1-38 J5-2)
+    )
+    (net /PG
+      (pins R12-1 U2-7)
+    )
+    (net /CHG
+      (pins R13-1 U2-9)
+    )
+    (net 5V0
+      (pins C10-1 D4-1 J4-15 L1-1)
+    )
+    (net "Net-(J2-Pad7)"
+      (pins J2-7)
+    )
+    (net "Net-(U3-Pad6)"
+      (pins U3-6)
+    )
+    (net "Net-(U3-Pad7)"
+      (pins U3-7)
+    )
+    (net "Net-(U3-Pad11)"
+      (pins U3-11)
+    )
+    (net "Net-(U3-Pad12)"
+      (pins U3-12)
+    )
+    (net "Net-(U3-Pad15)"
+      (pins U3-15)
+    )
+    (net "Net-(U3-Pad16)"
+      (pins U3-16)
+    )
+    (net "Net-(Q1-Pad3)"
+      (pins R1-2 Q1-3)
+    )
+    (net "Net-(R8-Pad1)"
+      (pins R8-1 U2-1)
+    )
+    (class kicad_default /A0 /A1 /A2 /A3 /A4 /A5 /ATN /CHG /D0 /D1 /D10 /D11
+      /D12 /D13 /D2 /D3 /D30 /D31 /D4 /D5 /D6 /D7 /D8 /D9 /MISO /MOSI /PG
+      /RESET /RST /RX_LED /SCK /SCL /SDA /SWCLK /SWDIO /TX_LED /USB+ "/USB-"
+      /USB_ID 3V3 5V0 AREF GND "Net-(C1-Pad2)" "Net-(C18-Pad1)" "Net-(C2-Pad2)"
+      "Net-(C4-Pad1)" "Net-(C5-Pad1)" "Net-(D1-Pad1)" "Net-(D2-Pad3)" "Net-(D2-Pad4)"
+      "Net-(F1-Pad1)" "Net-(J1-Pad3)" "Net-(J1-Pad4)" "Net-(J2-Pad4)" "Net-(J2-Pad7)"
+      "Net-(J2-Pad8)" "Net-(J2-Pad9)" "Net-(J6-Pad6)" "Net-(J6-Pad7)" "Net-(J6-Pad8)"
+      "Net-(M5-Pad~{})" "Net-(M6-Pad~{})" "Net-(Q1-Pad3)" "Net-(R10-Pad2)"
+      "Net-(R6-Pad2)" "Net-(R7-Pad2)" "Net-(R8-Pad1)" "Net-(R9-Pad2)" "Net-(U3-Pad11)"
+      "Net-(U3-Pad12)" "Net-(U3-Pad15)" "Net-(U3-Pad16)" "Net-(U3-Pad6)" "Net-(U3-Pad7)"
+      VBAT VBUS VEXT VIN VUSB
+      (circuit
+        (use_via "Via[0-1]_500:300_um")
+      )
+      (rule
+        (width 254)
+        (clearance 203.2)
+      )
+    )
+    (class "RF-50Ohm" "Net-(J3-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_500:300_um")
+      )
+      (rule
+        (width 1270)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

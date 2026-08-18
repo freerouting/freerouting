@@ -1,0 +1,58 @@
+{
+  "board_id": "EUC-VESC_electronics_BJT",
+  "display_name": "EUC-VESC_electronics_BJT",
+  "pcbench_directory": "PCBs/EUC-VESC_electronics_BJT",
+  "source": "https://github.com/EGG-electric-unicycle/EUC-VESC_electronics",
+  "author": "EGG-electric-unicycle",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.354185+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 93,
+    "components": 318,
+    "dimensions_mm": {
+      "width": 49.53,
+      "height": 100.08
+    },
+    "area_cm2": 49.57,
+    "zones": 1018
+  },
+  "reference": {
+    "segments": 1393,
+    "vias": 562,
+    "track_length_mm": 2915.42,
+    "kicad_drc_violations": 591,
+    "kicad_drc_breakdown": {
+      "total_violations": 591,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 89,
+        "copper_edge_clearance": 12,
+        "courtyards_overlap": 8,
+        "hole_to_hole": 2,
+        "holes_co_located": 1,
+        "lib_footprint_issues": 113,
+        "silk_edge_clearance": 34,
+        "silk_over_copper": 199,
+        "silk_overlap": 106,
+        "solder_mask_bridge": 1,
+        "text_height": 3,
+        "track_dangling": 17,
+        "via_dangling": 4,
+        "zones_intersect": 2
+      },
+      "by_severity": {
+        "error": 112,
+        "warning": 479
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

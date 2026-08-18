@@ -1,0 +1,51 @@
+{
+  "board_id": "LizardBoard_lizard",
+  "display_name": "LizardBoard_lizard",
+  "pcbench_directory": "PCBs/LizardBoard_lizard",
+  "source": "https://github.com/DesertLizard/LizardBoard",
+  "author": "DesertLizard",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:23:00.830155+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 11.0,
+      "height": 43.75
+    },
+    "area_cm2": 4.81,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 77,
+    "vias": 5,
+    "track_length_mm": 221.92,
+    "kicad_drc_violations": 39,
+    "kicad_drc_breakdown": {
+      "total_violations": 39,
+      "unconnected_count": 1,
+      "by_type": {
+        "copper_edge_clearance": 4,
+        "lib_footprint_issues": 11,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 16,
+        "silk_overlap": 1,
+        "text_height": 3,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 35
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

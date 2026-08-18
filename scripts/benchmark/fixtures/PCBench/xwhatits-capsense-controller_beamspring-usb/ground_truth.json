@@ -1,0 +1,31 @@
+{
+  "board": "xwhatits-capsense-controller_beamspring-usb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\xwhatits-capsense-controller_beamspring-usb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 105,
+  "segment_count": 868,
+  "approximate_track_length_mm": 2471.57,
+  "kicad_drc_violations": 448,
+  "generated_at": "2026-08-18T19:58:10.052866+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 448,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 92,
+      "copper_edge_clearance": 80,
+      "invalid_outline": 3,
+      "padstack": 2,
+      "silk_edge_clearance": 10,
+      "silk_over_copper": 177,
+      "silk_overlap": 12,
+      "text_height": 63,
+      "track_dangling": 7
+    },
+    "by_severity": {
+      "error": 177,
+      "warning": 271
+    }
+  }
+}

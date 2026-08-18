@@ -1,0 +1,26 @@
+{
+  "board": "karabas-nano_wifi_revA",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\karabas-nano_wifi_revA\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 30,
+  "segment_count": 67,
+  "approximate_track_length_mm": 267.04,
+  "kicad_drc_violations": 29,
+  "generated_at": "2026-08-18T19:00:41.234141+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 29,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 7,
+      "copper_edge_clearance": 9,
+      "lib_footprint_issues": 7,
+      "lib_footprint_mismatch": 4,
+      "silk_edge_clearance": 2
+    },
+    "by_severity": {
+      "error": 16,
+      "warning": 13
+    }
+  }
+}

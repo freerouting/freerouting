@@ -1,0 +1,148 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\induction-hob_temperature-sensor\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  152200 -110100  144800 -110100  144800 -103000  152200 -103000
+            152200 -110100)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "kicad-footprints:SOT563"
+      (place U1 149000 -106100 front 0 (PN TMP102))
+    )
+    (component Capacitors_SMD:C_0603_HandSoldering
+      (place C1 146100 -106400 front 90 (PN C))
+    )
+    (component "kicad-footprints:SOLDER_JUMPER"
+      (place JMP1 150700 -105200 front 90 (PN R))
+      (place JMP2 150700 -107300 front 90 (PN R))
+      (place JMP3 149100 -103800 front 0 (PN R))
+      (place JMP4 146500 -103800 front 180 (PN R))
+    )
+    (component "kicad-footprints:SMD_TP0.8mm"
+      (place ALERT1 151000 -109200 front 0 (PN TEST_POINT))
+      (place GND1 149800 -109200 front 0 (PN TEST_POINT))
+      (place SCL1 148500 -109200 front 0 (PN TEST_POINT))
+      (place SDA1 147300 -109200 front 0 (PN TEST_POINT))
+      (place VCC1 146100 -109200 front 0 (PN TEST_POINT))
+    )
+    (component "kicad-footprints:SMD_TP0.5mm"
+      (place REF** 146100 -107300 back 180 (PN SMD_TP0.5mm))
+    )
+  )
+  (library
+    (image "kicad-footprints:SOT563"
+      (outline (path signal 150  -850 -650  -850 650))
+      (outline (path signal 150  -800 -650  -850 -650))
+      (outline (path signal 150  850 -650  -800 -650))
+      (outline (path signal 150  850 650  850 -650))
+      (outline (path signal 150  -850 650  850 650))
+      (outline (path signal 150  -550 -350  -550 -650))
+      (outline (path signal 150  -850 -350  -550 -350))
+      (pin Rect[T]Pad_300.000000x1000.000000_um 1 -500 -950)
+      (pin Rect[T]Pad_300.000000x1000.000000_um 2 0 -950)
+      (pin Rect[T]Pad_300.000000x1000.000000_um 3 500 -950)
+      (pin Rect[T]Pad_300.000000x1000.000000_um 4 500 950)
+      (pin Rect[T]Pad_300.000000x1000.000000_um 5 0 950)
+      (pin Rect[T]Pad_300.000000x1000.000000_um 6 -500 950)
+    )
+    (image Capacitors_SMD:C_0603_HandSoldering
+      (outline (polygon signal 0  -1845 -745  -1845 745  1845 745  1845 -745))
+      (outline (path signal 150  350 -600  -350 -600))
+      (outline (path signal 150  -350 600  350 600))
+      (pin Rect[T]Pad_1200.000000x750.000000_um 1 -950 0)
+      (pin Rect[T]Pad_1200.000000x750.000000_um 2 950 0)
+    )
+    (image "kicad-footprints:SOLDER_JUMPER"
+      (pin Rect[T]Pad_500.000000x500.000000_um 1 -300 0)
+      (pin Rect[T]Pad_500.000000x500.000000_um 2 300 0)
+    )
+    (image "kicad-footprints:SMD_TP0.8mm"
+      (pin Round[T]Pad_800.000000_um 1 0 0)
+    )
+    (image "kicad-footprints:SMD_TP0.5mm"
+      (pin Round[T]Pad_500.000000_um 1 0 0)
+    )
+    (padstack Round[T]Pad_500.000000_um
+      (shape (circle F.Cu 500))
+      (attach off)
+    )
+    (padstack Round[T]Pad_800.000000_um
+      (shape (circle F.Cu 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_300.000000x1000.000000_um
+      (shape (rect F.Cu -150 -500 150 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x500.000000_um
+      (shape (rect F.Cu -250 -250 250 250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x750.000000_um
+      (shape (rect F.Cu -600 -375 600 375))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net /VCC
+      (pins U1-5 C1-1 JMP1-1 VCC1-1)
+    )
+    (net /ADD0
+      (pins U1-4 JMP1-2 JMP2-2 JMP3-2 JMP4-1)
+    )
+    (net GND
+      (pins U1-2 C1-2 JMP4-2 GND1-1)
+    )
+    (net /SCL
+      (pins U1-1 JMP2-1 SCL1-1)
+    )
+    (net /SDA
+      (pins U1-6 JMP3-1 SDA1-1)
+    )
+    (net /ALERT
+      (pins U1-3 ALERT1-1)
+    )
+    (class kicad_default /ADD0 /ALERT /SCL /SDA /VCC GND
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

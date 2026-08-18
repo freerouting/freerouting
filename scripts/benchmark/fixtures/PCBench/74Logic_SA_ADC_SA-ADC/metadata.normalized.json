@@ -1,0 +1,53 @@
+{
+  "board_id": "74Logic_SA_ADC_SA-ADC",
+  "display_name": "74Logic_SA_ADC_SA-ADC",
+  "pcbench_directory": "PCBs/74Logic_SA_ADC_SA-ADC",
+  "source": "https://github.com/schilkp/74Logic_SA_ADC",
+  "author": "schilkp",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:55.666094+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 87,
+    "components": 191,
+    "dimensions_mm": {
+      "width": 95.89,
+      "height": 69.22
+    },
+    "area_cm2": 66.38,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 2443,
+    "vias": 304,
+    "track_length_mm": 5047.77,
+    "kicad_drc_violations": 471,
+    "kicad_drc_breakdown": {
+      "total_violations": 471,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 161,
+        "copper_edge_clearance": 13,
+        "lib_footprint_issues": 5,
+        "lib_footprint_mismatch": 181,
+        "mirrored_text_on_front_layer": 1,
+        "silk_edge_clearance": 4,
+        "solder_mask_bridge": 96,
+        "track_dangling": 7,
+        "via_dangling": 3
+      },
+      "by_severity": {
+        "error": 270,
+        "warning": 201
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

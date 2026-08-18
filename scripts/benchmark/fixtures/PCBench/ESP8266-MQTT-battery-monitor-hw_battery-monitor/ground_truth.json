@@ -1,0 +1,27 @@
+{
+  "board": "ESP8266-MQTT-battery-monitor-hw_battery-monitor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ESP8266-MQTT-battery-monitor-hw_battery-monitor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 63,
+  "segment_count": 290,
+  "approximate_track_length_mm": 477.14,
+  "kicad_drc_violations": 398,
+  "generated_at": "2026-08-18T18:46:41.030491+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 398,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 115,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 49,
+      "silk_over_copper": 16,
+      "silk_overlap": 124,
+      "text_height": 92
+    },
+    "by_severity": {
+      "error": 117,
+      "warning": 281
+    }
+  }
+}

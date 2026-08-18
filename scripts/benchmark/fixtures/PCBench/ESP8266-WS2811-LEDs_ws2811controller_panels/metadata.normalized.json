@@ -1,0 +1,50 @@
+{
+  "board_id": "ESP8266-WS2811-LEDs_ws2811controller_panels",
+  "display_name": "ESP8266-WS2811-LEDs_ws2811controller_panels",
+  "pcbench_directory": "PCBs/ESP8266-WS2811-LEDs_ws2811controller_panels",
+  "source": "https://github.com/Jeija/ESP8266-WS2811-LEDs",
+  "author": "Jeija",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.853696+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 25.0,
+      "height": 27.0
+    },
+    "area_cm2": 6.75,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 69,
+    "vias": 0,
+    "track_length_mm": 173.36,
+    "kicad_drc_violations": 39,
+    "kicad_drc_breakdown": {
+      "total_violations": 39,
+      "unconnected_count": 1,
+      "by_type": {
+        "copper_edge_clearance": 6,
+        "lib_footprint_issues": 8,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 22,
+        "silk_overlap": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 33
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

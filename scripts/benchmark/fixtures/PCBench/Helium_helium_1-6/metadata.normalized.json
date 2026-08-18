@@ -1,0 +1,53 @@
+{
+  "board_id": "Helium_helium_1-6",
+  "display_name": "Helium_helium_1-6",
+  "pcbench_directory": "PCBs/Helium_helium_1-6",
+  "source": "https://github.com/blueshiftPDX/Helium",
+  "author": "blueshiftPDX",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:21.997698+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 112,
+    "dimensions_mm": {
+      "width": 86.99,
+      "height": 65.02
+    },
+    "area_cm2": 56.56,
+    "zones": 11
+  },
+  "reference": {
+    "segments": 1170,
+    "vias": 153,
+    "track_length_mm": 2086.1,
+    "kicad_drc_violations": 412,
+    "kicad_drc_breakdown": {
+      "total_violations": 412,
+      "unconnected_count": 4,
+      "by_type": {
+        "annular_width": 11,
+        "clearance": 73,
+        "shorting_items": 5,
+        "silk_over_copper": 120,
+        "silk_overlap": 62,
+        "solder_mask_bridge": 19,
+        "text_height": 114,
+        "text_thickness": 1,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 108,
+        "warning": 304
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "board_id": "ReST32_combined",
+  "display_name": "ReST32_combined",
+  "pcbench_directory": "PCBs/ReST32_combined",
+  "source": "https://github.com/berryelectronics/ReST32",
+  "author": "berryelectronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:35.817861+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 53,
+    "dimensions_mm": {
+      "width": 64.75,
+      "height": 43.5
+    },
+    "area_cm2": 28.17,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 329,
+    "vias": 32,
+    "track_length_mm": 960.26,
+    "kicad_drc_violations": 300,
+    "kicad_drc_breakdown": {
+      "total_violations": 300,
+      "unconnected_count": 3,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 203,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 53,
+        "padstack": 2,
+        "pth_inside_courtyard": 12,
+        "silk_over_copper": 2,
+        "silk_overlap": 14,
+        "solder_mask_bridge": 4,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 224,
+        "warning": 76
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

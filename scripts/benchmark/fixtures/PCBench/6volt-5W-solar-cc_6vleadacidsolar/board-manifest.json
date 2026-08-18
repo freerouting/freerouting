@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "6volt-5W-solar-cc_6vleadacidsolar",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 233509,
+      "sha256": "4c3a42eafd07be5f41eac04482517c1b82c662075b54a4b97cd5eff4721f32dd"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 144648,
+      "sha256": "2da3a0a5974f69bc6af09da1aebf4e36dc8443d7f52eb367e0489821cbd54b78"
+    },
+    "metadata_json": {
+      "bytes": 502,
+      "sha256": "7b3f6cf4b2ba42564bc15ee52f78eaa3730ad375585bdff82512fcae2161fd9f"
+    },
+    "final_json": {
+      "bytes": 130710,
+      "sha256": "4c4aa92b7b2258c1ecc8c202dac1670151d34577154ec2c89713f6a2f4771389"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:26:38.704574+00:00"
+  }
+}

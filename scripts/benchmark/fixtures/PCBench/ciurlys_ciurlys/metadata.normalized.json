@@ -1,0 +1,55 @@
+{
+  "board_id": "ciurlys_ciurlys",
+  "display_name": "ciurlys_ciurlys",
+  "pcbench_directory": "PCBs/ciurlys_ciurlys",
+  "source": "https://github.com/Miceuz/ciurlys",
+  "author": "Miceuz",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.470080+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 41.0,
+      "height": 12.0
+    },
+    "area_cm2": 4.92,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 116,
+    "vias": 9,
+    "track_length_mm": 260.24,
+    "kicad_drc_violations": 124,
+    "kicad_drc_breakdown": {
+      "total_violations": 124,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 21,
+        "copper_edge_clearance": 17,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 17,
+        "silk_edge_clearance": 29,
+        "silk_over_copper": 18,
+        "silk_overlap": 11,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 4,
+        "text_height": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 47,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

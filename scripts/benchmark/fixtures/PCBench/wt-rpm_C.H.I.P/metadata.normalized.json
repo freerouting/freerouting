@@ -1,0 +1,53 @@
+{
+  "board_id": "wt-rpm_C.H.I.P",
+  "display_name": "wt-rpm_C.H.I.P",
+  "pcbench_directory": "PCBs/wt-rpm_C.H.I.P",
+  "source": "https://github.com/mupuf/wt-rpm",
+  "author": "mupuf",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.625776+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 40,
+    "dimensions_mm": {
+      "width": 40.64,
+      "height": 55.25
+    },
+    "area_cm2": 22.45,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 203,
+    "vias": 0,
+    "track_length_mm": 457.56,
+    "kicad_drc_violations": 281,
+    "kicad_drc_breakdown": {
+      "total_violations": 281,
+      "unconnected_count": 5,
+      "by_type": {
+        "clearance": 119,
+        "copper_edge_clearance": 42,
+        "courtyards_overlap": 10,
+        "lib_footprint_issues": 40,
+        "silk_edge_clearance": 13,
+        "silk_over_copper": 31,
+        "silk_overlap": 18,
+        "starved_thermal": 7,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 178,
+        "warning": 103
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

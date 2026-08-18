@@ -1,0 +1,51 @@
+{
+  "board_id": "EncoderBoard_Enc_Pan_Led",
+  "display_name": "EncoderBoard_Enc_Pan_Led",
+  "pcbench_directory": "PCBs/EncoderBoard_Enc_Pan_Led",
+  "source": "https://github.com/hexeguitar/EncoderBoard",
+  "author": "hexeguitar",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:25.949744+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 58,
+    "dimensions_mm": {
+      "width": 42.0,
+      "height": 34.0
+    },
+    "area_cm2": 14.28,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 629,
+    "vias": 31,
+    "track_length_mm": 1006.6,
+    "kicad_drc_violations": 229,
+    "kicad_drc_breakdown": {
+      "total_violations": 229,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 110,
+        "copper_edge_clearance": 14,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 58,
+        "silk_over_copper": 1,
+        "solder_mask_bridge": 39,
+        "starved_thermal": 6
+      },
+      "by_severity": {
+        "error": 170,
+        "warning": 59
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

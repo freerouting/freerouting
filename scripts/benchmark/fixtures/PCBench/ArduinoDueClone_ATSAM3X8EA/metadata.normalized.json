@@ -1,0 +1,57 @@
+{
+  "board_id": "ArduinoDueClone_ATSAM3X8EA",
+  "display_name": "ArduinoDueClone_ATSAM3X8EA",
+  "pcbench_directory": "PCBs/ArduinoDueClone_ATSAM3X8EA",
+  "source": "https://github.com/digibird1/ArduinoDueClone",
+  "author": "digibird1",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.621741+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 75,
+    "dimensions_mm": {
+      "width": 160.0,
+      "height": 100.0
+    },
+    "area_cm2": 160.0,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 1762,
+    "vias": 189,
+    "track_length_mm": 5464.1,
+    "kicad_drc_violations": 768,
+    "kicad_drc_breakdown": {
+      "total_violations": 768,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 500,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 4,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 75,
+        "shorting_items": 3,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 109,
+        "silk_overlap": 56,
+        "solder_mask_bridge": 2,
+        "text_thickness": 2,
+        "track_dangling": 6,
+        "via_dangling": 4
+      },
+      "by_severity": {
+        "error": 512,
+        "warning": 256
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

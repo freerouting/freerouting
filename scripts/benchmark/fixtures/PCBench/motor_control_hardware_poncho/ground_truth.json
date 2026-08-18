@@ -1,0 +1,30 @@
+{
+  "board": "motor_control_hardware_poncho",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\motor_control_hardware_poncho\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 15,
+  "segment_count": 178,
+  "approximate_track_length_mm": 1064.65,
+  "kicad_drc_violations": 208,
+  "generated_at": "2026-08-18T19:25:47.578336+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 208,
+    "unconnected_count": 34,
+    "by_type": {
+      "clearance": 20,
+      "hole_clearance": 9,
+      "hole_to_hole": 14,
+      "holes_co_located": 16,
+      "lib_footprint_issues": 34,
+      "shorting_items": 37,
+      "silk_edge_clearance": 3,
+      "silk_overlap": 29,
+      "solder_mask_bridge": 46
+    },
+    "by_severity": {
+      "error": 112,
+      "warning": 96
+    }
+  }
+}

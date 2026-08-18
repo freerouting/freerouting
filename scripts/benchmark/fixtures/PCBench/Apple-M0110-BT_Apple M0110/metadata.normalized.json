@@ -1,0 +1,52 @@
+{
+  "board_id": "Apple-M0110-BT_Apple M0110",
+  "display_name": "Apple-M0110-BT_Apple M0110",
+  "pcbench_directory": "PCBs/Apple-M0110-BT_Apple M0110",
+  "source": "https://github.com/anthonyagarza/Apple-M0110-BT",
+  "author": "anthonyagarza",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:23.325714+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 97,
+    "components": 132,
+    "dimensions_mm": {
+      "width": 275.28,
+      "height": 97.92
+    },
+    "area_cm2": 269.55,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 541,
+    "vias": 14,
+    "track_length_mm": 4509.26,
+    "kicad_drc_violations": 600,
+    "kicad_drc_breakdown": {
+      "total_violations": 600,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 226,
+        "hole_clearance": 5,
+        "hole_to_hole": 22,
+        "lib_footprint_issues": 132,
+        "silk_over_copper": 4,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 10,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 243,
+        "warning": 357
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

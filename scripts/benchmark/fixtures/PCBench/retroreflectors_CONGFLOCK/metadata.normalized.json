@@ -1,0 +1,52 @@
+{
+  "board_id": "retroreflectors_CONGFLOCK",
+  "display_name": "retroreflectors_CONGFLOCK",
+  "pcbench_directory": "PCBs/retroreflectors_CONGFLOCK",
+  "source": "https://github.com/mossmann/retroreflectors",
+  "author": "",
+  "license": "[{'name': 'GNU General Public License v2.0', 'link': 'https://api.github.com/licenses/gpl-2.0'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 6.35,
+      "height": 6.35
+    },
+    "area_cm2": 0.4,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 21,
+    "vias": 0,
+    "track_length_mm": 12.23,
+    "kicad_drc_violations": 63,
+    "kicad_drc_breakdown": {
+      "total_violations": 63,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "copper_edge_clearance": 9,
+        "shorting_items": 4,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 19,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 10,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 31,
+        "warning": 32
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

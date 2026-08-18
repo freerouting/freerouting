@@ -1,0 +1,60 @@
+{
+  "board_id": "HY-AI7688H-RevA_HY-AI7688H",
+  "display_name": "HY-AI7688H-RevA_HY-AI7688H",
+  "pcbench_directory": "PCBs/HY-AI7688H-RevA_HY-AI7688H",
+  "source": "https://github.com/HYknight/HY-AI7688H-RevA",
+  "author": "HYknight",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.702024+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 217,
+    "dimensions_mm": {
+      "width": 97.0,
+      "height": 82.0
+    },
+    "area_cm2": 79.54,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 1169,
+    "vias": 144,
+    "track_length_mm": 2992.99,
+    "kicad_drc_violations": 982,
+    "kicad_drc_breakdown": {
+      "total_violations": 982,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 483,
+        "copper_edge_clearance": 8,
+        "courtyards_overlap": 1,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 199,
+        "padstack": 2,
+        "pth_inside_courtyard": 19,
+        "silk_edge_clearance": 17,
+        "silk_over_copper": 199,
+        "silk_overlap": 17,
+        "solder_mask_bridge": 15,
+        "starved_thermal": 2,
+        "text_height": 2,
+        "track_dangling": 10,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 534,
+        "warning": 448
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

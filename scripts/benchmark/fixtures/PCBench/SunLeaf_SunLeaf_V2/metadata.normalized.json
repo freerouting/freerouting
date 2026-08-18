@@ -1,0 +1,54 @@
+{
+  "board_id": "SunLeaf_SunLeaf_V2",
+  "display_name": "SunLeaf_SunLeaf_V2",
+  "pcbench_directory": "PCBs/SunLeaf_SunLeaf_V2",
+  "source": "https://github.com/HydroPWNics/SunLeaf",
+  "author": "HydroPWNics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.765719+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 90,
+    "components": 158,
+    "dimensions_mm": {
+      "width": 77.5,
+      "height": 40.0
+    },
+    "area_cm2": 31.0,
+    "zones": 21
+  },
+  "reference": {
+    "segments": 1293,
+    "vias": 220,
+    "track_length_mm": 1945.41,
+    "kicad_drc_violations": 624,
+    "kicad_drc_breakdown": {
+      "total_violations": 624,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 125,
+        "copper_edge_clearance": 22,
+        "lib_footprint_issues": 158,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 47,
+        "silk_overlap": 18,
+        "solder_mask_bridge": 85,
+        "text_height": 159,
+        "track_dangling": 6,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 232,
+        "warning": 392
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "board_id": "esp-serial-terminal_esp-com",
+  "display_name": "esp-serial-terminal_esp-com",
+  "pcbench_directory": "PCBs/esp-serial-terminal_esp-com",
+  "source": "https://github.com/dima-ch/esp-serial-terminal",
+  "author": "dima-ch",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:25.829743+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 66.23,
+      "height": 34.56
+    },
+    "area_cm2": 22.89,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 220,
+    "vias": 10,
+    "track_length_mm": 661.67,
+    "kicad_drc_violations": 189,
+    "kicad_drc_breakdown": {
+      "total_violations": 189,
+      "unconnected_count": 0,
+      "by_type": {
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 142,
+        "silk_overlap": 10,
+        "text_height": 27,
+        "text_thickness": 6
+      },
+      "by_severity": {
+        "warning": 189
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

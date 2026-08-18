@@ -1,0 +1,29 @@
+{
+  "board": "wifiLCD_wifilcd",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\wifiLCD_wifilcd\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 33,
+  "segment_count": 252,
+  "approximate_track_length_mm": 664.68,
+  "kicad_drc_violations": 209,
+  "generated_at": "2026-08-18T19:57:00.054862+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 209,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 98,
+      "copper_edge_clearance": 9,
+      "courtyards_overlap": 1,
+      "invalid_outline": 2,
+      "lib_footprint_issues": 23,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 69,
+      "silk_overlap": 5
+    },
+    "by_severity": {
+      "error": 110,
+      "warning": 99
+    }
+  }
+}

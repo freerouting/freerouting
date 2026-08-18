@@ -1,0 +1,53 @@
+{
+  "board_id": "decelerator4030_decelerator4030",
+  "display_name": "decelerator4030_decelerator4030",
+  "pcbench_directory": "PCBs/decelerator4030_decelerator4030",
+  "source": "https://github.com/Sakura-IT/decelerator4030",
+  "author": "Sakura-IT",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:32.401820+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 180,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 7707,
+    "vias": 865,
+    "track_length_mm": 28322.14,
+    "kicad_drc_violations": 953,
+    "kicad_drc_breakdown": {
+      "total_violations": 953,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 508,
+        "copper_edge_clearance": 2,
+        "invalid_outline": 2,
+        "silk_over_copper": 199,
+        "silk_overlap": 65,
+        "starved_thermal": 2,
+        "text_height": 113,
+        "track_dangling": 61
+      },
+      "by_severity": {
+        "error": 515,
+        "warning": 438
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

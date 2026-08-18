@@ -1,0 +1,53 @@
+{
+  "board_id": "roz_roz-power-board",
+  "display_name": "roz_roz-power-board",
+  "pcbench_directory": "PCBs/roz_roz-power-board",
+  "source": "https://github.com/JonHylands/roz",
+  "author": "JonHylands",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.485939+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 28,
+    "components": 87,
+    "dimensions_mm": {
+      "width": 80.0,
+      "height": 42.0
+    },
+    "area_cm2": 33.6,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 638,
+    "vias": 59,
+    "track_length_mm": 1490.87,
+    "kicad_drc_violations": 538,
+    "kicad_drc_breakdown": {
+      "total_violations": 538,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 115,
+        "courtyards_overlap": 17,
+        "lib_footprint_issues": 87,
+        "shorting_items": 25,
+        "silk_over_copper": 40,
+        "silk_overlap": 56,
+        "solder_mask_bridge": 185,
+        "starved_thermal": 1,
+        "text_height": 12
+      },
+      "by_severity": {
+        "error": 343,
+        "warning": 195
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

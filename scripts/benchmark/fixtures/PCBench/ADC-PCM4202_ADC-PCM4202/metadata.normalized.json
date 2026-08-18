@@ -1,0 +1,49 @@
+{
+  "board_id": "ADC-PCM4202_ADC-PCM4202",
+  "display_name": "ADC-PCM4202_ADC-PCM4202",
+  "pcbench_directory": "PCBs/ADC-PCM4202_ADC-PCM4202",
+  "source": "https://github.com/ohdsp/ADC-PCM4202",
+  "author": "ohdsp",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:38.457892+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 61,
+    "components": 237,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 1237,
+    "vias": 277,
+    "track_length_mm": 2788.57,
+    "kicad_drc_violations": 667,
+    "kicad_drc_breakdown": {
+      "total_violations": 667,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 426,
+        "lib_footprint_issues": 199,
+        "silk_over_copper": 4,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 26
+      },
+      "by_severity": {
+        "error": 452,
+        "warning": 215
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

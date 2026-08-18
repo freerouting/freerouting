@@ -1,0 +1,28 @@
+{
+  "board": "kitspace_hp_led_switch",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_hp_led_switch\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 98,
+  "approximate_track_length_mm": 425.03,
+  "kicad_drc_violations": 44,
+  "generated_at": "2026-08-18T19:07:37.347870+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 44,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 8,
+      "lib_footprint_issues": 1,
+      "lib_footprint_mismatch": 24,
+      "silk_edge_clearance": 2,
+      "silk_overlap": 7,
+      "text_height": 1,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 8,
+      "warning": 36
+    }
+  }
+}

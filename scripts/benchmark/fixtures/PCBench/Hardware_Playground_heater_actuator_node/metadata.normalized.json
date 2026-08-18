@@ -1,0 +1,53 @@
+{
+  "board_id": "Hardware_Playground_heater_actuator_node",
+  "display_name": "Hardware_Playground_heater_actuator_node",
+  "pcbench_directory": "PCBs/Hardware_Playground_heater_actuator_node",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 990,
+    "dimensions_mm": {
+      "width": 69.1,
+      "height": 65.53
+    },
+    "area_cm2": 45.28,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 313,
+    "vias": 23,
+    "track_length_mm": 1022.22,
+    "kicad_drc_violations": 608,
+    "kicad_drc_breakdown": {
+      "total_violations": 608,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 199,
+        "clearance": 148,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 3,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 45,
+        "pth_inside_courtyard": 199,
+        "silk_over_copper": 1,
+        "text_height": 10
+      },
+      "by_severity": {
+        "error": 552,
+        "warning": 56
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

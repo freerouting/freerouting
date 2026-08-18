@@ -1,0 +1,52 @@
+{
+  "board_id": "wavegen_waveform-generator",
+  "display_name": "wavegen_waveform-generator",
+  "pcbench_directory": "PCBs/wavegen_waveform-generator",
+  "source": "https://github.com/Fifty-Nine/wavegen",
+  "author": "Fifty-Nine",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:23:00.474151+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 43,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 50.8,
+      "height": 50.8
+    },
+    "area_cm2": 25.81,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 491,
+    "vias": 55,
+    "track_length_mm": 1006.74,
+    "kicad_drc_violations": 124,
+    "kicad_drc_breakdown": {
+      "total_violations": 124,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 19,
+        "courtyards_overlap": 10,
+        "lib_footprint_issues": 56,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 14,
+        "silk_overlap": 20,
+        "starved_thermal": 1,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 30,
+        "warning": 94
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

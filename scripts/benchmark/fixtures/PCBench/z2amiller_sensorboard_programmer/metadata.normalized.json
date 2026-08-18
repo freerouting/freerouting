@@ -1,0 +1,45 @@
+{
+  "board_id": "z2amiller_sensorboard_programmer",
+  "display_name": "z2amiller_sensorboard_programmer",
+  "pcbench_directory": "PCBs/z2amiller_sensorboard_programmer",
+  "source": "https://github.com/z2amiller/sensorboard",
+  "author": "",
+  "license": "[{'name': 'MIT License', 'link': 'https://api.github.com/licenses/mit'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 26.03,
+      "height": 18.41
+    },
+    "area_cm2": 4.79,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 42,
+    "vias": 0,
+    "track_length_mm": 152.15,
+    "kicad_drc_violations": 24,
+    "kicad_drc_breakdown": {
+      "total_violations": 24,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 8,
+        "silk_overlap": 16
+      },
+      "by_severity": {
+        "warning": 24
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

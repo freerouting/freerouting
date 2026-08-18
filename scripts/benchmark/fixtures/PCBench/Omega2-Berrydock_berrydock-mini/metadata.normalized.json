@@ -1,0 +1,55 @@
+{
+  "board_id": "Omega2-Berrydock_berrydock-mini",
+  "display_name": "Omega2-Berrydock_berrydock-mini",
+  "pcbench_directory": "PCBs/Omega2-Berrydock_berrydock-mini",
+  "source": "https://github.com/berryelectronics/Omega2-Berrydock",
+  "author": "berryelectronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.725954+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 55,
+    "components": 88,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 1513,
+    "vias": 156,
+    "track_length_mm": 1543.57,
+    "kicad_drc_violations": 659,
+    "kicad_drc_breakdown": {
+      "total_violations": 659,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 414,
+        "copper_edge_clearance": 17,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 88,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 16,
+        "silk_overlap": 14,
+        "solder_mask_bridge": 89,
+        "starved_thermal": 5,
+        "track_dangling": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 528,
+        "warning": 131
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

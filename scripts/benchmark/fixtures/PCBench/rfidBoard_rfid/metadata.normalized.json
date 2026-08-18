@@ -1,0 +1,53 @@
+{
+  "board_id": "rfidBoard_rfid",
+  "display_name": "rfidBoard_rfid",
+  "pcbench_directory": "PCBs/rfidBoard_rfid",
+  "source": "https://github.com/reportingsjr/rfidBoard",
+  "author": "reportingsjr",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:25.437739+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 31,
+    "components": 34,
+    "dimensions_mm": {
+      "width": 75.0,
+      "height": 50.0
+    },
+    "area_cm2": 37.5,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 239,
+    "vias": 67,
+    "track_length_mm": 681.86,
+    "kicad_drc_violations": 132,
+    "kicad_drc_breakdown": {
+      "total_violations": 132,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 44,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 34,
+        "padstack": 4,
+        "silk_over_copper": 4,
+        "silk_overlap": 6,
+        "starved_thermal": 2,
+        "text_height": 30
+      },
+      "by_severity": {
+        "error": 54,
+        "warning": 78
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "board_id": "DiscoDanceFloorV1_DiscoDongle",
+  "display_name": "DiscoDanceFloorV1_DiscoDongle",
+  "pcbench_directory": "PCBs/DiscoDanceFloorV1_DiscoDongle",
+  "source": "https://github.com/jgillick/DiscoDanceFloorV1",
+  "author": "jgillick",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.337890+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 58.42,
+      "height": 15.88
+    },
+    "area_cm2": 9.28,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 132,
+    "vias": 14,
+    "track_length_mm": 258.44,
+    "kicad_drc_violations": 85,
+    "kicad_drc_breakdown": {
+      "total_violations": 85,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 49,
+        "copper_edge_clearance": 8,
+        "lib_footprint_issues": 21,
+        "silk_edge_clearance": 4,
+        "silk_overlap": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 58,
+        "warning": 27
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "board_id": "ABOVISP_ABOVISP",
+  "display_name": "ABOVISP_ABOVISP",
+  "pcbench_directory": "PCBs/ABOVISP_ABOVISP",
+  "source": "https://github.com/jglim/ABOVISP",
+  "author": "jglim",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:26.021745+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 17.78,
+      "height": 30.48
+    },
+    "area_cm2": 5.42,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 76,
+    "vias": 12,
+    "track_length_mm": 149.15,
+    "kicad_drc_violations": 115,
+    "kicad_drc_breakdown": {
+      "total_violations": 115,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 20,
+        "copper_edge_clearance": 31,
+        "courtyards_overlap": 9,
+        "lib_footprint_issues": 15,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 5,
+        "silk_overlap": 19,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 5
+      },
+      "by_severity": {
+        "error": 69,
+        "warning": 46
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

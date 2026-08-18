@@ -1,0 +1,25 @@
+{
+  "board": "Hardware_Playground_hy_adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_hy_adapter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 3,
+  "segment_count": 25,
+  "approximate_track_length_mm": 56.38,
+  "kicad_drc_violations": 49,
+  "generated_at": "2026-08-18T18:53:38.732439+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 49,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 18,
+      "lib_footprint_issues": 22,
+      "silk_edge_clearance": 3,
+      "text_height": 6
+    },
+    "by_severity": {
+      "error": 18,
+      "warning": 31
+    }
+  }
+}

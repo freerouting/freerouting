@@ -1,0 +1,60 @@
+{
+  "board_id": "rvi_v2x_hardware_V2X",
+  "display_name": "rvi_v2x_hardware_V2X",
+  "pcbench_directory": "PCBs/rvi_v2x_hardware_V2X",
+  "source": "https://github.com/PDXostc/rvi_v2x_hardware",
+  "author": "PDXostc",
+  "license": "Mozilla Public License 2.0",
+  "license_spdx": "MPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:32.905826+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 116,
+    "components": 198,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 56.0
+    },
+    "area_cm2": 47.6,
+    "zones": 38
+  },
+  "reference": {
+    "segments": 2759,
+    "vias": 416,
+    "track_length_mm": 4514.07,
+    "kicad_drc_violations": 1399,
+    "kicad_drc_breakdown": {
+      "total_violations": 1399,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 8,
+        "clearance": 506,
+        "copper_edge_clearance": 23,
+        "courtyards_overlap": 10,
+        "hole_clearance": 13,
+        "lib_footprint_issues": 198,
+        "padstack": 8,
+        "pth_inside_courtyard": 16,
+        "silk_edge_clearance": 31,
+        "silk_over_copper": 187,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 8,
+        "starved_thermal": 8,
+        "text_height": 161,
+        "track_dangling": 22,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 592,
+        "warning": 807
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

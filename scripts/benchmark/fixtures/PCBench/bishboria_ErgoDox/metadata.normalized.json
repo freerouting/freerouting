@@ -1,0 +1,56 @@
+{
+  "board_id": "bishboria_ErgoDox",
+  "display_name": "bishboria_ErgoDox",
+  "pcbench_directory": "PCBs/bishboria_ErgoDox",
+  "source": "https://github.com/bishboria/ErgoDox",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 65,
+    "dimensions_mm": {
+      "width": 182.84,
+      "height": 158.87
+    },
+    "area_cm2": 290.48,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1174,
+    "vias": 6,
+    "track_length_mm": 5338.3,
+    "kicad_drc_violations": 1395,
+    "kicad_drc_breakdown": {
+      "total_violations": 1395,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 80,
+        "clearance": 507,
+        "copper_edge_clearance": 20,
+        "hole_clearance": 199,
+        "isolated_copper": 1,
+        "padstack": 80,
+        "shorting_items": 202,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 6,
+        "silk_overlap": 81,
+        "solder_mask_bridge": 202,
+        "starved_thermal": 6
+      },
+      "by_severity": {
+        "error": 1216,
+        "warning": 179
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

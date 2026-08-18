@@ -1,0 +1,27 @@
+{
+  "board": "ESP_WiFiSwitch_WifiSwitch",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ESP_WiFiSwitch_WifiSwitch\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 12,
+  "segment_count": 90,
+  "approximate_track_length_mm": 250.91,
+  "kicad_drc_violations": 80,
+  "generated_at": "2026-08-18T18:48:36.491484+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 80,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 38,
+      "invalid_outline": 4,
+      "lib_footprint_issues": 9,
+      "silk_edge_clearance": 10,
+      "silk_over_copper": 16,
+      "silk_overlap": 3
+    },
+    "by_severity": {
+      "error": 42,
+      "warning": 38
+    }
+  }
+}

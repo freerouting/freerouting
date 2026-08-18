@@ -1,0 +1,55 @@
+{
+  "board_id": "tmk_HHKB_controller",
+  "display_name": "tmk_HHKB_controller",
+  "pcbench_directory": "PCBs/tmk_HHKB_controller",
+  "source": "https://github.com/tmk/HHKB_controller",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 95,
+    "dimensions_mm": {
+      "width": 141.5,
+      "height": 36.0
+    },
+    "area_cm2": 50.94,
+    "zones": 15
+  },
+  "reference": {
+    "segments": 895,
+    "vias": 118,
+    "track_length_mm": 2875.69,
+    "kicad_drc_violations": 635,
+    "kicad_drc_breakdown": {
+      "total_violations": 635,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 437,
+        "copper_edge_clearance": 2,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 93,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 81,
+        "silk_overlap": 9,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 1,
+        "text_height": 1,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 446,
+        "warning": 189
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

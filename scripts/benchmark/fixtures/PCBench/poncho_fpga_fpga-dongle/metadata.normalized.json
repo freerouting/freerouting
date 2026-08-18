@@ -1,0 +1,59 @@
+{
+  "board_id": "poncho_fpga_fpga-dongle",
+  "display_name": "poncho_fpga_fpga-dongle",
+  "pcbench_directory": "PCBs/poncho_fpga_fpga-dongle",
+  "source": "https://github.com/martinribelotta/poncho_fpga",
+  "author": "martinribelotta",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:43.641953+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 72,
+    "components": 114,
+    "dimensions_mm": {
+      "width": 85.8,
+      "height": 137.0
+    },
+    "area_cm2": 117.55,
+    "zones": 15
+  },
+  "reference": {
+    "segments": 2186,
+    "vias": 216,
+    "track_length_mm": 7663.47,
+    "kicad_drc_violations": 894,
+    "kicad_drc_breakdown": {
+      "total_violations": 894,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 233,
+        "courtyards_overlap": 1,
+        "drill_out_of_range": 105,
+        "items_not_allowed": 199,
+        "lib_footprint_issues": 114,
+        "padstack": 2,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 9,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 199,
+        "starved_thermal": 4,
+        "text_height": 2,
+        "track_dangling": 5,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 744,
+        "warning": 150
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

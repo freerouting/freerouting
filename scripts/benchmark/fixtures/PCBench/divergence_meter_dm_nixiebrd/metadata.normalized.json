@@ -1,0 +1,52 @@
+{
+  "board_id": "divergence_meter_dm_nixiebrd",
+  "display_name": "divergence_meter_dm_nixiebrd",
+  "pcbench_directory": "PCBs/divergence_meter_dm_nixiebrd",
+  "source": "https://github.com/q61org/divergence_meter",
+  "author": "q61org",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.941745+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 188.5,
+      "height": 42.0
+    },
+    "area_cm2": 79.17,
+    "zones": 16
+  },
+  "reference": {
+    "segments": 1594,
+    "vias": 166,
+    "track_length_mm": 5578.38,
+    "kicad_drc_violations": 139,
+    "kicad_drc_breakdown": {
+      "total_violations": 139,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 69,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 2,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 51,
+        "silk_edge_clearance": 1,
+        "silk_overlap": 7,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 79,
+        "warning": 60
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

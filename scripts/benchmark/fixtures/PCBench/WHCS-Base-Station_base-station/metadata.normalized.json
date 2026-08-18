@@ -1,0 +1,54 @@
+{
+  "board_id": "WHCS-Base-Station_base-station",
+  "display_name": "WHCS-Base-Station_base-station",
+  "pcbench_directory": "PCBs/WHCS-Base-Station_base-station",
+  "source": "https://github.com/WHCS-UCF/WHCS-Base-Station",
+  "author": "WHCS-UCF",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.030146+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 69,
+    "dimensions_mm": {
+      "width": 85.73,
+      "height": 87.25
+    },
+    "area_cm2": 74.8,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 559,
+    "vias": 108,
+    "track_length_mm": 2534.73,
+    "kicad_drc_violations": 429,
+    "kicad_drc_breakdown": {
+      "total_violations": 429,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 212,
+        "hole_clearance": 6,
+        "isolated_copper": 20,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 126,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 6,
+        "starved_thermal": 4,
+        "text_height": 37,
+        "track_dangling": 5
+      },
+      "by_severity": {
+        "error": 228,
+        "warning": 201
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

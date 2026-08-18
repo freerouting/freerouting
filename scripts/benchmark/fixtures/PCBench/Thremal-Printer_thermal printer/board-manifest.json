@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Thremal-Printer_thermal printer",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 184696,
+      "sha256": "19b04048f303db619c51efb2868d7566c4e1fb282fc290124f14d4029448b724"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 84201,
+      "sha256": "f1cfaa412a04a7f502e3bb106eeacd8b0f5f289ade5af1b7048964cf50827e98"
+    },
+    "metadata_json": {
+      "bytes": 510,
+      "sha256": "1c1ed4ecb41afce56d7b2c5fc7b9830c788016bccfef193ae47dde8bd3f639f5"
+    },
+    "final_json": {
+      "bytes": 76723,
+      "sha256": "eed82ae5a20a852cf7b91f770c3e00376a6aff56e537f464723ce106de6e8dbb"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:52:12.308495+00:00"
+  }
+}

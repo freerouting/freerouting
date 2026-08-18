@@ -1,0 +1,50 @@
+{
+  "board_id": "battmanpi_battmanpi",
+  "display_name": "battmanpi_battmanpi",
+  "pcbench_directory": "PCBs/battmanpi_battmanpi",
+  "source": "https://github.com/andrewerrington/battmanpi",
+  "author": "andrewerrington",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:42.049934+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 80,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 56.0
+    },
+    "area_cm2": 36.4,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 427,
+    "vias": 1,
+    "track_length_mm": 1363.31,
+    "kicad_drc_violations": 348,
+    "kicad_drc_breakdown": {
+      "total_violations": 348,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 125,
+        "copper_edge_clearance": 14,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 2,
+        "silk_overlap": 199,
+        "starved_thermal": 5
+      },
+      "by_severity": {
+        "error": 144,
+        "warning": 204
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

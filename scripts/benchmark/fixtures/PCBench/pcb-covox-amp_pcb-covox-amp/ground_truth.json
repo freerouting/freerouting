@@ -1,0 +1,28 @@
+{
+  "board": "pcb-covox-amp_pcb-covox-amp",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\pcb-covox-amp_pcb-covox-amp\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 144,
+  "approximate_track_length_mm": 609.39,
+  "kicad_drc_violations": 204,
+  "generated_at": "2026-08-18T19:31:41.595138+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 204,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 62,
+      "lib_footprint_issues": 45,
+      "silk_edge_clearance": 31,
+      "silk_over_copper": 52,
+      "silk_overlap": 7,
+      "solder_mask_bridge": 6,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 68,
+      "warning": 136
+    }
+  }
+}

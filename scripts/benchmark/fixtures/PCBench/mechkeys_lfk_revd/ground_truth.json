@@ -1,0 +1,38 @@
+{
+  "board": "mechkeys_lfk_revd",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mechkeys_lfk_revd\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 286,
+  "segment_count": 3545,
+  "approximate_track_length_mm": 19199.71,
+  "kicad_drc_violations": 1399,
+  "generated_at": "2026-08-18T19:22:01.354705+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1399,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 509,
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 9,
+      "drill_out_of_range": 93,
+      "hole_clearance": 145,
+      "hole_to_hole": 24,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 199,
+      "npth_inside_courtyard": 2,
+      "pth_inside_courtyard": 5,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 199,
+      "silk_overlap": 132,
+      "solder_mask_bridge": 58,
+      "starved_thermal": 5,
+      "track_dangling": 8,
+      "via_dangling": 2
+    },
+    "by_severity": {
+      "error": 830,
+      "warning": 569
+    }
+  }
+}

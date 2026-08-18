@@ -1,0 +1,162 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\memsarray_mems_modules\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  40386 -39568.1  29718 -39568.1  29748.5 -28077.2  40416.5 -28077.2
+            40386 -39568.1)
+    )
+    (plane DGND (polygon B.Cu 0  29972 -28702  40132 -28702  40132 -38862  29972 -38862
+            29972 -28702))
+    (plane DGND (polygon F.Cu 0  29972 -28702  40132 -28702  40132 -38862  29972 -38862
+            29972 -28702))
+    (via "Via[0-1]_600:400_um" "Via[0-1]_762:508_um")
+    (rule
+      (width 254)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component mems_array:Castellated_Pad
+      (place P4 37084 -39116 front 0 (PN CASTELLATED_PAD))
+      (place P1 33020 -28448 front 0 (PN CASTELLATED_PAD))
+      (place P3 33020 -39116 front 0 (PN CASTELLATED_PAD))
+      (place P2 37084 -28448 front 0 (PN CASTELLATED_PAD))
+    )
+    (component "mems_array:Mic-MEMS_Top_8_pins"
+      (place MIC1 35052 -33782 front 90 (PN MEMS_MIC))
+    )
+    (component Capacitors_SMD:C_0805
+      (place C1 31242 -33782 front -90 (PN 1uF))
+    )
+  )
+  (library
+    (image mems_array:Castellated_Pad
+      (pin Rect[A]Pad_1524.000000x2000.000000_um 1 0 0)
+    )
+    (image "mems_array:Mic-MEMS_Top_8_pins"
+      (outline (polygon signal 0  -1595 -2095  -1595 2095  1595 2095  1595 -2095))
+      (outline (path signal 120  1500 -2000  1500 -1500))
+      (outline (path signal 120  1500 -2000  1000 -2000))
+      (outline (path signal 120  -1500 2000  -1000 2000))
+      (outline (path signal 120  -1500 2000  -1500 1500))
+      (outline (path signal 120  1800 -2070.71  1754.55 -2054.17  1730.36 -2012.28  1738.76 -1964.64
+            1775.82 -1933.55  1824.18 -1933.55  1861.24 -1964.64  1869.64 -2012.28
+            1845.45 -2054.17  1800 -2070.71))
+      (pin Rect[T]Pad_450.000000x950.000000_um 4 -425 -675)
+      (pin Rect[T]Pad_450.000000x950.000000_um 3 -425 675)
+      (pin Rect[T]Pad_450.000000x950.000000_um 2 425 675)
+      (pin Rect[T]Pad_450.000000x950.000000_um 1 425 -675)
+      (pin Rect[T]Pad_450.000000x2300.000000_um 5 1225 0)
+      (pin Rect[T]Pad_450.000000x2300.000000_um 5@1 -1275 0)
+      (pin Rect[T]Pad_1300.000000x450.000000_um 5@2 0 -1775)
+      (pin Rect[T]Pad_1300.000000x450.000000_um 5@3 0 1775)
+    )
+    (image Capacitors_SMD:C_0805
+      (outline (polygon signal 0  1795 995  1795 -995  -1795 -995  -1795 995))
+      (outline (path signal 150  -500 -850  500 -850))
+      (outline (path signal 150  500 850  -500 850))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+    )
+    (padstack Rect[T]Pad_450.000000x2300.000000_um
+      (shape (rect F.Cu -225 -1150 225 1150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_450.000000x950.000000_um
+      (shape (rect F.Cu -225 -475 225 475))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1250.000000_um
+      (shape (rect F.Cu -500 -625 500 625))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1300.000000x450.000000_um
+      (shape (rect F.Cu -650 -225 650 225))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x2000.000000_um
+      (shape (rect F.Cu -762 -1000 762 1000))
+      (shape (rect B.Cu -762 -1000 762 1000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_762:508_um"
+      (shape (circle F.Cu 762))
+      (shape (circle B.Cu 762))
+      (attach off)
+    )
+  )
+  (network
+    (net DVDD
+      (pins MIC1-2 MIC1-1 P1-1 C1-1)
+    )
+    (net DGND
+      (pins MIC1-5 MIC1-5@1 MIC1-5@2 MIC1-5@3 C1-2 P2-1)
+    )
+    (net /OUT
+      (pins P4-1 MIC1-4)
+    )
+    (net /CLK
+      (pins MIC1-3 P3-1)
+    )
+    (class kicad_default /CLK /OUT DGND DVDD
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 254)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 508  31242 -30464  31242 -32782)(net DVDD)(type route))
+    (wire (path F.Cu 508  33020 -28448  33020 -28686  31242 -30464)(net DVDD)(type route))
+    (wire (path F.Cu 254  33274 -32512  32875 -32512  32605 -32782  31242 -32782)(net DVDD)(type route))
+    (wire (path F.Cu 152.4  33274 -32512  33282 -32512)(net DVDD)(type route))
+    (wire (path F.Cu 254  34127 -33357  33909 -33139)(net DVDD)(type route))
+    (wire (path F.Cu 152.4  33282 -32512  33909 -33139)(net DVDD)(type route))
+    (wire (path F.Cu 254  34377 -33357  35727 -33357)(net DVDD)(type route))
+    (wire (path F.Cu 254  34377 -33357  34127 -33357)(net DVDD)(type route))
+    (wire (path F.Cu 254  31242 -37084  31242 -34782)(net DGND)(type route))
+    (wire (path B.Cu 254  35052 -37084  31242 -37084)(net DGND)(type route))
+    (wire (path F.Cu 254  35052 -37084  35052 -35057)(net DGND)(type route))
+    (wire (path B.Cu 254  37084 -28448  37084 -35052  35052 -37084)(net DGND)(type route))
+    (wire (path F.Cu 254  37084 -28448  37084 -31450  35977 -32557  35052 -32557)(net DGND)(type route))
+    (wire (path F.Cu 254  33277 -34207  33277 -33782)(net DGND)(type route))
+    (wire (path F.Cu 254  36830 -35052  37084 -35306  37084 -39116)(net /OUT)(type route))
+    (wire (path F.Cu 254  35727 -34207  35977 -34207)(net /OUT)(type route))
+    (wire (path F.Cu 152.4  36830 -35052  36822 -35052  36314 -34544)(net /OUT)(type route))
+    (wire (path F.Cu 254  35977 -34207  36314 -34544)(net /OUT)(type route))
+    (wire (path F.Cu 254  33401 -34925  33020 -35306  33020 -39116)(net /CLK)(type route))
+    (wire (path F.Cu 254  34377 -34207  34127 -34207)(net /CLK)(type route))
+    (wire (path F.Cu 152.4  33401 -34925  33401 -34933  33782 -34552)(net /CLK)(type route))
+    (wire (path F.Cu 254  34127 -34207  33782 -34552)(net /CLK)(type route))
+    (via "Via[0-1]_762:508_um"  31242 -37084 (net DGND)(type route))
+    (via "Via[0-1]_762:508_um"  35052 -37084 (net DGND)(type route))
+  )
+)

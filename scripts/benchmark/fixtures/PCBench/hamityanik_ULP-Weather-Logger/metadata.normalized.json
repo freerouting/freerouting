@@ -1,0 +1,54 @@
+{
+  "board_id": "hamityanik_ULP-Weather-Logger",
+  "display_name": "hamityanik_ULP-Weather-Logger",
+  "pcbench_directory": "PCBs/hamityanik_ULP-Weather-Logger",
+  "source": "https://github.com/hamityanik/ULP-Weather-Logger",
+  "author": "",
+  "license": "[{'name': 'MIT License', 'link': 'https://api.github.com/licenses/mit'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 94,
+    "dimensions_mm": {
+      "width": 37.0,
+      "height": 66.0
+    },
+    "area_cm2": 24.42,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 358,
+    "vias": 34,
+    "track_length_mm": 739.73,
+    "kicad_drc_violations": 529,
+    "kicad_drc_breakdown": {
+      "total_violations": 529,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 275,
+        "copper_edge_clearance": 6,
+        "courtyards_overlap": 1,
+        "hole_clearance": 4,
+        "items_not_allowed": 37,
+        "lib_footprint_issues": 94,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 49,
+        "solder_mask_bridge": 59,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 384,
+        "warning": 145
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

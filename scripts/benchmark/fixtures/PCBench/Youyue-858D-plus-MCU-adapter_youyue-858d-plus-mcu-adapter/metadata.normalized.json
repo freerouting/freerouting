@@ -1,0 +1,44 @@
+{
+  "board_id": "Youyue-858D-plus-MCU-adapter_youyue-858d-plus-mcu-adapter",
+  "display_name": "Youyue-858D-plus-MCU-adapter_youyue-858d-plus-mcu-adapter",
+  "pcbench_directory": "PCBs/Youyue-858D-plus-MCU-adapter_youyue-858d-plus-mcu-adapter",
+  "source": "https://github.com/madworm/Youyue-858D-plus-MCU-adapter",
+  "author": "madworm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.041769+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 21,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 20.3,
+      "height": 45.9
+    },
+    "area_cm2": 9.32,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 193,
+    "vias": 0,
+    "track_length_mm": 439.44,
+    "kicad_drc_violations": 32,
+    "kicad_drc_breakdown": {
+      "total_violations": 32,
+      "unconnected_count": 0,
+      "by_type": {
+        "silk_overlap": 32
+      },
+      "by_severity": {
+        "warning": 32
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

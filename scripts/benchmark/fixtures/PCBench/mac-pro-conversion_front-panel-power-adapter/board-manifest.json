@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "mac-pro-conversion_front-panel-power-adapter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 92131,
+      "sha256": "77a6e6428c227f58668439afefceeb4a24f2ab40b092ecafecc2e48087ead21e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 51794,
+      "sha256": "3f4da3e720cbd7119ca0523e2e361bc3ac564950be6085bc9b0958bbb9545efa"
+    },
+    "metadata_json": {
+      "bytes": 551,
+      "sha256": "c203b5a74c28e1361afda9c4ed0125e4af9ec8330edc374a1d3c1265f600218a"
+    },
+    "final_json": {
+      "bytes": 20770,
+      "sha256": "a68f5fa3ab3e186fe2ed456c4ba02698c1d4888f800442a14452176e12b8ed05"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:19:17.908885+00:00"
+  }
+}

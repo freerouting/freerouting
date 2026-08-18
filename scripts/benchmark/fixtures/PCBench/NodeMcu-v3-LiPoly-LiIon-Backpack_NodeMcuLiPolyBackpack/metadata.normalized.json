@@ -1,0 +1,52 @@
+{
+  "board_id": "NodeMcu-v3-LiPoly-LiIon-Backpack_NodeMcuLiPolyBackpack",
+  "display_name": "NodeMcu-v3-LiPoly-LiIon-Backpack_NodeMcuLiPolyBackpack",
+  "pcbench_directory": "PCBs/NodeMcu-v3-LiPoly-LiIon-Backpack_NodeMcuLiPolyBackpack",
+  "source": "https://github.com/theinventorshouse/NodeMcu-v3-LiPoly-LiIon-Backpack",
+  "author": "theinventorshouse",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.613999+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 19.84,
+      "height": 26.16
+    },
+    "area_cm2": 5.19,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 64,
+    "vias": 0,
+    "track_length_mm": 138.67,
+    "kicad_drc_violations": 202,
+    "kicad_drc_breakdown": {
+      "total_violations": 202,
+      "unconnected_count": 6,
+      "by_type": {
+        "copper_edge_clearance": 5,
+        "lib_footprint_issues": 16,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 164,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 1,
+        "text_height": 6,
+        "tracks_crossing": 1
+      },
+      "by_severity": {
+        "error": 7,
+        "warning": 195
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "board_id": "Hardware_Playground_buck_led_driver",
+  "display_name": "Hardware_Playground_buck_led_driver",
+  "pcbench_directory": "PCBs/Hardware_Playground_buck_led_driver",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 25.0,
+      "height": 17.0
+    },
+    "area_cm2": 4.25,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 48,
+    "vias": 9,
+    "track_length_mm": 95.16,
+    "kicad_drc_violations": 64,
+    "kicad_drc_breakdown": {
+      "total_violations": 64,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 27,
+        "courtyards_overlap": 9,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 12,
+        "pth_inside_courtyard": 2,
+        "silk_edge_clearance": 12,
+        "silk_over_copper": 1
+      },
+      "by_severity": {
+        "error": 38,
+        "warning": 26
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

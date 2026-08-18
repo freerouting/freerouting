@@ -1,0 +1,52 @@
+{
+  "board_id": "elec_turbo_brushless",
+  "display_name": "elec_turbo_brushless",
+  "pcbench_directory": "PCBs/elec_turbo_brushless",
+  "source": "https://github.com/utcoupe/elec",
+  "author": "utcoupe",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.678153+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 58,
+    "components": 98,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 50.0
+    },
+    "area_cm2": 35.0,
+    "zones": 24
+  },
+  "reference": {
+    "segments": 828,
+    "vias": 198,
+    "track_length_mm": 1870.11,
+    "kicad_drc_violations": 225,
+    "kicad_drc_breakdown": {
+      "total_violations": 225,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 106,
+        "copper_edge_clearance": 8,
+        "courtyards_overlap": 7,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 8,
+        "lib_footprint_mismatch": 82,
+        "silk_over_copper": 2,
+        "text_height": 10
+      },
+      "by_severity": {
+        "error": 123,
+        "warning": 102
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

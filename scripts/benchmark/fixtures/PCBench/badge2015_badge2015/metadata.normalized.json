@@ -1,0 +1,53 @@
+{
+  "board_id": "badge2015_badge2015",
+  "display_name": "badge2015_badge2015",
+  "pcbench_directory": "PCBs/badge2015_badge2015",
+  "source": "https://github.com/cryptovillage/badge2015",
+  "author": "cryptovillage",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:38.741895+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 47,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 38.1,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 529,
+    "vias": 67,
+    "track_length_mm": 1889.09,
+    "kicad_drc_violations": 624,
+    "kicad_drc_breakdown": {
+      "total_violations": 624,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 355,
+        "copper_edge_clearance": 2,
+        "holes_co_located": 5,
+        "lib_footprint_issues": 56,
+        "silk_over_copper": 199,
+        "silk_overlap": 2,
+        "starved_thermal": 1,
+        "text_thickness": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 358,
+        "warning": 266
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

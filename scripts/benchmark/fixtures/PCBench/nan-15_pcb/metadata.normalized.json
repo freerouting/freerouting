@@ -1,0 +1,56 @@
+{
+  "board_id": "nan-15_pcb",
+  "display_name": "nan-15_pcb",
+  "pcbench_directory": "PCBs/nan-15_pcb",
+  "source": "https://github.com/trebb/nan-15",
+  "author": "trebb",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:25.385738+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 71.12
+    },
+    "area_cm2": 48.77,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 690,
+    "vias": 48,
+    "track_length_mm": 2270.64,
+    "kicad_drc_violations": 338,
+    "kicad_drc_breakdown": {
+      "total_violations": 338,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 153,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 2,
+        "hole_clearance": 7,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 51,
+        "silk_edge_clearance": 29,
+        "silk_over_copper": 16,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 70,
+        "track_dangling": 2,
+        "tracks_crossing": 2
+      },
+      "by_severity": {
+        "error": 237,
+        "warning": 101
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

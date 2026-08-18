@@ -1,0 +1,54 @@
+{
+  "board_id": "Aleste-520EX_aleste",
+  "display_name": "Aleste-520EX_aleste",
+  "pcbench_directory": "PCBs/Aleste-520EX_aleste",
+  "source": "https://github.com/LasDesu/Aleste-520EX",
+  "author": "LasDesu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.033769+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 243,
+    "components": 313,
+    "dimensions_mm": {
+      "width": 334.01,
+      "height": 193.04
+    },
+    "area_cm2": 644.77,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 8264,
+    "vias": 1041,
+    "track_length_mm": 57005.55,
+    "kicad_drc_violations": 868,
+    "kicad_drc_breakdown": {
+      "total_violations": 868,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 77,
+        "courtyards_overlap": 20,
+        "holes_co_located": 105,
+        "lib_footprint_issues": 199,
+        "silk_edge_clearance": 24,
+        "silk_over_copper": 173,
+        "silk_overlap": 199,
+        "track_dangling": 47,
+        "tracks_crossing": 4,
+        "via_dangling": 20
+      },
+      "by_severity": {
+        "error": 101,
+        "warning": 767
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

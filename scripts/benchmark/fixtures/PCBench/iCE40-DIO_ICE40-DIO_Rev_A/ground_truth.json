@@ -1,0 +1,32 @@
+{
+  "board": "iCE40-DIO_ICE40-DIO_Rev_A",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\iCE40-DIO_ICE40-DIO_Rev_A\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 205,
+  "segment_count": 1703,
+  "approximate_track_length_mm": 3134.84,
+  "kicad_drc_violations": 573,
+  "generated_at": "2026-08-18T18:58:13.807989+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 573,
+    "unconnected_count": 1,
+    "by_type": {
+      "annular_width": 119,
+      "clearance": 235,
+      "copper_edge_clearance": 95,
+      "hole_to_hole": 4,
+      "item_on_disabled_layer": 1,
+      "lib_footprint_issues": 51,
+      "silk_edge_clearance": 23,
+      "silk_overlap": 32,
+      "starved_thermal": 6,
+      "text_height": 5,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 456,
+      "warning": 117
+    }
+  }
+}

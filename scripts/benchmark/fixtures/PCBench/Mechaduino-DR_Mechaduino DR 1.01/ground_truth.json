@@ -1,0 +1,32 @@
+{
+  "board": "Mechaduino-DR_Mechaduino DR 1.01",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Mechaduino-DR_Mechaduino DR 1.01\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 76,
+  "segment_count": 811,
+  "approximate_track_length_mm": 1255.44,
+  "kicad_drc_violations": 861,
+  "generated_at": "2026-08-18T19:21:07.755593+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 861,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 368,
+      "copper_edge_clearance": 2,
+      "hole_clearance": 6,
+      "lib_footprint_issues": 50,
+      "padstack": 2,
+      "silk_over_copper": 20,
+      "silk_overlap": 114,
+      "solder_mask_bridge": 149,
+      "text_height": 75,
+      "text_thickness": 72,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 525,
+      "warning": 336
+    }
+  }
+}

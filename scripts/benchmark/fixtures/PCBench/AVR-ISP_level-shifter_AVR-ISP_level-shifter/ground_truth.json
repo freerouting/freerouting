@@ -1,0 +1,25 @@
+{
+  "board": "AVR-ISP_level-shifter_AVR-ISP_level-shifter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\AVR-ISP_level-shifter_AVR-ISP_level-shifter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 268,
+  "approximate_track_length_mm": 450.66,
+  "kicad_drc_violations": 33,
+  "generated_at": "2026-08-18T18:31:06.646057+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 33,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 3,
+      "lib_footprint_issues": 27,
+      "silk_edge_clearance": 1,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 3,
+      "warning": 30
+    }
+  }
+}

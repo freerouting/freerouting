@@ -1,0 +1,27 @@
+{
+  "board": "SmartLaserCO2-PCB_LaserPointer",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SmartLaserCO2-PCB_LaserPointer\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 5,
+  "approximate_track_length_mm": 49.85,
+  "kicad_drc_violations": 23,
+  "generated_at": "2026-08-18T19:45:15.335999+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 23,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 3,
+      "invalid_outline": 7,
+      "padstack": 2,
+      "silk_overlap": 8,
+      "text_height": 1
+    },
+    "by_severity": {
+      "error": 12,
+      "warning": 11
+    }
+  }
+}

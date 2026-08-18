@@ -1,0 +1,47 @@
+{
+  "board_id": "kitspace_solenoid_driver",
+  "display_name": "kitspace_solenoid_driver",
+  "pcbench_directory": "PCBs/kitspace_solenoid_driver",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:30.175966+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 45.5,
+      "height": 48.5
+    },
+    "area_cm2": 22.07,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 74,
+    "vias": 0,
+    "track_length_mm": 273.65,
+    "kicad_drc_violations": 20,
+    "kicad_drc_breakdown": {
+      "total_violations": 20,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 17,
+        "silk_overlap": 1,
+        "text_height": 1
+      },
+      "by_severity": {
+        "warning": 20
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

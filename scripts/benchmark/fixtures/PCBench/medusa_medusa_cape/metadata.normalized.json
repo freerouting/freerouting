@@ -1,0 +1,52 @@
+{
+  "board_id": "medusa_medusa_cape",
+  "display_name": "medusa_medusa_cape",
+  "pcbench_directory": "PCBs/medusa_medusa_cape",
+  "source": "https://github.com/sharebrained/medusa",
+  "author": "sharebrained",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:42.101935+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 0,
+    "components": 73,
+    "dimensions_mm": {
+      "width": 54.61,
+      "height": 86.36
+    },
+    "area_cm2": 47.16,
+    "zones": 15
+  },
+  "reference": {
+    "segments": 806,
+    "vias": 162,
+    "track_length_mm": 1934.96,
+    "kicad_drc_violations": 570,
+    "kicad_drc_breakdown": {
+      "total_violations": 570,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 199,
+        "copper_edge_clearance": 4,
+        "drill_out_of_range": 5,
+        "invalid_outline": 1,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 88,
+        "silk_overlap": 199,
+        "text_height": 73
+      },
+      "by_severity": {
+        "error": 209,
+        "warning": 361
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

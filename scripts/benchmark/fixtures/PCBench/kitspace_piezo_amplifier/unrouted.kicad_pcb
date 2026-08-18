@@ -1,0 +1,2407 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 4)
+    (tracks 409)
+    (zones 0)
+    (modules 43)
+    (nets 30)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide)
+  )
+
+  (setup
+    (last_trace_width 0.25)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.8)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.05)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.12)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.524 1.524)
+    (pad_drill 0.762)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x010fc_ffffffff)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory ""))
+  )
+
+  (net 0 "")
+  (net 1 "Net-(C1-Pad1)")
+  (net 2 "Net-(C1-Pad2)")
+  (net 3 "Net-(C2-Pad1)")
+  (net 4 +6V)
+  (net 5 "Net-(C3-Pad1)")
+  (net 6 "Net-(C3-Pad2)")
+  (net 7 "Net-(C4-Pad1)")
+  (net 8 "Net-(D1-Pad1)")
+  (net 9 "Net-(D1-Pad2)")
+  (net 10 "Net-(D2-Pad1)")
+  (net 11 "Net-(D2-Pad2)")
+  (net 12 "Net-(J1-Pad1)")
+  (net 13 "Net-(J1-Pad2)")
+  (net 14 "unconnected-(J1-Pad3)")
+  (net 15 GND)
+  (net 16 "Net-(P1-Pad1)")
+  (net 17 "Net-(P1-Pad2)")
+  (net 18 +12V)
+  (net 19 "Net-(P4-Pad1)")
+  (net 20 "Net-(P4-Pad2)")
+  (net 21 "Net-(Q1-Pad2)")
+  (net 22 "Net-(Q2-Pad2)")
+  (net 23 "Net-(R3-Pad1)")
+  (net 24 "Net-(R3-Pad2)")
+  (net 25 "Net-(R13-Pad1)")
+  (net 26 "Net-(R13-Pad2)")
+  (net 27 "Net-(RV1-Pad2)")
+  (net 28 "Net-(RV2-Pad2)")
+  (net 29 "unconnected-(U2-Pad4)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.8)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +12V)
+    (add_net +6V)
+    (add_net GND)
+    (add_net "Net-(C1-Pad1)")
+    (add_net "Net-(C1-Pad2)")
+    (add_net "Net-(C2-Pad1)")
+    (add_net "Net-(C3-Pad1)")
+    (add_net "Net-(C3-Pad2)")
+    (add_net "Net-(C4-Pad1)")
+    (add_net "Net-(D1-Pad1)")
+    (add_net "Net-(D1-Pad2)")
+    (add_net "Net-(D2-Pad1)")
+    (add_net "Net-(D2-Pad2)")
+    (add_net "Net-(J1-Pad1)")
+    (add_net "Net-(J1-Pad2)")
+    (add_net "Net-(P1-Pad1)")
+    (add_net "Net-(P1-Pad2)")
+    (add_net "Net-(P4-Pad1)")
+    (add_net "Net-(P4-Pad2)")
+    (add_net "Net-(Q1-Pad2)")
+    (add_net "Net-(Q2-Pad2)")
+    (add_net "Net-(R13-Pad1)")
+    (add_net "Net-(R13-Pad2)")
+    (add_net "Net-(R3-Pad1)")
+    (add_net "Net-(R3-Pad2)")
+    (add_net "Net-(RV1-Pad2)")
+    (add_net "Net-(RV2-Pad2)")
+    (add_net "unconnected-(J1-Pad3)")
+    (add_net "unconnected-(U2-Pad4)")
+  )
+
+  (module LED_THT:LED_D3.0mm_Clear (layer F.Cu) (tedit 5A6C9BC0) (tstamp 2A96C24)
+    (at 234.565 78.474)
+    (descr "IR-LED, diameter 3.0mm, 2 pins, color: clear")
+    (tags "IR infrared LED diameter 3.0mm 2 pins clear")
+    (path /b760eed3-9072-4382-ae03-a8fd70f59dac)
+    (fp_text reference D1 (at 1.27 -2.96) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value LED (at 1.27 2.96) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.29 1.08) (end -0.29 1.236) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.29 -1.236) (end -0.29 -1.08) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.15 -2.25) (end -1.15 2.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.7 -2.25) (end -1.15 -2.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.7 2.25) (end 3.7 -2.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.15 2.25) (end 3.7 2.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.23 -1.16619) (end -0.23 1.16619) (layer F.Fab) (width 0.1))
+    (fp_circle (center 1.27 0) (end 2.77 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 1.47 0) (layer F.Fab)
+      (effects (font (size 0.8 0.8) (thickness 0.12)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.8 1.8) (drill 0.9) (layers *.Cu *.Mask)
+      (net 8 "Net-(D1-Pad1)"))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.8 1.8) (drill 0.9) (layers *.Cu *.Mask)
+      (net 9 "Net-(D1-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/LED_THT.3dshapes/LED_D3.0mm_Clear.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module MountingHole:MountingHole_3.2mm_M3_ISO7380 (layer F.Cu) (tedit 56D1B4CB) (tstamp 876A5DE)
+    (at 207.184 19.094)
+    (descr "Mounting Hole 3.2mm, no annular, M3, ISO7380")
+    (tags "mounting hole 3.2mm no annular m3 iso7380")
+    (path /00000000-0000-0000-0000-00006247d7d4)
+    (fp_text reference H2 (at 0 -3.85) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole (at 0 3.85) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.85 0) (layer Cmts.User) (width 0.15))
+    (fp_circle (center 0 0) (end 3.1 0) (layer F.CrtYd) (width 0.05))
+    (fp_text user ${REFERENCE} (at 0 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 17C369CF)
+    (at 175.085 69.474)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /add5b594-7f08-40a8-a64c-b0e007d299bb)
+    (fp_text reference R2 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 16 "Net-(P1-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 1 "Net-(C1-Pad1)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 1DF5D875)
+    (at 175.085 74.624)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /10f5d427-ea39-4c0a-ba5d-b8056dc22140)
+    (fp_text reference R20 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 270 (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 10 "Net-(D2-Pad1)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitor_THT:C_Disc_D16.0mm_W5.0mm_P10.00mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 20D44F6A)
+    (at 215.265 65.024)
+    (descr "C, Disc series, Radial, pin pitch=10.00mm, , diameter*width=16.0*5.0mm^2, Capacitor, http://www.vishay.com/docs/28535/vy2series.pdf")
+    (tags "C Disc series Radial pin pitch 10.00mm  diameter 16.0mm width 5.0mm Capacitor")
+    (path /620e7ad5-5707-4bca-9715-33574041157e)
+    (fp_text reference C1 (at 5 -3.75) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 22pF (at 5 3.75) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.12 -2.62) (end -3.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 2.62) (end 13.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 -2.62) (end 13.12 -2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.12 -2.62) (end 13.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.25 2.75) (end 13.25 2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.25 -2.75) (end -3.25 2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.25 2.75) (end 13.25 -2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.25 -2.75) (end -3.25 -2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3 2.5) (end 13 2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 13 -2.5) (end -3 -2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -3 -2.5) (end -3 2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 13 2.5) (end 13 -2.5) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 5 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2 2) (drill 1) (layers *.Cu *.Mask)
+      (net 1 "Net-(C1-Pad1)"))
+    (pad 2 thru_hole circle (at 10 0) (size 2 2) (drill 1) (layers *.Cu *.Mask)
+      (net 2 "Net-(C1-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Capacitor_THT.3dshapes/C_Disc_D16.0mm_W5.0mm_P10.00mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Package_DIP:DIP-14_W7.62mm_Socket_LongPads (layer F.Cu) (tedit 5A02E8C5) (tstamp 253438E1)
+    (at 98.552 54.229)
+    (descr "14-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket, LongPads")
+    (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket LongPads")
+    (path /f01efdb1-881c-40a2-bc25-404d9fd4e172)
+    (fp_text reference U2 (at 3.81 -2.33) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value Opamp_Quad (at 3.81 17.57) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.44 16.63) (end 9.06 16.63) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.06 16.63) (end 9.06 -1.39) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.06 -1.33) (end 4.81 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.56 -1.33) (end 1.56 16.57) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.06 16.57) (end 6.06 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.06 -1.39) (end -1.44 -1.39) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.44 -1.39) (end -1.44 16.63) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.81 -1.33) (end 1.56 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.56 16.57) (end 6.06 16.57) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.55 16.85) (end 9.15 16.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.55 -1.6) (end -1.55 16.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 9.15 16.85) (end 9.15 -1.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 9.15 -1.6) (end -1.55 -1.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 8.89 16.57) (end 8.89 -1.33) (layer F.Fab) (width 0.1))
+    (fp_line (start 6.985 -1.27) (end 6.985 16.51) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.27 16.57) (end 8.89 16.57) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.635 16.51) (end 0.635 -0.27) (layer F.Fab) (width 0.1))
+    (fp_line (start 1.635 -1.27) (end 6.985 -1.27) (layer F.Fab) (width 0.1))
+    (fp_line (start 6.985 16.51) (end 0.635 16.51) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.27 -1.33) (end -1.27 16.57) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.635 -0.27) (end 1.635 -1.27) (layer F.Fab) (width 0.1))
+    (fp_line (start 8.89 -1.33) (end -1.27 -1.33) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 3.81 7.62) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 2 "Net-(C1-Pad2)"))
+    (pad 2 thru_hole oval (at 0 2.54) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 1 "Net-(C1-Pad1)"))
+    (pad 3 thru_hole oval (at 0 5.08) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 3 "Net-(C2-Pad1)"))
+    (pad 4 thru_hole oval (at 0 7.62) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 29 "unconnected-(U2-Pad4)"))
+    (pad 5 thru_hole oval (at 0 10.16) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (pad 6 thru_hole oval (at 0 12.7) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 23 "Net-(R3-Pad1)"))
+    (pad 7 thru_hole oval (at 0 15.24) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 24 "Net-(R3-Pad2)"))
+    (pad 8 thru_hole oval (at 7.62 15.24) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 6 "Net-(C3-Pad2)"))
+    (pad 9 thru_hole oval (at 7.62 12.7) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 7 "Net-(C4-Pad1)"))
+    (pad 10 thru_hole oval (at 7.62 10.16) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 5 "Net-(C3-Pad1)"))
+    (pad 11 thru_hole oval (at 7.62 7.62) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (pad 12 thru_hole oval (at 7.62 5.08) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 25 "Net-(R13-Pad1)"))
+    (pad 13 thru_hole oval (at 7.62 2.54) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (pad 14 thru_hole oval (at 7.62 0) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 26 "Net-(R13-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Package_DIP.3dshapes/DIP-14_W7.62mm_Socket.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 29D472A1)
+    (at 175.085 90.074)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /ebce5b89-7cd3-4950-bf16-bd31083a698a)
+    (fp_text reference R4 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 17 "Net-(P1-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 3 "Net-(C2-Pad1)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 2BC25DB2)
+    (at 167.645 64.324)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /a4df01e5-0b1d-453f-be97-b17ad57cec52)
+    (fp_text reference R12 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 19 "Net-(P4-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 5 "Net-(C3-Pad1)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical (layer F.Cu) (tedit 5C28146C) (tstamp 40AF157D)
+    (at 128.671 113.394)
+    (descr "JST XH series connector, B2B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
+    (tags "connector JST XH vertical")
+    (path /029767b2-2fd2-4343-8e95-4bbc884c01b1)
+    (fp_text reference P4 (at 1.25 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value piezzo2 (at 1.25 4.6) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.6 -2.75) (end -2.85 -2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -2.45) (end -2.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.3 2.75) (end 1.25 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.25 -2.45) (end 3.25 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.3 -0.2) (end 4.3 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -2.45) (end 0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -0.2) (end 4.3 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.85 -2.75) (end -2.85 -1.5) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.75 -2.45) (end 0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.06 3.51) (end 5.06 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.75 -1.7) (end 1.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -2.45) (end -2.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -1.7) (end 5.05 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.25 -1.7) (end 5.05 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -1.7) (end -0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -0.2) (end -1.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 -0.2) (end -1.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -2.45) (end 3.25 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 -2.46) (end -2.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 3.51) (end 5.06 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 2.75) (end 1.25 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.06 -2.46) (end -2.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -1.7) (end 1.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -1.7) (end -0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.45 -2.85) (end -2.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 -2.85) (end -2.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.45 3.9) (end 5.45 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 3.9) (end 5.45 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0 -1.35) (end 0.625 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.625 -2.35) (end 0 -1.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 3.4) (end 4.95 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.95 3.4) (end 4.95 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.95 -2.35) (end -2.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 -2.35) (end -2.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 1.25 2.7) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole roundrect (at 0 0) (size 1.7 2) (drill 1) (layers *.Cu *.Mask) (roundrect_rratio 0.147059)
+      (net 19 "Net-(P4-Pad1)"))
+    (pad 2 thru_hole oval (at 2.5 0) (size 1.7 2) (drill 1) (layers *.Cu *.Mask)
+      (net 20 "Net-(P4-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 40C8E655)
+    (at 186.835 64.324)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /badd6522-d4ab-472a-93ee-17b4f15bd00e)
+    (fp_text reference R17 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 3k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 11 "Net-(D2-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 18 +12V))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module MountingHole:MountingHole_3.2mm_M3_ISO7380 (layer F.Cu) (tedit 56D1B4CB) (tstamp 467B4061)
+    (at 139.664 17.544)
+    (descr "Mounting Hole 3.2mm, no annular, M3, ISO7380")
+    (tags "mounting hole 3.2mm no annular m3 iso7380")
+    (path /00000000-0000-0000-0000-00006247de98)
+    (fp_text reference H3 (at 0 -3.85) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole (at 0 3.85) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.85 0) (layer Cmts.User) (width 0.15))
+    (fp_circle (center 0 0) (end 3.1 0) (layer F.CrtYd) (width 0.05))
+    (fp_text user ${REFERENCE} (at 0 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 475ABCDD)
+    (at 175.085 79.774)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /15434c73-ca27-47fe-90b5-5db0be3d06a5)
+    (fp_text reference R10 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 270 (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 8 "Net-(D1-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 48936810)
+    (at 118.999 34.798)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /ca878334-b6fd-41fd-9eb9-4fc7de5ba635)
+    (fp_text reference R19 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100M (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 7 "Net-(C4-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 51C712EB)
+    (at 194.275 69.474)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /27f808a7-18c4-41d2-8e4b-48f7af35e45c)
+    (fp_text reference R6 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 2 "Net-(C1-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 23 "Net-(R3-Pad1)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 59739E5E)
+    (at 194.275 74.624)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /5da350d4-d4c6-4f76-86bb-4b1631d9d653)
+    (fp_text reference R7 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 3k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 9 "Net-(D1-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 18 +12V))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module LED_THT:LED_D3.0mm_Clear (layer F.Cu) (tedit 5A6C9BC0) (tstamp 5A7E080E)
+    (at 213.535 94.474)
+    (descr "IR-LED, diameter 3.0mm, 2 pins, color: clear")
+    (tags "IR infrared LED diameter 3.0mm 2 pins clear")
+    (path /9b37021f-fbd0-4193-84a2-1641f9ec0166)
+    (fp_text reference D2 (at 1.27 -2.96) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value LED (at 1.27 2.96) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.29 -1.236) (end -0.29 -1.08) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.29 1.08) (end -0.29 1.236) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.7 2.25) (end 3.7 -2.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.15 -2.25) (end -1.15 2.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.15 2.25) (end 3.7 2.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.7 -2.25) (end -1.15 -2.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.23 -1.16619) (end -0.23 1.16619) (layer F.Fab) (width 0.1))
+    (fp_circle (center 1.27 0) (end 2.77 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 1.47 0) (layer F.Fab)
+      (effects (font (size 0.8 0.8) (thickness 0.12)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.8 1.8) (drill 0.9) (layers *.Cu *.Mask)
+      (net 10 "Net-(D2-Pad1)"))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.8 1.8) (drill 0.9) (layers *.Cu *.Mask)
+      (net 11 "Net-(D2-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/LED_THT.3dshapes/LED_D3.0mm_Clear.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 63E758C4)
+    (at 155.895 94.124)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /17047d71-ef6b-4450-9aeb-cfa3cea51bf3)
+    (fp_text reference R13 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 20k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 25 "Net-(R13-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 26 "Net-(R13-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Package_TO_SOT_THT:TO-92_Inline (layer F.Cu) (tedit 5A1DD157) (tstamp 675B2A1E)
+    (at 242.775 67.654)
+    (descr "TO-92 leads in-line, narrow, oval pads, drill 0.75mm (see NXP sot054_po.pdf)")
+    (tags "to-92 sc-43 sc-43a sot54 PA33 transistor")
+    (path /98674925-7a0f-48f8-8e00-f49c8fd9bf9f)
+    (fp_text reference Q2 (at 1.27 -3.56) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PN2222A (at 1.27 2.79) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.53 1.85) (end 3.07 1.85) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4 2.01) (end -1.46 2.01) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 4 2.01) (end 4 -2.73) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.46 -2.73) (end 4 -2.73) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.46 -2.73) (end -1.46 2.01) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.5 1.75) (end 3 1.75) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 1.27 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.05 1.5) (drill 0.75) (layers *.Cu *.Mask)
+      (net 12 "Net-(J1-Pad1)"))
+    (pad 2 thru_hole oval (at 1.27 0) (size 1.05 1.5) (drill 0.75) (layers *.Cu *.Mask)
+      (net 22 "Net-(Q2-Pad2)"))
+    (pad 3 thru_hole oval (at 2.54 0) (size 1.05 1.5) (drill 0.75) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (model ${KICAD6_3DMODEL_DIR}/Package_TO_SOT_THT.3dshapes/TO-92_Inline.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 6A55E82C)
+    (at 186.835 59.174)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /a65a2664-7c78-4868-aca8-b0d9f898cbd2)
+    (fp_text reference R5 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 3k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 13 "Net-(J1-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 6A6AFD5B)
+    (at 155.895 88.974)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /b6c0e29a-7a1b-4d84-952d-3cce6574f399)
+    (fp_text reference R1 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100M (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 1 "Net-(C1-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 2 "Net-(C1-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 6E358669)
+    (at 155.895 83.824)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /7820f012-b0ab-4e86-876d-2b7fb63bf373)
+    (fp_text reference R16 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 6 "Net-(C3-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 25 "Net-(R13-Pad1)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitor_THT:C_Disc_D16.0mm_W5.0mm_P10.00mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 6F13E8DD)
+    (at 176.885 95.924)
+    (descr "C, Disc series, Radial, pin pitch=10.00mm, , diameter*width=16.0*5.0mm^2, Capacitor, http://www.vishay.com/docs/28535/vy2series.pdf")
+    (tags "C Disc series Radial pin pitch 10.00mm  diameter 16.0mm width 5.0mm Capacitor")
+    (path /3ad8ab76-44ee-45f2-8e37-6351514da498)
+    (fp_text reference C2 (at 5 -3.75) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 22pF (at 5 3.75) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.12 -2.62) (end 13.12 -2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 2.62) (end 13.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.12 -2.62) (end 13.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 -2.62) (end -3.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.25 2.75) (end 13.25 2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.25 -2.75) (end -3.25 2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.25 2.75) (end 13.25 -2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.25 -2.75) (end -3.25 -2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13 -2.5) (end -3 -2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -3 -2.5) (end -3 2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -3 2.5) (end 13 2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 13 2.5) (end 13 -2.5) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 5 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2 2) (drill 1) (layers *.Cu *.Mask)
+      (net 3 "Net-(C2-Pad1)"))
+    (pad 2 thru_hole circle (at 10 0) (size 2 2) (drill 1) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (model ${KICAD6_3DMODEL_DIR}/Capacitor_THT.3dshapes/C_Disc_D16.0mm_W5.0mm_P10.00mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical (layer F.Cu) (tedit 5C28146C) (tstamp 76A7753A)
+    (at 123.123 78.85)
+    (descr "JST XH series connector, B4B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
+    (tags "connector JST XH vertical")
+    (path /12fc5fae-2589-481a-9c5c-1325ed3bb3b8)
+    (fp_text reference J1 (at 3.75 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value Conn_01x04_Female (at 3.75 4.6) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.75 -2.45) (end -2.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 10.05 -1.7) (end 10.05 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 -0.2) (end -1.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.6 -2.75) (end -2.85 -2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.75 -1.7) (end 6.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.75 -2.45) (end 0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 10.06 3.51) (end 10.06 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 3.51) (end 10.06 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start 8.25 -1.7) (end 10.05 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.3 -0.2) (end 9.3 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.3 2.75) (end 3.75 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 -2.46) (end -2.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -2.45) (end -2.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 8.25 -2.45) (end 8.25 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.85 -2.75) (end -2.85 -1.5) (layer F.SilkS) (width 0.12))
+    (fp_line (start 10.06 -2.46) (end -2.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start 10.05 -0.2) (end 9.3 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -1.7) (end 6.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -1.7) (end -0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -1.7) (end -0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 10.05 -2.45) (end 8.25 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 2.75) (end 3.75 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -2.45) (end 0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -0.2) (end -1.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start 10.45 3.9) (end 10.45 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 3.9) (end 10.45 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 10.45 -2.85) (end -2.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 -2.85) (end -2.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.625 -2.35) (end 0 -1.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 9.95 3.4) (end 9.95 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 -1.35) (end 0.625 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 -2.35) (end -2.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 9.95 -2.35) (end -2.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 3.4) (end 9.95 3.4) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 3.75 2.7) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole roundrect (at 0 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask) (roundrect_rratio 0.147059)
+      (net 12 "Net-(J1-Pad1)"))
+    (pad 2 thru_hole oval (at 2.5 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask)
+      (net 13 "Net-(J1-Pad2)"))
+    (pad 3 thru_hole oval (at 5 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask)
+      (net 14 "unconnected-(J1-Pad3)"))
+    (pad 4 thru_hole oval (at 7.5 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (model ${KICAD6_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 7FFFFFFF)
+    (at 155.895 109.574)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /dff2e01c-3328-42c8-ab04-381f4262ccad)
+    (fp_text reference R11 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100M (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 5 "Net-(C3-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 6 "Net-(C3-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 7FFFFFFF)
+    (at 206.025 59.174)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /d5605319-4587-4071-baf4-29cfff6468b2)
+    (fp_text reference R3 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 20k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 23 "Net-(R3-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 24 "Net-(R3-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Package_TO_SOT_THT:TO-3P-3_Vertical (layer F.Cu) (tedit 5AC8701B) (tstamp 7FFFFFFF)
+    (at 72.401 39.11)
+    (descr "TO-3P-3, Vertical, RM 5.45mm, , see https://toshiba.semicon-storage.com/ap-en/design-support/package/detail.TO-3P(N).html")
+    (tags "TO-3P-3 Vertical RM 5.45mm ")
+    (path /3749553d-b3f1-4f21-8fbf-1adb20d44f9a)
+    (fp_text reference U4 (at 5.45 -4.12) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value L7806 (at 5.45 3.5) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 7.051 -3.12) (end 7.051 -1.38) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.42 -3.12) (end 13.32 -3.12) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.85 -1.38) (end 9.5 -1.38) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.85 -3.12) (end 3.85 -1.38) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.42 1.62) (end -1.4 1.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.3 -1.38) (end 13.32 -1.38) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.85 1.62) (end 9.5 1.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.4 -1.38) (end 4.051 -1.38) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.42 -1.38) (end -1.4 -1.38) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.3 1.62) (end 13.32 1.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.4 1.62) (end 4.051 1.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.32 -3.12) (end 13.32 1.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.42 -3.12) (end -2.42 1.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -3.25) (end -2.55 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.45 2.5) (end 13.45 -3.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.55 2.5) (end 13.45 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.45 -3.25) (end -2.55 -3.25) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.2 -3) (end -2.3 -3) (layer F.Fab) (width 0.1))
+    (fp_line (start 3.85 -3) (end 3.85 -1.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 13.2 1.5) (end 13.2 -3) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.3 -3) (end -2.3 1.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 7.05 -3) (end 7.05 -1.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.3 -1.5) (end 13.2 -1.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.3 1.5) (end 13.2 1.5) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 5.45 -4.12) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 2.5 4.5) (drill 1.5) (layers *.Cu *.Mask)
+      (net 18 +12V))
+    (pad 2 thru_hole oval (at 5.45 0) (size 2.5 4.5) (drill 1.5) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (pad 3 thru_hole oval (at 10.9 0) (size 2.5 4.5) (drill 1.5) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (model ${KICAD6_3DMODEL_DIR}/Package_TO_SOT_THT.3dshapes/TO-3P-3_Vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitor_THT:C_Disc_D16.0mm_W5.0mm_P10.00mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 7FFFFFFF)
+    (at 176.885 102.474)
+    (descr "C, Disc series, Radial, pin pitch=10.00mm, , diameter*width=16.0*5.0mm^2, Capacitor, http://www.vishay.com/docs/28535/vy2series.pdf")
+    (tags "C Disc series Radial pin pitch 10.00mm  diameter 16.0mm width 5.0mm Capacitor")
+    (path /e54538d4-293e-4a03-bc22-7aa9346c5107)
+    (fp_text reference C4 (at 5 -3.75) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 22pF (at 5 3.75) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.12 -2.62) (end 13.12 -2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 -2.62) (end -3.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.12 -2.62) (end 13.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 2.62) (end 13.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.25 2.75) (end 13.25 2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.25 -2.75) (end -3.25 -2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.25 -2.75) (end -3.25 2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.25 2.75) (end 13.25 -2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3 -2.5) (end -3 2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -3 2.5) (end 13 2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 13 2.5) (end 13 -2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 13 -2.5) (end -3 -2.5) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 5 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2 2) (drill 1) (layers *.Cu *.Mask)
+      (net 7 "Net-(C4-Pad1)"))
+    (pad 2 thru_hole circle (at 10 0) (size 2 2) (drill 1) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (model ${KICAD6_3DMODEL_DIR}/Capacitor_THT.3dshapes/C_Disc_D16.0mm_W5.0mm_P10.00mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical (layer F.Cu) (tedit 5C28146C) (tstamp 7FFFFFFF)
+    (at 75.455 55.9 270)
+    (descr "JST XH series connector, B2B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
+    (tags "connector JST XH vertical")
+    (path /0c72df7b-eff2-4da4-a6bb-5b60b2c28bf8)
+    (fp_text reference P1 (at 1.25 -3.55 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value piezzo1 (at 1.25 4.6 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.25 -2.45) (end 3.25 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.06 3.51) (end 5.06 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 2.75) (end 1.25 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.75 -1.7) (end 1.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -1.7) (end 1.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -2.45) (end 0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -1.7) (end -0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 3.51) (end 5.06 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 -2.46) (end -2.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -1.7) (end 5.05 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.25 -1.7) (end 5.05 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.85 -2.75) (end -2.85 -1.5) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.75 -2.45) (end 0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.06 -2.46) (end -2.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.6 -2.75) (end -2.85 -2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -2.45) (end 3.25 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -1.7) (end -0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -2.45) (end -2.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.3 2.75) (end 1.25 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -0.2) (end 4.3 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -0.2) (end -1.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.3 -0.2) (end 4.3 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -2.45) (end -2.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 -0.2) (end -1.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.95 -2.85) (end -2.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.45 -2.85) (end -2.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.45 3.9) (end 5.45 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 3.9) (end 5.45 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.45 3.4) (end 4.95 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.95 -2.35) (end -2.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 -2.35) (end -2.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.625 -2.35) (end 0 -1.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.95 3.4) (end 4.95 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 -1.35) (end 0.625 -2.35) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 1.25 2.7 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole roundrect (at 0 0 270) (size 1.7 2) (drill 1) (layers *.Cu *.Mask) (roundrect_rratio 0.147059)
+      (net 16 "Net-(P1-Pad1)"))
+    (pad 2 thru_hole oval (at 2.5 0 270) (size 1.7 2) (drill 1) (layers *.Cu *.Mask)
+      (net 17 "Net-(P1-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module MountingHole:MountingHole_3.2mm_M3_ISO7380 (layer F.Cu) (tedit 56D1B4CB) (tstamp 7FFFFFFF)
+    (at 193.294 34.544)
+    (descr "Mounting Hole 3.2mm, no annular, M3, ISO7380")
+    (tags "mounting hole 3.2mm no annular m3 iso7380")
+    (path /00000000-0000-0000-0000-000062a0a091)
+    (fp_text reference H1 (at 0 -3.85) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole (at 0 3.85) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.85 0) (layer Cmts.User) (width 0.15))
+    (fp_circle (center 0 0) (end 3.1 0) (layer F.CrtYd) (width 0.05))
+    (fp_text user ${REFERENCE} (at 0 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 7FFFFFFF)
+    (at 155.895 99.274)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /c4e858a4-cf9a-4741-ac27-02c191a4edc6)
+    (fp_text reference R18 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 270 (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 22 "Net-(Q2-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 11 "Net-(D2-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 7FFFFFFF)
+    (at 175.085 84.924)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /cf7d8f8b-4524-4c40-9859-95940a13ffea)
+    (fp_text reference R14 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 20 "Net-(P4-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 7 "Net-(C4-Pad1)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical (layer F.Cu) (tedit 5C28146C) (tstamp 7FFFFFFF)
+    (at 255.798 57.387)
+    (descr "JST XH series connector, B2B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
+    (tags "connector JST XH vertical")
+    (path /d13e1c22-0850-4bee-b492-de41720d7cfe)
+    (fp_text reference P3 (at 1.25 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 12V (at 1.25 4.6) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.06 3.51) (end 5.06 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.06 -2.46) (end -2.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -2.45) (end -2.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.85 -2.75) (end -2.85 -1.5) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.25 -2.45) (end 3.25 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.25 -1.7) (end 5.05 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.75 -1.7) (end 1.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.3 -0.2) (end 4.3 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.75 -2.45) (end 0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.3 2.75) (end 1.25 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -1.7) (end 1.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -0.2) (end -1.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -1.7) (end 5.05 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -2.45) (end -2.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -2.45) (end 3.25 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.6 -2.75) (end -2.85 -2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -1.7) (end -0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -2.45) (end 0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -1.7) (end -0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 3.51) (end 5.06 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 -2.46) (end -2.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 2.75) (end 1.25 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -0.2) (end 4.3 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 -0.2) (end -1.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.95 3.9) (end 5.45 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 -2.85) (end -2.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.45 3.9) (end 5.45 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.45 -2.85) (end -2.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.625 -2.35) (end 0 -1.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.95 -2.35) (end -2.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 -2.35) (end -2.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 3.4) (end 4.95 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.95 3.4) (end 4.95 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 -1.35) (end 0.625 -2.35) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 1.25 2.7) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole roundrect (at 0 0) (size 1.7 2) (drill 1) (layers *.Cu *.Mask) (roundrect_rratio 0.147059)
+      (net 18 +12V))
+    (pad 2 thru_hole oval (at 2.5 0) (size 1.7 2) (drill 1) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (model ${KICAD6_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical (layer F.Cu) (tedit 5C28146C) (tstamp 7FFFFFFF)
+    (at 259.354 85.708)
+    (descr "JST XH series connector, B2B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
+    (tags "connector JST XH vertical")
+    (path /5b8a60b7-195e-4a3d-bbdc-fd6b7e7c14a0)
+    (fp_text reference P2 (at 1.25 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 12V (at 1.25 4.6) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 1.75 -1.7) (end 1.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -1.7) (end 5.05 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.06 -2.46) (end -2.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.6 -2.75) (end -2.85 -2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -1.7) (end -0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 3.51) (end 5.06 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -0.2) (end -1.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -2.45) (end -2.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -1.7) (end 1.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.85 -2.75) (end -2.85 -1.5) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.25 -2.45) (end 3.25 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 -2.46) (end -2.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -2.45) (end -2.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 -0.2) (end -1.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -2.45) (end 3.25 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 2.75) (end 1.25 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.3 2.75) (end 1.25 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.06 3.51) (end 5.06 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -1.7) (end -0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.05 -0.2) (end 4.3 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.75 -2.45) (end 0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.3 -0.2) (end 4.3 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -2.45) (end 0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 3.25 -1.7) (end 5.05 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.95 -2.85) (end -2.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 3.9) (end 5.45 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.45 -2.85) (end -2.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.45 3.9) (end 5.45 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0 -1.35) (end 0.625 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 -2.35) (end -2.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 3.4) (end 4.95 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.625 -2.35) (end 0 -1.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.95 3.4) (end 4.95 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.95 -2.35) (end -2.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 1.25 2.7) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole roundrect (at 0 0) (size 1.7 2) (drill 1) (layers *.Cu *.Mask) (roundrect_rratio 0.147059)
+      (net 18 +12V))
+    (pad 2 thru_hole oval (at 2.5 0) (size 1.7 2) (drill 1) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (model ${KICAD6_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Package_TO_SOT_THT:TO-92_Inline (layer F.Cu) (tedit 5A1DD157) (tstamp 7FFFFFFF)
+    (at 204.395 107.754)
+    (descr "TO-92 leads in-line, narrow, oval pads, drill 0.75mm (see NXP sot054_po.pdf)")
+    (tags "to-92 sc-43 sc-43a sot54 PA33 transistor")
+    (path /df8e897a-e5af-4e5f-8b21-82f3d45477ad)
+    (fp_text reference Q1 (at 1.27 -3.56) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PN2222A (at 1.27 2.79) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.53 1.85) (end 3.07 1.85) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4 2.01) (end -1.46 2.01) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 4 2.01) (end 4 -2.73) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.46 -2.73) (end 4 -2.73) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.46 -2.73) (end -1.46 2.01) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.5 1.75) (end 3 1.75) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 1.27 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.05 1.5) (drill 0.75) (layers *.Cu *.Mask)
+      (net 13 "Net-(J1-Pad2)"))
+    (pad 2 thru_hole oval (at 1.27 0) (size 1.05 1.5) (drill 0.75) (layers *.Cu *.Mask)
+      (net 21 "Net-(Q1-Pad2)"))
+    (pad 3 thru_hole oval (at 2.54 0) (size 1.05 1.5) (drill 0.75) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (model ${KICAD6_3DMODEL_DIR}/Package_TO_SOT_THT.3dshapes/TO-92_Inline.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitor_THT:C_Disc_D16.0mm_W5.0mm_P10.00mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 7FFFFFFF)
+    (at 196.075 85.624)
+    (descr "C, Disc series, Radial, pin pitch=10.00mm, , diameter*width=16.0*5.0mm^2, Capacitor, http://www.vishay.com/docs/28535/vy2series.pdf")
+    (tags "C Disc series Radial pin pitch 10.00mm  diameter 16.0mm width 5.0mm Capacitor")
+    (path /e6200eb8-71c2-47de-9a28-03ea31becf06)
+    (fp_text reference C3 (at 5 -3.75) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 22pF (at 5 3.75) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 13.12 -2.62) (end 13.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 -2.62) (end -3.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 -2.62) (end 13.12 -2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.12 2.62) (end 13.12 2.62) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.25 -2.75) (end -3.25 -2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 13.25 2.75) (end 13.25 -2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.25 2.75) (end 13.25 2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.25 -2.75) (end -3.25 2.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3 -2.5) (end -3 2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 13 2.5) (end 13 -2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -3 2.5) (end 13 2.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 13 -2.5) (end -3 -2.5) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 5 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2 2) (drill 1) (layers *.Cu *.Mask)
+      (net 5 "Net-(C3-Pad1)"))
+    (pad 2 thru_hole circle (at 10 0) (size 2 2) (drill 1) (layers *.Cu *.Mask)
+      (net 6 "Net-(C3-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Capacitor_THT.3dshapes/C_Disc_D16.0mm_W5.0mm_P10.00mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 7FFFFFFF)
+    (at 155.895 104.424)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /705080ca-6d1a-4a06-908f-2c4185e4dd78)
+    (fp_text reference R8 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 270 (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 21 "Net-(Q1-Pad2)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 9 "Net-(D1-Pad2)"))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Package_DIP:DIP-8_W7.62mm_Socket_LongPads (layer F.Cu) (tedit 5A02E8C5) (tstamp 7FFFFFFF)
+    (at 231.115 58.724)
+    (descr "8-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket, LongPads")
+    (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket LongPads")
+    (path /3b953930-9975-47e1-967a-81cc3f0e3f01)
+    (fp_text reference U1 (at 3.81 -2.33) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value LM393 (at 3.81 9.95) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.44 9.01) (end 9.06 9.01) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.06 8.95) (end 6.06 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.56 -1.33) (end 1.56 8.95) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.56 8.95) (end 6.06 8.95) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.06 9.01) (end 9.06 -1.39) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.44 -1.39) (end -1.44 9.01) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.06 -1.33) (end 4.81 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.06 -1.39) (end -1.44 -1.39) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.81 -1.33) (end 1.56 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.15 -1.6) (end -1.55 -1.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.55 -1.6) (end -1.55 9.2) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.55 9.2) (end 9.15 9.2) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 9.15 9.2) (end 9.15 -1.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.27 8.95) (end 8.89 8.95) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.635 -0.27) (end 1.635 -1.27) (layer F.Fab) (width 0.1))
+    (fp_line (start 6.985 8.89) (end 0.635 8.89) (layer F.Fab) (width 0.1))
+    (fp_line (start 8.89 -1.33) (end -1.27 -1.33) (layer F.Fab) (width 0.1))
+    (fp_line (start 8.89 8.95) (end 8.89 -1.33) (layer F.Fab) (width 0.1))
+    (fp_line (start 6.985 -1.27) (end 6.985 8.89) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.635 8.89) (end 0.635 -0.27) (layer F.Fab) (width 0.1))
+    (fp_line (start 1.635 -1.27) (end 6.985 -1.27) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.27 -1.33) (end -1.27 8.95) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 3.81 3.81) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask))
+    (pad 2 thru_hole oval (at 0 2.54) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask))
+    (pad 3 thru_hole oval (at 0 5.08) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask))
+    (pad 4 thru_hole oval (at 0 7.62) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (pad 5 thru_hole oval (at 7.62 7.62) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask))
+    (pad 6 thru_hole oval (at 7.62 5.08) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask))
+    (pad 7 thru_hole oval (at 7.62 2.54) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask))
+    (pad 8 thru_hole oval (at 7.62 0) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 18 +12V))
+    (model ${KICAD6_3DMODEL_DIR}/Package_DIP.3dshapes/DIP-8_W7.62mm_Socket.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Package_DIP:DIP-8_W7.62mm_Socket_LongPads (layer F.Cu) (tedit 5A02E8C5) (tstamp 7FFFFFFF)
+    (at 168.793 28.712)
+    (descr "8-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), Socket, LongPads")
+    (tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket LongPads")
+    (path /e62d3fe4-f75a-44e6-a4f1-407f5f99a5c8)
+    (fp_text reference U3 (at 3.81 -2.33) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value LM393 (at 3.81 9.95) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.44 9.01) (end 9.06 9.01) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.06 -1.33) (end 4.81 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.44 -1.39) (end -1.44 9.01) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.06 -1.39) (end -1.44 -1.39) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.06 8.95) (end 6.06 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.56 -1.33) (end 1.56 8.95) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.81 -1.33) (end 1.56 -1.33) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.56 8.95) (end 6.06 8.95) (layer F.SilkS) (width 0.12))
+    (fp_line (start 9.06 9.01) (end 9.06 -1.39) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.55 -1.6) (end -1.55 9.2) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.55 9.2) (end 9.15 9.2) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 9.15 9.2) (end 9.15 -1.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 9.15 -1.6) (end -1.55 -1.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.635 -0.27) (end 1.635 -1.27) (layer F.Fab) (width 0.1))
+    (fp_line (start 6.985 -1.27) (end 6.985 8.89) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.27 8.95) (end 8.89 8.95) (layer F.Fab) (width 0.1))
+    (fp_line (start 1.635 -1.27) (end 6.985 -1.27) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.27 -1.33) (end -1.27 8.95) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.635 8.89) (end 0.635 -0.27) (layer F.Fab) (width 0.1))
+    (fp_line (start 6.985 8.89) (end 0.635 8.89) (layer F.Fab) (width 0.1))
+    (fp_line (start 8.89 -1.33) (end -1.27 -1.33) (layer F.Fab) (width 0.1))
+    (fp_line (start 8.89 8.95) (end 8.89 -1.33) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 3.81 3.81) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 9 "Net-(D1-Pad2)"))
+    (pad 2 thru_hole oval (at 0 2.54) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 27 "Net-(RV1-Pad2)"))
+    (pad 3 thru_hole oval (at 0 5.08) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 24 "Net-(R3-Pad2)"))
+    (pad 4 thru_hole oval (at 0 7.62) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (pad 5 thru_hole oval (at 7.62 7.62) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 26 "Net-(R13-Pad2)"))
+    (pad 6 thru_hole oval (at 7.62 5.08) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 28 "Net-(RV2-Pad2)"))
+    (pad 7 thru_hole oval (at 7.62 2.54) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 11 "Net-(D2-Pad2)"))
+    (pad 8 thru_hole oval (at 7.62 0) (size 2.4 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 18 +12V))
+    (model ${KICAD6_3DMODEL_DIR}/Package_DIP.3dshapes/DIP-8_W7.62mm_Socket.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module MountingHole:MountingHole_3.2mm_M3_ISO7380 (layer F.Cu) (tedit 56D1B4CB) (tstamp 7FFFFFFF)
+    (at 199.934 19.094)
+    (descr "Mounting Hole 3.2mm, no annular, M3, ISO7380")
+    (tags "mounting hole 3.2mm no annular m3 iso7380")
+    (path /00000000-0000-0000-0000-00006247e15e)
+    (fp_text reference H4 (at 0 -3.85) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole (at 0 3.85) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.85 0) (layer Cmts.User) (width 0.15))
+    (fp_circle (center 0 0) (end 3.1 0) (layer F.CrtYd) (width 0.05))
+    (fp_text user ${REFERENCE} (at 0 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
+  )
+
+  (module Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical (layer F.Cu) (tedit 5C28146C) (tstamp 7FFFFFFF)
+    (at 195.775 92.274)
+    (descr "JST XH series connector, B3B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
+    (tags "connector JST XH vertical")
+    (path /572e15c9-b06c-4fcc-9419-0c1f05d865d9)
+    (fp_text reference RV1 (at 2.5 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R_Potentiometer (at 2.5 4.6) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.75 -2.45) (end -2.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.75 -2.45) (end 5.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.56 -2.46) (end -2.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -0.2) (end -1.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 -2.46) (end -2.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.55 -2.45) (end 5.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.25 -1.7) (end 4.25 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -1.7) (end -0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.55 -1.7) (end 7.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.25 -2.45) (end 0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.8 -0.2) (end 6.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -2.45) (end 0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.75 -1.7) (end 7.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -1.7) (end -0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.85 -2.75) (end -2.85 -1.5) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -1.7) (end 4.25 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.55 -0.2) (end 6.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.8 2.75) (end 2.5 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -2.45) (end -2.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 2.75) (end 2.5 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.56 3.51) (end 7.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 -0.2) (end -1.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 3.51) (end 7.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.6 -2.75) (end -2.85 -2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.95 -2.85) (end -2.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 7.95 -2.85) (end -2.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 7.95 3.9) (end 7.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 3.9) (end 7.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0 -1.35) (end 0.625 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.625 -2.35) (end 0 -1.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 7.45 3.4) (end 7.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 3.4) (end 7.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 -2.35) (end -2.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 7.45 -2.35) (end -2.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 2.5 2.7) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole roundrect (at 0 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask) (roundrect_rratio 0.147059)
+      (net 18 +12V))
+    (pad 2 thru_hole oval (at 2.5 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask)
+      (net 27 "Net-(RV1-Pad2)"))
+    (pad 3 thru_hole oval (at 5 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (model ${KICAD6_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical (layer F.Cu) (tedit 5C28146C) (tstamp 7FFFFFFF)
+    (at 214.965 79.474)
+    (descr "JST XH series connector, B3B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
+    (tags "connector JST XH vertical")
+    (path /5f4e421e-f4e3-411f-a409-40e12cb0c75d)
+    (fp_text reference RV2 (at 2.5 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R_Potentiometer (at 2.5 4.6) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.75 -1.7) (end -0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -1.7) (end 4.25 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.56 3.51) (end 7.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.55 -0.2) (end 6.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.75 -1.7) (end 7.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 3.51) (end 7.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.85 -2.75) (end -2.85 -1.5) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 2.75) (end 2.5 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -1.7) (end -0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.75 -2.45) (end 5.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.25 -2.45) (end 0.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.56 -2.46) (end -2.56 -2.46) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.8 -0.2) (end -1.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.6 -2.75) (end -2.85 -2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.75 -2.45) (end 0.75 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -0.2) (end -1.8 -0.2) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.8 -0.2) (end 6.8 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start 6.8 2.75) (end 2.5 2.75) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.75 -2.45) (end -2.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.56 -2.46) (end -2.56 3.51) (layer F.SilkS) (width 0.12))
+    (fp_line (start 4.25 -1.7) (end 4.25 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.55 -2.45) (end 5.75 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.55 -1.7) (end 7.55 -2.45) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.55 -2.45) (end -2.55 -1.7) (layer F.SilkS) (width 0.12))
+    (fp_line (start 7.95 3.9) (end 7.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 3.9) (end 7.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 7.95 -2.85) (end -2.95 -2.85) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.95 -2.85) (end -2.95 3.9) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.45 -2.35) (end -2.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.625 -2.35) (end 0 -1.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 -1.35) (end 0.625 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start 7.45 -2.35) (end -2.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.45 3.4) (end 7.45 3.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 7.45 3.4) (end 7.45 -2.35) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 2.5 2.7) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole roundrect (at 0 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask) (roundrect_rratio 0.147059)
+      (net 18 +12V))
+    (pad 2 thru_hole oval (at 2.5 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask)
+      (net 28 "Net-(RV2-Pad2)"))
+    (pad 3 thru_hole oval (at 5 0) (size 1.7 1.95) (drill 0.95) (layers *.Cu *.Mask)
+      (net 15 GND))
+    (model ${KICAD6_3DMODEL_DIR}/Connector_JST.3dshapes/JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 7FFFFFFF)
+    (at 194.275 79.774)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /65135da0-d4bb-4b0e-b963-4345a498ada3)
+    (fp_text reference R15 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 3k (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 12 "Net-(J1-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal (layer F.Cu) (tedit 5AE5139B) (tstamp 7FFFFFFF)
+    (at 70.739 70.485)
+    (descr "Resistor, Axial_DIN0411 series, Axial, Horizontal, pin pitch=15.24mm, 1W, length*diameter=9.9*3.6mm^2")
+    (tags "Resistor Axial_DIN0411 series Axial Horizontal pin pitch 15.24mm 1W length 9.9mm diameter 3.6mm")
+    (path /1c5e3a88-997e-4787-a9c3-101951b769a5)
+    (fp_text reference R9 (at 7.62 -2.92) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100M (at 7.62 2.92) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 1.44 0) (end 2.55 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 -1.92) (end 2.55 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 13.8 0) (end 12.69 0) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 1.92) (end 12.69 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 2.55 1.92) (end 12.69 1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 12.69 -1.92) (end 2.55 -1.92) (layer F.SilkS) (width 0.12))
+    (fp_line (start 16.69 -2.05) (end -1.45 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 16.69 2.05) (end 16.69 -2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 2.05) (end 16.69 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.45 -2.05) (end -1.45 2.05) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 15.24 0) (end 12.57 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 1.8) (end 12.57 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 -1.8) (end 2.67 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 2.67 1.8) (end 12.57 1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 12.57 -1.8) (end 2.67 -1.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 2.67 0) (layer F.Fab) (width 0.1))
+    (fp_text user ${REFERENCE} (at 7.62 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 3 "Net-(C2-Pad1)"))
+    (pad 2 thru_hole oval (at 15.24 0) (size 2.4 2.4) (drill 1.2) (layers *.Cu *.Mask)
+      (net 4 +6V))
+    (model ${KICAD6_3DMODEL_DIR}/Resistor_THT.3dshapes/R_Axial_DIN0411_L9.9mm_D3.6mm_P15.24mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (gr_line (start 265.92022 13.50772) (end 65.6717 15.7734) (layer Edge.Cuts) (width 0.05))
+  (gr_line (start 266.3444 117.32006) (end 265.92022 13.50772) (layer Edge.Cuts) (width 0.05))
+  (gr_line (start 65.81394 117.32006) (end 266.3444 117.32006) (layer Edge.Cuts) (width 0.05))
+  (gr_line (start 65.6717 15.77594) (end 65.81394 117.32006) (layer Edge.Cuts) (width 0.05))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

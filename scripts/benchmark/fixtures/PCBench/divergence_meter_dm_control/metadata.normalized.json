@@ -1,0 +1,56 @@
+{
+  "board_id": "divergence_meter_dm_control",
+  "display_name": "divergence_meter_dm_control",
+  "pcbench_directory": "PCBs/divergence_meter_dm_control",
+  "source": "https://github.com/q61org/divergence_meter",
+  "author": "q61org",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.941745+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 54,
+    "components": 107,
+    "dimensions_mm": {
+      "width": 89.0,
+      "height": 47.0
+    },
+    "area_cm2": 41.83,
+    "zones": 45
+  },
+  "reference": {
+    "segments": 1212,
+    "vias": 325,
+    "track_length_mm": 2402.86,
+    "kicad_drc_violations": 437,
+    "kicad_drc_breakdown": {
+      "total_violations": 437,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 247,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 3,
+        "items_not_allowed": 3,
+        "lib_footprint_issues": 105,
+        "padstack": 2,
+        "silk_over_copper": 3,
+        "silk_overlap": 9,
+        "solder_mask_bridge": 56,
+        "starved_thermal": 1,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 314,
+        "warning": 123
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

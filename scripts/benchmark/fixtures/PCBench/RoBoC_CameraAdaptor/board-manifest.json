@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "RoBoC_CameraAdaptor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 57957,
+      "sha256": "dc5a8d6a67091f59d334391c0b6803b168323c3675a92f422f4b812d75d2cb20"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 31409,
+      "sha256": "2ca8386b599773e35d5cb78067de1ba5cec4a1d11d3268f19df719e90424b788"
+    },
+    "metadata_json": {
+      "bytes": 475,
+      "sha256": "10e68c4933d5ffa409ca391fbb25da6bc08da991755c825b50ba1d09935d3b6e"
+    },
+    "final_json": {
+      "bytes": 36108,
+      "sha256": "3cce638c7b845dc7f14b88a7380e7f59fe8538224486ab404365c9ab3f45150c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:41:26.812567+00:00"
+  }
+}

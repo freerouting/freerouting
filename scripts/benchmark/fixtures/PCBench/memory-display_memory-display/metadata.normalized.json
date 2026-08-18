@@ -1,0 +1,50 @@
+{
+  "board_id": "memory-display_memory-display",
+  "display_name": "memory-display_memory-display",
+  "pcbench_directory": "PCBs/memory-display_memory-display",
+  "source": "https://github.com/pdp7/memory-display",
+  "author": "pdp7",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:58.806131+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 32,
+    "dimensions_mm": {
+      "width": 48.87,
+      "height": 50.8
+    },
+    "area_cm2": 24.83,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 175,
+    "vias": 9,
+    "track_length_mm": 407.32,
+    "kicad_drc_violations": 149,
+    "kicad_drc_breakdown": {
+      "total_violations": 149,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 39,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 31,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 75,
+        "silk_overlap": 1
+      },
+      "by_severity": {
+        "error": 41,
+        "warning": 108
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

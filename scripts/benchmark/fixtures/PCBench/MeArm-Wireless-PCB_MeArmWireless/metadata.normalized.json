@@ -1,0 +1,54 @@
+{
+  "board_id": "MeArm-Wireless-PCB_MeArmWireless",
+  "display_name": "MeArm-Wireless-PCB_MeArmWireless",
+  "pcbench_directory": "PCBs/MeArm-Wireless-PCB_MeArmWireless",
+  "source": "https://github.com/mimeindustries/MeArm-Wireless-PCB",
+  "author": "mimeindustries",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.598070+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 56.0
+    },
+    "area_cm2": 36.4,
+    "zones": 12
+  },
+  "reference": {
+    "segments": 382,
+    "vias": 38,
+    "track_length_mm": 1203.61,
+    "kicad_drc_violations": 290,
+    "kicad_drc_breakdown": {
+      "total_violations": 290,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 147,
+        "copper_edge_clearance": 12,
+        "items_not_allowed": 40,
+        "lib_footprint_issues": 31,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 34,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 5,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 205,
+        "warning": 85
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

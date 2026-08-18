@@ -1,0 +1,22 @@
+{
+  "board": "I2CTempsensor_sensors",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\I2CTempsensor_sensors\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 83,
+  "approximate_track_length_mm": 140.71,
+  "kicad_drc_violations": 11,
+  "generated_at": "2026-08-18T18:57:58.485324+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 11,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 6,
+      "text_height": 5
+    },
+    "by_severity": {
+      "warning": 11
+    }
+  }
+}

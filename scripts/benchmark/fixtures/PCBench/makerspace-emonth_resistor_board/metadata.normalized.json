@@ -1,0 +1,51 @@
+{
+  "board_id": "makerspace-emonth_resistor_board",
+  "display_name": "makerspace-emonth_resistor_board",
+  "pcbench_directory": "PCBs/makerspace-emonth_resistor_board",
+  "source": "https://github.com/google/makerspace-emonth",
+  "author": "google",
+  "license": "Creative Commons Attribution 4.0 International",
+  "license_spdx": "CC-BY-4.0",
+  "retrieved_at": "2023-08-17T17:22:31.633811+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 92.71,
+      "height": 64.14
+    },
+    "area_cm2": 59.46,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 131,
+    "vias": 13,
+    "track_length_mm": 841.44,
+    "kicad_drc_violations": 181,
+    "kicad_drc_breakdown": {
+      "total_violations": 181,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 40,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 16,
+        "silk_edge_clearance": 28,
+        "silk_over_copper": 32,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 62
+      },
+      "by_severity": {
+        "error": 103,
+        "warning": 78
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

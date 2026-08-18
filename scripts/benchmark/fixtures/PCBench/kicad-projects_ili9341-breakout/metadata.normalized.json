@@ -1,0 +1,47 @@
+{
+  "board_id": "kicad-projects_ili9341-breakout",
+  "display_name": "kicad-projects_ili9341-breakout",
+  "pcbench_directory": "PCBs/kicad-projects_ili9341-breakout",
+  "source": "https://github.com/spadgenske/kicad-projects",
+  "author": "spadgenske",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.138182+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 48.26,
+      "height": 15.24
+    },
+    "area_cm2": 7.35,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 78,
+    "vias": 0,
+    "track_length_mm": 260.74,
+    "kicad_drc_violations": 33,
+    "kicad_drc_breakdown": {
+      "total_violations": 33,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 28,
+        "lib_footprint_issues": 4,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 29,
+        "warning": 4
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

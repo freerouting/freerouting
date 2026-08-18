@@ -1,0 +1,51 @@
+{
+  "board_id": "Box0-hv-analog-breakoutboard_breakout",
+  "display_name": "Box0-hv-analog-breakoutboard_breakout",
+  "pcbench_directory": "PCBs/Box0-hv-analog-breakoutboard_breakout",
+  "source": "https://github.com/riktw/Box0-hv-analog-breakoutboard",
+  "author": "riktw",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.378020+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 28,
+    "components": 57,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 50.0
+    },
+    "area_cm2": 35.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 267,
+    "vias": 11,
+    "track_length_mm": 534.43,
+    "kicad_drc_violations": 482,
+    "kicad_drc_breakdown": {
+      "total_violations": 482,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 340,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 32,
+        "lib_footprint_issues": 57,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 7,
+        "silk_overlap": 41
+      },
+      "by_severity": {
+        "error": 374,
+        "warning": 108
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

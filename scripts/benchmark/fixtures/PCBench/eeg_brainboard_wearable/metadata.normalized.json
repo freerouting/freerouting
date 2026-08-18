@@ -1,0 +1,57 @@
+{
+  "board_id": "eeg_brainboard_wearable",
+  "display_name": "eeg_brainboard_wearable",
+  "pcbench_directory": "PCBs/eeg_brainboard_wearable",
+  "source": "https://github.com/gskelly/eeg",
+  "author": "gskelly",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:24.221724+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 11,
+    "components": 59,
+    "dimensions_mm": {
+      "width": 40.0,
+      "height": 50.8
+    },
+    "area_cm2": 20.32,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 698,
+    "vias": 70,
+    "track_length_mm": 990.18,
+    "kicad_drc_violations": 602,
+    "kicad_drc_breakdown": {
+      "total_violations": 602,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 301,
+        "copper_edge_clearance": 5,
+        "hole_clearance": 12,
+        "lib_footprint_issues": 1,
+        "padstack": 2,
+        "silk_edge_clearance": 13,
+        "silk_over_copper": 199,
+        "silk_overlap": 9,
+        "solder_mask_bridge": 4,
+        "text_height": 49,
+        "text_thickness": 1,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 324,
+        "warning": 278
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

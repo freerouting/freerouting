@@ -1,0 +1,52 @@
+{
+  "board_id": "dorkyboard_keyboard",
+  "display_name": "dorkyboard_keyboard",
+  "pcbench_directory": "PCBs/dorkyboard_keyboard",
+  "source": "https://github.com/evnpwr/dorkyboard",
+  "author": "evnpwr",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:58.802131+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 116,
+    "components": 433,
+    "dimensions_mm": {
+      "width": 436.82,
+      "height": 114.55
+    },
+    "area_cm2": 500.38,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 1701,
+    "vias": 68,
+    "track_length_mm": 12097.56,
+    "kicad_drc_violations": 1065,
+    "kicad_drc_breakdown": {
+      "total_violations": 1065,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 508,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 199,
+        "silk_over_copper": 16,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 129,
+        "starved_thermal": 8,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 648,
+        "warning": 417
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

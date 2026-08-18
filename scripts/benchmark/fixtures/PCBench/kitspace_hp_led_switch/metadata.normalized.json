@@ -1,0 +1,51 @@
+{
+  "board_id": "kitspace_hp_led_switch",
+  "display_name": "kitspace_hp_led_switch",
+  "pcbench_directory": "PCBs/kitspace_hp_led_switch",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:27.534900+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 45.5,
+      "height": 71.0
+    },
+    "area_cm2": 32.3,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 98,
+    "vias": 0,
+    "track_length_mm": 425.03,
+    "kicad_drc_violations": 44,
+    "kicad_drc_breakdown": {
+      "total_violations": 44,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 24,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 7,
+        "text_height": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

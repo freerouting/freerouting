@@ -1,0 +1,32 @@
+{
+  "board": "pwm-2420-lus_pwm-2420-lus",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\pwm-2420-lus_pwm-2420-lus\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 303,
+  "segment_count": 1018,
+  "approximate_track_length_mm": 2606.65,
+  "kicad_drc_violations": 423,
+  "generated_at": "2026-08-18T19:36:54.534165+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 423,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 35,
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 3,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 107,
+      "lib_footprint_mismatch": 10,
+      "silk_edge_clearance": 19,
+      "silk_over_copper": 25,
+      "silk_overlap": 172,
+      "solder_mask_bridge": 45,
+      "starved_thermal": 2
+    },
+    "by_severity": {
+      "error": 90,
+      "warning": 333
+    }
+  }
+}

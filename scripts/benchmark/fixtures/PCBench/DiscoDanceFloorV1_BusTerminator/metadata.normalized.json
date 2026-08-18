@@ -1,0 +1,49 @@
+{
+  "board_id": "DiscoDanceFloorV1_BusTerminator",
+  "display_name": "DiscoDanceFloorV1_BusTerminator",
+  "pcbench_directory": "PCBs/DiscoDanceFloorV1_BusTerminator",
+  "source": "https://github.com/jgillick/DiscoDanceFloorV1",
+  "author": "jgillick",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.337890+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 18.61,
+      "height": 17.02
+    },
+    "area_cm2": 3.17,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 29,
+    "vias": 3,
+    "track_length_mm": 49.05,
+    "kicad_drc_violations": 16,
+    "kicad_drc_breakdown": {
+      "total_violations": 16,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 3,
+        "lib_footprint_issues": 8,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 10
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

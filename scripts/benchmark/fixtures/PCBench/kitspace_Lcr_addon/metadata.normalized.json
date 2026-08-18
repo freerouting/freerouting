@@ -1,0 +1,49 @@
+{
+  "board_id": "kitspace_Lcr_addon",
+  "display_name": "kitspace_Lcr_addon",
+  "pcbench_directory": "PCBs/kitspace_Lcr_addon",
+  "source": "https://github.com/eulerlab/open-visual-stimulator",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/eulerlab/open-visual-stimulator/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:11:45.252292+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 85.09,
+      "height": 55.12
+    },
+    "area_cm2": 46.9,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 123,
+    "vias": 8,
+    "track_length_mm": 660.9,
+    "kicad_drc_violations": 17,
+    "kicad_drc_breakdown": {
+      "total_violations": 17,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "lib_footprint_issues": 4,
+        "lib_footprint_mismatch": 10,
+        "silk_overlap": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

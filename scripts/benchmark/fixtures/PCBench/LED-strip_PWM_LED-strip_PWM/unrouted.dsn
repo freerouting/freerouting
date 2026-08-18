@@ -1,0 +1,379 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\LED-strip_PWM_LED-strip_PWM\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Front
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Back
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  104748 -48002.4  104941 -48040.7  105123 -48115.9  105286 -48225.1
+            105425 -48364.1  105534 -48527.5  105609 -48709  105648 -48901.7
+            105650 -49000  105650 -57000  105648 -57098.3  105609 -57291
+            105534 -57472.5  105425 -57635.9  105286 -57774.9  105123 -57884.1
+            104941 -57959.3  104748 -57997.6  104650 -58000  77000 -58000
+            76901.7 -57997.6  76709 -57959.3  76527.5 -57884.1  76364.1 -57774.9
+            76225.1 -57635.9  76115.9 -57472.5  76040.7 -57291  76002.4 -57098.3
+            76000 -57000  76000 -49000  76002.4 -48901.7  76040.7 -48709
+            76115.9 -48527.5  76225.1 -48364.1  76364.1 -48225.1  76527.5 -48115.9
+            76709 -48040.7  76901.7 -48002.4  77000 -48000  104650 -48000
+            104748 -48002.4)
+    )
+    (via "Via[0-1]_762:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component MADW__PIN_ARRAY_3x2_1.27mm
+      (place JP1 92950 -50700 front 180 (PN ISP))
+    )
+    (component MADW__MLF10
+      (place IC1 92950 -55200 front 0 (PN "MADW__ATTINY13-MM"))
+    )
+    (component "MADW__SMD-net-noin-0.5mm"
+      (place NJ1 101350 -51950 front 0 (PN "NET-JOIN"))
+    )
+    (component "MADW__SIL-2"
+      (place P1 103900 -53000 front 90 (PN CONN_2))
+      (place P2 77700 -53000 front 90 (PN CONN_2))
+    )
+    (component MADW__C0805
+      (place C1 98300 -49450 front 0 (PN 100nF))
+      (place C2 100800 -55450 front -90 (PN 100nF))
+      (place C3 98300 -51950 front 0 (PN 4.7µF))
+    )
+    (component MADW__R0603_2
+      (place R1 81800 -49800 front 180 (PN 100k))
+      (place R2 81900 -56200 front 0 (PN 150R))
+    )
+    (component "MADW__TC33X-POT"
+      (place RV1 87175 -51100 front 90 (PN 50k))
+      (place RV2 87175 -55125 front 90 (PN 50k))
+    )
+    (component MADW__SOT23
+      (place T1 81900 -53000 front 90 (PN AO3400))
+    )
+    (component "MADW__SOT23-5"
+      (place U1 97800 -55350 front 0 (PN "MCP1804-SOT23-5"))
+    )
+    (component LED_smile_silkscreen_3mm
+      (place G2 96500 -52200 back 180 (PN LED_smile_silkscreen_3mm))
+      (place G1 85450 -52200 back 180 (PN "OSHW-logo_silkscreen_3mm"))
+    )
+  )
+  (library
+    (image MADW__PIN_ARRAY_3x2_1.27mm
+      (outline (path signal 200  2200 2000  -2200 2000))
+      (outline (path signal 200  -2200 2000  -2200 -2000))
+      (outline (path signal 200  2200 2000  2200 -2000))
+      (outline (path signal 200  2200 -2000  -2200 -2000))
+      (pin "Rect[A][0.000000,-200.000000]Pad_1050.000000x1500.000000_um" 1 -1270 -635)
+      (pin Oval[A][0.000000,200.000000]Pad_1050.000000x1500.000000_um 2 -1270 635)
+      (pin "Oval[A][0.000000,-200.000000]Pad_1050.000000x1500.000000_um" 3 0 -635)
+      (pin Oval[A][0.000000,200.000000]Pad_1050.000000x1500.000000_um 4 0 635)
+      (pin "Oval[A][0.000000,-200.000000]Pad_1050.000000x1500.000000_um" 5 1270 -635)
+      (pin Oval[A][0.000000,200.000000]Pad_1050.000000x1500.000000_um 6 1270 635)
+    )
+    (image MADW__MLF10
+      (outline (path signal 200  -2400 1500  -2400 -1900))
+      (outline (path signal 200  -2000 1900  2400 1900))
+      (outline (path signal 200  -2000 1900  -2400 1500))
+      (outline (path signal 200  2400 -1900  -2400 -1900))
+      (outline (path signal 200  2400 1900  2400 -1900))
+      (outline (path signal 200  -1500 1500  1500 1500))
+      (outline (path signal 200  1500 1500  1500 -1500))
+      (outline (path signal 200  1500 -1500  -1500 -1500))
+      (outline (path signal 200  -1500 -1500  -1500 1500))
+      (pin "Rect[T][-300.000000,0.000000]Pad_1600.000000x300.000000_um" 1 -1500 1000)
+      (pin "Rect[T][-300.000000,0.000000]Pad_1600.000000x300.000000_um" 2 -1500 500)
+      (pin "Rect[T][-300.000000,0.000000]Pad_1600.000000x300.000000_um" 3 -1500 0)
+      (pin "Rect[T][-300.000000,0.000000]Pad_1600.000000x300.000000_um" 4 -1500 -500)
+      (pin "Rect[T][-300.000000,0.000000]Pad_1600.000000x300.000000_um" 5 -1500 -1000)
+      (pin Rect[T][300.000000,0.000000]Pad_1600.000000x300.000000_um 6 1500 -1000)
+      (pin Rect[T][300.000000,0.000000]Pad_1600.000000x300.000000_um 7 1500 -500)
+      (pin Rect[T][300.000000,0.000000]Pad_1600.000000x300.000000_um 8 1500 0)
+      (pin Rect[T][300.000000,0.000000]Pad_1600.000000x300.000000_um 9 1500 500)
+      (pin Rect[T][300.000000,0.000000]Pad_1600.000000x300.000000_um 10 1500 1000)
+    )
+    (image "MADW__SMD-net-noin-0.5mm"
+      (outline (path signal 250  -381 -127  381 -127))
+      (outline (path signal 250  -381 127  381 127))
+      (outline (path signal 250  -381 0  381 0))
+      (pin Rect[T]Pad_500.000000x500.000000_um 1 -381 0)
+      (pin Rect[T]Pad_500.000000x500.000000_um 2 381 0)
+    )
+    (image "MADW__SIL-2"
+      (outline (path signal 200  -2540 -1270  -2540 1270))
+      (outline (path signal 200  -2540 1270  2540 1270))
+      (outline (path signal 200  2540 1270  2540 -1270))
+      (outline (path signal 200  2540 -1270  -2540 -1270))
+      (pin "Rect[A][-1000.000000,0.000000]Pad_4000.000000x2500.000000_um" 1 -1270 0)
+      (pin Oval[A][1000.000000,0.000000]Pad_4000.000000x2500.000000_um 2 1270 0)
+    )
+    (image MADW__C0805
+      (outline (path signal 200  2000 1100  -2000 1100))
+      (outline (path signal 200  2000 1100  2000 -1100))
+      (outline (path signal 200  2000 -1100  -2000 -1100))
+      (outline (path signal 200  -2000 -1100  -2000 1100))
+      (outline (path signal 100  200 400  200 -400))
+      (outline (path signal 100  -200 400  -200 -400))
+      (outline (path signal 100  -200 0  -600 0))
+      (outline (path signal 100  200 0  600 0))
+      (outline (path signal 200  -1000 630  1000 630))
+      (outline (path signal 200  1000 630  1000 -630))
+      (outline (path signal 200  1000 -630  -1000 -630))
+      (outline (path signal 200  -1000 -630  -1000 630))
+      (pin Rect[T]Pad_1297.940000x1498.600000_um 1 -949.96 0)
+      (pin Rect[T]Pad_1297.940000x1498.600000_um 2 949.96 0)
+    )
+    (image MADW__R0603_2
+      (outline (path signal 200  -1700 900  1700 900))
+      (outline (path signal 200  1700 900  1700 -900))
+      (outline (path signal 200  1700 -900  -1700 -900))
+      (outline (path signal 200  -1700 -900  -1700 900))
+      (outline (path signal 200  431.8 -431.8  838.2 -431.8))
+      (outline (path signal 200  838.2 -431.8  838.2 431.8))
+      (outline (path signal 200  431.8 431.8  838.2 431.8))
+      (outline (path signal 200  431.8 -431.8  431.8 431.8))
+      (outline (path signal 200  -838.2 -431.8  -431.8 -431.8))
+      (outline (path signal 200  -431.8 -431.8  -431.8 431.8))
+      (outline (path signal 200  -838.2 431.8  -431.8 431.8))
+      (outline (path signal 200  -838.2 -431.8  -838.2 431.8))
+      (outline (path signal 200  -431.8 -355.6  431.8 -355.6))
+      (outline (path signal 200  431.8 355.6  -431.8 355.6))
+      (pin Rect[T]Pad_998.220000x1099.820000_um 1 -848.36 0)
+      (pin Rect[T]Pad_998.220000x1099.820000_um 2 848.36 0)
+    )
+    (image "MADW__TC33X-POT"
+      (outline (path signal 200  0 -1297.4  -219.262 -1278.74  -432.217 -1223.29  -632.737 -1132.65
+            -815.055 -1009.43  -973.925 -857.161  -1104.78 -680.238  -1203.85 -483.745
+            -1268.28 -273.336  -1296.23 -55.063  -1286.89 164.793  -1240.53 379.909
+            -1158.48 584.096  -1043.11 771.479  -897.724 936.668  -726.513 1074.91
+            -534.402 1182.23  -326.917 1255.54  -110.027 1292.73  110.027 1292.73
+            326.917 1255.54  534.402 1182.23  726.513 1074.91  897.724 936.668
+            1043.11 771.479  1158.48 584.096  1240.53 379.909  1286.89 164.793
+            1296.23 -55.063  1268.28 -273.336  1203.85 -483.745  1104.78 -680.238
+            973.925 -857.161  815.055 -1009.43  632.737 -1132.65  432.217 -1223.29
+            219.262 -1278.74  0 -1297.4))
+      (outline (path signal 200  -800.1 0  800.1 0))
+      (outline (path signal 200  0 800.1  0 -800.1))
+      (outline (path signal 200  0 1750.06  1800.86 1750.06))
+      (outline (path signal 200  1800.86 1750.06  1800.86 -1998.98))
+      (outline (path signal 200  1800.86 -1998.98  -1800.86 -1998.98))
+      (outline (path signal 200  -1800.86 -1998.98  -1800.86 1750.06))
+      (outline (path signal 200  -1800.86 1750.06  0 1750.06))
+      (pin Rect[T]Pad_1198.880000x1198.880000_um 1 -1000.76 -1800.86)
+      (pin Rect[T]Pad_1198.880000x1198.880000_um 3 1000.76 -1800.86)
+      (pin Rect[T]Pad_1600.200000x1501.140000_um 2 0 1450.34)
+    )
+    (image MADW__SOT23
+      (outline (path signal 200  1900 2200  1900 -2200))
+      (outline (path signal 200  1900 -2200  -1900 -2200))
+      (outline (path signal 200  -1900 -2200  -1900 2200))
+      (outline (path signal 200  -1900 2200  1900 2200))
+      (outline (path signal 200  -228.6 711.2  228.6 711.2))
+      (outline (path signal 200  228.6 711.2  228.6 1292.86))
+      (outline (path signal 200  -228.6 1292.86  228.6 1292.86))
+      (outline (path signal 200  -228.6 711.2  -228.6 1292.86))
+      (outline (path signal 200  711.2 -1292.86  1168.4 -1292.86))
+      (outline (path signal 200  1168.4 -1292.86  1168.4 -711.2))
+      (outline (path signal 200  711.2 -711.2  1168.4 -711.2))
+      (outline (path signal 200  711.2 -1292.86  711.2 -711.2))
+      (outline (path signal 200  -1168.4 -1292.86  -711.2 -1292.86))
+      (outline (path signal 200  -711.2 -1292.86  -711.2 -711.2))
+      (outline (path signal 200  -1168.4 -711.2  -711.2 -711.2))
+      (outline (path signal 200  -1168.4 -1292.86  -1168.4 -711.2))
+      (outline (path signal 200  -497.84 -299.72  497.84 -299.72))
+      (outline (path signal 200  497.84 -299.72  497.84 299.72))
+      (outline (path signal 200  -497.84 299.72  497.84 299.72))
+      (outline (path signal 200  -497.84 -299.72  -497.84 299.72))
+      (outline (path signal 200  1419.86 657.86  1419.86 -657.86))
+      (outline (path signal 200  1419.86 -657.86  -1419.86 -657.86))
+      (outline (path signal 200  -1419.86 -657.86  -1419.86 657.86))
+      (outline (path signal 200  -1419.86 657.86  1419.86 657.86))
+      (pin Rect[T]Pad_1000.000000x1400.000000_um 1 -950 -1100)
+      (pin Rect[T]Pad_1000.000000x1400.000000_um 2 950 -1100)
+      (pin Rect[T]Pad_1000.000000x1400.000000_um 3 0 1100)
+    )
+    (image "MADW__SOT23-5"
+      (outline (path signal 200  -1850 2300  1850 2300))
+      (outline (path signal 200  -1850 2300  -1850 -2300))
+      (outline (path signal 200  -1850 -2300  1850 -2300))
+      (outline (path signal 200  1850 2300  1850 -2300))
+      (outline (path signal 200  -1419.86 807.72  1419.86 807.72))
+      (outline (path signal 200  -1419.86 -807.72  1419.86 -807.72))
+      (outline (path signal 100  -1198.88 -1498.6  -698.5 -1498.6))
+      (outline (path signal 100  -698.5 -1498.6  -698.5 -848.36))
+      (outline (path signal 100  -1198.88 -1498.6  -1198.88 -848.36))
+      (outline (path signal 100  -248.92 -1498.6  248.92 -1498.6))
+      (outline (path signal 100  248.92 -1498.6  248.92 -848.36))
+      (outline (path signal 100  -248.92 -1498.6  -248.92 -848.36))
+      (outline (path signal 100  698.5 -1498.6  1198.88 -1498.6))
+      (outline (path signal 100  1198.88 -1498.6  1198.88 -848.36))
+      (outline (path signal 100  698.5 -1498.6  698.5 -848.36))
+      (outline (path signal 100  1198.88 848.36  1198.88 1498.6))
+      (outline (path signal 100  698.5 1498.6  1198.88 1498.6))
+      (outline (path signal 100  698.5 848.36  698.5 1498.6))
+      (outline (path signal 100  -698.5 848.36  -698.5 1498.6))
+      (outline (path signal 100  -1198.88 1498.6  -698.5 1498.6))
+      (outline (path signal 100  -1198.88 848.36  -1198.88 1498.6))
+      (outline (path signal 200  1419.86 807.72  1419.86 -807.72))
+      (outline (path signal 200  -1419.86 -807.72  -1419.86 807.72))
+      (pin Rect[T]Pad_650.000000x1250.000000_um 1 -950 -1300)
+      (pin Rect[T]Pad_650.000000x1250.000000_um 2 0 -1300)
+      (pin Rect[T]Pad_650.000000x1250.000000_um 3 950 -1300)
+      (pin Rect[T]Pad_650.000000x1250.000000_um 4 950 1300)
+      (pin Rect[T]Pad_650.000000x1250.000000_um 5 -950 1300)
+    )
+    (image LED_smile_silkscreen_3mm
+    )
+    (padstack Oval[A][0.000000,200.000000]Pad_1050.000000x1500.000000_um
+      (shape (path Front 1050  0 -25  0 425))
+      (shape (path Back 1050  0 -25  0 425))
+      (attach off)
+    )
+    (padstack "Oval[A][0.000000,-200.000000]Pad_1050.000000x1500.000000_um"
+      (shape (path Front 1050  0 -425  0 25))
+      (shape (path Back 1050  0 -425  0 25))
+      (attach off)
+    )
+    (padstack Oval[A][1000.000000,0.000000]Pad_4000.000000x2500.000000_um
+      (shape (path Front 2500  250 0  1750 0))
+      (shape (path Back 2500  250 0  1750 0))
+      (attach off)
+    )
+    (padstack "Rect[T][-300.000000,0.000000]Pad_1600.000000x300.000000_um"
+      (shape (rect Front -1100 -150 500 150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x500.000000_um
+      (shape (rect Front -250 -250 250 250))
+      (attach off)
+    )
+    (padstack "Rect[A][-1000.000000,0.000000]Pad_4000.000000x2500.000000_um"
+      (shape (rect Front -3000 -1250 1000 1250))
+      (shape (rect Back -3000 -1250 1000 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_650.000000x1250.000000_um
+      (shape (rect Front -325 -625 325 625))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_998.220000x1099.820000_um
+      (shape (rect Front -499.11 -549.91 499.11 549.91))
+      (attach off)
+    )
+    (padstack Rect[T][300.000000,0.000000]Pad_1600.000000x300.000000_um
+      (shape (rect Front -500 -150 1100 150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1400.000000_um
+      (shape (rect Front -500 -700 500 700))
+      (attach off)
+    )
+    (padstack "Rect[A][0.000000,-200.000000]Pad_1050.000000x1500.000000_um"
+      (shape (rect Front -525 -950 525 550))
+      (shape (rect Back -525 -950 525 550))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1198.880000x1198.880000_um
+      (shape (rect Front -599.44 -599.44 599.44 599.44))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1297.940000x1498.600000_um
+      (shape (rect Front -648.97 -749.3 648.97 749.3))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.200000x1501.140000_um
+      (shape (rect Front -800.1 -750.57 800.1 750.57))
+      (attach off)
+    )
+    (padstack "Via[0-1]_762:330.2_um"
+      (shape (circle Front 762))
+      (shape (circle Back 762))
+      (attach off)
+    )
+  )
+  (network
+    (net /MISO
+      (pins JP1-1 IC1-7)
+    )
+    (net /MOSI
+      (pins JP1-4 IC1-6 R1-2 R2-1)
+    )
+    (net /POT1
+      (pins IC1-2 RV1-2)
+    )
+    (net /POT2
+      (pins IC1-4 RV2-2)
+    )
+    (net /RESET
+      (pins JP1-5 IC1-1)
+    )
+    (net /SCK
+      (pins JP1-3 IC1-9)
+    )
+    (net /Vin
+      (pins P1-1 P2-1 C2-1 U1-1 U1-4)
+    )
+    (net /drain
+      (pins P2-2 T1-3)
+    )
+    (net GND
+      (pins JP1-6 IC1-5 NJ1-1 C1-2 C3-2 RV1-3 RV2-1)
+    )
+    (net GNDPWR
+      (pins NJ1-2 P1-2 C2-2 R1-1 T1-2 U1-2)
+    )
+    (net "N-000004"
+      (pins R2-2 T1-1)
+    )
+    (net "N-000005"
+      (pins IC1-3)
+    )
+    (net "N-000006"
+      (pins IC1-8)
+    )
+    (net VCC
+      (pins JP1-2 IC1-10 C1-1 C3-1 RV1-1 RV2-3 U1-5)
+    )
+    (class kicad_default /MISO /MOSI /POT1 /POT2 /RESET /SCK /drain "N-000004"
+      "N-000005" "N-000006"
+      (circuit
+        (use_via "Via[0-1]_762:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+    (class Power /Vin GND GNDPWR VCC
+      (circuit
+        (use_via "Via[0-1]_762:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

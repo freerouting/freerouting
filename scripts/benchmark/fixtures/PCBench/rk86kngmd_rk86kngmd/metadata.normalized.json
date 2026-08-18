@@ -1,0 +1,51 @@
+{
+  "board_id": "rk86kngmd_rk86kngmd",
+  "display_name": "rk86kngmd_rk86kngmd",
+  "pcbench_directory": "PCBs/rk86kngmd_rk86kngmd",
+  "source": "https://github.com/timtashpulatov/rk86kngmd",
+  "author": "timtashpulatov",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.673894+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 106,
+    "components": 39,
+    "dimensions_mm": {
+      "width": 226.25,
+      "height": 67.76
+    },
+    "area_cm2": 153.31,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 921,
+    "vias": 286,
+    "track_length_mm": 8736.66,
+    "kicad_drc_violations": 151,
+    "kicad_drc_breakdown": {
+      "total_violations": 151,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 60,
+        "courtyards_overlap": 12,
+        "lib_footprint_issues": 34,
+        "pth_inside_courtyard": 3,
+        "silk_edge_clearance": 1,
+        "silk_overlap": 40,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 75,
+        "warning": 76
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

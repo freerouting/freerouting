@@ -1,0 +1,27 @@
+{
+  "board": "OpenHardwareExG_ActiveElectrode_OpenHardwareExG_ActiveElectrode",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\OpenHardwareExG_ActiveElectrode_OpenHardwareExG_ActiveElectrode\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 5,
+  "segment_count": 133,
+  "approximate_track_length_mm": 163.68,
+  "kicad_drc_violations": 76,
+  "generated_at": "2026-08-18T18:21:07.980691+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 76,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 25,
+      "copper_edge_clearance": 17,
+      "lib_footprint_issues": 13,
+      "silk_over_copper": 5,
+      "text_height": 15,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 42,
+      "warning": 34
+    }
+  }
+}

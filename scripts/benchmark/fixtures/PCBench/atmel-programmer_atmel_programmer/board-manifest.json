@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "atmel-programmer_atmel_programmer",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 216757,
+      "sha256": "48de3db485b617195d7de22a5a479a721e5f7eddb8d80c9e34a250c555d3bec3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 60950,
+      "sha256": "ab5e0a4900900d89c6788f9e842cd6244acbb3e8ab98c2b78926e125e69c9adb"
+    },
+    "metadata_json": {
+      "bytes": 699,
+      "sha256": "bcdc88f7e83441d85a8d8cea558eded5a7d5e5437b8b6acda1c015719e2dcda0"
+    },
+    "final_json": {
+      "bytes": 56694,
+      "sha256": "4133e5749d97bb9e6e1812f6f9a3f978cc43086014dcbe4e99461f21f3fb72f9"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:30:02.635736+00:00"
+  }
+}

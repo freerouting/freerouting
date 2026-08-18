@@ -1,0 +1,60 @@
+{
+  "board_id": "pico-pi-rel_pico-pi",
+  "display_name": "pico-pi-rel_pico-pi",
+  "pcbench_directory": "PCBs/pico-pi-rel_pico-pi",
+  "source": "https://github.com/bristol-seds/pico-pi-rel",
+  "author": "bristol-seds",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:58.858132+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 71,
+    "components": 98,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 30.0
+    },
+    "area_cm2": 19.5,
+    "zones": 27
+  },
+  "reference": {
+    "segments": 753,
+    "vias": 194,
+    "track_length_mm": 1017.29,
+    "kicad_drc_violations": 606,
+    "kicad_drc_breakdown": {
+      "total_violations": 606,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 129,
+        "copper_edge_clearance": 25,
+        "courtyards_overlap": 23,
+        "invalid_outline": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 98,
+        "pth_inside_courtyard": 4,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 65,
+        "silk_overlap": 25,
+        "solder_mask_bridge": 200,
+        "starved_thermal": 8,
+        "text_height": 1,
+        "text_thickness": 1,
+        "track_dangling": 6,
+        "via_dangling": 8
+      },
+      "by_severity": {
+        "error": 391,
+        "warning": 215
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

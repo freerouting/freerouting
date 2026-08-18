@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "nikon_gps_nikon_gps",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 92970,
+      "sha256": "38a2bd0e8b16bbdb986b29ace49611528445f0de6d7ab55a70976015b4b6069c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 87177,
+      "sha256": "be14967bb12759466560402d3a3da6760a4957599eb1a02106cdcc4dfc0d3cab"
+    },
+    "metadata_json": {
+      "bytes": 614,
+      "sha256": "d53dbd81b0cfbb36a19fb07f6fc6256a6c4959623d1479647be01c41e7ae0108"
+    },
+    "final_json": {
+      "bytes": 54111,
+      "sha256": "d6a58e056f290f78efe612feea02e0da7baab7660955d9d79043ea69607390a1"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:27:44.750380+00:00"
+  }
+}

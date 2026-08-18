@@ -1,0 +1,56 @@
+{
+  "board_id": "kitspace_teensy-fx",
+  "display_name": "kitspace_teensy-fx",
+  "pcbench_directory": "PCBs/kitspace_teensy-fx",
+  "source": "https://github.com/mattvenn/teensy-audio-fx",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:00.413623+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 63,
+    "components": 82,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 100.0
+    },
+    "area_cm2": 60.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1218,
+    "vias": 115,
+    "track_length_mm": 3517.55,
+    "kicad_drc_violations": 292,
+    "kicad_drc_breakdown": {
+      "total_violations": 292,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 48,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 2,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 19,
+        "lib_footprint_mismatch": 51,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 8,
+        "silk_overlap": 39,
+        "solder_mask_bridge": 109,
+        "text_height": 1,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 163,
+        "warning": 129
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

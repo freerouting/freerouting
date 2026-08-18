@@ -1,0 +1,52 @@
+{
+  "board_id": "avr_ledprojector_avr_ledprojection-0402",
+  "display_name": "avr_ledprojector_avr_ledprojection-0402",
+  "pcbench_directory": "PCBs/avr_ledprojector_avr_ledprojection-0402",
+  "source": "https://github.com/cnlohr/avr_ledprojector",
+  "author": "cnlohr",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:43.729954+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 91,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 34.54
+    },
+    "area_cm2": 8.77,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1322,
+    "vias": 62,
+    "track_length_mm": 786.6,
+    "kicad_drc_violations": 470,
+    "kicad_drc_breakdown": {
+      "total_violations": 470,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 107,
+        "copper_edge_clearance": 15,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 175,
+        "silk_overlap": 13,
+        "starved_thermal": 3,
+        "text_height": 87,
+        "text_thickness": 69
+      },
+      "by_severity": {
+        "error": 125,
+        "warning": 345
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "board_id": "hm-mod-rpi-rtc_hm-mod-rpi-rtc",
+  "display_name": "hm-mod-rpi-rtc_hm-mod-rpi-rtc",
+  "pcbench_directory": "PCBs/hm-mod-rpi-rtc_hm-mod-rpi-rtc",
+  "source": "https://github.com/m3h7/hm-mod-rpi-rtc",
+  "author": "m3h7",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:59.422138+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 44.45,
+      "height": 21.84
+    },
+    "area_cm2": 9.71,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 141,
+    "vias": 12,
+    "track_length_mm": 270.65,
+    "kicad_drc_violations": 73,
+    "kicad_drc_breakdown": {
+      "total_violations": 73,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 41,
+        "lib_footprint_issues": 25,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 4
+      },
+      "by_severity": {
+        "error": 41,
+        "warning": 32
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

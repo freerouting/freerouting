@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Blink-Eras_Blink Eras",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 234596,
+      "sha256": "eab217c32ecb377d339218ac2cd194facc402c1470aff7b77a846c7b2bcc5a2b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 180493,
+      "sha256": "03660dba310fed7b2691e94163a27cc86bb33ac600a0befbb3a0297f657ce952"
+    },
+    "metadata_json": {
+      "bytes": 671,
+      "sha256": "5be65590e937dca3e3083c92be5dfbb614df37f80e6a55b0e59bc0ad41ae5720"
+    },
+    "final_json": {
+      "bytes": 34481,
+      "sha256": "2dfce198d3e20726be2fd24f75399bdce1211416435a521ae623dfaea5b010c2"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:34:05.845141+00:00"
+  }
+}

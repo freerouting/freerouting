@@ -1,0 +1,58 @@
+{
+  "board_id": "kitspace_OutlineChaos",
+  "display_name": "kitspace_OutlineChaos",
+  "pcbench_directory": "PCBs/kitspace_OutlineChaos",
+  "source": "https://github.com/GaudiLabs/ChaosLooper",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/GaudiLabs/ChaosLooper/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:09:08.326859+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 30,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 150.5,
+      "height": 81.5
+    },
+    "area_cm2": 122.66,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 170,
+    "vias": 15,
+    "track_length_mm": 734.81,
+    "kicad_drc_violations": 296,
+    "kicad_drc_breakdown": {
+      "total_violations": 296,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 150,
+        "copper_edge_clearance": 12,
+        "invalid_outline": 27,
+        "isolated_copper": 2,
+        "lib_footprint_issues": 31,
+        "padstack": 4,
+        "shorting_items": 2,
+        "silk_edge_clearance": 19,
+        "silk_over_copper": 35,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 5,
+        "track_dangling": 2,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 200,
+        "warning": 96
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

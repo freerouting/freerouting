@@ -1,0 +1,54 @@
+{
+  "board_id": "HID_PID_controller",
+  "display_name": "HID_PID_controller",
+  "pcbench_directory": "PCBs/HID_PID_controller",
+  "source": "https://github.com/pholat/HID_PID",
+  "author": "pholat",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.202089+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 62,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 444,
+    "vias": 14,
+    "track_length_mm": 1035.44,
+    "kicad_drc_violations": 699,
+    "kicad_drc_breakdown": {
+      "total_violations": 699,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 95,
+        "copper_edge_clearance": 5,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 143,
+        "silk_overlap": 147,
+        "starved_thermal": 3,
+        "text_height": 71,
+        "track_dangling": 2,
+        "track_width": 199,
+        "via_diameter": 14
+      },
+      "by_severity": {
+        "error": 316,
+        "warning": 383
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

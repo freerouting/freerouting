@@ -1,0 +1,54 @@
+{
+  "board_id": "mppt-2420-rc_mppt-2420-rc",
+  "display_name": "mppt-2420-rc_mppt-2420-rc",
+  "pcbench_directory": "PCBs/mppt-2420-rc_mppt-2420-rc",
+  "source": "https://github.com/LibreSolar/mppt-2420-rc",
+  "author": "LibreSolar",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:25.837743+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 39,
+    "components": 121,
+    "dimensions_mm": {
+      "width": 67.7,
+      "height": 86.4
+    },
+    "area_cm2": 58.49,
+    "zones": 34
+  },
+  "reference": {
+    "segments": 933,
+    "vias": 191,
+    "track_length_mm": 1759.92,
+    "kicad_drc_violations": 184,
+    "kicad_drc_breakdown": {
+      "total_violations": 184,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 14,
+        "copper_edge_clearance": 19,
+        "courtyards_overlap": 3,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 97,
+        "lib_footprint_mismatch": 22,
+        "silk_edge_clearance": 10,
+        "silk_overlap": 15,
+        "track_dangling": 1,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 39,
+        "warning": 145
+      }
+    }
+  },
+  "tags": [
+    "4-layer"
+  ]
+}

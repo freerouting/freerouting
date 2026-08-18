@@ -1,0 +1,56 @@
+{
+  "board_id": "can_firewall_hardware_CAN_Firewall",
+  "display_name": "can_firewall_hardware_CAN_Firewall",
+  "pcbench_directory": "PCBs/can_firewall_hardware_CAN_Firewall",
+  "source": "https://github.com/PDXostc/can_firewall_hardware",
+  "author": "PDXostc",
+  "license": "Mozilla Public License 2.0",
+  "license_spdx": "MPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:32.729824+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 78,
+    "components": 80,
+    "dimensions_mm": {
+      "width": 68.0,
+      "height": 58.0
+    },
+    "area_cm2": 39.44,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 1281,
+    "vias": 167,
+    "track_length_mm": 2307.21,
+    "kicad_drc_violations": 591,
+    "kicad_drc_breakdown": {
+      "total_violations": 591,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 327,
+        "copper_edge_clearance": 2,
+        "hole_to_hole": 2,
+        "lib_footprint_issues": 80,
+        "padstack": 4,
+        "silk_edge_clearance": 14,
+        "silk_over_copper": 23,
+        "silk_overlap": 34,
+        "starved_thermal": 2,
+        "text_height": 86,
+        "track_dangling": 13
+      },
+      "by_severity": {
+        "error": 335,
+        "warning": 256
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

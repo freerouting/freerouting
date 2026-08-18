@@ -1,0 +1,51 @@
+{
+  "board_id": "nanoSwinSidC_nanoSwinSidC",
+  "display_name": "nanoSwinSidC_nanoSwinSidC",
+  "pcbench_directory": "PCBs/nanoSwinSidC_nanoSwinSidC",
+  "source": "https://github.com/UzixLS/nanoSwinSidC",
+  "author": "UzixLS",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:51.890050+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 35.8,
+      "height": 17.5
+    },
+    "area_cm2": 6.26,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 272,
+    "vias": 29,
+    "track_length_mm": 492.52,
+    "kicad_drc_violations": 74,
+    "kicad_drc_breakdown": {
+      "total_violations": 74,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 28,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 9,
+        "lib_footprint_mismatch": 6,
+        "pth_inside_courtyard": 8,
+        "silk_edge_clearance": 6,
+        "text_height": 14
+      },
+      "by_severity": {
+        "error": 39,
+        "warning": 35
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "board_id": "Minitel_video_output_stage",
+  "display_name": "Minitel_video_output_stage",
+  "pcbench_directory": "PCBs/Minitel_video_output_stage",
+  "source": "https://github.com/phooky/Minitel",
+  "author": "phooky",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.797743+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 78.74,
+      "height": 66.04
+    },
+    "area_cm2": 52.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 47,
+    "vias": 0,
+    "track_length_mm": 334.36,
+    "kicad_drc_violations": 32,
+    "kicad_drc_breakdown": {
+      "total_violations": 32,
+      "unconnected_count": 17,
+      "by_type": {
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 21,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 2,
+        "silk_overlap": 6,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 31
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}

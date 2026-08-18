@@ -1,0 +1,52 @@
+{
+  "board_id": "hardware-designs_energy-harvester",
+  "display_name": "hardware-designs_energy-harvester",
+  "pcbench_directory": "PCBs/hardware-designs_energy-harvester",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 46.23,
+      "height": 15.75
+    },
+    "area_cm2": 7.28,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 92,
+    "vias": 4,
+    "track_length_mm": 224.8,
+    "kicad_drc_violations": 124,
+    "kicad_drc_breakdown": {
+      "total_violations": 124,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 48,
+        "copper_edge_clearance": 5,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 20,
+        "silk_overlap": 27,
+        "solder_mask_bridge": 8,
+        "starved_thermal": 1,
+        "text_height": 14
+      },
+      "by_severity": {
+        "error": 62,
+        "warning": 62
+      }
+    }
+  },
+  "tags": [
+    "2-layer"
+  ]
+}
