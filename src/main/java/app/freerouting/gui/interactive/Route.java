@@ -1,15 +1,15 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Unit;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.geometry.planar.Area;

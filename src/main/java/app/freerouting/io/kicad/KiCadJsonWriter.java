@@ -1,12 +1,12 @@
 package app.freerouting.io.kicad;
 
-import app.freerouting.board.BoardOutline;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Unit;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -59,7 +59,7 @@ public final class KiCadJsonWriter {
 
     // 1. Layers
     for (int i = 0; i < board.getLayerCount(); i++) {
-      app.freerouting.board.Layer layer = board.layerStructure.layers[i];
+      app.freerouting.board.model.structure.Layer layer = board.layerStructure.layers[i];
       KiCadBoardJson.LayerJson layerJson = new KiCadBoardJson.LayerJson();
       layerJson.index = i;
       layerJson.name = layer.name;

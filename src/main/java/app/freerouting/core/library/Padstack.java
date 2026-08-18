@@ -1,6 +1,6 @@
 package app.freerouting.core.library;
 
-import app.freerouting.board.ItemInfoPrinter;
+import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Direction;
 import app.freerouting.geometry.planar.IntBox;

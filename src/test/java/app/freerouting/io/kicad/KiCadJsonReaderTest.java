@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.rules.NetClass;

@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.Item;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.fixtures.RoutingFixtureTest;
 import app.freerouting.io.kicad.KiCadDrcReport;

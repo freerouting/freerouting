@@ -1,11 +1,11 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.Component;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.Item;
-import app.freerouting.board.ObstacleArea;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;

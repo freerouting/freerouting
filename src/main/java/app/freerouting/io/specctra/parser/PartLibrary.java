@@ -1,6 +1,5 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.Component;
 import app.freerouting.core.library.LogicalParts;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
@@ -39,7 +38,8 @@ public class PartLibrary extends ScopeKeyword {
       scopeParameter.file.newLine();
       scopeParameter.file.write("(comp");
       for (int j = 1; j <= scopeParameter.board.components.count(); j++) {
-        Component currentComponent = scopeParameter.board.components.get(j);
+        app.freerouting.board.model.structure.Component currentComponent =
+            scopeParameter.board.components.get(j);
         if (currentComponent.getLogicalPart() == currentPart) {
           scopeParameter.file.write(" ");
           scopeParameter.file.write(currentComponent.name);

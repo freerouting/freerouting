@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
+import app.freerouting.gui.windows.board.WindowVisibility;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Locale;

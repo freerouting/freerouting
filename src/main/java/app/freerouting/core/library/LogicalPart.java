@@ -1,6 +1,6 @@
 package app.freerouting.core.library;
 
-import app.freerouting.board.ItemInfoPrinter;
+import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;

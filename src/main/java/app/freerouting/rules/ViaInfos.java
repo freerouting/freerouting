@@ -1,6 +1,6 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.ItemInfoPrinter;
+import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;
 import java.util.LinkedList;

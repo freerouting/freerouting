@@ -1,6 +1,6 @@
 package app.freerouting.core.library;
 
-import app.freerouting.board.LayerStructure;
+import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.logger.FRLogger;
 import java.io.Serializable;

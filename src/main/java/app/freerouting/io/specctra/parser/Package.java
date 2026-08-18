@@ -1,6 +1,6 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
@@ -213,7 +213,7 @@ public class Package {
       throws IOException {
     Layer keepoutLayer;
     if (keepout.layer >= 0) {
-      app.freerouting.board.Layer boardLayer =
+      app.freerouting.board.model.structure.Layer boardLayer =
           scopeParameter.board.layerStructure.layers[keepout.layer];
       keepoutLayer = new Layer(boardLayer.name, keepout.layer, boardLayer.isSignal);
     } else {
@@ -358,7 +358,8 @@ public class Package {
     Collection<Item> boardItems = scopeParameter.board.getItems();
     boolean componentFound = false;
     for (int i = 1; i <= scopeParameter.board.components.count(); i++) {
-      app.freerouting.board.Component currentComponent = scopeParameter.board.components.get(i);
+      app.freerouting.board.model.structure.Component currentComponent =
+          scopeParameter.board.components.get(i);
       if (currentComponent.getPackage() == boardPackage) {
         // check, if not all items of the component are deleted
         boolean undeletedItemFound = false;

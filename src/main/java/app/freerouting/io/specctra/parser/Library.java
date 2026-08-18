@@ -1,6 +1,6 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.library.Packages;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.core.library.Padstacks;
@@ -77,7 +77,8 @@ public class Library extends ScopeKeyword {
       if (currentBoardShape == null) {
         continue;
       }
-      app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[i];
+      app.freerouting.board.model.structure.Layer boardLayer =
+          scopeParameter.board.layerStructure.layers[i];
       final Layer currentLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
       Shape currentShape =
           scopeParameter.coordinateTransform.boardToDsnRel(currentBoardShape, currentLayer);

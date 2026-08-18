@@ -1,8 +1,8 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.Pin;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.rendering.BoardRenderer;
 import app.freerouting.gui.workspace.GuiBoardManager;

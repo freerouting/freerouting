@@ -1,9 +1,9 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.Item;
-import app.freerouting.board.ObstacleArea;
-import app.freerouting.board.Pin;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.logger.FRLogger;
@@ -52,7 +52,7 @@ public class Component extends ScopeKeyword {
   }
 
   public static void writeScope(
-      WriteScopeParameter scopeParameter, app.freerouting.board.Component component)
+      WriteScopeParameter scopeParameter, app.freerouting.board.model.structure.Component component)
       throws IOException {
     scopeParameter.file.startScope();
     scopeParameter.file.write("place ");
@@ -86,7 +86,9 @@ public class Component extends ScopeKeyword {
   }
 
   private static void writePinInfo(
-      WriteScopeParameter scopeParameter, app.freerouting.board.Component component, int pinIndex)
+      WriteScopeParameter scopeParameter,
+      app.freerouting.board.model.structure.Component component,
+      int pinIndex)
       throws IOException {
     if (!component.isPlaced()) {
       return;
@@ -118,7 +120,7 @@ public class Component extends ScopeKeyword {
   }
 
   private static void writeKeepoutInfos(
-      WriteScopeParameter scopeParameter, app.freerouting.board.Component component)
+      WriteScopeParameter scopeParameter, app.freerouting.board.model.structure.Component component)
       throws IOException {
     if (!component.isPlaced()) {
       return;

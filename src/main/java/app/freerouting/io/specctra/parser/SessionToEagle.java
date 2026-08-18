@@ -1,8 +1,7 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.Pin;
-import app.freerouting.board.Unit;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
@@ -38,7 +37,7 @@ public class SessionToEagle {
   /** The layer structure in specctra format. */
   private final LayerStructure specctraLayerStructure;
 
-  private final Unit unit;
+  private final app.freerouting.board.model.structure.Unit unit;
 
   /** The scale factor for transforming coordinates from the session file to Eagle. */
   private final double sessionFileScaleDenominator;
@@ -50,7 +49,7 @@ public class SessionToEagle {
       IJFlexScanner scanner,
       OutputStreamWriter outFile,
       BasicBoard board,
-      Unit unit,
+      app.freerouting.board.model.structure.Unit unit,
       double sessionFileScaleDominator,
       double boardScaleFactor) {
     this.scanner = scanner;

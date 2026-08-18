@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.settings.GlobalSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -190,8 +190,8 @@ class SesRoundTripTest {
     assertTrue(imported.wiresImported() > 0);
 
     int tracesWithDrillContacts = 0;
-    for (app.freerouting.board.Item item : board.getItems()) {
-      if (!(item instanceof app.freerouting.board.PolylineTrace trace)) {
+    for (app.freerouting.board.model.items.Item item : board.getItems()) {
+      if (!(item instanceof app.freerouting.board.trace.PolylineTrace trace)) {
         continue;
       }
       for (boolean startSide : new boolean[] {true, false}) {

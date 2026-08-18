@@ -8,6 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import app.freerouting.gui.controls.ComboBoxLayer;
+import app.freerouting.gui.windows.routing.WindowAutorouteParameter;
+import app.freerouting.gui.windows.routing.WindowClearanceMatrix;
+import app.freerouting.gui.windows.routing.WindowNetClasses;
+import app.freerouting.gui.windows.routing.WindowRouteParameter;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.rules.ClearanceMatrix;
@@ -36,20 +41,16 @@ class DialogInteractionHandlersTest {
   }
 
   @Test
-  void autoRouterSettingsCheckboxAndAlgorithmInteractionsInvokeExpectedSetters() {
+  void autoRouterSettingsCheckboxInteractionsInvokeExpectedSetters() {
     RouterSettings settings = mock(RouterSettings.class);
 
     WindowAutorouteParameter.applyViasAllowedSelection(settings, true);
     WindowAutorouteParameter.applyAutorouteEnabledSelection(settings, false);
     WindowAutorouteParameter.applyOptimizerEnabledSelection(settings, true);
-    WindowAutorouteParameter.applyAlgorithmSelection(settings, true);
-    WindowAutorouteParameter.applyAlgorithmSelection(settings, false);
 
     verify(settings).setViasAllowed(true);
     verify(settings).setEnabled(false);
     verify(settings).setOptimizerEnabled(true);
-    verify(settings).setAlgorithm(RouterSettings.ALGORITHM_V19);
-    verify(settings).setAlgorithm(RouterSettings.ALGORITHM_CURRENT);
   }
 
   @Test

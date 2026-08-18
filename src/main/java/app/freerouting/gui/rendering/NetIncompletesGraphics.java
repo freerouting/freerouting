@@ -1,6 +1,6 @@
 package app.freerouting.gui.rendering;
 
-import app.freerouting.board.Pin;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.drc.AirLine;
 import app.freerouting.drc.NetIncompletes;
 import app.freerouting.geometry.planar.FloatPoint;

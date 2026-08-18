@@ -1,6 +1,5 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.Layer;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
@@ -142,7 +141,8 @@ public abstract class Rule {
     scopeParameter.file.startScope();
     scopeParameter.file.write("layer_rule ");
 
-    Layer currentBoardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
+    app.freerouting.board.model.structure.Layer currentBoardLayer =
+        scopeParameter.board.layerStructure.layers[layerIndex];
 
     scopeParameter.file.write(currentBoardLayer.name);
     scopeParameter.file.startScope();

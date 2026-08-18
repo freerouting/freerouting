@@ -3,9 +3,9 @@ package app.freerouting.i18n;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import app.freerouting.gui.BoardFrame;
-import app.freerouting.gui.WindowClearanceViolations;
+import app.freerouting.gui.board.BoardFrame;
 import app.freerouting.gui.interactive.InteractiveState;
+import app.freerouting.gui.windows.routing.WindowClearanceViolations;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;

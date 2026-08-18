@@ -11,7 +11,7 @@ import java.util.LinkedList;
  * Convex shape defined as intersection of half-planes. A half-plane is defined as the positive side
  * of a directed line.
  */
-public class Simplex extends TileShape implements Serializable {
+public final class Simplex extends TileShape implements Serializable {
 
   /** Standard implementation for an empty Simplex. */
   public static final Simplex EMPTY = new Simplex(new Line[0]);

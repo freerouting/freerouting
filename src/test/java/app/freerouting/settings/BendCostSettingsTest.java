@@ -83,19 +83,22 @@ class BendCostSettingsTest {
     assertEquals(2.0, settings.getPreferredDirectionTraceCosts(0));
 
     // Construct a dummy board to test applyBoardSpecificOptimizations with null scoring
-    app.freerouting.board.Layer layer1 = new app.freerouting.board.Layer("Top", true);
-    app.freerouting.board.Layer layer2 = new app.freerouting.board.Layer("Bottom", true);
-    app.freerouting.board.LayerStructure layerStructure =
-        new app.freerouting.board.LayerStructure(
-            new app.freerouting.board.Layer[] {layer1, layer2});
+    app.freerouting.board.model.structure.Layer layer1 =
+        new app.freerouting.board.model.structure.Layer("Top", true);
+    app.freerouting.board.model.structure.Layer layer2 =
+        new app.freerouting.board.model.structure.Layer("Bottom", true);
+    app.freerouting.board.model.structure.LayerStructure layerStructure =
+        new app.freerouting.board.model.structure.LayerStructure(
+            new app.freerouting.board.model.structure.Layer[] {layer1, layer2});
     app.freerouting.rules.ClearanceMatrix clearanceMatrix =
         app.freerouting.rules.ClearanceMatrix.getDefaultInstance(layerStructure, 10);
     app.freerouting.rules.BoardRules boardRules =
         new app.freerouting.rules.BoardRules(layerStructure, clearanceMatrix);
     boardRules.createDefaultNetClass();
-    app.freerouting.board.Communication communication = new app.freerouting.board.Communication();
-    app.freerouting.board.RoutingBoard board =
-        new app.freerouting.board.RoutingBoard(
+    app.freerouting.board.state.Communication communication =
+        new app.freerouting.board.state.Communication();
+    app.freerouting.board.facade.RoutingBoard board =
+        new app.freerouting.board.facade.RoutingBoard(
             new app.freerouting.geometry.planar.IntBox(0, 0, 2000000, 2000000),
             layerStructure,
             new app.freerouting.geometry.planar.PolylineShape[] {

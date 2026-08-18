@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import app.freerouting.gui.workspace.EditorStateHandle;
-import app.freerouting.gui.workspace.InteractiveCommand;
+import app.freerouting.gui.workspace.progress.InteractiveCommand;
+import app.freerouting.gui.workspace.session.EditorStateHandle;
 import org.junit.jupiter.api.Test;
 
 class InteractiveCommandTest {

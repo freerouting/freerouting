@@ -1,0 +1,84 @@
+{
+  "delete_all_tracks_and_vias": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.menus.BoardMenuOther"
+    ],
+    "english_hash": "83b65bf060a6e62f6d4d690a6cf45408a0f385137923b62760523e25277ed800",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.menus.BoardMenuOther",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "delete_all_tracks_and_vias_tooltip"
+    ],
+    "ui_role": "label"
+  },
+  "delete_all_tracks_and_vias_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.menus.BoardMenuOther"
+    ],
+    "english_hash": "fb76f170c78197f3fd663445396ec39e1dd8c8d816bd3e523cd340a2b29990b8",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.menus.BoardMenuOther",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "delete_all_tracks_and_vias"
+    ],
+    "ui_role": "tooltip"
+  },
+  "other": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.menus.BoardMenuOther"
+    ],
+    "english_hash": "f97e9da0e3b879f0a9df979ae260a5f7e1371edb127c1862d4f861981166cdc1",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.menus.BoardMenuOther",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "snapshots": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "f187f78e07efb26eacf88e2d361f91f4abf37d025e744f36446b62d22abd1460",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.menus.BoardMenuOther",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "snapshots_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "853a4d46eb8b11e01906accaa5463a90534bcdc5a72415612c681831974658b2",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.menus.BoardMenuOther",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "snapshots"
+    ],
+    "ui_role": "tooltip"
+  }
+}

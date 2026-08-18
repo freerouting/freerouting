@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 /** Abstract class describing functionality for Points in the plane. */
-public abstract class Point implements Serializable {
+public abstract sealed class Point implements Serializable permits IntPoint, RationalPoint {
 
   /** Standard implementation of the zero point. */
   public static final IntPoint ZERO = new IntPoint(0, 0);

@@ -2,7 +2,7 @@ package app.freerouting.fixtures;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.io.specctra.DsnReader;

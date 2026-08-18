@@ -1,8 +1,8 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.Item;
-import app.freerouting.board.Trace;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import java.util.Collection;

@@ -1,7 +1,7 @@
 package app.freerouting.settings;
 
-import app.freerouting.autoroute.AutorouteControl;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.autoroute.maze.AutorouteControl;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 /** Mutable router configuration assembled from the configured settings sources. */
 public class RouterSettings implements Serializable, Cloneable {
-  // Valid algorithm values
+  // Current algorithm identifier and legacy compatibility token.
   public static final String ALGORITHM_CURRENT = "freerouting-router";
   public static final String ALGORITHM_V19 = "freerouting-router-v19";
   public static final double MIN_BEND_COST = 0.0;

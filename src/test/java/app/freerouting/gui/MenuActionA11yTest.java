@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
+import app.freerouting.gui.board.BoardFrame;
+import app.freerouting.gui.menus.BoardMenuFile;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.concurrent.atomic.AtomicBoolean;

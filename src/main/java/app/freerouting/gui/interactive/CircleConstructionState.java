@@ -1,8 +1,8 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatPoint;

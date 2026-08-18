@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
+import app.freerouting.gui.board.BoardToolbar;
+import app.freerouting.gui.menus.BoardMenuBar;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.InputEvent;

@@ -1,9 +1,7 @@
 {
   "clearance_violations_found": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "7082f980b02dd4faec00af651512a250c0694b3b3435d9b65455c6163b8c5ed0",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -45,9 +43,7 @@
   },
   "no_more_redo_possible": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "8f9e1039a4cae1077a0dc20556875d6f4a35df94e223665df86f7a6e139c578e",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -63,9 +59,7 @@
   },
   "no_more_undo_possible": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "9d12b8d65deb4dfde7bd0e2bf13ad4b202d06efaefef3dfa31ecf876aa70dc6c",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -81,9 +75,7 @@
   },
   "ratsnest_status_incomplete_only": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "05b7ec5510cd26662c4ee2bec7ba26ddff1d2bff67de0d7da81275151763ef14",
     "grammatical_role": "fragment",
     "has_placeholders": true,
@@ -101,9 +93,7 @@
   },
   "ratsnest_status_with_length_violations": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "1a4e9683628c5e1d43b92b043319fa826f799fee846b76fcc3c0716c68bb0b7a",
     "grammatical_role": "fragment",
     "has_placeholders": true,
@@ -122,9 +112,7 @@
   },
   "redo": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "74273989b0966e2369b6d01aadb23af4ad6a9e724643fa88f2bde99202a36708",
     "grammatical_role": "fragment",
     "has_placeholders": false,
@@ -152,9 +140,7 @@
   },
   "save_error": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "07932a884be34cb439779fa49627745c7800ed8b8430e044c8bb728b618ecee1",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
@@ -182,9 +168,7 @@
   },
   "undo": {
     "bundle_desc": "GUI (graphical user interface)",
-    "code_references": [
-      "app.freerouting.gui.workspace.GuiBoardManager"
-    ],
+    "code_references": [],
     "english_hash": "a8283ade31856f71220db0e6f60a257c6889dc4dad0f275f66ad44b9ed9bf8d5",
     "grammatical_role": "fragment",
     "has_placeholders": false,

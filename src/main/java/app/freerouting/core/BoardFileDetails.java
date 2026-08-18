@@ -1,6 +1,6 @@
 package app.freerouting.core;
 
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEvent;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEventListener;
 import app.freerouting.core.scoring.BoardStatistics;

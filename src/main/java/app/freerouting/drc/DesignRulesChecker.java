@@ -1,13 +1,13 @@
 package app.freerouting.drc;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Unit;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.constants.Constants;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.io.kicad.KiCadDrcPosition;
@@ -94,7 +94,7 @@ public class DesignRulesChecker {
     // Group items by net
     java.util.Map<Integer, List<Item>> itemsByNet = new java.util.HashMap<>();
     for (Item item : board.getItems()) {
-      if (item instanceof app.freerouting.board.Connectable && item.netCount() > 0) {
+      if (item instanceof app.freerouting.board.model.items.Connectable && item.netCount() > 0) {
         int netNumber = item.getNetNumber(0);
         itemsByNet.computeIfAbsent(netNumber, k -> new ArrayList<>()).add(item);
       }
@@ -553,7 +553,7 @@ public class DesignRulesChecker {
       if (currentItem == null) {
         break;
       }
-      if (currentItem instanceof app.freerouting.board.Connectable) {
+      if (currentItem instanceof app.freerouting.board.model.items.Connectable) {
         for (int i = 0; i < currentItem.netCount(); i++) {
           netItemLists.get(currentItem.getNetNumber(i) - 1).add(currentItem);
         }

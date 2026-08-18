@@ -1,8 +1,3 @@
-// Use this to test for missing keys in all .properties files
-// For individual testing use:
-// ./gradlew cleanTest test --tests app.freerouting.i18n.EnglishPropertiesParityTest --rerun-tasks
-// Reports are in build/reports/i18n/*Report.txt and build/reports/i18n/*Report.json
-
 package app.freerouting.i18n;
 
 import app.freerouting.logger.FRLogger;
@@ -26,6 +21,11 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+
+// Use this to test for missing keys in all .properties files
+// For individual testing use:
+// ./gradlew cleanTest test --tests app.freerouting.i18n.EnglishPropertiesParityTest --rerun-tasks
+// Reports are in build/reports/i18n/*Report.txt and build/reports/i18n/*Report.json
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EnglishPropertiesParityTest {
@@ -85,11 +85,13 @@ class EnglishPropertiesParityTest {
       Set.of(
           "app.freerouting.gui.interactive.InteractiveState",
           "app.freerouting.gui.workspace.GuiBoardManager",
-          "app.freerouting.gui.workspace.ScreenMessages",
-          "app.freerouting.gui.workspace.RatsNest");
+          "app.freerouting.gui.workspace.progress.ScreenMessages",
+          "app.freerouting.gui.workspace.progress.RatsNest");
   private static final Map<String, String> BUNDLE_ALIASES =
       Map.ofEntries(
-          Map.entry("app.freerouting.rules.NetClasses", "app.freerouting.gui.WindowNetClasses"),
+          Map.entry(
+              "app.freerouting.rules.NetClasses",
+              "app.freerouting.gui.windows.routing.WindowNetClasses"),
           Map.entry(
               "app.freerouting.gui.rendering.ItemColorTableModel",
               "app.freerouting.gui.rendering.ColorTableModel"),
@@ -97,31 +99,44 @@ class EnglishPropertiesParityTest {
               "app.freerouting.gui.rendering.OtherColorTableModel",
               "app.freerouting.gui.rendering.ColorTableModel"),
           Map.entry(
-              "app.freerouting.gui.workspace.AutorouterAndRouteOptimizerThread",
+              "app.freerouting.gui.workspace.progress.GuiRoutingJobWorker",
               "app.freerouting.gui.interactive.InteractiveState"),
-          Map.entry("app.freerouting.gui.AirLineInfo", "app.freerouting.drc.AirLine"),
+          Map.entry("app.freerouting.gui.windows.board.AirLineInfo", "app.freerouting.drc.AirLine"),
           Map.entry("app.freerouting.gui.AirLine", "app.freerouting.drc.AirLine"),
-          Map.entry("app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui.CleanupWindows"),
           Map.entry(
-              "app.freerouting.gui.WindowUnconnectedRoute", "app.freerouting.gui.CleanupWindows"),
+              "app.freerouting.gui.windows.routing.WindowRouteStubs",
+              "app.freerouting.gui.windows.board.CleanupWindows"),
           Map.entry(
-              "app.freerouting.gui.WindowObjectListWithFilter",
-              "app.freerouting.gui.WindowObjectList"),
+              "app.freerouting.gui.windows.routing.WindowUnconnectedRoute",
+              "app.freerouting.gui.windows.board.CleanupWindows"),
           Map.entry(
-              "app.freerouting.gui.WindowIncompletes", "app.freerouting.gui.WindowObjectList"),
-          Map.entry("app.freerouting.gui.WindowComponents", "app.freerouting.gui.WindowObjectList"),
-          Map.entry("app.freerouting.gui.WindowPackages", "app.freerouting.gui.WindowObjectList"),
-          Map.entry("app.freerouting.gui.WindowPadstacks", "app.freerouting.gui.WindowObjectList"));
+              "app.freerouting.gui.windows.board.WindowObjectListWithFilter",
+              "app.freerouting.gui.windows.board.WindowObjectList"),
+          Map.entry(
+              "app.freerouting.gui.windows.board.WindowIncompletes",
+              "app.freerouting.gui.windows.board.WindowObjectList"),
+          Map.entry(
+              "app.freerouting.gui.windows.board.WindowComponents",
+              "app.freerouting.gui.windows.board.WindowObjectList"),
+          Map.entry(
+              "app.freerouting.gui.windows.board.WindowPackages",
+              "app.freerouting.gui.windows.board.WindowObjectList"),
+          Map.entry(
+              "app.freerouting.gui.windows.board.WindowPadstacks",
+              "app.freerouting.gui.windows.board.WindowObjectList"));
 
   /**
    * Subclasses with own bundles that override selected keys from {@link
-   * app.freerouting.gui.WindowObjectList}.
+   * app.freerouting.gui.windows.board.WindowObjectList}.
    */
   private static final Map<String, String> SUBCLASS_BUNDLE_PARENTS =
       Map.of(
-          "app.freerouting.gui.WindowNets", "app.freerouting.gui.WindowObjectList",
-          "app.freerouting.gui.WindowClearanceViolations", "app.freerouting.gui.WindowObjectList",
-          "app.freerouting.gui.WindowLengthViolations", "app.freerouting.gui.WindowObjectList");
+          "app.freerouting.gui.windows.board.WindowNets",
+              "app.freerouting.gui.windows.board.WindowObjectList",
+          "app.freerouting.gui.windows.routing.WindowClearanceViolations",
+              "app.freerouting.gui.windows.board.WindowObjectList",
+          "app.freerouting.gui.windows.routing.WindowLengthViolations",
+              "app.freerouting.gui.windows.board.WindowObjectList");
 
   private static final Path REPORT_PATH_1 =
       Path.of("build/reports/i18n/CodeKeysExistInEnglishBundlesReport.txt");
@@ -557,7 +572,7 @@ class EnglishPropertiesParityTest {
     }
 
     if (source.contains("extends WindowObjectList")) {
-      bundleOwners.add("app.freerouting.gui.WindowObjectList");
+      bundleOwners.add("app.freerouting.gui.windows.board.WindowObjectList");
     }
 
     if (EXTENDS_INTERACTIVE_STATE_PATTERN.matcher(source).find()

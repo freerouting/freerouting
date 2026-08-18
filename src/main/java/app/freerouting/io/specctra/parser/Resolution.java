@@ -1,7 +1,6 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.Communication;
-import app.freerouting.board.Unit;
+import app.freerouting.board.state.Communication;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
@@ -37,7 +36,8 @@ public class Resolution extends ScopeKeyword {
                 + "'");
         return false;
       }
-      scopeParameter.unit = Unit.fromString((String) nextToken);
+      scopeParameter.unit =
+          app.freerouting.board.model.structure.Unit.fromString((String) nextToken);
       if (scopeParameter.unit == null) {
         FRLogger.warn(
             "Resolution.read_scope: unit mil, inch or mm expected at '"

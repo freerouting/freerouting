@@ -1,0 +1,814 @@
+package app.freerouting.gui.workspace.progress;
+
+import static app.freerouting.Freerouting.globalSettings;
+
+import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.autoroute.events.BoardUpdatedEvent;
+import app.freerouting.autoroute.events.BoardUpdatedEventListener;
+import app.freerouting.autoroute.events.TaskStateChangedEvent;
+import app.freerouting.autoroute.events.TaskStateChangedEventListener;
+import app.freerouting.autoroute.pipeline.BatchAutorouter;
+import app.freerouting.autoroute.pipeline.BatchOptimizer;
+import app.freerouting.autoroute.pipeline.BatchOptimizerMultiThreaded;
+import app.freerouting.autoroute.pipeline.RoutingPipeline;
+import app.freerouting.autoroute.pipeline.TaskState;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.geometry.planar.FloatLine;
+import app.freerouting.geometry.planar.FloatPoint;
+import app.freerouting.gui.workspace.ports.BoardReplacement;
+import app.freerouting.gui.workspace.ports.WorkspacePort;
+import app.freerouting.gui.workspace.session.InteractiveActionThread;
+import app.freerouting.gui.workspace.session.RunGeneration;
+import app.freerouting.io.FileFormat;
+import app.freerouting.io.specctra.SesWriter;
+import app.freerouting.logger.FRLogger;
+import app.freerouting.management.jobs.RoutingJobSchedulerActionThread;
+import app.freerouting.management.jobs.ThreadActionListener;
+import app.freerouting.util.TextManager;
+import com.sun.management.ThreadMXBean;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.io.ByteArrayOutputStream;
+import java.lang.management.ManagementFactory;
+import java.time.Instant;
+
+/**
+ * Interactive thread managing the combined execution of batch autorouting and route optimization.
+ *
+ * <p>This thread orchestrates a complete automated routing workflow in GUI mode, consisting of:
+ *
+ * <ol>
+ *   <li><strong>Batch Autorouting:</strong> Automatically routes all incomplete connections
+ *   <li><strong>Route Optimization:</strong> Post-processes routes to improve quality (if enabled)
+ * </ol>
+ *
+ * <p><strong>Key Features:</strong>
+ *
+ * <ul>
+ *   <li><strong>Algorithm Selection:</strong> Uses the current router algorithm
+ *   <li><strong>Multi-threading:</strong> Can leverage multiple CPU cores for faster routing
+ *   <li><strong>Real-time Feedback:</strong> Updates GUI with progress, statistics, and visual
+ *       indicators
+ *   <li><strong>Event-driven Updates:</strong> Responds to routing events to update display and job
+ *       state
+ *   <li><strong>Optimization Variants:</strong> Single-threaded or multi-threaded optimization
+ *       modes
+ *   <li><strong>Interruptible:</strong> User can stop the process at any time
+ * </ul>
+ *
+ * <p><strong>Workflow:</strong>
+ *
+ * <pre>
+ * 1. Initialize the BatchAutorouter
+ * 2. Set up event listeners for GUI updates
+ * 3. Initialize optimizer if enabled (BatchOptimizer or BatchOptimizerMultiThreaded)
+ * 4. Run autorouting passes until completion or interruption
+ * 5. Run optimization passes if enabled and not interrupted
+ * 6. Update job output with SES file data
+ * 7. Display completion statistics and restore board state
+ * </pre>
+ *
+ * <p><strong>GUI Integration:</strong>
+ *
+ * <ul>
+ *   <li>Updates status messages showing current operation
+ *   <li>Displays routing statistics (via count, incomplete count, violations)
+ *   <li>Shows board score in real-time
+ *   <li>Draws current airline being routed and optimization position
+ *   <li>Maintains board read-only state during routing
+ * </ul>
+ *
+ * <p><strong>Algorithm Selection:</strong>
+ *
+ * <ul>
+ *   <li><strong>Current Algorithm:</strong> Modern routing algorithm with the latest improvements
+ * </ul>
+ *
+ * <p><strong>Optimization Modes:</strong>
+ *
+ * <ul>
+ *   <li><strong>Single-threaded:</strong> Safe, reliable optimization using {@link BatchOptimizer}
+ *   <li><strong>Multi-threaded:</strong> Faster but may generate violations ({@link
+ *       BatchOptimizerMultiThreaded})
+ * </ul>
+ *
+ * <p><strong>Event Handling:</strong> The thread registers listeners for:
+ *
+ * <ul>
+ *   <li>{@link BoardUpdatedEvent}: Triggered after each routing/optimization iteration
+ *   <li>{@link TaskStateChangedEvent}: Triggered when routing stages start/stop
+ * </ul>
+ *
+ * <p><strong>Output:</strong> Upon completion, generates:
+ *
+ * <ul>
+ *   <li>Specctra SES file with routing results
+ *   <li>Routing statistics and performance metrics
+ *   <li>Board score and quality indicators
+ * </ul>
+ *
+ * <p><strong>Performance Tracking:</strong>
+ *
+ * <ul>
+ *   <li>Records start/finish timestamps
+ *   <li>Measures autorouting and optimization durations separately
+ *   <li>Calculates score improvement percentage
+ *   <li>Logs detailed session summaries
+ * </ul>
+ *
+ * <p><strong>Known Issues:</strong>
+ *
+ * <ul>
+ *   <li>Multi-threaded optimization may generate clearance violations
+ *   <li>Single-threaded optimization recommended for production use
+ * </ul>
+ *
+ * <p><strong>TODO:</strong> This class should be deprecated in favor of a more modern job scheduler
+ * architecture for better job management.
+ *
+ * @see InteractiveActionThread
+ * @see BatchAutorouter
+ * @see BatchOptimizer
+ * @see BatchOptimizerMultiThreaded
+ * @see RoutingJob
+ */
+public class GuiRoutingJobWorker extends InteractiveActionThread {
+
+  /**
+   * The batch autorouter instance executing the routing algorithm.
+   *
+   * <p>Uses the current {@link BatchAutorouter} implementation.
+   */
+  private final BatchAutorouter batchAutorouter;
+
+  private final RoutingPipeline pipeline;
+
+  /**
+   * The batch optimizer instance for post-routing optimization, or null if disabled.
+   *
+   * <p>Can be either:
+   *
+   * <ul>
+   *   <li>{@link BatchOptimizer}: Single-threaded, safe optimization
+   *   <li>{@link BatchOptimizerMultiThreaded}: Multi-threaded, faster but may create violations
+   * </ul>
+   *
+   * <p>Set to null if optimization is disabled in router settings.
+   */
+  private final BatchOptimizer batchOptimizer;
+
+  private boolean routerEnabledForRun;
+  private float scoreBeforeOptimization;
+  private double autoroutingSecondsToComplete;
+
+  /**
+   * Creates a new autorouter and optimizer thread for GUI-based routing.
+   *
+   * <p>Initialization process:
+   *
+   * <ol>
+   *   <li>Validates the router algorithm setting and selects the current implementation
+   *   <li>Configures board references in routing job
+   *   <li>Registers event listeners for GUI updates
+   *   <li>Sets up SES file generation on routing updates
+   *   <li>Initializes optimizer if enabled (single or multi-threaded)
+   * </ol>
+   *
+   * <p><strong>Event Listeners:</strong> Sets up listeners for:
+   *
+   * <ul>
+   *   <li>Board updates: Updates GUI statistics, score, and display
+   *   <li>SES generation: Saves routing results to job output
+   *   <li>Task state changes: Updates status messages for stage transitions
+   * </ul>
+   *
+   * <p><strong>Optimizer Setup:</strong> If optimization is enabled:
+   *
+   * <ul>
+   *   <li>Single thread or multi-threading disabled: Uses {@link BatchOptimizer}
+   *   <li>Multiple threads enabled: Uses {@link BatchOptimizerMultiThreaded}
+   * </ul>
+   *
+   * <p><strong>Warning:</strong> Multi-threaded optimization is known to potentially generate
+   * clearance violations. Single-threaded mode is recommended for production.
+   *
+   * @param boardHandling the GUI board manager for display updates
+   * @param routingJob the routing job containing configuration and board data
+   * @see BatchAutorouter
+   * @see BatchOptimizer
+   * @see BatchOptimizerMultiThreaded
+   */
+  public GuiRoutingJobWorker(
+      WorkspacePort sessionPort, RunGeneration generation, RoutingJob routingJob) {
+    super(sessionPort, generation, routingJob);
+
+    routingJob.thread = this;
+    routingJob.board = sessionPort.routingBoard();
+
+    this.pipeline = RoutingPipeline.createForGui(routingJob);
+    this.batchAutorouter = this.pipeline.getAutorouter();
+    this.batchOptimizer = this.pipeline.getOptimizer();
+
+    // Add event listener for the GUI updates
+    this.batchAutorouter.addBoardUpdatedEventListener(
+        new BoardUpdatedEventListener() {
+          @Override
+          public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
+            float boardScore =
+                event.getBoardStatistics().getNormalizedScore(routingJob.routerSettings.scoring);
+
+            if (event.getRouterCounters() != null
+                && "fanout".equals(event.getRouterCounters().phase)) {
+              int extraVias =
+                  event.getRouterCounters().fanoutExtraViasCount == null
+                      ? 0
+                      : event.getRouterCounters().fanoutExtraViasCount;
+              String fanoutMessage =
+                  "Fanout pass #"
+                      + event.getRouterCounters().passCount
+                      + " (routed "
+                      + event.getRouterCounters().routedCount
+                      + ", failed "
+                      + event.getRouterCounters().failedToBeRoutedCount
+                      + ", +"
+                      + extraVias
+                      + " vias)";
+              sessionPort.publishProgress(
+                  new RouteProgress(
+                      generation,
+                      fanoutMessage,
+                      copyCounters(event),
+                      boardScore,
+                      event.getBoardStatistics().connections.incompleteCount,
+                      event.getBoardStatistics().clearanceViolations.totalCount,
+                      null,
+                      null,
+                      null,
+                      false,
+                      true));
+            } else {
+              sessionPort.publishProgress(
+                  new RouteProgress(
+                      generation,
+                      null,
+                      copyCounters(event),
+                      boardScore,
+                      event.getBoardStatistics().connections.incompleteCount,
+                      event.getBoardStatistics().clearanceViolations.totalCount,
+                      null,
+                      null,
+                      null,
+                      false,
+                      true));
+            }
+          }
+        });
+
+    // Add another event listener for the job output object updates
+    this.batchAutorouter.addBoardUpdatedEventListener(
+        new BoardUpdatedEventListener() {
+          @Override
+          public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+              SesWriter.write(routingJob.board, outputStream, routingJob.name);
+              routingJob.output.setData(outputStream.toByteArray());
+            } catch (Exception e) {
+              routingJob.logError("Couldn't save the SES output into the job object.", e);
+            }
+          }
+        });
+
+    this.batchAutorouter.addTaskStateChangedEventListener(
+        new TaskStateChangedEventListener() {
+          @Override
+          public void onTaskStateChangedEvent(TaskStateChangedEvent event) {
+            TaskState taskState = event.getTaskState();
+            if (taskState == TaskState.RUNNING) {
+              TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+              String startMessage =
+                  tm.getText("autorouter_started", Integer.toString(event.getPassNumber()));
+              sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
+            }
+          }
+        });
+
+    if (this.batchOptimizer != null) {
+      this.batchOptimizer.addBoardUpdatedEventListener(
+          new BoardUpdatedEventListener() {
+            @Override
+            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
+              BoardStatistics boardStatistics = event.getBoardStatistics();
+              if (batchOptimizer instanceof BatchOptimizerMultiThreaded) {
+                routingJob.board = event.getBoard();
+                sessionPort.replaceBoard(new BoardReplacement(generation, event.getBoard()));
+              }
+              sessionPort.publishProgress(
+                  new RouteProgress(
+                      generation,
+                      null,
+                      null,
+                      boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring),
+                      boardStatistics.connections.incompleteCount,
+                      boardStatistics.clearanceViolations.totalCount,
+                      boardStatistics.items.viaCount,
+                      (double) boardStatistics.traces.totalLength,
+                      sessionPort.displayUnit(),
+                      false,
+                      true));
+            }
+          });
+
+      this.batchOptimizer.addTaskStateChangedEventListener(
+          new TaskStateChangedEventListener() {
+            @Override
+            public void onTaskStateChangedEvent(TaskStateChangedEvent event) {
+              if (event.getTaskState() == TaskState.RUNNING) {
+                TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+                String startMessage =
+                    tm.getText("optimizer_started", Integer.toString(event.getPassNumber()));
+                sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
+              }
+            }
+          });
+    }
+  }
+
+  private static BatchProgress copyCounters(BoardUpdatedEvent event) {
+    var counters = event.getRouterCounters();
+    if (counters == null) {
+      return null;
+    }
+    return new BatchProgress(
+        counters.phase == null ? "autoroute" : counters.phase,
+        counters.queuedToBeRoutedCount == null ? 0 : counters.queuedToBeRoutedCount,
+        counters.routedCount == null ? 0 : counters.routedCount,
+        counters.failedToBeRoutedCount == null ? 0 : counters.failedToBeRoutedCount,
+        counters.rippedCount == null ? 0 : counters.rippedCount,
+        counters.fanoutExtraViasCount);
+  }
+
+  private void handleRoutingStageFinished(BatchAutorouter autorouter) {
+    var boardStatistics = new BoardStatistics(routingJob.board);
+    this.scoreBeforeOptimization =
+        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring);
+    this.autoroutingSecondsToComplete =
+        FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
+
+    Instant sessionStartTime = autorouter.getSessionStartTime();
+    int initialUnroutedCount = autorouter.getInitialUnroutedCount();
+    if (this.routerEnabledForRun) {
+      if (sessionStartTime != null) {
+        String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
+        if (routingJob.routerSettings.maxPasses != null
+            && routingJob.routerSettings.maxPasses > 0
+            && 1 > routingJob.routerSettings.maxPasses) {
+          completionStatus = "completed with pass number limit hit:";
+        }
+
+        routingJob.logInfo(
+            String.format(
+                java.util.Locale.US,
+                "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, "
+                    + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
+                    + "and %.1f MB peak heap usage.",
+                completionStatus,
+                initialUnroutedCount,
+                this.autoroutingSecondsToComplete,
+                FRLogger.formatScore(
+                    this.scoreBeforeOptimization,
+                    boardStatistics.connections.incompleteCount,
+                    boardStatistics.clearanceViolations.totalCount),
+                routingJob.resourceUsage.cpuTimeUsed,
+                routingJob.resourceUsage.maxMemoryUsed / 1024.0f,
+                routingJob.resourceUsage.peakMemoryUsed));
+      } else {
+        routingJob.logInfo(
+            String.format(
+                "Auto-routing was completed in %.2f seconds with the score of %s.",
+                this.autoroutingSecondsToComplete,
+                FRLogger.formatScore(
+                    this.scoreBeforeOptimization,
+                    boardStatistics.connections.incompleteCount,
+                    boardStatistics.clearanceViolations.totalCount)));
+      }
+    }
+
+    FRAnalytics.autorouterFinished(
+        boardStatistics.nets.totalCount,
+        boardStatistics.connections.incompleteCount,
+        boardStatistics.clearanceViolations.totalCount,
+        routingJob.board.getHash(),
+        this.scoreBeforeOptimization);
+  }
+
+  private void handleOptimizationStageStarted() {
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+
+    int numThreads =
+        routingJob.routerSettings.maxThreads == null ? 1 : routingJob.routerSettings.maxThreads;
+    routingJob.logInfo(
+        "Starting optimization on "
+            + (numThreads == 1 ? "1 thread" : numThreads + " threads")
+            + "...");
+    if (numThreads > 1) {
+      routingJob.logWarning(
+          "Multi-threaded route optimization is broken and it is known to generate clearance "
+              + "violations. It is highly recommended to use the single-threaded route "
+              + "optimization instead by setting the number of threads to 1 with the '-mt 1' "
+              + "command line argument.");
+    }
+
+    FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
+    FRAnalytics.routeOptimizerStarted();
+    TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+    sessionPort.publishProgress(
+        RouteProgress.status(generation, tm.getText("batch_optimizer_start_message")));
+  }
+
+  private void handleOptimizationStageFinished() {
+    var boardStatistics = new BoardStatistics(routingJob.board);
+    var scoreAfterOptimization =
+        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring);
+    double percentageImprovement =
+        ((scoreAfterOptimization / this.scoreBeforeOptimization) * 100.0) - 100.0;
+    double routeOptimizationSecondsToComplete =
+        FRLogger.traceExit("BatchAutorouterThread.thread_action()-routeoptimization");
+    routingJob.logInfo(
+        "Optimization was completed in "
+            + FRLogger.formatDuration(routeOptimizationSecondsToComplete)
+            + " with the score of "
+            + FRLogger.formatScore(
+                this.scoreBeforeOptimization,
+                boardStatistics.connections.incompleteCount,
+                boardStatistics.clearanceViolations.totalCount)
+            + (percentageImprovement > 0
+                ? " and an improvement of "
+                    + FRLogger.defaultSignedFloatFormat.format(percentageImprovement)
+                    + "%."
+                : "."));
+
+    String currentMessage = this.isStopRequested() ? "interrupted" : "completed";
+    TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+    sessionPort.publishProgress(
+        RouteProgress.status(generation, tm.getText("optimization_end_message", currentMessage)));
+    FRAnalytics.routeOptimizerFinished();
+  }
+
+  /**
+   * Executes the complete autorouting and optimization workflow.
+   *
+   * <p><strong>Execution Flow:</strong>
+   *
+   * <ol>
+   *   <li><strong>Initialization:</strong>
+   *       <ul>
+   *         <li>Set job start time and state to RUNNING
+   *         <li>Configure thread count
+   *         <li>Notify listeners that autorouting started
+   *         <li>Set board to read-only mode
+   *         <li>Hide rats nest during routing
+   *       </ul>
+   *   <li><strong>Auto-routing Stage:</strong>
+   *       <ul>
+   *         <li>Display status message
+   *         <li>Execute batch autorouting passes
+   *         <li>Track routing time and statistics
+   *         <li>Log session summary with initial/final counts
+   *         <li>Send analytics event
+   *       </ul>
+   *   <li><strong>Optimization Stage (if enabled):</strong>
+   *       <ul>
+   *         <li>Check if optimization is enabled and not interrupted
+   *         <li>Display optimization status message
+   *         <li>Execute optimization passes
+   *         <li>Calculate improvement percentage
+   *         <li>Log optimization results
+   *         <li>Send analytics event
+   *       </ul>
+   *   <li><strong>Finalization:</strong>
+   *       <ul>
+   *         <li>Generate SES output file if required
+   *         <li>Update rats nest display
+   *         <li>Restore board read-only state
+   *         <li>Display completion message with statistics
+   *         <li>Refresh GUI windows
+   *         <li>Check for non-45-degree traces if applicable
+   *         <li>Set job completion time and state
+   *         <li>Notify listeners of completion or abortion
+   *       </ul>
+   * </ol>
+   *
+   * <p><strong>Performance Tracking:</strong>
+   *
+   * <ul>
+   *   <li>Measures autorouting duration separately from optimization
+   *   <li>Logs detailed session summaries with routing statistics
+   *   <li>Calculates score improvement from optimization
+   *   <li>Tracks completion status (completed, interrupted, or pass limit hit)
+   * </ul>
+   *
+   * <p><strong>GUI Updates:</strong> Throughout execution:
+   *
+   * <ul>
+   *   <li>Status messages show current stage (auto-routing/optimizing)
+   *   <li>Board statistics display via count, incomplete count, violations
+   *   <li>Board score updates in real-time
+   *   <li>Progress indicators through event listeners
+   * </ul>
+   *
+   * <p><strong>Interruption Handling:</strong>
+   *
+   * <ul>
+   *   <li>Checks {@link #isStopRequested()} at key points
+   *   <li>Allows clean exit from auto-routing stage
+   *   <li>Allows clean exit from optimization stage
+   *   <li>Sets job state to CANCELLED if interrupted
+   *   <li>Logs interruption status in messages
+   * </ul>
+   *
+   * <p><strong>Output Generation:</strong>
+   *
+   * <ul>
+   *   <li>Generates Specctra SES file with routing results
+   *   <li>Stores SES data in job output object
+   *   <li>Updates output after autorouting (via events)
+   *   <li>Final output update after optimization completes
+   * </ul>
+   *
+   * <p><strong>Analytics:</strong> Sends the following analytics events:
+   *
+   * <ul>
+   *   <li>autorouterStarted: When autorouting begins
+   *   <li>autorouterFinished: When autorouting completes
+   *   <li>routeOptimizerStarted: When optimization begins
+   *   <li>routeOptimizerFinished: When optimization completes
+   * </ul>
+   *
+   * <p><strong>Error Handling:</strong>
+   *
+   * <ul>
+   *   <li>Catches all exceptions and logs them
+   *   <li>Ensures job state is updated even on errors
+   *   <li>Guarantees listeners are notified of completion
+   * </ul>
+   *
+   * @see BatchAutorouter#runBatchLoop()
+   * @see BatchOptimizer#runBatchLoop()
+   * @see RoutingJobState
+   */
+  @Override
+  protected void threadAction() {
+    routingJob.startedAt = Instant.now();
+    routingJob.state = RoutingJobState.RUNNING;
+
+    // Start a background thread that periodically samples CPU time, total allocated
+    // memory, and peak heap usage — mirroring the headless RoutingJobSchedulerActionThread.
+    Thread resourceMonitor =
+        new Thread(
+            () -> {
+              while (routingJob.state == app.freerouting.core.RoutingJobState.RUNNING
+                  || routingJob.state == app.freerouting.core.RoutingJobState.STOPPING) {
+                try {
+                  Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                  Thread.currentThread().interrupt();
+                  break;
+                }
+                monitorCpuAndMemoryUsage(routingJob);
+              }
+            });
+    resourceMonitor.setDaemon(true);
+    resourceMonitor.setName("resource-monitor-gui");
+    resourceMonitor.start();
+
+    for (ThreadActionListener hl : this.listeners) {
+      hl.autorouterStarted();
+    }
+
+    FRLogger.traceEntry("BatchAutorouterThread.thread_action()");
+    try {
+      this.routerEnabledForRun =
+          routingJob.routerSettings.getRunRouter()
+              && (routingJob.routerSettings.maxPasses == null
+                  || routingJob.routerSettings.maxPasses >= 0);
+      if (this.routerEnabledForRun) {
+        int threadCount = routingJob.routerSettings.maxThreads;
+        routingJob.logInfo(
+            "Starting routing of '"
+                + routingJob.name
+                + "' on "
+                + (threadCount == 1 ? "1 thread" : threadCount + " threads")
+                + "...");
+      } else if (routingJob.routerSettings.isFanoutEnabled()) {
+        routingJob.logInfo("Starting fanout of '" + routingJob.name + "'...");
+      }
+      FRLogger.traceEntry("BatchAutorouterThread.thread_action()-autorouting");
+
+      globalSettings.statistics.incrementJobsCompleted();
+      FRAnalytics.autorouterStarted();
+
+      TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
+      String startMessage = tm.getText("batch_autorouter_start_message");
+      sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
+
+      this.pipeline.addStageListener(
+          new RoutingPipeline.StageListener() {
+            @Override
+            public void afterRouting(BatchAutorouter autorouter) {
+              handleRoutingStageFinished(autorouter);
+            }
+
+            @Override
+            public void beforeOptimization(BatchOptimizer optimizer) {
+              handleOptimizationStageStarted();
+            }
+
+            @Override
+            public void afterOptimization(BatchOptimizer optimizer) {
+              handleOptimizationStageFinished();
+            }
+          });
+      this.pipeline.run();
+
+      // Save the result to the output field as a Specctra SES file
+      if (routingJob.output.format == FileFormat.SES) {
+        // Save the SES file after the auto-router has finished
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+          SesWriter.write(routingJob.board, baos, routingJob.name);
+          if (baos.size() > 0) {
+            routingJob.output.setData(baos.toByteArray());
+            FRAnalytics.fileSaved("SES", routingJob.name);
+          }
+        } catch (Exception e) {
+          routingJob.logError("Couldn't save the output into the job object.", e);
+        }
+      }
+
+      if (routingJob.board.rules.getTraceAngleRestriction() == AngleRestriction.FORTYFIVE_DEGREE) {
+        int non45DegreeCount = routingJob.board.getNon45DegreeTraceCount();
+        if (non45DegreeCount > 1) {
+          routingJob.logWarning(
+              "Invalid traces after autoroute: " + non45DegreeCount + " traces not 45 degree");
+        }
+      }
+    } catch (Exception e) {
+      routingJob.logError(e.getLocalizedMessage(), e);
+    }
+
+    if (this.isStopRequested()) {
+      routingJob.finishedAt = Instant.now();
+      routingJob.state = RoutingJobState.CANCELLED;
+    } else {
+      routingJob.finishedAt = Instant.now();
+      routingJob.state = RoutingJobState.COMPLETED;
+      globalSettings.statistics.incrementJobsCompleted();
+    }
+
+    int incompleteCount =
+        routingJob.board == null
+            ? 0
+            : new BoardStatistics(routingJob.board).connections.incompleteCount;
+    TextManager terminalText = new TextManager(ScreenMessages.class, sessionPort.locale());
+    String terminalStatus =
+        terminalText.getText(
+            "autoroute_end_message",
+            this.isStopRequested()
+                ? terminalText.getText("interrupted")
+                : terminalText.getText("completed"),
+            Integer.toString(incompleteCount));
+    sessionPort.finishRoute(
+        new RouteCompletion(
+            generation, this.isStopRequested(), terminalStatus, incompleteCount, true, true));
+
+    for (ThreadActionListener hl : this.listeners) {
+      if (this.isStopRequested()) {
+        hl.autorouterAborted();
+      } else {
+        hl.autorouterFinished();
+      }
+    }
+
+    FRLogger.traceExit("BatchAutorouterThread.thread_action()");
+  }
+
+  /**
+   * Samples CPU time, total allocated memory, and peak heap usage for the current routing job
+   * thread and updates {@code routingJob.resourceUsage}. Mirrors the implementation in {@link
+   * RoutingJobSchedulerActionThread}.
+   */
+  private void monitorCpuAndMemoryUsage(app.freerouting.core.RoutingJob job) {
+    try {
+      ThreadMXBean threadBean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+      long[] threadIds = threadBean.getAllThreadIds();
+      for (long threadId : threadIds) {
+        if (job.thread != null && threadId == job.thread.threadId()) {
+          float cpuTime = threadBean.getThreadCpuTime(threadId) / 1_000_000_000.0f;
+          threadBean.setThreadAllocatedMemoryEnabled(true);
+          long allocatedMemory = threadBean.getThreadAllocatedBytes(threadId);
+          float allocatedMegabytes = allocatedMemory / (1024.0f * 1024.0f);
+          job.resourceUsage.cpuTimeUsed = cpuTime;
+          job.resourceUsage.maxMemoryUsed = allocatedMegabytes;
+        }
+      }
+      java.lang.management.MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+      float heapUsedMegabytes = memoryBean.getHeapMemoryUsage().getUsed() / (1024.0f * 1024.0f);
+      if (heapUsedMegabytes > job.resourceUsage.peakMemoryUsed) {
+        job.resourceUsage.peakMemoryUsed = heapUsedMegabytes;
+      }
+    } catch (Throwable t) {
+      // java.management or jdk.management module not available in this JRE build
+    }
+  }
+
+  /**
+   * Draws visual indicators showing current autorouting and optimization progress.
+   *
+   * <p>This method provides real-time visual feedback during routing operations by drawing overlay
+   * graphics on the board display.
+   *
+   * <p><strong>Autorouting Indicator:</strong> If autorouting is active, draws the current airline
+   * being processed:
+   *
+   * <ul>
+   *   <li><strong>Appearance:</strong> Line connecting two unconnected points
+   *   <li><strong>Color:</strong> Incomplete connection color from graphics context
+   *   <li><strong>Width:</strong> 3 mil or 300 board units (whichever is smaller)
+   *   <li><strong>Purpose:</strong> Shows which connection is currently being routed
+   * </ul>
+   *
+   * <p><strong>Optimization Indicator:</strong> If optimization is active, draws crosshair and
+   * circle at current position:
+   *
+   * <ul>
+   *   <li><strong>Crosshair:</strong> Two diagonal lines (X pattern)
+   *   <li><strong>Circle:</strong> Surrounds the optimization point
+   *   <li><strong>Radius:</strong> 10× the default trace half-width
+   *   <li><strong>Color:</strong> Incomplete connection color
+   *   <li><strong>Width:</strong> 1 pixel lines
+   *   <li><strong>Purpose:</strong> Shows which area is being optimized
+   * </ul>
+   *
+   * <p><strong>Performance Note:</strong> This method is called frequently during routing to update
+   * the display. Drawing operations are kept lightweight to maintain responsive GUI.
+   *
+   * <p><strong>Implementation Details:</strong>
+   *
+   * <ul>
+   *   <li>Handles null cases when no airline or position is available
+   *   <li>Delegates actual drawing to graphics context methods
+   *   <li>Scales indicators based on board resolution and trace widths
+   * </ul>
+   *
+   * @param graphics the graphics context for rendering overlay indicators
+   * @see BatchAutorouter#getAirLine()
+   * @see BatchOptimizer#getCurrentPosition()
+   */
+  @Override
+  public void draw(Graphics graphics) {
+    FloatLine currentAirLine = batchAutorouter.getAirLine();
+    if (currentAirLine != null) {
+      FloatPoint[] drawLine = new FloatPoint[2];
+      drawLine[0] = currentAirLine.a;
+      drawLine[1] = currentAirLine.b;
+      // draw the incomplete
+      Color drawColor = this.sessionPort.graphicsContext().getIncompleteColor();
+      double drawWidth =
+          Math.min(
+              this.sessionPort.routingBoard().communication.getResolution(Unit.MIL) * 3,
+              300); // problem with low resolution on Kicad300;
+      this.sessionPort.graphicsContext().draw(drawLine, drawWidth, drawColor, graphics, 1);
+    }
+
+    if (this.batchOptimizer != null) {
+      // draw the current optimization position
+      FloatPoint currentOptPosition = batchOptimizer.getCurrentPosition();
+      int radius = 10 * this.sessionPort.routingBoard().rules.getDefaultTraceHalfWidth(0);
+      if (currentOptPosition != null) {
+        final int drawWidth = 1;
+        Color drawColor = this.sessionPort.graphicsContext().getIncompleteColor();
+        FloatPoint[] drawPoints = new FloatPoint[2];
+        drawPoints[0] =
+            new FloatPoint(currentOptPosition.x - radius, currentOptPosition.y - radius);
+        drawPoints[1] =
+            new FloatPoint(currentOptPosition.x + radius, currentOptPosition.y + radius);
+        this.sessionPort.graphicsContext().draw(drawPoints, drawWidth, drawColor, graphics, 1);
+        drawPoints[0] =
+            new FloatPoint(currentOptPosition.x + radius, currentOptPosition.y - radius);
+        drawPoints[1] =
+            new FloatPoint(currentOptPosition.x - radius, currentOptPosition.y + radius);
+        this.sessionPort.graphicsContext().draw(drawPoints, drawWidth, drawColor, graphics, 1);
+        this.sessionPort
+            .graphicsContext()
+            .drawCircle(currentOptPosition, radius, drawWidth, drawColor, graphics, 1);
+      }
+    }
+  }
+}

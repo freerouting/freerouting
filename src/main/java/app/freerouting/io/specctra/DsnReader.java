@@ -1,9 +1,9 @@
 package app.freerouting.io.specctra;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.BoardObservers;
-import app.freerouting.board.ItemIdGenerator;
+import app.freerouting.board.actions.ItemIdGenerator;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.state.BoardObserverAdaptor;
+import app.freerouting.board.state.BoardObservers;
 import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.io.BoardMetadata;
 import app.freerouting.io.BoardReadResult;
@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Reads a Specctra DSN file and returns a fully constructed {@link
- * app.freerouting.board.BasicBoard} wrapped in a typed {@link BoardReadResult}.
+ * app.freerouting.board.facade.BasicBoard} wrapped in a typed {@link BoardReadResult}.
  *
  * <p>This class has <em>no</em> dependency on {@link app.freerouting.management.BoardManager},
  * {@link app.freerouting.core.RoutingJob}, or any GUI class. Board construction happens internally

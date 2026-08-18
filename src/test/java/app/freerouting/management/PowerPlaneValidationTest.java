@@ -3,12 +3,12 @@ package app.freerouting.management;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.Communication;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Layer;
-import app.freerouting.board.LayerStructure;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.state.Communication;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -183,8 +183,8 @@ public class PowerPlaneValidationTest {
     // Force plane layer to active in settings after optimizations to test override guard
     settings.setLayerActive(1, true);
 
-    app.freerouting.autoroute.AutorouteControl control =
-        new app.freerouting.autoroute.AutorouteControl(board, gndNet.netNumber, settings);
+    app.freerouting.autoroute.maze.AutorouteControl control =
+        new app.freerouting.autoroute.maze.AutorouteControl(board, gndNet.netNumber, settings);
 
     // Assert that the override guard forced it to false
     assertFalse(

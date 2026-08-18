@@ -8,7 +8,7 @@ import java.io.Serializable;
  * coordinates and 45-degree angle constraints. The class extends RegularTileShape and provides
  * efficient representations for PCB (Printed Circuit Board) routing spaces.
  */
-public class IntOctagon extends RegularTileShape implements Serializable {
+public final class IntOctagon extends RegularTileShape implements Serializable {
 
   /** Reusable instance of an empty octagon. */
   public static final IntOctagon EMPTY =

@@ -7,6 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.core.RoutingJob;
+import app.freerouting.gui.workspace.ports.WorkspacePortAdapter;
+import app.freerouting.gui.workspace.progress.RouteProgress;
+import app.freerouting.gui.workspace.progress.RouterSettingsSnapshot;
+import app.freerouting.gui.workspace.progress.ScreenMessages;
+import app.freerouting.gui.workspace.session.LoadGeneration;
+import app.freerouting.gui.workspace.session.RunGeneration;
 import app.freerouting.settings.RouterSettings;
 import java.util.ArrayList;
 import java.util.List;

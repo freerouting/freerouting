@@ -1,9 +1,9 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.ObstacleArea;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;

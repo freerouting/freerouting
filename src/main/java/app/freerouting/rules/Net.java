@@ -1,13 +1,13 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.Connectable;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemInfoPrinter;
-import app.freerouting.board.ItemInfoPrinter.Printable;
-import app.freerouting.board.Pin;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.actions.ItemInfoPrinter;
+import app.freerouting.board.actions.ItemInfoPrinter.Printable;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.Connectable;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;

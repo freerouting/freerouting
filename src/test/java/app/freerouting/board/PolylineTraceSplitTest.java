@@ -1,5 +1,13 @@
 package app.freerouting.board;
 
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.state.Communication;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
@@ -74,7 +82,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             360,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace1);
 
@@ -92,7 +100,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             361,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace2);
 
@@ -145,7 +153,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             362,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace3);
 
@@ -232,7 +240,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             1,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace1);
 
@@ -250,7 +258,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             2,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace2);
 
@@ -311,7 +319,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             1,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(traceAbc);
 
@@ -326,7 +334,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             2,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(traceBc);
 
@@ -338,5 +346,64 @@ public class PolylineTraceSplitTest {
     Assertions.assertFalse(
         isCycle,
         "Trace should not be detected as a cycle just because an overlapping trace exists");
+  }
+
+  /** The end-combine fallback must recover when a trace has lost its default-tree entries. */
+  @Test
+  void testCombineAtEndRecoversMissingDefaultTreeEntries() {
+    RoutingBoard board = createTestBoard();
+    Point start = new IntPoint(10000, 10000);
+    Point join = new IntPoint(20000, 10000);
+    Point end = new IntPoint(30000, 10000);
+
+    PolylineTrace first =
+        new PolylineTrace(
+            new Polyline(start, join), 0, 1000, new int[] {1}, 1, 1, 0, FixedState.UNFIXED, board);
+    PolylineTrace second =
+        new PolylineTrace(
+            new Polyline(join, end), 0, 1000, new int[] {1}, 1, 2, 0, FixedState.UNFIXED, board);
+    board.insertItem(first);
+    board.insertItem(second);
+
+    // Reproduce a live trace whose board entry was removed before the geometry mutation. Keep the
+    // item marked on-board so combineAtEnd reaches the null-entry fallback.
+    board.searchTreeManager.remove(first);
+    first.setOnTheBoard(true);
+
+    Assertions.assertTrue(first.combine(), "The traces should combine through the fallback path");
+    Assertions.assertTrue(first.isOnTheBoard(), "The retained trace should remain on the board");
+    Assertions.assertFalse(second.isOnTheBoard(), "The consumed trace should be removed");
+    Assertions.assertNotNull(
+        first.getSearchTreeEntries(board.searchTreeManager.getDefaultTree()),
+        "The fallback must restore default-tree bookkeeping");
+  }
+
+  /**
+   * Basic trace measurements and geometry access remain stable behind the extracted collaborator.
+   */
+  @Test
+  void testTraceGeometryCharacterization() {
+    RoutingBoard board = createTestBoard();
+    Point firstPoint = new IntPoint(10000, 10000);
+    Point lastPoint = new IntPoint(20000, 10000);
+    PolylineTrace trace =
+        new PolylineTrace(
+            new Polyline(firstPoint, lastPoint),
+            0,
+            1000,
+            new int[] {1},
+            1,
+            1,
+            0,
+            FixedState.UNFIXED,
+            board);
+
+    Assertions.assertEquals(firstPoint, trace.firstCorner());
+    Assertions.assertEquals(lastPoint, trace.lastCorner());
+    Assertions.assertEquals(2, trace.cornerCount());
+    Assertions.assertEquals(1, trace.tileShapeCount());
+    Assertions.assertEquals(10000.0, trace.getLength());
+    Assertions.assertNotNull(
+        trace.getTraceConnectionShape(board.searchTreeManager.getDefaultTree(), 0));
   }
 }

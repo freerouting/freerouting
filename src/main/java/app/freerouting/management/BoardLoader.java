@@ -1,6 +1,6 @@
 package app.freerouting.management;
 
-import app.freerouting.board.ItemIdGenerator;
+import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;

@@ -1,6 +1,6 @@
 package app.freerouting.gui.rendering;
 
-import app.freerouting.board.LayerStructure;
+import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.io.IOException;

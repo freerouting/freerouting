@@ -1,20 +1,15 @@
 package app.freerouting.management.jobs;
 
 import app.freerouting.Freerouting;
-import app.freerouting.autoroute.BatchAutorouter;
-import app.freerouting.autoroute.BatchOptimizer;
-import app.freerouting.autoroute.NamedAlgorithm;
-import app.freerouting.autoroute.events.BoardUpdatedEvent;
-import app.freerouting.autoroute.events.BoardUpdatedEventListener;
+import app.freerouting.autoroute.pipeline.BatchAutorouter;
+import app.freerouting.autoroute.pipeline.RoutingPipeline;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
-import app.freerouting.core.RoutingStage;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.settings.RouterSettings;
 import app.freerouting.util.TextManager;
 import com.sun.management.ThreadMXBean;
 import java.io.ByteArrayOutputStream;
@@ -92,122 +87,65 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     monitorThread.setDaemon(true);
     monitorThread.start();
 
-    // start the routing task if needed
-    boolean fanoutTimedOut = false;
-    if (job.routerSettings.getRunRouter()
-        && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0)) {
-      job.stage = RoutingStage.ROUTING;
-
-      // Select router implementation based on algorithm setting
-      NamedAlgorithm router;
-      String algorithm = job.routerSettings.algorithm;
-
-      if (!RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
-        job.logInfo(
-            "Unknown router algorithm '" + algorithm + "', using default (freerouting-router)");
-      }
-      // Always use standard BatchAutorouter
-      router = new BatchAutorouter(job);
-      BatchAutorouter batchRouter = (BatchAutorouter) router;
-
-      router.addBoardUpdatedEventListener(
-          new BoardUpdatedEventListener() {
-            @Override
-            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-              setJobOutput(job);
+    RoutingPipeline pipeline = RoutingPipeline.createForHeadless(job);
+    pipeline.addBoardUpdatedEventListener(event -> setJobOutput(job));
+    pipeline.addStageListener(
+        new RoutingPipeline.StageListener() {
+          @Override
+          public void afterRouting(BatchAutorouter batchRouter) {
+            boolean routerEnabled =
+                job.routerSettings.getRunRouter()
+                    && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0);
+            if (!routerEnabled) {
+              return;
             }
-          });
 
-      // Call runBatchLoop
-      batchRouter.runBatchLoop();
-      fanoutTimedOut = batchRouter.isFanoutTimedOut();
+            Instant sessionStartTime = batchRouter.getSessionStartTime();
+            if (sessionStartTime == null) {
+              return;
+            }
 
-      // Log session summary
-      Instant sessionStartTime = batchRouter.getSessionStartTime();
-      int initialUnroutedCount = batchRouter.getInitialUnroutedCount();
+            Instant sessionEndTime = Instant.now();
+            double totalTime =
+                java.time.Duration.between(sessionStartTime, sessionEndTime).toMillis() / 1000.0;
+            var finalStats = job.board.getStatistics();
+            String completionStatus = "completed:";
+            boolean isTimedOut =
+                (job.state == RoutingJobState.TIMED_OUT)
+                    || ((job.timeoutAt != null)
+                        && !Instant.now().isBefore(job.timeoutAt)
+                        && job.thread.isStopRequested());
 
-      if (sessionStartTime != null) {
-        Instant sessionEndTime = Instant.now();
-        long totalSeconds =
-            java.time.Duration.between(sessionStartTime, sessionEndTime).getSeconds();
-        double totalTime =
-            totalSeconds
-                + (java.time.Duration.between(sessionStartTime, sessionEndTime).getNano()
-                    / 1000000000.0);
+            if (isTimedOut) {
+              completionStatus = "completed with timeout:";
+            } else if (job.thread.isStopRequested()) {
+              completionStatus = job.isCancelledByUser() ? "cancelled:" : "interrupted:";
+            }
 
-        var finalStats = job.board.getStatistics();
-
-        String completionStatus = "completed:";
-        // Check for timeout explicitly because job.state might not be updated to
-        // TIMED_OUT yet due to race conditions
-        boolean isTimedOut =
-            (job.state == RoutingJobState.TIMED_OUT)
-                || ((job.timeoutAt != null)
-                    && !Instant.now().isBefore(job.timeoutAt)
-                    && job.thread.isStopRequested());
-
-        if (isTimedOut) {
-          completionStatus = "completed with timeout:";
-        } else if (job.thread.isStopRequested()) {
-          completionStatus = "interrupted:";
-          if (job.isCancelledByUser()) {
-            completionStatus = "cancelled:";
+            job.logInfo(
+                String.format(
+                    java.util.Locale.US,
+                    "Auto-routing stage %s started with %d unrouted nets, completed in %.2f "
+                        + "seconds, final score: %s, using %.2f total CPU seconds, %.2f GB total "
+                        + "allocated, and %.1f MB peak heap usage.",
+                    completionStatus,
+                    batchRouter.getInitialUnroutedCount(),
+                    totalTime,
+                    FRLogger.formatScore(
+                        finalStats.getNormalizedScore(job.routerSettings.scoring),
+                        finalStats.connections.incompleteCount,
+                        finalStats.clearanceViolations.totalCount),
+                    job.resourceUsage.cpuTimeUsed,
+                    job.resourceUsage.maxMemoryUsed / 1024.0f,
+                    job.resourceUsage.peakMemoryUsed));
           }
-        }
+        });
+    pipeline.run();
+    setJobOutput(job);
 
-        String sessionSummary =
-            String.format(
-                java.util.Locale.US,
-                "Auto-routing stage %s started with %d unrouted nets, completed in %.2f seconds, "
-                    + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
-                    + "and %.1f MB peak heap usage.",
-                completionStatus,
-                initialUnroutedCount,
-                totalTime,
-                FRLogger.formatScore(
-                    finalStats.getNormalizedScore(job.routerSettings.scoring),
-                    finalStats.connections.incompleteCount,
-                    finalStats.clearanceViolations.totalCount),
-                job.resourceUsage.cpuTimeUsed,
-                job.resourceUsage.maxMemoryUsed / 1024.0f,
-                job.resourceUsage.peakMemoryUsed);
-
-        job.logInfo(sessionSummary);
-      }
-
-      job.stage = RoutingStage.IDLE;
-    } else if (job.routerSettings.isFanoutEnabled()) {
-      // Headless fanout-only mode: run the fanout pre-pass and skip autorouter passes.
-      job.stage = RoutingStage.ROUTING;
-      Integer originalMaxPasses = job.routerSettings.maxPasses;
-      try {
-        job.routerSettings.maxPasses = 0;
-        BatchAutorouter batchRouter = new BatchAutorouter(job);
-        batchRouter.runBatchLoop();
-        fanoutTimedOut = batchRouter.isFanoutTimedOut();
-        setJobOutput(job);
-      } finally {
-        job.routerSettings.maxPasses = originalMaxPasses;
-      }
-      job.stage = RoutingStage.IDLE;
-    }
-
-    boolean optimizerTimedOut = false;
-    if (job.routerSettings.getRunOptimizer()) {
-      job.stage = RoutingStage.OPTIMIZATION;
-      // start the optimizer task
-      BatchOptimizer optimizer = new BatchOptimizer(job);
-      optimizer.addBoardUpdatedEventListener(
-          new BoardUpdatedEventListener() {
-            @Override
-            public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-              setJobOutput(job);
-            }
-          });
-      optimizer.runBatchLoop();
-      optimizerTimedOut = optimizer.isTimedOut();
-      job.stage = RoutingStage.IDLE;
-    }
+    boolean fanoutTimedOut = pipeline.getAutorouter().isFanoutTimedOut();
+    final boolean optimizerTimedOut =
+        pipeline.getOptimizer() != null && pipeline.getOptimizer().isTimedOut();
 
     job.finishedAt = Instant.now();
     if (job.state == RoutingJobState.RUNNING) {

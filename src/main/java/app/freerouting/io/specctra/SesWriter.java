@@ -1,12 +1,12 @@
 package app.freerouting.io.specctra;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.IdentifierType;
@@ -124,7 +124,7 @@ public final class SesWriter {
     Collection<Item> boardItems = board.getItems();
     boolean componentFound = false;
     for (int i = 1; i <= board.components.count(); i++) {
-      app.freerouting.board.Component currentComponent = board.components.get(i);
+      app.freerouting.board.model.structure.Component currentComponent = board.components.get(i);
       if (currentComponent.getPackage() == pkg) {
         // check that not all items of the component are deleted
         boolean undeletedItemFound = false;
@@ -155,7 +155,7 @@ public final class SesWriter {
       IdentifierType identifierType,
       CoordinateTransform coordinateTransform,
       IndentFileWriter file,
-      app.freerouting.board.Component component)
+      app.freerouting.board.model.structure.Component component)
       throws IOException {
     file.newLine();
     file.write("(place ");
@@ -190,7 +190,7 @@ public final class SesWriter {
       if (currentPin.getChangedTo() != currentPin) {
         file.newLine();
         file.write("(pins ");
-        app.freerouting.board.Component currentCmp =
+        app.freerouting.board.model.structure.Component currentCmp =
             board.components.get(currentPin.getComponentId());
         if (currentCmp != null) {
           identifierType.write(currentCmp.name, file);
@@ -201,7 +201,7 @@ public final class SesWriter {
           FRLogger.warn("SesWriter.writeWasIs: component not found");
         }
         file.write(" ");
-        app.freerouting.board.Component swapCmp =
+        app.freerouting.board.model.structure.Component swapCmp =
             board.components.get(swappedWith.getComponentId());
         if (swapCmp != null) {
           identifierType.write(swapCmp.name, file);
@@ -297,7 +297,7 @@ public final class SesWriter {
       if (currentBoardShape == null) {
         continue;
       }
-      app.freerouting.board.Layer boardLayer = board.layerStructure.layers[i];
+      app.freerouting.board.model.structure.Layer boardLayer = board.layerStructure.layers[i];
       Layer currentLayer = new Layer(boardLayer.name, i, boardLayer.isSignal);
       Shape currentShape = coordinateTransform.boardToDsnRel(currentBoardShape, currentLayer);
       file.startScope();
@@ -377,7 +377,8 @@ public final class SesWriter {
       IndentFileWriter file)
       throws IOException {
     int layerIndex = wire.getLayer();
-    final app.freerouting.board.Layer boardLayer = board.layerStructure.layers[layerIndex];
+    final app.freerouting.board.model.structure.Layer boardLayer =
+        board.layerStructure.layers[layerIndex];
     final int wireWidth = (int) Math.round(coordinateTransform.boardToDsn(2 * wire.getHalfWidth()));
     file.startScope();
     file.write("wire");
@@ -428,7 +429,7 @@ public final class SesWriter {
     java.util.Set<Item> contacts = startSide ? wire.getStartContacts() : wire.getEndContacts();
     int layer = wire.getLayer();
     for (Item contact : contacts) {
-      if (!(contact instanceof app.freerouting.board.DrillItem drill)) {
+      if (!(contact instanceof app.freerouting.board.model.items.DrillItem drill)) {
         continue;
       }
       if (layer < drill.firstLayer() || layer > drill.lastLayer()) {
@@ -524,7 +525,8 @@ public final class SesWriter {
     }
     Area currentArea = conductionArea.getArea();
     int layerIndex = conductionArea.getLayer();
-    app.freerouting.board.Layer boardLayer = board.layerStructure.layers[layerIndex];
+    app.freerouting.board.model.structure.Layer boardLayer =
+        board.layerStructure.layers[layerIndex];
     final Layer conductionLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;

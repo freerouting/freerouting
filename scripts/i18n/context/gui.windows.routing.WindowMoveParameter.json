@@ -1,0 +1,114 @@
+{
+  "horizontal_component_grid": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "46770fb835efa616cedbba26236141a2c44c104a8ddff3e77ee4b20f61e93625",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowMoveParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "rotate": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowMoveParameter"
+    ],
+    "english_hash": "299bcf54c044b1b5d49a18da354e16f240b695a1f3a55f1e5217595de59fbb3d",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowMoveParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "title": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowMoveParameter"
+    ],
+    "english_hash": "863f574fa53e393796d96e2ea178534be38db901bd4220963506690890a3edab",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowMoveParameter",
+    "max_length_hint": 30,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "dialog_title"
+  },
+  "vertical_component_grid": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "7e76daaf4af052cc0dda13b6a0897b76bc35ecdbda0760252e92ef86f9f80969",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowMoveParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "wheel_function": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowMoveParameter"
+    ],
+    "english_hash": "64faf70f085a759317be097c43c52f6e08ed2cb54c4a9bf2a54a8e4923064c94",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowMoveParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "wheel_function_tooltip"
+    ],
+    "ui_role": "label"
+  },
+  "wheel_function_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowMoveParameter"
+    ],
+    "english_hash": "850195c75d8fc867c91ae8f129fafbbaf73910475e0743b4dad234631abc5d3c",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowMoveParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "wheel_function"
+    ],
+    "ui_role": "tooltip"
+  },
+  "zoom": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowMoveParameter"
+    ],
+    "english_hash": "d21bb537725d603ee2dbadf9c3d1e291a6b7aed215d36a34e58a1a3b0daa5084",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowMoveParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  }
+}

@@ -1,14 +1,14 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.BoardOutline;
-import app.freerouting.board.Communication;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.ObstacleArea;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.ViaObstacleArea;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.ViaObstacleArea;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.state.Communication;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.library.BoardLibrary;
 import app.freerouting.core.library.Padstack;
@@ -230,7 +230,8 @@ public class Structure extends ScopeKeyword {
       throws IOException {
     Area keepoutArea = keepout.getArea();
     int layerIndex = keepout.getLayer();
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
+    app.freerouting.board.model.structure.Layer boardLayer =
+        scopeParameter.board.layerStructure.layers[layerIndex];
     final Layer keepoutLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;
@@ -1164,7 +1165,8 @@ public class Structure extends ScopeKeyword {
       boardConstructionInfo.boundingShape = boundingBox;
     }
     Rectangle boundingBox = boardConstructionInfo.boundingShape.boundingBox();
-    app.freerouting.board.Layer[] boardLayerArr = new app.freerouting.board.Layer[layerCount];
+    app.freerouting.board.model.structure.Layer[] boardLayerArr =
+        new app.freerouting.board.model.structure.Layer[layerCount];
     Iterator<Layer> it = boardConstructionInfo.layerInfo.iterator();
     for (int i = 0; i < layerCount; i++) {
       final Layer currentLayer = it.next();
@@ -1175,10 +1177,11 @@ public class Structure extends ScopeKeyword {
                 + "'");
         return false;
       }
-      boardLayerArr[i] = new app.freerouting.board.Layer(currentLayer.name, currentLayer.isSignal);
+      boardLayerArr[i] =
+          new app.freerouting.board.model.structure.Layer(currentLayer.name, currentLayer.isSignal);
     }
-    final app.freerouting.board.LayerStructure boardLayerStructure =
-        new app.freerouting.board.LayerStructure(boardLayerArr);
+    final app.freerouting.board.model.structure.LayerStructure boardLayerStructure =
+        new app.freerouting.board.model.structure.LayerStructure(boardLayerArr);
     scopeParameter.layerStructure = new LayerStructure(boardConstructionInfo.layerInfo);
 
     // Calculate an approximate scaling between dsn coordinates and board

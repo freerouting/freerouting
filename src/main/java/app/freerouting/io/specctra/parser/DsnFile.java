@@ -1,11 +1,11 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.BoardOutline;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.Trace;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
@@ -33,11 +33,12 @@ public final class DsnFile {
     if (routingBoard == null) {
       return false;
     }
-    final app.freerouting.board.LayerStructure boardLayerStructure = routingBoard.layerStructure;
+    final app.freerouting.board.model.structure.LayerStructure boardLayerStructure =
+        routingBoard.layerStructure;
     if (boardLayerStructure.layers.length <= 2) {
       return false;
     }
-    for (app.freerouting.board.Layer currentLayer : boardLayerStructure.layers) {
+    for (app.freerouting.board.model.structure.Layer currentLayer : boardLayerStructure.layers) {
       if (!currentLayer.isSignal) {
         return false;
       }
@@ -75,7 +76,7 @@ public final class DsnFile {
       if (layerContainsWiresArr[layerIndex]) {
         continue;
       }
-      final app.freerouting.board.Layer currentLayer =
+      final app.freerouting.board.model.structure.Layer currentLayer =
           routingBoard.layerStructure.layers[layerIndex];
       if (!currentLayer.isSignal
           || layerIndex == 0

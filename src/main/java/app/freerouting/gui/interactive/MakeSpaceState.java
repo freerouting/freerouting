@@ -1,7 +1,7 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.gui.workspace.GuiBoardManager;

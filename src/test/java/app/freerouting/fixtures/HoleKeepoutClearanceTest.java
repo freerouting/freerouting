@@ -3,9 +3,9 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.ObstacleArea;
-import app.freerouting.board.Unit;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.settings.sources.TestingSettings;

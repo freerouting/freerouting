@@ -1,6 +1,6 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;

@@ -1,9 +1,9 @@
 package app.freerouting.drc;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.Item;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.datastructures.PlanarDelaunayTriangulation;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.FloatPoint;

@@ -88,7 +88,7 @@ public class UndoableObjects implements Serializable {
       return false;
     }
 
-    if (object instanceof app.freerouting.board.Item item) {
+    if (object instanceof app.freerouting.board.model.items.Item item) {
       String itemNetNames = item.getAllNetNames();
       FRLogger.trace(
           "UndoableObjects.delete",

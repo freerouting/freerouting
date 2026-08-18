@@ -34,51 +34,67 @@ public final class FRAnalytics {
 
   static {
     appLocationTable = new HashMap<String, String>();
-    appLocationTable.put("app.freerouting.gui.BoardFrame", "app.freerouting.gui/Board");
+    appLocationTable.put("app.freerouting.gui.board.BoardFrame", "app.freerouting.gui/Board");
     appLocationTable.put(
-        "app.freerouting.gui.WindowVisibility", "app.freerouting.gui/Appearance/Visibility");
+        "app.freerouting.gui.windows.board.WindowVisibility",
+        "app.freerouting.gui/Appearance/Visibility");
     appLocationTable.put(
-        "app.freerouting.gui.ColorManager", "app.freerouting.gui/Appearance/Colors");
+        "app.freerouting.gui.controls.ColorManager", "app.freerouting.gui/Appearance/Colors");
     appLocationTable.put(
-        "app.freerouting.gui.WindowDisplayMisc", "app.freerouting.gui/Appearance/Misc");
+        "app.freerouting.gui.windows.board.WindowDisplayMisc",
+        "app.freerouting.gui/Appearance/Misc");
     appLocationTable.put(
-        "app.freerouting.gui.WindowSelectParameter", "app.freerouting.gui/Settings/Selection");
+        "app.freerouting.gui.windows.routing.WindowSelectParameter",
+        "app.freerouting.gui/Settings/Selection");
     appLocationTable.put(
-        "app.freerouting.gui.WindowRouteParameter", "app.freerouting.gui/Settings/Routing");
+        "app.freerouting.gui.windows.routing.WindowRouteParameter",
+        "app.freerouting.gui/Settings/Routing");
     appLocationTable.put(
-        "app.freerouting.gui.WindowAutorouteParameter", "app.freerouting.gui/Settings/Auto-router");
+        "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
+        "app.freerouting.gui/Settings/Auto-router");
     appLocationTable.put(
         "app.freerouting.gui.WindowAutorouteDetailParameter",
         "app.freerouting.gui/Settings/Auto-router/Details");
     appLocationTable.put(
-        "app.freerouting.gui.WindowMoveParameter", "app.freerouting.gui/Settings/Controls");
+        "app.freerouting.gui.windows.routing.WindowMoveParameter",
+        "app.freerouting.gui/Settings/Controls");
     appLocationTable.put(
-        "app.freerouting.gui.WindowClearanceMatrix", "app.freerouting.gui/Rules/ClearanceMatrix");
-    appLocationTable.put("app.freerouting.gui.WindowVia", "app.freerouting.gui/Rules/Vias");
-    appLocationTable.put("app.freerouting.gui.WindowNets", "app.freerouting.gui/Rules/Nets");
+        "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
+        "app.freerouting.gui/Rules/ClearanceMatrix");
     appLocationTable.put(
-        "app.freerouting.gui.WindowNetClasses", "app.freerouting.gui/Rules/NetClasses");
+        "app.freerouting.gui.windows.routing.WindowVia", "app.freerouting.gui/Rules/Vias");
     appLocationTable.put(
-        "app.freerouting.gui.WindowPackages", "app.freerouting.gui/Information/LibraryPackages");
+        "app.freerouting.gui.windows.board.WindowNets", "app.freerouting.gui/Rules/Nets");
     appLocationTable.put(
-        "app.freerouting.gui.WindowPadstacks", "app.freerouting.gui/Information/LibraryPadstacks");
+        "app.freerouting.gui.windows.routing.WindowNetClasses",
+        "app.freerouting.gui/Rules/NetClasses");
     appLocationTable.put(
-        "app.freerouting.gui.WindowComponents", "app.freerouting.gui/Information/PlacedComponents");
+        "app.freerouting.gui.windows.board.WindowPackages",
+        "app.freerouting.gui/Information/LibraryPackages");
     appLocationTable.put(
-        "app.freerouting.gui.WindowIncompletes", "app.freerouting.gui/Information/Incompletes");
+        "app.freerouting.gui.windows.board.WindowPadstacks",
+        "app.freerouting.gui/Information/LibraryPadstacks");
     appLocationTable.put(
-        "app.freerouting.gui.WindowLengthViolations",
+        "app.freerouting.gui.windows.board.WindowComponents",
+        "app.freerouting.gui/Information/PlacedComponents");
+    appLocationTable.put(
+        "app.freerouting.gui.windows.board.WindowIncompletes",
+        "app.freerouting.gui/Information/Incompletes");
+    appLocationTable.put(
+        "app.freerouting.gui.windows.routing.WindowLengthViolations",
         "app.freerouting.gui/Information/LengthViolations");
     appLocationTable.put(
-        "app.freerouting.gui.WindowClearanceViolations",
+        "app.freerouting.gui.windows.routing.WindowClearanceViolations",
         "app.freerouting.gui/Information/ClearanceViolations");
     appLocationTable.put(
-        "app.freerouting.gui.WindowUnconnectedRoute",
+        "app.freerouting.gui.windows.routing.WindowUnconnectedRoute",
         "app.freerouting.gui/Information/UnconnectedRoutes");
     appLocationTable.put(
-        "app.freerouting.gui.WindowRouteStubs", "app.freerouting.gui/Information/RouteStubs");
+        "app.freerouting.gui.windows.routing.WindowRouteStubs",
+        "app.freerouting.gui/Information/RouteStubs");
 
-    appLocationTable.put("app.freerouting.gui.WindowAbout", "app.freerouting.gui/Help/About");
+    appLocationTable.put(
+        "app.freerouting.gui.windows.board.WindowAbout", "app.freerouting.gui/Help/About");
     appLocationTable.put("select_button", "app.freerouting.gui/Board/Toolbar/Select");
     appLocationTable.put("route_button", "app.freerouting.gui/Board/Toolbar/Route");
     appLocationTable.put("drag_button", "app.freerouting.gui/Board/Toolbar/Drag");

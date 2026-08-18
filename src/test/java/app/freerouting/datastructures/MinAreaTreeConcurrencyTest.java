@@ -2,7 +2,7 @@ package app.freerouting.datastructures;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import app.freerouting.geometry.planar.RegularTileShape;

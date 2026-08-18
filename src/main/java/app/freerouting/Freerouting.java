@@ -9,8 +9,8 @@ import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.drc.DesignRulesChecker;
-import app.freerouting.gui.DefaultExceptionHandler;
-import app.freerouting.gui.GuiManager;
+import app.freerouting.gui.board.GuiManager;
+import app.freerouting.gui.support.DefaultExceptionHandler;
 import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
@@ -716,16 +716,16 @@ public class Freerouting {
         return false;
       }
 
-      app.freerouting.board.RoutingBoard board1 = loadBoardFromFile(file1);
-      app.freerouting.board.RoutingBoard board2 = loadBoardFromFile(file2);
+      app.freerouting.board.facade.RoutingBoard board1 = loadBoardFromFile(file1);
+      app.freerouting.board.facade.RoutingBoard board2 = loadBoardFromFile(file2);
 
       if (board1 == null || board2 == null) {
         FRLogger.error("Failed to load one or both boards for comparison.", null);
         return false;
       }
 
-      app.freerouting.board.BoardComparator.ComparisonResult result =
-          app.freerouting.board.BoardComparator.compare(board1, board2, 1e-3);
+      app.freerouting.board.state.BoardComparator.ComparisonResult result =
+          app.freerouting.board.state.BoardComparator.compare(board1, board2, 1e-3);
 
       IO.println(result.report);
 
@@ -741,7 +741,7 @@ public class Freerouting {
     }
   }
 
-  private static app.freerouting.board.RoutingBoard loadBoardFromFile(java.io.File file)
+  private static app.freerouting.board.facade.RoutingBoard loadBoardFromFile(java.io.File file)
       throws Exception {
     try (java.io.InputStream is = new java.io.FileInputStream(file)) {
       if (file.getName().toLowerCase().endsWith(".json")) {
@@ -750,20 +750,20 @@ public class Freerouting {
           app.freerouting.io.BoardReadResult readResult =
               app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
           if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-            return (app.freerouting.board.RoutingBoard) success.board();
+            return (app.freerouting.board.facade.RoutingBoard) success.board();
           } else if (readResult
               instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-            return (app.freerouting.board.RoutingBoard) outlineMissing.board();
+            return (app.freerouting.board.facade.RoutingBoard) outlineMissing.board();
           }
         }
       } else {
         app.freerouting.io.BoardReadResult readResult =
             app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
         if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-          return (app.freerouting.board.RoutingBoard) success.board();
+          return (app.freerouting.board.facade.RoutingBoard) success.board();
         } else if (readResult
             instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-          return (app.freerouting.board.RoutingBoard) outlineMissing.board();
+          return (app.freerouting.board.facade.RoutingBoard) outlineMissing.board();
         }
       }
     }
