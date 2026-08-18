@@ -1,0 +1,168 @@
+# Fixture metadata for benchmark harness and autopilot gates.
+# Tags: canary (fast smoke), large (>500 nets or >30min), plane (GND pour), regression-*
+
+fixtures:
+  DAC2020_boards/DAC2020_bm01.dsn:
+    size_class: medium
+    layers: 2
+    nets: 99
+    timeout_budget: "00:30:00"
+    tags: [canary, regression-bm01]
+  DAC2020_boards/DAC2020_bm02.dsn:
+    size_class: small
+    layers: 2
+    nets: 34
+    timeout_budget: "00:05:00"
+    tags: [canary]
+  DAC2020_boards/DAC2020_bm04.dsn:
+    size_class: medium
+    layers: 16
+    nets: 80
+    timeout_budget: "00:45:00"
+    tags: []
+  DAC2020_boards/DAC2020_bm05.dsn:
+    size_class: medium
+    layers: 2
+    nets: 54
+    timeout_budget: "00:30:00"
+    tags: []
+  DAC2020_boards/DAC2020_bm06.dsn:
+    size_class: small
+    layers: 2
+    nets: 38
+    timeout_budget: "00:10:00"
+    tags: [canary]
+  DAC2020_boards/DAC2020_bm07.dsn:
+    size_class: small
+    layers: 2
+    nets: 52
+    timeout_budget: "00:05:00"
+    tags: [canary]
+  DAC2020_boards/DAC2020_bm08.dsn:
+    size_class: tiny
+    layers: 2
+    nets: 15
+    timeout_budget: "00:02:00"
+    tags: [canary]
+  DAC2020_boards/DAC2020_bm09.dsn:
+    size_class: medium
+    layers: 16
+    nets: 70
+    timeout_budget: "00:10:00"
+    tags: [canary]
+  DAC2020_boards/DAC2020_bm10.dsn:
+    size_class: medium
+    layers: 4
+    nets: 63
+    timeout_budget: "00:15:00"
+    tags: []
+  DAC2020_boards/DAC2020_bm11.dsn:
+    size_class: medium
+    layers: 4
+    nets: 35
+    timeout_budget: "00:10:00"
+    tags: [canary]
+  KiCad_10_demos/CM5_MINIMA_3.dsn:
+    size_class: large
+    layers: 6
+    nets: 220
+    timeout_budget: "00:30:00"
+    max_items: 100
+    tags: [large]
+  KiCad_10_demos/complex_hierarchy.dsn:
+    size_class: small
+    layers: 2
+    nets: 52
+    timeout_budget: "00:10:00"
+    tags: []
+  KiCad_10_demos/ecc83-pp.dsn:
+    size_class: tiny
+    layers: 2
+    nets: 13
+    timeout_budget: "00:02:00"
+    tags: [canary]
+  KiCad_10_demos/ecc83-pp_v2.dsn:
+    size_class: tiny
+    layers: 2
+    nets: 13
+    timeout_budget: "00:02:00"
+    tags: [canary]
+  KiCad_10_demos/interf_u.dsn:
+    size_class: medium
+    layers: 2
+    nets: 173
+    timeout_budget: "00:30:00"
+    tags: [plane]
+  KiCad_10_demos/kit-dev-coldfire-xilinx_5213.dsn:
+    size_class: large
+    layers: 4
+    nets: 278
+    timeout_budget: "00:30:00"
+    max_items: 200
+    tags: [large]
+  KiCad_10_demos/multichannel_mixer.dsn:
+    size_class: medium
+    layers: 2
+    nets: 80
+    timeout_budget: "00:10:00"
+    tags: []
+  KiCad_10_demos/multichannel_mixer-unrouted.dsn:
+    size_class: medium
+    layers: 2
+    nets: 224
+    timeout_budget: "00:15:00"
+    tags: [regression]
+  KiCad_10_demos/pic_programmer.dsn:
+    size_class: small
+    layers: 2
+    nets: 111
+    timeout_budget: "00:05:00"
+    tags: [canary]
+  KiCad_10_demos/RoyalBlue54L-Feather.dsn:
+    size_class: large
+    layers: 8
+    nets: 95
+    timeout_budget: "00:30:00"
+    tags: [large]
+  KiCad_10_demos/sonde xilinx.dsn:
+    size_class: small
+    layers: 2
+    nets: 42
+    timeout_budget: "00:05:00"
+    tags: [canary]
+  KiCad_10_demos/StickHub.dsn:
+    size_class: medium
+    layers: 2
+    nets: 47
+    timeout_budget: "00:15:00"
+    tags: []
+  KiCad_10_demos/video.dsn:
+    size_class: large
+    layers: 4
+    nets: 588
+    timeout_budget: "00:30:00"
+    max_items: 200
+    tags: [large]
+  KiCad_10_demos/vme-wren.dsn:
+    size_class: xlarge
+    layers: 12
+    nets: 1800
+    timeout_budget: "00:30:00"
+    max_items: 100
+    tags: [large]
+
+canary_fixtures:
+  - DAC2020_boards/DAC2020_bm02.dsn
+  - DAC2020_boards/DAC2020_bm07.dsn
+  - DAC2020_boards/DAC2020_bm08.dsn
+  - KiCad_10_demos/ecc83-pp.dsn
+  - KiCad_10_demos/sonde xilinx.dsn
+  - DAC2020_boards/DAC2020_bm01.dsn
+
+noise_floor_fixtures:
+  - DAC2020_boards/DAC2020_bm02.dsn
+  - DAC2020_boards/DAC2020_bm07.dsn
+  - DAC2020_boards/DAC2020_bm08.dsn
+  - KiCad_10_demos/ecc83-pp.dsn
+  - KiCad_10_demos/sonde xilinx.dsn
+  - DAC2020_boards/DAC2020_bm01.dsn

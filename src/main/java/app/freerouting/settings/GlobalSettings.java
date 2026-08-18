@@ -114,6 +114,9 @@ public class GlobalSettings implements Serializable {
    */
   public transient String designSessionFilename;
 
+  /** Exit code from the most recent headless CLI routing run (for harness consumption). */
+  public transient int cliExitCode = 0;
+
   /**
    * The current locale for the application. It is initialized based on the system default locale,
    * but can be overridden via command line arguments.

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "description": "Per-fixture measurement noise (stddev). Populate via measure-noise-floor.ps1.",
+  "generated_at": null,
+  "runs_per_fixture": 5,
+  "fixtures": {}
+}

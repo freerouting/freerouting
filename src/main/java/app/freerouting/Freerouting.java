@@ -8,6 +8,7 @@ import app.freerouting.api.mcp.McpWebSocketEndpoint;
 import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.board.GuiManager;
 import app.freerouting.gui.support.DefaultExceptionHandler;
@@ -128,9 +129,8 @@ public class Freerouting {
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
 
-    // Wait for the RoutingJobScheduler to do its work
-    while ((routingJob.state != RoutingJobState.COMPLETED)
-        && (routingJob.state != RoutingJobState.TERMINATED)) {
+    // Wait for the RoutingJobScheduler to finish (success, timeout, cancel, or error).
+    while (!isCliTerminalState(routingJob.state)) {
       try {
         Thread.sleep(500);
       } catch (InterruptedException _) {
@@ -139,40 +139,90 @@ public class Freerouting {
       }
     }
 
-    // Save the output file
-    if (routingJob.state == RoutingJobState.COMPLETED) {
-      try {
-        Path outputFilePath = Path.of(globalSettings.initialOutputFile);
-        Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
-      } catch (IOException e) {
-        FRLogger.error(
-            "Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
-      }
+    boolean outputWritten = writeCliOutputIfAvailable(globalSettings, routingJob);
+    int cliExitCode = computeCliExitCode(routingJob, outputWritten);
+    writeCliResultManifestIfRequested(globalSettings, routingJob, outputWritten, cliExitCode);
 
-      // Print a sponsor/success-story message to stdout (not the log) once the
-      // condition is met: ≥5 completed jobs and the user has not yet saved their email
-      if ((globalSettings.statistics.jobsCompleted >= 5)
-          && globalSettings.userProfileSettings.userEmail.isEmpty()) {
-        String nl = System.lineSeparator();
-        IO.println(
-            nl
-                + "╔══════════════════════════════════════════════════════════════════╗"
-                + nl
-                + "║           Thank you for using Freerouting!                       ║"
-                + nl
-                + "║                                                                  ║"
-                + nl
-                + "║  If you would like to support the project, please consider       ║"
-                + nl
-                + "║  sponsoring me at https://github.com/sponsors/andrasfuchs        ║"
-                + nl
-                + "║  Even a small monthly donation is greatly appreciated!           ║"
-                + nl
-                + "╚══════════════════════════════════════════════════════════════════╝");
-      }
+    if (outputWritten
+        && (globalSettings.statistics.jobsCompleted >= 5)
+        && globalSettings.userProfileSettings.userEmail.isEmpty()) {
+      String nl = System.lineSeparator();
+      IO.println(
+          nl
+              + "╔══════════════════════════════════════════════════════════════════╗"
+              + nl
+              + "║           Thank you for using Freerouting!                       ║"
+              + nl
+              + "║                                                                  ║"
+              + nl
+              + "║  If you would like to support the project, please consider       ║"
+              + nl
+              + "║  sponsoring me at https://github.com/sponsors/andrasfuchs        ║"
+              + nl
+              + "║  Even a small monthly donation is greatly appreciated!           ║"
+              + nl
+              + "╚══════════════════════════════════════════════════════════════════╝");
     }
 
-    return true;
+    globalSettings.cliExitCode = cliExitCode;
+    return cliExitCode == 0;
+  }
+
+  private static boolean isCliTerminalState(RoutingJobState state) {
+    return state == RoutingJobState.COMPLETED
+        || state == RoutingJobState.TERMINATED
+        || state == RoutingJobState.TIMED_OUT
+        || state == RoutingJobState.CANCELLED;
+  }
+
+  private static boolean writeCliOutputIfAvailable(
+      GlobalSettings globalSettings, RoutingJob routingJob) {
+    if (routingJob.output == null || routingJob.output.getData() == null) {
+      return false;
+    }
+    if (routingJob.state != RoutingJobState.COMPLETED
+        && routingJob.state != RoutingJobState.TIMED_OUT) {
+      return false;
+    }
+    try {
+      Path outputFilePath = Path.of(globalSettings.initialOutputFile);
+      Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
+      return Files.exists(outputFilePath) && Files.size(outputFilePath) > 0;
+    } catch (IOException e) {
+      FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
+      return false;
+    }
+  }
+
+  private static int computeCliExitCode(RoutingJob routingJob, boolean outputWritten) {
+    if (routingJob.state == RoutingJobState.COMPLETED && outputWritten) {
+      return 0;
+    }
+    if (routingJob.state == RoutingJobState.TIMED_OUT && outputWritten) {
+      return 0;
+    }
+    return 1;
+  }
+
+  private static void writeCliResultManifestIfRequested(
+      GlobalSettings globalSettings, RoutingJob routingJob, boolean outputWritten, int exitCode) {
+    if (routingJob.routerSettings == null
+        || routingJob.routerSettings.resultJsonPath == null
+        || routingJob.routerSettings.resultJsonPath.isBlank()) {
+      return;
+    }
+    try {
+      RoutingResultManifest manifest =
+          RoutingResultManifest.fromJob(
+              routingJob, globalSettings.initialInputFile, outputWritten, exitCode);
+      RoutingResultManifest.write(Path.of(routingJob.routerSettings.resultJsonPath), manifest);
+    } catch (IOException e) {
+      FRLogger.error(
+          "Couldn't write routing result manifest to '"
+              + routingJob.routerSettings.resultJsonPath
+              + "'",
+          e);
+    }
   }
 
   private static boolean initializeDrc(GlobalSettings globalSettings) {
@@ -1353,6 +1403,11 @@ public class Freerouting {
     shutdownApplication();
 
     FRLogger.traceExit("MainApplication.main()");
+    if (!globalSettings.guiSettings.isEnabled
+        && !globalSettings.apiServerSettings.isRunning
+        && !globalSettings.mcpServerSettings.isRunning) {
+      System.exit(globalSettings.cliExitCode);
+    }
     System.exit(0);
   }
 }

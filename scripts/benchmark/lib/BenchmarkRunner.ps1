@@ -38,10 +38,12 @@ function Invoke-BenchmarkRun {
     $errFile = Join-Path $LogsDir "${BaseName}.err"
     $memLog = Join-Path $LogsDir "${BaseName}-memory.log"
     $outputFile = Join-Path $OutputsDir "${BaseName}.ses"
+    $resultJsonFile = Join-Path $OutputsDir "${BaseName}-result.json"
     $liveLogFile = if ($isV19) { $stdoutFile } else { $logFile }
 
     # Clean previous output
     if (Test-Path $outputFile) { Remove-Item $outputFile -Force -ErrorAction SilentlyContinue }
+    if (Test-Path $resultJsonFile) { Remove-Item $resultJsonFile -Force -ErrorAction SilentlyContinue }
     if (Test-Path $logFile) { Remove-Item $logFile -Force -ErrorAction SilentlyContinue }
     if (Test-Path $stdoutFile) { Remove-Item $stdoutFile -Force -ErrorAction SilentlyContinue }
     if (Test-Path $errFile) { Remove-Item $errFile -Force -ErrorAction SilentlyContinue }
@@ -90,10 +92,16 @@ function Invoke-BenchmarkRun {
     $jvmArgs += ('--logging.file.location="{0}"' -f $logFile)
     $jvmArgs += "--logging.console.level=INFO"
 
+    $envGitSha = $Settings.git_sha
+    if ($envGitSha -and $SupportsCliMode -and ($Binary.Name -notmatch 'freerouting-1.9.0.jar')) {
+        $jvmArgs += "-Dfreerouting.git.sha=$envGitSha"
+    }
+
     if ($Binary.Name -notmatch 'freerouting-1.9.0.jar') {
         $jvmArgs += "--api_server.enabled=false"
         if ($SupportsCliMode) {
             $jvmArgs += "--gui.enabled=false"
+            $jvmArgs += ('--router.result_json="{0}"' -f $resultJsonFile)
         }
     }
 
@@ -244,6 +252,7 @@ function Invoke-BenchmarkRun {
         WallClockSeconds  = ($endTime - $startTime).TotalSeconds
         LogFile           = $logFile
         OutputFile        = $outputFile
+        ResultJsonFile    = $resultJsonFile
         Crashed           = $crashed
         OomDetected       = $oomDetected
         TimedOut          = $timedOut

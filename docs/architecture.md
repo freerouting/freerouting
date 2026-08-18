@@ -240,7 +240,8 @@ Headless board management (using `BoardManager` and `HeadlessBoardManager`), boa
 
 ### `app.freerouting.core`
 
-Shared application data such as routing jobs, sessions, scoring (`core.scoring`), and board library definitions (`core.library`).
+Shared application data such as routing jobs, sessions, scoring (`core.scoring`), CLI result
+manifests (`core.results`), and board library definitions (`core.library`).
 
 ### `app.freerouting.settings`
 
@@ -274,6 +275,7 @@ Several implementation areas live one level below the top-level package grouping
 - `app.freerouting.analytics` contains analytics telemetry and dispatch; start with [FRAnalytics.java](src/main/java/app/freerouting/analytics/FRAnalytics.java).
 - `app.freerouting.util.gson` contains Gson adapters and JSON provider helpers; start with [GsonProvider.java](src/main/java/app/freerouting/util/gson/GsonProvider.java).
 - `app.freerouting.core.scoring` contains board statistics and scoring helpers; start with [BoardStatistics.java](src/main/java/app/freerouting/core/scoring/BoardStatistics.java).
+- `app.freerouting.core.results` contains the headless CLI routing result manifest; start with [RoutingResultManifest.java](src/main/java/app/freerouting/core/results/RoutingResultManifest.java).
 - `app.freerouting.api.v1`, `app.freerouting.api.dto`, `app.freerouting.api.security`, and `app.freerouting.api.dev` contain the public controllers, payloads, authentication, and mocked endpoints; start with [JobControllerV1.java](src/main/java/app/freerouting/api/v1/JobControllerV1.java), [BoardFilePayload.java](src/main/java/app/freerouting/api/dto/BoardFilePayload.java), and [ApiKeyValidationService.java](src/main/java/app/freerouting/api/security/ApiKeyValidationService.java).
 - `app.freerouting.autoroute.events` contains routing event callbacks; start with [BoardUpdatedEvent.java](src/main/java/app/freerouting/autoroute/events/BoardUpdatedEvent.java).
 - `app.freerouting.autoroute.pipeline` contains the shared routing sequencer; start with [RoutingPipeline.java](src/main/java/app/freerouting/autoroute/pipeline/RoutingPipeline.java).
