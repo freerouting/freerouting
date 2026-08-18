@@ -113,10 +113,15 @@ foreach ($board in $selected) {
     New-Item -ItemType Directory -Force -Path $boardFixtureDir | Out-Null
 
     $stripped = Join-Path $StrippedDir "$name.kicad_pcb"
+    $fixtureRawPcb = Join-Path $boardFixtureDir "raw.kicad_pcb"
+    $fixtureProcessedPcb = Join-Path $boardFixtureDir "processed.kicad_pcb"
+    $fixtureUnroutedPcb = Join-Path $boardFixtureDir "unrouted.kicad_pcb"
     $unroutedDsn = Join-Path $boardFixtureDir "unrouted.dsn"
     $refDsn = Join-Path $boardFixtureDir "reference-routed.dsn"
 
-    $hasAllFiles = (Test-Path $unroutedDsn) -and (Test-Path $refDsn) -and
+    $hasAllFiles = (Test-Path $fixtureRawPcb) -and (Test-Path $fixtureProcessedPcb) -and
+                   (Test-Path $fixtureUnroutedPcb) -and
+                   (Test-Path $unroutedDsn) -and (Test-Path $refDsn) -and
                    (Test-Path (Join-Path $boardFixtureDir "ground_truth.json")) -and
                    (Test-Path (Join-Path $boardFixtureDir "metadata.normalized.json")) -and
                    (Test-Path (Join-Path $boardFixtureDir "board-manifest.json"))
@@ -130,7 +135,15 @@ foreach ($board in $selected) {
     Write-Host "[$boardIndex/$($selected.Count)] $name : Starting conversion..."
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
-    # 1. Export reference-routed.dsn from raw.kicad_pcb (with fallback to processed.kicad_pcb)
+    # 1. Copy original KiCad PCB files into fixture directory
+    if (Test-Path $rawPcb) {
+        Copy-Item $rawPcb $fixtureRawPcb -Force
+    }
+    if (Test-Path $sourcePcb) {
+        Copy-Item $sourcePcb $fixtureProcessedPcb -Force
+    }
+
+    # 2. Export reference-routed.dsn from raw.kicad_pcb (with fallback to processed.kicad_pcb)
     if (Test-Path $rawPcb) {
         Write-Host "  [$name] Exporting reference-routed.dsn..."
         $prevEap = $ErrorActionPreference
@@ -142,17 +155,18 @@ foreach ($board in $selected) {
         }
     }
 
-    # 2. Strip processed.kicad_pcb and export unrouted.dsn
+    # 3. Strip processed.kicad_pcb and export unrouted.dsn
     Write-Host "  [$name] Stripping routing elements & zone fills..."
-    python $stripScript $sourcePcb $stripped
-    if ($LASTEXITCODE -ne 0 -or -not (Test-Path $stripped)) {
+    python $stripScript $sourcePcb $fixtureUnroutedPcb
+    if ($LASTEXITCODE -ne 0 -or -not (Test-Path $fixtureUnroutedPcb)) {
         Write-Warning "Strip failed for $name"
         $failed += $name
         continue
     }
+    Copy-Item $fixtureUnroutedPcb $stripped -Force
 
     Write-Host "  [$name] Exporting unrouted.dsn..."
-    & $kicadPython $exportScript $stripped $unroutedDsn 2>&1 | Out-Null
+    & $kicadPython $exportScript $fixtureUnroutedPcb $unroutedDsn 2>&1 | Out-Null
     if (-not (Test-Path $unroutedDsn)) {
         Write-Warning "Unrouted DSN export failed for $name (pcbnew.ExportSpecctraDSN)"
         $failed += $name

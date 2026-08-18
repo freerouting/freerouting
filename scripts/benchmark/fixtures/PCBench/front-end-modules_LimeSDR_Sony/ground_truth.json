@@ -6,7 +6,7 @@
   "segment_count": 2150,
   "approximate_track_length_mm": 1917.12,
   "kicad_drc_violations": 1723,
-  "generated_at": "2026-08-18T14:04:10.021681+00:00",
+  "generated_at": "2026-08-18T17:29:08.561095+00:00",
   "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
   "kicad_drc_breakdown": {
     "total_violations": 1723,

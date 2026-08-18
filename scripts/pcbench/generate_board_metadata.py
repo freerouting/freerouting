@@ -251,6 +251,9 @@ def main() -> int:
         "board_id": board_name,
         "source_files": files_info,
         "generated_files": {
+            "raw_kicad_pcb": "raw.kicad_pcb",
+            "processed_kicad_pcb": "processed.kicad_pcb",
+            "unrouted_kicad_pcb": "unrouted.kicad_pcb",
             "unrouted_dsn": "unrouted.dsn",
             "reference_routed_dsn": "reference-routed.dsn",
             "ground_truth_json": "ground_truth.json",
