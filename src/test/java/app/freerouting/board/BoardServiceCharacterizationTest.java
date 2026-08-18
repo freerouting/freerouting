@@ -5,6 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.state.BoardObserverAdaptor;
+import app.freerouting.board.state.BoardObservers;
+import app.freerouting.board.state.Communication;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;

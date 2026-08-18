@@ -1,7 +1,7 @@
 package app.freerouting.drc;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemInfoPrinter;
+import app.freerouting.board.actions.ItemInfoPrinter;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.util.TextManager;
 import java.util.ArrayList;

@@ -11,15 +11,15 @@ import app.freerouting.autoroute.expansion.FreeSpaceExpansionRoom;
 import app.freerouting.autoroute.expansion.IncompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
 import app.freerouting.autoroute.expansion.TargetItemExpansionDoor;
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.Connectable;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.model.items.Connectable;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
@@ -98,7 +98,7 @@ public class MazeSearchEngine {
                         : 3000.0;
                 double resolution =
                     autorouteEngine.board.communication.getResolution(
-                        app.freerouting.board.Unit.UM);
+                        app.freerouting.board.model.structure.Unit.UM);
                 app.freerouting.geometry.planar.FloatPoint entryPoint =
                     element.shapeEntry.a.middlePoint(element.shapeEntry.b);
                 double dist = entryPoint.distance(pinCenterFloat);
@@ -113,7 +113,7 @@ public class MazeSearchEngine {
                         : 500.0;
                 double resolution =
                     autorouteEngine.board.communication.getResolution(
-                        app.freerouting.board.Unit.UM);
+                        app.freerouting.board.model.structure.Unit.UM);
                 double drillDist = drill.location.toFloat().distance(pinCenterFloat);
                 if (drillDist < minLen * resolution) {
                   return false;

@@ -1,7 +1,7 @@
 package app.freerouting.core.library;
 
-import app.freerouting.board.ItemInfoPrinter;
-import app.freerouting.board.Pin;
+import app.freerouting.board.actions.ItemInfoPrinter;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.Vector;

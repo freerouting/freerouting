@@ -2,8 +2,8 @@ package app.freerouting.autoroute.expansion;
 
 import app.freerouting.autoroute.AutorouteDiagnostic;
 import app.freerouting.autoroute.maze.AutorouteEngine;
-import app.freerouting.board.Connectable;
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Connectable;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.datastructures.ShapeTree;

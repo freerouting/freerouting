@@ -19,10 +19,10 @@ public class LayerStructure {
   }
 
   /** Creates a dsn-LayerStructure from a board LayerStructure. */
-  public LayerStructure(app.freerouting.board.LayerStructure boardLayerStructure) {
+  public LayerStructure(app.freerouting.board.model.structure.LayerStructure boardLayerStructure) {
     layers = new Layer[boardLayerStructure.layers.length];
     for (int i = 0; i < layers.length; i++) {
-      app.freerouting.board.Layer boardLayer = boardLayerStructure.layers[i];
+      app.freerouting.board.model.structure.Layer boardLayer = boardLayerStructure.layers[i];
       layers[i] = new Layer(boardLayer.name, i, boardLayer.isSignal);
     }
   }

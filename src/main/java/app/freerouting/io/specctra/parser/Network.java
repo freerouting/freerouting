@@ -1,9 +1,9 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Pin;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.LogicalPart;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Padstack;
@@ -882,7 +882,7 @@ public class Network extends ScopeKeyword {
         }
       }
       for (String currentCmpName : nextMapping.components) {
-        app.freerouting.board.Component currentComponent =
+        app.freerouting.board.model.structure.Component currentComponent =
             routingBoard.components.get(currentCmpName);
         if (currentComponent != null) {
           currentComponent.setLogicalPart(currentLogicalPart);
@@ -916,7 +916,8 @@ public class Network extends ScopeKeyword {
           FRLogger.warn("Network.search_lib_package: component list empty at '" + partName + "'");
           return null;
         }
-        app.freerouting.board.Component currentComponent = board.components.get(componentName);
+        app.freerouting.board.model.structure.Component currentComponent =
+            board.components.get(componentName);
         if (currentComponent == null) {
           FRLogger.warn(
               "Network.search_lib_package: component not found at '" + componentName + "'");
@@ -953,7 +954,7 @@ public class Network extends ScopeKeyword {
     }
     double rotationInDegree = location.rotation;
 
-    app.freerouting.board.Component newComponent =
+    app.freerouting.board.model.structure.Component newComponent =
         routingBoard.components.add(
             location.name,
             componentLocation,

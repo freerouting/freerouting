@@ -1,7 +1,7 @@
 package app.freerouting.core.library;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.DrillItem;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.datastructures.UndoableObjects;
 import java.io.Serializable;
 import java.util.Arrays;

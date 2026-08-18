@@ -1,5 +1,13 @@
 package app.freerouting.board;
 
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.state.Communication;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
 import app.freerouting.geometry.planar.IntPoint;
@@ -74,7 +82,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             360,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace1);
 
@@ -92,7 +100,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             361,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace2);
 
@@ -145,7 +153,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             362,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace3);
 
@@ -232,7 +240,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             1,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace1);
 
@@ -250,7 +258,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             2,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(trace2);
 
@@ -311,7 +319,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             1,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(traceAbc);
 
@@ -326,7 +334,7 @@ public class PolylineTraceSplitTest {
             clearanceClass,
             2,
             0,
-            app.freerouting.board.FixedState.UNFIXED,
+            app.freerouting.board.model.structure.FixedState.UNFIXED,
             board);
     board.insertItem(traceBc);
 
@@ -350,26 +358,10 @@ public class PolylineTraceSplitTest {
 
     PolylineTrace first =
         new PolylineTrace(
-            new Polyline(start, join),
-            0,
-            1000,
-            new int[] {1},
-            1,
-            1,
-            0,
-            FixedState.UNFIXED,
-            board);
+            new Polyline(start, join), 0, 1000, new int[] {1}, 1, 1, 0, FixedState.UNFIXED, board);
     PolylineTrace second =
         new PolylineTrace(
-            new Polyline(join, end),
-            0,
-            1000,
-            new int[] {1},
-            1,
-            2,
-            0,
-            FixedState.UNFIXED,
-            board);
+            new Polyline(join, end), 0, 1000, new int[] {1}, 1, 2, 0, FixedState.UNFIXED, board);
     board.insertItem(first);
     board.insertItem(second);
 
@@ -386,7 +378,9 @@ public class PolylineTraceSplitTest {
         "The fallback must restore default-tree bookkeeping");
   }
 
-  /** Basic trace measurements and geometry access remain stable behind the extracted collaborator. */
+  /**
+   * Basic trace measurements and geometry access remain stable behind the extracted collaborator.
+   */
   @Test
   void testTraceGeometryCharacterization() {
     RoutingBoard board = createTestBoard();

@@ -1,13 +1,13 @@
 package app.freerouting.autoroute.path;
 
 import app.freerouting.autoroute.maze.AutorouteControl;
-import app.freerouting.board.ForcedViaInserter;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
+import app.freerouting.board.actions.ForcedViaInserter;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;

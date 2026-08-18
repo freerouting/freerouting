@@ -2,7 +2,7 @@ package app.freerouting.autoroute.expansion;
 
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.autoroute.maze.MazeSearchElement;
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;

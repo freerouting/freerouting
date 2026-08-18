@@ -4,6 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.BoardItemType;
+import app.freerouting.board.model.items.ComponentObstacleArea;
+import app.freerouting.board.model.items.ComponentOutline;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.items.ViaObstacleArea;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import java.io.FileInputStream;

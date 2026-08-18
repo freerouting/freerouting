@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.Pin;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.TileShape;

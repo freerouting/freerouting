@@ -5,11 +5,11 @@ import app.freerouting.autoroute.drill.ExpansionDrill;
 import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
 import app.freerouting.autoroute.expansion.ExpandableObject;
 import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
-import app.freerouting.board.ForcedPadRouter;
-import app.freerouting.board.ForcedViaInserter;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.Via;
+import app.freerouting.board.actions.ForcedPadRouter;
+import app.freerouting.board.actions.ForcedViaInserter;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.FloatLine;
@@ -54,7 +54,8 @@ final class MazeExpansionEngine {
     ConvexShape shrinkedDrillShape = drill.getShape().shrink(viaRadius);
     FloatPoint compareCorner = fromElement.shapeEntry.a.middlePoint(fromElement.shapeEntry.b);
     if (fromElement.door instanceof DrillPage
-        && fromElement.backtrackDoor instanceof app.freerouting.autoroute.expansion.TargetItemExpansionDoor door
+        && fromElement.backtrackDoor
+            instanceof app.freerouting.autoroute.expansion.TargetItemExpansionDoor door
         && door.item instanceof Pin pin) {
       FloatPoint nearestExitCorner =
           pin.nearestTraceExitCorner(drill.location.toFloat(), traceHalfWidth, layer);
@@ -82,7 +83,8 @@ final class MazeExpansionEngine {
       newSectionNoOfBacktrackDoor = fromElement.sectionNoOfDoor;
       expansionValue += ctrl.minNormalViaCost;
     }
-    double sortingValue = expansionValue + search.destinationDistance.calculate(nearestPoint, layer);
+    double sortingValue =
+        expansionValue + search.destinationDistance.calculate(nearestPoint, layer);
     MazeListElement newElement =
         new MazeListElement(
             drill,
@@ -222,7 +224,10 @@ final class MazeExpansionEngine {
       if (currentDrill.getMazeSearchElement(sectionIndex).isOccupied) {
         search.fanoutDiagnostics.trace(
             "drill_rejected_section_occupied",
-            "drill=" + MazeSearchEngine.describeExpandable(currentDrill) + ", section=" + sectionIndex);
+            "drill="
+                + MazeSearchEngine.describeExpandable(currentDrill)
+                + ", section="
+                + sectionIndex);
         continue;
       }
       expandToDrill(currentDrill, fromElement, 0);
@@ -330,7 +335,7 @@ final class MazeExpansionEngine {
             && currentViaInfo.toLayer <= viaUpperBound) {
           boolean maskOk =
               !(currentViaInfo.fromLayer == 0 && smdAttachedOnComponentSide
-                  || currentViaInfo.toLayer == ctrl.layerCount - 1 && smdAttachedOnSolderSide)
+                      || currentViaInfo.toLayer == ctrl.layerCount - 1 && smdAttachedOnSolderSide)
                   || currentViaInfo.attachSmdAllowed;
           if (maskOk) {
             maskFound = true;

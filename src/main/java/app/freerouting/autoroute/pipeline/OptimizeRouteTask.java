@@ -1,8 +1,8 @@
 package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.ItemRouteResult;
-import app.freerouting.board.Item;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.logger.FRLogger;
 

@@ -4,10 +4,10 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.autoroute.ItemRouteResult;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
-import app.freerouting.board.Item;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;

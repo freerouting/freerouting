@@ -1,6 +1,6 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.Component;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.core.library.Package;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
@@ -27,14 +27,14 @@ public class Net {
   public static void writeScope(
       WriteScopeParameter scopeParameter,
       app.freerouting.rules.Net net,
-      Collection<app.freerouting.board.Pin> pinList)
+      Collection<app.freerouting.board.model.items.Pin> pinList)
       throws IOException {
     scopeParameter.file.startScope();
     writeNetId(net, scopeParameter.file, scopeParameter.identifierType);
     // write the pins scope
     scopeParameter.file.startScope();
     scopeParameter.file.write("pins");
-    for (app.freerouting.board.Pin currentPin : pinList) {
+    for (app.freerouting.board.model.items.Pin currentPin : pinList) {
       if (currentPin.containsNet(net.netNumber)) {
         writePin(scopeParameter, currentPin);
       }
@@ -53,9 +53,11 @@ public class Net {
     file.write(String.valueOf(subnetNumber));
   }
 
-  public static void writePin(WriteScopeParameter scopeParameter, app.freerouting.board.Pin pin)
+  public static void writePin(
+      WriteScopeParameter scopeParameter, app.freerouting.board.model.items.Pin pin)
       throws IOException {
-    Component currentComponent = scopeParameter.board.components.get(pin.getComponentId());
+    app.freerouting.board.model.structure.Component currentComponent =
+        scopeParameter.board.components.get(pin.getComponentId());
     if (currentComponent == null) {
       FRLogger.warn("Net.write_scope: component not found at '" + currentComponent.name + "'");
       return;

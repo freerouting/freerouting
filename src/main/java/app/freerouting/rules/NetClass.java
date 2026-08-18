@@ -1,7 +1,7 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.ItemInfoPrinter;
-import app.freerouting.board.LayerStructure;
+import app.freerouting.board.actions.ItemInfoPrinter;
+import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
 import java.io.Serializable;

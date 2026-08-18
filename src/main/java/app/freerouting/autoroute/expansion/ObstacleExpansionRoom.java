@@ -1,10 +1,10 @@
 package app.freerouting.autoroute.expansion;
 
 import app.freerouting.autoroute.AutorouteDiagnostic;
-import app.freerouting.board.Item;
-import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.ArrayList;
 import java.util.Collection;

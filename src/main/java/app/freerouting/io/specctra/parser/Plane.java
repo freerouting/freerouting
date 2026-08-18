@@ -1,6 +1,6 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.ConductionArea;
+import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
@@ -24,7 +24,8 @@ public class Plane extends ScopeKeyword {
     final String netName = scopeParameter.board.rules.nets.get(conduction.getNetNumber(0)).name;
     Area currentArea = conduction.getArea();
     int layerIndex = conduction.getLayer();
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
+    app.freerouting.board.model.structure.Layer boardLayer =
+        scopeParameter.board.layerStructure.layers[layerIndex];
     final Layer planeLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;

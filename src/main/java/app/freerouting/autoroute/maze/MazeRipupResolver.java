@@ -4,13 +4,13 @@ import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
 import app.freerouting.autoroute.expansion.ExpansionDoor;
 import app.freerouting.autoroute.expansion.ObstacleExpansionRoom;
 import app.freerouting.autoroute.path.Connection;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.searchtree.SearchTreeObject;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Line;
@@ -96,8 +96,7 @@ final class MazeRipupResolver {
     double fanoutViaCostFactor = 1.0;
     double costFactor = 1;
     boolean preserveFanoutProtection =
-        !ctrl.removeUnconnectedVias
-            && ctrl.ripupCosts <= (ctrl.settings.getStartRipupCosts() * 2);
+        !ctrl.removeUnconnectedVias && ctrl.ripupCosts <= (ctrl.settings.getStartRipupCosts() * 2);
     if (obstacleItem instanceof Trace obstacleTrace) {
       costFactor = obstacleTrace.getHalfWidth();
       if (preserveFanoutProtection) {

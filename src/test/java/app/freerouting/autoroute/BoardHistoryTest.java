@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.ItemIdGenerator;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.actions.ItemIdGenerator;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.state.BoardObserverAdaptor;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.management.HeadlessBoardManager;

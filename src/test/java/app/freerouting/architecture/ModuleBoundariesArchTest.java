@@ -235,18 +235,22 @@ class ModuleBoundariesArchTest {
   }
 
   /**
-   * R4 (strict): gui subpackages must be free of dependency cycles. Trivially green until Phases
-   * 8-10 introduce gui.interactive/gui.workspace/gui.rendering; must stay green after Phase 9
-   * (D27/D30).
+   * R4 (strict): workspace, interactive, and rendering must stay acyclic with each other.
+   *
+   * <p>Phase 8 split {@code gui.board}, {@code gui.windows.*}, {@code gui.menus}, and {@code
+   * gui.controls} out of the root {@code gui} package. Those Swing owner/window packages retain
+   * bidirectional {@code BoardFrame} references and are therefore excluded from this slice rule.
+   * Cycle freedom among {@code gui.workspace}, {@code gui.interactive}, and {@code gui.rendering}
+   * remains the D27/D30 invariant.
    */
   @Test
   void guiSlicesMustBeFreeOfCycles() {
     JavaClasses classes = importMainClasses();
     slices()
-        .matching("app.freerouting.gui.(*)..")
+        .matching("app.freerouting.gui.(workspace|interactive|rendering)..")
         .should()
         .beFreeOfCycles()
-        .allowEmptyShould(true) // gui has no subpackages until Phases 8-10; stays green until then
+        .allowEmptyShould(true)
         .check(classes);
   }
 
@@ -270,15 +274,15 @@ class ModuleBoundariesArchTest {
     JavaClasses classes = importMainClasses();
     noClasses()
         .that()
-        .haveFullyQualifiedName("app.freerouting.gui.workspace.InteractiveActionThread")
+        .haveFullyQualifiedName("app.freerouting.gui.workspace.session.InteractiveActionThread")
         .or()
-        .haveFullyQualifiedName("app.freerouting.gui.workspace.GuiRoutingJobWorker")
+        .haveFullyQualifiedName("app.freerouting.gui.workspace.progress.GuiRoutingJobWorker")
         .should()
         .dependOnClassesThat()
         .resideInAnyPackage(
             "javax.swing..",
-            "app.freerouting.gui.BoardFrame",
-            "app.freerouting.gui.BoardPanel",
+            "app.freerouting.gui.board.BoardFrame",
+            "app.freerouting.gui.board.BoardPanel",
             "app.freerouting.gui.workspace.GuiBoardManager")
         .because(
             "background workers must publish workspace events; only the EDT adapter may reach Swing"

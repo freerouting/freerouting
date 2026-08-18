@@ -1,17 +1,17 @@
 package app.freerouting.board.optimize;
 
 import app.freerouting.autoroute.maze.AutorouteControl.ExpansionCostFactor;
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.datastructures.TimeLimit;

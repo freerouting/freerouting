@@ -1,7 +1,7 @@
 package app.freerouting.logger;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.debug.DebugControl;
 import app.freerouting.geometry.planar.Point;
 import java.text.DecimalFormat;

@@ -1,8 +1,8 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.Item;
-import app.freerouting.board.MoveComponent;
+import app.freerouting.board.actions.MoveComponent;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Vector;

@@ -2,7 +2,7 @@ package app.freerouting.management.jobs;
 
 import static app.freerouting.Freerouting.globalSettings;
 
-import app.freerouting.board.ItemIdGenerator;
+import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;

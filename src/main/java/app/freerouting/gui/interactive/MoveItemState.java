@@ -1,12 +1,12 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.Component;
-import app.freerouting.board.Components;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.Item;
-import app.freerouting.board.LayerStructure;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.Component;
+import app.freerouting.board.model.structure.Components;
+import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.core.library.BoardLibrary;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.FloatPoint;

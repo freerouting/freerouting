@@ -1,21 +1,22 @@
 package app.freerouting.core.scoring;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.ComponentOutline;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Unit;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ComponentOutline;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.constants.Constants;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.gui.workspace.progress.RatsNest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
@@ -104,8 +105,7 @@ public class BoardStatistics implements Serializable {
    * Creates board statistics with optional clearance and connection (incomplete) analysis.
    *
    * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} — use
-   *     when a {@link app.freerouting.gui.workspace.RatsNest} will be created immediately after
-   *     load
+   *     when a {@link RatsNest} will be created immediately after load
    */
   public BoardStatistics(
       BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {

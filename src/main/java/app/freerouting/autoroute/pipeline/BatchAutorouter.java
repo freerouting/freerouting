@@ -1,26 +1,18 @@
 package app.freerouting.autoroute.pipeline;
 
-import static java.util.Collections.shuffle;
-
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.BoardHistory;
-import app.freerouting.autoroute.PerformanceProfiler;
-import app.freerouting.autoroute.events.BoardUpdatedEvent;
-import app.freerouting.autoroute.events.BoardUpdatedEventListener;
-import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.autoroute.maze.AutorouteControl;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.Connectable;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
-import app.freerouting.core.RouterCounters;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Connectable;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
@@ -33,7 +25,6 @@ import app.freerouting.settings.RouterSettings;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -310,12 +301,13 @@ public final class BatchAutorouter extends NamedAlgorithm {
    * ripup costs) retry it. Returns null when the connection is clean and may be kept.
    */
   public static AutorouteAttemptResult enforceStrictDrc(
-      app.freerouting.board.RoutingBoard board, int routeNetNo, int maxItemIdBefore) {
+      app.freerouting.board.facade.RoutingBoard board, int routeNetNo, int maxItemIdBefore) {
     List<Item> newItems = new ArrayList<>();
     boolean hasViolation = false;
     for (Item currentItem : board.getConnectableItems(routeNetNo)) {
       if (currentItem.getId() <= maxItemIdBefore
-          || !(currentItem instanceof Trace || currentItem instanceof app.freerouting.board.Via)) {
+          || !(currentItem instanceof Trace
+              || currentItem instanceof app.freerouting.board.model.items.Via)) {
         continue;
       }
       newItems.add(currentItem);

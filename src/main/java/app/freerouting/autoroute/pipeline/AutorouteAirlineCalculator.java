@@ -1,8 +1,8 @@
 package app.freerouting.autoroute.pipeline;
 
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.Item;
-import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import java.util.Collection;
@@ -176,8 +176,7 @@ final class AutorouteAirlineCalculator {
         connectedSet.isEmpty() ? Set.of(item) : connectedSet, unconnectedSet);
   }
 
-  private static double calculateMinDistance(
-      Collection<Item> fromItems, Collection<Item> toItems) {
+  private static double calculateMinDistance(Collection<Item> fromItems, Collection<Item> toItems) {
     double minDistance = Double.MAX_VALUE;
 
     for (Item fromItem : fromItems) {

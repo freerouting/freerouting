@@ -1,9 +1,9 @@
 package app.freerouting.autoroute.pipeline;
 
-import app.freerouting.board.Component;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.core.library.Package;
 import app.freerouting.drc.AirLine;
 import app.freerouting.drc.DesignRulesChecker;

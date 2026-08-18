@@ -1,16 +1,16 @@
 package app.freerouting.io.kicad;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.BoardObservers;
-import app.freerouting.board.Communication;
-import app.freerouting.board.Component;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.ItemIdGenerator;
-import app.freerouting.board.Layer;
-import app.freerouting.board.LayerStructure;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Unit;
+import app.freerouting.board.actions.ItemIdGenerator;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.Component;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.state.BoardObserverAdaptor;
+import app.freerouting.board.state.BoardObservers;
+import app.freerouting.board.state.Communication;
 import app.freerouting.core.library.Package;
 import app.freerouting.core.library.Packages;
 import app.freerouting.core.library.Padstack;

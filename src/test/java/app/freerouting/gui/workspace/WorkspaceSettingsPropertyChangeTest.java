@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.ItemIdGenerator;
+import app.freerouting.board.actions.ItemIdGenerator;
+import app.freerouting.board.state.BoardObserverAdaptor;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.RouterSettings;

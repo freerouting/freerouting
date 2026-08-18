@@ -3,7 +3,7 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.Unit;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.settings.sources.TestingSettings;
 import org.junit.jupiter.api.Test;
 

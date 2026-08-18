@@ -1,7 +1,7 @@
 package app.freerouting.autoroute.drill;
 
 import app.freerouting.autoroute.AutorouteDiagnostic;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.TileShape;
 import java.util.Collection;

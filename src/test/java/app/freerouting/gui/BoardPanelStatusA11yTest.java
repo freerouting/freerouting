@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
+import app.freerouting.gui.board.BoardPanelStatus;
 import java.awt.Component;
 import java.util.Locale;
 import javax.accessibility.AccessibleRole;

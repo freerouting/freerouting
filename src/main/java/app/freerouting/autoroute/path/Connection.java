@@ -1,7 +1,7 @@
 package app.freerouting.autoroute.path;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.Trace;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
 import app.freerouting.geometry.planar.Point;
 import java.util.Collection;
 import java.util.Set;

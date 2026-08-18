@@ -2,13 +2,13 @@ package app.freerouting.autoroute.expansion;
 
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.autoroute.maze.AutorouteEngine;
-import app.freerouting.board.Connectable;
-import app.freerouting.board.Item;
-import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.model.items.Connectable;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.board.searchtree.ShapeSearchTree45Degree;
 import app.freerouting.board.searchtree.ShapeSearchTree90Degree;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.geometry.planar.Direction;

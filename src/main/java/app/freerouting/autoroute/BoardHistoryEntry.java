@@ -1,6 +1,6 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.settings.ScoringSettings;
 import java.time.Instant;

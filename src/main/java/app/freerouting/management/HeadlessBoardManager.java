@@ -3,11 +3,11 @@ package app.freerouting.management;
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
 import app.freerouting.analytics.FRAnalytics;
-import app.freerouting.board.BoardObservers;
-import app.freerouting.board.Communication;
-import app.freerouting.board.LayerStructure;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Unit;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.state.BoardObservers;
+import app.freerouting.board.state.Communication;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
@@ -15,6 +15,7 @@ import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.workspace.WorkspaceSettings;
+import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.kicad.KiCadJsonReader;
 import app.freerouting.io.specctra.DsnReader;
@@ -97,7 +98,7 @@ public class HeadlessBoardManager implements BoardManager {
    * <p>Typically used for logging, progress reporting, or coordinating with external systems.
    *
    * @see ThreadActionListener
-   * @see app.freerouting.gui.workspace.InteractiveActionThread
+   * @see InteractiveActionThread
    */
   public ThreadActionListener autorouterListener;
 
@@ -189,8 +190,8 @@ public class HeadlessBoardManager implements BoardManager {
     if (counterpartBoard == null) {
       return;
     }
-    app.freerouting.board.BoardComparator.ComparisonResult comparison =
-        app.freerouting.board.BoardComparator.compare(board, counterpartBoard, 1e-3);
+    app.freerouting.board.state.BoardComparator.ComparisonResult comparison =
+        app.freerouting.board.state.BoardComparator.compare(board, counterpartBoard, 1e-3);
     if (comparison.areEqual) {
       FRLogger.debug(
           "Counterpart comparison: The loaded board and its counterpart '"
@@ -405,12 +406,14 @@ public class HeadlessBoardManager implements BoardManager {
     if (matrix == null) {
       return 0;
     }
-    java.util.List<app.freerouting.board.ObstacleArea> holeKeepouts = new java.util.ArrayList<>();
-    for (app.freerouting.board.Item item : this.board.getItems()) {
-      if (item.getClass() != app.freerouting.board.ObstacleArea.class) {
+    java.util.List<app.freerouting.board.model.items.ObstacleArea> holeKeepouts =
+        new java.util.ArrayList<>();
+    for (app.freerouting.board.model.items.Item item : this.board.getItems()) {
+      if (item.getClass() != app.freerouting.board.model.items.ObstacleArea.class) {
         continue;
       }
-      app.freerouting.board.ObstacleArea keepout = (app.freerouting.board.ObstacleArea) item;
+      app.freerouting.board.model.items.ObstacleArea keepout =
+          (app.freerouting.board.model.items.ObstacleArea) item;
       // Package keepouts belong to a component; a circular one is a drilled hole in the
       // footprint (the only way KiCad expresses NPTH in DSN).
       if (keepout.getComponentId() > 0
@@ -450,7 +453,7 @@ public class HeadlessBoardManager implements BoardManager {
       }
     }
     int reclassified = 0;
-    for (app.freerouting.board.ObstacleArea keepout : holeKeepouts) {
+    for (app.freerouting.board.model.items.ObstacleArea keepout : holeKeepouts) {
       if (keepout.clearanceClassIndex() != holeEdgeClassNo) {
         keepout.setClearanceClassIndex(holeEdgeClassNo);
         keepout.clearDerivedData();
@@ -874,7 +877,8 @@ public class HeadlessBoardManager implements BoardManager {
   }
 
   boolean conductionAreasOverlap(
-      app.freerouting.board.ConductionArea ca1, app.freerouting.board.ConductionArea ca2) {
+      app.freerouting.board.model.items.ConductionArea ca1,
+      app.freerouting.board.model.items.ConductionArea ca2) {
     app.freerouting.geometry.planar.TileShape[] pieces1 = ca1.getArea().splitToConvex();
     app.freerouting.geometry.planar.TileShape[] pieces2 = ca2.getArea().splitToConvex();
     if (pieces1 == null || pieces2 == null) {
@@ -893,7 +897,7 @@ public class HeadlessBoardManager implements BoardManager {
     return false;
   }
 
-  String getConductionAreaNetNames(app.freerouting.board.ConductionArea ca) {
+  String getConductionAreaNetNames(app.freerouting.board.model.items.ConductionArea ca) {
     java.util.List<String> names = new java.util.ArrayList<>();
     for (int i = 0; i < ca.netCount(); i++) {
       int netNumber = ca.getNetNumber(i);
@@ -916,7 +920,7 @@ public class HeadlessBoardManager implements BoardManager {
     java.util.List<String> violations = new java.util.ArrayList<>();
 
     for (int i = 0; i < this.board.getLayerCount(); i++) {
-      app.freerouting.board.Layer layer = this.board.layerStructure.layers[i];
+      app.freerouting.board.model.structure.Layer layer = this.board.layerStructure.layers[i];
       if (!layer.isSignal) {
         final int layerIndex = i;
 
@@ -934,7 +938,7 @@ public class HeadlessBoardManager implements BoardManager {
         }
 
         // 2. Check for at least one conduction area
-        java.util.List<app.freerouting.board.ConductionArea> layerAreas =
+        java.util.List<app.freerouting.board.model.items.ConductionArea> layerAreas =
             this.board.getConductionAreas().stream()
                 .filter(ca -> ca.getLayer() == layerIndex)
                 .toList();

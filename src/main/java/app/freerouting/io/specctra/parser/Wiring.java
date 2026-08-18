@@ -1,14 +1,14 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
@@ -115,7 +115,8 @@ public class Wiring extends ScopeKeyword {
       return;
     }
     int layerIndex = currentWire.getLayer();
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
+    app.freerouting.board.model.structure.Layer boardLayer =
+        scopeParameter.board.layerStructure.layers[layerIndex];
     final Layer currentLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     final double wireWidth =
         scopeParameter.coordinateTransform.boardToDsn(2 * currentWire.getHalfWidth());
@@ -164,7 +165,8 @@ public class Wiring extends ScopeKeyword {
         scopeParameter.board.rules.nets.get(conductionArea.getNetNumber(0));
     Area currentArea = conductionArea.getArea();
     int layerIndex = conductionArea.getLayer();
-    app.freerouting.board.Layer boardLayer = scopeParameter.board.layerStructure.layers[layerIndex];
+    app.freerouting.board.model.structure.Layer boardLayer =
+        scopeParameter.board.layerStructure.layers[layerIndex];
     final Layer conductionLayer = new Layer(boardLayer.name, layerIndex, boardLayer.isSignal);
     app.freerouting.geometry.planar.Shape boundaryShape;
     app.freerouting.geometry.planar.Shape[] holes;

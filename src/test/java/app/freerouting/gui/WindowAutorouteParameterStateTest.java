@@ -2,6 +2,7 @@ package app.freerouting.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import app.freerouting.gui.windows.routing.WindowAutorouteParameterState;
 import org.junit.jupiter.api.Test;
 
 /** Characterizes the validation and timeout rules used by the autoroute parameter dialog. */

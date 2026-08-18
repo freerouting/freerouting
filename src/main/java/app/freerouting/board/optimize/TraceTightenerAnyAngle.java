@@ -1,8 +1,8 @@
 package app.freerouting.board.optimize;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.datastructures.Signum;
 import app.freerouting.datastructures.Stoppable;
 import app.freerouting.geometry.planar.Direction;

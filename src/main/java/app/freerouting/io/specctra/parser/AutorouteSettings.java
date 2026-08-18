@@ -1,6 +1,5 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.Layer;
 import app.freerouting.datastructures.IdentifierType;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
@@ -160,7 +159,7 @@ public final class AutorouteSettings {
   public static void writeScope(
       IndentFileWriter file,
       RouterSettings settings,
-      app.freerouting.board.LayerStructure layerStructure,
+      app.freerouting.board.model.structure.LayerStructure layerStructure,
       IdentifierType identifierType)
       throws IOException {
     file.startScope();
@@ -209,7 +208,7 @@ public final class AutorouteSettings {
     file.write(")");
     file.newLine();
     for (int i = 0; i < layerStructure.layers.length; i++) {
-      final Layer currentLayer = layerStructure.layers[i];
+      final app.freerouting.board.model.structure.Layer currentLayer = layerStructure.layers[i];
       file.startScope();
       file.write("layer_rule ");
       identifierType.write(currentLayer.name, file);

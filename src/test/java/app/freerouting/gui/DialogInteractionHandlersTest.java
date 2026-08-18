@@ -8,6 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import app.freerouting.gui.controls.ComboBoxLayer;
+import app.freerouting.gui.windows.routing.WindowAutorouteParameter;
+import app.freerouting.gui.windows.routing.WindowClearanceMatrix;
+import app.freerouting.gui.windows.routing.WindowNetClasses;
+import app.freerouting.gui.windows.routing.WindowRouteParameter;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.rules.ClearanceMatrix;

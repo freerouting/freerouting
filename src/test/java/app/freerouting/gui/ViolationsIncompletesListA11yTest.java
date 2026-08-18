@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.drc.AirLine;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.drc.DesignRulesChecker;

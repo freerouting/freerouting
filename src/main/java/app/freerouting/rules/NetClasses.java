@@ -1,6 +1,6 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.LayerStructure;
+import app.freerouting.board.model.structure.LayerStructure;
 import java.io.Serializable;
 import java.util.Vector;
 

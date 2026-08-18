@@ -5,7 +5,7 @@ import static app.freerouting.util.gson.GsonProvider.GSON;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.dto.BoardFilePayload;
-import app.freerouting.board.ItemIdGenerator;
+import app.freerouting.board.actions.ItemIdGenerator;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.drc.DesignRulesChecker;

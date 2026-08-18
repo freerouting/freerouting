@@ -8,13 +8,11 @@ import app.freerouting.autoroute.BoardHistory;
 import app.freerouting.autoroute.PerformanceProfiler;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
-import app.freerouting.autoroute.maze.AutorouteControl;
-import app.freerouting.autoroute.pipeline.BatchAutorouterThread;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -53,15 +50,12 @@ final class AutoroutePassRunner {
           new BatchAutorouterThread[router.job.routerSettings.maxThreads];
       final BoardHistory boardHistory = new BoardHistory(router.job.routerSettings.scoring);
 
-      for (int threadIndex = 0;
-          threadIndex < router.job.routerSettings.maxThreads;
-          threadIndex++) {
+      for (int threadIndex = 0; threadIndex < router.job.routerSettings.maxThreads; threadIndex++) {
         PerformanceProfiler.start("board.deepCopy");
         RoutingBoard clonedBoard = router.board.deepCopy();
         PerformanceProfiler.end("board.deepCopy");
 
-        List<Item> clonedAutorouteItemList =
-            new ArrayList<>(router.getAutorouteItems(clonedBoard));
+        List<Item> clonedAutorouteItemList = new ArrayList<>(router.getAutorouteItems(clonedBoard));
         shuffle(clonedAutorouteItemList, router.random);
 
         autorouterThreads[threadIndex] =
@@ -75,10 +69,7 @@ final class AutoroutePassRunner {
                 router.removeUnconnectedVias,
                 true);
         autorouterThreads[threadIndex].setName(
-            "Router thread #"
-                + passNo
-                + "."
-                + router.threadIndexToLetter(threadIndex));
+            "Router thread #" + passNo + "." + router.threadIndexToLetter(threadIndex));
         autorouterThreads[threadIndex].setDaemon(true);
         autorouterThreads[threadIndex].setPriority(Thread.MIN_PRIORITY);
       }
@@ -97,9 +88,7 @@ final class AutoroutePassRunner {
         autorouterThread.start();
       }
 
-      for (int threadIndex = 0;
-          threadIndex < router.job.routerSettings.maxThreads;
-          threadIndex++) {
+      for (int threadIndex = 0; threadIndex < router.job.routerSettings.maxThreads; threadIndex++) {
         BatchAutorouterThread autorouterThread = autorouterThreads[threadIndex];
         try {
           autorouterThread.join(TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
@@ -165,8 +154,7 @@ final class AutoroutePassRunner {
       router.resetPassProfile();
     }
     try {
-      long itemSelectionStart =
-          BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
+      long itemSelectionStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       List<Item> autorouteItemList = router.getAutorouteItems(router.board);
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
         router.profileItemSelectionNanos += System.nanoTime() - itemSelectionStart;
@@ -183,8 +171,7 @@ final class AutoroutePassRunner {
       router.progressItemsSinceStatistics = 0;
       final BoardStatistics stats = router.progressStatistics;
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
-        router.profileBoardStatisticsNanos +=
-            System.nanoTime() - initialProgressStatisticsStart;
+        router.profileBoardStatisticsNanos += System.nanoTime() - initialProgressStatisticsStart;
       }
 
       int itemsToGoCount = autorouteItemList.size();
@@ -197,8 +184,7 @@ final class AutoroutePassRunner {
       routerCounters.failedToBeRoutedCount = 0;
       routerCounters.routedCount = 0;
 
-      long statisticsStart =
-          BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
+      long statisticsStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       DesignRulesChecker tempDrc = new DesignRulesChecker(router.board, null);
       tempDrc.calculateAllIncompletes();
       routerCounters.incompleteCount = tempDrc.getIncompleteCount();
@@ -248,8 +234,7 @@ final class AutoroutePassRunner {
             }
           }
 
-          long routeItemStart =
-              BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
+          long routeItemStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
           PerformanceProfiler.start("autoroute_item");
           final AutorouteAttemptResult autorouterResult =
               router.autorouteItem(
@@ -323,10 +308,8 @@ final class AutoroutePassRunner {
           BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       final BoardStatistics boardStatistics = router.board.getStatistics();
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
-        router.profileBoardStatisticsNanos +=
-            System.nanoTime() - finalBoardStatisticsStart;
-        router.profileIntermediateStatisticsNanos +=
-            System.nanoTime() - finalStatisticsStart;
+        router.profileBoardStatisticsNanos += System.nanoTime() - finalBoardStatisticsStart;
+        router.profileIntermediateStatisticsNanos += System.nanoTime() - finalStatisticsStart;
       }
       routerCounters.passCount = passNo;
       routerCounters.queuedToBeRoutedCount = itemsToGoCount;
@@ -497,10 +480,7 @@ final class AutoroutePassRunner {
             "BatchAutorouter.autoroute_pass",
             "compare_trace_dump_net_item",
             "Item " + netItem.getClass().getSimpleName(),
-            "Net #94,Item #"
-                + netItem.getId()
-                + ",Type="
-                + netItem.getClass().getSimpleName(),
+            "Net #94,Item #" + netItem.getId() + ",Type=" + netItem.getClass().getSimpleName(),
             router.getImpactedPoints(netItem));
       }
     }
@@ -514,15 +494,13 @@ final class AutoroutePassRunner {
       int routed,
       int skipped) {
     router.progressItemsSinceStatistics++;
-    if (router.progressItemsSinceStatistics
-        >= BatchAutorouter.PROGRESS_STATISTICS_ITEM_INTERVAL) {
+    if (router.progressItemsSinceStatistics >= BatchAutorouter.PROGRESS_STATISTICS_ITEM_INTERVAL) {
       long progressStatisticsStart =
           BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       router.progressStatistics = new BoardStatistics(router.board, null, false);
       router.progressItemsSinceStatistics = 0;
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
-        router.profileBoardStatisticsNanos +=
-            System.nanoTime() - progressStatisticsStart;
+        router.profileBoardStatisticsNanos += System.nanoTime() - progressStatisticsStart;
       }
     }
 
@@ -541,10 +519,7 @@ final class AutoroutePassRunner {
     FRLogger.trace(
         "BatchAutorouter.autoroute_pass",
         "compare_trace_remove_tails",
-        "Incompletes "
-            + (before ? "before" : "after")
-            + " remove_tails="
-            + incompleteCount,
+        "Incompletes " + (before ? "before" : "after") + " remove_tails=" + incompleteCount,
         "Autorouter pass #" + passNo,
         new Point[0]);
   }

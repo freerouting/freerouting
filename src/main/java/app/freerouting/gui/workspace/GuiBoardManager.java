@@ -2,23 +2,44 @@ package app.freerouting.gui.workspace;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.BoardObservers;
-import app.freerouting.board.Communication;
-import app.freerouting.board.CoordinateTransform;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.LayerStructure;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Unit;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.state.BoardObservers;
+import app.freerouting.board.state.Communication;
+import app.freerouting.board.state.CoordinateTransform;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
-import app.freerouting.gui.BoardPanel;
+import app.freerouting.gui.board.BoardPanel;
 import app.freerouting.gui.rendering.GraphicsContext;
+import app.freerouting.gui.workspace.controllers.EditorStateController;
+import app.freerouting.gui.workspace.controllers.GuiBoardAnalysisController;
+import app.freerouting.gui.workspace.controllers.GuiBoardEventBridge;
+import app.freerouting.gui.workspace.controllers.GuiBoardHistoryController;
+import app.freerouting.gui.workspace.controllers.GuiBoardInteractionController;
+import app.freerouting.gui.workspace.controllers.GuiBoardLayerController;
+import app.freerouting.gui.workspace.controllers.GuiBoardLegacyEditActions;
+import app.freerouting.gui.workspace.controllers.GuiBoardPresentationController;
+import app.freerouting.gui.workspace.controllers.GuiBoardRoutingActions;
+import app.freerouting.gui.workspace.controllers.GuiBoardRoutingSettings;
+import app.freerouting.gui.workspace.controllers.GuiBoardSessionModeController;
+import app.freerouting.gui.workspace.ports.GuiBoardPersistence;
+import app.freerouting.gui.workspace.ports.WorkspacePort;
+import app.freerouting.gui.workspace.ports.WorkspacePortAdapter;
+import app.freerouting.gui.workspace.progress.ClearanceViolations;
+import app.freerouting.gui.workspace.progress.EdtExecutor;
+import app.freerouting.gui.workspace.progress.RatsNest;
+import app.freerouting.gui.workspace.progress.ScreenMessages;
+import app.freerouting.gui.workspace.session.EditorStateHandle;
+import app.freerouting.gui.workspace.session.GuiBoardSessionState;
+import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.rules.BoardRules;
@@ -65,27 +86,6 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   private final WorkspacePort sessionPort;
 
   /** GUI workspace member. */
-  public GraphicsContext graphicsContext;
-
-  /** GUI workspace member. */
-  public CoordinateTransform coordinateTransform;
-
-  /** GUI workspace member. */
-  public ClearanceViolations clearanceViolations;
-
-  /** GUI workspace member. */
-  boolean paintImmediately;
-
-  /** GUI workspace member. */
-  private EditorStateController editorStateController;
-
-  /** GUI workspace member. */
-  private WorkspaceSettings workspaceSettings;
-
-  /** GUI workspace member. */
-  private app.freerouting.gui.BoardFrame boardFrame;
-
-  /** GUI workspace member. */
   private final GuiBoardSessionState sessionState;
 
   /** GUI workspace member. */
@@ -117,6 +117,27 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
 
   /** GUI workspace member. */
   private final GuiBoardRoutingActions routingActions;
+
+  /** GUI workspace member. */
+  public GraphicsContext graphicsContext;
+
+  /** GUI workspace member. */
+  public CoordinateTransform coordinateTransform;
+
+  /** GUI workspace member. */
+  public ClearanceViolations clearanceViolations;
+
+  /** GUI workspace member. */
+  boolean paintImmediately;
+
+  /** GUI workspace member. */
+  private EditorStateController editorStateController;
+
+  /** GUI workspace member. */
+  private WorkspaceSettings workspaceSettings;
+
+  /** GUI workspace member. */
+  private app.freerouting.gui.board.BoardFrame boardFrame;
 
   /** GUI workspace member. */
   private InteractiveActionThread interactiveActionThread;
@@ -180,27 +201,22 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   }
 
   /** GUI workspace member. */
-  public void setBoardFrame(app.freerouting.gui.BoardFrame boardFrame) {
-    this.boardFrame = boardFrame;
-  }
-
-  /** GUI workspace member. */
-  EditorStateController getInteractionStateController() {
+  public EditorStateController getInteractionStateController() {
     return editorStateController;
   }
 
   /** GUI workspace member. */
-  CoordinateTransform getCoordinateTransform() {
+  public CoordinateTransform getCoordinateTransform() {
     return coordinateTransform;
   }
 
   /** GUI workspace member. */
-  GraphicsContext getGraphicsContext() {
+  public GraphicsContext getGraphicsContext() {
     return graphicsContext;
   }
 
   /** GUI workspace member. */
-  void setInteractionMousePosition(FloatPoint position) {
+  public void setInteractionMousePosition(FloatPoint position) {
     interactionController.setCurrentMousePosition(position);
   }
 
@@ -453,51 +469,56 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   }
 
   /** GUI workspace member. */
-  boolean isInInteractiveDrag() {
+  public boolean isInInteractiveDrag() {
     return editorStateController != null && editorStateController.isInteractiveDrag();
   }
 
-  app.freerouting.gui.BoardFrame getBoardFrame() {
+  public app.freerouting.gui.board.BoardFrame getBoardFrame() {
     return boardFrame;
   }
 
-  boolean isPaintImmediately() {
+  /** GUI workspace member. */
+  public void setBoardFrame(app.freerouting.gui.board.BoardFrame boardFrame) {
+    this.boardFrame = boardFrame;
+  }
+
+  public boolean isPaintImmediately() {
     return paintImmediately;
   }
 
-  RoutingBoard getPresentationBoard() {
+  public RoutingBoard getPresentationBoard() {
     return board;
   }
 
-  GraphicsContext getPresentationGraphicsContext() {
+  public GraphicsContext getPresentationGraphicsContext() {
     return graphicsContext;
   }
 
-  RatsNest getPresentationRatsNest() {
+  public RatsNest getPresentationRatsNest() {
     return analysisController.getExistingRatsnest();
   }
 
-  ClearanceViolations getPresentationClearanceViolations() {
+  public ClearanceViolations getPresentationClearanceViolations() {
     return clearanceViolations;
   }
 
-  ClearanceViolations getAnalysisClearanceViolations() {
+  public ClearanceViolations getAnalysisClearanceViolations() {
     return clearanceViolations;
   }
 
-  void setAnalysisClearanceViolations(ClearanceViolations value) {
+  public void setAnalysisClearanceViolations(ClearanceViolations value) {
     clearanceViolations = value;
   }
 
-  EditorStateController getPresentationEditorStateController() {
+  public EditorStateController getPresentationEditorStateController() {
     return editorStateController;
   }
 
-  InteractiveActionThread getPresentationInteractiveActionThread() {
+  public InteractiveActionThread getPresentationInteractiveActionThread() {
     return interactiveActionThread;
   }
 
-  Point[] getImpactedPoints() {
+  public Point[] getImpactedPoints() {
     return eventBridge.getImpactedPoints();
   }
 
@@ -686,55 +707,55 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   }
 
   // Package-private persistence seam; the public manager façade remains unchanged.
-  RoutingJob getPersistenceRoutingJob() {
+  public RoutingJob getPersistenceRoutingJob() {
     return routingJob;
   }
 
-  RoutingBoard getPersistenceBoard() {
+  public RoutingBoard getPersistenceBoard() {
     return board;
   }
 
-  void setPersistenceBoard(RoutingBoard value) {
+  public void setPersistenceBoard(RoutingBoard value) {
     board = value;
   }
 
-  WorkspaceSettings getPersistenceWorkspaceSettings() {
+  public WorkspaceSettings getPersistenceWorkspaceSettings() {
     return workspaceSettings;
   }
 
-  void setPersistenceWorkspaceSettings(WorkspaceSettings value) {
+  public void setPersistenceWorkspaceSettings(WorkspaceSettings value) {
     workspaceSettings = value;
   }
 
-  CoordinateTransform getPersistenceCoordinateTransform() {
+  public CoordinateTransform getPersistenceCoordinateTransform() {
     return coordinateTransform;
   }
 
-  void setPersistenceCoordinateTransform(CoordinateTransform value) {
+  public void setPersistenceCoordinateTransform(CoordinateTransform value) {
     coordinateTransform = value;
   }
 
-  GraphicsContext getPersistenceGraphicsContext() {
+  public GraphicsContext getPersistenceGraphicsContext() {
     return graphicsContext;
   }
 
-  void setPersistenceGraphicsContext(GraphicsContext value) {
+  public void setPersistenceGraphicsContext(GraphicsContext value) {
     graphicsContext = value;
   }
 
-  void setOriginalBoardChecksum(long value) {
+  public void setOriginalBoardChecksum(long value) {
     originalBoardChecksum = value;
   }
 
-  boolean isBoardReadOnlyForPersistence() {
+  public boolean isBoardReadOnlyForPersistence() {
     return isBoardReadOnly();
   }
 
-  String getPersistenceText(String key) {
+  public String getPersistenceText(String key) {
     return tm.getText(key);
   }
 
-  boolean saveHeadlessSpecctraSessionSes(OutputStream outputStream, String designName) {
+  public boolean saveHeadlessSpecctraSessionSes(OutputStream outputStream, String designName) {
     return super.saveAsSpecctraSessionSes(outputStream, designName);
   }
 
@@ -847,13 +868,13 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   }
 
   /** GUI workspace member. */
-  void requestStopFromSessionPort() {
+  public void requestStopFromSessionPort() {
     if (this.interactiveActionThread != null) {
       this.interactiveActionThread.requestStop();
     }
   }
 
-  void setInteractiveActionThread(InteractiveActionThread worker) {
+  public void setInteractiveActionThread(InteractiveActionThread worker) {
     this.interactiveActionThread = worker;
   }
 

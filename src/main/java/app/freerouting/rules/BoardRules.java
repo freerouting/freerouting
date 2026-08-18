@@ -1,8 +1,8 @@
 package app.freerouting.rules;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.Item;
-import app.freerouting.board.LayerStructure;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.logger.FRLogger;

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.gui.workspace.session.GuiBoardSessionState;
 import org.junit.jupiter.api.Test;
 
 /** Verifies the isolated batch configuration state used by the GUI board façade. */

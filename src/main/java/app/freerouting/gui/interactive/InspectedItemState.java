@@ -1,12 +1,12 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.Connectable;
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Connectable;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.WindowObjectInfo;
 import app.freerouting.gui.rendering.BoardRenderer;
-import app.freerouting.gui.workspace.ClearanceViolations;
+import app.freerouting.gui.windows.board.WindowObjectInfo;
 import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.progress.ClearanceViolations;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;

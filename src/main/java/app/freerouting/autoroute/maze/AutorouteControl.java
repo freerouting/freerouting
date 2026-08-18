@@ -1,8 +1,8 @@
 package app.freerouting.autoroute.maze;
 
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.Point;

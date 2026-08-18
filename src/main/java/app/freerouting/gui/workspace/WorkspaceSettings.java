@@ -1,7 +1,7 @@
 package app.freerouting.gui.workspace;
 
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.sources.GuiSettingsSource;
@@ -273,7 +273,7 @@ public class WorkspaceSettings extends GuiSettingsSource implements Serializable
    *
    * @param is the deserialized instance; must not be {@code null}
    */
-  static void setInstance(WorkspaceSettings is) {
+  public static void setInstance(WorkspaceSettings is) {
     synchronized (WorkspaceSettings.class) {
       instance = is;
     }

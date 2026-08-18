@@ -1,6 +1,6 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.FixedState;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.PolygonShape;

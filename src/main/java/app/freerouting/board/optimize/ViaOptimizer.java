@@ -1,14 +1,14 @@
 package app.freerouting.board.optimize;
 
 import app.freerouting.autoroute.maze.AutorouteControl.ExpansionCostFactor;
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.DrillItemMover;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Via;
+import app.freerouting.board.actions.DrillItemMover;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntPoint;

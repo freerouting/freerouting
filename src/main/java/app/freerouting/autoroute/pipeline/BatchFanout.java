@@ -1,9 +1,9 @@
 package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
-import app.freerouting.board.Component;
-import app.freerouting.board.Pin;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
@@ -40,18 +40,19 @@ public final class BatchFanout {
         settings.fanout != null && settings.fanout.pinSortingOrder != null
             ? settings.fanout.pinSortingOrder
             : "outer_first";
-    Collection<app.freerouting.board.Pin> boardSmdPinList = routingBoard.getSmdPins();
+    Collection<app.freerouting.board.model.items.Pin> boardSmdPinList = routingBoard.getSmdPins();
     // Filter out SMD pins that belong to no net — they don't need fanout and would inflate
     // total pin counts and escape statistics.
-    Collection<app.freerouting.board.Pin> boardSmdPinListWithNets = new LinkedList<>();
-    for (app.freerouting.board.Pin pin : boardSmdPinList) {
+    Collection<app.freerouting.board.model.items.Pin> boardSmdPinListWithNets = new LinkedList<>();
+    for (app.freerouting.board.model.items.Pin pin : boardSmdPinList) {
       if (pin.netCount() > 0) {
         boardSmdPinListWithNets.add(pin);
       }
     }
     this.sortedComponents = new TreeSet<>();
     for (int i = 1; i <= routingBoard.components.count(); ++i) {
-      app.freerouting.board.Component currentBoardComponent = routingBoard.components.get(i);
+      app.freerouting.board.model.structure.Component currentBoardComponent =
+          routingBoard.components.get(i);
       Component currentComponent =
           new Component(currentBoardComponent, boardSmdPinListWithNets, sortingOrder, routingBoard);
       if (currentComponent.smdPinCount > 0) {
@@ -65,7 +66,7 @@ public final class BatchFanout {
       for (Component.Pin pin : component.smdPins) {
         // A pin is already connected if all items in its connected set are on the pin's layer
         // and its unconnected set is empty — same logic as RoutingBoard.fanout().
-        app.freerouting.board.Pin boardPin = pin.boardPin;
+        app.freerouting.board.model.items.Pin boardPin = pin.boardPin;
         int netNumber = boardPin.getNetNumber(0);
         if (boardPin.getUnconnectedSet(netNumber).isEmpty()) {
           alreadyConnected++;
@@ -629,7 +630,7 @@ public final class BatchFanout {
 
   private static class Component implements Comparable<Component> {
 
-    final app.freerouting.board.Component boardComponent;
+    final app.freerouting.board.model.structure.Component boardComponent;
     final int smdPinCount;
     final SortedSet<Pin> smdPins;
 
@@ -639,24 +640,24 @@ public final class BatchFanout {
     final String pinSortingOrder;
 
     Component(
-        app.freerouting.board.Component boardComponent,
-        Collection<app.freerouting.board.Pin> boardSmdPinList,
+        app.freerouting.board.model.structure.Component boardComponent,
+        Collection<app.freerouting.board.model.items.Pin> boardSmdPinList,
         String pinSortingOrder,
         RoutingBoard routingBoard) {
       this.boardComponent = boardComponent;
       this.pinSortingOrder = pinSortingOrder;
 
       // calculate the center of gravity of all SMD pins of this component.
-      Collection<app.freerouting.board.Pin> currentPinList = new LinkedList<>();
+      Collection<app.freerouting.board.model.items.Pin> currentPinList = new LinkedList<>();
       int componentId = boardComponent.id;
-      for (app.freerouting.board.Pin currentBoardPin : boardSmdPinList) {
+      for (app.freerouting.board.model.items.Pin currentBoardPin : boardSmdPinList) {
         if (currentBoardPin.getComponentId() == componentId) {
           currentPinList.add(currentBoardPin);
         }
       }
       double x = 0;
       double y = 0;
-      for (app.freerouting.board.Pin currentPin : currentPinList) {
+      for (app.freerouting.board.model.items.Pin currentPin : currentPinList) {
         FloatPoint currentPoint = currentPin.getCenter().toFloat();
         x += currentPoint.x;
         y += currentPoint.y;
@@ -671,7 +672,7 @@ public final class BatchFanout {
       // calculate the sorted SMD pins of this component
       this.smdPins = new TreeSet<>();
 
-      for (app.freerouting.board.Pin currentBoardPin : currentPinList) {
+      for (app.freerouting.board.model.items.Pin currentBoardPin : currentPinList) {
         this.smdPins.add(new Pin(currentBoardPin, boardSmdPinList, routingBoard));
       }
     }
@@ -693,14 +694,14 @@ public final class BatchFanout {
 
     class Pin implements Comparable<Pin> {
 
-      final app.freerouting.board.Pin boardPin;
+      final app.freerouting.board.model.items.Pin boardPin;
       final double distanceToComponentCenter;
       final double distanceToClosestOnNet;
       final int surroundingsDensity;
 
       Pin(
-          app.freerouting.board.Pin boardPin,
-          Collection<app.freerouting.board.Pin> boardSmdPinList,
+          app.freerouting.board.model.items.Pin boardPin,
+          Collection<app.freerouting.board.model.items.Pin> boardSmdPinList,
           RoutingBoard routingBoard) {
         this.boardPin = boardPin;
         FloatPoint pinLocation = boardPin.getCenter().toFloat();
@@ -710,7 +711,7 @@ public final class BatchFanout {
         double minDistance = Double.MAX_VALUE;
         int netNumber = boardPin.netCount() > 0 ? boardPin.getNetNumber(0) : 0;
         if (netNumber > 0) {
-          for (app.freerouting.board.Pin otherPin : routingBoard.getPins()) {
+          for (app.freerouting.board.model.items.Pin otherPin : routingBoard.getPins()) {
             if (otherPin != boardPin && otherPin.containsNet(netNumber)) {
               double dist = pinLocation.distance(otherPin.getCenter().toFloat());
               if (dist < minDistance) {
@@ -722,10 +723,11 @@ public final class BatchFanout {
         this.distanceToClosestOnNet = minDistance;
 
         // surroundingsDensity calculation
-        double resolution = routingBoard.communication.getResolution(app.freerouting.board.Unit.UM);
+        double resolution =
+            routingBoard.communication.getResolution(app.freerouting.board.model.structure.Unit.UM);
         double maxDist = 20000.0 * resolution; // 20.0 mm in coordinate units
         int density = 0;
-        for (app.freerouting.board.Pin otherPin : boardSmdPinList) {
+        for (app.freerouting.board.model.items.Pin otherPin : boardSmdPinList) {
           if (otherPin != boardPin) {
             double dist = pinLocation.distance(otherPin.getCenter().toFloat());
             if (dist <= maxDist) {

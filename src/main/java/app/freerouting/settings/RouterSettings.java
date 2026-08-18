@@ -1,7 +1,7 @@
 package app.freerouting.settings;
 
 import app.freerouting.autoroute.maze.AutorouteControl;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;

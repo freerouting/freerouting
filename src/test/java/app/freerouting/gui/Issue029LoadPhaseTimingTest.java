@@ -2,10 +2,10 @@ package app.freerouting.gui;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.gui.workspace.RatsNest;
+import app.freerouting.gui.workspace.progress.RatsNest;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
@@ -56,7 +56,7 @@ class Issue029LoadPhaseTimingTest {
 
       long t8 = System.nanoTime();
       app.freerouting.geometry.planar.IntBox bbox = board.getBoundingBox();
-      for (app.freerouting.board.Item currentItem : board.getItems()) {
+      for (app.freerouting.board.model.items.Item currentItem : board.getItems()) {
         app.freerouting.geometry.planar.IntBox currentBoundingBox = currentItem.boundingBox();
         if (currentBoundingBox.ur.x < Integer.MAX_VALUE) {
           bbox = bbox.union(currentBoundingBox);

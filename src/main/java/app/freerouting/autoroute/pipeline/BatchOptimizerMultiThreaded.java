@@ -3,7 +3,7 @@ package app.freerouting.autoroute.pipeline;
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemRouteResult;
 import app.freerouting.autoroute.ItemSelectionStrategy;
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;

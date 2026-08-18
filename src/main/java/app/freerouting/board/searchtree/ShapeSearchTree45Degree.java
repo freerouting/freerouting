@@ -2,11 +2,11 @@ package app.freerouting.board.searchtree;
 
 import app.freerouting.autoroute.expansion.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.expansion.IncompleteFreeSpaceExpansionRoom;
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.BoardOutline;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.Item;
-import app.freerouting.board.ObstacleArea;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.datastructures.ArrayStack;
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import app.freerouting.geometry.planar.IntBox;

@@ -4,12 +4,11 @@ import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.AutorouteEngine;
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.Item;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Unit;
-import app.freerouting.core.StoppableThread;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
@@ -42,11 +41,7 @@ final class AutorouteConnectionRouter {
 
       AutorouteControl autorouteControl =
           new AutorouteControl(
-              router.board,
-              routeNetNo,
-              router.settings,
-              currentViaCosts,
-              router.getTraceCosts());
+              router.board, routeNetNo, router.settings, currentViaCosts, router.getTraceCosts());
       autorouteControl.ripupAllowed = true;
       autorouteControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
       autorouteControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
@@ -72,8 +67,7 @@ final class AutorouteConnectionRouter {
         routeDestSet = connectedSet;
       }
 
-      router.setAirLine(
-          AutorouteAirlineCalculator.calculateAirline(routeStartSet, routeDestSet));
+      router.setAirLine(AutorouteAirlineCalculator.calculateAirline(routeStartSet, routeDestSet));
 
       double maxMilliseconds = 100000 * Math.pow(2, ripupPassNo - 1);
       maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
@@ -90,8 +84,7 @@ final class AutorouteConnectionRouter {
       byte[] strictDrcBoardSnapshot =
           router.settings.isStrictDrc() ? router.board.serialize(false) : null;
 
-      long mazeSearchStart =
-          BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
+      long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       AutorouteAttemptResult autorouteResult =
           autorouteEngine.autorouteConnection(
               routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
@@ -106,8 +99,7 @@ final class AutorouteConnectionRouter {
                 + routeNetNo
                 + ", maxItemId="
                 + maxItemIdBeforeOpt);
-        long pullTightStart =
-            BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
+        long pullTightStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
         router.board.optChangedArea(
             new int[0],
             null,
@@ -144,8 +136,7 @@ final class AutorouteConnectionRouter {
                 timeLimit);
         if (neckedResult != null) {
           AutorouteAttemptResult strictResult =
-              applyStrictDrcAfterRoute(
-                  routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+              applyStrictDrcAfterRoute(routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot);
           if (strictResult != null) {
             return strictResult;
           }
@@ -155,8 +146,7 @@ final class AutorouteConnectionRouter {
 
       if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
         AutorouteAttemptResult strictResult =
-            applyStrictDrcAfterRoute(
-                routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+            applyStrictDrcAfterRoute(routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot);
         if (strictResult != null) {
           return strictResult;
         }
@@ -201,11 +191,7 @@ final class AutorouteConnectionRouter {
 
     AutorouteControl neckControl =
         new AutorouteControl(
-            router.board,
-            routeNetNo,
-            router.settings,
-            viaCosts,
-            router.getTraceCosts());
+            router.board, routeNetNo, router.settings, viaCosts, router.getTraceCosts());
     neckControl.ripupAllowed = true;
     neckControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
     neckControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
@@ -222,8 +208,7 @@ final class AutorouteConnectionRouter {
             router.thread,
             timeLimit,
             router.isRetainAutorouteDatabase());
-    long neckMazeSearchStart =
-        BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
+    long neckMazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
     AutorouteAttemptResult neckResult =
         neckEngine.autorouteConnection(
             routeStartSet, routeDestSet, neckControl, rippedItemList, ripupCosts);
@@ -234,8 +219,7 @@ final class AutorouteConnectionRouter {
       return null;
     }
 
-    long neckPullTightStart =
-        BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
+    long neckPullTightStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
     router.board.optChangedArea(
         new int[0],
         null,

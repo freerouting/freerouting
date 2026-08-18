@@ -1,9 +1,9 @@
 package app.freerouting.board.searchtree;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.Item;
-import app.freerouting.board.PolylineTrace;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;

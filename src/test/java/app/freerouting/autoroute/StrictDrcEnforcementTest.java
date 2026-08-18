@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
-import app.freerouting.board.Item;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.io.specctra.DsnTestFixtures;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class StrictDrcEnforcementTest {
     // behaves as it does for router-inserted items.
     for (Item item : board.getItems()) {
       if ((item instanceof Trace || item instanceof Via) && item.containsNet(netNumber)) {
-        item.setFixedState(app.freerouting.board.FixedState.UNFIXED);
+        item.setFixedState(app.freerouting.board.model.structure.FixedState.UNFIXED);
       }
     }
     long tracesBefore =

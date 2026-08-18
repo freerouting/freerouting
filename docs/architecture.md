@@ -19,7 +19,7 @@ flowchart TD
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["**gui + gui.workspace + gui.interactive**\nSwing desktop"]
+        GUI["**gui windows/menus/board + workspace + interactive**\nSwing desktop"]
         RENDER["**gui.rendering**\nGUI-owned board renderer"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp**\nMCP JSON-RPC + SSE + WS"]
@@ -35,7 +35,7 @@ flowchart TD
 
     subgraph pipeline ["Core Routing Pipeline"]
         IO["**io.specctra**\nDSN / SES reader-writer"]
-        BOARD["**board + board.searchtree + board.optimize**\nLive board model · search trees · optimization"]
+        BOARD["**board.model/facade/state/actions/trace + searchtree + optimize**\nLive board model · search trees · optimization"]
         RULES["**rules**\nNets · clearances"]
         AR["**autoroute.pipeline + maze + expansion + drill + path**\nRouting stages · maze · expansion · path"]
         DRC["**drc**\nDesign-rule checking"]
@@ -80,11 +80,11 @@ Use the table below to jump to the package most likely to own the behavior you a
 | If you are working on... | Start with... |
 | --- | --- |
 | DSN / SES file loading or writing | `app.freerouting.io.specctra` |
-| Board items, board state, or board-level helpers | `app.freerouting.board` |
+| Board items, board state, or board-level helpers | `app.freerouting.board.model.items`, `app.freerouting.board.model.structure`, `app.freerouting.board.facade`, `app.freerouting.board.state`, `app.freerouting.board.actions`, and `app.freerouting.board.trace` |
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute.pipeline`, `app.freerouting.autoroute.maze`, `app.freerouting.autoroute.expansion`, `app.freerouting.autoroute.drill`, `app.freerouting.autoroute.path`, and `app.freerouting.board.optimize` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
+| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui.windows.board`, `app.freerouting.gui.windows.routing`, `app.freerouting.gui.menus`, `app.freerouting.gui.board`, `app.freerouting.gui.controls`, `app.freerouting.gui.support`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
@@ -112,12 +112,15 @@ boundaries are strict ArchUnit rules; no frozen violation store is required.
 
 ## Accepted architectural debt
 
-- `board.ItemInfoPrinter` remains a presentation-shaped writer API; converting it to DTOs is
+- `board.actions.ItemInfoPrinter` remains a presentation-shaped writer API; converting it to DTOs is
   outside this initiative.
 - Incomplete-connection computation remains under `drc`; the package name is broader than
   clearance checking by design.
 - `gui.workspace` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
   moving that state fully into views is outside this initiative.
+- `gui.board`, `gui.windows.*`, `gui.menus`, and `gui.controls` retain bidirectional `BoardFrame`
+  owner references after the Phase 8 split; ArchUnit cycle checks apply to
+  `gui.workspace` / `gui.interactive` / `gui.rendering` only.
 
 ## Package Glossary
 
@@ -131,7 +134,18 @@ Import and export for board files. The public DSN and SES entry points are in th
 
 ### `app.freerouting.board`
 
-The live board model: components, pins, vias, traces, layers, and the board-level operations that mutate them.
+The live board model is split into cohesive subpackages. There are no remaining Java sources in the
+`board` root package.
+
+- `board.model.items` — pins, vias, traces, conduction areas, keepouts, and connectivity.
+- `board.model.structure` — layers, outline, components, units, and fixed-state.
+- `board.trace` — polyline-trace geometry, normalization, and search-tree adaptation.
+- `board.facade` — `BasicBoard`, `RoutingBoard`, and repository/snapshot/search/undo façades.
+- `board.state` — observers, communication, changed-area, coordinate transform, and comparison.
+- `board.actions` — forced routing, item inspection/selection, drill-item moves, and ID generation.
+
+Start with [BasicBoard.java](src/main/java/app/freerouting/board/facade/BasicBoard.java) and
+[RoutingBoard.java](src/main/java/app/freerouting/board/facade/RoutingBoard.java).
 
 ### `app.freerouting.board.searchtree`
 
@@ -183,8 +197,17 @@ Planar geometry primitives and helper classes used throughout routing and board 
 
 ### `app.freerouting.gui`
 
-The Swing user interface: frames, dialogs, menus, panels, and rendering support. Accessibility
-coverage uses the frame-free component seams in `BoardMenuBar`, `BoardToolbar`, and
+The Swing user interface is split into cohesive subpackages. There are no remaining Java sources in
+the `gui` root package.
+
+- `gui.windows.board` — board/information windows (`WindowAbout`, `WindowNets`, `WindowVisibility`).
+- `gui.windows.routing` — routing, rules, clearance, via, and autoroute windows.
+- `gui.menus` — board menus and popup menus (`BoardMenuBar`, `BoardMenuFile`, `PopupMenuMain`).
+- `gui.board` — board shell and frame classes (`BoardFrame`, `BoardPanel`, `GuiManager`, toolbars).
+- `gui.controls` — reusable controls (`ColorManager`, combo boxes, progress controls).
+- `gui.support` — GUI defaults, text, and progress support (`GuiDefaultsFile`, `GuiTextManager`).
+
+Accessibility coverage uses the frame-free component seams in `BoardMenuBar`, `BoardToolbar`, and
 `WindowVisibility`; these keep menu, toolbar, and settings workflows testable under forced
 headless mode without creating top-level windows.
 
@@ -196,12 +219,10 @@ state.
 
 ### `app.freerouting.gui.workspace`
 
-The GUI board workspace boundary: `GuiBoardManager`, `GuiBoardAnalysisController`,
-`GuiBoardRoutingSettings`, `GuiBoardHistoryController`, `GuiBoardLayerController`,
-`GuiBoardSessionModeController`, `GuiBoardEventBridge`, `GuiBoardLegacyEditActions`,
-`WorkspaceContract`, `WorkspaceSettings`, `ScreenMessages`, `GuiRoutingJobWorker`, action threads,
-ratsnest/violation presentation façades, opaque
-`EditorStateHandle`/`EditorStateKind`, `EditorEvent`, and `InteractiveCommand`. This package owns no
+The GUI board workspace boundary. The root package is a compatibility façade with `GuiBoardManager`,
+`WorkspaceContract`, and `WorkspaceSettings`. Collaborators live in `gui.workspace.controllers`,
+`gui.workspace.session`, `gui.workspace.ports`, and `gui.workspace.progress` (`ScreenMessages`,
+`GuiRoutingJobWorker`, ratsnest, and route-progress façades). This package owns no
 concrete editor state and has no dependency on `gui.interactive`; GUI views perform initial-state
 registration.
 
@@ -257,8 +278,11 @@ Several implementation areas live one level below the top-level package grouping
 - `app.freerouting.autoroute.events` contains routing event callbacks; start with [BoardUpdatedEvent.java](src/main/java/app/freerouting/autoroute/events/BoardUpdatedEvent.java).
 - `app.freerouting.autoroute.pipeline` contains the shared routing sequencer; start with [RoutingPipeline.java](src/main/java/app/freerouting/autoroute/pipeline/RoutingPipeline.java).
 - `app.freerouting.board.searchtree` contains board spatial indexes; start with [SearchTreeManager.java](src/main/java/app/freerouting/board/searchtree/SearchTreeManager.java).
-- `app.freerouting.board` keeps board services behind the stable `BasicBoard` and `RoutingBoard`
+- `app.freerouting.board.facade` keeps board services behind the stable `BasicBoard` and `RoutingBoard`
   façades: item storage/connectivity/snapshots, routing operations/search, and routing undo/redo.
+- `app.freerouting.gui.windows.board` and `app.freerouting.gui.windows.routing` contain the Swing
+  information and routing-parameter windows; start with [WindowVisibility.java](src/main/java/app/freerouting/gui/windows/board/WindowVisibility.java) and [WindowAutorouteParameter.java](src/main/java/app/freerouting/gui/windows/routing/WindowAutorouteParameter.java).
+- `app.freerouting.gui.board` contains the board shell; start with [BoardFrame.java](src/main/java/app/freerouting/gui/board/BoardFrame.java).
 
 ## How The Code Fits Together
 
@@ -337,9 +361,9 @@ The optimizer changes the board more conservatively than the autorouter. Its job
 
 ### GUI and Interaction Path
 
-The interactive editor is split between `gui`, `gui.workspace`, and `gui.interactive`.
+The interactive editor is split between GUI window/shell packages, `gui.workspace`, and `gui.interactive`.
 
-- `gui` contains the visible application components.
+- `gui.windows.*`, `gui.menus`, `gui.board`, `gui.controls`, and `gui.support` contain the visible application components.
 - `gui.workspace` contains the opaque workspace facade and board-workspace services.
 - `gui.interactive` contains the concrete state machine and its inverted controller.
 - Views construct the controller and bootstrap `RouteMenuState`; workspace code never names a concrete state.

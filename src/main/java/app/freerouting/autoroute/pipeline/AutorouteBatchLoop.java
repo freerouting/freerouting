@@ -11,8 +11,8 @@ import static app.freerouting.autoroute.pipeline.BatchAutorouter.STOP_AT_PASS_MO
 import app.freerouting.autoroute.BoardHistory;
 import app.freerouting.autoroute.PerformanceProfiler;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
-import app.freerouting.board.Item;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
@@ -21,7 +21,6 @@ import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.rules.Net;
 import app.freerouting.settings.RouterSettings;
 import java.time.Instant;
 import java.util.Set;
@@ -100,7 +99,7 @@ final class AutorouteBatchLoop {
         // pins, count those that are already fully connected (empty unconnected set).
         int netConnectedSmdPins = 0;
         int alreadyConnectedAtStart = 0;
-        for (app.freerouting.board.Pin pin : router.board.getSmdPins()) {
+        for (app.freerouting.board.model.items.Pin pin : router.board.getSmdPins()) {
           if (pin.netCount() > 0) {
             netConnectedSmdPins++;
             if (pin.getUnconnectedSet(pin.getNetNumber(0)).isEmpty()) {
@@ -187,8 +186,7 @@ final class AutorouteBatchLoop {
         if (fanoutAllocatedMbStart >= 0f && fanoutAllocatedMbEnd >= fanoutAllocatedMbStart) {
           fanoutAllocatedMb = fanoutAllocatedMbEnd - fanoutAllocatedMbStart;
         } else {
-          fanoutAllocatedMb =
-              Math.max(0f, AutorouteRuntimeMetrics.allocatedMemoryMbSnapshot(job));
+          fanoutAllocatedMb = Math.max(0f, AutorouteRuntimeMetrics.allocatedMemoryMbSnapshot(job));
         }
 
         float fanoutPeakHeapMb =
@@ -587,7 +585,6 @@ final class AutorouteBatchLoop {
     }
 
     return !router.thread.isStopAutoRouterRequested();
-
   }
 
   private int calculateIncompleteCount(RoutingBoard board) {

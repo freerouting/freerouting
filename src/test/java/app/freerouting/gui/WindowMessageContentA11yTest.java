@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
+import app.freerouting.gui.windows.board.WindowMessage;
 import java.awt.Component;
 import javax.accessibility.AccessibleRole;
 import javax.swing.JPanel;

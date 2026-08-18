@@ -1,7 +1,7 @@
 package app.freerouting.io.specctra;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.FixedState;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.Polyline;

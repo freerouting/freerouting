@@ -1,6 +1,6 @@
 package app.freerouting.autoroute;
 
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Item;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

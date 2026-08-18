@@ -5,15 +5,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import app.freerouting.autoroute.pipeline.RoutingPipeline;
-import app.freerouting.board.ItemIdGenerator;
-import app.freerouting.board.Unit;
+import app.freerouting.board.actions.ItemIdGenerator;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
-import app.freerouting.gui.workspace.GuiRoutingJobWorker;
-import app.freerouting.gui.workspace.RunGeneration;
-import app.freerouting.gui.workspace.WorkspacePort;
+import app.freerouting.gui.workspace.ports.WorkspacePort;
+import app.freerouting.gui.workspace.progress.GuiRoutingJobWorker;
+import app.freerouting.gui.workspace.session.RunGeneration;
 import app.freerouting.management.HeadlessBoardManager;
 import app.freerouting.settings.sources.TestingSettings;
 import java.util.Collection;
@@ -22,6 +22,28 @@ import org.junit.jupiter.api.Test;
 
 /** Compares the GUI and headless adapters using the shared routing pipeline. */
 class RoutingPipelineComparisonTest extends RoutingFixtureTest {
+
+  private static TestingSettings createTestingSettings() {
+    TestingSettings settings = new TestingSettings();
+    settings.setMaxPasses(1);
+    settings.setMaxItems(2);
+    settings.setOptimizerEnabled(true);
+    settings.setOptimizerMaxPasses(1);
+    settings.setOptimizerMaxItems(2);
+    return settings;
+  }
+
+  private static void loadBoard(RoutingJob job) {
+    HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+    try {
+      boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to load DSN board", e);
+    }
+    job.board = boardManager.getRoutingBoard();
+    job.routerSettings.maxThreads = 1;
+    job.routerSettings.optimizer.maxThreads = 1;
+  }
 
   @Test
   void guiAndHeadlessPipelinesMatchOnDac2020Fixture() {
@@ -51,28 +73,6 @@ class RoutingPipelineComparisonTest extends RoutingFixtureTest {
     Collection<?> headlessViolations =
         new DesignRulesChecker(headlessJob.board, null).getAllClearanceViolations();
     assertEquals(guiViolations.size(), headlessViolations.size());
-  }
-
-  private static TestingSettings createTestingSettings() {
-    TestingSettings settings = new TestingSettings();
-    settings.setMaxPasses(1);
-    settings.setMaxItems(2);
-    settings.setOptimizerEnabled(true);
-    settings.setOptimizerMaxPasses(1);
-    settings.setOptimizerMaxItems(2);
-    return settings;
-  }
-
-  private static void loadBoard(RoutingJob job) {
-    HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
-    try {
-      boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to load DSN board", e);
-    }
-    job.board = boardManager.getRoutingBoard();
-    job.routerSettings.maxThreads = 1;
-    job.routerSettings.optimizer.maxThreads = 1;
   }
 
   private static final class TestGuiRoutingJobWorker extends GuiRoutingJobWorker {
