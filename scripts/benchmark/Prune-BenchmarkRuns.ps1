@@ -131,11 +131,11 @@ else:
     print('\nDryRun: No changes written.')
 "@
 
-$removeStr = ($RemoveVersions -join ",")
+$removeStr = if ($RemoveVersions.Count -gt 0) { ($RemoveVersions -join ",") } else { "none" }
 $isKeepLatest = if ($KeepLatestOnly) { "true" } else { "false" }
 $isDryRun = if ($DryRun) { "true" } else { "false" }
 
-python -c $pyPruneScript $jsonPath $removeStr $OlderThanDays $isKeepLatest $isDryRun
+python -c $pyPruneScript "$jsonPath" "$removeStr" "$OlderThanDays" "$isKeepLatest" "$isDryRun"
 
 if (-not $DryRun -and $RegenerateReports) {
     Write-Host "`nRegenerating Markdown, HTML, and chart summaries from pruned benchmarks.json..." -ForegroundColor Cyan

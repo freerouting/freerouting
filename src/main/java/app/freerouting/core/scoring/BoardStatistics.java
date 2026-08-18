@@ -334,9 +334,33 @@ public class BoardStatistics implements Serializable {
 
     if (includeClearanceViolations) {
       var clearanceDrc = new app.freerouting.drc.DesignRulesChecker(board, null);
-      this.clearanceViolations.totalCount = clearanceDrc.getAllClearanceViolations().size();
+      java.util.Collection<app.freerouting.drc.ClearanceViolation> violationsList =
+          clearanceDrc.getAllClearanceViolations();
+      this.clearanceViolations.totalCount = violationsList.size();
+      if (!violationsList.isEmpty()) {
+        double minViolation = Double.MAX_VALUE;
+        double maxViolation = 0.0;
+        double sumViolation = 0.0;
+        for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
+          double shortfall = Math.max(0.0, cv.expectedClearance - cv.actualClearance);
+          double shortfallMm = shortfall * boardUnitToMmFactor;
+          minViolation = Math.min(minViolation, shortfallMm);
+          maxViolation = Math.max(maxViolation, shortfallMm);
+          sumViolation += shortfallMm;
+        }
+        this.clearanceViolations.minViolationMm = minViolation;
+        this.clearanceViolations.maxViolationMm = maxViolation;
+        this.clearanceViolations.avgViolationMm = sumViolation / violationsList.size();
+      } else {
+        this.clearanceViolations.minViolationMm = 0.0;
+        this.clearanceViolations.maxViolationMm = 0.0;
+        this.clearanceViolations.avgViolationMm = 0.0;
+      }
     } else {
       this.clearanceViolations.totalCount = 0;
+      this.clearanceViolations.minViolationMm = 0.0;
+      this.clearanceViolations.maxViolationMm = 0.0;
+      this.clearanceViolations.avgViolationMm = 0.0;
     }
 
     // Convert all length values from board.communication.unit to the preferred unit

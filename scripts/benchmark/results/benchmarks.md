@@ -1,16 +1,29 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-08-18 17:50:31
+Generated on: 2026-08-18 23:24:36
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
 
-## Summary Table (Best Results per Fixture)
+## Summary
 
-| Version | Fixture Count | Failures | Non-perfect | Avg. Score |
-| :------ | ------------: | -------: | ----------: | ---------: |
-| 1.9.0   |            20 |        1 |          19 |      902.9 |
-| 2.2.4   |            20 |        2 |          19 |      891.5 |
-| 2.3.0   |            20 |        2 |          20 |  **915.1** |
+### Summary Table (All Tiers Combined)
+Comprehensive performance across all benchmark fixtures.
+
+| Version | Fixtures | Perfects   | All-routed | Timeouts  | Failures   | Avg. Score |
+| :------ | -------: | ---------: | ---------: | --------: | ---------: | ---------: |
+| 1.9.0   |       20 | 8/20 (40%) | 9/20 (45%) | 1/20 (5%) |  1/20 (5%) |      902.9 |
+| 2.2.4   |       20 | 7/20 (35%) | 7/20 (35%) | 0/20 (0%) | 2/20 (10%) |      891.5 |
+| 2.3.0   |       20 | 3/20 (15%) | 8/20 (40%) | 1/20 (5%) | 2/20 (10%) |  **915.1** |
+
+
+### General / Legacy Golden Fixtures
+In-repo regression and golden fixture benchmark suite.
+
+| Version | Fixtures | Perfects   | All-routed | Timeouts  | Failures   | Avg. Score |
+| :------ | -------: | ---------: | ---------: | --------: | ---------: | ---------: |
+| 1.9.0   |       20 | 8/20 (40%) | 9/20 (45%) | 1/20 (5%) |  1/20 (5%) |      902.9 |
+| 2.2.4   |       20 | 7/20 (35%) | 7/20 (35%) | 0/20 (0%) | 2/20 (10%) |      891.5 |
+| 2.3.0   |       20 | 3/20 (15%) | 8/20 (40%) | 1/20 (5%) | 2/20 (10%) |  **915.1** |
 
 
 ## Group: [DAC2020_boards](../fixtures/DAC2020_boards)

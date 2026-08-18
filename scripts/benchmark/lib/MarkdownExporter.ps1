@@ -132,83 +132,180 @@ function Export-MarkdownReport {
     [void]$sb.AppendLine("This report lists the latest benchmark run results for each Freerouting version and fixture combination.")
     [void]$sb.AppendLine()
 
-    # --- Summary Table ---
-    [void]$sb.AppendLine("## Summary Table (Best Results per Fixture)")
+    # --- Multi-Tier Summary Tables ---
+    $catalogLookup = @{}
+    $catalogPath = Join-Path $FixturesDir "PCBench\catalog.json"
+    if (Test-Path $catalogPath) {
+        try {
+            $cat = Get-Content $catalogPath -Raw | ConvertFrom-Json
+            foreach ($b in $cat.boards) {
+                $catalogLookup[$b.board_id] = $b.tier
+            }
+        } catch {}
+    }
+
+    $getTierFn = {
+        param($r)
+        if ($r.fixture.tier) { return [string]$r.fixture.tier }
+        $rel = [string]$r.fixture.relative_path
+        if ($rel -match 'PCBench[/\\]([^/\\]+)') {
+            $boardId = $Matches[1]
+            if ($catalogLookup.ContainsKey($boardId)) {
+                return [string]$catalogLookup[$boardId]
+            }
+        }
+        return "Other"
+    }
+
+    $buildSummaryTableFn = {
+        param(
+            [string]$Title,
+            [System.Collections.IEnumerable]$TargetRuns,
+            [string]$Description = ""
+        )
+
+        $runsList = @($TargetRuns)
+        if ($runsList.Count -eq 0) { return "" }
+
+        $groupedByFixture = $runsList | Group-Object -Property { $_.fixture.relative_path }
+        $versionStats = @{}
+
+        foreach ($verGroup in ($runsList | Group-Object -Property { $_.binary.version_label })) {
+            $version = $verGroup.Name
+            $fixtureCount = 0
+            $failures = 0
+            $timeouts = 0
+            $perfects = 0
+            $allRouted = 0
+            $avgScoreValues = [System.Collections.ArrayList]::new()
+
+            foreach ($fixtureGroup in $groupedByFixture) {
+                $versionRuns = $fixtureGroup.Group | Where-Object { $_.binary.version_label -eq $version }
+                if (-not $versionRuns) { continue }
+
+                $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
+                $fixtureCount++
+
+                $failed = Test-RunIsFailed $latestRun
+                $isTimeout = $latestRun.exit.timed_out -eq $true -or $latestRun.log_analysis.timed_out -eq $true
+                if ($isTimeout) { $timeouts++ }
+                if ($failed) { $failures++ }
+
+                $unrouted = if ($latestRun.drc.final_unrouted -ne $null) {
+                    [int]$latestRun.drc.final_unrouted
+                } elseif ($latestRun.quality.final_unrouted -ne $null) {
+                    [int]$latestRun.quality.final_unrouted
+                } else { $null }
+
+                $violations = if ($latestRun.drc.summary_violations -ne $null) {
+                    [int]$latestRun.drc.summary_violations
+                } elseif ($latestRun.quality.clearance_violations -ne $null) {
+                    [int]$latestRun.quality.clearance_violations
+                } else { $null }
+
+                $score = Get-RunScoreValue $latestRun
+
+                if (-not $failed -and $unrouted -ne $null -and $unrouted -eq 0) {
+                    $allRouted++
+                    if ($violations -ne $null -and $violations -eq 0) {
+                        $perfects++
+                    }
+                }
+
+                if (-not $failed -and $score -ne $null) {
+                    [void]$avgScoreValues.Add($score)
+                }
+            }
+
+            $avgScore = $null
+            if ($avgScoreValues.Count -gt 0) {
+                $avgScore = (($avgScoreValues | Measure-Object -Average).Average)
+            }
+
+            $versionStats[$version] = [PSCustomObject]@{
+                Version      = $version
+                FixtureCount = $fixtureCount
+                Perfects     = $perfects
+                AllRouted    = $allRouted
+                Timeouts     = $timeouts
+                Failures     = $failures
+                AvgScore     = $avgScore
+            }
+        }
+
+        $avgScoreStats = @($versionStats.Values | Where-Object { $_.AvgScore -ne $null })
+        $maxAvgScore = $null
+        if ($avgScoreStats.Count -gt 0) {
+            $maxAvgScore = ($avgScoreStats | Measure-Object -Property AvgScore -Maximum).Maximum
+        }
+
+        $summaryHeaders = @("Version", "Fixtures", "Perfects", "All-routed", "Timeouts", "Failures", "Avg. Score")
+        $summaryAlignments = @("L", "R", "R", "R", "R", "R", "R")
+        $summaryRows = [System.Collections.ArrayList]::new()
+
+        foreach ($stat in ($versionStats.Values | Sort-Object -Property Version)) {
+            $tot = $stat.FixtureCount
+            $perfPct = if ($tot -gt 0) { [math]::Round(($stat.Perfects / $tot) * 100, 1) } else { 0.0 }
+            $allPct  = if ($tot -gt 0) { [math]::Round(($stat.AllRouted / $tot) * 100, 1) } else { 0.0 }
+            $toPct   = if ($tot -gt 0) { [math]::Round(($stat.Timeouts / $tot) * 100, 1) } else { 0.0 }
+            $failPct = if ($tot -gt 0) { [math]::Round(($stat.Failures / $tot) * 100, 1) } else { 0.0 }
+
+            $perfStr = "$($stat.Perfects)/$tot ($perfPct%)"
+            $allStr  = "$($stat.AllRouted)/$tot ($allPct%)"
+            $toStr   = "$($stat.Timeouts)/$tot ($toPct%)"
+            $failStr = "$($stat.Failures)/$tot ($failPct%)"
+
+            $avgScoreStr = if ($stat.AvgScore -ne $null) {
+                $formatted = $stat.AvgScore.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture)
+                if ($maxAvgScore -ne $null -and $stat.AvgScore -eq $maxAvgScore) { "**$formatted**" } else { $formatted }
+            } else {
+                "N/A"
+            }
+
+            [void]$summaryRows.Add(@(
+                $stat.Version,
+                $stat.FixtureCount,
+                $perfStr,
+                $allStr,
+                $toStr,
+                $failStr,
+                $avgScoreStr
+            ))
+        }
+
+        $tableSb = [System.Text.StringBuilder]::new()
+        [void]$tableSb.AppendLine("### $Title")
+        if ($Description) {
+            [void]$tableSb.AppendLine($Description)
+        }
+        [void]$tableSb.AppendLine()
+        [void]$tableSb.AppendLine((Format-MarkdownTable $summaryHeaders $summaryAlignments $summaryRows))
+        [void]$tableSb.AppendLine()
+        return $tableSb.ToString()
+    }
+
+    [void]$sb.AppendLine("## Summary")
     [void]$sb.AppendLine()
 
-    $versionStats = @{}
+    # 1. Overall Summary Table
+    [void]$sb.Append((& $buildSummaryTableFn "Summary Table (All Tiers Combined)" $runs "Comprehensive performance across all benchmark fixtures."))
 
-    foreach ($verGroup in ($runs | Group-Object -Property { $_.binary.version_label })) {
-        $version = $verGroup.Name
-        $fixtureCount = 0
-        $failures = 0
-        $nonPerfect = 0
-        $avgScoreValues = [System.Collections.ArrayList]::new()
-
-        foreach ($fixtureGroup in $grouped) {
-            $versionRuns = $fixtureGroup.Group | Where-Object { $_.binary.version_label -eq $version }
-            if (-not $versionRuns) { continue }
-
-            $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
-            $fixtureCount++
-
-            $failed = Test-RunIsFailed $latestRun
-            $score = Get-RunScoreValue $latestRun
-
-            if ($failed) {
-                $failures++
-            }
-            if ($score -ne $null -and $score -lt 1000) {
-                $nonPerfect++
-            }
-            if (-not $failed -and $score -ne $null -and $score -lt 1000) {
-                [void]$avgScoreValues.Add($score)
-            }
-        }
-
-        $avgScore = $null
-        if ($avgScoreValues.Count -gt 0) {
-            $avgScore = (($avgScoreValues | Measure-Object -Average).Average)
-        }
-
-        $versionStats[$version] = [PSCustomObject]@{
-            Version      = $version
-            FixtureCount = $fixtureCount
-            Failures     = $failures
-            NonPerfect   = $nonPerfect
-            AvgScore     = $avgScore
-        }
+    # Segment by Tier
+    $tierBuckets = [ordered]@{
+        "A"     = @{ Title = "Tier A: Canary Gate"; Desc = "Fast-solving 2-layer boards (0 unrouted, 0 clearance violations expected)." }
+        "B"     = @{ Title = "Tier B: Routine Benchmarks"; Desc = "Standard 2-4 layer boards evaluated for routine optimization progress." }
+        "C"     = @{ Title = "Tier C: Complex / Multi-Layer"; Desc = "Dense and 6+ layer boards requiring deeper pathfinding." }
+        "D"     = @{ Title = "Tier D: Extreme Stress / Diagnostic"; Desc = "High net-count and large surface-area stress boards." }
+        "Other" = @{ Title = "General / Legacy Golden Fixtures"; Desc = "In-repo regression and golden fixture benchmark suite." }
     }
 
-    $avgScoreStats = @($versionStats.Values | Where-Object { $_.AvgScore -ne $null })
-    $maxAvgScore = $null
-    if ($avgScoreStats.Count -gt 0) {
-        $maxAvgScore = ($avgScoreStats | Measure-Object -Property AvgScore -Maximum).Maximum
-    }
-
-    $summaryHeaders = @("Version", "Fixture Count", "Failures", "Non-perfect", "Avg. Score")
-    $summaryAlignments = @("L", "R", "R", "R", "R")
-    $summaryRows = [System.Collections.ArrayList]::new()
-
-    foreach ($stat in ($versionStats.Values | Sort-Object -Property Version)) {
-        $avgScoreStr = if ($stat.AvgScore -ne $null) {
-            $formatted = $stat.AvgScore.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture)
-            if ($maxAvgScore -ne $null -and $stat.AvgScore -eq $maxAvgScore) { "**$formatted**" } else { $formatted }
-        } else {
-            "N/A"
+    foreach ($tKey in $tierBuckets.Keys) {
+        $matchingRuns = @($runs | Where-Object { (& $getTierFn $_) -eq $tKey })
+        if ($matchingRuns.Count -gt 0) {
+            $b = $tierBuckets[$tKey]
+            [void]$sb.Append((& $buildSummaryTableFn $b.Title $matchingRuns $b.Desc))
         }
-
-        $null = $summaryRows.Add(@(
-            $stat.Version,
-            $stat.FixtureCount,
-            $stat.Failures,
-            $stat.NonPerfect,
-            $avgScoreStr
-        ))
     }
-
-    [void]$sb.AppendLine((Format-MarkdownTable $summaryHeaders $summaryAlignments $summaryRows))
-    [void]$sb.AppendLine()
 
     $upArrowGreen = "$([char]0x2191)$([char]::ConvertFromUtf32(0x1F7E2))" # ↑🟢
     $downArrowRed = "$([char]0x2193)$([char]::ConvertFromUtf32(0x1F53B))" # ↓🔻
