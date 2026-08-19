@@ -23,7 +23,8 @@ param(
     [string]$Tier = "All",
     [int]$Workers = 4,
     [int]$MaxBoards = 0,
-    [string]$VersionLabel = "v2.3.1-SNAPSHOT"
+    [string]$VersionLabel = "v2.3.1-SNAPSHOT",
+    [switch]$Force
 )
 
 $ErrorActionPreference = "Stop"
@@ -37,6 +38,9 @@ $pyArgs = @(
 )
 if ($MaxBoards -gt 0) {
     $pyArgs += @("--max-boards", [string]$MaxBoards)
+}
+if ($Force) {
+    $pyArgs += @("--force")
 }
 
 python @pyArgs

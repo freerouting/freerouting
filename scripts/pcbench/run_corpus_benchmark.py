@@ -224,6 +224,7 @@ def main() -> int:
     parser.add_argument("--workers", default=4, type=int)
     parser.add_argument("--max-boards", default=0, type=int)
     parser.add_argument("--version-label", default="v2.3.1-SNAPSHOT")
+    parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
     args = parser.parse_args()
 
     fixtures_dir = args.fixtures_dir
@@ -260,16 +261,6 @@ def main() -> int:
     except Exception:
         git_sha = "unknown"
 
-    print(f"Starting PCBench Corpus Benchmark ({len(boards)} boards, Tier={args.tier}, Workers={args.workers})...", flush=True)
-
-    tasks = []
-    for b in boards:
-        b_id = b.get("board_id")
-        b_dir = fixtures_dir / b_id
-        budget = b.get("timeout_budget", "00:05:00")
-        if (b_dir / "unrouted.dsn").exists():
-            tasks.append((jar_path, b_dir, output_dir, log_dir, budget, args.version_label, git_sha, jar_sha256, jar_size))
-
     # Load existing benchmarks.json
     bench_data: dict[str, Any] = {"schema_version": 2, "runs": []}
     if benchmarks_json.exists():
@@ -279,6 +270,38 @@ def main() -> int:
             pass
 
     existing_runs = {r.get("cache_key"): r for r in bench_data.get("runs", [])}
+
+    tasks = []
+    already_completed = 0
+    for b in boards:
+        b_id = b.get("board_id")
+        b_dir = fixtures_dir / b_id
+        budget = b.get("timeout_budget", "00:05:00")
+        
+        if not args.force:
+            is_already_run = any(
+                r.get("fixture", {}).get("relative_path") == f"PCBench/{b_id}/unrouted.dsn"
+                and r.get("binary", {}).get("version_label") == args.version_label
+                and r.get("quality", {}).get("final_unrouted") is not None
+                for r in existing_runs.values()
+            )
+            if is_already_run:
+                already_completed += 1
+                continue
+
+        if (b_dir / "unrouted.dsn").exists():
+            tasks.append((jar_path, b_dir, output_dir, log_dir, budget, args.version_label, git_sha, jar_sha256, jar_size))
+
+    print(
+        f"Starting PCBench Corpus Benchmark ({len(boards)} total, {already_completed} already cached, "
+        f"{len(tasks)} remaining to run, Tier={args.tier}, Workers={args.workers})...",
+        flush=True,
+    )
+
+    if not tasks:
+        print("All requested boards are already benchmarked in benchmarks.json! Regenerating reports...", flush=True)
+        subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"], check=False)
+        return 0
 
     completed = 0
     t_start = time.perf_counter()
