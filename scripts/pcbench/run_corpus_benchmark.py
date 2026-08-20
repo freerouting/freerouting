@@ -20,6 +20,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+# Reconfigure stdout/stderr to UTF-8 with fallback
+try:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 # Enable ANSI colors on Windows Console
 if sys.platform == "win32":
     try:
@@ -397,11 +406,18 @@ def render_dashboard(
     lines.append(f"{C_BCYAN}{'=' * 105}{C_RESET}")
 
     output_text = "\n".join(lines)
-    if in_place and sys.stdout.isatty():
-        sys.stdout.write("\033[H\033[J" + output_text + "\n")
-        sys.stdout.flush()
-    else:
-        print(output_text, flush=True)
+    try:
+        if in_place and sys.stdout.isatty():
+            sys.stdout.write("\033[H\033[J" + output_text + "\n")
+            sys.stdout.flush()
+        else:
+            print(output_text, flush=True)
+    except Exception:
+        try:
+            safe_text = output_text.encode("ascii", errors="replace").decode("ascii")
+            print(safe_text, flush=True)
+        except Exception:
+            pass
 
 
 def main() -> int:
