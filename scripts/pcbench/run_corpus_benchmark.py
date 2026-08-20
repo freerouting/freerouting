@@ -55,6 +55,8 @@ def route_single_board(
 
     cmd = [
         "java",
+        "-Dfreerouting.log.file.level=INFO",
+        "-Dfreerouting.log.console.level=INFO",
         "-jar",
         str(jar_path),
         "--gui.enabled=false",

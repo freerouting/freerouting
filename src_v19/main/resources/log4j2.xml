@@ -14,10 +14,10 @@
         </File>
     </Appenders>
     <Loggers>
-        <Root level="ALL">
+        <Root level="INFO">
             <AppenderRef level="${sys:freerouting.log.console.level:-INFO}" ref="Console"/>
             <AppenderRef level="ERROR" ref="stderr"/>
-            <AppenderRef level="${sys:freerouting.log.file.level:-DEBUG}" ref="File"/>
+            <AppenderRef level="${sys:freerouting.log.file.level:-INFO}" ref="File"/>
         </Root>
     </Loggers>
 
@@ -26,5 +26,5 @@
         <Property name="default_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %-6level %msg%n</Property>
     </Properties>
 
-    <ThresholdFilter level="trace"/>
+    <ThresholdFilter level="info"/>
 </Configuration>
