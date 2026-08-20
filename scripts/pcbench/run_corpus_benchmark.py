@@ -20,6 +20,38 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+# Enable ANSI colors on Windows Console
+if sys.platform == "win32":
+    try:
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        handle = kernel32.GetStdHandle(-11)
+        mode = ctypes.c_ulong()
+        if kernel32.GetConsoleMode(handle, ctypes.byref(mode)):
+            kernel32.SetConsoleMode(handle, mode.value | 0x0004)
+    except Exception:
+        pass
+
+# Color definitions
+C_RESET = "\033[0m"
+C_BOLD = "\033[1m"
+C_DIM = "\033[2m"
+C_CYAN = "\033[36m"
+C_BCYAN = "\033[1;36m"
+C_GREEN = "\033[32m"
+C_BGREEN = "\033[1;32m"
+C_YELLOW = "\033[33m"
+C_BYELLOW = "\033[1;33m"
+C_BLUE = "\033[34m"
+C_BBLUE = "\033[1;34m"
+C_MAGENTA = "\033[35m"
+C_BMAGENTA = "\033[1;35m"
+C_RED = "\033[31m"
+C_BRED = "\033[1;31m"
+C_WHITE = "\033[37m"
+C_BWHITE = "\033[1;37m"
+C_GRAY = "\033[90m"
+
 
 def compute_sha256(path: Path) -> str:
     """Compute sha256 of a file."""
@@ -30,6 +62,16 @@ def compute_sha256(path: Path) -> str:
         while chunk := f.read(65536):
             h.update(chunk)
     return h.hexdigest()
+
+
+def colorize_status_line(msg: str) -> str:
+    """Highlight status keywords in color."""
+    msg = re.sub(r"\bCLEAN\b", f"{C_BGREEN}CLEAN{C_RESET}", msg)
+    msg = re.sub(r"\bROUTED\b", f"{C_BYELLOW}ROUTED{C_RESET}", msg)
+    msg = re.sub(r"\bUNROUTED\b", f"{C_BBLUE}UNROUTED{C_RESET}", msg)
+    msg = re.sub(r"\bTIMEOUT\b", f"{C_BRED}TIMEOUT{C_RESET}", msg)
+    msg = re.sub(r"\bERROR\b", f"{C_BRED}ERROR{C_RESET}", msg)
+    return msg
 
 
 def parse_phases_from_text(text: str) -> dict[str, Any]:
@@ -306,6 +348,7 @@ def render_dashboard(
     worker_status: dict[int, dict[str, Any]],
     recent_messages: collections.deque[str],
     status_lock: threading.Lock,
+    in_place: bool = True,
 ) -> None:
     """Print updated multi-worker dashboard with live logs and recent history."""
     elapsed = time.perf_counter() - t_start
@@ -316,13 +359,16 @@ def render_dashboard(
     pct = (completed / total) * 100.0 if total > 0 else 0.0
 
     lines = []
-    lines.append("=" * 100)
+    lines.append(f"{C_BCYAN}{'=' * 105}{C_RESET}")
     lines.append(
-        f"PCBench Benchmark: {completed}/{total} ({pct:5.1f}%) | "
-        f"Elapsed: {elapsed_str} | ETA: {eta_str} ({avg_per_board:.1f}s/board) | Workers: {len(worker_status)}"
+        f"{C_BWHITE}PCBench Benchmark:{C_RESET} {C_BYELLOW}{completed}/{total}{C_RESET} "
+        f"({C_BGREEN}{pct:5.1f}%{C_RESET}) | "
+        f"{C_BWHITE}Elapsed:{C_RESET} {C_CYAN}{elapsed_str}{C_RESET} | "
+        f"{C_BWHITE}ETA:{C_RESET} {C_CYAN}{eta_str}{C_RESET} ({C_YELLOW}{avg_per_board:.1f}s/board{C_RESET}) | "
+        f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET}"
     )
-    lines.append("-" * 100)
-    lines.append("Active Workers:")
+    lines.append(f"{C_CYAN}{'-' * 105}{C_RESET}")
+    lines.append(f"{C_BWHITE}Active Workers:{C_RESET}")
 
     now = time.perf_counter()
     with status_lock:
@@ -333,20 +379,29 @@ def render_dashboard(
                 dur_str = f"{run_sec // 60:02d}:{run_sec % 60:02d}"
                 board = info.get("board", "unknown")
                 last = info.get("last_line", "")
-                lines.append(f"  [Worker {wid}] {board:<35} [{dur_str}] -> {last}")
+                lines.append(
+                    f"  {C_BMAGENTA}[Worker {wid}]{C_RESET} "
+                    f"{C_BWHITE}{board:<36}{C_RESET} "
+                    f"{C_BYELLOW}[{dur_str}]{C_RESET} -> {C_GRAY}{last}{C_RESET}"
+                )
             else:
-                lines.append(f"  [Worker {wid}] Idle")
+                lines.append(f"  {C_BMAGENTA}[Worker {wid}]{C_RESET} {C_DIM}Idle{C_RESET}")
 
-    lines.append("-" * 100)
-    lines.append("Recent Completed (Last 10):")
+    lines.append(f"{C_CYAN}{'-' * 105}{C_RESET}")
+    lines.append(f"{C_BWHITE}Recent Completed (Last 10):{C_RESET}")
     if recent_messages:
         for msg in recent_messages:
-            lines.append(f"  {msg}")
+            lines.append(f"  {colorize_status_line(msg)}")
     else:
-        lines.append("  (None completed yet)")
-    lines.append("=" * 100)
+        lines.append(f"  {C_DIM}(None completed yet){C_RESET}")
+    lines.append(f"{C_BCYAN}{'=' * 105}{C_RESET}")
 
-    print("\n".join(lines), flush=True)
+    output_text = "\n".join(lines)
+    if in_place and sys.stdout.isatty():
+        sys.stdout.write("\033[H\033[J" + output_text + "\n")
+        sys.stdout.flush()
+    else:
+        print(output_text, flush=True)
 
 
 def main() -> int:
@@ -464,6 +519,26 @@ def main() -> int:
     error_count = 0
     t_start = time.perf_counter()
 
+    tracker = {"completed": 0}
+    stop_refresh = threading.Event()
+
+    def background_refresh():
+        while not stop_refresh.is_set():
+            stop_refresh.wait(5.0)
+            if not stop_refresh.is_set():
+                render_dashboard(
+                    tracker["completed"],
+                    len(tasks),
+                    t_start,
+                    worker_status,
+                    recent_messages,
+                    status_lock,
+                    in_place=True,
+                )
+
+    refresh_thread = threading.Thread(target=background_refresh, daemon=True)
+    refresh_thread.start()
+
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
             future_to_board = {
@@ -479,6 +554,7 @@ def main() -> int:
 
             for future in concurrent.futures.as_completed(future_to_board):
                 completed += 1
+                tracker["completed"] = completed
                 b_name = future_to_board[future]
                 elapsed = time.perf_counter() - t_start
                 avg_per_board = elapsed / completed if completed > 0 else 0
@@ -524,6 +600,7 @@ def main() -> int:
                         worker_status,
                         recent_messages,
                         status_lock,
+                        in_place=True,
                     )
 
                     # Trigger report regeneration every 50 boards in background
@@ -549,11 +626,14 @@ def main() -> int:
                         worker_status,
                         recent_messages,
                         status_lock,
+                        in_place=True,
                     )
 
     except KeyboardInterrupt:
         print("\nBenchmark interrupted by user. Saving current progress...", flush=True)
     finally:
+        stop_refresh.set()
+        refresh_thread.join(timeout=1.0)
         save_benchmarks_atomic()
 
     total_time = round(time.perf_counter() - t_start, 1)
