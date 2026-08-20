@@ -81,8 +81,8 @@ foreach ($fx in $fixtures) {
         return $fallback
     }
 
-    $cViol = [int](Get-OrDefault $cRun.drc.final_violations (Get-OrDefault $cRun.quality.clearance_violations 0))
-    $cUnr = [int](Get-OrDefault $cRun.drc.final_unrouted (Get-OrDefault $cRun.quality.final_unrouted 0))
+    $cViol = [int](Get-OrDefault $cRun.quality.clearance_violations (Get-OrDefault $cRun.drc.final_violations 0))
+    $cUnr = [int](Get-OrDefault $cRun.quality.unrouted_connections (Get-OrDefault $cRun.quality.final_unrouted (Get-OrDefault $cRun.drc.final_unrouted 0)))
     $cScore = [double](Get-OrDefault $cRun.quality.quality_score 0)
     $cTime = [double](Get-OrDefault $cRun.quality.wall_clock_seconds 0)
 
@@ -90,8 +90,8 @@ foreach ($fx in $fixtures) {
     $bUnr = 9999
     $bScore = 0
     if ($bRun) {
-        $bViol = [int](Get-OrDefault $bRun.drc.final_violations (Get-OrDefault $bRun.quality.clearance_violations 0))
-        $bUnr = [int](Get-OrDefault $bRun.drc.final_unrouted (Get-OrDefault $bRun.quality.final_unrouted 9999))
+        $bViol = [int](Get-OrDefault $bRun.quality.clearance_violations (Get-OrDefault $bRun.drc.final_violations 0))
+        $bUnr = [int](Get-OrDefault $bRun.quality.unrouted_connections (Get-OrDefault $bRun.quality.final_unrouted (Get-OrDefault $bRun.drc.final_unrouted 9999)))
         $bScore = [double](Get-OrDefault $bRun.quality.quality_score 0)
     }
 

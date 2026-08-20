@@ -140,7 +140,6 @@ def route_single_board(
     run_record = {
         "cache_key": cache_key,
         "run_at": datetime.now(timezone.utc).isoformat(),
-        "run_mode": "CLI",
         "system": {
             "os": platform.platform(),
             "cpu_name": platform.processor(),
@@ -176,7 +175,7 @@ def route_single_board(
         },
         "quality": {
             "total_nets": b_board.get("nets", 0),
-            "final_unrouted": unrouted_count,
+            "unrouted_connections": unrouted_count,
             "clearance_violations": violations_count,
             "min_violation_um": min_viol_um,
             "max_violation_um": max_viol_um,
@@ -187,33 +186,21 @@ def route_single_board(
             "peak_heap_mb": resources.get("peak_memory", 0.0),
             "total_allocated_gb": resources.get("max_memory", 0.0),
         },
-        "drc": {
-            "final_unrouted": unrouted_count,
-            "clearance_violations": violations_count,
-            "summary_violations": violations_count,
-            "min_violation_um": min_viol_um,
-            "max_violation_um": max_viol_um,
-            "avg_violation_um": avg_viol_um,
-            "final_quality_score": score_val,
-        },
-        "log_analysis": {
-            "warn_count": stdout_text.count("WARN"),
-            "error_count": stdout_text.count("ERROR"),
-            "load_error": "Loading board file" not in stdout_text and exit_code != 0,
-            "exceptions": stdout_text.count("Exception"),
-            "timed_out": timed_out,
-            "metric_source": "manifest" if manifest_data else "log",
-        },
         "exit": {
             "code": exit_code,
+            "state": final_state,
             "crashed": crashed,
             "oom_detected": "OutOfMemoryError" in stdout_text,
             "timed_out": timed_out,
         },
+        "log_analysis": {
+            "warn_count": stdout_text.count("WARN"),
+            "error_count": stdout_text.count("ERROR"),
+            "exceptions": stdout_text.count("Exception"),
+        },
         "log_file": str(log_path.relative_to(log_dir.parent.parent)),
         "result_json": str(manifest_path.relative_to(output_dir.parent.parent)) if manifest_path.exists() else None,
         "output_file": str(ses_path.relative_to(output_dir.parent.parent)) if ses_path.exists() else None,
-        "schema_version": 2,
     }
 
     return run_record

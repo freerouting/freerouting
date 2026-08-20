@@ -73,7 +73,6 @@ function Format-MarkdownTable {
 function Get-RunScoreValue {
     param($Run)
 
-    if ($Run.drc.final_quality_score -ne $null) { return [double]$Run.drc.final_quality_score }
     if ($Run.quality.quality_score -ne $null) { return [double]$Run.quality.quality_score }
     return $null
 }
@@ -81,31 +80,11 @@ function Get-RunScoreValue {
 function Test-RunIsFailed {
     param($Run)
 
-    $isTimeout = $Run.exit.timed_out -eq $true
-    $isLoadError = $false
-
-    $loadErrorVal = $Run.log_analysis.load_error
-    $timedOutVal = $Run.log_analysis.timed_out
-    if ($Run.log_file -and (Test-Path $Run.log_file) -and ($loadErrorVal -eq $null -or $timedOutVal -eq $null)) {
-        $logMetrics = Get-PhaseMetrics $Run.log_file $Run.binary.version_label
-        $loadErrorVal = $logMetrics.load_error
-        $timedOutVal = $logMetrics.timed_out
-    }
-
-    if ($timedOutVal -eq $true) { $isTimeout = $true }
-    if ($loadErrorVal -eq $true) { $isLoadError = $true }
-
-    $hasTime = $false
-    if ($Run.phases.fanout.duration_seconds -ne $null) { $hasTime = $true }
-    if ($Run.phases.autorouter.duration_seconds -ne $null) { $hasTime = $true }
-    if ($Run.phases.optimizer.duration_seconds -ne $null) { $hasTime = $true }
-    if (-not $hasTime) { $isLoadError = $true }
-
-    if ($isTimeout -or $isLoadError) { return $true }
-
+    if ($Run.exit.crashed -eq $true) { return $true }
+    if ($Run.exit.code -ne $null -and $Run.exit.code -ne 0) { return $true }
+    if ($Run.exit.state -and $Run.exit.state -eq "FAILED") { return $true }
     $score = Get-RunScoreValue $Run
     if ($score -eq $null -or $score -eq 0) { return $true }
-
     return $false
 }
 
@@ -188,19 +167,17 @@ function Export-MarkdownReport {
                 $fixtureCount++
 
                 $failed = Test-RunIsFailed $latestRun
-                $isTimeout = $latestRun.exit.timed_out -eq $true -or $latestRun.log_analysis.timed_out -eq $true
+                $isTimeout = $latestRun.exit.timed_out -eq $true
                 if ($isTimeout) { $timeouts++ }
                 if ($failed) { $failures++ }
 
-                $unrouted = if ($latestRun.drc.final_unrouted -ne $null) {
-                    [int]$latestRun.drc.final_unrouted
+                $unrouted = if ($latestRun.quality.unrouted_connections -ne $null) {
+                    [int]$latestRun.quality.unrouted_connections
                 } elseif ($latestRun.quality.final_unrouted -ne $null) {
                     [int]$latestRun.quality.final_unrouted
                 } else { $null }
 
-                $violations = if ($latestRun.drc.summary_violations -ne $null) {
-                    [int]$latestRun.drc.summary_violations
-                } elseif ($latestRun.quality.clearance_violations -ne $null) {
+                $violations = if ($latestRun.quality.clearance_violations -ne $null) {
                     [int]$latestRun.quality.clearance_violations
                 } else { $null }
 
@@ -389,22 +366,19 @@ function Export-MarkdownReport {
                 $oPass = "{0,3}" -f $optimizerPassesVal
                 $passes = "$fPass+$rPass+$oPass"
 
-                $hasCheckpointMetrics = $run.log_analysis.metric_source -and $run.log_analysis.metric_source -ne "none"
-                $unroutedVal = if ($run.drc.final_unrouted -ne $null) {
-                    $run.drc.final_unrouted
-                } elseif ($hasCheckpointMetrics -and $run.quality.final_unrouted -ne $null) {
+                $unroutedVal = if ($run.quality.unrouted_connections -ne $null) {
+                    $run.quality.unrouted_connections
+                } elseif ($run.quality.final_unrouted -ne $null) {
                     $run.quality.final_unrouted
                 } else {
                     $null
                 }
-                $violationsVal = if ($run.drc.summary_violations -ne $null) {
-                    $run.drc.summary_violations
-                } elseif ($hasCheckpointMetrics -and $run.quality.clearance_violations -ne $null) {
+                $violationsVal = if ($run.quality.clearance_violations -ne $null) {
                     $run.quality.clearance_violations
                 } else {
                     $null
                 }
-                $scoreVal = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { $null }
+                $scoreVal = Get-RunScoreValue $run
 
                 # Compute unrouted cell string
                 $unroutedStr = if ($unroutedVal -ne $null) { "$unroutedVal" } else { "N/A" }

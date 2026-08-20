@@ -73,20 +73,17 @@ function Update-BenchmarksHtml {
                 $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
                 $fixtureCount++
 
-                $failed = Test-RunIsFailed $latestRun
-                $isTimeout = $latestRun.exit.timed_out -eq $true -or $latestRun.log_analysis.timed_out -eq $true
+                $isTimeout = $latestRun.exit.timed_out -eq $true
                 if ($isTimeout) { $timeouts++ }
                 if ($failed) { $failures++ }
 
-                $unrouted = if ($latestRun.drc.final_unrouted -ne $null) {
-                    [int]$latestRun.drc.final_unrouted
+                $unrouted = if ($latestRun.quality.unrouted_connections -ne $null) {
+                    [int]$latestRun.quality.unrouted_connections
                 } elseif ($latestRun.quality.final_unrouted -ne $null) {
                     [int]$latestRun.quality.final_unrouted
                 } else { $null }
 
-                $violations = if ($latestRun.drc.summary_violations -ne $null) {
-                    [int]$latestRun.drc.summary_violations
-                } elseif ($latestRun.quality.clearance_violations -ne $null) {
+                $violations = if ($latestRun.quality.clearance_violations -ne $null) {
                     [int]$latestRun.quality.clearance_violations
                 } else { $null }
 
@@ -264,22 +261,19 @@ function Update-BenchmarksHtml {
             $optimizerPasses = if ($run.phases.optimizer.passes_completed -ne $null) { $run.phases.optimizer.passes_completed } else { 0 }
             $passes = "$fanoutPasses+$routerPasses+$optimizerPasses"
 
-            $hasCheckpointMetrics = $run.log_analysis.metric_source -and $run.log_analysis.metric_source -ne "none"
-            $unrouted = if ($run.drc.final_unrouted -ne $null) {
-                $run.drc.final_unrouted
-            } elseif ($hasCheckpointMetrics -and $run.quality.final_unrouted -ne $null) {
+            $unrouted = if ($run.quality.unrouted_connections -ne $null) {
+                $run.quality.unrouted_connections
+            } elseif ($run.quality.final_unrouted -ne $null) {
                 $run.quality.final_unrouted
             } else {
                 "N/A"
             }
-            $violations = if ($run.drc.summary_violations -ne $null) {
-                $run.drc.summary_violations
-            } elseif ($hasCheckpointMetrics -and $run.quality.clearance_violations -ne $null) {
+            $violations = if ($run.quality.clearance_violations -ne $null) {
                 $run.quality.clearance_violations
             } else {
                 "N/A"
             }
-            $scoreVal = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { $null }
+            $scoreVal = Get-RunScoreValue $run
             $score = if ($scoreVal -ne $null) { $scoreVal.ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             $heap = if ($run.quality.peak_heap_mb -ne $null) { [math]::Round($run.quality.peak_heap_mb).ToString("F0", [System.Globalization.CultureInfo]::InvariantCulture) } else { "N/A" }
             $warns = if ($run.log_analysis.warn_count -ne $null) { $run.log_analysis.warn_count } else { 0 }
