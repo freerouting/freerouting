@@ -21,8 +21,9 @@ function Format-MarkdownTable {
         }
     }
 
+    $ratioCols = @("Fanout", "Perfects", "All-routed", "All-Routed", "Timeouts", "Failures")
     for ($i = 0; $i -lt $colCount; $i++) {
-        if ($Headers[$i] -eq "Fanout" -and $widths[$i] -lt 18) {
+        if ($ratioCols -contains $Headers[$i] -and $widths[$i] -lt 18) {
             $widths[$i] = 18
         }
     }
@@ -243,17 +244,22 @@ function Export-MarkdownReport {
         $summaryAlignments = @("L", "R", "R", "R", "R", "R", "R")
         $summaryRows = [System.Collections.ArrayList]::new()
 
+        $formatRatioPctFn = {
+            param([int]$c, [int]$t)
+            if ($t -le 0) { return "N/A" }
+            $cStr = "{0,4}" -f $c
+            $tStr = "{0,4}" -f $t
+            $pct = ([double]$c / [double]$t) * 100.0
+            $pStr = $pct.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture).PadLeft(5)
+            return "$cStr/$tStr ($pStr%)"
+        }
+
         foreach ($stat in ($versionStats.Values | Sort-Object -Property Version)) {
             $tot = $stat.FixtureCount
-            $perfPct = if ($tot -gt 0) { [math]::Round(($stat.Perfects / $tot) * 100, 1) } else { 0.0 }
-            $allPct  = if ($tot -gt 0) { [math]::Round(($stat.AllRouted / $tot) * 100, 1) } else { 0.0 }
-            $toPct   = if ($tot -gt 0) { [math]::Round(($stat.Timeouts / $tot) * 100, 1) } else { 0.0 }
-            $failPct = if ($tot -gt 0) { [math]::Round(($stat.Failures / $tot) * 100, 1) } else { 0.0 }
-
-            $perfStr = "$($stat.Perfects)/$tot ($perfPct%)"
-            $allStr  = "$($stat.AllRouted)/$tot ($allPct%)"
-            $toStr   = "$($stat.Timeouts)/$tot ($toPct%)"
-            $failStr = "$($stat.Failures)/$tot ($failPct%)"
+            $perfStr = & $formatRatioPctFn $stat.Perfects $tot
+            $allStr  = & $formatRatioPctFn $stat.AllRouted $tot
+            $toStr   = & $formatRatioPctFn $stat.Timeouts $tot
+            $failStr = & $formatRatioPctFn $stat.Failures $tot
 
             $avgScoreStr = if ($stat.AvgScore -ne $null) {
                 $formatted = $stat.AvgScore.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture)
