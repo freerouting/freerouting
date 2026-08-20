@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import atexit
 import collections
 import concurrent.futures
 import hashlib
@@ -60,6 +61,60 @@ C_BRED = "\033[1;31m"
 C_WHITE = "\033[37m"
 C_BWHITE = "\033[1;37m"
 C_GRAY = "\033[90m"
+
+
+class ProcessLock:
+    """Cross-platform single-instance file lock to prevent concurrent benchmark runs."""
+
+    def __init__(self, lock_path: Path):
+        self.lock_path = lock_path
+        self.file_handle = None
+
+    def acquire(self) -> bool:
+        self.lock_path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            if sys.platform == "win32":
+                import msvcrt
+                self.file_handle = open(self.lock_path, "a+")
+                self.file_handle.seek(0)
+                msvcrt.locking(self.file_handle.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                self.file_handle = open(self.lock_path, "a+")
+                fcntl.flock(self.file_handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+            self.file_handle.seek(0)
+            self.file_handle.truncate()
+            self.file_handle.write(f"pid={os.getpid()}\nstarted={datetime.now(timezone.utc).isoformat()}\n")
+            self.file_handle.flush()
+            return True
+        except (BlockingIOError, PermissionError, OSError):
+            if self.file_handle:
+                try:
+                    self.file_handle.close()
+                except Exception:
+                    pass
+                self.file_handle = None
+            return False
+
+    def release(self) -> None:
+        if self.file_handle:
+            try:
+                if sys.platform == "win32":
+                    import msvcrt
+                    self.file_handle.seek(0)
+                    msvcrt.locking(self.file_handle.fileno(), msvcrt.LK_UNLCK, 1)
+                else:
+                    import fcntl
+                    fcntl.flock(self.file_handle.fileno(), fcntl.LOCK_UN)
+                self.file_handle.close()
+            except Exception:
+                pass
+            self.file_handle = None
+            try:
+                self.lock_path.unlink(missing_ok=True)
+            except Exception:
+                pass
 
 
 def compute_sha256(path: Path) -> str:
@@ -463,6 +518,27 @@ def main() -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     log_dir.mkdir(parents=True, exist_ok=True)
     results_dir.mkdir(parents=True, exist_ok=True)
+
+    # Enforce single active benchmark instance
+    lock_file = results_dir / ".benchmark.lock"
+    proc_lock = ProcessLock(lock_file)
+    if not proc_lock.acquire():
+        existing_info = ""
+        try:
+            if lock_file.exists():
+                existing_info = f" ({lock_file.read_text(encoding='utf-8').strip()})"
+        except Exception:
+            pass
+        print(
+            f"\n{C_BRED}Error: Another instance of the benchmark is already running!{C_RESET}\n"
+            f"{C_YELLOW}Lock file: {lock_file}{existing_info}{C_RESET}\n"
+            f"Please wait for the active run to finish or terminate it before starting a new one.\n",
+            file=sys.stderr,
+            flush=True,
+        )
+        return 1
+
+    atexit.register(proc_lock.release)
 
     if not catalog_path.exists() or not jar_path.exists():
         print("Missing catalog.json or freerouting JAR", file=sys.stderr)
