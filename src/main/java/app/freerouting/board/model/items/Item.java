@@ -427,26 +427,33 @@ public abstract class Item
               board.rules.clearanceMatrix.getValue(
                   currentItem.clearanceClassIndex, this.clearanceClassIndex, shapeLayer(i), false);
 
-          double actualClearance = 0;
-
           TileShape enlargedShape1 = (TileShape) shape1.enlarge(0);
           TileShape enlargedShape2 = (TileShape) shape2.enlarge(0);
 
-          if (!this.board.searchTreeManager.isClearanceCompensationUsed()) {
-            double clOffset = 0.5 * minimumClearance;
-            enlargedShape1 = (TileShape) shape1.enlarge(clOffset);
-            enlargedShape2 = (TileShape) shape2.enlarge(clOffset);
-
-            actualClearance =
-                calculateClearanceBetweenTwoShapes(
-                    shape1, shape2, minimumClearance + ClearanceMatrix.clearance_safety_margin);
-            if ((smallestClearance == 0) || (actualClearance < smallestClearance)) {
-              smallestClearance = actualClearance;
-            }
+          int clComp1 = 0;
+          int clComp2 = 0;
+          if (this.board.searchTreeManager.isClearanceCompensationUsed()) {
+            clComp1 = defaultTree.clearanceCompensationValue(this.clearanceClassIndex, shapeLayer(i));
+            clComp2 = defaultTree.clearanceCompensationValue(currentItem.clearanceClassIndex, shapeLayer(i));
+          } else {
+            clComp1 = (int) Math.round(0.5 * minimumClearance);
+            clComp2 = (int) Math.round(minimumClearance - clComp1);
+            enlargedShape1 = (TileShape) shape1.enlarge(clComp1);
+            enlargedShape2 = (TileShape) shape2.enlarge(clComp2);
           }
 
           TileShape intersection = enlargedShape1.intersection(enlargedShape2);
           if (intersection.dimension() == 2) {
+            TileShape rawShape1 = (clComp1 > 0) ? (TileShape) shape1.shrink(clComp1) : shape1;
+            TileShape rawShape2 = (clComp2 > 0) ? (TileShape) shape2.shrink(clComp2) : shape2;
+            double actualClearance =
+                calculateClearanceBetweenTwoShapes(
+                    rawShape1, rawShape2, minimumClearance, clComp1, clComp2);
+
+            if ((smallestClearance == 0) || (actualClearance < smallestClearance)) {
+              smallestClearance = actualClearance;
+            }
+
             ClearanceViolation currentViolation =
                 new ClearanceViolation(
                     this,
@@ -464,19 +471,31 @@ public abstract class Item
   }
 
   private double calculateClearanceBetweenTwoShapes(
-      TileShape shape1, TileShape shape2, double minimumClearance) {
-    for (double clearance = minimumClearance; clearance > 0; clearance--) {
-      double clOffset = 0.5 * clearance;
-      TileShape enlargedShape1 = (TileShape) shape1.enlarge(clOffset);
-      TileShape enlargedShape2 = (TileShape) shape2.enlarge(clOffset);
+      TileShape rawShape1,
+      TileShape rawShape2,
+      double minimumClearance,
+      int clComp1,
+      int clComp2) {
+    if (rawShape1.intersection(rawShape2).dimension() == 2) {
+      return 0.0;
+    }
+    double low = 0.0;
+    double high = minimumClearance;
+    double sumComp = clComp1 + clComp2;
+    double factor1 = (sumComp > 0) ? ((double) clComp1 / sumComp) : 0.5;
+    double factor2 = (sumComp > 0) ? ((double) clComp2 / sumComp) : 0.5;
 
-      TileShape intersection = enlargedShape1.intersection(enlargedShape2);
-      if (intersection.dimension() != 2) {
-        return clearance;
+    for (int iter = 0; iter < 16; iter++) {
+      double mid = (low + high) * 0.5;
+      TileShape s1 = (TileShape) rawShape1.enlarge(mid * factor1);
+      TileShape s2 = (TileShape) rawShape2.enlarge(mid * factor2);
+      if (s1.intersection(s2).dimension() == 2) {
+        high = mid;
+      } else {
+        low = mid;
       }
     }
-
-    return 0;
+    return low;
   }
 
   /**
