@@ -92,7 +92,6 @@ function Export-MarkdownReport {
     param(
         [Hashtable]$Cache,
         [string]$MdPath,
-        [string]$CsvPath,
         [string]$ChartDataPath,
         [string]$FixturesDir = (Get-BenchmarkFixturesDir)
     )
@@ -434,15 +433,14 @@ function Export-MarkdownReport {
                 }
 
                 $notes = @()
-                if (-not $hasTime) {
+                if ($run.exit.crashed -eq $true -or ($run.exit.code -ne $null -and $run.exit.code -ne 0 -and $run.exit.state -eq "FAILED")) {
+                    $notes += "FAILED"
+                }
+                if ($run.exit.timed_out -eq $true -or $logTimedOut -eq $true) {
+                    $notes += "TIMEOUT"
+                }
+                if ($loadError -eq $true) {
                     $notes += "LOAD ERROR"
-                } else {
-                    if ($run.exit.timed_out -eq $true -or $logTimedOut -eq $true) {
-                        $notes += "TIMEOUT"
-                    }
-                    if ($loadError -eq $true) {
-                        $notes += "LOAD ERROR"
-                    }
                 }
                 if ($exceptions) {
                     foreach ($exc in $exceptions) {
@@ -467,42 +465,11 @@ function Export-MarkdownReport {
 
     [System.IO.File]::WriteAllText($MdPath, $sb.ToString(), [System.Text.UTF8Encoding]::new($false))
 
-    # --- 3. CSV Export ---
-    $csvHeaders = "fixture_group,fixture_name,version,run_mode,fanout_success,router_passes,drc_unrouted,drc_raw_violations,drc_clearance_violations,drc_summary_violations,drc_track_dangling,drc_via_dangling,drc_unconnected_items,drc_unconnected_findings,drc_score,drc_binary_version,drc_binary_sha256,drc_report_file,wall_time,cpu_time,peak_heap_mb,warn_count,error_count"
-    $csvLines = @($csvHeaders)
-    foreach ($run in $runs) {
-        $fanoutSuccess = ""
-        if ($run.phases.fanout.log_found -and $run.phases.fanout.smd_pin_count -gt 0) {
-            $fanoutSuccess = "$($run.phases.fanout.escaped_pin_count)/$($run.phases.fanout.smd_pin_count)"
-        }
-        $passes = if ($run.phases.autorouter.passes_completed -ne $null) { $run.phases.autorouter.passes_completed } else { "" }
-
-        $drcUnrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { "" }
-        $drcRawViolations = if ($run.drc.final_violations -ne $null) { $run.drc.final_violations } else { "" }
-        $drcClearanceViolations = if ($run.drc.clearance_violations -ne $null) { $run.drc.clearance_violations } else { "" }
-        $drcSummaryViolations = if ($run.drc.summary_violations -ne $null) { $run.drc.summary_violations } else { "" }
-        $drcTrackDangling = if ($run.drc.dangling_tracks -ne $null) { $run.drc.dangling_tracks } else { "" }
-        $drcViaDangling = if ($run.drc.dangling_vias -ne $null) { $run.drc.dangling_vias } else { "" }
-        $drcUnconnectedItems = if ($run.drc.unconnected_items -ne $null) { $run.drc.unconnected_items } else { "" }
-        $drcUnconnectedFindings = if ($run.drc.unconnected_findings -ne $null) { $run.drc.unconnected_findings } else { "" }
-        $drcScore = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { "" }
-
-        $wall = if ($run.quality.wall_clock_seconds -ne $null) { $run.quality.wall_clock_seconds } else { "" }
-        $cpu = if ($run.quality.total_cpu_seconds -ne $null) { $run.quality.total_cpu_seconds } else { "" }
-        $heap = if ($run.quality.peak_heap_mb -ne $null) { $run.quality.peak_heap_mb } else { "" }
-        $warns = if ($run.log_analysis.warn_count -ne $null) { $run.log_analysis.warn_count } else { "0" }
-        $errs = if ($run.log_analysis.error_count -ne $null) { $run.log_analysis.error_count } else { "0" }
-
-        $line = "$($run.fixture.group),$($run.fixture.filename),$($run.binary.version_label),$($run.run_mode),$fanoutSuccess,$passes,$drcUnrouted,$drcRawViolations,$drcClearanceViolations,$drcSummaryViolations,$drcTrackDangling,$drcViaDangling,$drcUnconnectedItems,$drcUnconnectedFindings,$drcScore,$($run.drc.drc_binary_version),$($run.drc.drc_binary_sha256),$($run.drc.report_file),$wall,$cpu,$heap,$warns,$errs"
-        $csvLines += $line
-    }
-    [System.IO.File]::WriteAllLines($CsvPath, $csvLines, [System.Text.UTF8Encoding]::new($false))
-
-    # --- 4. Chart Data JSON Export ---
+    # --- 3. Chart Data JSON Export ---
     $chartData = @()
     foreach ($run in $runs) {
-        $chartScore = if ($run.drc.final_quality_score -ne $null) { $run.drc.final_quality_score } elseif ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { 0.0 }
-        $chartUnrouted = if ($run.drc.final_unrouted -ne $null) { $run.drc.final_unrouted } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
+        $chartScore = if ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { 0.0 }
+        $chartUnrouted = if ($run.quality.unrouted_connections -ne $null) { $run.quality.unrouted_connections } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
 
         $chartData += @{
             fixture  = $run.fixture.filename
@@ -510,7 +477,7 @@ function Export-MarkdownReport {
             date     = $run.run_at
             score    = [double]$chartScore
             unrouted = [int]$chartUnrouted
-            cpu_time = if ($run.quality.total_cpu_seconds -ne $null) { [double]$run.quality.total_cpu_seconds } else { 0.0 }
+            cpu_time = if ($run.quality.cpu_seconds -ne $null) { [double]$run.quality.cpu_seconds } else { 0.0 }
         }
     }
     $chartJson = ConvertTo-Json $chartData -Depth 5

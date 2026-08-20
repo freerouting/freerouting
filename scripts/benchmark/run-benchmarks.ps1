@@ -54,7 +54,6 @@ $null = New-Item -ItemType Directory -Force -Path $OutputsDir -ErrorAction Silen
 
 $JsonPath = Join-Path $ResultsDir "benchmarks.json"
 $MdPath = Join-Path $ResultsDir "benchmarks.md"
-$CsvPath = Join-Path $ResultsDir "benchmarks.csv"
 $ChartDataPath = Join-Path $ResultsDir "benchmarks-chart-data.json"
 
 # Load current cache
@@ -64,7 +63,7 @@ $cache = $store.Cache
 
 function Update-BenchmarkReports {
     param([Hashtable]$Cache)
-    Export-MarkdownReport $Cache $MdPath $CsvPath $ChartDataPath
+    Export-MarkdownReport $Cache $MdPath $ChartDataPath
     if (-not $SkipWebsiteUpdate) {
         Update-BenchmarksHtml $Cache $WebsiteHtml
     }

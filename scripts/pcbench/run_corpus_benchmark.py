@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import subprocess
 import sys
 import time
@@ -26,6 +27,56 @@ def compute_sha256(path: Path) -> str:
         while chunk := f.read(65536):
             h.update(chunk)
     return h.hexdigest()
+
+
+def parse_phases_from_text(text: str) -> dict[str, Any]:
+    phases = {
+        "fanout": {"duration_seconds": None, "passes_completed": 0, "log_found": False},
+        "autorouter": {"duration_seconds": None, "passes_completed": 0},
+        "optimizer": {"duration_seconds": None, "passes_completed": 0},
+    }
+    # Fanout
+    m_fan = re.search(r"Fanout (?:phase|stage) completed:.*completed in ([\d\.]+) seconds.*escaped pins:\s*(\d+)/(\d+)\s*\(([\d\.]+)%\)", text)
+    if m_fan:
+        fan_passes = len(re.findall(r"Fanout pass #\d+", text))
+        phases["fanout"] = {
+            "duration_seconds": float(m_fan.group(1)),
+            "escaped_pin_count": int(m_fan.group(2)),
+            "smd_pin_count": int(m_fan.group(3)),
+            "escape_rate_pct": float(m_fan.group(4)),
+            "passes_completed": fan_passes,
+            "log_found": True,
+        }
+
+    # Autorouter
+    m_auto = re.search(r"Auto-rout\w+ (?:phase|stage) completed:.*completed in ([\d\.]+) seconds", text)
+    auto_passes = re.findall(r"Auto-rout\w+ pass #(\d+)", text)
+    auto_pass_count = max([int(p) for p in auto_passes], default=0)
+    if m_auto:
+        phases["autorouter"] = {
+            "duration_seconds": float(m_auto.group(1)),
+            "passes_completed": auto_pass_count,
+        }
+    elif auto_pass_count > 0:
+        phases["autorouter"] = {
+            "passes_completed": auto_pass_count,
+        }
+
+    # Optimizer
+    m_opt = re.search(r"Optimi\w+ (?:phase|stage) completed:.*completed in ([\d\.]+) seconds", text)
+    opt_passes = re.findall(r"Optimi\w+ pass #(\d+)", text)
+    opt_pass_count = max([int(p) for p in opt_passes], default=0)
+    if m_opt:
+        phases["optimizer"] = {
+            "duration_seconds": float(m_opt.group(1)),
+            "passes_completed": opt_pass_count,
+        }
+    elif opt_pass_count > 0:
+        phases["optimizer"] = {
+            "passes_completed": opt_pass_count,
+        }
+
+    return phases
 
 
 def route_single_board(
@@ -129,8 +180,9 @@ def route_single_board(
     max_viol_um = violations_info.get("max_violation_um", violations_info.get("max_violation_mm", None))
     avg_viol_um = violations_info.get("avg_violation_um", violations_info.get("avg_violation_mm", None))
     score_val = manifest_data.get("normalized_score", None)
-    final_state = manifest_data.get("final_state", "FAILED" if (crashed or timed_out) else "COMPLETED")
     phases = manifest_data.get("phases", {})
+    if not phases.get("autorouter", {}).get("duration_seconds") and stdout_text:
+        phases = parse_phases_from_text(stdout_text)
     resources = manifest_data.get("resource_usage", {})
 
     b_board = fixture_meta.get("board", {})
