@@ -21,7 +21,7 @@
 #>
 param(
     [string]$Tier = "All",
-    [int]$Workers = 4,
+    [int]$Workers = 8,
     [int]$MaxBoards = 0,
     [string]$VersionLabel = "v2.3.1-SNAPSHOT",
     [string]$JarPath = "",

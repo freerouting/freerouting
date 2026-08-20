@@ -211,7 +211,7 @@ def main() -> int:
     parser.add_argument("--jar", default="scripts/benchmark/binaries/freerouting-current.jar", type=Path)
     parser.add_argument("--fixtures-dir", default="scripts/benchmark/fixtures/PCBench", type=Path)
     parser.add_argument("--tier", default="All", help="Filter by tier: 'A', 'B', 'C', 'D', or 'All'")
-    parser.add_argument("--workers", default=4, type=int)
+    parser.add_argument("--workers", default=8, type=int)
     parser.add_argument("--max-boards", default=0, type=int)
     parser.add_argument("--version-label", default="v2.3.1-SNAPSHOT")
     parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
@@ -252,14 +252,14 @@ def main() -> int:
         git_sha = "unknown"
 
     # Load existing benchmarks.json
-    bench_data: dict[str, Any] = {"schema_version": 2, "runs": []}
+    bench_data: dict[str, Any] = {"runs": []}
     if benchmarks_json.exists():
         try:
             bench_data = json.loads(benchmarks_json.read_text(encoding="utf-8"))
         except Exception:
             pass
 
-    existing_runs = {r.get("cache_key"): r for r in bench_data.get("runs", [])}
+    existing_runs = {r.get("cache_key"): r for r in bench_data.get("runs", []) if r.get("cache_key")}
 
     tasks = []
     already_completed = 0
@@ -272,7 +272,7 @@ def main() -> int:
             is_already_run = any(
                 r.get("fixture", {}).get("relative_path") == f"PCBench/{b_id}/unrouted.dsn"
                 and r.get("binary", {}).get("version_label") == args.version_label
-                and r.get("quality", {}).get("final_unrouted") is not None
+                and (r.get("quality", {}).get("unrouted_connections") is not None or r.get("quality", {}).get("final_unrouted") is not None)
                 for r in existing_runs.values()
             )
             if is_already_run:
@@ -293,42 +293,93 @@ def main() -> int:
         subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"], check=False)
         return 0
 
+    def save_benchmarks_atomic():
+        bench_data["runs"] = list(existing_runs.values())
+        bench_data["total_runs"] = len(bench_data["runs"])
+        bench_data["generated_at"] = datetime.now(timezone.utc).isoformat()
+        tmp_file = benchmarks_json.with_suffix(".tmp")
+        tmp_file.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
+        tmp_file.replace(benchmarks_json)
+
     completed = 0
+    clean_count = 0
+    routed_viol_count = 0
+    unrouted_count = 0
+    timeout_count = 0
+    error_count = 0
     t_start = time.perf_counter()
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
-        future_to_board = {executor.submit(route_single_board, *task): task[1].name for task in tasks}
-        for future in concurrent.futures.as_completed(future_to_board):
-            completed += 1
-            b_name = future_to_board[future]
-            try:
-                rec = future.result()
-                existing_runs[rec["cache_key"]] = rec
-                q = rec["quality"]
-                unr = q.get("final_unrouted")
-                viol = q.get("clearance_violations")
-                sec = q.get("wall_clock_seconds")
-                status = f"CLEAN ({sec}s)" if (unr == 0 and viol == 0) else f"unr={unr}, viol={viol} ({sec}s)"
-                print(f"[{completed}/{len(tasks)}] {b_name}: {status}", flush=True)
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
+            future_to_board = {executor.submit(route_single_board, *task): task[1].name for task in tasks}
+            for future in concurrent.futures.as_completed(future_to_board):
+                completed += 1
+                b_name = future_to_board[future]
+                elapsed = time.perf_counter() - t_start
+                avg_per_board = elapsed / completed if completed > 0 else 0
+                remaining_secs = avg_per_board * (len(tasks) - completed)
+                eta_str = time.strftime("%H:%M:%S", time.gmtime(remaining_secs))
+                elapsed_str = time.strftime("%H:%M:%S", time.gmtime(elapsed))
+                pct = (completed / len(tasks)) * 100.0
 
-                # Incremental flush every 25 boards
-                if completed % 25 == 0 or completed == len(tasks):
-                    bench_data["runs"] = list(existing_runs.values())
-                    bench_data["total_runs"] = len(bench_data["runs"])
-                    bench_data["generated_at"] = datetime.now(timezone.utc).isoformat()
-                    benchmarks_json.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
+                try:
+                    rec = future.result()
+                    existing_runs[rec["cache_key"]] = rec
+                    q = rec.get("quality", {})
+                    exit_info = rec.get("exit", {})
+                    unr = q.get("unrouted_connections", q.get("final_unrouted"))
+                    viol = q.get("clearance_violations")
+                    sec = q.get("wall_clock_seconds", 0.0)
+                    is_timeout = exit_info.get("timed_out", False)
 
-            except Exception as e:
-                print(f"[{completed}/{len(tasks)}] {b_name}: ERROR {e}", flush=True)
+                    if is_timeout:
+                        timeout_count += 1
+                        status = f"TIMEOUT ({sec:.1f}s)"
+                    elif unr == 0 and viol == 0:
+                        clean_count += 1
+                        status = f"CLEAN ({sec:.1f}s)"
+                    elif unr == 0:
+                        routed_viol_count += 1
+                        status = f"ROUTED (viol={viol}, {sec:.1f}s)"
+                    else:
+                        unrouted_count += 1
+                        status = f"UNROUTED (unr={unr}, viol={viol}, {sec:.1f}s)"
 
-    # Final save
-    bench_data["runs"] = list(existing_runs.values())
-    bench_data["total_runs"] = len(bench_data["runs"])
-    bench_data["generated_at"] = datetime.now(timezone.utc).isoformat()
-    benchmarks_json.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
+                    print(
+                        f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] "
+                        f"[Clean:{clean_count} Routed:{routed_viol_count} Unr:{unrouted_count} Timeouts:{timeout_count}] "
+                        f"[Elapsed:{elapsed_str} ETA:{eta_str} ({avg_per_board:.1f}s/board)] "
+                        f"{b_name}: {status}",
+                        flush=True,
+                    )
+
+                    # Real-time atomic save on every completed board
+                    save_benchmarks_atomic()
+
+                    # Trigger report regeneration every 50 boards in background
+                    if completed % 50 == 0:
+                        try:
+                            subprocess.Popen(
+                                ["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"],
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL,
+                            )
+                        except Exception:
+                            pass
+
+                except Exception as e:
+                    error_count += 1
+                    print(f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: ERROR {e}", flush=True)
+                    save_benchmarks_atomic()
+
+    except KeyboardInterrupt:
+        print("\nBenchmark interrupted by user. Saving current progress...", flush=True)
+    finally:
+        save_benchmarks_atomic()
 
     total_time = round(time.perf_counter() - t_start, 1)
-    print(f"\nPCBench Corpus Benchmark completed {len(tasks)} boards in {total_time}s.", flush=True)
+    print(f"\nPCBench Corpus Benchmark finished {completed} boards in {total_time}s.", flush=True)
+    print(f"Results: {clean_count} Clean, {routed_viol_count} Routed with violations, {unrouted_count} Unrouted, {timeout_count} Timeouts, {error_count} Errors.")
 
     # Regenerate reports
     print("Regenerating Markdown and HTML reports...", flush=True)
