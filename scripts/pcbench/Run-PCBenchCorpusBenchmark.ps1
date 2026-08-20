@@ -24,6 +24,7 @@ param(
     [int]$Workers = 4,
     [int]$MaxBoards = 0,
     [string]$VersionLabel = "v2.3.1-SNAPSHOT",
+    [string]$JarPath = "",
     [switch]$Force
 )
 
@@ -36,6 +37,9 @@ $pyArgs = @(
     "--workers", [string]$Workers,
     "--version-label", $VersionLabel
 )
+if ($JarPath) {
+    $pyArgs += @("--jar", $JarPath)
+}
 if ($MaxBoards -gt 0) {
     $pyArgs += @("--max-boards", [string]$MaxBoards)
 }

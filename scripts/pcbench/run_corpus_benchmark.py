@@ -64,6 +64,8 @@ def route_single_board(
         str(dsn_path),
         "-do",
         str(ses_path),
+        "-dct",
+        "0",
         f"--router.result_json={manifest_path}",
         "--router.max_passes=20",
         f"--router.job_timeout={timeout_budget}",

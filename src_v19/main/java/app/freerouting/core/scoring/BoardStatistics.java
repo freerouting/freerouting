@@ -331,8 +331,6 @@ public class BoardStatistics implements Serializable {
     // Clearance violations
     if (includeClearanceViolations) {
       ClearanceViolations cvList = new ClearanceViolations(board.get_items());
-      // Dedup pair count
-      this.clearanceViolations.totalCount = (cvList.list.size() + 1) / 2;
       if (!cvList.list.isEmpty()) {
         double minViolation = Double.MAX_VALUE;
         double maxViolation = 0.0;
@@ -340,9 +338,10 @@ public class BoardStatistics implements Serializable {
         Set<String> processedPairs = new HashSet<>();
 
         for (ClearanceViolation cv : cvList.list) {
-          String key = cv.first_item.get_id_no() + "-" + cv.second_item.get_id_no();
-          String reverseKey = cv.second_item.get_id_no() + "-" + cv.first_item.get_id_no();
-          if (processedPairs.contains(reverseKey)) {
+          int id1 = cv.first_item.get_id_no();
+          int id2 = cv.second_item.get_id_no();
+          String key = (id1 < id2 ? id1 + "-" + id2 : id2 + "-" + id1) + "-" + cv.layer;
+          if (processedPairs.contains(key)) {
             continue;
           }
           processedPairs.add(key);
@@ -355,10 +354,12 @@ public class BoardStatistics implements Serializable {
         }
 
         int uniqueCount = processedPairs.size();
+        this.clearanceViolations.totalCount = uniqueCount;
         this.clearanceViolations.minViolationMm = uniqueCount > 0 ? minViolation : 0.0;
         this.clearanceViolations.maxViolationMm = maxViolation;
         this.clearanceViolations.avgViolationMm = uniqueCount > 0 ? sumViolation / uniqueCount : 0.0;
       } else {
+        this.clearanceViolations.totalCount = 0;
         this.clearanceViolations.minViolationMm = 0.0;
         this.clearanceViolations.maxViolationMm = 0.0;
         this.clearanceViolations.avgViolationMm = 0.0;
