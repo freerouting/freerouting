@@ -42,6 +42,7 @@ public class StartupOptions {
   public boolean disable_analytics = false;
   public int dialog_confirmation_timeout = 20;
   public String host = "N/A";
+  public String result_json_path = null;
   transient boolean single_design_option = false;
   transient boolean test_version_option = false;
   transient boolean show_help_option = false;
@@ -215,6 +216,11 @@ public class StartupOptions {
             if (dialog_confirmation_timeout <= 0) {
               dialog_confirmation_timeout = 0;
             }
+          }
+        } else if (p_args[i].startsWith("--router.result_json") || p_args[i].startsWith("--router.output_json")) {
+          String[] parts = p_args[i].split("=", 2);
+          if (parts.length == 2) {
+            result_json_path = parts[1].replace("\"", "").trim();
           }
         } else if (p_args[i].startsWith("--router.optimizer.enabled")) {
           String[] parts = p_args[i].split("=");
