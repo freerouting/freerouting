@@ -4,14 +4,17 @@
 from __future__ import annotations
 
 import argparse
+import collections
 import concurrent.futures
 import hashlib
 import json
 import os
 import platform
+import queue
 import re
 import subprocess
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -89,6 +92,9 @@ def route_single_board(
     git_sha: str,
     jar_sha256: str,
     jar_size: int,
+    worker_slots: queue.Queue[int],
+    worker_status: dict[int, dict[str, Any]],
+    status_lock: threading.Lock,
 ) -> dict[str, Any]:
     """Execute Freerouting on a single PCBench board and return a benchmark run record."""
     board_id = board_dir.name
@@ -96,6 +102,17 @@ def route_single_board(
     ses_path = output_dir / f"{board_id}--unrouted--{version_label}.ses"
     manifest_path = output_dir / f"{board_id}--unrouted--{version_label}-result.json"
     log_path = log_dir / f"{board_id}--unrouted--{version_label}.log"
+
+    wid = worker_slots.get()
+    t0 = time.perf_counter()
+
+    with status_lock:
+        worker_status[wid] = {
+            "board": board_id,
+            "start": t0,
+            "last_line": "Starting autorouter process...",
+            "active": True,
+        }
 
     # Timeout calculation
     parts = timeout_budget.split(":")
@@ -125,33 +142,54 @@ def route_single_board(
         f"--logging.file.location={log_path}",
     ]
 
-    t0 = time.perf_counter()
     exit_code = 0
     crashed = False
     timed_out = False
-    stdout_text = ""
+    stdout_lines: list[str] = []
 
     try:
-        proc = subprocess.run(
+        proc = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
-            timeout=timeout_sec + 20,
             encoding="utf-8",
             errors="replace",
+            bufsize=1,
         )
+        if proc.stdout:
+            for line in proc.stdout:
+                stdout_lines.append(line)
+                clean = line.strip()
+                if clean:
+                    short = clean
+                    for pfx in (" INFO   ", " DEBUG  ", " WARN   ", " ERROR  "):
+                        if pfx in clean:
+                            short = clean.split(pfx, 1)[1]
+                            break
+                    with status_lock:
+                        worker_status[wid]["last_line"] = short[:70]
+        proc.wait(timeout=timeout_sec + 20)
         exit_code = proc.returncode
-        stdout_text = proc.stdout
-    except subprocess.TimeoutExpired as e:
+    except subprocess.TimeoutExpired:
         timed_out = True
+        try:
+            proc.kill()
+        except Exception:
+            pass
         exit_code = -1
-        stdout_text = e.stdout if e.stdout else "TIMEOUT"
+        stdout_lines.append("TIMEOUT")
     except Exception as e:
         crashed = True
         exit_code = -2
-        stdout_text = str(e)
+        stdout_lines.append(str(e))
+    finally:
+        with status_lock:
+            worker_status[wid]["active"] = False
+            worker_status[wid]["last_line"] = "Idle"
+        worker_slots.put(wid)
 
+    stdout_text = "".join(stdout_lines)
     wall_time = round(time.perf_counter() - t0, 2)
 
     # Read normalized metadata from fixture
@@ -180,6 +218,7 @@ def route_single_board(
     max_viol_um = violations_info.get("max_violation_um", violations_info.get("max_violation_mm", None))
     avg_viol_um = violations_info.get("avg_violation_um", violations_info.get("avg_violation_mm", None))
     score_val = manifest_data.get("normalized_score", None)
+    final_state = manifest_data.get("final_state", "FAILED" if (crashed or timed_out) else "COMPLETED")
     phases = manifest_data.get("phases", {})
     if not phases.get("autorouter", {}).get("duration_seconds") and stdout_text:
         phases = parse_phases_from_text(stdout_text)
@@ -260,6 +299,56 @@ def route_single_board(
     return run_record
 
 
+def render_dashboard(
+    completed: int,
+    total: int,
+    t_start: float,
+    worker_status: dict[int, dict[str, Any]],
+    recent_messages: collections.deque[str],
+    status_lock: threading.Lock,
+) -> None:
+    """Print updated multi-worker dashboard with live logs and recent history."""
+    elapsed = time.perf_counter() - t_start
+    avg_per_board = elapsed / completed if completed > 0 else 0
+    remaining_secs = avg_per_board * (total - completed)
+    eta_str = time.strftime("%H:%M:%S", time.gmtime(remaining_secs))
+    elapsed_str = time.strftime("%H:%M:%S", time.gmtime(elapsed))
+    pct = (completed / total) * 100.0 if total > 0 else 0.0
+
+    lines = []
+    lines.append("=" * 100)
+    lines.append(
+        f"PCBench Benchmark: {completed}/{total} ({pct:5.1f}%) | "
+        f"Elapsed: {elapsed_str} | ETA: {eta_str} ({avg_per_board:.1f}s/board) | Workers: {len(worker_status)}"
+    )
+    lines.append("-" * 100)
+    lines.append("Active Workers:")
+
+    now = time.perf_counter()
+    with status_lock:
+        for wid in sorted(worker_status.keys()):
+            info = worker_status[wid]
+            if info.get("active"):
+                run_sec = int(now - info.get("start", now))
+                dur_str = f"{run_sec // 60:02d}:{run_sec % 60:02d}"
+                board = info.get("board", "unknown")
+                last = info.get("last_line", "")
+                lines.append(f"  [Worker {wid}] {board:<35} [{dur_str}] -> {last}")
+            else:
+                lines.append(f"  [Worker {wid}] Idle")
+
+    lines.append("-" * 100)
+    lines.append("Recent Completed (Last 10):")
+    if recent_messages:
+        for msg in recent_messages:
+            lines.append(f"  {msg}")
+    else:
+        lines.append("  (None completed yet)")
+    lines.append("=" * 100)
+
+    print("\n".join(lines), flush=True)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--jar", default="scripts/benchmark/binaries/freerouting-current.jar", type=Path)
@@ -338,7 +427,7 @@ def main() -> int:
 
     print(
         f"Starting PCBench Corpus Benchmark ({len(boards)} total, {already_completed} already cached, "
-        f"{len(tasks)} remaining to run, Tier={args.tier}, Workers={args.workers})...",
+        f"{len(tasks)} remaining to run, Tier={args.tier}, Workers={args.workers})...\n",
         flush=True,
     )
 
@@ -355,6 +444,18 @@ def main() -> int:
         tmp_file.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
         tmp_file.replace(benchmarks_json)
 
+    # Worker tracking structures
+    worker_slots: queue.Queue[int] = queue.Queue()
+    for wid in range(1, args.workers + 1):
+        worker_slots.put(wid)
+
+    worker_status: dict[int, dict[str, Any]] = {
+        wid: {"board": "Idle", "start": 0.0, "last_line": "Idle", "active": False}
+        for wid in range(1, args.workers + 1)
+    }
+    status_lock = threading.Lock()
+    recent_messages: collections.deque[str] = collections.deque(maxlen=10)
+
     completed = 0
     clean_count = 0
     routed_viol_count = 0
@@ -365,7 +466,17 @@ def main() -> int:
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
-            future_to_board = {executor.submit(route_single_board, *task): task[1].name for task in tasks}
+            future_to_board = {
+                executor.submit(
+                    route_single_board,
+                    *task,
+                    worker_slots,
+                    worker_status,
+                    status_lock,
+                ): task[1].name
+                for task in tasks
+            }
+
             for future in concurrent.futures.as_completed(future_to_board):
                 completed += 1
                 b_name = future_to_board[future]
@@ -399,15 +510,21 @@ def main() -> int:
                         unrouted_count += 1
                         status = f"UNROUTED (unr={unr}, viol={viol}, {sec:.1f}s)"
 
-                    print(
-                        f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] "
-                        f"[Elapsed:{elapsed_str} ETA:{eta_str} ({avg_per_board:.1f}s/board)] "
-                        f"{b_name}: {status}",
-                        flush=True,
-                    )
+                    msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] [Elapsed:{elapsed_str} ETA:{eta_str} ({avg_per_board:.1f}s/board)] {b_name}: {status}"
+                    recent_messages.append(msg)
 
                     # Real-time atomic save on every completed board
                     save_benchmarks_atomic()
+
+                    # Render dashboard with active workers & recent 10 completed
+                    render_dashboard(
+                        completed,
+                        len(tasks),
+                        t_start,
+                        worker_status,
+                        recent_messages,
+                        status_lock,
+                    )
 
                     # Trigger report regeneration every 50 boards in background
                     if completed % 50 == 0:
@@ -422,8 +539,17 @@ def main() -> int:
 
                 except Exception as e:
                     error_count += 1
-                    print(f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: ERROR {e}", flush=True)
+                    msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: ERROR {e}"
+                    recent_messages.append(msg)
                     save_benchmarks_atomic()
+                    render_dashboard(
+                        completed,
+                        len(tasks),
+                        t_start,
+                        worker_status,
+                        recent_messages,
+                        status_lock,
+                    )
 
     except KeyboardInterrupt:
         print("\nBenchmark interrupted by user. Saving current progress...", flush=True)
