@@ -1,5 +1,5 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-08-20 08:33:13
+Generated on: 2026-08-20 08:36:54
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -9,7 +9,7 @@ This report lists the latest benchmark run results for each Freerouting version 
 ### Summary Table (All Tiers Combined)
 Comprehensive performance across all benchmark fixtures.
 
-| Version         | Fixtures | Perfects           | All-routed         | Timeouts           | Failures           | Avg. Score |
+| Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | 1.9.0           |       20 |    8/  20 ( 40.0%) |    9/  20 ( 45.0%) |    1/  20 (  5.0%) |    1/  20 (  5.0%) |      902.9 |
 | 2.2.4           |       20 |    7/  20 ( 35.0%) |    7/  20 ( 35.0%) |    0/  20 (  0.0%) |    2/  20 ( 10.0%) |      891.5 |
@@ -20,7 +20,7 @@ Comprehensive performance across all benchmark fixtures.
 ### Tier A: Canary Gate
 Fast-solving 2-layer boards (0 unrouted, 0 clearance violations expected).
 
-| Version         | Fixtures | Perfects           | All-routed         | Timeouts           | Failures           | Avg. Score |
+| Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | v2.3.1-SNAPSHOT |      169 |  169/ 169 (100.0%) |  169/ 169 (100.0%) |    0/ 169 (  0.0%) |    0/ 169 (  0.0%) | **1000.0** |
 
@@ -28,7 +28,7 @@ Fast-solving 2-layer boards (0 unrouted, 0 clearance violations expected).
 ### Tier B: Routine Benchmarks
 Standard 2-4 layer boards evaluated for routine optimization progress.
 
-| Version         | Fixtures | Perfects           | All-routed         | Timeouts           | Failures           | Avg. Score |
+| Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | v2.3.1-SNAPSHOT |      844 |  175/ 844 ( 20.7%) |  401/ 844 ( 47.5%) |    7/ 844 (  0.8%) |   11/ 844 (  1.3%) |  **923.4** |
 
@@ -36,7 +36,7 @@ Standard 2-4 layer boards evaluated for routine optimization progress.
 ### Tier C: Complex / Multi-Layer
 Dense and 6+ layer boards requiring deeper pathfinding.
 
-| Version         | Fixtures | Perfects           | All-routed         | Timeouts           | Failures           | Avg. Score |
+| Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | v2.3.1-SNAPSHOT |      122 |   18/ 122 ( 14.8%) |   33/ 122 ( 27.0%) |    1/ 122 (  0.8%) |    3/ 122 (  2.5%) |  **911.9** |
 
@@ -44,7 +44,7 @@ Dense and 6+ layer boards requiring deeper pathfinding.
 ### Tier D: Extreme Stress / Diagnostic
 High net-count and large surface-area stress boards.
 
-| Version         | Fixtures | Perfects           | All-routed         | Timeouts           | Failures           | Avg. Score |
+| Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | v2.3.1-SNAPSHOT |       22 |    1/  22 (  4.5%) |    4/  22 ( 18.2%) |    3/  22 ( 13.6%) |    4/  22 ( 18.2%) |  **931.0** |
 
@@ -52,7 +52,7 @@ High net-count and large surface-area stress boards.
 ### General / Legacy Golden Fixtures
 In-repo regression and golden fixture benchmark suite.
 
-| Version | Fixtures | Perfects           | All-routed         | Timeouts           | Failures           | Avg. Score |
+| Version | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :------ | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | 1.9.0   |       20 |    8/  20 ( 40.0%) |    9/  20 ( 45.0%) |    1/  20 (  5.0%) |    1/  20 (  5.0%) |      902.9 |
 | 2.2.4   |       20 |    7/  20 ( 35.0%) |    7/  20 ( 35.0%) |    0/  20 (  0.0%) |    2/  20 ( 10.0%) |      891.5 |

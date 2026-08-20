@@ -21,7 +21,7 @@ function Format-MarkdownTable {
         }
     }
 
-    $ratioCols = @("Fanout", "Perfects", "All-routed", "All-Routed", "Timeouts", "Failures")
+    $ratioCols = @("Fanout", "Clean (0 DRC)", "Fully-Routed", "Timeouts", "Failures")
     for ($i = 0; $i -lt $colCount; $i++) {
         if ($ratioCols -contains $Headers[$i] -and $widths[$i] -lt 18) {
             $widths[$i] = 18
@@ -240,7 +240,7 @@ function Export-MarkdownReport {
             $maxAvgScore = ($avgScoreStats | Measure-Object -Property AvgScore -Maximum).Maximum
         }
 
-        $summaryHeaders = @("Version", "Fixtures", "Perfects", "All-routed", "Timeouts", "Failures", "Avg. Score")
+        $summaryHeaders = @("Version", "Fixtures", "Clean (0 DRC)", "Fully-Routed", "Timeouts", "Failures", "Avg. Score")
         $summaryAlignments = @("L", "R", "R", "R", "R", "R", "R")
         $summaryRows = [System.Collections.ArrayList]::new()
 
