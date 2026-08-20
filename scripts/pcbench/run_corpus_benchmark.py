@@ -347,7 +347,6 @@ def main() -> int:
 
                     print(
                         f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] "
-                        f"[Clean:{clean_count} Routed:{routed_viol_count} Unr:{unrouted_count} Timeouts:{timeout_count}] "
                         f"[Elapsed:{elapsed_str} ETA:{eta_str} ({avg_per_board:.1f}s/board)] "
                         f"{b_name}: {status}",
                         flush=True,
