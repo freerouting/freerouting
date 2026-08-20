@@ -189,6 +189,7 @@ def route_single_board(
         },
         "drc": {
             "final_unrouted": unrouted_count,
+            "clearance_violations": violations_count,
             "summary_violations": violations_count,
             "min_violation_um": min_viol_um,
             "max_violation_um": max_viol_um,
