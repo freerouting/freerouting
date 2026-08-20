@@ -145,9 +145,14 @@ def route_single_board(
     jar_size: int,
     worker_slots: queue.Queue[int],
     worker_status: dict[int, dict[str, Any]],
+    active_procs: dict[int, subprocess.Popen],
     status_lock: threading.Lock,
-) -> dict[str, Any]:
+    cancel_event: threading.Event,
+) -> dict[str, Any] | None:
     """Execute Freerouting on a single PCBench board and return a benchmark run record."""
+    if cancel_event.is_set():
+        return None
+
     board_id = board_dir.name
     dsn_path = board_dir / "unrouted.dsn"
     ses_path = output_dir / f"{board_id}--unrouted--{version_label}.ses"
@@ -208,8 +213,17 @@ def route_single_board(
             errors="replace",
             bufsize=1,
         )
+        with status_lock:
+            active_procs[wid] = proc
+
         if proc.stdout:
             for line in proc.stdout:
+                if cancel_event.is_set():
+                    try:
+                        proc.kill()
+                    except Exception:
+                        pass
+                    break
                 stdout_lines.append(line)
                 clean = line.strip()
                 if clean:
@@ -220,8 +234,10 @@ def route_single_board(
                             break
                     with status_lock:
                         worker_status[wid]["last_line"] = short[:70]
-        proc.wait(timeout=timeout_sec + 20)
-        exit_code = proc.returncode
+
+        if not cancel_event.is_set():
+            proc.wait(timeout=timeout_sec + 20)
+            exit_code = proc.returncode
     except subprocess.TimeoutExpired:
         timed_out = True
         try:
@@ -236,9 +252,13 @@ def route_single_board(
         stdout_lines.append(str(e))
     finally:
         with status_lock:
+            active_procs.pop(wid, None)
             worker_status[wid]["active"] = False
             worker_status[wid]["last_line"] = "Idle"
         worker_slots.put(wid)
+
+    if cancel_event.is_set():
+        return None
 
     stdout_text = "".join(stdout_lines)
     wall_time = round(time.perf_counter() - t0, 2)
@@ -374,7 +394,8 @@ def render_dashboard(
         f"({C_BGREEN}{pct:5.1f}%{C_RESET}) | "
         f"{C_BWHITE}Elapsed:{C_RESET} {C_CYAN}{elapsed_str}{C_RESET} | "
         f"{C_BWHITE}ETA:{C_RESET} {C_CYAN}{eta_str}{C_RESET} ({C_YELLOW}{avg_per_board:.1f}s/board{C_RESET}) | "
-        f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET}"
+        f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET} | "
+        f"{C_DIM}[ESC / Q to exit]{C_RESET}"
     )
     lines.append(f"{C_CYAN}{'-' * 105}{C_RESET}")
     lines.append(f"{C_BWHITE}Active Workers:{C_RESET}")
@@ -524,6 +545,7 @@ def main() -> int:
         wid: {"board": "Idle", "start": 0.0, "last_line": "Idle", "active": False}
         for wid in range(1, args.workers + 1)
     }
+    active_procs: dict[int, subprocess.Popen] = {}
     status_lock = threading.Lock()
     recent_messages: collections.deque[str] = collections.deque(maxlen=10)
 
@@ -537,11 +559,12 @@ def main() -> int:
 
     tracker = {"completed": 0}
     stop_refresh = threading.Event()
+    cancel_event = threading.Event()
 
     def background_refresh():
-        while not stop_refresh.is_set():
+        while not stop_refresh.is_set() and not cancel_event.is_set():
             stop_refresh.wait(5.0)
-            if not stop_refresh.is_set():
+            if not stop_refresh.is_set() and not cancel_event.is_set():
                 render_dashboard(
                     tracker["completed"],
                     len(tasks),
@@ -552,8 +575,31 @@ def main() -> int:
                     in_place=True,
                 )
 
+    def keyboard_listener():
+        if sys.platform == "win32":
+            try:
+                import msvcrt
+                while not stop_refresh.is_set() and not cancel_event.is_set():
+                    if msvcrt.kbhit():
+                        ch = msvcrt.getch()
+                        if ch in (b"\x1b", b"q", b"Q"):
+                            cancel_event.set()
+                            with status_lock:
+                                for p in list(active_procs.values()):
+                                    try:
+                                        p.kill()
+                                    except Exception:
+                                        pass
+                            break
+                    time.sleep(0.05)
+            except Exception:
+                pass
+
     refresh_thread = threading.Thread(target=background_refresh, daemon=True)
     refresh_thread.start()
+
+    key_thread = threading.Thread(target=keyboard_listener, daemon=True)
+    key_thread.start()
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
@@ -563,12 +609,17 @@ def main() -> int:
                     *task,
                     worker_slots,
                     worker_status,
+                    active_procs,
                     status_lock,
+                    cancel_event,
                 ): task[1].name
                 for task in tasks
             }
 
             for future in concurrent.futures.as_completed(future_to_board):
+                if cancel_event.is_set():
+                    break
+
                 completed += 1
                 tracker["completed"] = completed
                 b_name = future_to_board[future]
@@ -581,6 +632,8 @@ def main() -> int:
 
                 try:
                     rec = future.result()
+                    if rec is None:
+                        continue
                     existing_runs[rec["cache_key"]] = rec
                     q = rec.get("quality", {})
                     exit_info = rec.get("exit", {})
@@ -646,11 +699,14 @@ def main() -> int:
                     )
 
     except KeyboardInterrupt:
-        print("\nBenchmark interrupted by user. Saving current progress...", flush=True)
+        print("\nBenchmark interrupted by user (Ctrl+C). Saving current progress...", flush=True)
     finally:
         stop_refresh.set()
-        refresh_thread.join(timeout=1.0)
+        cancel_event.set()
         save_benchmarks_atomic()
+
+    if cancel_event.is_set():
+        print(f"\n{C_BYELLOW}Benchmark stopped gracefully. All completed board results have been saved.{C_RESET}", flush=True)
 
     total_time = round(time.perf_counter() - t_start, 1)
     print(f"\nPCBench Corpus Benchmark finished {completed} boards in {total_time}s.", flush=True)
