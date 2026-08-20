@@ -123,9 +123,9 @@ def route_single_board(
     unrouted_count = connections.get("incomplete_count", None)
     violations_info = stats.get("clearance_violations", {})
     violations_count = violations_info.get("total_count", None)
-    min_viol_mm = violations_info.get("min_violation_mm", None)
-    max_viol_mm = violations_info.get("max_violation_mm", None)
-    avg_viol_mm = violations_info.get("avg_violation_mm", None)
+    min_viol_um = violations_info.get("min_violation_um", violations_info.get("min_violation_mm", None))
+    max_viol_um = violations_info.get("max_violation_um", violations_info.get("max_violation_mm", None))
+    avg_viol_um = violations_info.get("avg_violation_um", violations_info.get("avg_violation_mm", None))
     score_val = manifest_data.get("normalized_score", None)
     final_state = manifest_data.get("final_state", "FAILED" if (crashed or timed_out) else "COMPLETED")
     phases = manifest_data.get("phases", {})
@@ -178,9 +178,9 @@ def route_single_board(
             "total_nets": b_board.get("nets", 0),
             "final_unrouted": unrouted_count,
             "clearance_violations": violations_count,
-            "min_violation_mm": min_viol_mm,
-            "max_violation_mm": max_viol_mm,
-            "avg_violation_mm": avg_viol_mm,
+            "min_violation_um": min_viol_um,
+            "max_violation_um": max_viol_um,
+            "avg_violation_um": avg_viol_um,
             "quality_score": score_val,
             "wall_clock_seconds": wall_time,
             "cpu_seconds": resources.get("cpu_time", 0.0),
@@ -190,9 +190,9 @@ def route_single_board(
         "drc": {
             "final_unrouted": unrouted_count,
             "summary_violations": violations_count,
-            "min_violation_mm": min_viol_mm,
-            "max_violation_mm": max_viol_mm,
-            "avg_violation_mm": avg_viol_mm,
+            "min_violation_um": min_viol_um,
+            "max_violation_um": max_viol_um,
+            "avg_violation_um": avg_viol_um,
             "final_quality_score": score_val,
         },
         "log_analysis": {

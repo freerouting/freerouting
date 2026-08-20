@@ -9,12 +9,12 @@ public class BoardStatisticsClearanceViolations implements Serializable {
   @SerializedName("total_count")
   public Integer totalCount;
 
-  @SerializedName("min_violation_mm")
-  public Double minViolationMm;
+  @SerializedName("min_violation_um")
+  public Double minViolationUm;
 
-  @SerializedName("max_violation_mm")
-  public Double maxViolationMm;
+  @SerializedName("max_violation_um")
+  public Double maxViolationUm;
 
-  @SerializedName("avg_violation_mm")
-  public Double avgViolationMm;
+  @SerializedName("avg_violation_um")
+  public Double avgViolationUm;
 }

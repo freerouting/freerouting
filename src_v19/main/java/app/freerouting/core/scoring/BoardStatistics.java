@@ -184,9 +184,13 @@ public class BoardStatistics implements Serializable {
     }
 
     double boardUnitToMmFactor = 1.0;
+    double boardUnitToUmFactor = 1000.0;
     if (board.communication != null && board.communication.unit != null) {
       boardUnitToMmFactor =
           Unit.scale(1.0, board.communication.unit, Unit.MM)
+              / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+      boardUnitToUmFactor =
+          Unit.scale(1.0, board.communication.unit, Unit.UM)
               / (board.communication.resolution > 0 ? board.communication.resolution : 1);
     }
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
@@ -347,22 +351,22 @@ public class BoardStatistics implements Serializable {
           processedPairs.add(key);
 
           double shortfall = Math.max(0.0, cv.expected_clearance - cv.actual_clearance);
-          double shortfallMm = shortfall * boardUnitToMmFactor;
-          minViolation = Math.min(minViolation, shortfallMm);
-          maxViolation = Math.max(maxViolation, shortfallMm);
-          sumViolation += shortfallMm;
+          double shortfallUm = shortfall * boardUnitToUmFactor;
+          minViolation = Math.min(minViolation, shortfallUm);
+          maxViolation = Math.max(maxViolation, shortfallUm);
+          sumViolation += shortfallUm;
         }
 
         int uniqueCount = processedPairs.size();
         this.clearanceViolations.totalCount = uniqueCount;
-        this.clearanceViolations.minViolationMm = uniqueCount > 0 ? minViolation : 0.0;
-        this.clearanceViolations.maxViolationMm = maxViolation;
-        this.clearanceViolations.avgViolationMm = uniqueCount > 0 ? sumViolation / uniqueCount : 0.0;
+        this.clearanceViolations.minViolationUm = uniqueCount > 0 ? minViolation : 0.0;
+        this.clearanceViolations.maxViolationUm = maxViolation;
+        this.clearanceViolations.avgViolationUm = uniqueCount > 0 ? sumViolation / uniqueCount : 0.0;
       } else {
         this.clearanceViolations.totalCount = 0;
-        this.clearanceViolations.minViolationMm = 0.0;
-        this.clearanceViolations.maxViolationMm = 0.0;
-        this.clearanceViolations.avgViolationMm = 0.0;
+        this.clearanceViolations.minViolationUm = 0.0;
+        this.clearanceViolations.maxViolationUm = 0.0;
+        this.clearanceViolations.avgViolationUm = 0.0;
       }
     }
 
