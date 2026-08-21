@@ -13,7 +13,7 @@ quiet-level = 2
 ignore-regex = '\\[fnrstv]'
 builtin = "clear,rare,informal,code,names"
 
-ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting,ws,stdio,thead,Cloneable,Deque,deque,IAM,ro,currentY,onText,Jupyter,cripts"
+ignore-words-list = "autoroute,autorouter,autorouting,padstack,padstacks,netlist,netlists,freerouting,ws,stdio,thead,Cloneable,Deque,deque,IAM,ro,currentY,onText,Jupyter"
 
 [tool.yamlfix]
 line_length = 80
