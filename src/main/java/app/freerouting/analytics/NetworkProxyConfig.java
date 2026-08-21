@@ -13,8 +13,10 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -26,7 +28,6 @@ import javax.net.ssl.X509TrustManager;
 public final class NetworkProxyConfig {
 
   private static volatile SSLSocketFactory cachedSslSocketFactory;
-  private static volatile boolean initialized = false;
 
   private NetworkProxyConfig() {}
 
@@ -37,11 +38,6 @@ public final class NetworkProxyConfig {
    * @param settings optional network settings from configuration
    */
   public static synchronized void configure(NetworkSettings settings) {
-    if (initialized) {
-      return;
-    }
-    initialized = true;
-
     try {
       configureProxy(settings);
     } catch (Exception e) {
@@ -124,24 +120,49 @@ public final class NetworkProxyConfig {
     }
   }
 
-  private static void applyNoProxy(String noProxy) {
-    StringBuilder sb = new StringBuilder("localhost|127.0.0.1");
-    if (noProxy != null && !noProxy.isBlank()) {
-      String[] entries = noProxy.split("[,;\\s]+");
-      for (String entry : entries) {
+  /**
+   * Combines an existing non-proxy hosts string with new bypass entries, ensuring localhost and
+   * 127.0.0.1 are always present.
+   *
+   * @param existing current value of {@code http.nonProxyHosts}, or {@code null}
+   * @param noProxy additional comma/space/pipe-separated bypass list, or {@code null}
+   * @return pipe-separated non-proxy hosts string
+   */
+  public static String buildNonProxyHosts(String existing, String noProxy) {
+    Set<String> hosts = new LinkedHashSet<>();
+    hosts.add("localhost");
+    hosts.add("127.0.0.1");
+
+    if (existing != null && !existing.isBlank()) {
+      String[] existingEntries = existing.split("[|]+");
+      for (String entry : existingEntries) {
         String trimmed = entry.trim();
-        if (!trimmed.isEmpty() && !trimmed.equals("localhost") && !trimmed.equals("127.0.0.1")) {
-          if (trimmed.startsWith(".")) {
-            trimmed = "*" + trimmed;
-          }
-          sb.append("|").append(trimmed);
+        if (!trimmed.isEmpty()) {
+          hosts.add(trimmed);
         }
       }
     }
 
-    if (System.getProperty("http.nonProxyHosts") == null) {
-      System.setProperty("http.nonProxyHosts", sb.toString());
+    if (noProxy != null && !noProxy.isBlank()) {
+      String[] entries = noProxy.split("[,;\\s|]+");
+      for (String entry : entries) {
+        String trimmed = entry.trim();
+        if (!trimmed.isEmpty()) {
+          if (trimmed.startsWith(".")) {
+            trimmed = "*" + trimmed;
+          }
+          hosts.add(trimmed);
+        }
+      }
     }
+
+    return String.join("|", hosts);
+  }
+
+  private static void applyNoProxy(String noProxy) {
+    String existing = System.getProperty("http.nonProxyHosts");
+    String merged = buildNonProxyHosts(existing, noProxy);
+    System.setProperty("http.nonProxyHosts", merged);
   }
 
   private static void configureTrustStore(NetworkSettings settings) {

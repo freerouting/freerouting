@@ -30,6 +30,19 @@ class NetworkProxyConfigTest {
   }
 
   @Test
+  void testBuildNonProxyHostsContainsLocalhostAndWildcards() {
+    String merged =
+        NetworkProxyConfig.buildNonProxyHosts(
+            "*.local|169.254/16", "internal.corp,api.internal,.example.com");
+    assertNotNull(merged);
+    assertTrue(merged.contains("localhost"), "Should include localhost");
+    assertTrue(merged.contains("127.0.0.1"), "Should include 127.0.0.1");
+    assertTrue(merged.contains("*.local"), "Should retain existing entry");
+    assertTrue(merged.contains("internal.corp"), "Should include new entry");
+    assertTrue(merged.contains("*.example.com"), "Should prefix dot domains with wildcard");
+  }
+
+  @Test
   void testNoProxyContainsLocalhost() {
     NetworkSettings settings = new NetworkSettings();
     settings.noProxy = "internal.corp,api.internal";
