@@ -1218,7 +1218,8 @@ public class Freerouting {
     globalSettings.runtimeEnvironment.freeroutingVersion =
         Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;
     globalSettings.runtimeEnvironment.appStartedAt = Instant.now();
-    globalSettings.runtimeEnvironment.commandLineArguments = String.join(" ", args);
+    globalSettings.runtimeEnvironment.commandLineArguments =
+        app.freerouting.settings.RuntimeEnvironment.sanitizeCommandLineArguments(args);
     globalSettings.runtimeEnvironment.architecture =
         System.getProperty("os.name")
             + ","

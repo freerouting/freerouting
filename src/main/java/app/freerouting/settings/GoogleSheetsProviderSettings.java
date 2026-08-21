@@ -8,7 +8,7 @@ public class GoogleSheetsProviderSettings implements Serializable {
 
   /** Google API key used by the provider. */
   @SerializedName("google_api_key")
-  public String googleApiKey;
+  public transient String googleApiKey;
 
   /** URL of the Google Sheet used by the provider. */
   @SerializedName("sheet_url")

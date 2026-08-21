@@ -18,6 +18,7 @@ import java.io.Writer;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
@@ -380,6 +381,18 @@ public class GlobalSettings implements Serializable {
     // doesn't exist
     try {
       Files.createDirectories(configurationFilePath.getParent());
+      try {
+        if (configurationFilePath
+            .getParent()
+            .getFileSystem()
+            .supportedFileAttributeViews()
+            .contains("posix")) {
+          Files.setPosixFilePermissions(
+              configurationFilePath.getParent(), PosixFilePermissions.fromString("rwx------"));
+        }
+      } catch (Exception _) {
+        // Ignored on non-POSIX or restricted environments
+      }
     } catch (AccessDeniedException e) {
       throw new AccessDeniedException(
           configurationFilePath.getParent().toString(),
@@ -423,6 +436,16 @@ public class GlobalSettings implements Serializable {
               + e.getMessage()
               + ". Settings won't be persisted.",
           e);
+    }
+
+    // Enforce owner-only permissions on the settings file if supported
+    try {
+      if (configurationFilePath.getFileSystem().supportedFileAttributeViews().contains("posix")) {
+        Files.setPosixFilePermissions(
+            configurationFilePath, PosixFilePermissions.fromString("rw-------"));
+      }
+    } catch (Exception _) {
+      // Ignored on non-POSIX or restricted environments
     }
   }
 

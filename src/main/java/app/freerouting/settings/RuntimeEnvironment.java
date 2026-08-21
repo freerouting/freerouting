@@ -3,6 +3,9 @@ package app.freerouting.settings;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Stores runtime environment information about the application execution context. This is NOT for
@@ -39,4 +42,46 @@ public class RuntimeEnvironment implements Serializable {
 
   @SerializedName("host")
   public transient String host = "N/A";
+
+  /**
+   * Sanitizes command-line arguments by redacting sensitive values (keys, tokens, passwords,
+   * secrets) before recording in runtime environment or telemetry.
+   *
+   * @param args raw command-line arguments
+   * @return sanitized argument string
+   */
+  public static String sanitizeCommandLineArguments(String[] args) {
+    if (args == null || args.length == 0) {
+      return "";
+    }
+    List<String> sanitized = new ArrayList<>(args.length);
+    boolean redactNext = false;
+    for (String arg : args) {
+      if (arg == null) {
+        continue;
+      }
+      if (redactNext) {
+        sanitized.add("[REDACTED]");
+        redactNext = false;
+        continue;
+      }
+      String lower = arg.toLowerCase(Locale.ROOT);
+      if (lower.startsWith("-")
+          && (lower.contains("key")
+              || lower.contains("secret")
+              || lower.contains("token")
+              || lower.contains("password"))) {
+        if (arg.contains("=")) {
+          int eq = arg.indexOf('=');
+          sanitized.add(arg.substring(0, eq + 1) + "[REDACTED]");
+        } else {
+          sanitized.add(arg);
+          redactNext = true;
+        }
+      } else {
+        sanitized.add(arg);
+      }
+    }
+    return String.join(" ", sanitized);
+  }
 }
