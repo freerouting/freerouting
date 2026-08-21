@@ -81,6 +81,9 @@ public class TextManager {
    * @return duration in seconds, or {@code null} if parsing fails
    */
   public static Long parseTimespanString(String timespanString) {
+    if (timespanString == null || timespanString.isBlank()) {
+      return null;
+    }
     try {
       Duration duration = Duration.parse(convertFromTimespanToDurationFormat(timespanString));
       return duration.getSeconds();

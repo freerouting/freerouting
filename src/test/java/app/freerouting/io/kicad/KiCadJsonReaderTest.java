@@ -445,4 +445,37 @@ class KiCadJsonReaderTest {
     assertEquals(-45000, bounds.ll.y);
     assertEquals(-15000, bounds.ur.y);
   }
+
+  @Test
+  void testHostCadAndHostVersionParsed() {
+    String json =
+        """
+        {
+          "designName": "CustomHostBoard",
+          "hostCad": "KiCadNightly",
+          "hostVersion": "11.0.0-rc1",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"}
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 10.0, "y": 0.0},
+              {"x": 10.0, "y": 10.0},
+              {"x": 0.0, "y": 10.0}
+            ]
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertEquals("KiCadNightly", board.communication.specctraParserInfo.hostCad);
+    assertEquals("11.0.0-rc1", board.communication.specctraParserInfo.hostVersion);
+  }
 }

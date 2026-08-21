@@ -1,6 +1,7 @@
 package app.freerouting;
 
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.analytics.NetworkProxyConfig;
 import app.freerouting.api.AppContextListener;
 import app.freerouting.api.mcp.McpApplication;
 import app.freerouting.api.mcp.McpContextListener;
@@ -1267,6 +1268,9 @@ public class Freerouting {
 
     boolean allowAnalytics = false;
 
+    // configure corporate proxy and truststores
+    NetworkProxyConfig.configure(globalSettings.networkSettings);
+
     // initialize analytics
     FRAnalytics.setAccessKey(
         Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.loggerKey);
@@ -1295,6 +1299,9 @@ public class Freerouting {
     if (!globalSettings.userProfileSettings.userEmail.isBlank()) {
       FRAnalytics.refreshIdentity();
     }
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread(() -> FRAnalytics.flush(1500), "freerouting-analytics-shutdown-flush"));
     try {
       Thread.sleep(1000);
     } catch (Exception _) {
