@@ -73,6 +73,9 @@ public class GlobalSettings implements Serializable {
   @SerializedName("logging")
   public final LoggingSettings logging = new LoggingSettings();
 
+  @SerializedName("network")
+  public final NetworkSettings networkSettings = new NetworkSettings();
+
   @SerializedName("debug")
   public final transient DebugSettings debugSettings = new DebugSettings();
 

@@ -1,6 +1,7 @@
 package app.freerouting;
 
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.analytics.NetworkProxyConfig;
 import app.freerouting.api.AppContextListener;
 import app.freerouting.api.mcp.McpApplication;
 import app.freerouting.api.mcp.McpContextListener;
@@ -1266,6 +1267,9 @@ public class Freerouting {
     }
 
     boolean allowAnalytics = false;
+
+    // configure corporate proxy and truststores
+    NetworkProxyConfig.configure(globalSettings.networkSettings);
 
     // initialize analytics
     FRAnalytics.setAccessKey(

@@ -1,5 +1,6 @@
 package app.freerouting.analytics;
 
+import app.freerouting.Freerouting;
 import app.freerouting.analytics.dto.Context;
 import app.freerouting.analytics.dto.Library;
 import app.freerouting.analytics.dto.Payload;
@@ -14,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 
 /** Sends analytics payloads to Freerouting's HTTP API. */
 public class FreeroutingAnalyticsClient implements AnalyticsClient {
@@ -86,6 +89,16 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
             connection = (HttpURLConnection) uri.toURL().openConnection();
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(10000);
+            if (connection instanceof HttpsURLConnection httpsConn) {
+              SSLSocketFactory ssf =
+                  NetworkProxyConfig.getCompositeSslSocketFactory(
+                      Freerouting.globalSettings != null
+                          ? Freerouting.globalSettings.networkSettings
+                          : null);
+              if (ssf != null) {
+                httpsConn.setSSLSocketFactory(ssf);
+              }
+            }
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Host", uri.getHost());
             connection.setRequestProperty("Content-Type", "application/json");
