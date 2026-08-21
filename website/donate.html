@@ -92,7 +92,7 @@
         }
         .tier-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.2em;
             margin-bottom: 2.5em;
         }
@@ -100,11 +100,13 @@
             background-color: rgba(0, 42, 23, 0.8);
             border: 1px solid rgba(232, 204, 135, 0.3);
             border-radius: 8px;
-            padding: 1.4em;
+            padding: 1.4em 1.2em;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            align-items: center;
             text-align: center;
+            cursor: pointer;
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .tier-card:hover {
@@ -128,32 +130,20 @@
             align-self: center;
         }
         .tier-icon {
-            font-size: 2em;
-            margin: 0.3em 0;
+            font-size: 2.2em;
+            margin: 0.2em 0 0.4em 0;
         }
         .tier-title {
-            font-size: 1.3em;
+            font-size: 1.25em;
             font-weight: bold;
-            margin-bottom: 0.2em;
-        }
-        .tier-price {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: rgb(255, 220, 140);
-            margin: 0.3em 0 0.6em 0;
-        }
-        .tier-desc {
-            font-size: 0.95em;
-            opacity: 0.9;
-            flex-grow: 1;
             margin-bottom: 1.2em;
-            line-height: 1.5;
         }
         .tier-action {
+            width: 100%;
             margin-top: auto;
         }
         .tier-action .btn {
-            width: 80%;
+            width: 100%;
             margin: 0 auto;
             text-align: center;
             box-sizing: border-box;
@@ -266,11 +256,9 @@
         <div class="tier-card">
             <div class="tier-icon">☕</div>
             <div class="tier-title">Coffee Backer</div>
-            <div class="tier-price">$10</div>
-            <div class="tier-desc">Buy a coffee to fuel the next late-night routing optimization session.</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/4gM4gz6aieNN5dI12mbsc02" target="_blank" id="donate_stripe_10">
-                    <i class="fab fa-stripe-s"></i> Donate $10
+                    Donate $10
                 </a>
             </div>
         </div>
@@ -279,11 +267,9 @@
             <span class="tier-badge">Most Popular</span>
             <div class="tier-icon">🔌</div>
             <div class="tier-title">Board Enthusiast</div>
-            <div class="tier-price">$25</div>
-            <div class="tier-desc">Support a smooth and fast routing experience on your latest hardware build.</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/bJe14n2Y68pp5dI12mbsc03" target="_blank" id="donate_stripe_25">
-                    <i class="fab fa-stripe-s"></i> Donate $25
+                    Donate $25
                 </a>
             </div>
         </div>
@@ -291,11 +277,9 @@
         <div class="tier-card">
             <div class="tier-icon">⚡</div>
             <div class="tier-title">Power Router</div>
-            <div class="tier-price">$50</div>
-            <div class="tier-desc">Power active bugfixes, performance tuning, and new algorithmic features.</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/cNiaEX0PY8ppgWq9ySbsc04" target="_blank" id="donate_stripe_50">
-                    <i class="fab fa-stripe-s"></i> Donate $50
+                    Donate $50
                 </a>
             </div>
         </div>
@@ -303,11 +287,9 @@
         <div class="tier-card">
             <div class="tier-icon">🚀</div>
             <div class="tier-title">Open Source Champion</div>
-            <div class="tier-price">$100</div>
-            <div class="tier-desc">Fund substantial AI development credits and testing infrastructure for the community.</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/fZueVdfKSaxxgWq8uObsc05" target="_blank" id="donate_stripe_100">
-                    <i class="fab fa-stripe-s"></i> Donate $100
+                    Donate $100
                 </a>
             </div>
         </div>
@@ -315,11 +297,9 @@
         <div class="tier-card">
             <div class="tier-icon">💎</div>
             <div class="tier-title">Benefactor</div>
-            <div class="tier-price">$250</div>
-            <div class="tier-desc">Accelerate high-impact research, major releases, and long-term sustainability.</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/00waEXeGOeNN9tYdP8bsc06" target="_blank" id="donate_stripe_250">
-                    <i class="fab fa-stripe-s"></i> Donate $250
+                    Donate $250
                 </a>
             </div>
         </div>
@@ -327,11 +307,9 @@
         <div class="tier-card">
             <div class="tier-icon">✍️</div>
             <div class="tier-title">Custom Amount</div>
-            <div class="tier-price">Any</div>
-            <div class="tier-desc">Choose your own custom amount on GitHub Sponsors according to your budget.</div>
             <div class="tier-action">
                 <a class="btn" href="https://github.com/sponsors/andrasfuchs?frequency=one-time" target="_blank" id="donate_github_custom">
-                    <i class="fab fa-github"></i> Custom Donate
+                    <i class="fab fa-github"></i> Donate
                 </a>
             </div>
         </div>
@@ -342,11 +320,9 @@
         <div class="tier-card">
             <div class="tier-icon">🌱</div>
             <div class="tier-title">Supporter</div>
-            <div class="tier-price">$5 <span style="font-size:0.5em">/ mo</span></div>
-            <div class="tier-desc">For individual makers and hobbyists. Includes a Supporter badge on GitHub.</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/6oUeVddCKgVVeOi8uObsc07" target="_blank" id="sponsor_stripe_5">
-                    <i class="fab fa-stripe-s"></i> Sponsor $5/mo
+                    Sponsor $5/mo
                 </a>
             </div>
         </div>
@@ -355,11 +331,9 @@
             <span class="tier-badge">Recommended</span>
             <div class="tier-icon">🛠️</div>
             <div class="tier-title">Hardware Pro</div>
-            <div class="tier-price">$15 <span style="font-size:0.5em">/ mo</span></div>
-            <div class="tier-desc">For freelancers and active hardware engineers. Priority issue triage and preview builds.</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/fZufZh42agVV9tYbH0bsc08" target="_blank" id="sponsor_stripe_15">
-                    <i class="fab fa-stripe-s"></i> Sponsor $15/mo
+                    Sponsor $15/mo
                 </a>
             </div>
         </div>
@@ -367,23 +341,19 @@
         <div class="tier-card">
             <div class="tier-icon">🛡️</div>
             <div class="tier-title">Project Patron</div>
-            <div class="tier-price">$50 <span style="font-size:0.5em">/ mo</span></div>
-            <div class="tier-desc">For studios and power teams. Named mention in release notes & priority feature consideration.</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/dRm9AT9muaxxay27qKbsc09" target="_blank" id="sponsor_stripe_50">
-                    <i class="fab fa-stripe-s"></i> Sponsor $50/mo
+                    Sponsor $50/mo
                 </a>
             </div>
         </div>
 
         <div class="tier-card">
             <div class="tier-icon">🏢</div>
-            <div class="tier-title">Corporate / Gold Sponsor</div>
-            <div class="tier-price">$500 <span style="font-size:0.5em">/ mo</span></div>
-            <div class="tier-desc">For EDA & PCB companies. Prominent company logo on README, website, and in-app About dialog.</div>
+            <div class="tier-title">Gold Sponsor</div>
             <div class="tier-action">
                 <a class="btn" href="https://donate.stripe.com/5kQ5kDgOW499dKecL4bsc0a" target="_blank" id="sponsor_stripe_500">
-                    <i class="fab fa-stripe-s"></i> Sponsor $500/mo
+                    Sponsor $500/mo
                 </a>
             </div>
         </div>
@@ -463,6 +433,15 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.tier-card').forEach(function(card) {
+            card.addEventListener('click', function(e) {
+                const link = card.querySelector('a.btn');
+                if (link && !e.target.closest('a')) {
+                    link.click();
+                }
+            });
+        });
+
         document.querySelectorAll('a, button, .btn').forEach(function(element) {
             element.addEventListener('click', function() {
                 if (typeof gtag === 'function') {
