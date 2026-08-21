@@ -1,6 +1,6 @@
 # Complete Codebase Security Audit Plan
 
-**Status:** Phase 0 complete; threat model complete; next is Phase 1 scanners (optional parallel) then Pass A
+**Status:** Phase 0–3 complete (2026-08-21); Phase 1 scanners executed; next is Phase 4 remediation
 **Owner:** maintainers (agent-assisted)
 **Scope:** full Freerouting tree except frozen `src_v19/` (reference only; do not refactor)
 **Tracking folder:** `docs/issues/`
@@ -336,8 +336,8 @@ Temporary artifacts (heap dumps, raw scanner XML, draft replies): `logs/security
 The audit is complete when:
 
 - [x] Threat model and inventory exist
-- [ ] Passes A–H have hunter reports; A, B (and G if network-reachable) have Extra High confirmation
-- [ ] Scanner summary exists
-- [ ] Risk register lists every confirmed finding with severity and status
+- [x] Passes A–H have hunter reports; A and B have Extra High confirmation; G used Medium because no network `ObjectInputStream` path was found
+- [x] Scanner summary exists (Phase 1 executed 2026-08-21; Netty advisories folded into AUDIT-034)
+- [x] Risk register lists every confirmed finding with severity and status
 - [ ] Critical/High items have either a fix PR, a scheduled issue, or an explicit accepted residual
 - [ ] This plan’s Status is updated to **Complete** with the date
