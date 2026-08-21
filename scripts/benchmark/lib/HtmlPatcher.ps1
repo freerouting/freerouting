@@ -96,9 +96,8 @@ function Update-BenchmarksHtml {
                     }
                 }
 
-                if (-not $failed -and $score -ne $null) {
-                    [void]$avgScoreValues.Add($score)
-                }
+                $effectiveScore = if (-not $failed -and $score -ne $null) { $score } else { 0.0 }
+                [void]$avgScoreValues.Add($effectiveScore)
             }
 
             $avgScore = $null

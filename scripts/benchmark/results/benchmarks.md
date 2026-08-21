@@ -1,5 +1,5 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-08-21 09:11:38
+Generated on: 2026-08-21 11:03:54
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -11,7 +11,7 @@ Comprehensive performance across all benchmark fixtures.
 
 | Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
-| 1.9.0           |     1157 |  419/1157 ( 36.2%) |  578/1157 ( 50.0%) |    0/1157 (  0.0%) |    3/1157 (  0.3%) |  **970.6** |
+| 1.9.0           |     1157 |  419/1157 ( 36.2%) |  578/1157 ( 50.0%) |    0/1157 (  0.0%) |    3/1157 (  0.3%) |  **968.1** |
 | v2.3.1-SNAPSHOT |     1157 |  358/1157 ( 30.9%) |  598/1157 ( 51.7%) |    0/1157 (  0.0%) |    0/1157 (  0.0%) |      925.5 |
 
 
@@ -29,7 +29,7 @@ Standard 2-4 layer boards evaluated for routine optimization progress.
 
 | Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
-| 1.9.0           |      844 |  260/ 844 ( 30.8%) |  400/ 844 ( 47.4%) |    0/ 844 (  0.0%) |    2/ 844 (  0.2%) |  **968.5** |
+| 1.9.0           |      844 |  260/ 844 ( 30.8%) |  400/ 844 ( 47.4%) |    0/ 844 (  0.0%) |    2/ 844 (  0.2%) |  **966.2** |
 | v2.3.1-SNAPSHOT |      844 |  171/ 844 ( 20.3%) |  391/ 844 ( 46.3%) |    0/ 844 (  0.0%) |    0/ 844 (  0.0%) |      915.3 |
 
 
@@ -38,7 +38,7 @@ Dense and 6+ layer boards requiring deeper pathfinding.
 
 | Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
-| 1.9.0           |      122 |   21/ 122 ( 17.2%) |   32/ 122 ( 26.2%) |    0/ 122 (  0.0%) |    1/ 122 (  0.8%) |  **954.9** |
+| 1.9.0           |      122 |   21/ 122 ( 17.2%) |   32/ 122 ( 26.2%) |    0/ 122 (  0.0%) |    1/ 122 (  0.8%) |  **947.1** |
 | v2.3.1-SNAPSHOT |      122 |   18/ 122 ( 14.8%) |   34/ 122 ( 27.9%) |    0/ 122 (  0.0%) |    0/ 122 (  0.0%) |      896.2 |
 
 
