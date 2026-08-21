@@ -463,7 +463,8 @@ public class Freerouting {
     }
 
     // Keep the caller responsive after the server has bound its connectors.
-    new Thread(
+    Thread apiJoinThread =
+        new Thread(
             () -> {
               try {
                 apiServer.join();
@@ -473,10 +474,23 @@ public class Freerouting {
                   globalSettings.apiServerSettings.isRunning = false;
                 }
               }
-            })
-        .start();
+            },
+            "api-server-join");
+    apiJoinThread.setDaemon(true);
+    apiJoinThread.start();
 
     return apiServer;
+  }
+
+  /** Stops the API server if it is currently running. */
+  public static void stopApiServer() {
+    if (apiServer != null && apiServer.isRunning()) {
+      try {
+        apiServer.stop();
+      } catch (Exception e) {
+        FRLogger.error("Error stopping API server", e);
+      }
+    }
   }
 
   /**
@@ -585,7 +599,8 @@ public class Freerouting {
     }
 
     // Keep the caller responsive after the server has bound its connectors.
-    new Thread(
+    Thread mcpJoinThread =
+        new Thread(
             () -> {
               try {
                 mcpServer.join();
@@ -595,8 +610,10 @@ public class Freerouting {
                   globalSettings.mcpServerSettings.isRunning = false;
                 }
               }
-            })
-        .start();
+            },
+            "mcp-server-join");
+    mcpJoinThread.setDaemon(true);
+    mcpJoinThread.start();
 
     return mcpServer;
   }
@@ -1304,7 +1321,9 @@ public class Freerouting {
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
-    new Thread(checker).start();
+    Thread versionThread = new Thread(checker, "version-checker");
+    versionThread.setDaemon(true);
+    versionThread.start();
 
     // Check if the user requested help
     if (globalSettings.showHelpOption) {

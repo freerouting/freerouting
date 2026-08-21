@@ -63,7 +63,8 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
       return;
     }
 
-    new Thread(
+    Thread senderThread =
+        new Thread(
             () -> {
               HttpURLConnection connection = null;
 
@@ -121,8 +122,10 @@ public class FreeroutingAnalyticsClient implements AnalyticsClient {
                 // logs the first failure immediately and then emits a single hourly summary.
                 AnalyticsErrorAggregator.recordFailure(endpoint, e);
               }
-            })
-        .start();
+            },
+            "analytics-freerouting-sender");
+    senderThread.setDaemon(true);
+    senderThread.start();
   }
 
   @Override
