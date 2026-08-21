@@ -1,6 +1,6 @@
 # Complete Codebase Security Audit Plan
 
-**Status:** Phase 0 complete; threat-model phase next
+**Status:** Phase 0 complete; threat model complete; next is Phase 1 scanners (optional parallel) then Pass A
 **Owner:** maintainers (agent-assisted)
 **Scope:** full Freerouting tree except frozen `src_v19/` (reference only; do not refactor)
 **Tracking folder:** `docs/issues/`
@@ -56,7 +56,7 @@ Cost figures are CursorBench averages. Real audit chats will often cost more (la
 - Serialization: `ObjectInputStream` / `.frb` / board snapshots
 - Supply chain: Gradle, Docker, GitHub Actions `permissions`
 
-**Threat-model output:** `docs/issues/security-audit-threat-model.md`
+**Threat-model output:** `docs/issues/security-audit-threat-model.md` (complete 2026-08-21)
 
 Must include:
 
@@ -335,7 +335,7 @@ Temporary artifacts (heap dumps, raw scanner XML, draft replies): `logs/security
 
 The audit is complete when:
 
-- [ ] Threat model and inventory exist
+- [x] Threat model and inventory exist
 - [ ] Passes A–H have hunter reports; A, B (and G if network-reachable) have Extra High confirmation
 - [ ] Scanner summary exists
 - [ ] Risk register lists every confirmed finding with severity and status
