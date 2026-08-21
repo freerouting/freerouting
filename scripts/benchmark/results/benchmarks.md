@@ -1,5 +1,5 @@
 # Freerouting Nightly Benchmarks Report
-Generated on: 2026-08-21 04:58:34
+Generated on: 2026-08-21 09:11:38
 System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)
 
 This report lists the latest benchmark run results for each Freerouting version and fixture combination.
@@ -12,7 +12,7 @@ Comprehensive performance across all benchmark fixtures.
 | Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | 1.9.0           |     1157 |  419/1157 ( 36.2%) |  578/1157 ( 50.0%) |    0/1157 (  0.0%) |    3/1157 (  0.3%) |  **970.6** |
-| v2.3.1-SNAPSHOT |     1157 |  358/1157 ( 30.9%) |  597/1157 ( 51.6%) |    0/1157 (  0.0%) |    7/1157 (  0.6%) |      928.5 |
+| v2.3.1-SNAPSHOT |     1157 |  358/1157 ( 30.9%) |  598/1157 ( 51.7%) |    0/1157 (  0.0%) |    0/1157 (  0.0%) |      925.5 |
 
 
 ### Tier A: Canary Gate
@@ -30,7 +30,7 @@ Standard 2-4 layer boards evaluated for routine optimization progress.
 | Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | 1.9.0           |      844 |  260/ 844 ( 30.8%) |  400/ 844 ( 47.4%) |    0/ 844 (  0.0%) |    2/ 844 (  0.2%) |  **968.5** |
-| v2.3.1-SNAPSHOT |      844 |  171/ 844 ( 20.3%) |  391/ 844 ( 46.3%) |    0/ 844 (  0.0%) |    4/ 844 (  0.5%) |      918.4 |
+| v2.3.1-SNAPSHOT |      844 |  171/ 844 ( 20.3%) |  391/ 844 ( 46.3%) |    0/ 844 (  0.0%) |    0/ 844 (  0.0%) |      915.3 |
 
 
 ### Tier C: Complex / Multi-Layer
@@ -39,7 +39,7 @@ Dense and 6+ layer boards requiring deeper pathfinding.
 | Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | 1.9.0           |      122 |   21/ 122 ( 17.2%) |   32/ 122 ( 26.2%) |    0/ 122 (  0.0%) |    1/ 122 (  0.8%) |  **954.9** |
-| v2.3.1-SNAPSHOT |      122 |   18/ 122 ( 14.8%) |   34/ 122 ( 27.9%) |    0/ 122 (  0.0%) |    2/ 122 (  1.6%) |      903.1 |
+| v2.3.1-SNAPSHOT |      122 |   18/ 122 ( 14.8%) |   34/ 122 ( 27.9%) |    0/ 122 (  0.0%) |    0/ 122 (  0.0%) |      896.2 |
 
 
 ### Tier D: Extreme Stress / Diagnostic
@@ -48,7 +48,7 @@ High net-count and large surface-area stress boards.
 | Version         | Fixtures | Clean (0 DRC)      | Fully-Routed       | Timeouts           | Failures           | Avg. Score |
 | :-------------- | -------: | -----------------: | -----------------: | -----------------: | -----------------: | ---------: |
 | 1.9.0           |       22 |    2/  22 (  9.1%) |    7/  22 ( 31.8%) |    0/  22 (  0.0%) |    0/  22 (  0.0%) |  **982.7** |
-| v2.3.1-SNAPSHOT |       22 |    0/  22 (  0.0%) |    3/  22 ( 13.6%) |    0/  22 (  0.0%) |    1/  22 (  4.5%) |      903.1 |
+| v2.3.1-SNAPSHOT |       22 |    0/  22 (  0.0%) |    4/  22 ( 18.2%) |    0/  22 (  0.0%) |    0/  22 (  0.0%) |      907.4 |
 
 
 ## Group: [PCBench](../fixtures/PCBench)
@@ -6790,7 +6790,7 @@ Size: 57.5 kB · Layers: 2 · Nets: 86 · Components: 263 · Dimensions: 370.46 
 | Version         | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0           | N/A  |                N/A |        N/A |     115.34 |   137.29 |    252.63 |   0+  5+  2 |        1 |          0 |   998 |       453 |     8172.0 |  655 / 0 |       |
-| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  0+  0 |      N/A |        N/A |   N/A |         0 |        0.0 |    4 / 2 | 2     |
+| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |     436.25 |      N/A |    436.25 |   0+  1+  0 |       14 |          0 |   966 |       987 |  1679119.8 |    5 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/medusa_medusa_cape/unrouted.dsn)
@@ -8190,7 +8190,7 @@ Size: 77.3 kB · Layers: 2 · Nets: 421 · Components: 457 · Dimensions: 68.58 
 | Version         | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0           | N/A  |                N/A |        N/A |      15.97 |   862.71 |    878.68 |   0+  2+  2 |        0 |          0 |  1000 |       215 |     8172.0 |    0 / 0 |       |
-| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |        N/A |      N/A |       N/A |   0+  0+  0 |      N/A |        N/A |   N/A |         0 |        0.0 |    4 / 2 | 2     |
+| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |      33.24 |      N/A |     33.24 |   0+  2+  0 |        0 |          8 |   998 |       515 |   135086.5 |    1 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/pesho_pesho/unrouted.dsn)
@@ -10160,7 +10160,7 @@ Size: 29.4 kB · Layers: 2 · Nets: 9 · Components: 26 · Dimensions: 60.0 x 19
 | Version         | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0           | N/A  |                N/A |        N/A |       2.85 |     0.73 |      3.58 |   0+ 20+  2 |        2 |          0 |   962 |       124 |     8172.0 |    0 / 0 |       |
-| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |       0.25 |      N/A |      0.25 |   0+  1+  0 |        0 |          0 |     0 |         0 |        0.0 |    4 / 0 |       |
+| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |       8.72 |      N/A |      8.72 |   0+  1+  0 |        2 |          0 |   959 |       506 |    47415.3 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Starling_matrix/unrouted.dsn)
@@ -10170,7 +10170,7 @@ Size: 20.7 kB · Layers: 2 · Nets: 27 · Components: 29 · Dimensions: 26.37 x 
 | Version         | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0           | N/A  |                N/A |        N/A |       8.95 |      N/A |      8.95 |   0+  7+ 14 |        6 |         38 |   921 |        96 |     8172.0 |    4 / 2 | 2     |
-| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |     216.47 |      N/A |    216.47 |   0+  1+  0 |        0 |         28 |   927 |       450 |   447010.6 |    3 / 0 |       |
+| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |      63.30 |      N/A |     63.30 |   0+  1+  0 |        0 |         28 |   927 |       637 |   457441.8 |    2 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/Starling_Starling_V1/unrouted.dsn)
@@ -10180,7 +10180,7 @@ Size: 33.8 kB · Layers: 2 · Nets: 27 · Components: 25 · Dimensions: 60.1 x 2
 | Version         | Mode | Fanout             | Fanout (s) | Router (s) | Opt. (s) | Total (s) | Passes      | Unrouted | Violations | Score | Heap (MB) | Alloc (GB) | Warn/Err | Notes |
 | :-------------- | :--- | -----------------: | ---------: | ---------: | -------: | --------: | ----------: | -------: | ---------: | ----: | --------: | ---------: | -------: | :---- |
 | 1.9.0           | N/A  |                N/A |        N/A |      21.75 |     2.83 |     24.58 |   0+ 14+  2 |        1 |          0 |   987 |       194 |     8172.0 |    1 / 0 |       |
-| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |      61.51 |      N/A |     61.51 |   0+  6+  0 |        7 |          0 |   911 |       348 |    95626.4 |    2 / 0 |       |
+| v2.3.1-SNAPSHOT | N/A  |                N/A |        N/A |      30.67 |      N/A |     30.67 |   0+  1+  0 |        1 |          0 |   987 |       522 |   154402.3 |    1 / 0 |       |
 
 
 ### Fixture: [unrouted.dsn](../fixtures/PCBench/starsynctrackers_reset_switch/unrouted.dsn)

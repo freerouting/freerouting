@@ -84,7 +84,7 @@ function Test-RunIsFailed {
     if ($Run.exit.code -ne $null -and $Run.exit.code -ne 0) { return $true }
     if ($Run.exit.state -and $Run.exit.state -eq "FAILED") { return $true }
     $score = Get-RunScoreValue $Run
-    if ($score -eq $null -or $score -eq 0) { return $true }
+    if ($score -eq $null) { return $true }
     return $false
 }
 

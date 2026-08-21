@@ -504,6 +504,7 @@ def main() -> int:
     parser.add_argument("--workers", default=8, type=int)
     parser.add_argument("--max-boards", default=0, type=int)
     parser.add_argument("--version-label", default="v2.3.1-SNAPSHOT")
+    parser.add_argument("--filter", default="", help="Filter fixtures by substring/pattern")
     parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
     args = parser.parse_args()
 
@@ -549,6 +550,9 @@ def main() -> int:
 
     if args.tier != "All":
         boards = [b for b in boards if b.get("tier") == args.tier]
+
+    if args.filter:
+        boards = [b for b in boards if args.filter.lower() in b.get("board_id", "").lower()]
 
     if args.max_boards > 0:
         boards = boards[: args.max_boards]

@@ -21,7 +21,6 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.Nets;
 import app.freerouting.util.TextManager;
@@ -433,8 +432,11 @@ public abstract class Item
           int clComp1 = 0;
           int clComp2 = 0;
           if (this.board.searchTreeManager.isClearanceCompensationUsed()) {
-            clComp1 = defaultTree.clearanceCompensationValue(this.clearanceClassIndex, shapeLayer(i));
-            clComp2 = defaultTree.clearanceCompensationValue(currentItem.clearanceClassIndex, shapeLayer(i));
+            clComp1 =
+                defaultTree.clearanceCompensationValue(this.clearanceClassIndex, shapeLayer(i));
+            clComp2 =
+                defaultTree.clearanceCompensationValue(
+                    currentItem.clearanceClassIndex, shapeLayer(i));
           } else {
             clComp1 = (int) Math.round(0.5 * minimumClearance);
             clComp2 = (int) Math.round(minimumClearance - clComp1);
@@ -471,11 +473,7 @@ public abstract class Item
   }
 
   private double calculateClearanceBetweenTwoShapes(
-      TileShape rawShape1,
-      TileShape rawShape2,
-      double minimumClearance,
-      int clComp1,
-      int clComp2) {
+      TileShape rawShape1, TileShape rawShape2, double minimumClearance, int clComp1, int clComp2) {
     if (rawShape1.intersection(rawShape2).dimension() == 2) {
       return 0.0;
     }

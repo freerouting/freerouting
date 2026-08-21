@@ -165585,8 +165585,348 @@
       "log_file": "benchmark\\logs\\zx-sizif-512-ext_sizif512ext--unrouted--v2.3.1-SNAPSHOT.log",
       "result_json": "benchmark\\outputs\\zx-sizif-512-ext_sizif512ext--unrouted--v2.3.1-SNAPSHOT-result.json",
       "output_file": "benchmark\\outputs\\zx-sizif-512-ext_sizif512ext--unrouted--v2.3.1-SNAPSHOT.ses"
+    },
+    {
+      "cache_key": "Starling__autosave-Starling WiPSU ver_0.1--unrouted--v2.3.1-SNAPSHOT--0dd76cda",
+      "run_at": "2026-08-21T06:58:44.357971+00:00",
+      "system": {
+        "os": "Windows-11-10.0.26200-SP0",
+        "cpu_name": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD",
+        "cpu_logical_cores": 12
+      },
+      "binary": {
+        "filename": "freerouting-current.jar",
+        "version_label": "v2.3.1-SNAPSHOT",
+        "sha256": "0383845099e0d11c5f534ea190d8f293439d72ccba7af3ec359a83b2c0f990de",
+        "size_bytes": 63204451,
+        "git_sha": "0dd76cda"
+      },
+      "fixture": {
+        "filename": "unrouted.dsn",
+        "group": "PCBench",
+        "relative_path": "PCBench/Starling__autosave-Starling WiPSU ver_0.1/unrouted.dsn",
+        "size_bytes": 30085,
+        "sha256": "65bb8a93e9af4d97065a29b2351b39264bd3c4466844fffaff39d1a55e21cc45",
+        "host_cad": "KiCad's Pcbnew",
+        "host_version": "",
+        "layer_count": 2,
+        "net_count": 9,
+        "component_count": 26,
+        "board_width_mm": 60.0,
+        "board_height_mm": 19.55,
+        "board_area_cm2": 11.73,
+        "tier": "B"
+      },
+      "phases": {
+        "fanout": {},
+        "autorouter": {
+          "duration_seconds": 8.718,
+          "passes_completed": 1
+        },
+        "optimizer": {}
+      },
+      "quality": {
+        "total_nets": 9,
+        "unrouted_connections": 2,
+        "clearance_violations": 0,
+        "min_violation_um": 0.0,
+        "max_violation_um": 0.0,
+        "avg_violation_um": 0.0,
+        "quality_score": 959.1776,
+        "wall_clock_seconds": 12.16,
+        "cpu_seconds": 7.671875,
+        "peak_heap_mb": 506.47623,
+        "total_allocated_gb": 47415.348
+      },
+      "exit": {
+        "code": 0,
+        "state": "COMPLETED",
+        "crashed": false,
+        "oom_detected": false,
+        "timed_out": false
+      },
+      "log_analysis": {
+        "warn_count": 2,
+        "error_count": 0,
+        "exceptions": 0
+      },
+      "log_file": "benchmark\\logs\\Starling__autosave-Starling WiPSU ver_0.1--unrouted--v2.3.1-SNAPSHOT.log",
+      "result_json": "benchmark\\outputs\\Starling__autosave-Starling WiPSU ver_0.1--unrouted--v2.3.1-SNAPSHOT-result.json",
+      "output_file": "benchmark\\outputs\\Starling__autosave-Starling WiPSU ver_0.1--unrouted--v2.3.1-SNAPSHOT.ses"
+    },
+    {
+      "cache_key": "Starling_matrix--unrouted--v2.3.1-SNAPSHOT--0dd76cda",
+      "run_at": "2026-08-21T06:59:51.259810+00:00",
+      "system": {
+        "os": "Windows-11-10.0.26200-SP0",
+        "cpu_name": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD",
+        "cpu_logical_cores": 12
+      },
+      "binary": {
+        "filename": "freerouting-current.jar",
+        "version_label": "v2.3.1-SNAPSHOT",
+        "sha256": "0383845099e0d11c5f534ea190d8f293439d72ccba7af3ec359a83b2c0f990de",
+        "size_bytes": 63204451,
+        "git_sha": "0dd76cda"
+      },
+      "fixture": {
+        "filename": "unrouted.dsn",
+        "group": "PCBench",
+        "relative_path": "PCBench/Starling_matrix/unrouted.dsn",
+        "size_bytes": 21230,
+        "sha256": "dfe1ad38f7d72fb41433fcba41c793fec0164b1e7087f2784b6b9dbad4883262",
+        "host_cad": "KiCad's Pcbnew",
+        "host_version": "",
+        "layer_count": 2,
+        "net_count": 27,
+        "component_count": 29,
+        "board_width_mm": 26.37,
+        "board_height_mm": 65.55,
+        "board_area_cm2": 17.29,
+        "tier": "B"
+      },
+      "phases": {
+        "fanout": {},
+        "autorouter": {
+          "duration_seconds": 63.295,
+          "passes_completed": 1
+        },
+        "optimizer": {}
+      },
+      "quality": {
+        "total_nets": 27,
+        "unrouted_connections": 0,
+        "clearance_violations": 28,
+        "min_violation_um": 0.00762939453125,
+        "max_violation_um": 73.69232177734375,
+        "avg_violation_um": 5.270821707589286,
+        "quality_score": 927.2589,
+        "wall_clock_seconds": 66.82,
+        "cpu_seconds": 61.5,
+        "peak_heap_mb": 636.595,
+        "total_allocated_gb": 457441.8
+      },
+      "exit": {
+        "code": 0,
+        "state": "COMPLETED",
+        "crashed": false,
+        "oom_detected": false,
+        "timed_out": false
+      },
+      "log_analysis": {
+        "warn_count": 2,
+        "error_count": 0,
+        "exceptions": 0
+      },
+      "log_file": "benchmark\\logs\\Starling_matrix--unrouted--v2.3.1-SNAPSHOT.log",
+      "result_json": "benchmark\\outputs\\Starling_matrix--unrouted--v2.3.1-SNAPSHOT-result.json",
+      "output_file": "benchmark\\outputs\\Starling_matrix--unrouted--v2.3.1-SNAPSHOT.ses"
+    },
+    {
+      "cache_key": "Starling_Starling_V1--unrouted--v2.3.1-SNAPSHOT--0dd76cda",
+      "run_at": "2026-08-21T07:00:25.020842+00:00",
+      "system": {
+        "os": "Windows-11-10.0.26200-SP0",
+        "cpu_name": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD",
+        "cpu_logical_cores": 12
+      },
+      "binary": {
+        "filename": "freerouting-current.jar",
+        "version_label": "v2.3.1-SNAPSHOT",
+        "sha256": "0383845099e0d11c5f534ea190d8f293439d72ccba7af3ec359a83b2c0f990de",
+        "size_bytes": 63204451,
+        "git_sha": "0dd76cda"
+      },
+      "fixture": {
+        "filename": "unrouted.dsn",
+        "group": "PCBench",
+        "relative_path": "PCBench/Starling_Starling_V1/unrouted.dsn",
+        "size_bytes": 34604,
+        "sha256": "31871239038b0d76121a59b452095ca217c0350156ff756b583e681dff633f44",
+        "host_cad": "KiCad's Pcbnew",
+        "host_version": "",
+        "layer_count": 2,
+        "net_count": 27,
+        "component_count": 25,
+        "board_width_mm": 60.1,
+        "board_height_mm": 23.8,
+        "board_area_cm2": 14.3,
+        "tier": "B"
+      },
+      "phases": {
+        "fanout": {},
+        "autorouter": {
+          "duration_seconds": 30.668,
+          "passes_completed": 1
+        },
+        "optimizer": {}
+      },
+      "quality": {
+        "total_nets": 27,
+        "unrouted_connections": 1,
+        "clearance_violations": 0,
+        "min_violation_um": 0.0,
+        "max_violation_um": 0.0,
+        "avg_violation_um": 0.0,
+        "quality_score": 987.3252,
+        "wall_clock_seconds": 33.76,
+        "cpu_seconds": 28.953123,
+        "peak_heap_mb": 521.8756,
+        "total_allocated_gb": 154402.34
+      },
+      "exit": {
+        "code": 0,
+        "state": "COMPLETED",
+        "crashed": false,
+        "oom_detected": false,
+        "timed_out": false
+      },
+      "log_analysis": {
+        "warn_count": 1,
+        "error_count": 0,
+        "exceptions": 0
+      },
+      "log_file": "benchmark\\logs\\Starling_Starling_V1--unrouted--v2.3.1-SNAPSHOT.log",
+      "result_json": "benchmark\\outputs\\Starling_Starling_V1--unrouted--v2.3.1-SNAPSHOT-result.json",
+      "output_file": "benchmark\\outputs\\Starling_Starling_V1--unrouted--v2.3.1-SNAPSHOT.ses"
+    },
+    {
+      "cache_key": "mechkeys_MF68+10--unrouted--v2.3.1-SNAPSHOT--0dd76cda",
+      "run_at": "2026-08-21T07:08:02.846864+00:00",
+      "system": {
+        "os": "Windows-11-10.0.26200-SP0",
+        "cpu_name": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD",
+        "cpu_logical_cores": 12
+      },
+      "binary": {
+        "filename": "freerouting-current.jar",
+        "version_label": "v2.3.1-SNAPSHOT",
+        "sha256": "0383845099e0d11c5f534ea190d8f293439d72ccba7af3ec359a83b2c0f990de",
+        "size_bytes": 63204451,
+        "git_sha": "0dd76cda"
+      },
+      "fixture": {
+        "filename": "unrouted.dsn",
+        "group": "PCBench",
+        "relative_path": "PCBench/mechkeys_MF68+10/unrouted.dsn",
+        "size_bytes": 58926,
+        "sha256": "4bf2b3065b0d553d417f71c6f88135252b57df8620429d444574525a0d8af295",
+        "host_cad": "KiCad's Pcbnew",
+        "host_version": "",
+        "layer_count": 2,
+        "net_count": 86,
+        "component_count": 263,
+        "board_width_mm": 370.46,
+        "board_height_mm": 94.44,
+        "board_area_cm2": 349.86,
+        "tier": "C"
+      },
+      "phases": {
+        "fanout": {},
+        "autorouter": {
+          "duration_seconds": 436.247,
+          "passes_completed": 1
+        },
+        "optimizer": {}
+      },
+      "quality": {
+        "total_nets": 86,
+        "unrouted_connections": 14,
+        "clearance_violations": 0,
+        "min_violation_um": 0.0,
+        "max_violation_um": 0.0,
+        "avg_violation_um": 0.0,
+        "quality_score": 966.24994,
+        "wall_clock_seconds": 439.71,
+        "cpu_seconds": 427.21875,
+        "peak_heap_mb": 987.10944,
+        "total_allocated_gb": 1679119.8
+      },
+      "exit": {
+        "code": 0,
+        "state": "COMPLETED",
+        "crashed": false,
+        "oom_detected": false,
+        "timed_out": false
+      },
+      "log_analysis": {
+        "warn_count": 5,
+        "error_count": 0,
+        "exceptions": 0
+      },
+      "log_file": "benchmark\\logs\\mechkeys_MF68+10--unrouted--v2.3.1-SNAPSHOT.log",
+      "result_json": "benchmark\\outputs\\mechkeys_MF68+10--unrouted--v2.3.1-SNAPSHOT-result.json",
+      "output_file": "benchmark\\outputs\\mechkeys_MF68+10--unrouted--v2.3.1-SNAPSHOT.ses"
+    },
+    {
+      "cache_key": "perfplusplus_Ard-perf++--unrouted--v2.3.1-SNAPSHOT--0dd76cda",
+      "run_at": "2026-08-21T07:08:58.438915+00:00",
+      "system": {
+        "os": "Windows-11-10.0.26200-SP0",
+        "cpu_name": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD",
+        "cpu_logical_cores": 12
+      },
+      "binary": {
+        "filename": "freerouting-current.jar",
+        "version_label": "v2.3.1-SNAPSHOT",
+        "sha256": "0383845099e0d11c5f534ea190d8f293439d72ccba7af3ec359a83b2c0f990de",
+        "size_bytes": 63204451,
+        "git_sha": "0dd76cda"
+      },
+      "fixture": {
+        "filename": "unrouted.dsn",
+        "group": "PCBench",
+        "relative_path": "PCBench/perfplusplus_Ard-perf++/unrouted.dsn",
+        "size_bytes": 79142,
+        "sha256": "5fa42546421b6e47fe166434f40ca23ecf8e70bd0b3442ddc4c88a39b90447f7",
+        "host_cad": "KiCad's Pcbnew",
+        "host_version": "",
+        "layer_count": 2,
+        "net_count": 421,
+        "component_count": 457,
+        "board_width_mm": 68.58,
+        "board_height_mm": 53.34,
+        "board_area_cm2": 36.58,
+        "tier": "D"
+      },
+      "phases": {
+        "fanout": {},
+        "autorouter": {
+          "duration_seconds": 33.242,
+          "passes_completed": 2
+        },
+        "optimizer": {}
+      },
+      "quality": {
+        "total_nets": 421,
+        "unrouted_connections": 0,
+        "clearance_violations": 8,
+        "min_violation_um": 0.00762939453125,
+        "max_violation_um": 0.00762939453125,
+        "avg_violation_um": 0.00762939453125,
+        "quality_score": 998.19354,
+        "wall_clock_seconds": 37.07,
+        "cpu_seconds": 32.32812,
+        "peak_heap_mb": 514.6485,
+        "total_allocated_gb": 135086.52
+      },
+      "exit": {
+        "code": 0,
+        "state": "COMPLETED",
+        "crashed": false,
+        "oom_detected": false,
+        "timed_out": false
+      },
+      "log_analysis": {
+        "warn_count": 1,
+        "error_count": 0,
+        "exceptions": 0
+      },
+      "log_file": "benchmark\\logs\\perfplusplus_Ard-perf++--unrouted--v2.3.1-SNAPSHOT.log",
+      "result_json": "benchmark\\outputs\\perfplusplus_Ard-perf++--unrouted--v2.3.1-SNAPSHOT-result.json",
+      "output_file": "benchmark\\outputs\\perfplusplus_Ard-perf++--unrouted--v2.3.1-SNAPSHOT.ses"
     }
   ],
-  "total_runs": 2316,
-  "generated_at": "2026-08-21T02:58:31.720191+00:00"
+  "total_runs": 2321,
+  "generated_at": "2026-08-21T07:08:58.674831+00:00"
 }
