@@ -438,6 +438,29 @@ class McpEndpointsTest {
     }
   }
 
+  @Test
+  void mcpLocalFileToolsRejectSystemPaths() throws Exception {
+    JsonObject uploadRequest = new JsonObject();
+    uploadRequest.addProperty("jsonrpc", "2.0");
+    uploadRequest.addProperty("id", 88);
+    uploadRequest.addProperty("method", "tools/call");
+
+    JsonObject uploadParams = new JsonObject();
+    uploadParams.addProperty("name", "upload_job_input_from_local_file");
+    JsonObject uploadArgs = new JsonObject();
+    uploadArgs.addProperty("jobId", "test-job-id");
+    uploadArgs.addProperty("filePath", "/etc/shadow");
+    uploadParams.add("arguments", uploadArgs);
+    uploadRequest.add("params", uploadParams);
+
+    HttpResponse<String> response =
+        httpClient.send(
+            authenticatedMcpRequest(uploadRequest), HttpResponse.BodyHandlers.ofString());
+    JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
+    assertTrue(payload.has("error"), "Must return JSON-RPC error when accessing system path");
+    assertEquals(-32603, payload.getAsJsonObject("error").get("code").getAsInt());
+  }
+
   private String createTestSession() throws Exception {
     JsonObject request = new JsonObject();
     request.addProperty("jsonrpc", "2.0");
