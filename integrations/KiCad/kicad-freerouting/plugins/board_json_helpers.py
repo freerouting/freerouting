@@ -147,10 +147,17 @@ def _build_board_json_manually(board):
     """
     global _debug_logs
     _debug_logs = []
-    debug_log("Starting manual board JSON serialization...")
+    version_str = "10.0"
+    try:
+        if hasattr(pcbnew, "GetBuildVersion"):
+            version_str = str(pcbnew.GetBuildVersion())
+    except Exception:
+        pass
 
     data = {
         "designName": Path(board.GetFileName()).stem if board.GetFileName() else "Untitled",
+        "hostCad": "KiCad",
+        "hostVersion": version_str,
         "unit": "MM",
         "resolution": 1.0,
         "layers": [],

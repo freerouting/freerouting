@@ -311,8 +311,14 @@ public final class KiCadJsonReader {
 
       // 6. Communication object setup
       final CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
+      String hostCad =
+          boardJson.hostCad != null && !boardJson.hostCad.isBlank() ? boardJson.hostCad : "KiCad";
+      String hostVersion =
+          boardJson.hostVersion != null && !boardJson.hostVersion.isBlank()
+              ? boardJson.hostVersion
+              : "v10.0";
       Communication.SpecctraParserInfo parserInfo =
-          new Communication.SpecctraParserInfo("\"", "KiCad", "v10.0", null, null, false);
+          new Communication.SpecctraParserInfo("\"", hostCad, hostVersion, null, null, false);
       Communication communication =
           new Communication(
               userUnit, resolution, parserInfo, coordinateTransform, idGenerator, observers);

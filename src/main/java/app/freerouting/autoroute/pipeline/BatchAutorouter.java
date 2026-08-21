@@ -115,7 +115,9 @@ public final class BatchAutorouter extends NamedAlgorithm {
         !job.routerSettings.isFanoutEnabled(),
         true,
         job.routerSettings.getStartRipupCosts(),
-        job.routerSettings.tracePullTightAccuracy);
+        job.routerSettings.tracePullTightAccuracy != null
+            ? job.routerSettings.tracePullTightAccuracy
+            : 500);
     this.job = job;
   }
 

@@ -35,4 +35,14 @@ public interface AnalyticsClient {
    * @param enabled Whether the client should be enabled.
    */
   void setEnabled(boolean enabled);
+
+  /**
+   * Flushes any pending asynchronous analytics delivery tasks, waiting up to {@code timeoutMs}.
+   *
+   * @param timeoutMs maximum time to wait in milliseconds
+   */
+  default void flush(long timeoutMs) {}
+
+  /** Shuts down the analytics client and releases background resources. */
+  default void shutdown() {}
 }

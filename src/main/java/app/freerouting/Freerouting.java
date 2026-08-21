@@ -1295,6 +1295,9 @@ public class Freerouting {
     if (!globalSettings.userProfileSettings.userEmail.isBlank()) {
       FRAnalytics.refreshIdentity();
     }
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread(() -> FRAnalytics.flush(1500), "freerouting-analytics-shutdown-flush"));
     try {
       Thread.sleep(1000);
     } catch (Exception _) {

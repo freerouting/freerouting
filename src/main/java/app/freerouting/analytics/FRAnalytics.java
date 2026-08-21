@@ -446,10 +446,17 @@ public final class FRAnalytics {
         "statistics_jobs_completed", String.valueOf(globalSettings.statistics.jobsCompleted));
 
     trackAnonymousAction(permanentUserId, "Application Closed", properties);
-    try {
-      Thread.sleep(500);
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
+    flush(1000);
+  }
+
+  /**
+   * Flushes any pending asynchronous analytics delivery tasks, waiting up to {@code timeoutMs}.
+   *
+   * @param timeoutMs maximum time to wait in milliseconds
+   */
+  public static void flush(long timeoutMs) {
+    if (analytics != null) {
+      analytics.flush(timeoutMs);
     }
   }
 

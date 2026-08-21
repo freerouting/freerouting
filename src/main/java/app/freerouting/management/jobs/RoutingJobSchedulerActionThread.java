@@ -1,7 +1,9 @@
 package app.freerouting.management.jobs;
 
 import app.freerouting.Freerouting;
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
+import app.freerouting.autoroute.pipeline.BatchOptimizer;
 import app.freerouting.autoroute.pipeline.RoutingPipeline;
 import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
@@ -66,7 +68,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
                   this.monitorCpuAndMemoryUsage(job);
 
                   // Check for timeout
-                  if (!Instant.now().isBefore(job.timeoutAt)) {
+                  if (job.timeoutAt != null && !Instant.now().isBefore(job.timeoutAt)) {
 
                     // signal the job thread to stop, and wait gracefully for up to 30 seconds for
                     // it
@@ -87,15 +89,19 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     monitorThread.setDaemon(true);
     monitorThread.start();
 
+    boolean routerEnabled =
+        job.routerSettings.getRunRouter()
+            && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0);
+    if (routerEnabled) {
+      FRAnalytics.autorouterStarted();
+    }
+
     RoutingPipeline pipeline = RoutingPipeline.createForHeadless(job);
     pipeline.addBoardUpdatedEventListener(event -> setJobOutput(job));
     pipeline.addStageListener(
         new RoutingPipeline.StageListener() {
           @Override
           public void afterRouting(BatchAutorouter batchRouter) {
-            boolean routerEnabled =
-                job.routerSettings.getRunRouter()
-                    && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0);
             if (!routerEnabled) {
               return;
             }
@@ -109,6 +115,14 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
             double totalTime =
                 java.time.Duration.between(sessionStartTime, sessionEndTime).toMillis() / 1000.0;
             var finalStats = job.board.getStatistics();
+            Float normalizedScore = finalStats.getNormalizedScore(job.routerSettings.scoring);
+            FRAnalytics.autorouterFinished(
+                finalStats.nets.totalCount,
+                finalStats.connections.incompleteCount,
+                finalStats.clearanceViolations.totalCount,
+                job.board.getHash(),
+                normalizedScore);
+
             String completionStatus = "completed:";
             boolean isTimedOut =
                 (job.state == RoutingJobState.TIMED_OUT)
@@ -132,12 +146,22 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
                     batchRouter.getInitialUnroutedCount(),
                     totalTime,
                     FRLogger.formatScore(
-                        finalStats.getNormalizedScore(job.routerSettings.scoring),
+                        normalizedScore,
                         finalStats.connections.incompleteCount,
                         finalStats.clearanceViolations.totalCount),
                     job.resourceUsage.cpuTimeUsed,
                     job.resourceUsage.maxMemoryUsed / 1024.0f,
                     job.resourceUsage.peakMemoryUsed));
+          }
+
+          @Override
+          public void beforeOptimization(BatchOptimizer optimizer) {
+            FRAnalytics.routeOptimizerStarted();
+          }
+
+          @Override
+          public void afterOptimization(BatchOptimizer optimizer) {
+            FRAnalytics.routeOptimizerFinished();
           }
         });
     pipeline.run();

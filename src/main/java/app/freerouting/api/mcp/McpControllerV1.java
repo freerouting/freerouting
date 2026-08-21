@@ -203,7 +203,23 @@ public class McpControllerV1 extends BaseController {
       FRLogger.info("[mcp][cid=" + correlationId + "] response (error)=" + response.toString());
     }
 
-    FRAnalytics.apiEndpointCalled("POST v1/mcp", requestBody, response.toString(), userId);
+    String envHost = headers.getHeaderString("Freerouting-Environment-Host");
+    if (envHost == null || envHost.isBlank()) {
+      envHost = detectedClientInfo;
+    }
+    if (envHost != null && !envHost.isBlank()) {
+      app.freerouting.analytics.AnalyticsRequestContext.setEnvironmentHost(envHost);
+    }
+
+    String apiMethodTag = "POST v1/mcp";
+    if ("tools/call".equals(method)
+        && params != null
+        && params.has("name")
+        && params.get("name").isJsonPrimitive()) {
+      apiMethodTag = "POST v1/mcp (tool: " + params.get("name").getAsString() + ")";
+    }
+
+    FRAnalytics.apiEndpointCalled(apiMethodTag, requestBody, response.toString(), userId);
 
     if (isNotification) {
       return Response.noContent().header(CorrelationIdFilter.HEADER_NAME, correlationId).build();
