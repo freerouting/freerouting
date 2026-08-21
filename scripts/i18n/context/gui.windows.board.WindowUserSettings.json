@@ -182,13 +182,13 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowUserSettings"
     ],
-    "english_hash": "fcaf1884330b0fc7d256bd5d7443272a6b07e888fed8990cf4994a4480e9160f",
+    "english_hash": "dd9d36842c5d402cfdcd25619442700949e644c9ac84a7ee2b52f72687f8bdd2",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowUserSettings",
     "max_length_hint": 30,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "sponsor_message"
@@ -200,13 +200,13 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowUserSettings"
     ],
-    "english_hash": "17b0297915555a786e3f3798ed9b03943959954226a04a8b1c1dfd6289ea0168",
-    "grammatical_role": "fragment",
+    "english_hash": "1834f9fd0a757f193ab836dba9619d91ef64edbae9989fd92a1a5c6cf5d40358",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
-    "is_html": true,
+    "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowUserSettings",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "sponsor_button"

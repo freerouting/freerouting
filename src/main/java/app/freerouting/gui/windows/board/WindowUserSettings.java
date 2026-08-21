@@ -28,7 +28,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -307,8 +309,16 @@ public final class WindowUserSettings extends WindowBase {
     gbc.gridy = 12;
     gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    JLabel sponsorMessage = new JLabel(tm.getText("sponsor_message"));
-    profileDialog.add(sponsorMessage, gbc);
+    JTextArea sponsorMsgArea = new JTextArea(tm.getText("sponsor_message"));
+    sponsorMsgArea.setFont(UIManager.getFont("Label.font"));
+    sponsorMsgArea.setLineWrap(true);
+    sponsorMsgArea.setWrapStyleWord(true);
+    sponsorMsgArea.setOpaque(false);
+    sponsorMsgArea.setEditable(false);
+    sponsorMsgArea.setFocusable(false);
+    sponsorMsgArea.setRows(3);
+    sponsorMsgArea.setColumns(28);
+    profileDialog.add(sponsorMsgArea, gbc);
 
     // Sponsor button
     gbc.gridy = 13;
@@ -317,7 +327,7 @@ public final class WindowUserSettings extends WindowBase {
     gbc.weighty = 1.0;
     gbc.anchor = GridBagConstraints.PAGE_END;
     gbc.fill = GridBagConstraints.NONE;
-    JButton sponsorButton = new JButton(">  " + tm.getText("sponsor_button") + "  <");
+    JButton sponsorButton = new JButton(tm.getText("sponsor_button"));
     sponsorButton.setFont(sponsorButton.getFont().deriveFont(java.awt.Font.BOLD, 14f));
     sponsorButton.setForeground(new Color(200, 16, 46));
     var sponsorButtonSize = new Dimension(220, sponsorButton.getPreferredSize().height + 4);
