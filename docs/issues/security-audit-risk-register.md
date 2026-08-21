@@ -1,14 +1,13 @@
 # Security Audit Risk Register
 
-**Status:** Phase 3 triage complete (2026-08-21)
+**Status:** Phase 4 remediation complete (2026-08-21)
 **Audit plan:** [security-audit-plan.md](security-audit-plan.md)
+**Remediation log:** [security-audit-remediation-log.md](security-audit-remediation-log.md)
 **Threat model:** [security-audit-threat-model.md](security-audit-threat-model.md)
 **Triage model:** Grok 4.6 Extra High
 **Inputs:** confirmed Pass A–H reports; threat model; [scanner summary](security-audit-scanner-summary.md) (executed 2026-08-21)
 
-Only **confirmed** pass findings belong here. Unpromoted, disputed, and unreproduced items stay
-in the pass reports. No GitHub issues were opened. No production code was changed. Remediation
-is Phase 4.
+All confirmed findings across Quick Wins and Batches 1 to 6 have been remediated, verified against quality gates, and documented in [security-audit-remediation-log.md](security-audit-remediation-log.md).
 
 ## Summary
 
