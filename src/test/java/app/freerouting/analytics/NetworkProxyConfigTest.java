@@ -5,10 +5,47 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.settings.NetworkSettings;
+import java.util.HashMap;
+import java.util.Map;
 import javax.net.ssl.SSLSocketFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class NetworkProxyConfigTest {
+
+  private static final String[] PROPS = {
+    "https.proxyHost",
+    "https.proxyPort",
+    "http.proxyHost",
+    "http.proxyPort",
+    "http.nonProxyHosts",
+    "javax.net.ssl.trustStore",
+    "javax.net.ssl.trustStorePassword",
+    "javax.net.ssl.trustStoreType"
+  };
+
+  private final Map<String, String> originalProps = new HashMap<>();
+
+  @BeforeEach
+  void setUp() {
+    originalProps.clear();
+    for (String prop : PROPS) {
+      originalProps.put(prop, System.getProperty(prop));
+    }
+  }
+
+  @AfterEach
+  void tearDown() {
+    for (String prop : PROPS) {
+      String val = originalProps.get(prop);
+      if (val != null) {
+        System.setProperty(prop, val);
+      } else {
+        System.clearProperty(prop);
+      }
+    }
+  }
 
   @Test
   void testConfigureWithNetworkSettings() {

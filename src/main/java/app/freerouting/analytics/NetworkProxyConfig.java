@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -178,6 +180,7 @@ public final class NetworkProxyConfig {
 
     if (trustStorePath != null
         && !trustStorePath.isBlank()
+        && Files.exists(Path.of(trustStorePath))
         && System.getProperty("javax.net.ssl.trustStore") == null) {
       System.setProperty("javax.net.ssl.trustStore", trustStorePath);
       if (settings != null
@@ -199,7 +202,7 @@ public final class NetworkProxyConfig {
    * OS/enterprise certificates.
    *
    * @param settings optional network settings
-   * @return the composite socket factory, or {@code null} if default is sufficient
+   * @return the composite socket factory, or default factory if customization is not needed
    */
   public static SSLSocketFactory getCompositeSslSocketFactory(NetworkSettings settings) {
     if (cachedSslSocketFactory != null) {
@@ -215,13 +218,17 @@ public final class NetworkProxyConfig {
         List<X509TrustManager> trustManagers = new ArrayList<>();
 
         // 1. Standard default trust managers (JDK cacerts)
-        TrustManagerFactory defaultTmf =
-            TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        defaultTmf.init((KeyStore) null);
-        for (TrustManager tm : defaultTmf.getTrustManagers()) {
-          if (tm instanceof X509TrustManager x509Tm) {
-            trustManagers.add(x509Tm);
+        try {
+          TrustManagerFactory defaultTmf =
+              TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+          defaultTmf.init((KeyStore) null);
+          for (TrustManager tm : defaultTmf.getTrustManagers()) {
+            if (tm instanceof X509TrustManager x509Tm) {
+              trustManagers.add(x509Tm);
+            }
           }
+        } catch (Throwable t) {
+          FRLogger.warn("Could not load default trust managers: " + t.getMessage());
         }
 
         // 2. Windows OS root trust store if running on Windows
@@ -243,12 +250,14 @@ public final class NetworkProxyConfig {
           }
         }
 
-        // 3. Custom certificate file if provided
+        // 3. Custom certificate file if provided and exists
         String customCaPath =
             settings != null && settings.customTruststorePath != null
                 ? settings.customTruststorePath
                 : getFirstEnv("SSL_CERT_FILE", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE");
-        if (customCaPath != null && !customCaPath.isBlank()) {
+        if (customCaPath != null
+            && !customCaPath.isBlank()
+            && Files.exists(Path.of(customCaPath))) {
           try (InputStream is = new FileInputStream(customCaPath)) {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             Collection<? extends java.security.cert.Certificate> certs =
@@ -278,19 +287,23 @@ public final class NetworkProxyConfig {
           }
         }
 
-        if (trustManagers.size() <= 1) {
-          cachedSslSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory();
-          return cachedSslSocketFactory;
-        }
-
-        X509TrustManager compositeTrustManager = new CompositeX509TrustManager(trustManagers);
         SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, new TrustManager[] {compositeTrustManager}, null);
+        if (!trustManagers.isEmpty()) {
+          X509TrustManager compositeTrustManager = new CompositeX509TrustManager(trustManagers);
+          sslContext.init(null, new TrustManager[] {compositeTrustManager}, null);
+        } else {
+          sslContext.init(null, null, null);
+        }
         cachedSslSocketFactory = sslContext.getSocketFactory();
         return cachedSslSocketFactory;
-      } catch (Exception e) {
-        FRLogger.warn("Could not initialize composite SSL socket factory: " + e.getMessage());
-        return null;
+      } catch (Throwable e) {
+        FRLogger.warn("Could not initialize SSL socket factory: " + e.getMessage());
+        try {
+          cachedSslSocketFactory = SSLContext.getDefault().getSocketFactory();
+          return cachedSslSocketFactory;
+        } catch (Exception _) {
+          return HttpsURLConnection.getDefaultSSLSocketFactory();
+        }
       }
     }
   }
