@@ -44,7 +44,7 @@ public abstract class Item
   /** The board this Item is on. */
   public transient BasicBoard board;
 
-  public double smallestClearance;
+  public double smallestClearance = -1.0;
 
   /** Not 0, if this item belongs to a component. */
   protected int componentId;
@@ -415,7 +415,7 @@ public abstract class Item
         if (isObstacle) {
           // Get the two shapes the clearance is calculated between
           TileShape shape1 = currentTileShape;
-          TileShape shape2 = currentItem.getTreeShape(defaultTree, currentEntry.shapeIndexInObject);
+          TileShape shape2 = currentItem.getTileShape(currentEntry.shapeIndexInObject);
           if (shape1 == null || shape2 == null) {
             FRLogger.warn("Item.clearanceViolations: unexpected null shape");
             continue;
@@ -425,9 +425,6 @@ public abstract class Item
           double minimumClearance =
               board.rules.clearanceMatrix.getValue(
                   currentItem.clearanceClassIndex, this.clearanceClassIndex, shapeLayer(i), false);
-
-          TileShape enlargedShape1 = (TileShape) shape1.enlarge(0);
-          TileShape enlargedShape2 = (TileShape) shape2.enlarge(0);
 
           int clComp1 = 0;
           int clComp2 = 0;
@@ -440,19 +437,18 @@ public abstract class Item
           } else {
             clComp1 = (int) Math.round(0.5 * minimumClearance);
             clComp2 = (int) Math.round(minimumClearance - clComp1);
-            enlargedShape1 = (TileShape) shape1.enlarge(clComp1);
-            enlargedShape2 = (TileShape) shape2.enlarge(clComp2);
           }
+
+          TileShape enlargedShape1 = (clComp1 > 0) ? (TileShape) shape1.enlarge(clComp1) : shape1;
+          TileShape enlargedShape2 = (clComp2 > 0) ? (TileShape) shape2.enlarge(clComp2) : shape2;
 
           TileShape intersection = enlargedShape1.intersection(enlargedShape2);
           if (intersection.dimension() == 2) {
-            TileShape rawShape1 = (clComp1 > 0) ? (TileShape) shape1.shrink(clComp1) : shape1;
-            TileShape rawShape2 = (clComp2 > 0) ? (TileShape) shape2.shrink(clComp2) : shape2;
             double actualClearance =
                 calculateClearanceBetweenTwoShapes(
-                    rawShape1, rawShape2, minimumClearance, clComp1, clComp2);
+                    shape1, shape2, minimumClearance, clComp1, clComp2);
 
-            if ((smallestClearance == 0) || (actualClearance < smallestClearance)) {
+            if ((smallestClearance < 0) || (actualClearance < smallestClearance)) {
               smallestClearance = actualClearance;
             }
 

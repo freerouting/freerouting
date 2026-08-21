@@ -109,8 +109,8 @@ class RatsnestClearanceHeadlessTest {
 
     double smallest = ClearanceViolation.smallestClearance(board.getItems());
     assertTrue(
-        smallest > 0 && smallest < Double.MAX_VALUE,
-        "smallestClearance must be a positive finite value on a board with violations");
+        smallest >= 0 && smallest < Double.MAX_VALUE,
+        "smallestClearance must be a non-negative finite value on a board with violations");
   }
 
   @Test

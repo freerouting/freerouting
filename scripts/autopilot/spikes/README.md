@@ -3,7 +3,7 @@
 ## 0.1 CLI vs API equivalence
 
 ```powershell
-.\scripts\autopilot\spikes\Invoke-CliApiEquivalence.ps1
+./scripts/autopilot/spikes/Invoke-CliApiEquivalence.ps1
 ```
 
 Routes `DAC2020_bm01.dsn` and `ecc83-pp.dsn` via CLI (`--router.result_json`) and REST
@@ -13,7 +13,7 @@ Routes `DAC2020_bm01.dsn` and `ecc83-pp.dsn` via CLI (`--router.result_json`) an
 ## 0.2 PCBench conversion PoC
 
 ```powershell
-.\scripts\autopilot\spikes\Invoke-PCBenchConversionPoC.ps1
+./scripts/autopilot/spikes/Invoke-PCBenchConversionPoC.ps1
 ```
 
 Uses the local clone at `C:\Work\PCBench` and KiCad 10 at

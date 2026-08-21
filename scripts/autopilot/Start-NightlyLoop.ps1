@@ -37,9 +37,9 @@ foreach ($exp in $pending) {
 }
 
 # Refresh website benchmarks if results exist
-$benchJson = Join-Path $RepoRoot "scripts\benchmark\results\benchmarks.json"
+$benchJson = Join-Path $RepoRoot "scripts/benchmark/results/benchmarks.json"
 if (Test-Path $benchJson) {
-    & "$RepoRoot\scripts\benchmark\run-benchmarks.ps1" -ReportOnly -SkipWebsiteUpdate:$false 2>$null
+    & "$RepoRoot/scripts/benchmark/run-benchmarks.ps1" -ReportOnly -SkipWebsiteUpdate:$false 2>$null
 }
 
 Pop-Location

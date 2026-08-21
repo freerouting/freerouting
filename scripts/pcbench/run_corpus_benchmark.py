@@ -582,7 +582,7 @@ def main() -> int:
         b_id = b.get("board_id")
         b_dir = fixtures_dir / b_id
         budget = b.get("timeout_budget", "00:05:00")
-        
+
         if not args.force:
             is_already_run = any(
                 r.get("fixture", {}).get("relative_path") == f"PCBench/{b_id}/unrouted.dsn"

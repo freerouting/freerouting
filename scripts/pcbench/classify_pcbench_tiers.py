@@ -13,7 +13,7 @@ from typing import Any
 
 def classify_board(meta: dict[str, Any]) -> tuple[str, str, str, list[str]]:
     """Classify a board into (tier, expected_outcome, timeout_budget, extra_tags).
-    
+
     Returns:
         tier: 'A' | 'B' | 'C' | 'D' | 'E'
         expected_outcome: 'complete' | 'partial' | 'timeout' | 'unsupported'

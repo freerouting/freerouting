@@ -62,9 +62,9 @@ Copy-Item $jar.FullName (Join-Path $benchBin "freerouting-current.jar") -Force
 Write-GateLog "G1: canary benchmarks ($G1Runs runs each)"
 $canaries = @("DAC2020_bm02.dsn", "DAC2020_bm07.dsn", "DAC2020_bm08.dsn", "ecc83-pp.dsn")
 foreach ($canary in $canaries) {
-    & "$RepoRoot\scripts\benchmark\run-benchmarks.ps1" `
+    & "$RepoRoot/scripts/benchmark/run-benchmarks.ps1" `
         -BinariesDir $benchBin `
-        -FixturesDir "$RepoRoot\scripts\benchmark\fixtures" `
+        -FixturesDir "$RepoRoot/scripts/benchmark/fixtures" `
         -ResultsDir (Join-Path $expDir "g1-results") `
         -FilterFixture $canary `
         -FilterBinary "freerouting-current.jar" `
@@ -82,9 +82,9 @@ Write-GateLog "G1 PASSED"
 
 if (-not $SkipG2) {
     Write-GateLog "G2: full fixture suite"
-    & "$RepoRoot\scripts\benchmark\run-benchmarks.ps1" `
+    & "$RepoRoot/scripts/benchmark/run-benchmarks.ps1" `
         -BinariesDir $benchBin `
-        -FixturesDir "$RepoRoot\scripts\benchmark\fixtures" `
+        -FixturesDir "$RepoRoot/scripts/benchmark/fixtures" `
         -ResultsDir (Join-Path $expDir "g2-results") `
         -FilterBinary "freerouting-current.jar" `
         -SkipWebsiteUpdate `

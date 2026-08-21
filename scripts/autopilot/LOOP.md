@@ -56,8 +56,8 @@ Single-fixture regression beyond 2× noise floor → reject even if average impr
 If G1/G2 fails with behavioral divergence:
 
 ```powershell
-.\scripts\tests\compare-versions.ps1 -de fixtures\Issue508-DAC2020_bm01.dsn
-.\scripts\tests\raw-section-mismatch.ps1
+./scripts/tests/compare-versions.ps1 -de fixtures/Issue508-DAC2020_bm01.dsn
+./scripts/tests/raw-section-mismatch.ps1
 ```
 
 ## Failure triage

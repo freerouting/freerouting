@@ -39,7 +39,7 @@ public abstract class Item
   private final int id_no;
   /** The board this Item is on */
   public transient BasicBoard board;
-  public double smallest_clearance;
+  public double smallest_clearance = -1.0;
   /** The nets, to which this item belongs */
   int[] net_no_arr;
   /** the index in the clearance matrix describing the required spacing to other items */
@@ -364,7 +364,7 @@ public abstract class Item
           // Get the two shapes the clearance is calculated between
           TileShape shape_1 = curr_tile_shape;
           TileShape shape_2 =
-              curr_item.get_tree_shape(default_tree, curr_entry.shape_index_in_object);
+              curr_item.get_tile_shape(curr_entry.shape_index_in_object);
           if (shape_1 == null || shape_2 == null) {
             FRLogger.warn("Item.clearance_violations: unexpected null shape");
             continue;
@@ -375,9 +375,6 @@ public abstract class Item
               board.rules.clearance_matrix.get_value(
                   curr_item.clearance_class, this.clearance_class, shape_layer(i), false);
 
-          TileShape enlarged_shape_1 = (TileShape) shape_1.enlarge(0);
-          TileShape enlarged_shape_2 = (TileShape) shape_2.enlarge(0);
-
           int cl_comp_1 = 0;
           int cl_comp_2 = 0;
           if (this.board.search_tree_manager.is_clearance_compensation_used()) {
@@ -386,19 +383,18 @@ public abstract class Item
           } else {
             cl_comp_1 = (int) Math.round(0.5 * minimum_clearance);
             cl_comp_2 = (int) Math.round(minimum_clearance - cl_comp_1);
-            enlarged_shape_1 = (TileShape) shape_1.enlarge(cl_comp_1);
-            enlarged_shape_2 = (TileShape) shape_2.enlarge(cl_comp_2);
           }
+
+          TileShape enlarged_shape_1 = (cl_comp_1 > 0) ? (TileShape) shape_1.enlarge(cl_comp_1) : shape_1;
+          TileShape enlarged_shape_2 = (cl_comp_2 > 0) ? (TileShape) shape_2.enlarge(cl_comp_2) : shape_2;
 
           TileShape intersection = enlarged_shape_1.intersection(enlarged_shape_2);
           if (intersection.dimension() == 2) {
-            TileShape raw_shape_1 = (cl_comp_1 > 0) ? (TileShape) shape_1.shrink(cl_comp_1) : shape_1;
-            TileShape raw_shape_2 = (cl_comp_2 > 0) ? (TileShape) shape_2.shrink(cl_comp_2) : shape_2;
             double actual_clearance =
                 calculate_clearance_between_two_shapes(
-                    raw_shape_1, raw_shape_2, minimum_clearance, cl_comp_1, cl_comp_2);
+                    shape_1, shape_2, minimum_clearance, cl_comp_1, cl_comp_2);
 
-            if ((smallest_clearance == 0) || (actual_clearance < smallest_clearance)) {
+            if ((smallest_clearance < 0) || (actual_clearance < smallest_clearance)) {
               smallest_clearance = actual_clearance;
             }
 

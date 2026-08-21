@@ -281,7 +281,7 @@ required because KiCad 10's CLI does not expose a Specctra DSN export subcommand
 First verify the clone:
 
 ```powershell
-.\scripts\pcbench\Fetch-PCBench.ps1 -PCBenchRoot C:\Work\PCBench
+./scripts/pcbench/Fetch-PCBench.ps1 -PCBenchRoot C:\Work\PCBench
 ```
 
 For a deterministic PoC, select board names explicitly:
@@ -321,11 +321,11 @@ cache at `scripts/benchmark/fixtures/PCBench/` and the stripped KiCad files are 
 `scripts/pcbench/cache/stripped/`:
 
 ```powershell
-.\scripts\pcbench\Convert-PCBenchBoards.ps1 `
+./scripts/pcbench/Convert-PCBenchBoards.ps1 `
   -PCBenchRoot C:\Work\PCBench `
   -IncludeBoards "1-Wire-Wing-pcb_1-Wire_Wing,1Bitsy_1bitsy,front-end-modules_LimeSDR_Sony" `
   -MaxBoards 3 `
-  -JarPath .\build\libs\freerouting-current-executable.jar `
+  -JarPath ./build/libs/freerouting-current-executable.jar `
   -Force
 ```
 
@@ -338,7 +338,7 @@ only provides the stripped benchmark DSN.
 Compute ground truth from `raw.kicad_pcb`, not from a converted DSN:
 
 ```powershell
-.\scripts\pcbench\Build-GroundTruth.ps1 `
+./scripts/pcbench/Build-GroundTruth.ps1 `
   -PCBenchRoot C:\Work\PCBench `
   -IncludeBoards "1-Wire-Wing-pcb_1-Wire_Wing,1Bitsy_1bitsy,front-end-modules_LimeSDR_Sony"
 ```
@@ -402,10 +402,10 @@ tracks imported, so this remains a planned follow-up rather than a completed gua
 Run the benchmark harness against the tier's `unrouted.dsn` files, not the reference DSNs:
 
 ```powershell
-.\scripts\benchmark\run-benchmarks.ps1 `
-  -BinariesDir .\build\libs `
-  -FixturesDir .\scripts\benchmark\fixtures\PCBench `
-  -ResultsDir .\experiments\pcbench-gate `
+./scripts/benchmark/run-benchmarks.ps1 `
+  -BinariesDir ./build/libs `
+  -FixturesDir ./scripts/benchmark/fixtures/PCBench `
+  -ResultsDir ./experiments/pcbench-gate `
   -RunsPerConfig 3 `
   -Force
 ```
