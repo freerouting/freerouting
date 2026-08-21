@@ -26,9 +26,20 @@ public class BaseController {
 
   @Context private HttpHeaders httpHeaders;
   @Context private jakarta.ws.rs.core.SecurityContext securityContext;
+  private UUID userIdOverride;
 
   /** Default constructor for BaseController. */
   public BaseController() {}
+
+  /** Sets a user ID override (for testing without full HTTP context). */
+  public void setUserIdOverride(UUID userIdOverride) {
+    this.userIdOverride = userIdOverride;
+  }
+
+  /** Sets the HTTP headers (for testing). */
+  public void setHttpHeaders(HttpHeaders httpHeaders) {
+    this.httpHeaders = httpHeaders;
+  }
 
   /**
    * Returns the authenticated principal from the request's {@link
@@ -46,6 +57,7 @@ public class BaseController {
    * <p>Resolution order:
    *
    * <ol>
+   *   <li>Use {@code userIdOverride} if set (e.g. in unit tests).
    *   <li>Parse {@code Freerouting-Profile-ID} header as a UUID.
    *   <li>If that header is absent or unparsable, fall back to {@code Freerouting-Profile-Email}
    *       (email-to-UUID look-up is not yet implemented).
@@ -56,8 +68,14 @@ public class BaseController {
    *     resolvable UUID.
    */
   protected UUID authenticateUser() {
-    String userIdString = httpHeaders.getHeaderString("Freerouting-Profile-ID");
-    String userEmailString = httpHeaders.getHeaderString("Freerouting-Profile-Email");
+    if (userIdOverride != null) {
+      return userIdOverride;
+    }
+
+    String userIdString =
+        httpHeaders != null ? httpHeaders.getHeaderString("Freerouting-Profile-ID") : null;
+    String userEmailString =
+        httpHeaders != null ? httpHeaders.getHeaderString("Freerouting-Profile-Email") : null;
 
     if (((userIdString == null) || (userIdString.isEmpty()))
         && ((userEmailString == null) || (userEmailString.isEmpty()))) {
