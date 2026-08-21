@@ -174,7 +174,8 @@ public final class NetworkProxyConfig {
   }
 
   /**
-   * Returns a composite SSLSocketFactory that trusts both standard JDK CAs and OS/enterprise CAs.
+   * Returns a composite SSLSocketFactory that trusts both standard JDK root certificates and
+   * OS/enterprise certificates.
    *
    * @param settings optional network settings
    * @return the composite socket factory, or {@code null} if default is sufficient
