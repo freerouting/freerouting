@@ -340,8 +340,7 @@ public final class WindowUserSettings extends WindowBase {
         });
     profileDialog.add(sponsorButton, gbc);
     profileDialog.pack();
-    profileDialog.setMinimumSize(new Dimension(440, profileDialog.getHeight()));
-    profileDialog.setResizable(true);
+    profileDialog.setResizable(false);
     profileDialog.setLocationRelativeTo(null);
     profileDialog.setVisible(true);
   }
