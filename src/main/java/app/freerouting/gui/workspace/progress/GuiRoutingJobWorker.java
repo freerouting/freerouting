@@ -733,21 +733,39 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     if (routingJob.board == null) {
       return null;
     }
-    BoardStatistics stats = new BoardStatistics(routingJob.board);
+    BoardStatistics stats =
+        new BoardStatistics(routingJob.board, sessionPort.displayUnit(), true, true);
     double duration = this.autoroutingSecondsToComplete;
     if (routingJob.startedAt != null && routingJob.finishedAt != null) {
       duration =
           java.time.Duration.between(routingJob.startedAt, routingJob.finishedAt).toMillis()
               / 1000.0;
     }
+    double traceLengthInUserUnit =
+        stats.traces.totalLengthMm != null
+            ? Unit.scale(stats.traces.totalLengthMm, Unit.MM, sessionPort.displayUnit())
+            : 0.0;
+    double maxViolationInUserUnit =
+        stats.clearanceViolations.maxViolationUm != null
+            ? Unit.scale(
+                stats.clearanceViolations.maxViolationUm, Unit.UM, sessionPort.displayUnit())
+            : 0.0;
+    float score =
+        stats.getNormalizedScore(
+            routingJob.routerSettings != null
+                ? routingJob.routerSettings.scoring
+                : new app.freerouting.settings.ScoringSettings());
+
     return new RoutingSummaryData(
         stats.nets.totalCount,
         stats.connections.incompleteCount,
         stats.clearanceViolations.totalCount,
+        maxViolationInUserUnit,
         stats.items.viaCount,
-        (double) stats.traces.totalLength,
+        traceLengthInUserUnit,
         sessionPort.displayUnit(),
         duration,
+        score,
         this.isStopRequested());
   }
 

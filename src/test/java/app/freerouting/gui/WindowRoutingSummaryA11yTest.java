@@ -27,7 +27,8 @@ class WindowRoutingSummaryA11yTest {
   @Test
   void englishRoutingSummaryPanelIsAccessible() {
     GlobalSettings settings = new GlobalSettings();
-    RoutingSummaryData data = new RoutingSummaryData(24, 0, 0, 12, 142.5, Unit.MM, 8.4, false);
+    RoutingSummaryData data =
+        new RoutingSummaryData(24, 0, 0, 0.0, 12, 142.5, Unit.MM, 8.4, 998.5f, false);
     AtomicBoolean closed = new AtomicBoolean(false);
 
     JPanel panel =
@@ -68,7 +69,8 @@ class WindowRoutingSummaryA11yTest {
   @Test
   void hungarianRoutingSummaryPanelKeepsStableLocators() {
     GlobalSettings settings = new GlobalSettings();
-    RoutingSummaryData data = new RoutingSummaryData(10, 2, 0, 5, 55.2, Unit.MM, 3.1, true);
+    RoutingSummaryData data =
+        new RoutingSummaryData(10, 2, 1, 0.15, 5, 55.2, Unit.MM, 3.1, 950.0f, true);
 
     JPanel panel =
         GuiA11yHarness.onEdt(
