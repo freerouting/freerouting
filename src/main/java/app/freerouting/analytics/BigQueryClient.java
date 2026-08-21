@@ -226,7 +226,8 @@ public class BigQueryClient implements AnalyticsClient {
     // on mutable payload state.
     Map<String, String> fields = generateFieldsFromPayload(payload);
 
-    new Thread(
+    Thread senderThread =
+        new Thread(
             () -> {
               try {
                 // Table name is the event name with some formatting.
@@ -267,8 +268,10 @@ public class BigQueryClient implements AnalyticsClient {
                 FRLogger.error(
                     "Exception in BigQueryClient.sendPayloadAsync: " + e.getMessage(), e);
               }
-            })
-        .start();
+            },
+            "analytics-bigquery-sender");
+    senderThread.setDaemon(true);
+    senderThread.start();
   }
 
   private Map<String, String> generateFieldsFromPayload(Payload payload) {

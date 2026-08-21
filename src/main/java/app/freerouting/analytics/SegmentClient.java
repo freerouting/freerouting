@@ -41,7 +41,8 @@ public class SegmentClient implements AnalyticsClient {
       return;
     }
 
-    new Thread(
+    Thread senderThread =
+        new Thread(
             () -> {
               try {
                 // Create and configure HTTP connection
@@ -78,8 +79,10 @@ public class SegmentClient implements AnalyticsClient {
                 // FRLogger.error("Exception in SegmentClient.send_payload_async: " +
                 // e.getMessage(), e);
               }
-            })
-        .start();
+            },
+            "analytics-segment-sender");
+    senderThread.setDaemon(true);
+    senderThread.start();
   }
 
   @Override

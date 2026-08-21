@@ -1337,6 +1337,7 @@ public class BoardFrame extends WindowBase {
       // running)
       Freerouting.globalSettings.guiSettings.isRunning = false;
       Freerouting.globalSettings.apiServerSettings.isRunning = false;
+      Freerouting.stopApiServer();
     }
 
     @Override

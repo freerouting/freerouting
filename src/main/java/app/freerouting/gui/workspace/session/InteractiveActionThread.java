@@ -218,10 +218,10 @@ public abstract class InteractiveActionThread extends StoppableThread {
               FRLogger.warn("InteractiveActionThread: unable to save global settings");
             }
 
-            // Show the user settings dialog after auto-routing is finished if the number of
-            // completed jobs is greater than 5 and the user has not yet set their email
-            // address
-            if ((globalSettings.statistics.jobsCompleted >= 5)
+            if (globalSettings.guiSettings.showRoutingSummary != null
+                && globalSettings.guiSettings.showRoutingSummary) {
+              sessionPort.showRoutingSummary(routerThread.getSummaryData());
+            } else if ((globalSettings.statistics.jobsCompleted >= 5)
                 && globalSettings.userProfileSettings.userEmail.isEmpty()) {
               sessionPort.showProfileDialog();
             }

@@ -4,13 +4,13 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowUserSettings"
     ],
-    "english_hash": "e28231a0c077aa3d3e76d561573937e315560049e7a3d081b82206d1ca8af691",
+    "english_hash": "1603d8410dd277a9f620d54e07848f189babb2dab3e961059f4d3e9bf8a9814a",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": true,
     "java_class": "app.freerouting.gui.windows.board.WindowUserSettings",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "allow_telemetry"
@@ -22,13 +22,13 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowUserSettings"
     ],
-    "english_hash": "4fed3044da5cb1a8a0a3c7e563e27cde95357206fd072d9775db74ca4d1ccec0",
+    "english_hash": "90d5f9a27d38ce14b7275b2116a237fcb53146a4d218f6a8390953fc33589b4f",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": true,
     "java_class": "app.freerouting.gui.windows.board.WindowUserSettings",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "allow_contact"
@@ -74,13 +74,13 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowUserSettings"
     ],
-    "english_hash": "2c4cdae8fd4f64f370459db9a83491b0fe99121568099e7c449f460c57448187",
+    "english_hash": "6cab9a21884175dbcc5480e090b6722e010b8e0e3c02442ba1bc5ff843867223",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": true,
     "java_class": "app.freerouting.gui.windows.board.WindowUserSettings",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "email",
@@ -182,7 +182,7 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowUserSettings"
     ],
-    "english_hash": "fcaf1884330b0fc7d256bd5d7443272a6b07e888fed8990cf4994a4480e9160f",
+    "english_hash": "dd9d36842c5d402cfdcd25619442700949e644c9ac84a7ee2b52f72687f8bdd2",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -200,10 +200,10 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowUserSettings"
     ],
-    "english_hash": "17b0297915555a786e3f3798ed9b03943959954226a04a8b1c1dfd6289ea0168",
-    "grammatical_role": "fragment",
+    "english_hash": "1834f9fd0a757f193ab836dba9619d91ef64edbae9989fd92a1a5c6cf5d40358",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
-    "is_html": true,
+    "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowUserSettings",
     "max_length_hint": null,
     "needs_retranslation": false,

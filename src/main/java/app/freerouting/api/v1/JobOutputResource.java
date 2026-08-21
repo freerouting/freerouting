@@ -390,7 +390,13 @@ public class JobOutputResource extends BaseController {
     }
 
     // Create a scheduled executor for periodic updates
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    ScheduledExecutorService executor =
+        Executors.newSingleThreadScheduledExecutor(
+            r -> {
+              Thread t = new Thread(r, "job-output-stream-worker");
+              t.setDaemon(true);
+              return t;
+            });
 
     // Schedule periodic updates every 250ms
     executor.scheduleAtFixedRate(
@@ -494,7 +500,13 @@ public class JobOutputResource extends BaseController {
       return;
     }
 
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    ScheduledExecutorService executor =
+        Executors.newSingleThreadScheduledExecutor(
+            r -> {
+              Thread t = new Thread(r, "job-output-board-stream-worker");
+              t.setDaemon(true);
+              return t;
+            });
     java.util.concurrent.atomic.AtomicLong previousChecksum =
         new java.util.concurrent.atomic.AtomicLong(-1);
 

@@ -239,7 +239,8 @@ public class BatchOptimizerMultiThreaded extends BatchOptimizer {
             Executors.newFixedThreadPool(
                 threadPoolSize,
                 r -> {
-                  Thread t = new Thread(r);
+                  Thread t = new Thread(r, "batch-optimizer-worker");
+                  t.setDaemon(true);
                   t.setUncaughtExceptionHandler(
                       (t1, e) -> job.logError("Exception in thread pool worker thread: " + t1, e));
                   return t;

@@ -104,6 +104,7 @@ public final class GuiLocators {
   public static final String MENU_OTHER = "menu.other";
   public static final String MENU_HELP = "menu.help";
   public static final String MENU_HELP_ABOUT = "menu.help.about";
+  public static final String MENU_HELP_SPONSOR = "menu.help.sponsor";
   public static final String MENU_PROFILE = "menu.profile";
 
   /** Component-only display/settings panel. */
@@ -147,6 +148,12 @@ public final class GuiLocators {
 
   /** Prefix used for labels in extracted WindowMessage content. */
   public static final String WINDOW_MESSAGE_LABEL_PREFIX = "window.message.label";
+
+  // ---- Routing summary dialog ----
+  public static final String ROUTING_SUMMARY_DIALOG = "dialog.routing_summary";
+  public static final String ROUTING_SUMMARY_DONATE_BUTTON = "dialog.routing_summary.donate";
+  public static final String ROUTING_SUMMARY_CLOSE_BUTTON = "dialog.routing_summary.close";
+  public static final String ROUTING_SUMMARY_SHOW_CHECKBOX = "dialog.routing_summary.show_checkbox";
 
   /** Returns the stable locator for a message label at {@code index}. */
   public static String windowMessageLabel(int index) {

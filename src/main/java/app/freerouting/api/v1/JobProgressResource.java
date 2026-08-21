@@ -392,7 +392,13 @@ public class JobProgressResource extends BaseController {
     }
 
     // Create a scheduled executor for periodic updates
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    ScheduledExecutorService executor =
+        Executors.newSingleThreadScheduledExecutor(
+            r -> {
+              Thread t = new Thread(r, "job-progress-stream-worker");
+              t.setDaemon(true);
+              return t;
+            });
 
     // stream a new log entry when the job logsEntryAdded event was fired
     job.addLogEntryAddedEventListener(
