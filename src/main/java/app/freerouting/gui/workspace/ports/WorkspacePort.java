@@ -3,6 +3,7 @@ package app.freerouting.gui.workspace.ports;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.gui.rendering.GraphicsContext;
+import app.freerouting.gui.workspace.progress.RoutingSummaryData;
 import java.util.Locale;
 
 /**
@@ -37,4 +38,7 @@ public interface WorkspacePort
 
   /** Shows the profile dialog through the EDT adapter. */
   public void showProfileDialog();
+
+  /** Shows the routing summary dialog through the EDT adapter. */
+  public void showRoutingSummary(RoutingSummaryData summaryData);
 }

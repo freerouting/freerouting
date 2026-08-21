@@ -43,6 +43,9 @@
     <a class="btn" href="https://github.com/freerouting/freerouting/releases" id="download">
         <i class="fas fa-download"></i> Download Freerouting
     </a>
+    <a class="btn" href="donate.html" id="donate_header">
+        <i class="fas fa-heart" style="color: #e0245e;"></i> Support
+    </a>
     <a class="btn" href="https://forms.gle/EqbxFZMSQiSsR4WM8" id="api_access">
         <i class="fas fa-network-wired"></i> Request API Access
     </a>
@@ -52,13 +55,12 @@
 </header>
 
 <main>
-    <section class="section api-maintenance-notice" aria-labelledby="api-maintenance-title" role="status">
-        <h2 id="api-maintenance-title">⚠️ Planned API maintenance</h2>
+    <section class="section api-maintenance-notice" aria-labelledby="support-notice-title" role="status" style="border-left: 4px solid #e0245e;">
+        <h2 id="support-notice-title">💖 Support Freerouting Development</h2>
         <p>
-            The Freerouting API will be unavailable on <strong>Wednesday, August 19, 2026</strong>, from
-            <strong>06:00 to 18:00 UTC</strong> due to planned maintenance.
+            Freerouting powers over 136,000 PCB designers worldwide as a free, independent open-source tool.
+            If it saves you time on your hardware projects, please consider <a href="donate.html" id="banner_donate_link" style="color: #e8cc87; font-weight: bold; text-decoration: underline;">supporting ongoing development with a donation or sponsorship</a>.
         </p>
-        <p>Please plan your API workloads accordingly. We apologize for the inconvenience.</p>
     </section>
 
     <section class="section">
@@ -172,22 +174,29 @@
     </section>
 
     <section class="sponsors">
-        <h2>Sponsors</h2>
+        <h2>Sponsors & Support</h2>
         <p>
-            A heartfelt thank you to my sponsors for their invaluable support and motivation, which enables me to
-            continue volunteering as the sole developer and maintainer of Freerouting.
+            A heartfelt thank you to all sponsors and supporters for their invaluable encouragement, which enables me to
+            continue volunteering as the lead developer and maintainer of Freerouting.
         </p>
         <p>
-            Since I’m currently the only active contributor to Freerouting, even a small monthly contribution would be
-            greatly appreciated. If you’d like to support this project, please consider sponsoring me:
-            <a href="https://github.com/sponsors/andrasfuchs" id="sponsors">GitHub Sponsors</a>. Thank you!
+            Powering over 136,000 users worldwide with free and open-source PCB auto-routing takes substantial ongoing effort,
+            hosting, and AI compute. If you’d like to support this project with a one-time donation or monthly sponsorship:
+        </p>
+        <p>
+            <a class="btn" href="donate.html" id="sponsors_donate_btn">
+                <i class="fas fa-heart" style="color: #e0245e;"></i> View Donation & Sponsorship Options
+            </a>
+            <a class="btn" href="https://github.com/sponsors/andrasfuchs" id="sponsors_github_btn" target="_blank">
+                <i class="fab fa-github"></i> GitHub Sponsors
+            </a>
         </p>
     </section>
 </main>
 
 <footer class="footer">
     <p>
-        Freerouting is an open-source project maintained by <a href="https://github.com/sponsors/andrasfuchs"
+        Freerouting is an open-source project maintained by <a href="donate.html"
                                                                id="sponsors_footer">Andras Fuchs</a>.<br/>
         Contributions, feedback, and support are always welcome.<br/>
         Visit the <a href="https://github.com/freerouting/freerouting" id="github_footer">GitHub repository</a>

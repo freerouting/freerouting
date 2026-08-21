@@ -728,6 +728,29 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     }
   }
 
+  /** Returns the summary data of the completed routing run. */
+  public RoutingSummaryData getSummaryData() {
+    if (routingJob.board == null) {
+      return null;
+    }
+    BoardStatistics stats = new BoardStatistics(routingJob.board);
+    double duration = this.autoroutingSecondsToComplete;
+    if (routingJob.startedAt != null && routingJob.finishedAt != null) {
+      duration =
+          java.time.Duration.between(routingJob.startedAt, routingJob.finishedAt).toMillis()
+              / 1000.0;
+    }
+    return new RoutingSummaryData(
+        stats.nets.totalCount,
+        stats.connections.incompleteCount,
+        stats.clearanceViolations.totalCount,
+        stats.items.viaCount,
+        (double) stats.traces.totalLength,
+        sessionPort.displayUnit(),
+        duration,
+        this.isStopRequested());
+  }
+
   /**
    * Draws visual indicators showing current autorouting and optimization progress.
    *

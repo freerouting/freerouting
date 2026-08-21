@@ -155,11 +155,11 @@ public class Freerouting {
               + nl
               + "║                                                                  ║"
               + nl
-              + "║  If you would like to support the project, please consider       ║"
+              + "║  If you would like to support the project, please visit          ║"
               + nl
-              + "║  sponsoring me at https://github.com/sponsors/andrasfuchs        ║"
+              + "║  https://www.freerouting.app/donate.html                         ║"
               + nl
-              + "║  Even a small monthly donation is greatly appreciated!           ║"
+              + "║  Every contribution helps keep this project open and active!     ║"
               + nl
               + "╚══════════════════════════════════════════════════════════════════╝");
     }

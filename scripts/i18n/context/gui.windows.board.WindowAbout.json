@@ -15,6 +15,22 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "donate": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.board.WindowAbout"
+    ],
+    "english_hash": "d9aaabc678517ece18f1d8ca2b70f8340b2dca31c505be3828740902e4b6dfff",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.board.WindowAbout",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
   "homepage": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [

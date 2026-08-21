@@ -326,7 +326,7 @@ public final class WindowUserSettings extends WindowBase {
     sponsorButton.addActionListener(
         _ -> {
           try {
-            Desktop.getDesktop().browse(new URI("https://github.com/sponsors/andrasfuchs"));
+            Desktop.getDesktop().browse(new URI("https://www.freerouting.app/donate.html"));
           } catch (Exception ex) {
             FRLogger.error("Failed to open sponsor link", ex);
           }

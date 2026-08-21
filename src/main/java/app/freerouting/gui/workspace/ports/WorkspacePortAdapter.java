@@ -1,15 +1,19 @@
 package app.freerouting.gui.workspace.ports;
 
+import static app.freerouting.Freerouting.globalSettings;
+
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.gui.board.BoardFrame;
+import app.freerouting.gui.windows.board.WindowRoutingSummary;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.gui.workspace.progress.BatchProgress;
 import app.freerouting.gui.workspace.progress.EdtExecutor;
 import app.freerouting.gui.workspace.progress.RouteCompletion;
 import app.freerouting.gui.workspace.progress.RouteProgress;
 import app.freerouting.gui.workspace.progress.RouterSettingsSnapshot;
+import app.freerouting.gui.workspace.progress.RoutingSummaryData;
 import app.freerouting.gui.workspace.progress.ScreenMessages;
 import app.freerouting.gui.workspace.session.LoadGeneration;
 import app.freerouting.gui.workspace.session.RunGeneration;
@@ -268,6 +272,21 @@ public final class WorkspacePortAdapter implements WorkspacePort {
           BoardFrame frame = frameSupplier.get();
           if (frame != null) {
             frame.menubar.showProfileDialog();
+          }
+        });
+  }
+
+  @Override
+  public void showRoutingSummary(RoutingSummaryData summaryData) {
+    runOnEdt(
+        () -> {
+          BoardFrame frame = frameSupplier.get();
+          if (frame != null
+              && summaryData != null
+              && globalSettings != null
+              && globalSettings.guiSettings.showRoutingSummary != null
+              && globalSettings.guiSettings.showRoutingSummary) {
+            WindowRoutingSummary.show(frame, summaryData, globalSettings);
           }
         });
   }

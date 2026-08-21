@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Support Freerouting - Donate & Sponsorship</title>
+    <meta content="Support Freerouting development with one-time donations or recurring sponsorships. Powering open-source PCB auto-routing for over 136,000 engineers worldwide."
+          name="description">
+    <meta content="Freerouting, donate, sponsor, PCB design, open source, Stripe, GitHub Sponsors, Alipay, WeChat Pay" name="keywords">
+    <meta content="Freerouting Team" name="author">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="freerouting_icon_256x256_v3.ico" rel="icon" type="image/x-icon">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        .donate-container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+        .donate-story {
+            background-color: rgba(232, 204, 135, 0.08);
+            border-left: 4px solid rgb(232, 204, 135);
+            padding: 1.5em;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 2em;
+            line-height: 1.7;
+        }
+        .donate-story p {
+            margin: 0.8em 0;
+        }
+        .tab-controls {
+            display: flex;
+            justify-content: center;
+            margin: 2em 0 1.5em 0;
+            gap: 10px;
+        }
+        .tab-btn {
+            background-color: transparent;
+            color: rgb(232, 204, 135);
+            border: 2px solid rgb(232, 204, 135);
+            padding: 0.7em 1.8em;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background-color: rgb(232, 204, 135);
+            color: rgb(1, 58, 32);
+        }
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2em;
+            margin-bottom: 2.5em;
+        }
+        .tier-card {
+            background-color: rgba(0, 42, 23, 0.8);
+            border: 1px solid rgba(232, 204, 135, 0.3);
+            border-radius: 8px;
+            padding: 1.4em;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tier-card:hover {
+            transform: translateY(-3px);
+            border-color: rgb(232, 204, 135);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+        .tier-card.featured {
+            border: 2px solid rgb(232, 204, 135);
+            background-color: rgba(232, 204, 135, 0.12);
+        }
+        .tier-badge {
+            font-size: 0.8em;
+            background-color: rgb(232, 204, 135);
+            color: rgb(1, 58, 32);
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.5em;
+            align-self: center;
+        }
+        .tier-icon {
+            font-size: 2em;
+            margin: 0.3em 0;
+        }
+        .tier-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 0.2em;
+        }
+        .tier-price {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: rgb(255, 220, 140);
+            margin: 0.3em 0 0.6em 0;
+        }
+        .tier-desc {
+            font-size: 0.95em;
+            opacity: 0.9;
+            flex-grow: 1;
+            margin-bottom: 1.2em;
+            line-height: 1.5;
+        }
+        .tier-action {
+            margin-top: auto;
+        }
+        .tier-action .btn {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .channels-section {
+            background-color: rgba(0, 42, 23, 0.6);
+            border: 1px solid rgba(232, 204, 135, 0.25);
+            border-radius: 8px;
+            padding: 1.5em;
+            margin: 2.5em 0;
+        }
+        .channel-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2em;
+            margin: 1.2em 0;
+            padding-bottom: 1.2em;
+            border-bottom: 1px solid rgba(232, 204, 135, 0.15);
+        }
+        .channel-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .channel-icon {
+            font-size: 2.2em;
+            min-width: 50px;
+            text-align: center;
+        }
+        .channel-info h3 {
+            margin: 0 0 0.3em 0;
+            font-size: 1.15em;
+        }
+        .channel-info p {
+            margin: 0;
+            font-size: 0.92em;
+            opacity: 0.9;
+        }
+        .b2b-box {
+            border: 1px dashed rgb(232, 204, 135);
+            background-color: rgba(232, 204, 135, 0.05);
+            border-radius: 8px;
+            padding: 1.3em;
+            margin-top: 2em;
+            text-align: center;
+        }
+    </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JCLE6RZE0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4JCLE6RZE0');
+    </script>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-container">
+        <img alt="Freerouting logo" src="logo_transparent.png">
+        <h1>freerouting</h1>
+    </div>
+    <p>Support Ongoing Development & Sustainable Open Source</p>
+    <a class="btn" href="index.html" id="nav_home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+    <a class="btn" href="https://github.com/sponsors/andrasfuchs" id="nav_github_sponsors" target="_blank">
+        <i class="fab fa-github"></i> GitHub Sponsors
+    </a>
+</header>
+
+<main class="donate-container">
+    <section class="donate-story">
+        <h2>Hey there!</h2>
+        <p>
+            If you've ever used Freerouting, you know how satisfying it is to watch the routing engine magically solve the complex puzzle of connecting your PCB traces, saving you hours of tedious manual routing.
+        </p>
+        <p>
+            Today, Freerouting has grown into the world's most popular open-source PCB auto-router, powering the designs of over <strong>136,000 professionals and hobbyists</strong>, running hundreds of thousands of routing sessions every single month.
+        </p>
+        <p>
+            To be completely honest, I could be spending my hours consulting for big companies for a much higher paycheck. Instead, I’ve chosen to dedicate my time and skills to this project because I believe in empowering the global electronics community with free, high-quality tools.
+        </p>
+        <p>
+            But keeping a project of this scale running smoothly isn't just about writing code. It takes a huge amount of time, effort, and active API hosting costs to continuously roll out new features, squash bugs, and boost routing performance.
+        </p>
+        <p>
+            On top of that, a significant portion of your donations directly funds AI API credits from various vendors &mdash; which I use to accelerate development, improve the code, and solve tricky bugs. I am constantly benchmarking and searching for the absolute best value-for-money options to ensure every single dollar you donate is stretched to deliver the maximum possible value back to you and the Freerouting software.
+        </p>
+        <p>
+            If Freerouting has saved you time, spared you a routing headache, or helped bring your hardware projects to life, please consider setting up a sponsor subscription or a one-time donation. Even the price of a cup of coffee makes a world of difference!
+        </p>
+        <p>
+            <em>Thank you so much for being a part of this journey and keeping the open-source hardware dream alive!</em><br>
+            <strong>&mdash; Andras Fuchs</strong> (Lead Developer & Maintainer)
+        </p>
+    </section>
+
+    <div class="tab-controls">
+        <button class="tab-btn active" id="tab-onetime" onclick="switchTab('onetime')">
+            <i class="fas fa-gift"></i> One-Time Support
+        </button>
+        <button class="tab-btn" id="tab-monthly" onclick="switchTab('monthly')">
+            <i class="fas fa-sync-alt"></i> Monthly Sponsorship
+        </button>
+    </div>
+
+    <!-- ONE-TIME DONATION TIERS -->
+    <div id="section-onetime" class="tier-grid">
+        <div class="tier-card">
+            <div class="tier-icon">☕</div>
+            <div class="tier-title">Coffee Backer</div>
+            <div class="tier-price">$10</div>
+            <div class="tier-desc">Buy a coffee to fuel the next late-night routing optimization session.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/4gM4gz6aieNN5dI12mbsc02" target="_blank" id="donate_stripe_10">
+                    <i class="fab fa-stripe-s"></i> Donate $10
+                </a>
+            </div>
+        </div>
+
+        <div class="tier-card featured">
+            <span class="tier-badge">Most Popular</span>
+            <div class="tier-icon">🔌</div>
+            <div class="tier-title">Board Enthusiast</div>
+            <div class="tier-price">$25</div>
+            <div class="tier-desc">Support a smooth and fast routing experience on your latest hardware build.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/bJe14n2Y68pp5dI12mbsc03" target="_blank" id="donate_stripe_25">
+                    <i class="fab fa-stripe-s"></i> Donate $25
+                </a>
+            </div>
+        </div>
+
+        <div class="tier-card">
+            <div class="tier-icon">⚡</div>
+            <div class="tier-title">Power Router</div>
+            <div class="tier-price">$50</div>
+            <div class="tier-desc">Power active bugfixes, performance tuning, and new algorithmic features.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/cNiaEX0PY8ppgWq9ySbsc04" target="_blank" id="donate_stripe_50">
+                    <i class="fab fa-stripe-s"></i> Donate $50
+                </a>
+            </div>
+        </div>
+
+        <div class="tier-card">
+            <div class="tier-icon">🚀</div>
+            <div class="tier-title">Open Source Champion</div>
+            <div class="tier-price">$100</div>
+            <div class="tier-desc">Fund substantial AI development credits and testing infrastructure for the community.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/fZueVdfKSaxxgWq8uObsc05" target="_blank" id="donate_stripe_100">
+                    <i class="fab fa-stripe-s"></i> Donate $100
+                </a>
+            </div>
+        </div>
+
+        <div class="tier-card">
+            <div class="tier-icon">💎</div>
+            <div class="tier-title">Benefactor</div>
+            <div class="tier-price">$250</div>
+            <div class="tier-desc">Accelerate high-impact research, major releases, and long-term sustainability.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/00waEXeGOeNN9tYdP8bsc06" target="_blank" id="donate_stripe_250">
+                    <i class="fab fa-stripe-s"></i> Donate $250
+                </a>
+            </div>
+        </div>
+
+        <div class="tier-card">
+            <div class="tier-icon">✍️</div>
+            <div class="tier-title">Custom Amount</div>
+            <div class="tier-price">Any</div>
+            <div class="tier-desc">Choose your own custom amount on GitHub Sponsors according to your budget.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://github.com/sponsors/andrasfuchs?frequency=one-time" target="_blank" id="donate_github_custom">
+                    <i class="fab fa-github"></i> Custom Donate
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECURRING MEMBERSHIP TIERS -->
+    <div id="section-monthly" class="tier-grid" style="display: none;">
+        <div class="tier-card">
+            <div class="tier-icon">🌱</div>
+            <div class="tier-title">Supporter</div>
+            <div class="tier-price">$5 <span style="font-size:0.5em">/ mo</span></div>
+            <div class="tier-desc">For individual makers and hobbyists. Includes a Supporter badge on GitHub.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/6oUeVddCKgVVeOi8uObsc07" target="_blank" id="sponsor_stripe_5">
+                    <i class="fab fa-stripe-s"></i> Sponsor $5/mo
+                </a>
+            </div>
+        </div>
+
+        <div class="tier-card featured">
+            <span class="tier-badge">Recommended</span>
+            <div class="tier-icon">🛠️</div>
+            <div class="tier-title">Hardware Pro</div>
+            <div class="tier-price">$15 <span style="font-size:0.5em">/ mo</span></div>
+            <div class="tier-desc">For freelancers and active hardware engineers. Priority issue triage and preview builds.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/fZufZh42agVV9tYbH0bsc08" target="_blank" id="sponsor_stripe_15">
+                    <i class="fab fa-stripe-s"></i> Sponsor $15/mo
+                </a>
+            </div>
+        </div>
+
+        <div class="tier-card">
+            <div class="tier-icon">🛡️</div>
+            <div class="tier-title">Project Patron</div>
+            <div class="tier-price">$50 <span style="font-size:0.5em">/ mo</span></div>
+            <div class="tier-desc">For studios and power teams. Named mention in release notes & priority feature consideration.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/dRm9AT9muaxxay27qKbsc09" target="_blank" id="sponsor_stripe_50">
+                    <i class="fab fa-stripe-s"></i> Sponsor $50/mo
+                </a>
+            </div>
+        </div>
+
+        <div class="tier-card">
+            <div class="tier-icon">🏢</div>
+            <div class="tier-title">Corporate / Gold Sponsor</div>
+            <div class="tier-price">$500 <span style="font-size:0.5em">/ mo</span></div>
+            <div class="tier-desc">For EDA & PCB companies. Prominent company logo on README, website, and in-app About dialog.</div>
+            <div class="tier-action">
+                <a class="btn" href="https://donate.stripe.com/5kQ5kDgOW499dKecL4bsc0a" target="_blank" id="sponsor_stripe_500">
+                    <i class="fab fa-stripe-s"></i> Sponsor $500/mo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHANNELS & PAYMENT METHODS -->
+    <section class="channels-section">
+        <h2>Supported Payment Methods & Global Channels</h2>
+        
+        <div class="channel-item">
+            <div class="channel-icon"><i class="fas fa-credit-card"></i></div>
+            <div class="channel-info">
+                <h3>Credit & Debit Cards (Global)</h3>
+                <p>Supports Visa, Mastercard, American Express, Discover, Diners Club, JCB, and UnionPay worldwide.</p>
+            </div>
+        </div>
+
+        <div class="channel-item">
+            <div class="channel-icon"><i class="fab fa-apple"></i> <i class="fab fa-google-pay"></i></div>
+            <div class="channel-info">
+                <h3>Digital Wallets (1-Click Checkout)</h3>
+                <p>Fast and secure checkout with Apple Pay, Google Pay, and Link by Stripe on any supported device.</p>
+            </div>
+        </div>
+
+        <div class="channel-item">
+            <div class="channel-icon"><i class="fab fa-alipay" style="color: #1677ff;"></i></div>
+            <div class="channel-info">
+                <h3>Alipay (支付宝 - China)</h3>
+                <p>Donors in China can donate directly via Alipay on all Stripe checkout tiers.</p>
+            </div>
+        </div>
+
+        <div class="channel-item">
+            <div class="channel-icon"><i class="fas fa-university"></i></div>
+            <div class="channel-info">
+                <h3>European & Regional Payment Methods</h3>
+                <p>
+                    Revolut Pay, SEPA Direct Debit, iDEAL & Wero (Netherlands / EU), BLIK (Poland),
+                    Bancontact (Belgium), EPS (Austria), MobilePay (Denmark & Finland), Klarna, PAYCO & Samsung Pay (South Korea).
+                </p>
+            </div>
+        </div>
+
+        <div class="channel-item">
+            <div class="channel-icon"><i class="fab fa-github"></i></div>
+            <div class="channel-info">
+                <h3>GitHub Sponsors</h3>
+                <p>Zero processing fees. Direct monthly or one-time sponsorships linked to your GitHub profile.</p>
+            </div>
+        </div>
+
+        <div class="b2b-box">
+            <h3>🏢 Corporate & B2B Invoicing (Estonian OÜ)</h3>
+            <p>
+                Need official EU VAT reverse-charge invoicing or direct SEPA / SWIFT EUR bank transfer for business expense accounting?<br>
+                Official sponsorships can be billed directly through my Estonian company. Contact me at <a href="mailto:info@freerouting.app" style="color: #e8cc87; font-weight: bold;">info@freerouting.app</a>.
+            </p>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>
+        Freerouting is an open-source project maintained by <a href="https://github.com/sponsors/andrasfuchs" id="sponsors_footer">Andras Fuchs</a>.<br/>
+        Contributions, feedback, and support are always welcome.<br/>
+        Visit the <a href="https://github.com/freerouting/freerouting" id="github_footer">GitHub repository</a> to learn more.
+    </p>
+</footer>
+
+<script>
+    function switchTab(tabName) {
+        document.getElementById('section-onetime').style.display = tabName === 'onetime' ? 'grid' : 'none';
+        document.getElementById('section-monthly').style.display = tabName === 'monthly' ? 'grid' : 'none';
+        document.getElementById('tab-onetime').classList.toggle('active', tabName === 'onetime');
+        document.getElementById('tab-monthly').classList.toggle('active', tabName === 'monthly');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('a, button, .btn').forEach(function(element) {
+            element.addEventListener('click', function() {
+                if (typeof gtag === 'function') {
+                    gtag('event', 'click_' + (element.id || 'button'), {
+                        'event_category': 'donation',
+                        'event_label': element.href || element.textContent.trim()
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
