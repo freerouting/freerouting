@@ -53,10 +53,6 @@ public final class WindowUserSettings extends WindowBase {
 
     JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
     profileDialog.setTitle(tm.getText("title"));
-    profileDialog.setSize(480, 570);
-    profileDialog.setMinimumSize(new Dimension(480, 570));
-    profileDialog.setMaximumSize(new Dimension(480, 570));
-    profileDialog.setResizable(false);
     profileDialog.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.insets = new Insets(5, 15, 5, 15);
@@ -308,6 +304,7 @@ public final class WindowUserSettings extends WindowBase {
     gbc.gridx = 0;
     gbc.gridy = 12;
     gbc.gridwidth = 4;
+    gbc.weighty = 0.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     JTextArea sponsorMsgArea = new JTextArea(tm.getText("sponsor_message"));
     sponsorMsgArea.setFont(UIManager.getFont("Label.font"));
@@ -316,7 +313,6 @@ public final class WindowUserSettings extends WindowBase {
     sponsorMsgArea.setOpaque(false);
     sponsorMsgArea.setEditable(false);
     sponsorMsgArea.setFocusable(false);
-    sponsorMsgArea.setRows(3);
     sponsorMsgArea.setColumns(28);
     profileDialog.add(sponsorMsgArea, gbc);
 
@@ -324,8 +320,9 @@ public final class WindowUserSettings extends WindowBase {
     gbc.gridy = 13;
     gbc.gridx = 0;
     gbc.gridwidth = 4;
-    gbc.weighty = 1.0;
-    gbc.anchor = GridBagConstraints.PAGE_END;
+    gbc.weighty = 0.0;
+    gbc.insets = new Insets(8, 15, 12, 15);
+    gbc.anchor = GridBagConstraints.CENTER;
     gbc.fill = GridBagConstraints.NONE;
     JButton sponsorButton = new JButton(tm.getText("sponsor_button"));
     sponsorButton.setFont(sponsorButton.getFont().deriveFont(java.awt.Font.BOLD, 14f));
@@ -342,7 +339,9 @@ public final class WindowUserSettings extends WindowBase {
           }
         });
     profileDialog.add(sponsorButton, gbc);
-
+    profileDialog.pack();
+    profileDialog.setMinimumSize(new Dimension(440, profileDialog.getHeight()));
+    profileDialog.setResizable(true);
     profileDialog.setLocationRelativeTo(null);
     profileDialog.setVisible(true);
   }
