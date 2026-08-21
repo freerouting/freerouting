@@ -1,0 +1,62 @@
+{
+  "board_id": "breakout-boards_swd-to-wires",
+  "display_name": "breakout-boards_swd-to-wires",
+  "pcbench_directory": "PCBs/breakout-boards_swd-to-wires",
+  "source": "https://github.com/myelin/breakout-boards",
+  "author": "myelin",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:24.229724+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 2,
+    "dimensions_mm": {
+      "width": 12.7,
+      "height": 13.97
+    },
+    "area_cm2": 1.77,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 42,
+    "vias": 1,
+    "track_length_mm": 69.72,
+    "kicad_drc_violations": 31,
+    "kicad_drc_breakdown": {
+      "total_violations": 31,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 24,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 2,
+        "silk_overlap": 1,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 28,
+        "warning": 3
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.852117+00:00",
+    "elapsed_seconds": 9.25,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 888.88
+  }
+}

@@ -1,0 +1,2464 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 4)
+    (tracks 420)
+    (zones 0)
+    (modules 87)
+    (nets 31)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide)
+  )
+
+  (setup
+    (last_trace_width 0.2)
+    (trace_clearance 0.12)
+    (zone_clearance 0.4)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.8)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.15)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 0.4 0.4)
+    (mod_text_width 0.1)
+    (pad_size 1.725 1.725)
+    (pad_drill 0)
+    (pad_to_mask_clearance 0.2)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x010fc_ffffffff)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk true)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "gerber/"))
+  )
+
+  (net 0 "")
+  (net 1 GND)
+  (net 2 /DTR)
+  (net 3 /RESET)
+  (net 4 /LNA)
+  (net 5 "Net-(C3-Pad1)")
+  (net 6 "Net-(C4-Pad1)")
+  (net 7 +3V3)
+  (net 8 "Net-(R2-Pad2)")
+  (net 9 "Net-(R3-Pad2)")
+  (net 10 "Net-(R4-Pad2)")
+  (net 11 /SD_CLK)
+  (net 12 "Net-(R5-Pad1)")
+  (net 13 /SD_HD)
+  (net 14 /SD_WP)
+  (net 15 /SD_CS)
+  (net 16 /SD_SO)
+  (net 17 /SD_SI)
+  (net 18 "Net-(ANT1-Pad1)")
+  (net 19 /GPIO2)
+  (net 20 /GPIO4)
+  (net 21 /GPIO5)
+  (net 22 /GPIO12)
+  (net 23 /GPIO13)
+  (net 24 /GPIO14)
+  (net 25 /GPIO16)
+  (net 26 /GPIO0)
+  (net 27 /U0RX)
+  (net 28 /U0TX)
+  (net 29 /ADC)
+  (net 30 "Net-(U1-Pad5)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.12)
+    (trace_width 0.2)
+    (via_dia 0.8)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +3V3)
+    (add_net /ADC)
+    (add_net /DTR)
+    (add_net /GPIO0)
+    (add_net /GPIO12)
+    (add_net /GPIO13)
+    (add_net /GPIO14)
+    (add_net /GPIO16)
+    (add_net /GPIO2)
+    (add_net /GPIO4)
+    (add_net /GPIO5)
+    (add_net /LNA)
+    (add_net /RESET)
+    (add_net /SD_CLK)
+    (add_net /SD_CS)
+    (add_net /SD_HD)
+    (add_net /SD_SI)
+    (add_net /SD_SO)
+    (add_net /SD_WP)
+    (add_net /U0RX)
+    (add_net /U0TX)
+    (add_net GND)
+    (add_net "Net-(ANT1-Pad1)")
+    (add_net "Net-(C3-Pad1)")
+    (add_net "Net-(C4-Pad1)")
+    (add_net "Net-(R2-Pad2)")
+    (add_net "Net-(R3-Pad2)")
+    (add_net "Net-(R4-Pad2)")
+    (add_net "Net-(R5-Pad1)")
+    (add_net "Net-(U1-Pad5)")
+  )
+
+  (module Crystals:Crystal_SMD_3225-4pin_3.2x2.5mm (layer F.Cu) (tedit 5A85680D) (tstamp 5A85642A)
+    (at 127.5 66.25 180)
+    (descr "SMD Crystal SERIES SMD3225/4 http://www.txccrystal.com/images/pdf/7m-accuracy.pdf, 3.2x2.5mm^2 package")
+    (tags "SMD SMT crystal")
+    (path /5A8413AA)
+    (attr smd)
+    (fp_text reference Y1 (at -0.1 -2.05 180) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 26MHz (at 0 2.45 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -1.6 -1.25) (end -1.6 1.25) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.6 1.25) (end 1.6 1.25) (layer F.Fab) (width 0.1))
+    (fp_line (start 1.6 1.25) (end 1.6 -1.25) (layer F.Fab) (width 0.1))
+    (fp_line (start 1.6 -1.25) (end -1.6 -1.25) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.6 0.25) (end -0.6 1.25) (layer F.Fab) (width 0.1))
+    (fp_line (start -2.1 -1.5) (end -2.1 1.8) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.1 1.8) (end 1.9 1.8) (layer F.SilkS) (width 0.12))
+    (fp_line (start -2.1 -1.7) (end -2.1 1.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.1 1.7) (end 2.1 1.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.1 1.7) (end 2.1 -1.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 2.1 -1.7) (end -2.1 -1.7) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 180) (layer F.Fab)
+      (effects (font (size 0.7 0.7) (thickness 0.105)))
+    )
+    (pad 4 smd rect (at -1.1 -0.85 180) (size 1.4 1.2) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 3 smd rect (at 1.1 -0.85 180) (size 1.4 1.2) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(C4-Pad1)"))
+    (pad 2 smd rect (at 1.1 0.85 180) (size 1.4 1.2) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 1 smd rect (at -1.1 0.85 180) (size 1.4 1.2) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C3-Pad1)"))
+    (model ${KIPRJMOD}/shapes3D/Crystal_3.2x2.5x1.0.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 -90))
+    )
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8561CD)
+    (at 116.5 68.25)
+    (attr virtual)
+    (fp_text reference V4_9_2 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8561B7)
+    (at 116.5 71.75)
+    (attr virtual)
+    (fp_text reference V7_21_10 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8561AF)
+    (at 116.5 73)
+    (attr virtual)
+    (fp_text reference V7_21_9 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8561A0)
+    (at 113.5 75.5)
+    (attr virtual)
+    (fp_text reference V7_21_8 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A856198)
+    (at 116.5 73.75)
+    (attr virtual)
+    (fp_text reference V7_21_7 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A85618B)
+    (at 117 75.25)
+    (attr virtual)
+    (fp_text reference V7_21_6 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A85617E)
+    (at 116.75 74.5)
+    (attr virtual)
+    (fp_text reference V7_21_5 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A856176)
+    (at 116.25 75.25)
+    (attr virtual)
+    (fp_text reference V7_21_4 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A85613B)
+    (at 131.75 65.75)
+    (attr virtual)
+    (fp_text reference V22_9_5 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A85612E)
+    (at 130.75 68.5)
+    (attr virtual)
+    (fp_text reference V22_9_4 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A856126)
+    (at 129.25 68.5)
+    (attr virtual)
+    (fp_text reference V22_9_3 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A85611E)
+    (at 128.5 68.5)
+    (attr virtual)
+    (fp_text reference V22_9_2 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8560D5)
+    (at 116.5 64.75)
+    (attr virtual)
+    (fp_text reference V4_5_2 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8560B8)
+    (at 116.5 69.25)
+    (attr virtual)
+    (fp_text reference V5_11_3 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8560A8)
+    (at 116.5 70.25)
+    (attr virtual)
+    (fp_text reference V5_11_2 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8560A0)
+    (at 117.5 70.25)
+    (attr virtual)
+    (fp_text reference V5_11 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A8560F5)
+    (at 118.5 78.25)
+    (attr virtual)
+    (fp_text reference V7_21_3 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A856079)
+    (at 117.75 78.25)
+    (attr virtual)
+    (fp_text reference V7_21_2 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A856069)
+    (at 117.75 77.25)
+    (attr virtual)
+    (fp_text reference V7_21 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A855FCA)
+    (at 130.5 73.75)
+    (attr virtual)
+    (fp_text reference V23_14_5 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A855FC2)
+    (at 131.75 73)
+    (attr virtual)
+    (fp_text reference V23_14_4 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A855FBA)
+    (at 131 73)
+    (attr virtual)
+    (fp_text reference V23_14_3 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A855FB2)
+    (at 130.25 73)
+    (attr virtual)
+    (fp_text reference V23_14_2 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844FC5) (tstamp 5A842F38)
+    (at 131.75 79.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A84210A)
+    (fp_text reference J2 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 20 /GPIO4))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844FB2) (tstamp 5A931B0A)
+    (at 129.75 79.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A8425DC)
+    (fp_text reference J8 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 26 /GPIO0))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844FA2) (tstamp 5A931A77)
+    (at 127.75 79.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A8417CE)
+    (fp_text reference J1 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 19 /GPIO2))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844F96) (tstamp 5A931ACB)
+    (at 125.75 79.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A8421C4)
+    (fp_text reference J5 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 23 /GPIO13))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844F82) (tstamp 5A931AB6)
+    (at 123.75 79.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A842184)
+    (fp_text reference J4 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 22 /GPIO12))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844F70) (tstamp 5A931BB2)
+    (at 121.75 79.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A846458)
+    (fp_text reference J16 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 1 GND))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844F5D) (tstamp 5A933257)
+    (at 119.75 79.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A842594)
+    (fp_text reference J7 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 25 /GPIO16))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844F43) (tstamp 5A931B5E)
+    (at 117.75 79.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A844DA9)
+    (fp_text reference J12 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 1 GND))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844F25) (tstamp 5A933167)
+    (at 131.75 63.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A842146)
+    (fp_text reference J3 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 21 /GPIO5))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844F0A) (tstamp 5A9331A3)
+    (at 129.75 63.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A8456FB)
+    (fp_text reference J14 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 28 /U0TX))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844EF3) (tstamp 5A9331DF)
+    (at 127.75 63.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A8456A9)
+    (fp_text reference J11 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 27 /U0RX))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844EDD) (tstamp 5A93321B)
+    (at 125.75 63.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A84254C)
+    (fp_text reference J6 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 24 /GPIO14))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844ECC) (tstamp 5A931B9D)
+    (at 123.75 63.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A84631A)
+    (fp_text reference J15 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 29 /ADC))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844EB4) (tstamp 5A93312B)
+    (at 119.75 63.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A845139)
+    (fp_text reference J13 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 1) (end -1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 2 /DTR))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844E92) (tstamp 5A933293)
+    (at 121.75 63.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A8450EB)
+    (fp_text reference J10 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 3 /RESET))
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x01_Pitch2.00mm (layer F.Cu) (tedit 5A844E5C) (tstamp 5A9330EF)
+    (at 117.75 63.5)
+    (descr "Through hole straight pin header, 1x01, 2.00mm pitch, single row")
+    (tags "Through hole pin header THT 1x01 2.00mm single row")
+    (path /5A844D57)
+    (fp_text reference J9 (at 0 -2.06) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Conn_01x01 (at 0 2.06) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.5 -1) (end 1 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start 1 -1) (end 1 1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 1) (end -1 -0.5) (layer F.Fab) (width 0.1))
+    (fp_line (start -1 -0.5) (end -0.5 -1) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.5 -1.5) (end -1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 1.5) (end 1.5 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 1.5) (end 1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.5 -1.5) (end -1.5 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at 0 0) (size 1.2 1.2) (drill 0.8) (layers *.Cu *.Mask)
+      (net 7 +3V3))
+  )
+
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 59958EE7) (tstamp 5A97E189)
+    (at 130.75 66.25 270)
+    (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0603")
+    (path /5A840D3C)
+    (attr smd)
+    (fp_text reference C3 (at 1.75 -0.05 180) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 10p (at 0 1.5 270) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.4 0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.35 0.6) (end -0.35 0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.35 -0.6) (end 0.35 -0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 270) (layer F.Fab)
+      (effects (font (size 0.3 0.3) (thickness 0.075)))
+    )
+    (pad 1 smd rect (at -0.75 0 270) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C3-Pad1)"))
+    (pad 2 smd rect (at 0.75 0 270) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model ${KIPRJMOD}/shapes3D/C_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 59958EE7) (tstamp 5A97E178)
+    (at 114.75 72.25)
+    (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0603")
+    (path /5A84345B)
+    (attr smd)
+    (fp_text reference C2 (at -1.55 0.05 90) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 5p6 (at 0 1.5) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.4 0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.35 0.6) (end -0.35 0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.35 -0.6) (end 0.35 -0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0) (layer F.Fab)
+      (effects (font (size 0.3 0.3) (thickness 0.075)))
+    )
+    (pad 1 smd rect (at -0.75 0) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(ANT1-Pad1)"))
+    (pad 2 smd rect (at 0.75 0) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 4 /LNA))
+    (model ${KIPRJMOD}/shapes3D/C_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Inductors_SMD:L_0603 (layer F.Cu) (tedit 58307A47) (tstamp 5A97E1DE)
+    (at 114.75 74)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A84301A)
+    (attr smd)
+    (fp_text reference L1 (at -1.55 0 90) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value DNP (at 0 1.9) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.3 -0.8) (end 1.3 -0.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.3 -0.8) (end -1.3 0.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.3 -0.8) (end 1.3 0.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_text user %R (at 0 0) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 2 smd rect (at 0.75 0) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 1 smd rect (at -0.75 0) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(ANT1-Pad1)"))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Inductors_SMD:L_0603 (layer F.Cu) (tedit 58307A47) (tstamp 5A97E1EF)
+    (at 114.75 70.5 180)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A843107)
+    (attr smd)
+    (fp_text reference L2 (at 1.55 0 270) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value DNP (at 0 1.9 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.3 -0.8) (end 1.3 -0.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.3 0.8) (end 1.3 0.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.3 -0.8) (end -1.3 0.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.3 -0.8) (end 1.3 0.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_text user %R (at 0 0 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 2 smd rect (at 0.75 0 180) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 1 smd rect (at -0.75 0 180) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 4 /LNA))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 59958EE7) (tstamp 5A97E1CD)
+    (at 130.5 77.5)
+    (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0603")
+    (path /5A83F474)
+    (attr smd)
+    (fp_text reference C7 (at 1.75 0 90) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 100n (at 0 1.5) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.4 0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.35 0.6) (end -0.35 0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.35 -0.6) (end 0.35 -0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0) (layer F.Fab)
+      (effects (font (size 0.3 0.3) (thickness 0.075)))
+    )
+    (pad 1 smd rect (at -0.75 0) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 2 smd rect (at 0.75 0) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (model ${KIPRJMOD}/shapes3D/C_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistors_SMD:R_0603 (layer F.Cu) (tedit 64E0112D) (tstamp 5A843488)
+    (at 126 77.25)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A83F125)
+    (attr smd)
+    (fp_text reference R5 (at 1.7 -0.35 180) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 10K (at 0 1.5) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.25 -0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.25 -0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 2 smd rect (at 0.75 0) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask))
+    (pad 1 smd rect (at -0.75 0) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 12 "Net-(R5-Pad1)"))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistors_SMD:R_0603 (layer F.Cu) (tedit 58E0A804) (tstamp 5A97E222)
+    (at 119.75 77.25 180)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A842272)
+    (attr smd)
+    (fp_text reference R3 (at 1.5 0 270) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 10K (at 0 1.5 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.25 -0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.25 -0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 2 smd rect (at 0.75 0 180) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(R3-Pad2)"))
+    (pad 1 smd rect (at -0.75 0 180) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 59958EE7) (tstamp 5A97E19A)
+    (at 124.638 66.294 90)
+    (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0603")
+    (path /5A840F95)
+    (attr smd)
+    (fp_text reference C4 (at -1.75 0 180) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 10p (at 0 1.5 90) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.4 0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.35 0.6) (end -0.35 0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.35 -0.6) (end 0.35 -0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 0.3 0.3) (thickness 0.075)))
+    )
+    (pad 1 smd rect (at -0.75 0 90) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(C4-Pad1)"))
+    (pad 2 smd rect (at 0.75 0 90) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model ${KIPRJMOD}/shapes3D/C_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 59958EE7) (tstamp 5A97E1BC)
+    (at 122.5 66.25 270)
+    (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0603")
+    (path /5A8401B5)
+    (attr smd)
+    (fp_text reference C6 (at 2 0) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 10u (at 0 1.5 270) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.4 0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.35 0.6) (end -0.35 0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.35 -0.6) (end 0.35 -0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 270) (layer F.Fab)
+      (effects (font (size 0.3 0.3) (thickness 0.075)))
+    )
+    (pad 1 smd rect (at -0.75 0 270) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 2 smd rect (at 0.75 0 270) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (model ${KIPRJMOD}/shapes3D/C_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistors_SMD:R_0603 (layer F.Cu) (tedit 58E0A804) (tstamp 5A842C63)
+    (at 120.75 66.5 270)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A842939)
+    (attr smd)
+    (fp_text reference R2 (at 1.75 -0.5) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 12K (at 0 1.5 270) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.25 -0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.25 -0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 270) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 2 smd rect (at 0.75 0 270) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(R2-Pad2)"))
+    (pad 1 smd rect (at -0.75 0 270) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0603 (layer F.Cu) (tedit 59958EE7) (tstamp 5A97E167)
+    (at 119 66.5 270)
+    (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0603")
+    (path /5A84262B)
+    (attr smd)
+    (fp_text reference C1 (at 1.75 0) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 1u (at 0 1.5 270) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.4 0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.4 0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end -1.4 0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.4 -0.65) (end 1.4 -0.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.35 0.6) (end -0.35 0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.35 -0.6) (end 0.35 -0.6) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 270) (layer F.Fab)
+      (effects (font (size 0.3 0.3) (thickness 0.075)))
+    )
+    (pad 1 smd rect (at -0.75 0 270) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 2 /DTR))
+    (pad 2 smd rect (at 0.75 0 270) (size 0.8 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 3 /RESET))
+    (model ${KIPRJMOD}/shapes3D/C_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistors_SMD:R_0603 (layer F.Cu) (tedit 58E0A804) (tstamp 5A844417)
+    (at 117.25 66.5 270)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A842559)
+    (attr smd)
+    (fp_text reference R1 (at 1.75 0) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 10K (at 0 1.5 270) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.25 -0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.25 -0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 270) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 2 smd rect (at 0.75 0 270) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 3 /RESET))
+    (pad 1 smd rect (at -0.75 0 270) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistors_SMD:R_0603 (layer F.Cu) (tedit 58E0A804) (tstamp 5A933D7F)
+    (at 125.5 70.25 180)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A83FA13)
+    (attr smd)
+    (fp_text reference R4 (at 0 -1.25) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 200 (at 0 1.5 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.25 -0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.25 -0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 2 smd rect (at 0.75 0 180) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(R4-Pad2)"))
+    (pad 1 smd rect (at -0.75 0 180) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 11 /SD_CLK))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistors_SMD:R_0603 (layer F.Cu) (tedit 58E0A804) (tstamp 5A933D0B)
+    (at 125.53 75.35 180)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A84B2BE)
+    (attr smd)
+    (fp_text reference R6 (at 0.5 1.25) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 10K (at 0 1.5 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -1.25 -0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.25 -0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_text user %R (at 0 0 180) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 2 smd rect (at 0.75 0 180) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 26 /GPIO0))
+    (pad 1 smd rect (at -0.75 0 180) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Housings_DFN_QFN:QFN-32-1EP_5x5mm_Pitch0.5mm (layer F.Cu) (tedit 64E0114C) (tstamp 5A97E27C)
+    (at 121 72.25)
+    (descr "UH Package; 32-Lead Plastic QFN (5mm x 5mm); (see Linear Technology QFN_32_05-08-1693.pdf)")
+    (tags "QFN 0.5")
+    (path /5A83EB09)
+    (attr smd)
+    (fp_text reference U1 (at -3.4 -1.15 90) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value ESP8266EX (at 0 3.75) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 2.625 -2.625) (end 2.1 -2.625) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.625 2.625) (end 2.1 2.625) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.625 2.625) (end -2.1 2.625) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.625 -2.625) (end -2.1 -2.625) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.625 2.625) (end 2.625 2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.625 2.625) (end -2.625 2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.625 -2.625) (end 2.625 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3 3) (end 3 3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3 -3) (end 3 -3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3 -3) (end 3 3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3 -3) (end -3 3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.5 -1.5) (end -1.5 -2.5) (layer F.Fab) (width 0.15))
+    (fp_line (start -2.5 2.5) (end -2.5 -1.5) (layer F.Fab) (width 0.15))
+    (fp_line (start 2.5 2.5) (end -2.5 2.5) (layer F.Fab) (width 0.15))
+    (fp_line (start 2.5 -2.5) (end 2.5 2.5) (layer F.Fab) (width 0.15))
+    (fp_line (start -1.5 -2.5) (end 2.5 -2.5) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -2.4 -1.75) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (pad 2 smd rect (at -2.4 -1.25) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 4 /LNA))
+    (pad 3 smd rect (at -2.4 -0.75) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (pad 4 smd rect (at -2.4 -0.25) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (pad 5 smd rect (at -2.4 0.25) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 30 "Net-(U1-Pad5)"))
+    (pad 6 smd rect (at -2.4 0.75) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 29 /ADC))
+    (pad 7 smd rect (at -2.4 1.25) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(R3-Pad2)"))
+    (pad 8 smd rect (at -2.4 1.75) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 25 /GPIO16))
+    (pad 9 smd rect (at -1.75 2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 24 /GPIO14))
+    (pad 10 smd rect (at -1.25 2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 22 /GPIO12))
+    (pad 11 smd rect (at -0.75 2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (pad 12 smd rect (at -0.25 2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 23 /GPIO13))
+    (pad 13 smd rect (at 0.25 2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 12 "Net-(R5-Pad1)"))
+    (pad 14 smd rect (at 0.75 2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 19 /GPIO2))
+    (pad 15 smd rect (at 1.25 2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 26 /GPIO0))
+    (pad 16 smd rect (at 1.75 2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 20 /GPIO4))
+    (pad 17 smd rect (at 2.4 1.75) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (pad 18 smd rect (at 2.4 1.25) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 13 /SD_HD))
+    (pad 19 smd rect (at 2.4 0.75) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 14 /SD_WP))
+    (pad 20 smd rect (at 2.4 0.25) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 15 /SD_CS))
+    (pad 21 smd rect (at 2.4 -0.25) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(R4-Pad2)"))
+    (pad 22 smd rect (at 2.4 -0.75) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 16 /SD_SO))
+    (pad 23 smd rect (at 2.4 -1.25) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 17 /SD_SI))
+    (pad 24 smd rect (at 2.4 -1.75) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 21 /GPIO5))
+    (pad 25 smd rect (at 1.75 -2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 28 /U0TX))
+    (pad 26 smd rect (at 1.25 -2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 27 /U0RX))
+    (pad 27 smd rect (at 0.75 -2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C3-Pad1)"))
+    (pad 28 smd rect (at 0.25 -2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(C4-Pad1)"))
+    (pad 29 smd rect (at -0.25 -2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (pad 30 smd rect (at -0.75 -2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (pad 31 smd rect (at -1.25 -2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(R2-Pad2)"))
+    (pad 32 smd rect (at -1.75 -2.4 90) (size 0.7 0.25) (layers F.Cu F.Paste F.Mask)
+      (net 3 /RESET))
+    (pad 33 smd rect (at 0.8625 0.8625) (size 1.725 1.725) (layers F.Cu F.Paste F.Mask)
+      (solder_paste_margin_ratio -0.2))
+    (pad 33 smd rect (at 0.8625 -0.8625) (size 1.725 1.725) (layers F.Cu F.Paste F.Mask)
+      (solder_paste_margin_ratio -0.2))
+    (pad 33 smd rect (at -0.8625 0.8625) (size 1.725 1.725) (layers F.Cu F.Paste F.Mask)
+      (solder_paste_margin_ratio -0.2))
+    (pad 33 smd rect (at -0.8625 -0.8625) (size 1.725 1.725) (layers F.Cu F.Paste F.Mask)
+      (solder_paste_margin_ratio -0.2))
+    (model ${KIPRJMOD}/shapes3D/qfn32_5x5_p05.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Housings_SOIC:SOIC-8_3.9x4.9mm_Pitch1.27mm (layer F.Cu) (tedit 58CD0CDA) (tstamp 5A843028)
+    (at 129.75 72.75 270)
+    (descr "8-Lead Plastic Small Outline (SN) - Narrow, 3.90 mm Body [SOIC] (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "SOIC 1.27")
+    (path /5A83EC43)
+    (attr smd)
+    (fp_text reference U2 (at 0.05 1.85 270) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value AT25SF321-SSHDB (at 0 3.5 270) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -2.075 -2.525) (end -3.475 -2.525) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.075 2.575) (end 2.075 2.575) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.075 -2.575) (end 2.075 -2.575) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.075 2.575) (end -2.075 2.43) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.075 2.575) (end 2.075 2.43) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.075 -2.575) (end 2.075 -2.43) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.075 -2.575) (end -2.075 -2.525) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.73 2.7) (end 3.73 2.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.73 -2.7) (end 3.73 -2.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.73 -2.7) (end 3.73 2.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.73 -2.7) (end -3.73 2.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.95 -1.45) (end -0.95 -2.45) (layer F.Fab) (width 0.1))
+    (fp_line (start -1.95 2.45) (end -1.95 -1.45) (layer F.Fab) (width 0.1))
+    (fp_line (start 1.95 2.45) (end -1.95 2.45) (layer F.Fab) (width 0.1))
+    (fp_line (start 1.95 -2.45) (end 1.95 2.45) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.95 -2.45) (end 1.95 -2.45) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at -2.7 -1.905 270) (size 1.55 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 15 /SD_CS))
+    (pad 2 smd rect (at -2.7 -0.635 270) (size 1.55 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 16 /SD_SO))
+    (pad 3 smd rect (at -2.7 0.635 270) (size 1.55 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 14 /SD_WP))
+    (pad 4 smd rect (at -2.7 1.905 270) (size 1.55 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 5 smd rect (at 2.7 1.905 270) (size 1.55 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 17 /SD_SI))
+    (pad 6 smd rect (at 2.7 0.635 270) (size 1.55 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 11 /SD_CLK))
+    (pad 7 smd rect (at 2.7 -0.635 270) (size 1.55 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 13 /SD_HD))
+    (pad 8 smd rect (at 2.7 -1.905 270) (size 1.55 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (model ${KIPRJMOD}/shapes3D/SOIC-8_3.9x4.9mm_Pitch1.27mm.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module w_conn_rf.pretty:coaxial_u.fl-r-smt-1 (layer F.Cu) (tedit 5A843DA0) (tstamp 5A931A62)
+    (at 115 77.25 180)
+    (descr "Ultra small surface mount coaxial connector, Hirose U.FL-R-SMT-1")
+    (path /5A843D4A)
+    (fp_text reference ANT (at 1.4 -1.85 180) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value Antenna_Shield (at 0 2.7 180) (layer F.SilkS) hide
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start -1 -1.3) (end 1 -1.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.3 -1) (end 1.3 1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1 1.3) (end -1 1.3) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.3 1) (end -1.3 -1) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end -1 0) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0 0) (end -0.1 0) (layer F.SilkS) (width 0.15))
+    (fp_arc (start -1 1) (end -1 1.3) (angle 90) (layer F.SilkS) (width 0.15))
+    (fp_arc (start 1 1) (end 1.3 1) (angle 90) (layer F.SilkS) (width 0.15))
+    (fp_arc (start 1 -1) (end 1 -1.3) (angle 90) (layer F.SilkS) (width 0.15))
+    (fp_arc (start -1 -1) (end -1.3 -1) (angle 90) (layer F.SilkS) (width 0.15))
+    (pad 2 smd rect (at -1.475 0 180) (size 1.05 2.2) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.07) (solder_paste_margin -0.05))
+    (pad 2 smd rect (at 1.475 0 180) (size 1.05 2.2) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.07) (solder_paste_margin -0.05))
+    (pad 1 smd rect (at 0 1.525 180) (size 1 1.05) (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(ANT1-Pad1)") (solder_mask_margin 0.07) (solder_paste_margin -0.05))
+    (model ${KISYS3DMOD}/Connector_Coaxial.3dshapes/U.FL_Hirose_U.FL-R-SMT-1_Vertical.step
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Resistors_SMD:R_0603 (layer F.Cu) (tedit 58E0A804) (tstamp 5A842E7E)
+    (at 123 76.75 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /5A8432F2)
+    (attr smd)
+    (fp_text reference R7 (at 0.5 -1.25 270) (layer F.SilkS)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_text value 10K (at 0 1.5 90) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.1)))
+    )
+    (fp_line (start 1.25 0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.25 0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.25 -0.7) (end -1.25 0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.25 -0.7) (end 1.25 -0.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.5 -0.68) (end 0.5 -0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.5 0.68) (end -0.5 0.68) (layer F.SilkS) (width 0.12))
+    (fp_line (start -0.8 -0.4) (end 0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 -0.4) (end 0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.8 0.4) (end -0.8 0.4) (layer F.Fab) (width 0.1))
+    (fp_line (start -0.8 0.4) (end -0.8 -0.4) (layer F.Fab) (width 0.1))
+    (fp_text user %R (at 0 0 90) (layer F.Fab)
+      (effects (font (size 0.4 0.4) (thickness 0.075)))
+    )
+    (pad 1 smd rect (at -0.75 0 90) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 7 +3V3))
+    (pad 2 smd rect (at 0.75 0 90) (size 0.5 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 19 /GPIO2))
+    (model ${KIPRJMOD}/shapes3D/R_0603.stp
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EA5)
+    (at 114.173 64.207)
+    (attr virtual)
+    (fp_text reference V2_4 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EA9)
+    (at 114.973 64.207)
+    (attr virtual)
+    (fp_text reference V3_4 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EAD)
+    (at 115.773 64.207)
+    (attr virtual)
+    (fp_text reference V4_4 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EB5)
+    (at 114.173 65.007)
+    (attr virtual)
+    (fp_text reference V2_5 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EB9)
+    (at 114.973 65.007)
+    (attr virtual)
+    (fp_text reference V3_5 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EBD)
+    (at 115.773 65.007)
+    (attr virtual)
+    (fp_text reference V4_5 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EC5)
+    (at 114.173 65.807)
+    (attr virtual)
+    (fp_text reference V2_6 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EC9)
+    (at 114.973 65.807)
+    (attr virtual)
+    (fp_text reference V3_6 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848ECD)
+    (at 115.773 65.807)
+    (attr virtual)
+    (fp_text reference V4_6 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848ED5)
+    (at 114.173 66.607)
+    (attr virtual)
+    (fp_text reference V2_7 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848ED9)
+    (at 114.973 66.607)
+    (attr virtual)
+    (fp_text reference V3_7 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EDD)
+    (at 115.773 66.607)
+    (attr virtual)
+    (fp_text reference V4_7 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EED)
+    (at 131.773 66.607)
+    (attr virtual)
+    (fp_text reference V24_7 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EF1)
+    (at 114.173 67.407)
+    (attr virtual)
+    (fp_text reference V2_8 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EF5)
+    (at 114.973 67.407)
+    (attr virtual)
+    (fp_text reference V3_8 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EF9)
+    (at 115.773 67.407)
+    (attr virtual)
+    (fp_text reference V4_8 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848EFD)
+    (at 114.173 68.207)
+    (attr virtual)
+    (fp_text reference V2_9 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F01)
+    (at 114.973 68.207)
+    (attr virtual)
+    (fp_text reference V3_9 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F05)
+    (at 115.773 68.207)
+    (attr virtual)
+    (fp_text reference V4_9 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F0D)
+    (at 130 68)
+    (attr virtual)
+    (fp_text reference V22_9 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F11)
+    (at 114.173 69.007)
+    (attr virtual)
+    (fp_text reference V2_10 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F15)
+    (at 114.973 69.007)
+    (attr virtual)
+    (fp_text reference V3_10 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F19)
+    (at 115.773 69.007)
+    (attr virtual)
+    (fp_text reference V4_10 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F29)
+    (at 131.773 71.407)
+    (attr virtual)
+    (fp_text reference V24_13 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F2D)
+    (at 130.973 72.207)
+    (attr virtual)
+    (fp_text reference V23_14 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F31)
+    (at 131.773 72.207)
+    (attr virtual)
+    (fp_text reference V24_14 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F3D)
+    (at 114.973 77.007)
+    (attr virtual)
+    (fp_text reference V3_20 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F41)
+    (at 114.973 77.807)
+    (attr virtual)
+    (fp_text reference V3_21 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (module VIA_MATRIX (layer F.Cu) (tedit 5A84744B) (tstamp 5A848F49)
+    (at 114.973 78.607)
+    (attr virtual)
+    (fp_text reference V3_22 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (fp_text value AUTO_VIA (at 0 0) (layer F.Fab) hide
+      (effects (font (size 0 0) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 0.35 0.35) (drill 0.3) (layers *.Cu)
+      (net 1 GND) (clearance 0.2) (zone_connect 2))
+  )
+
+  (gr_line (start 112.77596 79.75092) (end 112.75564 63.1698) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 132.77596 79.75092) (end 112.77596 79.75092) (layer Edge.Cuts) (width 0.15) (tstamp 5A933474))
+  (gr_line (start 132.75564 63.1698) (end 132.77596 79.75092) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 112.75564 63.1698) (end 132.75564 63.1698) (layer Edge.Cuts) (width 0.15) (tstamp 5A93347D))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

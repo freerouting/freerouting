@@ -1,0 +1,27 @@
+{
+  "board": "digital_clock_led_clock_3_and_4_digit",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\digital_clock_led_clock_3_and_4_digit\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 53,
+  "segment_count": 906,
+  "approximate_track_length_mm": 5316.63,
+  "kicad_drc_violations": 536,
+  "generated_at": "2026-08-18T18:41:43.392899+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 536,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 220,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 138,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 11,
+      "silk_overlap": 164
+    },
+    "by_severity": {
+      "error": 222,
+      "warning": 314
+    }
+  }
+}

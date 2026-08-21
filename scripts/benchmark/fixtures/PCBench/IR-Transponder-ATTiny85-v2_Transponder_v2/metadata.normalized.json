@@ -1,0 +1,63 @@
+{
+  "board_id": "IR-Transponder-ATTiny85-v2_Transponder_v2",
+  "display_name": "IR-Transponder-ATTiny85-v2_Transponder_v2",
+  "pcbench_directory": "PCBs/IR-Transponder-ATTiny85-v2_Transponder_v2",
+  "source": "https://github.com/Aether4E0A/IR-Transponder-ATTiny85-v2",
+  "author": "Aether4E0A",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:55.262089+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 19.0,
+      "height": 23.0
+    },
+    "area_cm2": 4.37,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 65,
+    "vias": 3,
+    "track_length_mm": 90.73,
+    "kicad_drc_violations": 76,
+    "kicad_drc_breakdown": {
+      "total_violations": 76,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 58,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 12,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 63,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.959897+00:00",
+    "elapsed_seconds": 8.86,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 952.38
+  }
+}

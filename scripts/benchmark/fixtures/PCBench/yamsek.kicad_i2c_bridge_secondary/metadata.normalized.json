@@ -1,0 +1,65 @@
+{
+  "board_id": "yamsek.kicad_i2c_bridge_secondary",
+  "display_name": "yamsek.kicad_i2c_bridge_secondary",
+  "pcbench_directory": "PCBs/yamsek.kicad_i2c_bridge_secondary",
+  "source": "https://github.com/JohSchneider/yamsek.kicad",
+  "author": "JohSchneider",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.610094+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 16.0,
+      "height": 28.0
+    },
+    "area_cm2": 4.48,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 84,
+    "vias": 10,
+    "track_length_mm": 130.53,
+    "kicad_drc_violations": 73,
+    "kicad_drc_breakdown": {
+      "total_violations": 73,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 18,
+        "copper_edge_clearance": 6,
+        "lib_footprint_issues": 14,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 6,
+        "silk_overlap": 9,
+        "solder_mask_bridge": 3,
+        "text_height": 11
+      },
+      "by_severity": {
+        "error": 27,
+        "warning": 46
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.166829+00:00",
+    "elapsed_seconds": 12.21,
+    "unrouted_nets": 0,
+    "clearance_violations": 5,
+    "quality_score": 962.96
+  }
+}

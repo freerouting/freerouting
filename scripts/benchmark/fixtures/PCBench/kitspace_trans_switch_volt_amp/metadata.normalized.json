@@ -1,0 +1,59 @@
+{
+  "board_id": "kitspace_trans_switch_volt_amp",
+  "display_name": "kitspace_trans_switch_volt_amp",
+  "pcbench_directory": "PCBs/kitspace_trans_switch_volt_amp",
+  "source": "https://github.com/Sussex-Neuroscience/voltage-amplifier",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Sussex-Neuroscience/voltage-amplifier/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:50.937680+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 108,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 111.51,
+      "height": 85.09
+    },
+    "area_cm2": 94.88,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 81,
+    "vias": 0,
+    "track_length_mm": 596.17,
+    "kicad_drc_violations": 27,
+    "kicad_drc_breakdown": {
+      "total_violations": 27,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 2,
+        "lib_footprint_mismatch": 16,
+        "pth_inside_courtyard": 1,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 3,
+        "silk_overlap": 1,
+        "starved_thermal": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 24
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

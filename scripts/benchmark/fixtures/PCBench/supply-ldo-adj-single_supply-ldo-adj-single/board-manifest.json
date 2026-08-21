@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "supply-ldo-adj-single_supply-ldo-adj-single",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 114453,
+      "sha256": "8f15214508f50d4d752d3d15a13418f1a7fa003c962d11c5a574c51e55ca9b9b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 44082,
+      "sha256": "d451a89729be31bc44d0c4885bee743263e1301d776947cc1ccf60547ef118b9"
+    },
+    "metadata_json": {
+      "bytes": 729,
+      "sha256": "d8b3f8d1c4a5586cfe88d2d49d2ec16b5d049d0dd4a35c4b3ec2bd1f576a6d02"
+    },
+    "final_json": {
+      "bytes": 36307,
+      "sha256": "8d49b68389a7f0417d7d0055d8cf5560e9d3e8fe993cff511a4f98667fb95f7d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:49:15.418477+00:00"
+  }
+}

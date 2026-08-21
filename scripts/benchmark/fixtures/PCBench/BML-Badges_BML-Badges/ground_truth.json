@@ -1,0 +1,24 @@
+{
+  "board": "BML-Badges_BML-Badges",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BML-Badges_BML-Badges\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 79,
+  "approximate_track_length_mm": 510.58,
+  "kicad_drc_violations": 179,
+  "generated_at": "2026-08-18T18:34:30.818363+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 179,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 21,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 3,
+      "silk_overlap": 154
+    },
+    "by_severity": {
+      "warning": 179
+    }
+  }
+}

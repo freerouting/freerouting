@@ -1,0 +1,57 @@
+{
+  "board_id": "ESP8266-MQTT-battery-monitor-hw_battery-monitor",
+  "display_name": "ESP8266-MQTT-battery-monitor-hw_battery-monitor",
+  "pcbench_directory": "PCBs/ESP8266-MQTT-battery-monitor-hw_battery-monitor",
+  "source": "https://github.com/hwstar/ESP8266-MQTT-battery-monitor-hw",
+  "author": "hwstar",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.541740+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 49,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 290,
+    "vias": 63,
+    "track_length_mm": 477.14,
+    "kicad_drc_violations": 398,
+    "kicad_drc_breakdown": {
+      "total_violations": 398,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 115,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 49,
+        "silk_over_copper": 16,
+        "silk_overlap": 124,
+        "text_height": 92
+      },
+      "by_severity": {
+        "error": 117,
+        "warning": 281
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

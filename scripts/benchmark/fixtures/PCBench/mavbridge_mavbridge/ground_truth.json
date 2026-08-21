@@ -1,0 +1,33 @@
+{
+  "board": "mavbridge_mavbridge",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mavbridge_mavbridge\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 34,
+  "segment_count": 263,
+  "approximate_track_length_mm": 479.6,
+  "kicad_drc_violations": 161,
+  "generated_at": "2026-08-18T19:20:13.448559+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 161,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 80,
+      "lib_footprint_issues": 38,
+      "malformed_courtyard": 8,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 6,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 3,
+      "starved_thermal": 1,
+      "text_height": 18,
+      "text_thickness": 1,
+      "track_dangling": 1,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 92,
+      "warning": 69
+    }
+  }
+}

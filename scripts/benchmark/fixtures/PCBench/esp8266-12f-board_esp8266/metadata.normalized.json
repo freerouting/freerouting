@@ -1,0 +1,64 @@
+{
+  "board_id": "esp8266-12f-board_esp8266",
+  "display_name": "esp8266-12f-board_esp8266",
+  "pcbench_directory": "PCBs/esp8266-12f-board_esp8266",
+  "source": "https://github.com/bm0/esp8266-12f-board",
+  "author": "bm0",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:42.433939+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 32.0,
+      "height": 39.0
+    },
+    "area_cm2": 12.48,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 144,
+    "vias": 0,
+    "track_length_mm": 273.5,
+    "kicad_drc_violations": 71,
+    "kicad_drc_breakdown": {
+      "total_violations": 71,
+      "unconnected_count": 5,
+      "by_type": {
+        "courtyards_overlap": 10,
+        "lib_footprint_issues": 15,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 28,
+        "silk_overlap": 15
+      },
+      "by_severity": {
+        "error": 10,
+        "warning": 61
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.909465+00:00",
+    "elapsed_seconds": 10.12,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

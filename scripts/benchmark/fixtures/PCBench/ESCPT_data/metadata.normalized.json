@@ -1,0 +1,59 @@
+{
+  "board_id": "ESCPT_data",
+  "display_name": "ESCPT_data",
+  "pcbench_directory": "PCBs/ESCPT_data",
+  "source": "https://github.com/hanya/ESCPT",
+  "author": "hanya",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:27.473763+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 58,
+    "dimensions_mm": {
+      "width": 76.2,
+      "height": 95.25
+    },
+    "area_cm2": 72.58,
+    "zones": 38
+  },
+  "reference": {
+    "segments": 465,
+    "vias": 63,
+    "track_length_mm": 1494.24,
+    "kicad_drc_violations": 455,
+    "kicad_drc_breakdown": {
+      "total_violations": 455,
+      "unconnected_count": 11,
+      "by_type": {
+        "clearance": 368,
+        "copper_edge_clearance": 4,
+        "hole_clearance": 14,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 58,
+        "starved_thermal": 1,
+        "track_dangling": 7,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 389,
+        "warning": 66
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,66 @@
+{
+  "board_id": "silverduino-board_kicad",
+  "display_name": "silverduino-board_kicad",
+  "pcbench_directory": "PCBs/silverduino-board_kicad",
+  "source": "https://github.com/romkal/silverduino-board",
+  "author": "romkal",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.154076+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 126,
+    "vias": 5,
+    "track_length_mm": 570.53,
+    "kicad_drc_violations": 87,
+    "kicad_drc_breakdown": {
+      "total_violations": 87,
+      "unconnected_count": 4,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 51,
+        "holes_co_located": 2,
+        "item_on_disabled_layer": 4,
+        "lib_footprint_issues": 16,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 2,
+        "silk_overlap": 2,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 57,
+        "warning": 30
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.111848+00:00",
+    "elapsed_seconds": 11.47,
+    "unrouted_nets": 0,
+    "clearance_violations": 8,
+    "quality_score": 946.66
+  }
+}

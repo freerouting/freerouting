@@ -1,0 +1,59 @@
+{
+  "board_id": "low-power-counter_lpcounter",
+  "display_name": "low-power-counter_lpcounter",
+  "pcbench_directory": "PCBs/low-power-counter_lpcounter",
+  "source": "https://github.com/emard/low-power-counter",
+  "author": "emard",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.050075+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 54.0
+    },
+    "area_cm2": 45.9,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 150,
+    "vias": 2,
+    "track_length_mm": 480.32,
+    "kicad_drc_violations": 135,
+    "kicad_drc_breakdown": {
+      "total_violations": 135,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 83,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 29,
+        "malformed_courtyard": 3,
+        "silk_over_copper": 6,
+        "silk_overlap": 8,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 92,
+        "warning": 43
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

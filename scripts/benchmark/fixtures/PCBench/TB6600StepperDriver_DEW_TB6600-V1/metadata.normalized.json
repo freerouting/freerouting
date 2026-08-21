@@ -1,0 +1,57 @@
+{
+  "board_id": "TB6600StepperDriver_DEW_TB6600-V1",
+  "display_name": "TB6600StepperDriver_DEW_TB6600-V1",
+  "pcbench_directory": "PCBs/TB6600StepperDriver_DEW_TB6600-V1",
+  "source": "https://github.com/dewhisna/TB6600StepperDriver",
+  "author": "dewhisna",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.693965+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 75,
+    "dimensions_mm": {
+      "width": 86.36,
+      "height": 66.67
+    },
+    "area_cm2": 57.58,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 567,
+    "vias": 20,
+    "track_length_mm": 2736.4,
+    "kicad_drc_violations": 518,
+    "kicad_drc_breakdown": {
+      "total_violations": 518,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "silk_edge_clearance": 14,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "text_height": 100,
+        "text_on_edge_cuts": 1,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 516
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,29 @@
+{
+  "board": "kitspace_USBI2C01",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_USBI2C01\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 11,
+  "segment_count": 193,
+  "approximate_track_length_mm": 369.5,
+  "kicad_drc_violations": 142,
+  "generated_at": "2026-08-18T19:13:14.330360+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 142,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 7,
+      "lib_footprint_issues": 22,
+      "lib_footprint_mismatch": 4,
+      "silk_edge_clearance": 5,
+      "silk_over_copper": 83,
+      "silk_overlap": 5,
+      "solder_mask_bridge": 15,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 23,
+      "warning": 119
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "HW-AC-Emeter_ac-power-monitor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 191146,
+      "sha256": "79cca4580f30630b93a0f346782c4be0d25826547e73eef94dc426b4e4310ced"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 120015,
+      "sha256": "8f27c3fb9bb0c77b3aeb3f69eddf083bdf76fca7a408a66af5c1dfd3de6693df"
+    },
+    "metadata_json": {
+      "bytes": 485,
+      "sha256": "29a5ae0758709aab9cbf7b2c89908e1ff9c9648f9f73ce88611c8a39297dac59"
+    },
+    "final_json": {
+      "bytes": 100962,
+      "sha256": "4b2c3cdc20151355dd4c8e3d205e31efae2fae1fbc831e0efedd719b6091d571"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:57:21.041064+00:00"
+  }
+}

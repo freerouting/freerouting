@@ -1,0 +1,64 @@
+{
+  "board_id": "breakout-boards_swd-and-uart",
+  "display_name": "breakout-boards_swd-and-uart",
+  "pcbench_directory": "PCBs/breakout-boards_swd-and-uart",
+  "source": "https://github.com/myelin/breakout-boards",
+  "author": "myelin",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:24.229724+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 3,
+    "dimensions_mm": {
+      "width": 12.7,
+      "height": 25.4
+    },
+    "area_cm2": 3.23,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 45,
+    "vias": 6,
+    "track_length_mm": 95.19,
+    "kicad_drc_violations": 13,
+    "kicad_drc_breakdown": {
+      "total_violations": 13,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 5,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 3,
+        "text_height": 3
+      },
+      "by_severity": {
+        "error": 7,
+        "warning": 6
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.851122+00:00",
+    "elapsed_seconds": 6.93,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

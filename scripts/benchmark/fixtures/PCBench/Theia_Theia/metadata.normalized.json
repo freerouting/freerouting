@@ -1,0 +1,67 @@
+{
+  "board_id": "Theia_Theia",
+  "display_name": "Theia_Theia",
+  "pcbench_directory": "PCBs/Theia_Theia",
+  "source": "https://github.com/loldavid6/Theia",
+  "author": "loldavid6",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:53.570070+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 54.0,
+      "height": 40.0
+    },
+    "area_cm2": 21.6,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 118,
+    "vias": 11,
+    "track_length_mm": 489.26,
+    "kicad_drc_violations": 139,
+    "kicad_drc_breakdown": {
+      "total_violations": 139,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 66,
+        "copper_edge_clearance": 3,
+        "shorting_items": 8,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 22,
+        "silk_overlap": 24,
+        "solder_mask_bridge": 6,
+        "starved_thermal": 1,
+        "text_height": 2,
+        "tracks_crossing": 3
+      },
+      "by_severity": {
+        "error": 87,
+        "warning": 52
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.141902+00:00",
+    "elapsed_seconds": 11.49,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 972.21
+  }
+}

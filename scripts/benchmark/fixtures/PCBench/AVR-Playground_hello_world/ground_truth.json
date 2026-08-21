@@ -1,0 +1,24 @@
+{
+  "board": "AVR-Playground_hello_world",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\AVR-Playground_hello_world\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 18,
+  "approximate_track_length_mm": 162.35,
+  "kicad_drc_violations": 45,
+  "generated_at": "2026-08-18T18:31:15.996054+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 45,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 40,
+      "isolated_copper": 1,
+      "lib_footprint_issues": 4
+    },
+    "by_severity": {
+      "error": 40,
+      "warning": 5
+    }
+  }
+}

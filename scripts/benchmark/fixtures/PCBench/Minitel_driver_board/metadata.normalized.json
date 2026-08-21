@@ -1,0 +1,55 @@
+{
+  "board_id": "Minitel_driver_board",
+  "display_name": "Minitel_driver_board",
+  "pcbench_directory": "PCBs/Minitel_driver_board",
+  "source": "https://github.com/phooky/Minitel",
+  "author": "phooky",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.797743+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 39,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 83.82,
+      "height": 53.34
+    },
+    "area_cm2": 44.71,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 168,
+    "vias": 3,
+    "track_length_mm": 787.52,
+    "kicad_drc_violations": 134,
+    "kicad_drc_breakdown": {
+      "total_violations": 134,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 80,
+        "lib_footprint_issues": 29,
+        "silk_edge_clearance": 12,
+        "silk_overlap": 13
+      },
+      "by_severity": {
+        "error": 80,
+        "warning": 54
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

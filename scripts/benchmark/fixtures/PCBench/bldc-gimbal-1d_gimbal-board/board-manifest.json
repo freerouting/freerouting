@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "bldc-gimbal-1d_gimbal-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 166964,
+      "sha256": "8a350af86338c97b653a104825b7b6772db2601dc51358f572765eb8bc80966d"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 99962,
+      "sha256": "629e12c4683f7cb7fd5091d610e358522388f94d1b8255c645c6248c41eb69e5"
+    },
+    "metadata_json": {
+      "bytes": 651,
+      "sha256": "e9ee7e0f5e2cb70d86210c08ba49d7194e95192d9b1654066b486e29d7c1f16c"
+    },
+    "final_json": {
+      "bytes": 91575,
+      "sha256": "c6d47b587f163a6aa2c3c9fda8d56d8c295f9ef506ff5dcbc9e825664c9dad8e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:33:51.343164+00:00"
+  }
+}

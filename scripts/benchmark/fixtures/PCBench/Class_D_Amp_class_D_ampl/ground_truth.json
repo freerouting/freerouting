@@ -1,0 +1,28 @@
+{
+  "board": "Class_D_Amp_class_D_ampl",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Class_D_Amp_class_D_ampl\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 39,
+  "segment_count": 736,
+  "approximate_track_length_mm": 2020.2,
+  "kicad_drc_violations": 323,
+  "generated_at": "2026-08-18T18:38:48.895019+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 323,
+    "unconnected_count": 6,
+    "by_type": {
+      "clearance": 127,
+      "lib_footprint_issues": 89,
+      "pth_inside_courtyard": 1,
+      "silk_edge_clearance": 34,
+      "silk_over_copper": 20,
+      "silk_overlap": 35,
+      "track_dangling": 17
+    },
+    "by_severity": {
+      "error": 128,
+      "warning": 195
+    }
+  }
+}

@@ -1,0 +1,455 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\LED-Square_PT4115_LED-Square_PT4115\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Front
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Back
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  108196 -95002.4  108587 -95040.9  108973 -95117.5  109348 -95231.6
+            109711 -95381.9  110058 -95567  110384 -95785.2  110688 -96034.4
+            110966 -96312.1  111215 -96615.8  111433 -96942.3  111618 -97288.7
+            111768 -97651.6  111882 -98027.5  111959 -98412.7  111998 -98803.6
+            112000 -99000  112000 -141000  111998 -141196  111959 -141587
+            111882 -141973  111768 -142348  111618 -142711  111433 -143058
+            111215 -143384  110966 -143688  110688 -143966  110384 -144215
+            110058 -144433  109711 -144618  109348 -144768  108973 -144882
+            108587 -144959  108196 -144998  108000 -145000  66000 -145000
+            65803.6 -144998  65412.7 -144959  65027.5 -144882  64651.6 -144768
+            64288.7 -144618  63942.3 -144433  63615.8 -144215  63312.1 -143966
+            63034.4 -143688  62785.2 -143384  62567 -143058  62381.9 -142711
+            62231.6 -142348  62117.5 -141973  62040.9 -141587  62002.4 -141196
+            62000 -141000  62000 -99000  62002.4 -98803.6  62040.9 -98412.7
+            62117.5 -98027.5  62231.6 -97651.6  62381.9 -97288.7  62567 -96942.3
+            62785.2 -96615.8  63034.4 -96312.1  63312.1 -96034.4  63615.8 -95785.2
+            63942.3 -95567  64288.7 -95381.9  64651.6 -95231.6  65027.5 -95117.5
+            65412.7 -95040.9  65803.6 -95002.4  66000 -95000  108000 -95000
+            108196 -95002.4)
+    )
+    (via "Via[0-1]_635:330.2_um" "Via[0-1]_889:508_um")
+    (rule
+      (width 203.2)
+      (clearance 203.2)
+      (clearance 50.8 (type smd_smd))
+    )
+  )
+  (placement
+    (component "MADW__SOT89-5"
+      (place U1 87000 -111500 front 0 (PN "PT4115-SOT89-5"))
+    )
+    (component "my_parts:MADW__Nichia-NT2x757DT"
+      (place D6 75001.1 -120000 front -90 (PN LED))
+      (place D5 75001.1 -137000 front -90 (PN LED))
+      (place D2 98999 -103000 front 90 (PN LED))
+      (place D4 98999 -137000 front 90 (PN LED))
+      (place D3 98999 -120000 front 90 (PN LED))
+      (place D1 75001.1 -103000 front -90 (PN LED))
+    )
+    (component my_parts:MADW__R0805
+      (place R2 96750 -112500 front 90 (PN 1k))
+      (place R1 91313 -112522 front 90 (PN 1M))
+    )
+    (component "MADW__edge-connector_SIL6_male"
+      (place P2 105499 -120000 front 180 (PN OUT))
+    )
+    (component MADW__mounting_hole_3mm
+      (place MH2 108001 -98999 front 0 (PN CONN_1))
+      (place MH4 65999.4 -141000 front 0 (PN CONN_1))
+      (place MH3 108001 -141000 front 0 (PN CONN_1))
+      (place MH1 65999.4 -98999 front 0 (PN CONN_1))
+    )
+    (component "my_parts:MADW__diode_sub-SMA"
+      (place DS1 82850 -111400 front 90 (PN "SS14L (40V, 1A)"))
+    )
+    (component my_parts:MADW__C0805
+      (place C1 87000 -106500 front 0 (PN 10µF))
+      (place C5 108001 -107749 front 0 (PN 10µF))
+      (place C4 108001 -105001 front 0 (PN 10µF))
+      (place C3 65999.4 -107749 front 0 (PN 10µF))
+      (place C2 65999.4 -105001 front 0 (PN 10µF))
+      (place C6 93853 -112522 front 90 (PN 1.25µF/s))
+    )
+    (component my_parts:MADW__SOT23
+      (place DZ1 92583 -108077 front 0 (PN BZX84C_5V1))
+    )
+    (component "oshw-logo:OSHW-logo_silkscreen_5mm"
+      (place G1 87000 -101000 front 0 (PN "OSHW-logo_silkscreen_5mm"))
+      (place G2 87000 -132000 front 0 (PN LED_smile_silkscreen_5mm))
+      (place G4 91250 -120000 back 180 (PN "fire_silkscreen-back_4mm"))
+      (place G3 82750 -120000 back 180 (PN "fire_silkscreen-back_4mm"))
+    )
+    (component my_parts:MADW__R1206
+      (place R_CS1 73500 -111400 front 90 (PN 1R1))
+      (place R_CS2 76500 -111400 front 90 (PN 1R1))
+    )
+    (component "my_parts:MADW__edge-connector_SIL6_female"
+      (place P1 68501.3 -120000 front 0 (PN IN))
+    )
+    (component my_parts:MADW__L4.8x3.3mm
+      (place L1 87000.1 -120000 front 180 (PN 100µH))
+    )
+  )
+  (library
+    (image "MADW__SOT89-5"
+      (outline (path signal 200  -2400.3 -3200.4  -2400.3 3200.4))
+      (outline (path signal 200  2400.3 -3200.4  -2400.3 -3200.4))
+      (outline (path signal 200  2400.3 3200.4  2400.3 -3200.4))
+      (outline (path signal 200  -2400.3 3200.4  2400.3 3200.4))
+      (pin Rect[T]Pad_701.040000x1600.200000_um 1 -1501.14 -1899.92)
+      (pin Rect[T]Pad_1000.760000x2199.640000_um 2 0 -1600.2)
+      (pin Rect[T]Pad_701.040000x1600.200000_um 3 1501.14 -1899.92)
+      (pin Rect[T]Pad_701.040000x1600.200000_um 4 1501.14 1899.92)
+      (pin Rect[T]Pad_701.040000x1600.200000_um 5 -1501.14 1899.92)
+      (pin Rect[T]Pad_1800.860000x3401.060000_um 2@1 0 1000.76)
+      (pin Rect[A]Pad_635.000000x635.000000_um 2@2 -500.38 -99.06)
+      (pin Rect[A]Pad_635.000000x635.000000_um 2@3 500.38 -99.06)
+      (pin Rect[A]Pad_635.000000x635.000000_um 2@4 398.78 701.04)
+      (pin Rect[A]Pad_635.000000x635.000000_um 2@5 -398.78 701.04)
+      (pin Rect[A]Pad_635.000000x635.000000_um 2@6 0 200.66)
+      (pin Rect[A]Pad_635.000000x635.000000_um 2@7 0 -299.72)
+    )
+    (image "my_parts:MADW__Nichia-NT2x757DT"
+      (outline (path signal 200  -1500 1500  1500 1500))
+      (outline (path signal 200  1500 1500  1500 -1500))
+      (outline (path signal 200  -1100 0  -400 0))
+      (outline (path signal 200  -500 -800  -500 800))
+      (outline (path signal 200  500 -800  -500 0))
+      (outline (path signal 200  500 800  500 -800))
+      (outline (path signal 200  -500 0  500 800))
+      (outline (path signal 200  1100 0  600 0))
+      (outline (path signal 100  1300 1140  1300 -1140))
+      (outline (path signal 100  820 1140  1300 1140))
+      (outline (path signal 100  820 -1140  820 1140))
+      (outline (path signal 100  1300 -1140  820 -1140))
+      (outline (path signal 100  -1300 -1140  -1300 1140))
+      (outline (path signal 100  120 -1140  -1300 -1140))
+      (outline (path signal 100  120 1140  120 -1140))
+      (outline (path signal 100  -1300 1140  120 1140))
+      (outline (path signal 200  -1500 -1500  -1500 1500))
+      (outline (path signal 200  1500 -1500  -1500 -1500))
+      (outline (path signal 200  -2500 -2000  -2500 2500))
+      (outline (path signal 200  -2000 -2500  -2500 -2000))
+      (outline (path signal 200  2500 -2500  -2000 -2500))
+      (outline (path signal 200  2500 2500  2500 -2500))
+      (outline (path signal 200  -2500 2500  2500 2500))
+      (pin Rect[T]Pad_1530.000000x2300.000000_um 2 -630 0)
+      (pin Rect[T]Pad_700.000000x3150.000000_um 2@1 -1690 0)
+      (pin Rect[T]Pad_580.000000x2300.000000_um 1 1100 0)
+      (pin Rect[T]Pad_700.000000x3150.000000_um 1@1 1680 0)
+    )
+    (image my_parts:MADW__R0805
+      (outline (path signal 200  -1971.04 -982.98  -1971.04 982.98))
+      (outline (path signal 200  1971.04 -982.98  -1971.04 -982.98))
+      (outline (path signal 200  1971.04 982.98  1971.04 -982.98))
+      (outline (path signal 200  -1971.04 982.98  1971.04 982.98))
+      (outline (path signal 200  -408.94 -635  408.94 -635))
+      (outline (path signal 200  -408.94 635  408.94 635))
+      (outline (path signal 200  -1066.8 -698.5  -1066.8 701.04))
+      (outline (path signal 200  -1066.8 701.04  -416.56 701.04))
+      (outline (path signal 200  -416.56 -698.5  -416.56 701.04))
+      (outline (path signal 200  -1066.8 -698.5  -416.56 -698.5))
+      (outline (path signal 200  406.4 -698.5  406.4 701.04))
+      (outline (path signal 200  406.4 701.04  1054.1 701.04))
+      (outline (path signal 200  1054.1 -698.5  1054.1 701.04))
+      (outline (path signal 200  406.4 -698.5  1054.1 -698.5))
+      (pin Rect[T]Pad_1297.940000x1498.600000_um 1 -949.96 0)
+      (pin Rect[T]Pad_1297.940000x1498.600000_um 2 949.96 0)
+    )
+    (image "MADW__edge-connector_SIL6_male"
+      (outline (path signal 200  -1399.54 0  -3898.9 0))
+      (outline (path signal 200  -1399.54 2540  -3898.9 2540))
+      (outline (path signal 200  -1399.54 5080  -3898.9 5080))
+      (outline (path signal 200  -1399.54 -2540  -3898.9 -2540))
+      (outline (path signal 200  -1399.54 -5080  -3898.9 -5080))
+      (outline (path signal 200  -3898.9 6350  -9900.92 6350))
+      (outline (path signal 200  -3898.9 3810  -9900.92 3810))
+      (outline (path signal 200  -9900.92 1270  -3898.9 1270))
+      (outline (path signal 200  -3898.9 -1270  -9900.92 -1270))
+      (outline (path signal 200  -3898.9 -3810  -9900.92 -3810))
+      (outline (path signal 200  -3898.9 -6350  -9900.92 -6350))
+      (outline (path signal 200  -1399.54 7620  -1399.54 -7620))
+      (outline (path signal 200  -1399.54 -7620  -3898.9 -7620))
+      (outline (path signal 200  -1399.54 7620  -3898.9 7620))
+      (outline (path signal 200  -3898.9 -7620  -3898.9 7620))
+      (pin Round[A]Pad_1651.000000_um 3 0 1270)
+      (pin Round[A]Pad_1651.000000_um 4 0 -1270)
+      (pin Round[A]Pad_1651.000000_um 2 0 3810)
+      (pin Round[A]Pad_1651.000000_um 1 0 6350)
+      (pin Round[A]Pad_1651.000000_um 5 0 -3810)
+      (pin Round[A]Pad_1651.000000_um 6 0 -6350)
+    )
+    (image MADW__mounting_hole_3mm
+      (outline (path signal 200  2286 0  2266.44 -298.383  2208.11 -591.66  2111.99 -874.814
+            1979.73 -1143  1813.61 -1391.63  1616.45 -1616.45  1391.63 -1813.61
+            1143 -1979.73  874.814 -2111.99  591.66 -2208.11  298.383 -2266.44
+            0 -2286  -298.383 -2266.44  -591.66 -2208.11  -874.814 -2111.99
+            -1143 -1979.73  -1391.63 -1813.61  -1616.45 -1616.45  -1813.61 -1391.63
+            -1979.73 -1143  -2111.99 -874.814  -2208.11 -591.66  -2266.44 -298.383
+            -2286 0  -2266.44 298.383  -2208.11 591.66  -2111.99 874.814
+            -1979.73 1143  -1813.61 1391.63  -1616.45 1616.45  -1391.63 1813.61
+            -1143 1979.73  -874.814 2111.99  -591.66 2208.11  -298.383 2266.44
+            0 2286  298.383 2266.44  591.66 2208.11  874.814 2111.99  1143 1979.73
+            1391.63 1813.61  1616.45 1616.45  1813.61 1391.63  1979.73 1143
+            2111.99 874.814  2208.11 591.66  2266.44 298.383  2286 0))
+      (keepout "" (circle Front 3500))
+      (keepout "" (circle Back 3500))
+    )
+    (image "my_parts:MADW__diode_sub-SMA"
+      (outline (path signal 200  -1450 -950  -1450 950))
+      (outline (path signal 200  1450 -950  -1450 -950))
+      (outline (path signal 200  1450 950  1450 -950))
+      (outline (path signal 200  -1450 950  1450 950))
+      (outline (path signal 200  -1900 -600  -1450 -600))
+      (outline (path signal 200  -1900 600  -1900 -600))
+      (outline (path signal 200  -1450 600  -1900 600))
+      (outline (path signal 200  1900 -600  1450 -600))
+      (outline (path signal 200  1900 600  1900 -600))
+      (outline (path signal 200  1450 600  1900 600))
+      (outline (path signal 200  300 550  300 -550))
+      (outline (path signal 200  -400 -550  150 0))
+      (outline (path signal 200  -400 550  -400 -550))
+      (outline (path signal 200  150 0  -400 550))
+      (outline (path signal 200  300 0  950 0))
+      (outline (path signal 200  -950 0  -400 0))
+      (pin Rect[T]Pad_1800.000000x1800.000000_um 1 -1700 0)
+      (pin Rect[T]Pad_1800.000000x1800.000000_um 2 1700 0)
+    )
+    (image my_parts:MADW__C0805
+      (outline (path signal 200  -1000 -630  -1000 630))
+      (outline (path signal 200  1000 -630  -1000 -630))
+      (outline (path signal 200  1000 630  1000 -630))
+      (outline (path signal 200  -1000 630  1000 630))
+      (outline (path signal 100  200 0  600 0))
+      (outline (path signal 100  -200 0  -600 0))
+      (outline (path signal 100  -200 400  -200 -400))
+      (outline (path signal 100  200 400  200 -400))
+      (outline (path signal 200  -2000 -1100  -2000 1100))
+      (outline (path signal 200  2000 -1100  -2000 -1100))
+      (outline (path signal 200  2000 1100  2000 -1100))
+      (outline (path signal 200  2000 1100  -2000 1100))
+      (pin Rect[T]Pad_1297.940000x1498.600000_um 1 -949.96 0)
+      (pin Rect[T]Pad_1297.940000x1498.600000_um 2 949.96 0)
+    )
+    (image my_parts:MADW__SOT23
+      (outline (path signal 200  -1419.86 657.86  1419.86 657.86))
+      (outline (path signal 200  -1419.86 -657.86  -1419.86 657.86))
+      (outline (path signal 200  1419.86 -657.86  -1419.86 -657.86))
+      (outline (path signal 200  1419.86 657.86  1419.86 -657.86))
+      (outline (path signal 200  -497.84 -299.72  -497.84 299.72))
+      (outline (path signal 200  -497.84 299.72  497.84 299.72))
+      (outline (path signal 200  497.84 -299.72  497.84 299.72))
+      (outline (path signal 200  -497.84 -299.72  497.84 -299.72))
+      (outline (path signal 200  -1168.4 -1292.86  -1168.4 -711.2))
+      (outline (path signal 200  -1168.4 -711.2  -711.2 -711.2))
+      (outline (path signal 200  -711.2 -1292.86  -711.2 -711.2))
+      (outline (path signal 200  -1168.4 -1292.86  -711.2 -1292.86))
+      (outline (path signal 200  711.2 -1292.86  711.2 -711.2))
+      (outline (path signal 200  711.2 -711.2  1168.4 -711.2))
+      (outline (path signal 200  1168.4 -1292.86  1168.4 -711.2))
+      (outline (path signal 200  711.2 -1292.86  1168.4 -1292.86))
+      (outline (path signal 200  -228.6 711.2  -228.6 1292.86))
+      (outline (path signal 200  -228.6 1292.86  228.6 1292.86))
+      (outline (path signal 200  228.6 711.2  228.6 1292.86))
+      (outline (path signal 200  -228.6 711.2  228.6 711.2))
+      (outline (path signal 200  -1900 2200  1900 2200))
+      (outline (path signal 200  -1900 -2200  -1900 2200))
+      (outline (path signal 200  1900 -2200  -1900 -2200))
+      (outline (path signal 200  1900 2200  1900 -2200))
+      (pin Rect[T]Pad_1000.000000x1400.000000_um 1 -950 -1100)
+      (pin Rect[T]Pad_800.000000x1000.000000_um 2 950 -1100)
+      (pin Rect[T]Pad_1000.000000x1400.000000_um 3 0 1100)
+    )
+    (image "oshw-logo:OSHW-logo_silkscreen_5mm"
+    )
+    (image my_parts:MADW__R1206
+      (outline (path signal 200  952.5 812.8  -965.2 812.8))
+      (outline (path signal 200  952.5 -812.8  -965.2 -812.8))
+      (outline (path signal 200  952.5 -876.3  952.5 876.3))
+      (outline (path signal 200  952.5 876.3  1689.1 876.3))
+      (outline (path signal 200  1689.1 -876.3  1689.1 876.3))
+      (outline (path signal 200  952.5 -876.3  1689.1 -876.3))
+      (outline (path signal 200  -1689.1 -876.3  -1689.1 876.3))
+      (outline (path signal 200  -1689.1 876.3  -952.5 876.3))
+      (outline (path signal 200  -952.5 -876.3  -952.5 876.3))
+      (outline (path signal 200  -1689.1 -876.3  -952.5 -876.3))
+      (outline (path signal 200  -2600 -1300  -2600 1300))
+      (outline (path signal 200  2600 -1300  -2600 -1300))
+      (outline (path signal 200  2600 1300  2600 -1300))
+      (outline (path signal 200  -2600 1300  2600 1300))
+      (pin Rect[T]Pad_1597.660000x1800.860000_um 1 -1419.86 0)
+      (pin Rect[T]Pad_1597.660000x1800.860000_um 2 1419.86 0)
+    )
+    (image "my_parts:MADW__edge-connector_SIL6_female"
+      (outline (path signal 200  -1699.82 7620  -1699.82 -7620))
+      (outline (path signal 200  -10200 -7620  -1700 -7620))
+      (outline (path signal 200  -10200 7620  -10200 -7620))
+      (outline (path signal 200  -1700 7620  -10200 7620))
+      (pin Round[A]Pad_1651.000000_um 3 0 1270)
+      (pin Round[A]Pad_1651.000000_um 4 0 -1270)
+      (pin Round[A]Pad_1651.000000_um 2 0 3810)
+      (pin Round[A]Pad_1651.000000_um 1 0 6350)
+      (pin Round[A]Pad_1651.000000_um 5 0 -3810)
+      (pin Round[A]Pad_1651.000000_um 6 0 -6350)
+    )
+    (image my_parts:MADW__L4.8x3.3mm
+      (outline (path signal 200  -1447.8 -1600.2  1473.2 -1600.2))
+      (outline (path signal 200  -1473.2 1600.2  1473.2 1600.2))
+      (outline (path signal 200  1447.8 -1651  1447.8 1648.46))
+      (outline (path signal 200  1447.8 1648.46  2397.76 1648.46))
+      (outline (path signal 200  2397.76 -1651  2397.76 1648.46))
+      (outline (path signal 200  1447.8 -1651  2397.76 -1651))
+      (outline (path signal 200  -2387.6 -1651  -2387.6 1648.46))
+      (outline (path signal 200  -2387.6 1648.46  -1435.1 1648.46))
+      (outline (path signal 200  -1435.1 -1651  -1435.1 1648.46))
+      (outline (path signal 200  -2387.6 -1651  -1435.1 -1651))
+      (outline (path signal 200  -4050 -3100  -4050 3100))
+      (outline (path signal 200  4050 -3100  -4050 -3100))
+      (outline (path signal 200  4050 3100  4050 -3100))
+      (outline (path signal 200  -4050 3100  4050 3100))
+      (pin Rect[T]Pad_2499.360000x4500.880000_um 1 -1948.18 0)
+      (pin Rect[T]Pad_2499.360000x4500.880000_um 2 1948.18 0)
+    )
+    (padstack Round[A]Pad_1651.000000_um
+      (shape (circle Front 1651))
+      (shape (circle Back 1651))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2499.360000x4500.880000_um
+      (shape (rect Front -1249.68 -2250.44 1249.68 2250.44))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_580.000000x2300.000000_um
+      (shape (rect Front -290 -1150 290 1150))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_635.000000x635.000000_um
+      (shape (rect Front -317.5 -317.5 317.5 317.5))
+      (shape (rect Back -317.5 -317.5 317.5 317.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x3150.000000_um
+      (shape (rect Front -350 -1575 350 1575))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_701.040000x1600.200000_um
+      (shape (rect Front -350.52 -800.1 350.52 800.1))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x1000.000000_um
+      (shape (rect Front -400 -500 400 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1400.000000_um
+      (shape (rect Front -500 -700 500 700))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.760000x2199.640000_um
+      (shape (rect Front -500.38 -1099.82 500.38 1099.82))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1297.940000x1498.600000_um
+      (shape (rect Front -648.97 -749.3 648.97 749.3))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1530.000000x2300.000000_um
+      (shape (rect Front -765 -1150 765 1150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1597.660000x1800.860000_um
+      (shape (rect Front -798.83 -900.43 798.83 900.43))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1800.000000x1800.000000_um
+      (shape (rect Front -900 -900 900 900))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1800.860000x3401.060000_um
+      (shape (rect Front -900.43 -1700.53 900.43 1700.53))
+      (attach off)
+    )
+    (padstack "Via[0-1]_635:330.2_um"
+      (shape (circle Front 635))
+      (shape (circle Back 635))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:508_um"
+      (shape (circle Front 889))
+      (shape (circle Back 889))
+      (attach off)
+    )
+  )
+  (network
+    (net /CSN
+      (pins U1-4 D1-1 D1-1@1 R_CS1-2 R_CS2-2)
+    )
+    (net /D1HS
+      (pins D2-1 D2-1@1 D1-2 D1-2@1)
+    )
+    (net /D2HS
+      (pins D2-2 D2-2@1 D3-1 D3-1@1)
+    )
+    (net /D3HS
+      (pins D4-1 D4-1@1 D3-2 D3-2@1)
+    )
+    (net /D4HS
+      (pins D5-1 D5-1@1 D4-2 D4-2@1)
+    )
+    (net /D5HS
+      (pins D6-1 D6-1@1 D5-2 D5-2@1)
+    )
+    (net /D6HS
+      (pins D6-2 D6-2@1 L1-2)
+    )
+    (net /DIM
+      (pins R2-1 P2-2 P2-1 P1-5 P1-6)
+    )
+    (net /SW
+      (pins U1-1 DS1-1 L1-1)
+    )
+    (net /_dim
+      (pins U1-3 R2-2 DZ1-3 C6-1 R1-1)
+    )
+    (net GND
+      (pins U1-2 U1-2@1 U1-2@2 U1-2@3 U1-2@4 U1-2@5 U1-2@6 U1-2@7 P2-5 P2-6 C1-2 DZ1-1
+        C5-2 C4-2 C3-2 C2-2 C6-2 R1-2 P1-2 P1-1)
+    )
+    (net VCC
+      (pins U1-5 P2-3 P2-4 DS1-2 C1-1 C5-1 C4-1 C3-1 C2-1 R_CS1-1 R_CS2-1 P1-3 P1-4)
+    )
+    (class kicad_default /CSN /D1HS /D2HS /D3HS /D4HS /D5HS /D6HS /DIM /_dim
+      (circuit
+        (use_via "Via[0-1]_635:330.2_um")
+      )
+      (rule
+        (width 203.2)
+        (clearance 203.2)
+      )
+    )
+    (class POWER /SW GND VCC
+      (circuit
+        (use_via "Via[0-1]_889:508_um")
+      )
+      (rule
+        (width 711.2)
+        (clearance 203.2)
+      )
+    )
+  )
+  (wiring
+  )
+)

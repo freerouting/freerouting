@@ -1,0 +1,24 @@
+{
+  "board": "tiny-8088_Computer",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\tiny-8088_Computer\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 47,
+  "segment_count": 1618,
+  "approximate_track_length_mm": 7386.24,
+  "kicad_drc_violations": 73,
+  "generated_at": "2026-08-18T19:52:24.492411+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 73,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 54,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 2,
+      "silk_overlap": 11
+    },
+    "by_severity": {
+      "warning": 73
+    }
+  }
+}

@@ -190,13 +190,21 @@ public final class DsnFile {
   public static String readStringScope(IJFlexScanner scanner) {
     try {
       scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      String result = scanner.nextString();
+      Object token = scanner.nextToken();
+      if (token == null) {
+        return null;
+      }
+      String result = token.toString();
       Object nextToken = scanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         FRLogger.warn(
             "DsnFile.read_string_scope: closing bracket expected at '"
                 + scanner.getScopeIdentifier()
-                + "'");
+                + "', got: "
+                + nextToken);
+        while (nextToken != null && nextToken != Keyword.CLOSED_BRACKET) {
+          nextToken = scanner.nextToken();
+        }
       }
       return result;
     } catch (IOException e) {

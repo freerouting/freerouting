@@ -1,0 +1,65 @@
+{
+  "board_id": "espeverywhere_espeverywhere",
+  "display_name": "espeverywhere_espeverywhere",
+  "pcbench_directory": "PCBs/espeverywhere_espeverywhere",
+  "source": "https://github.com/IdleHandsProject/espeverywhere",
+  "author": "IdleHandsProject",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.833743+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 27,
+    "components": 41,
+    "dimensions_mm": {
+      "width": 45.0,
+      "height": 48.0
+    },
+    "area_cm2": 21.6,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 303,
+    "vias": 46,
+    "track_length_mm": 654.89,
+    "kicad_drc_violations": 324,
+    "kicad_drc_breakdown": {
+      "total_violations": 324,
+      "unconnected_count": 3,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 143,
+        "copper_edge_clearance": 8,
+        "hole_clearance": 2,
+        "items_not_allowed": 46,
+        "lib_footprint_issues": 41,
+        "malformed_courtyard": 6,
+        "padstack": 1,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 38,
+        "silk_overlap": 1,
+        "starved_thermal": 2,
+        "text_height": 30,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 208,
+        "warning": 116
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

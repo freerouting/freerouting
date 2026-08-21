@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "tessel-ice40__autosave-project",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 160510,
+      "sha256": "96f8601a9974cbfe5dc515818840b164ce2e73acdb48c0f31b49f172325b37a3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 109569,
+      "sha256": "2fcea5af700a3148bf8a2f921afc557e39a22503bb83462718ae92c004056452"
+    },
+    "metadata_json": {
+      "bytes": 479,
+      "sha256": "786f0e67b295330c369fe1744e2d42394559ea957b6df3887e14e6af9c00bde1"
+    },
+    "final_json": {
+      "bytes": 101623,
+      "sha256": "e2b6c1ebb29606707894a7804f44c74aa04b8e3a28365296e4d743abc1d60d55"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:51:27.767891+00:00"
+  }
+}

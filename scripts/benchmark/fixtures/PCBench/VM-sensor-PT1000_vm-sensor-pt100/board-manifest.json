@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "VM-sensor-PT1000_vm-sensor-pt100",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 141169,
+      "sha256": "3a833bd05e140c441edab8cd652d769f48e79a7c2dee2cde0836ce742c3bf9c8"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 85879,
+      "sha256": "24435b1fd29c0adaafe113c793a9456c207c841010315f004e1016a6d313df64"
+    },
+    "metadata_json": {
+      "bytes": 517,
+      "sha256": "ed687ac82201f733d15d8debd75e1285a63be15233cba3eede3bbb45b3a1727f"
+    },
+    "final_json": {
+      "bytes": 41812,
+      "sha256": "9a91a0cdfdd8c99d6aed053f24a07fb6f481c55a4fb3f59e84e3259c958d814a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:56:03.652892+00:00"
+  }
+}

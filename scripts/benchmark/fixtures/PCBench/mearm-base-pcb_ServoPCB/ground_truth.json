@@ -1,0 +1,25 @@
+{
+  "board": "mearm-base-pcb_ServoPCB",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mearm-base-pcb_ServoPCB\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 68,
+  "approximate_track_length_mm": 319.07,
+  "kicad_drc_violations": 72,
+  "generated_at": "2026-08-18T19:20:54.255238+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 72,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 59,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 9,
+      "silk_edge_clearance": 2
+    },
+    "by_severity": {
+      "error": 61,
+      "warning": 11
+    }
+  }
+}

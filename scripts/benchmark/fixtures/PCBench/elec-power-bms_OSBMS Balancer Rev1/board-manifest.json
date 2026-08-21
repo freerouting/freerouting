@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "elec-power-bms_OSBMS Balancer Rev1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 5831807,
+      "sha256": "778c590ec7d8c71a686e49d4f8c3c66ba4921034070f551101dc84f96a21e104"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 5713983,
+      "sha256": "39563408250ed08c86ad4a87a8e119ab3eafc8d8bcba32fe9f389881888e8e30"
+    },
+    "metadata_json": {
+      "bytes": 511,
+      "sha256": "eb00bcabaaf2e8c468f88dc6ba5282b5ffe823009be43ac0534566ffe3674f80"
+    },
+    "final_json": {
+      "bytes": 186046,
+      "sha256": "33aab0feb40e0fb548fba69fa3fb0a89790078ea8586f0e6e2f581db561f9124"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:44:21.800832+00:00"
+  }
+}

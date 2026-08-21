@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_ESP8266-PowerMonitor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 122037,
+      "sha256": "0171161b505ee6ce433185fbd22c9e80d9345fa97067c7424af294a1b180c621"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 150310,
+      "sha256": "ea6c4c63b6299106dd72f55d944999663880f680fc8ce076d3ec7e2cae0f575f"
+    },
+    "metadata_json": {
+      "bytes": 518,
+      "sha256": "fc99314ca3688d4ba78d7824548789ae7ce6487f56b877ff88d461d6f64504f2"
+    },
+    "final_json": {
+      "bytes": 39330,
+      "sha256": "8d91fa1d3adc00e6178e268387583bcc1e5686106f6c1488118918d0cb7f97c7"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:05:37.978899+00:00"
+  }
+}

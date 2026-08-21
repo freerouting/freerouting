@@ -1,0 +1,32 @@
+{
+  "board": "Omega2-Berrydock_berrydock-mini",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Omega2-Berrydock_berrydock-mini\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 156,
+  "segment_count": 1513,
+  "approximate_track_length_mm": 1543.57,
+  "kicad_drc_violations": 659,
+  "generated_at": "2026-08-18T19:29:14.248291+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 659,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 414,
+      "copper_edge_clearance": 17,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 88,
+      "silk_edge_clearance": 11,
+      "silk_over_copper": 16,
+      "silk_overlap": 14,
+      "solder_mask_bridge": 89,
+      "starved_thermal": 5,
+      "track_dangling": 1,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 528,
+      "warning": 131
+    }
+  }
+}

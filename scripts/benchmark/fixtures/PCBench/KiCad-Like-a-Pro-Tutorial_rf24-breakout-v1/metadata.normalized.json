@@ -1,0 +1,64 @@
+{
+  "board_id": "KiCad-Like-a-Pro-Tutorial_rf24-breakout-v1",
+  "display_name": "KiCad-Like-a-Pro-Tutorial_rf24-breakout-v1",
+  "pcbench_directory": "PCBs/KiCad-Like-a-Pro-Tutorial_rf24-breakout-v1",
+  "source": "https://github.com/wicker/KiCad-Like-a-Pro-Tutorial",
+  "author": "wicker",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.409891+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 3,
+    "dimensions_mm": {
+      "width": 33.02,
+      "height": 21.84
+    },
+    "area_cm2": 7.21,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 42,
+    "vias": 0,
+    "track_length_mm": 229.11,
+    "kicad_drc_violations": 46,
+    "kicad_drc_breakdown": {
+      "total_violations": 46,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 17,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 3,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 12,
+        "silk_overlap": 1,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 18,
+        "warning": 28
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.967790+00:00",
+    "elapsed_seconds": 6.02,
+    "unrouted_nets": 0,
+    "clearance_violations": 1,
+    "quality_score": 979.99
+  }
+}

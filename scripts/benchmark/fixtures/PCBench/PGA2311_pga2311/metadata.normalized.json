@@ -1,0 +1,61 @@
+{
+  "board_id": "PGA2311_pga2311",
+  "display_name": "PGA2311_pga2311",
+  "pcbench_directory": "PCBs/PGA2311_pga2311",
+  "source": "https://github.com/jjrh/PGA2311",
+  "author": "jjrh",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.926144+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 142,
+    "vias": 8,
+    "track_length_mm": 403.52,
+    "kicad_drc_violations": 240,
+    "kicad_drc_breakdown": {
+      "total_violations": 240,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 53,
+        "copper_edge_clearance": 7,
+        "lib_footprint_issues": 26,
+        "silk_edge_clearance": 16,
+        "silk_over_copper": 81,
+        "silk_overlap": 29,
+        "starved_thermal": 1,
+        "text_height": 23,
+        "text_thickness": 3,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 61,
+        "warning": 179
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

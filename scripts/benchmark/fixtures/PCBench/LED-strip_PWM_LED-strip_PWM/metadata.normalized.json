@@ -1,0 +1,61 @@
+{
+  "board_id": "LED-strip_PWM_LED-strip_PWM",
+  "display_name": "LED-strip_PWM_LED-strip_PWM",
+  "pcbench_directory": "PCBs/LED-strip_PWM_LED-strip_PWM",
+  "source": "https://github.com/madworm/LED-strip_PWM",
+  "author": "madworm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:51.930050+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 29.65,
+      "height": 10.0
+    },
+    "area_cm2": 2.96,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 158,
+    "vias": 10,
+    "track_length_mm": 222.91,
+    "kicad_drc_violations": 134,
+    "kicad_drc_breakdown": {
+      "total_violations": 134,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 6,
+        "shorting_items": 9,
+        "silk_over_copper": 99,
+        "silk_overlap": 20
+      },
+      "by_severity": {
+        "error": 15,
+        "warning": 119
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.013430+00:00",
+    "elapsed_seconds": 36.57,
+    "unrouted_nets": 3,
+    "clearance_violations": 8,
+    "quality_score": 851.61
+  }
+}

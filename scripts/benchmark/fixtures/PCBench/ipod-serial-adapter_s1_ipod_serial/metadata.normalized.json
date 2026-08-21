@@ -1,0 +1,61 @@
+{
+  "board_id": "ipod-serial-adapter_s1_ipod_serial",
+  "display_name": "ipod-serial-adapter_s1_ipod_serial",
+  "pcbench_directory": "PCBs/ipod-serial-adapter_s1_ipod_serial",
+  "source": "https://github.com/sektioneins/ipod-serial-adapter",
+  "author": "sektioneins",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.765695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 21.59,
+      "height": 49.53
+    },
+    "area_cm2": 10.69,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 307,
+    "vias": 19,
+    "track_length_mm": 542.96,
+    "kicad_drc_violations": 299,
+    "kicad_drc_breakdown": {
+      "total_violations": 299,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 84,
+        "copper_edge_clearance": 3,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 36,
+        "silk_over_copper": 45,
+        "silk_overlap": 80,
+        "starved_thermal": 7,
+        "text_height": 34,
+        "text_thickness": 2,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 98,
+        "warning": 201
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

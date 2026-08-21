@@ -1,0 +1,54 @@
+{
+  "board_id": "Neptune-Hardware_DataAcquisitionBoard",
+  "display_name": "Neptune-Hardware_DataAcquisitionBoard",
+  "pcbench_directory": "PCBs/Neptune-Hardware_DataAcquisitionBoard",
+  "source": "https://github.com/CIDARLAB/Neptune-Hardware",
+  "author": "CIDARLAB",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.037934+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 99.06,
+      "height": 68.58
+    },
+    "area_cm2": 67.94,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 103,
+    "vias": 0,
+    "track_length_mm": 674.1,
+    "kicad_drc_violations": 92,
+    "kicad_drc_breakdown": {
+      "total_violations": 92,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 69,
+        "lib_footprint_issues": 15,
+        "silk_edge_clearance": 8
+      },
+      "by_severity": {
+        "error": 69,
+        "warning": 23
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,441 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\snappi-zero_snappi-zero\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  210668 -75002.4  211003 -75040.1  211331 -75115  211649 -75226.2
+            211952 -75372.3  212237 -75551.4  212501 -75761.3  212739 -75999.4
+            212949 -76262.6  213128 -76547.7  213274 -76851  213385 -77168.8
+            213460 -77497.1  213498 -77831.7  213500 -78000  213500 -105000
+            213498 -105168  213460 -105503  213385 -105831  213274 -106149
+            213128 -106452  212949 -106737  212739 -107001  212501 -107239
+            212237 -107449  211952 -107628  211649 -107774  211331 -107885
+            211003 -107960  210668 -107998  210500 -108000  151500 -108000
+            151332 -107998  150997 -107960  150669 -107885  150351 -107774
+            150048 -107628  149763 -107449  149499 -107239  149261 -107001
+            149051 -106737  148872 -106452  148726 -106149  148615 -105831
+            148540 -105503  148502 -105168  148500 -105000  148500 -78000
+            148502 -77831.7  148540 -77497.1  148615 -77168.8  148726 -76851
+            148872 -76547.7  149051 -76262.6  149261 -75999.4  149499 -75761.3
+            149763 -75551.4  150048 -75372.3  150351 -75226.2  150669 -75115
+            150997 -75040.1  151332 -75002.4  151500 -75000  210500 -75000
+            210668 -75002.4)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 203.2)
+      (clearance 50.8 (type smd_smd))
+    )
+  )
+  (placement
+    (component CrumpPrints:Raspberry_Pi_Zero
+      (place P1 148501 -105004 front 0 (PN CONN_02X20))
+    )
+    (component LEDs:LED_1206
+      (place D3 210000 -95000 front 180 (PN C))
+      (place D2 210000 -90500 front 180 (PN B))
+      (place D1 210000 -86000 front 180 (PN A))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering
+      (place R1 162560 -101600 front -90 (PN 10k))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering::1
+      (place R2 200000 -101000 front 0 (PN 1k))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering::2
+      (place R3 200000 -103500 front 180 (PN 1k))
+      (place R4 200000 -106000 front 180 (PN 1k))
+    )
+    (component CrumpPrints:RF200_nosilk
+      (place U1 174500 -95000 front 180 (PN RF200))
+    )
+    (component CrumpPrints:SM200_nosilk
+      (place U2 176000 -93500 front 180 (PN SM220UF1))
+    )
+    (component "CrumpPrintSymbols:Symbol_OSHW-Logo_12.5mm_NoText_Silkscreen"
+      (place G***_2 202000 -87000 back 0 (PN LOGO))
+      (place G*** 199500 -89000 front 0 (PN LOGO))
+      (place svg2mod 152500 -85500 front 0 (PN G***))
+    )
+  )
+  (library
+    (image CrumpPrints:Raspberry_Pi_Zero
+      (outline (polygon signal 0  62168 29992.6  62502.1 29955  62829.8 29880.2  63147 29769.2
+            63449.9 29623.4  63734.5 29444.5  63997.3 29235  64235 28997.3
+            64444.5 28734.5  64623.4 28449.9  64769.2 28147  64880.2 27829.8
+            64955 27502.1  64992.6 27168  64995 26999.9  64995 3000.07  64992.6 2831.97
+            64955 2497.92  64880.2 2170.22  64769.2 1852.97  64623.4 1550.12
+            64444.5 1265.51  64235 1002.73  63997.3 765.039  63734.5 555.478
+            63449.9 376.643  63147 230.803  62829.8 119.792  62502.1 44.995
+            62168 7.357  61999.9 5  3000.07 5  2831.97 7.357  2497.92 44.995
+            2170.22 119.792  1852.96 230.803  1550.12 376.643  1265.51 555.478
+            1002.73 765.039  765.038 1002.73  555.477 1265.51  376.642 1550.12
+            230.802 1852.97  119.791 2170.22  44.994 2497.92  7.356 2831.97
+            5 3000.07  5 26999.9  7.356 27168  44.994 27502.1  119.791 27829.8
+            230.802 28147  376.642 28449.9  555.477 28734.5  765.038 28997.3
+            1002.73 29235  1265.51 29444.5  1550.12 29623.4  1852.96 29769.2
+            2170.22 29880.2  2497.92 29955  2831.97 29992.6  3000.07 29995
+            61999.9 29995))
+      (outline (path signal 120  7010 23860  7010 25250))
+      (outline (path signal 120  8400 23860  7010 23860))
+      (outline (path signal 120  9670 26520  9670 23860))
+      (outline (path signal 120  7010 26520  9670 26520))
+      (outline (path signal 120  7010 29180  7010 26520))
+      (outline (path signal 120  58050 29180  7010 29180))
+      (outline (path signal 120  58050 23860  58050 29180))
+      (outline (path signal 120  9670 23860  58050 23860))
+      (outline (path signal 100  7130 29060  7130 23980))
+      (outline (path signal 100  57930 29060  7130 29060))
+      (outline (path signal 100  57930 23980  57930 29060))
+      (outline (path signal 100  7130 23980  57930 23980))
+      (pin Round[A]Pad_6000.000000_um @1 61500 3500)
+      (pin Round[A]Pad_6000.000000_um @2 61500 26500)
+      (pin Round[A]Pad_6000.000000_um @3 3500 26500)
+      (pin Rect[A]Pad_1700.000000x1700.000000_um (rotate 90) 1 8400 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 2 8400 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 3 10940 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 4 10940 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 5 13480 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 6 13480 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 7 16020 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 8 16020 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 9 18560 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 10 18560 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 11 21100 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 12 21100 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 13 23640 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 14 23640 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 15 26180 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 16 26180 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 17 28720 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 18 28720 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 19 31260 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 20 31260 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 21 33800 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 22 33800 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 23 36340 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 24 36340 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 25 38880 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 26 38880 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 27 41420 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 28 41420 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 29 43960 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 30 43960 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 31 46500 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 32 46500 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 33 49040 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 34 49040 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 35 51580 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 36 51580 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 37 54120 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 38 54120 27790)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 39 56660 25250)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um (rotate 90) 40 56660 27790)
+      (pin Round[A]Pad_6000.000000_um @4 3500 3500)
+    )
+    (image LEDs:LED_1206
+      (outline (polygon signal 0  -2645 995  2645 995  2645 -995  -2645 -995))
+      (outline (path signal 120  -2450 850  1600 850))
+      (outline (path signal 120  -2450 -850  1600 -850))
+      (outline (path signal 100  -1600 -800  -1600 800))
+      (outline (path signal 100  -1600 800  1600 800))
+      (outline (path signal 100  1600 800  1600 -800))
+      (outline (path signal 100  1600 -800  -1600 -800))
+      (outline (path signal 100  200 400  200 -400))
+      (outline (path signal 100  200 -400  -400 0))
+      (outline (path signal 100  -400 0  200 400))
+      (outline (path signal 100  -450 400  -450 -400))
+      (outline (path signal 120  -2500 850  -2500 -850))
+      (pin Rect[T]Pad_1500.000000x1500.000000_um (rotate 180) 2 1650 0)
+      (pin Rect[T]Pad_1500.000000x1500.000000_um (rotate 180) 1 -1650 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering
+      (outline (polygon signal 0  2395 995  2395 -995  -2395 -995  -2395 995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering::1
+      (outline (polygon signal 0  2395 -995  -2395 -995  -2395 995  2395 995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering::2
+      (outline (polygon signal 0  -2395 995  2395 995  2395 -995  -2395 -995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (image CrumpPrints:RF200_nosilk
+      (outline (path signal 150  -18000 -13000  18000 -13000))
+      (outline (path signal 150  -18000 13000  -18000 -13000))
+      (outline (path signal 150  18000 13000  -18000 13000))
+      (outline (path signal 150  18000 -13000  18000 13000))
+      (outline (path signal 150  18000 13000  18000 17000))
+      (outline (path signal 150  -18000 13000  -18000 17000))
+      (outline (path signal 150  -14000 21000  14000 21000))
+      (outline (path signal 150  18000 17000  -18000 17000))
+      (outline (path signal 150  -18000 15000  18000 15000))
+      (outline (polygon signal 0  14000 20925  13955.9 20939.3  13928.7 20976.8  13928.7 21023.2
+            13955.9 21060.7  14000 21075  14376 21057.6  14748.8 21005.6
+            15115.2 20919.4  15472.1 20799.8  15816.4 20647.8  16145.2 20464.6
+            16455.7 20251.9  16745.3 20011.5  17011.5 19745.3  17251.9 19455.7
+            17464.6 19145.2  17647.8 18816.4  17799.8 18472.1  17919.4 18115.2
+            18005.6 17748.8  18057.6 17376  18075 17000  18060.7 16955.9
+            18023.2 16928.7  17976.8 16928.7  17939.3 16955.9  17925 17000
+            17925 17181.5  17891.5 17542.8  17824.8 17899.6  17725.5 18248.7
+            17594.4 18587.1  17432.6 18912  17241.6 19220.5  17022.9 19510.2
+            16778.4 19778.4  16510.2 20022.9  16220.5 20241.6  15912 20432.6
+            15587.1 20594.4  15248.7 20725.5  14899.6 20824.8  14542.8 20891.5
+            14181.5 20925  14000 20925))
+      (outline (polygon signal 0  -17925 17000  -17939.3 16955.9  -17976.8 16928.7  -18023.2 16928.7
+            -18060.7 16955.9  -18075 17000  -18057.6 17376  -18005.6 17748.8
+            -17919.4 18115.2  -17799.8 18472.1  -17647.8 18816.4  -17464.6 19145.2
+            -17251.9 19455.7  -17011.5 19745.3  -16745.3 20011.5  -16455.7 20251.9
+            -16145.2 20464.6  -15816.4 20647.8  -15472.1 20799.8  -15115.2 20919.4
+            -14748.8 21005.6  -14376 21057.6  -14000 21075  -13955.9 21060.7
+            -13928.7 21023.2  -13928.7 20976.8  -13955.9 20939.3  -14000 20925
+            -14181.5 20925  -14542.8 20891.5  -14899.6 20824.8  -15248.7 20725.5
+            -15587.1 20594.4  -15912 20432.6  -16220.5 20241.6  -16510.2 20022.9
+            -16778.4 19778.4  -17022.9 19510.2  -17241.6 19220.5  -17432.6 18912
+            -17594.4 18587.1  -17725.5 18248.7  -17824.8 17899.6  -17891.5 17542.8
+            -17925 17181.5  -17925 17000))
+      (pin Round[A]Pad_1701.800000_um 1 -15600 11000)
+      (pin Round[A]Pad_1701.800000_um 2 -15600 9000)
+      (pin Round[A]Pad_1701.800000_um 3 -15600 7000)
+      (pin Round[A]Pad_1701.800000_um 4 -15600 5000)
+      (pin Round[A]Pad_1701.800000_um 5 -15600 3000)
+      (pin Round[A]Pad_1701.800000_um 6 -15600 1000)
+      (pin Round[A]Pad_1701.800000_um 7 -15600 -1000)
+      (pin Round[A]Pad_1701.800000_um 8 -15600 -3000)
+      (pin Round[A]Pad_1701.800000_um 9 -15600 -5000)
+      (pin Round[A]Pad_1701.800000_um 10 -15600 -7000)
+      (pin Round[A]Pad_1701.800000_um 11 -15600 -9000)
+      (pin Round[A]Pad_1701.800000_um 12 -15600 -11000)
+      (pin Round[A]Pad_1701.800000_um 13 15600 -11000)
+      (pin Round[A]Pad_1701.800000_um 14 15600 -9000)
+      (pin Round[A]Pad_1701.800000_um 15 15600 -7000)
+      (pin Round[A]Pad_1701.800000_um 16 15600 -5000)
+      (pin Round[A]Pad_1701.800000_um 17 15600 -3000)
+      (pin Round[A]Pad_1701.800000_um 18 15600 -1000)
+      (pin Round[A]Pad_1701.800000_um 19 15600 1000)
+      (pin Round[A]Pad_1701.800000_um 20 15600 3000)
+      (pin Round[A]Pad_1701.800000_um 21 15600 5000)
+      (pin Round[A]Pad_1701.800000_um 22 15600 7000)
+      (pin Round[A]Pad_1701.800000_um 23 15600 9000)
+      (pin Round[A]Pad_1701.800000_um 24 15600 11000)
+    )
+    (image CrumpPrints:SM200_nosilk
+      (outline (path signal 200  9400 9400  9400 -8400))
+      (outline (path signal 200  -9400 -9400  -9400 9400))
+      (outline (path signal 200  8400 -9400  -9400 -9400))
+      (outline (path signal 200  9400 -8400  8400 -9400))
+      (outline (path signal 200  -9400 20400  -9400 9400))
+      (outline (path signal 200  9400 20400  -9400 20400))
+      (outline (path signal 200  9400 9400  9400 20400))
+      (outline (path signal 200  -9400 14700  9400 14700))
+      (outline (path signal 200  -9400 20400  -3700 14700))
+      (outline (path signal 200  -3700 20400  2000 14700))
+      (outline (path signal 200  2000 20400  7700 14700))
+      (pin Rect[T]Pad_1400.000000x1400.000000_um (rotate 90) A1 8400 -8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) B1 6000 -8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) C1 3600 -8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) D1 1200 -8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) E1 -1200 -8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) F1 -3600 -8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) G1 -6000 -8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) H1 -8400 -8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) A2 8400 -6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) B2 6000 -6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) C2 3600 -6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) D2 1200 -6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) E2 -1200 -6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) F2 -3600 -6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) G2 -6000 -6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) H2 -8400 -6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) A3 8400 -3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) B3 6000 -3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) C3 3600 -3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) D3 1200 -3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) E3 -1200 -3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) F3 -3600 -3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) G3 -6000 -3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) H3 -8400 -3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) A4 8400 -1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) B4 6000 -1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) C4 3600 -1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) D4 1200 -1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) E4 -1200 -1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) F4 -3600 -1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) G4 -6000 -1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) H4 -8400 -1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) A5 8400 1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) B5 6000 1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) C5 3600 1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) D5 1200 1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) E5 -1200 1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) F5 -3600 1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) G5 -6000 1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) H5 -8400 1200)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) A6 8400 3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) B6 6000 3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) C6 3600 3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) D6 1200 3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) E6 -1200 3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) F6 -3600 3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) G6 -6000 3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) H6 -8400 3600)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) A7 8400 6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) B7 6000 6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) C7 3600 6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) D7 1200 6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) E7 -1200 6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) F7 -3600 6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) G7 -6000 6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) H7 -8400 6000)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) A8 8400 8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) B8 6000 8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) C8 3600 8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) D8 1200 8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) E8 -1200 8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) F8 -3600 8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) G8 -6000 8400)
+      (pin Round[T]Pad_1400.000000_um (rotate 90) H8 -8400 8400)
+    )
+    (image "CrumpPrintSymbols:Symbol_OSHW-Logo_12.5mm_NoText_Silkscreen"
+    )
+    (padstack Round[T]Pad_1400.000000_um
+      (shape (circle F.Cu 1400))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1701.800000_um
+      (shape (circle F.Cu 1701.8))
+      (shape (circle B.Cu 1701.8))
+      (attach off)
+    )
+    (padstack Round[A]Pad_6000.000000_um
+      (shape (circle F.Cu 6000))
+      (shape (circle B.Cu 6000))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1700.000000x1700.000000_um
+      (shape (path F.Cu 1700  0 0  0 0))
+      (shape (path B.Cu 1700  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1400.000000x1400.000000_um
+      (shape (rect F.Cu -700 -700 700 700))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1300.000000_um
+      (shape (rect F.Cu -750 -650 750 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1500.000000_um
+      (shape (rect F.Cu -750 -750 750 750))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect F.Cu -850 -850 850 850))
+      (shape (rect B.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(D1-Pad2)"
+      (pins D1-2 R2-2)
+    )
+    (net GND
+      (pins P1-9 D3-1 D2-1 D1-1 U1-1 U1-24 U2-A1 U2-H1 U2-A8 U2-B8 U2-D8 U2-F8 U2-G8
+        U2-H8)
+    )
+    (net "Net-(D2-Pad2)"
+      (pins D2-2 R3-1)
+    )
+    (net "Net-(D3-Pad2)"
+      (pins D3-2 R4-1)
+    )
+    (net 3v3
+      (pins P1-1 R1-1 U1-21 U2-A2 U2-A3)
+    )
+    (net PI_TX
+      (pins P1-8 U1-9 U2-G4)
+    )
+    (net GPIO_17
+      (pins P1-11 R1-2 U1-23 U2-H5)
+    )
+    (net PI_RX
+      (pins P1-10 U1-10 U2-H4)
+    )
+    (net LED_A
+      (pins R2-1 U1-4 U2-D3)
+    )
+    (net LED_B
+      (pins R3-2 U1-3 U2-D2)
+    )
+    (net LED_C
+      (pins R4-2 U1-2 U2-D1)
+    )
+    (class kicad_default 3v3 GND GPIO_17 LED_A LED_B LED_C "Net-(D1-Pad2)"
+      "Net-(D2-Pad2)" "Net-(D3-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 203.2)
+      )
+    )
+    (class Thin PI_RX PI_TX
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 203.2)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

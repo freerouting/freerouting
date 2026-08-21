@@ -1,0 +1,53 @@
+{
+  "board_id": "Teensy-3.5-Breakout-Boaard_Test",
+  "display_name": "Teensy-3.5-Breakout-Boaard_Test",
+  "pcbench_directory": "PCBs/Teensy-3.5-Breakout-Boaard_Test",
+  "source": "https://github.com/mjs513/Teensy-3.5-Breakout-Boaard",
+  "author": "mjs513",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.414138+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 54,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 71.12,
+      "height": 80.01
+    },
+    "area_cm2": 56.9,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 153,
+    "vias": 1,
+    "track_length_mm": 971.19,
+    "kicad_drc_violations": 14,
+    "kicad_drc_breakdown": {
+      "total_violations": 14,
+      "unconnected_count": 0,
+      "by_type": {
+        "invalid_outline": 1,
+        "lib_footprint_issues": 9,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,58 @@
+{
+  "board_id": "kitspace_ss_relay",
+  "display_name": "kitspace_ss_relay",
+  "pcbench_directory": "PCBs/kitspace_ss_relay",
+  "source": "https://github.com/eulerlab/open-visual-stimulator",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/eulerlab/open-visual-stimulator/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:11:44.928077+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 22,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 98.0,
+      "height": 78.0
+    },
+    "area_cm2": 76.44,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 336,
+    "vias": 9,
+    "track_length_mm": 1201.87,
+    "kicad_drc_violations": 130,
+    "kicad_drc_breakdown": {
+      "total_violations": 130,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 59,
+        "hole_to_hole": 2,
+        "lib_footprint_issues": 36,
+        "pth_inside_courtyard": 4,
+        "silk_edge_clearance": 26,
+        "silk_over_copper": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 63,
+        "warning": 67
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

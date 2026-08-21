@@ -1,0 +1,56 @@
+{
+  "board_id": "filament_extruder_extruder",
+  "display_name": "filament_extruder_extruder",
+  "pcbench_directory": "PCBs/filament_extruder_extruder",
+  "source": "https://github.com/mtu-most/filament_extruder",
+  "author": "mtu-most",
+  "license": "GNU Affero General Public License v3.0",
+  "license_spdx": "AGPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:26.033746+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 56.77,
+      "height": 59.44
+    },
+    "area_cm2": 33.74,
+    "zones": 12
+  },
+  "reference": {
+    "segments": 303,
+    "vias": 4,
+    "track_length_mm": 983.48,
+    "kicad_drc_violations": 160,
+    "kicad_drc_breakdown": {
+      "total_violations": 160,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 40,
+        "lib_footprint_issues": 37,
+        "silk_over_copper": 61,
+        "silk_overlap": 20,
+        "zones_intersect": 2
+      },
+      "by_severity": {
+        "error": 42,
+        "warning": 118
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

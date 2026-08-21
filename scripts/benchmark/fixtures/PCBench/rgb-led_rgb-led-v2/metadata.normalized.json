@@ -1,0 +1,65 @@
+{
+  "board_id": "rgb-led_rgb-led-v2",
+  "display_name": "rgb-led_rgb-led-v2",
+  "pcbench_directory": "PCBs/rgb-led_rgb-led-v2",
+  "source": "https://github.com/coredump-ch/rgb-led",
+  "author": "coredump-ch",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:28.669777+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 90.0,
+      "height": 50.0
+    },
+    "area_cm2": 45.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 154,
+    "vias": 2,
+    "track_length_mm": 849.27,
+    "kicad_drc_violations": 286,
+    "kicad_drc_breakdown": {
+      "total_violations": 286,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 214,
+        "copper_edge_clearance": 3,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 12,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 4,
+        "silk_overlap": 43,
+        "solder_mask_bridge": 4
+      },
+      "by_severity": {
+        "error": 225,
+        "warning": 61
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.093542+00:00",
+    "elapsed_seconds": 16.89,
+    "unrouted_nets": 2,
+    "clearance_violations": 0,
+    "quality_score": 969.23
+  }
+}

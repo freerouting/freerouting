@@ -1,0 +1,57 @@
+{
+  "board_id": "nodemcu-basecamp_NodeMCU Basecamp",
+  "display_name": "nodemcu-basecamp_NodeMCU Basecamp",
+  "pcbench_directory": "PCBs/nodemcu-basecamp_NodeMCU Basecamp",
+  "source": "https://github.com/mplewis/nodemcu-basecamp",
+  "author": "mplewis",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.826155+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 47,
+    "dimensions_mm": {
+      "width": 63.5,
+      "height": 50.8
+    },
+    "area_cm2": 32.26,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 387,
+    "vias": 41,
+    "track_length_mm": 1019.0,
+    "kicad_drc_violations": 162,
+    "kicad_drc_breakdown": {
+      "total_violations": 162,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 52,
+        "lib_footprint_issues": 47,
+        "silk_over_copper": 28,
+        "silk_overlap": 33,
+        "starved_thermal": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 53,
+        "warning": 109
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

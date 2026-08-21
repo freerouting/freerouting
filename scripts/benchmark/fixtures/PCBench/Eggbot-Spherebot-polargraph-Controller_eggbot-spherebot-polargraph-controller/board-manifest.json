@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Eggbot-Spherebot-polargraph-Controller_eggbot-spherebot-polargraph-controller",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 148050,
+      "sha256": "0811d7f004c506276563017d2cce77d32a55fabef57fe63929c386cdd7293690"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 72492,
+      "sha256": "1d3d82d3c432194ac076ed3ee5701589f4ddccbba74eb175bf1d02423288271b"
+    },
+    "metadata_json": {
+      "bytes": 655,
+      "sha256": "104885cd0cb6735398d69459840576d530bf92e2738f7031994c2cc52d021427"
+    },
+    "final_json": {
+      "bytes": 61174,
+      "sha256": "c841b8ecc93ba669f1eab3201eada68c3b9c2c48a8b86a3a8e5434535bcbb519"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:43:58.026918+00:00"
+  }
+}

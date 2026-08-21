@@ -1,0 +1,32 @@
+{
+  "board": "bms-8s50-ic_bms-8s50-ic",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\bms-8s50-ic_bms-8s50-ic\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 255,
+  "segment_count": 1439,
+  "approximate_track_length_mm": 2847.39,
+  "kicad_drc_violations": 344,
+  "generated_at": "2026-08-18T18:34:40.414104+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 344,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 46,
+      "copper_edge_clearance": 11,
+      "courtyards_overlap": 2,
+      "hole_clearance": 1,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 157,
+      "lib_footprint_mismatch": 8,
+      "silk_edge_clearance": 18,
+      "silk_over_copper": 10,
+      "solder_mask_bridge": 89,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 149,
+      "warning": 195
+    }
+  }
+}

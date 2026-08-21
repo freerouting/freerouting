@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "xwhatits-capsense-controller_model-f-3178-adaptor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 50698,
+      "sha256": "df28722027fb253fa4fc1ca75dcd36a6368124792b148ef98be47b51e91981c0"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 19724,
+      "sha256": "43883e1b7d4763f5d333bf61431d0e762d3c691ca91bb6607cea7e3c82184297"
+    },
+    "metadata_json": {
+      "bytes": 751,
+      "sha256": "6164ee7d42907f3cf3fdf156efa5b1e2fed6169b3a48214e7eb996d5b83b0fca"
+    },
+    "final_json": {
+      "bytes": 24100,
+      "sha256": "f984a0b8f9a68ec92f82d86fe6acb79a9984687a34ffa07315354218b0b2d40d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:58:19.862618+00:00"
+  }
+}

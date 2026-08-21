@@ -1,0 +1,56 @@
+{
+  "board_id": "Inkjet_PiezoDriver",
+  "display_name": "Inkjet_PiezoDriver",
+  "pcbench_directory": "PCBs/Inkjet_PiezoDriver",
+  "source": "https://github.com/danielprint/Inkjet",
+  "author": "danielprint",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.033993+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 57,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 29.21,
+      "height": 74.93
+    },
+    "area_cm2": 21.89,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 0,
+    "vias": 0,
+    "track_length_mm": 0.0,
+    "kicad_drc_violations": 73,
+    "kicad_drc_breakdown": {
+      "total_violations": 73,
+      "unconnected_count": 21,
+      "by_type": {
+        "clearance": 48,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 11,
+        "silk_over_copper": 10,
+        "starved_thermal": 3
+      },
+      "by_severity": {
+        "error": 52,
+        "warning": 21
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

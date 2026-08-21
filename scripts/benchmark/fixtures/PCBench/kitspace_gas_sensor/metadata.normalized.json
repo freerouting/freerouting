@@ -1,0 +1,67 @@
+{
+  "board_id": "kitspace_gas_sensor",
+  "display_name": "kitspace_gas_sensor",
+  "pcbench_directory": "PCBs/kitspace_gas_sensor",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:25.518129+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 45.5,
+      "height": 32.5
+    },
+    "area_cm2": 14.79,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 57,
+    "vias": 0,
+    "track_length_mm": 190.76,
+    "kicad_drc_violations": 15,
+    "kicad_drc_breakdown": {
+      "total_violations": 15,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 2,
+        "lib_footprint_mismatch": 8,
+        "silk_overlap": 1,
+        "text_height": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.987937+00:00",
+    "elapsed_seconds": 6.44,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

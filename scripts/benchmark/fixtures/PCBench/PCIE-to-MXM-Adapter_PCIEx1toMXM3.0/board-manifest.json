@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PCIE-to-MXM-Adapter_PCIEx1toMXM3.0",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 471807,
+      "sha256": "257afc5ee0897499c373b43a6917191fbf119fd921a661e9f49416d60e7d6691"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 222473,
+      "sha256": "0f3a4cd880595d918b17fa1ac5b7e27e70ffd6f45567b346d81f396a1c3d0793"
+    },
+    "metadata_json": {
+      "bytes": 526,
+      "sha256": "ddd02c34ae01d2c80a30a25660717c02aa8d32bbea574e1b3543a3404ad81de5"
+    },
+    "final_json": {
+      "bytes": 244358,
+      "sha256": "0316aa7a157bfdf961a4b58abce1026b2f863c335e7c49b240c3bde05f8996f6"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:32:23.641152+00:00"
+  }
+}

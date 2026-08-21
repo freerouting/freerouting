@@ -1,0 +1,276 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Camera-Modules_LG-G2-Camera-Shim\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  161290 -112776  142748 -112776  142748 -103124  161290 -103124
+            161290 -112776)
+    )
+    (via "Via[0-1]_508:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component "connectors:GB042-30S"
+      (place P4 146050 -107950 front -90 (PN "LG-G2-G3-Rear-Camera"))
+    )
+    (component "connectors:GB042-30P"
+      (place P1 146050 -107950 back 90 (PN "LG-G2-G3-Rear-Camera"))
+    )
+    (component Pin_Headers:Pin_Header_Straight_2x02
+      (place P2 158496 -107442 front 180 (PN CONN_02X02))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x03
+      (place P3 159512 -110998 front -90 (PN CONN_01X03))
+    )
+  )
+  (library
+    (image "connectors:GB042-30S"
+      (outline (path signal 100  3300 -1750  4300 -1750))
+      (outline (path signal 100  3300 1750  4300 1750))
+      (outline (path signal 100  -4300 1750  -4300 -1750))
+      (outline (path signal 100  -4300 -1750  -3300 -1750))
+      (outline (path signal 100  4300 1750  4300 -1750))
+      (outline (path signal 100  -4300 1750  -3300 1750))
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 1 -2800 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 2 -2400 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 3 -2000 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 4 -1600 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 5 -1200 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 6 -800 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 7 -400 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 8 0 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 9 400 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 10 800 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 11 1200 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 12 1600 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 13 2000 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 14 2400 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um (rotate 180) 15 2800 -1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 16 2800 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 17 2400 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 18 2000 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 19 1600 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 20 1200 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 21 800 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 22 400 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 23 0 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 24 -400 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 25 -800 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 26 -1200 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 27 -1600 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 28 -2000 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 29 -2400 1700)
+      (pin Rect[T]Pad_230.000000x1000.000000_um 30 -2800 1700)
+    )
+    (image "connectors:GB042-30P"
+      (outline (path signal 100  3250 1100  3750 1100))
+      (outline (path signal 100  3750 1100  3750 -1100))
+      (outline (path signal 100  3750 -1100  3250 -1100))
+      (outline (path signal 100  -3250 1100  -3750 1100))
+      (outline (path signal 100  -3750 1100  -3750 -1100))
+      (outline (path signal 100  -3750 -1100  -3250 -1100))
+      (pin Rect[T]Pad_230.000000x700.000000_um 1 -2800 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 30 -2800 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 2 -2400 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 29 -2400 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 3 -2000 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 28 -2000 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 4 -1600 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 27 -1600 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 5 -1200 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 26 -1200 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 6 -800 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 25 -800 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 7 -400 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 24 -400 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 8 0 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 23 0 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 9 400 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 22 400 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 10 800 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 21 800 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 11 1200 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 20 1200 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 12 1600 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 19 1600 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 13 2000 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 18 2000 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 14 2400 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 17 2400 -1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 15 2800 1250)
+      (pin Rect[T]Pad_230.000000x700.000000_um 16 2800 -1250)
+    )
+    (image Pin_Headers:Pin_Header_Straight_2x02
+      (outline (polygon signal 0  -1745 1745  4295 1745  4295 -4295  -1745 -4295))
+      (outline (path signal 150  -1270 -3810  -1270 -1270))
+      (outline (path signal 150  3810 -3810  -1270 -3810))
+      (outline (path signal 150  3810 1270  3810 -3810))
+      (outline (path signal 150  1270 1270  3810 1270))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 0 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 2540 -2540)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x03
+      (outline (polygon signal 0  1745 1745  1745 -6845  -1745 -6845  -1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -6350  1270 -1270))
+      (outline (path signal 150  -1270 -6350  1270 -6350))
+      (outline (path signal 150  -1270 -1270  -1270 -6350))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_230.000000x700.000000_um
+      (shape (rect F.Cu -115 -350 115 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_230.000000x1000.000000_um
+      (shape (rect F.Cu -115 -500 115 500))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_508:330.2_um"
+      (shape (circle F.Cu 508))
+      (shape (circle B.Cu 508))
+      (attach off)
+    )
+  )
+  (network
+    (net /OIS_RESET_N
+      (pins P4-2 P1-2)
+    )
+    (net /+1V8_13M_VCM
+      (pins P4-3 P1-3)
+    )
+    (net /+1V0_VREG_L3
+      (pins P4-28 P1-28)
+    )
+    (net /+2V8_OIS_DIG
+      (pins P4-4 P1-4)
+    )
+    (net /+1V8_13M_VDDIO
+      (pins P4-27 P1-27)
+    )
+    (net GND
+      (pins P4-5 P4-8 P4-11 P4-14 P4-17 P4-20 P4-23 P4-25 P1-5 P1-25 P1-8 P1-23 P1-11
+        P1-20 P1-14 P1-17 P3-3)
+    )
+    (net /CAM_RESET_N
+      (pins P4-26 P1-26)
+    )
+    (net /DATA1_P
+      (pins P4-6 P1-6)
+    )
+    (net /DATA1_N
+      (pins P4-7 P1-7)
+    )
+    (net /CAM_MCLK
+      (pins P4-24 P1-24)
+    )
+    (net /DATA0_P
+      (pins P4-9 P1-9)
+    )
+    (net /DATA3_P
+      (pins P4-22 P1-22)
+    )
+    (net /DATA0_N
+      (pins P4-10 P1-10)
+    )
+    (net /DATA3_N
+      (pins P4-21 P1-21)
+    )
+    (net /CLK_P
+      (pins P4-12 P1-12)
+    )
+    (net /DATA2_P
+      (pins P4-19 P1-19)
+    )
+    (net /CLK_N
+      (pins P4-13 P1-13)
+    )
+    (net /DATA2_N
+      (pins P4-18 P1-18)
+    )
+    (net /+2V8_OIS_ANA
+      (pins P4-15 P1-15)
+    )
+    (net /+2V7_13M_ANA
+      (pins P4-16 P1-16)
+    )
+    (net /PHONE_SDA
+      (pins P1-30 P2-3)
+    )
+    (net /PHONE_SCL
+      (pins P1-29 P2-1)
+    )
+    (net /CAM_SCL
+      (pins P4-29 P2-2 P3-1)
+    )
+    (net /CAM_SDA
+      (pins P4-30 P2-4 P3-2)
+    )
+    (class kicad_default /+1V0_VREG_L3 /+1V8_13M_VCM /+1V8_13M_VDDIO /+2V7_13M_ANA
+      /+2V8_OIS_ANA /+2V8_OIS_DIG /CAM_MCLK /CAM_RESET_N /CAM_SCL /CAM_SDA
+      /CLK_N /CLK_P /DATA0_N /DATA0_P /DATA1_N /DATA1_P /DATA2_N /DATA2_P
+      /DATA3_N /DATA3_P /OIS_RESET_N /PHONE_SCL /PHONE_SDA GND
+      (circuit
+        (use_via "Via[0-1]_508:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

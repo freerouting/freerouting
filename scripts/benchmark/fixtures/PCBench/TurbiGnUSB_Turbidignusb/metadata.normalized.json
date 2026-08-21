@@ -1,0 +1,60 @@
+{
+  "board_id": "TurbiGnUSB_Turbidignusb",
+  "display_name": "TurbiGnUSB_Turbidignusb",
+  "pcbench_directory": "PCBs/TurbiGnUSB_Turbidignusb",
+  "source": "https://github.com/GenericLab/TurbiGnUSB",
+  "author": "GenericLab",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:26.377750+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 30.0,
+      "height": 80.0
+    },
+    "area_cm2": 24.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 147,
+    "vias": 7,
+    "track_length_mm": 370.47,
+    "kicad_drc_violations": 361,
+    "kicad_drc_breakdown": {
+      "total_violations": 361,
+      "unconnected_count": 3,
+      "by_type": {
+        "clearance": 96,
+        "copper_edge_clearance": 5,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 29,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 199,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 6,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 109,
+        "warning": 252
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

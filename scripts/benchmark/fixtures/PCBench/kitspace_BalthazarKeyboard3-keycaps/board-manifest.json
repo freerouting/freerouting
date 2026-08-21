@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_BalthazarKeyboard3-keycaps",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1527027,
+      "sha256": "cd6d39a9917564ea84c43c959e77863ab2748e4738ab8bbdfd9c39a7693185fc"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 737815,
+      "sha256": "94dabfcb2f5b1f92299b6b96d6431202d79d80ee1ae9bed6da34b356ed9cf231"
+    },
+    "metadata_json": {
+      "bytes": 675,
+      "sha256": "93284d0dc2d8af5ad7b9b0315c9356b6a04f0ac547a969f68efc3e5944a22dbe"
+    },
+    "final_json": {
+      "bytes": 516273,
+      "sha256": "40abedf940a7b871fd635a5e0ac4166e1b3e7d4e73b8c79f4947fb3ba2904772"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:16:43.258941+00:00"
+  }
+}

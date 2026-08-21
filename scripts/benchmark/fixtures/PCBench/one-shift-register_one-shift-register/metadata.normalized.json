@@ -1,0 +1,54 @@
+{
+  "board_id": "one-shift-register_one-shift-register",
+  "display_name": "one-shift-register_one-shift-register",
+  "pcbench_directory": "PCBs/one-shift-register_one-shift-register",
+  "source": "https://github.com/MarginallyClever/one-shift-register",
+  "author": "MarginallyClever",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:52.802061+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 36,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 44,
+    "vias": 0,
+    "track_length_mm": 234.13,
+    "kicad_drc_violations": 160,
+    "kicad_drc_breakdown": {
+      "total_violations": 160,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 119,
+        "lib_footprint_issues": 25,
+        "silk_overlap": 16
+      },
+      "by_severity": {
+        "error": 119,
+        "warning": 41
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

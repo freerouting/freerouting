@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "WemosLoraTracker_wemosGPSrfm",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 143478,
+      "sha256": "b61695d6ff5352d0deb1bccc0045efdd7cca1279d02e1db31a1c848597f66873"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 60748,
+      "sha256": "13f4aeadc05f82d75047d777774f3cac7702f12078af7ad011ea35fcc083d8dd"
+    },
+    "metadata_json": {
+      "bytes": 495,
+      "sha256": "5430423d46d856dcca65f3b15a536293cb17a9dfa7d3f07c8f1e67d0a11d893b"
+    },
+    "final_json": {
+      "bytes": 52183,
+      "sha256": "3d5e54ebf4e462b8eff8f0206cfbd61ee7f320236902f604bcb3848c271b2dfc"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:56:37.447121+00:00"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "board_id": "bobc_mbeduinopresso",
+  "display_name": "bobc_mbeduinopresso",
+  "pcbench_directory": "PCBs/bobc_mbeduinopresso",
+  "source": "https://github.com/bobc/bobc_hardware",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 87.0
+    },
+    "area_cm2": 87.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 788,
+    "vias": 14,
+    "track_length_mm": 3974.0,
+    "kicad_drc_violations": 260,
+    "kicad_drc_breakdown": {
+      "total_violations": 260,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 6,
+        "clearance": 4,
+        "holes_co_located": 4,
+        "nonmirrored_text_on_back_layer": 1,
+        "padstack": 6,
+        "silk_edge_clearance": 19,
+        "silk_over_copper": 136,
+        "silk_overlap": 42,
+        "solder_mask_bridge": 8,
+        "text_height": 34
+      },
+      "by_severity": {
+        "error": 18,
+        "warning": 242
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

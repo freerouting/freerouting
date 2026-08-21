@@ -197,6 +197,9 @@ public class BoardStatistics implements Serializable {
     double boardUnitToMmFactor =
         Unit.scale(1.0, board.communication.unit, Unit.MM)
             / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    double boardUnitToUmFactor =
+        Unit.scale(1.0, board.communication.unit, Unit.UM)
+            / (board.communication.resolution > 0 ? board.communication.resolution : 1);
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
@@ -334,9 +337,33 @@ public class BoardStatistics implements Serializable {
 
     if (includeClearanceViolations) {
       var clearanceDrc = new app.freerouting.drc.DesignRulesChecker(board, null);
-      this.clearanceViolations.totalCount = clearanceDrc.getAllClearanceViolations().size();
+      java.util.Collection<app.freerouting.drc.ClearanceViolation> violationsList =
+          clearanceDrc.getAllClearanceViolations();
+      this.clearanceViolations.totalCount = violationsList.size();
+      if (!violationsList.isEmpty()) {
+        double minViolation = Double.MAX_VALUE;
+        double maxViolation = 0.0;
+        double sumViolation = 0.0;
+        for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
+          double shortfall = Math.max(0.0, cv.expectedClearance - cv.actualClearance);
+          double shortfallUm = shortfall * boardUnitToUmFactor;
+          minViolation = Math.min(minViolation, shortfallUm);
+          maxViolation = Math.max(maxViolation, shortfallUm);
+          sumViolation += shortfallUm;
+        }
+        this.clearanceViolations.minViolationUm = minViolation;
+        this.clearanceViolations.maxViolationUm = maxViolation;
+        this.clearanceViolations.avgViolationUm = sumViolation / violationsList.size();
+      } else {
+        this.clearanceViolations.minViolationUm = 0.0;
+        this.clearanceViolations.maxViolationUm = 0.0;
+        this.clearanceViolations.avgViolationUm = 0.0;
+      }
     } else {
       this.clearanceViolations.totalCount = 0;
+      this.clearanceViolations.minViolationUm = 0.0;
+      this.clearanceViolations.maxViolationUm = 0.0;
+      this.clearanceViolations.avgViolationUm = 0.0;
     }
 
     // Convert all length values from board.communication.unit to the preferred unit

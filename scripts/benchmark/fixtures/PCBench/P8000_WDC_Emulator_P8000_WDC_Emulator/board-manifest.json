@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "P8000_WDC_Emulator_P8000_WDC_Emulator",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 554700,
+      "sha256": "89930e53e49b4a3c19b770ce81cfc30f8d437ef3158a8d5ad4ae80848a077dec"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 370928,
+      "sha256": "96f26490c4c947f629b95d933a35bc45c180d11b54957217a658626759d08f45"
+    },
+    "metadata_json": {
+      "bytes": 512,
+      "sha256": "c317f522decb82e81fc17246963214e5b3397544c4dad4020a867519f54e4089"
+    },
+    "final_json": {
+      "bytes": 366019,
+      "sha256": "35cd3a9999dccaf2a9c71794f82ac6b0427ca4979568b7e3880edabcad3f77d7"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:31:16.872753+00:00"
+  }
+}

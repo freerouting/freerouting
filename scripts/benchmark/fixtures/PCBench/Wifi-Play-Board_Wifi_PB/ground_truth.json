@@ -1,0 +1,34 @@
+{
+  "board": "Wifi-Play-Board_Wifi_PB",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Wifi-Play-Board_Wifi_PB\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 74,
+  "segment_count": 1515,
+  "approximate_track_length_mm": 3097.09,
+  "kicad_drc_violations": 881,
+  "generated_at": "2026-08-18T19:56:54.910414+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 881,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 1,
+      "clearance": 507,
+      "copper_edge_clearance": 6,
+      "hole_clearance": 4,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 199,
+      "malformed_courtyard": 6,
+      "pth_inside_courtyard": 10,
+      "silk_edge_clearance": 64,
+      "silk_over_copper": 6,
+      "solder_mask_bridge": 71,
+      "text_height": 1,
+      "track_dangling": 5
+    },
+    "by_severity": {
+      "error": 606,
+      "warning": 275
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "board_id": "modular_bus_board_bus",
+  "display_name": "modular_bus_board_bus",
+  "pcbench_directory": "PCBs/modular_bus_board_bus",
+  "source": "https://github.com/ccprek/modular_bus_board",
+  "author": "ccprek",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:41.001922+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 111.76,
+      "height": 48.26
+    },
+    "area_cm2": 53.94,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 53,
+    "vias": 10,
+    "track_length_mm": 259.68,
+    "kicad_drc_violations": 514,
+    "kicad_drc_breakdown": {
+      "total_violations": 514,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 32,
+        "clearance": 32,
+        "courtyards_overlap": 2,
+        "holes_co_located": 32,
+        "lib_footprint_issues": 26,
+        "pth_inside_courtyard": 64,
+        "silk_edge_clearance": 54,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 64,
+        "text_height": 9
+      },
+      "by_severity": {
+        "error": 194,
+        "warning": 320
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,28 @@
+{
+  "board": "Box0-hv-analog-breakoutboard_breakout",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Box0-hv-analog-breakoutboard_breakout\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 11,
+  "segment_count": 267,
+  "approximate_track_length_mm": 534.43,
+  "kicad_drc_violations": 482,
+  "generated_at": "2026-08-18T18:35:39.177749+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 482,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 340,
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 32,
+      "lib_footprint_issues": 57,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 7,
+      "silk_overlap": 41
+    },
+    "by_severity": {
+      "error": 374,
+      "warning": 108
+    }
+  }
+}

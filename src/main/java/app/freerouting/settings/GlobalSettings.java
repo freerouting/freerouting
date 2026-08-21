@@ -114,6 +114,9 @@ public class GlobalSettings implements Serializable {
    */
   public transient String designSessionFilename;
 
+  /** Exit code from the most recent headless CLI routing run (for harness consumption). */
+  public transient int cliExitCode = 0;
+
   /**
    * The current locale for the application. It is initialized based on the system default locale,
    * but can be overridden via command line arguments.
@@ -534,11 +537,20 @@ public class GlobalSettings implements Serializable {
             java.util.List<String> files = new java.util.ArrayList<>();
             int j = i + 1;
             while (j < args.length && !args[j].startsWith("-")) {
-              // Split each argument by '+' to support legacy concatenation (e.g.
-              // file1.dsn+file2.rules)
-              String[] parts = args[j].split("\\+");
-              for (String part : parts) {
-                files.add(part.trim());
+              String rawArg = args[j].trim();
+              if (new java.io.File(rawArg).exists()) {
+                files.add(rawArg);
+              } else if (rawArg.contains("+")) {
+                // Split each argument by '+' to support legacy concatenation (e.g.
+                // file1.dsn+file2.rules)
+                String[] parts = rawArg.split("\\+");
+                for (String part : parts) {
+                  if (!part.trim().isEmpty()) {
+                    files.add(part.trim());
+                  }
+                }
+              } else {
+                files.add(rawArg);
               }
               j++;
             }

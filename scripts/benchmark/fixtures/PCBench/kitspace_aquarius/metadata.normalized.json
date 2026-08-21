@@ -1,0 +1,62 @@
+{
+  "board_id": "kitspace_aquarius",
+  "display_name": "kitspace_aquarius",
+  "pcbench_directory": "PCBs/kitspace_aquarius",
+  "source": "https://github.com/LincolnUehara/Aquarius",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/LincolnUehara/Aquarius/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:42.698617+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 79,
+    "dimensions_mm": {
+      "width": 74.0,
+      "height": 120.0
+    },
+    "area_cm2": 88.8,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 545,
+    "vias": 174,
+    "track_length_mm": 2180.13,
+    "kicad_drc_violations": 252,
+    "kicad_drc_breakdown": {
+      "total_violations": 252,
+      "unconnected_count": 18,
+      "by_type": {
+        "clearance": 118,
+        "copper_edge_clearance": 6,
+        "lib_footprint_issues": 23,
+        "lib_footprint_mismatch": 53,
+        "nonmirrored_text_on_back_layer": 2,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 25,
+        "silk_overlap": 2,
+        "starved_thermal": 18,
+        "track_dangling": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 142,
+        "warning": 110
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,1384 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 4)
+    (tracks 205)
+    (zones 0)
+    (modules 29)
+    (nets 22)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user)
+  )
+
+  (setup
+    (last_trace_width 0.254)
+    (trace_clearance 0.254)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.1524)
+    (via_size 0.6858)
+    (via_drill 0.3302)
+    (via_min_size 0.6858)
+    (via_min_drill 0.3302)
+    (uvia_size 0.127)
+    (uvia_drill 0.0254)
+    (uvias_allowed no)
+    (uvia_min_size 0)
+    (uvia_min_drill 0)
+    (edge_width 0.15)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.524 1.524)
+    (pad_drill 0.762)
+    (pad_to_mask_clearance 0.2)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x00030_80000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory ""))
+  )
+
+  (net 0 "")
+  (net 1 GND)
+  (net 2 "Net-(C10-Pad2)")
+  (net 3 "Net-(C12-Pad1)")
+  (net 4 "Net-(C1-Pad1)")
+  (net 5 "Net-(C6-Pad1)")
+  (net 6 "Net-(R7-Pad1)")
+  (net 7 /right_tweeter_ph)
+  (net 8 /right_woofer_in)
+  (net 9 "Net-(C2-Pad1)")
+  (net 10 "Net-(C3-Pad2)")
+  (net 11 +15V)
+  (net 12 -15V)
+  (net 13 "Net-(C8-Pad1)")
+  (net 14 /left_tweeter_ph)
+  (net 15 "Net-(C9-Pad1)")
+  (net 16 /left_woofer_in)
+  (net 17 "Net-(R2-Pad1)")
+  (net 18 /right_low_out)
+  (net 19 /left_low_out)
+  (net 20 /left_high_out)
+  (net 21 /right_high_out)
+
+  (net_class Default "This is the default net class."
+    (clearance 0.254)
+    (trace_width 0.254)
+    (via_dia 0.6858)
+    (via_drill 0.3302)
+    (uvia_dia 0.127)
+    (uvia_drill 0.0254)
+    (add_net /left_high_out)
+    (add_net /left_low_out)
+    (add_net /left_tweeter_ph)
+    (add_net /left_woofer_in)
+    (add_net /right_high_out)
+    (add_net /right_low_out)
+    (add_net /right_tweeter_ph)
+    (add_net /right_woofer_in)
+    (add_net "Net-(C1-Pad1)")
+    (add_net "Net-(C10-Pad2)")
+    (add_net "Net-(C12-Pad1)")
+    (add_net "Net-(C2-Pad1)")
+    (add_net "Net-(C3-Pad2)")
+    (add_net "Net-(C6-Pad1)")
+    (add_net "Net-(C8-Pad1)")
+    (add_net "Net-(C9-Pad1)")
+    (add_net "Net-(R2-Pad1)")
+    (add_net "Net-(R7-Pad1)")
+  )
+
+  (net_class "Audio Out" ""
+    (clearance 0.254)
+    (trace_width 0.254)
+    (via_dia 0.6858)
+    (via_drill 0.3302)
+    (uvia_dia 0.127)
+    (uvia_drill 0.0254)
+  )
+
+  (net_class Power ""
+    (clearance 0.254)
+    (trace_width 0.508)
+    (via_dia 0.6858)
+    (via_drill 0.3302)
+    (uvia_dia 0.127)
+    (uvia_drill 0.0254)
+    (add_net +15V)
+    (add_net -15V)
+    (add_net GND)
+  )
+
+  (module Mounting_Holes:MountingHole_3.2mm_M3 (layer F.Cu) (tedit 59122331) (tstamp 591228BD)
+    (at 125.73 97.282)
+    (descr "Mounting Hole 3.2mm, no annular, M3")
+    (tags "mounting hole 3.2mm no annular m3")
+    (fp_text reference mnt4 (at 0 -4.2) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole_3.2mm_M3 (at 0 4.2) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.45 0) (layer F.CrtYd) (width 0.05))
+    (fp_circle (center 0 0) (end 3.2 0) (layer Cmts.User) (width 0.15))
+    (pad 1 np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
+  )
+
+  (module Mounting_Holes:MountingHole_3.2mm_M3 (layer F.Cu) (tedit 59122328) (tstamp 591228B6)
+    (at 125.73 73.66)
+    (descr "Mounting Hole 3.2mm, no annular, M3")
+    (tags "mounting hole 3.2mm no annular m3")
+    (fp_text reference mnt3 (at 0 -4.2) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole_3.2mm_M3 (at 0 4.2) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.45 0) (layer F.CrtYd) (width 0.05))
+    (fp_circle (center 0 0) (end 3.2 0) (layer Cmts.User) (width 0.15))
+    (pad 1 np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
+  )
+
+  (module Mounting_Holes:MountingHole_3.2mm_M3 (layer F.Cu) (tedit 59122321) (tstamp 591228A4)
+    (at 168.148 97.282)
+    (descr "Mounting Hole 3.2mm, no annular, M3")
+    (tags "mounting hole 3.2mm no annular m3")
+    (fp_text reference mnt2 (at 0 -4.2) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole_3.2mm_M3 (at 0 4.2) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.45 0) (layer F.CrtYd) (width 0.05))
+    (fp_circle (center 0 0) (end 3.2 0) (layer Cmts.User) (width 0.15))
+    (pad 1 np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 58E560FD)
+    (at 131.064 82.804 180)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E6BFC2)
+    (fp_text reference C11 (at 7.112 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 19 /left_low_out))
+    (pad 2 thru_hole circle (at 5 0 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 2 "Net-(C10-Pad2)"))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 58E560F8)
+    (at 136.144 78.74 90)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E1DC7C)
+    (fp_text reference C10 (at 2.5 0 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 19 /left_low_out))
+    (pad 2 thru_hole circle (at 5 0 90) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 2 "Net-(C10-Pad2)"))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590BB11D)
+    (at 160.02 92.202 270)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58E194B6)
+    (fp_text reference R4 (at 2.794 -2.032 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 270) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 8 /right_woofer_in))
+    (pad 2 thru_hole oval (at 5.08 0 270) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 10 "Net-(C3-Pad2)"))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590BB122)
+    (at 151.13 92.202 270)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58E19339)
+    (fp_text reference R5 (at 2.54 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 270) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 5 "Net-(C6-Pad1)"))
+    (pad 2 thru_hole oval (at 5.08 0 270) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 10 "Net-(C3-Pad2)"))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590BB127)
+    (at 157.226 73.66 270)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58E1DCB6)
+    (fp_text reference R6 (at 2.54 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 270) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 13 "Net-(C8-Pad1)"))
+    (pad 2 thru_hole oval (at 5.08 0 270) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 20 /left_high_out))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590BB12C)
+    (at 151.892 73.66 270)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58E1DCBC)
+    (fp_text reference R7 (at 2.54 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 270) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 6 "Net-(R7-Pad1)"))
+    (pad 2 thru_hole oval (at 5.08 0 270) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 15 "Net-(C9-Pad1)"))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590BB131)
+    (at 154.686 78.74 90)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58EEC602)
+    (fp_text reference R8 (at 2.286 0 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 2 thru_hole oval (at 5.08 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 6 "Net-(R7-Pad1)"))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590BB136)
+    (at 132.08 78.994 90)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58E1DC88)
+    (fp_text reference R9 (at 2.54 -1.86 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 16 /left_woofer_in))
+    (pad 2 thru_hole oval (at 5.08 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 2 "Net-(C10-Pad2)"))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590BB13B)
+    (at 145.796 78.994 90)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58E1DC82)
+    (fp_text reference R10 (at 2.54 0 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 3 "Net-(C12-Pad1)"))
+    (pad 2 thru_hole oval (at 5.08 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 2 "Net-(C10-Pad2)"))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590CAA9E)
+    (at 131.064 97.282 90)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58E19D05)
+    (fp_text reference R1 (at 2.54 0 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 4 "Net-(C1-Pad1)"))
+    (pad 2 thru_hole oval (at 5.08 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 21 /right_high_out))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 590F1C80)
+    (at 131.064 88.138 180)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E19CAF)
+    (fp_text reference C1 (at 6.858 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 4 "Net-(C1-Pad1)"))
+    (pad 2 thru_hole circle (at 5 0 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 7 /right_tweeter_ph))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 590F1C8B)
+    (at 138.176 92.282 270)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E19B26)
+    (fp_text reference C2 (at 2.46 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 9 "Net-(C2-Pad1)"))
+    (pad 2 thru_hole circle (at 5 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 4 "Net-(C1-Pad1)"))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 590F1C96)
+    (at 161.29 88.138 90)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E6BB5A)
+    (fp_text reference C4 (at 2.794 0 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 18 /right_low_out))
+    (pad 2 thru_hole circle (at 5 0 90) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 10 "Net-(C3-Pad2)"))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 590F1CAC)
+    (at 147.066 92.202 270)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E19643)
+    (fp_text reference C6 (at 2.5 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 5 "Net-(C6-Pad1)"))
+    (pad 2 thru_hole circle (at 5 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 590F1CC2)
+    (at 155.702 83.058 270)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E1DCAA)
+    (fp_text reference C9 (at 2.5 -0.254 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 15 "Net-(C9-Pad1)"))
+    (pad 2 thru_hole circle (at 5 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 13 "Net-(C8-Pad1)"))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590F1CF9)
+    (at 134.112 97.282 90)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58E19DB4)
+    (fp_text reference R2 (at 2.54 0 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 17 "Net-(R2-Pad1)"))
+    (pad 2 thru_hole oval (at 5.08 0 90) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 9 "Net-(C2-Pad1)"))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module scimpy_library:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal (layer F.Cu) (tedit 5874F706) (tstamp 590F1D0A)
+    (at 130.81 99.822)
+    (descr "Resistor, Axial_DIN0204 series, Axial, Horizontal, pin pitch=5.08mm, 0.16666666666666666W = 1/6W, length*diameter=3.6*1.6mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
+    (tags "Resistor Axial_DIN0204 series Axial Horizontal pin pitch 5.08mm 0.16666666666666666W = 1/6W length 3.6mm diameter 1.6mm")
+    (path /58EEC425)
+    (fp_text reference R3 (at 2.54 0) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value R (at 2.54 1.86) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 6.05 -1.15) (end -0.95 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 6.05 1.15) (end 6.05 -1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 1.15) (end 6.05 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -1.15) (end -0.95 1.15) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 0.68 0.86) (end 4.4 0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 0.68 -0.86) (end 4.4 -0.86) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.08 0) (end 4.34 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 0 0) (end 0.74 0) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 -0.8) (end 0.74 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 4.34 0.8) (end 4.34 -0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 0.8) (end 4.34 0.8) (layer F.Fab) (width 0.1))
+    (fp_line (start 0.74 -0.8) (end 0.74 0.8) (layer F.Fab) (width 0.1))
+    (pad 1 thru_hole circle (at 0 0) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 2 thru_hole oval (at 5.08 0) (size 1.4 1.4) (drill 0.7) (layers *.Cu *.Mask)
+      (net 17 "Net-(R2-Pad1)"))
+    (model Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+    (model ../../../../../home/showard/scimpy/scimpy/boards/3dshapes/Resistors_THT.3dshapes/R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.393701 0.393701 0.393701))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Housings_DIP:DIP-14_W7.62mm (layer F.Cu) (tedit 54130A77) (tstamp 590F1D1B)
+    (at 135.128 89.408 90)
+    (descr "14-lead dip package, row spacing 7.62 mm (300 mils)")
+    (tags "dil dip 2.54 300")
+    (path /58E0935A)
+    (fp_text reference U1 (at 8.382 17.526 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value TL074 (at 0 -3.72 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0.135 -1.025) (end -0.8 -1.025) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.135 17.535) (end 7.485 17.535) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.135 -2.295) (end 7.485 -2.295) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.135 17.535) (end 0.135 16.265) (layer F.SilkS) (width 0.15))
+    (fp_line (start 7.485 17.535) (end 7.485 16.265) (layer F.SilkS) (width 0.15))
+    (fp_line (start 7.485 -2.295) (end 7.485 -1.025) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.135 -2.295) (end 0.135 -1.025) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.05 17.7) (end 8.65 17.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.05 -2.45) (end 8.65 -2.45) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 8.65 -2.45) (end 8.65 17.7) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.05 -2.45) (end -1.05 17.7) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole oval (at 0 0 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 21 /right_high_out))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 21 /right_high_out))
+    (pad 3 thru_hole oval (at 0 5.08 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 9 "Net-(C2-Pad1)"))
+    (pad 4 thru_hole oval (at 0 7.62 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 11 +15V))
+    (pad 5 thru_hole oval (at 0 10.16 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 5 "Net-(C6-Pad1)"))
+    (pad 6 thru_hole oval (at 0 12.7 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 18 /right_low_out))
+    (pad 7 thru_hole oval (at 0 15.24 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 18 /right_low_out))
+    (pad 8 thru_hole oval (at 7.62 15.24 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 20 /left_high_out))
+    (pad 9 thru_hole oval (at 7.62 12.7 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 20 /left_high_out))
+    (pad 10 thru_hole oval (at 7.62 10.16 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 15 "Net-(C9-Pad1)"))
+    (pad 11 thru_hole oval (at 7.62 7.62 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 12 -15V))
+    (pad 12 thru_hole oval (at 7.62 5.08 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 3 "Net-(C12-Pad1)"))
+    (pad 13 thru_hole oval (at 7.62 2.54 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 19 /left_low_out))
+    (pad 14 thru_hole oval (at 7.62 0 90) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask)
+      (net 19 /left_low_out))
+    (model Housings_DIP.3dshapes/DIP-14_W7.62mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Angled_1x07 (layer F.Cu) (tedit 0) (tstamp 590FC349)
+    (at 154.178 100.076 270)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /590EB1A2)
+    (fp_text reference P2 (at 0.254 -2.54 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X07 (at 0 -3.1 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 1.524 6.35) (end 4.064 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 6.35) (end 1.524 8.89) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 8.89) (end 4.064 8.89) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 7.366) (end 10.16 7.366) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 7.366) (end 10.16 7.874) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 7.874) (end 4.064 7.874) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 8.89) (end 4.064 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 11.43) (end 4.064 8.89) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 10.414) (end 4.064 10.414) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 9.906) (end 10.16 10.414) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 9.906) (end 10.16 9.906) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 11.43) (end 4.064 11.43) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 8.89) (end 1.524 11.43) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 8.89) (end 4.064 8.89) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 13.97) (end 4.064 13.97) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 13.97) (end 1.524 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 16.51) (end 4.064 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 14.986) (end 10.16 14.986) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 14.986) (end 10.16 15.494) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 15.494) (end 4.064 15.494) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 16.51) (end 4.064 13.97) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 13.97) (end 4.064 11.43) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 12.954) (end 4.064 12.954) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 12.446) (end 10.16 12.954) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 12.446) (end 10.16 12.446) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 13.97) (end 4.064 13.97) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 11.43) (end 1.524 13.97) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 11.43) (end 4.064 11.43) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 1.27) (end 4.064 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 1.27) (end 1.524 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 3.81) (end 4.064 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 2.286) (end 10.16 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 2.286) (end 10.16 2.794) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 2.794) (end 4.064 2.794) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 3.81) (end 4.064 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 6.35) (end 4.064 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 5.334) (end 4.064 5.334) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 4.826) (end 10.16 5.334) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 4.826) (end 10.16 4.826) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 6.35) (end 4.064 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 3.81) (end 1.524 6.35) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 3.81) (end 4.064 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 -1.27) (end 4.064 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 -1.27) (end 1.524 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 1.27) (end 4.064 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 -0.254) (end 10.16 -0.254) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 -0.254) (end 10.16 0.254) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.16 0.254) (end 4.064 0.254) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.064 1.27) (end 4.064 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 9.906) (end 1.143 9.906) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 10.414) (end 1.143 10.414) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 12.446) (end 1.143 12.446) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 12.954) (end 1.143 12.954) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 14.986) (end 1.143 14.986) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 15.494) (end 1.143 15.494) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 7.874) (end 1.143 7.874) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 7.366) (end 1.143 7.366) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 5.334) (end 1.143 5.334) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 4.826) (end 1.143 4.826) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 2.794) (end 1.143 2.794) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 2.286) (end 1.143 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 0.254) (end 1.143 0.254) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.524 -0.254) (end 1.143 -0.254) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.191 0) (end 10.033 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.191 0.127) (end 4.191 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.033 0.127) (end 4.191 0.127) (layer F.SilkS) (width 0.15))
+    (fp_line (start 10.033 -0.127) (end 10.033 0.127) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.191 -0.127) (end 10.033 -0.127) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.3 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.3 -1.55) (end -1.3 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.5 17) (end 10.65 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.75) (end 10.65 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 10.65 -1.75) (end 10.65 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.5 -1.75) (end -1.5 17) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask)
+      (net 11 +15V))
+    (pad 2 thru_hole oval (at 0 2.54 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask)
+      (net 12 -15V))
+    (pad 3 thru_hole oval (at 0 5.08 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 4 thru_hole oval (at 0 7.62 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask)
+      (net 16 /left_woofer_in))
+    (pad 5 thru_hole oval (at 0 10.16 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask)
+      (net 14 /left_tweeter_ph))
+    (pad 6 thru_hole oval (at 0 12.7 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask)
+      (net 8 /right_woofer_in))
+    (pad 7 thru_hole oval (at 0 15.24 270) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask)
+      (net 7 /right_tweeter_ph))
+    (model Pin_Headers.3dshapes/Pin_Header_Angled_1x07.wrl
+      (offset (xyz 0 -7.619999885559082 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Socket_Strips:Socket_Strip_Angled_1x07 (layer F.Cu) (tedit 0) (tstamp 5910676A)
+    (at 154.178 69.85 180)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /590EB318)
+    (fp_text reference P1 (at -2.54 0.508 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X07 (at 0 -2.75 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 1.27 10.1) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 10.1) (end 1.27 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 -1.4) (end -1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.4) (end -1.55 -1.4) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 3.81 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 10.1) (end 3.81 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.81 10.1) (end 3.81 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 6.35 10.1) (end 6.35 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.81 10.1) (end 6.35 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.81 1.27) (end 6.35 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 6.35 1.27) (end 8.89 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 6.35 10.1) (end 8.89 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 8.89 10.1) (end 8.89 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 11.43 10.1) (end 11.43 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 8.89 10.1) (end 11.43 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 8.89 1.27) (end 11.43 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 11.43 1.27) (end 13.97 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 11.43 10.1) (end 13.97 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 13.97 10.1) (end 13.97 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 16.51 10.1) (end 16.51 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 13.97 10.1) (end 16.51 10.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 13.97 1.27) (end 16.51 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 10.6) (end 17 10.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.5) (end 17 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 17 -1.5) (end 17 10.6) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.5) (end -1.75 10.6) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 180) (size 1.7272 2.032) (drill 1.016) (layers *.Cu *.Mask)
+      (net 11 +15V))
+    (pad 2 thru_hole oval (at 2.54 0 180) (size 1.7272 2.032) (drill 1.016) (layers *.Cu *.Mask)
+      (net 12 -15V))
+    (pad 3 thru_hole oval (at 5.08 0 180) (size 1.7272 2.032) (drill 1.016) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 4 thru_hole oval (at 7.62 0 180) (size 1.7272 2.032) (drill 1.016) (layers *.Cu *.Mask)
+      (net 19 /left_low_out))
+    (pad 5 thru_hole oval (at 10.16 0 180) (size 1.7272 2.032) (drill 1.016) (layers *.Cu *.Mask)
+      (net 20 /left_high_out))
+    (pad 6 thru_hole oval (at 12.7 0 180) (size 1.7272 2.032) (drill 1.016) (layers *.Cu *.Mask)
+      (net 18 /right_low_out))
+    (pad 7 thru_hole oval (at 15.24 0 180) (size 1.7272 2.032) (drill 1.016) (layers *.Cu *.Mask)
+      (net 21 /right_high_out))
+    (model Socket_Strips.3dshapes/Socket_Strip_Angled_1x07.wrl
+      (offset (xyz 7.619999885559082 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 180))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 59106805)
+    (at 155.448 92.202 270)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E19282)
+    (fp_text reference C3 (at 2.54 0 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 18 /right_low_out))
+    (pad 2 thru_hole circle (at 5 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 10 "Net-(C3-Pad2)"))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D3_P2.5 (layer F.Cu) (tedit 0) (tstamp 59106810)
+    (at 142.494 94.742 90)
+    (descr "Capacitor 3mm Disc, Pitch 2.5mm")
+    (tags Capacitor)
+    (path /58E14B8A)
+    (fp_text reference C5 (at -2.032 0 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 1.25 2.5 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.75 1.25) (end -0.25 1.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 -1.25) (end 2.75 -1.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.9 1.5) (end -0.9 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.4 1.5) (end -0.9 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.4 -1.5) (end 3.4 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.9 -1.5) (end 3.4 -1.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 1.3 1.3) (drill 0.8) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 1.3 1.3) (drill 0.8001) (layers *.Cu *.Mask)
+      (net 11 +15V))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D3_P2.5.wrl
+      (offset (xyz 1.250000021226883 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D3_P2.5 (layer F.Cu) (tedit 0) (tstamp 5910681B)
+    (at 148.844 78.994 90)
+    (descr "Capacitor 3mm Disc, Pitch 2.5mm")
+    (tags Capacitor)
+    (path /58E14C05)
+    (fp_text reference C7 (at 4.318 0 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 1.25 2.5 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 2.75 1.25) (end -0.25 1.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.25 -1.25) (end 2.75 -1.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.9 1.5) (end -0.9 -1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.4 1.5) (end -0.9 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.4 -1.5) (end 3.4 1.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.9 -1.5) (end 3.4 -1.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 1.3 1.3) (drill 0.8) (layers *.Cu *.Mask)
+      (net 12 -15V))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 1.3 1.3) (drill 0.8001) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D3_P2.5.wrl
+      (offset (xyz 1.250000021226883 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 59106826)
+    (at 161.544 73.66 270)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E1DCB0)
+    (fp_text reference C8 (at 5.08 -3.556 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 13 "Net-(C8-Pad1)"))
+    (pad 2 thru_hole circle (at 5 0 270) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 14 /left_tweeter_ph))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_ThroughHole:C_Disc_D6_P5 (layer F.Cu) (tedit 0) (tstamp 59106984)
+    (at 141.732 78.914 90)
+    (descr "Capacitor 6mm Disc, Pitch 5mm")
+    (tags Capacitor)
+    (path /58E1DC94)
+    (fp_text reference C12 (at 2.46 0 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 2.5 3.5 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5.5 2.25) (end -0.5 2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.5 -2.25) (end 5.5 -2.25) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.95 2.5) (end -0.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 2.5) (end -0.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.95 -2.5) (end 5.95 2.5) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -0.95 -2.5) (end 5.95 -2.5) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 3 "Net-(C12-Pad1)"))
+    (pad 2 thru_hole circle (at 5 0 90) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (model Capacitors_ThroughHole.3dshapes/C_Disc_D6_P5.wrl
+      (offset (xyz 2.500000042453766 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Mounting_Holes:MountingHole_3.2mm_M3 (layer F.Cu) (tedit 59122319) (tstamp 59122895)
+    (at 168.148 73.66)
+    (descr "Mounting Hole 3.2mm, no annular, M3")
+    (tags "mounting hole 3.2mm no annular m3")
+    (fp_text reference mnt1 (at 0 -4.2) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole_3.2mm_M3 (at 0 4.2) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.45 0) (layer F.CrtYd) (width 0.05))
+    (fp_circle (center 0 0) (end 3.2 0) (layer Cmts.User) (width 0.15))
+    (pad 1 np_thru_hole circle (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask))
+  )
+
+  (gr_line (start 121.92 102.616) (end 121.92 67.818) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 121.92 102.616) (end 171.958 102.616) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 171.958 67.818) (end 171.958 102.616) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 121.92 67.818) (end 171.958 67.818) (angle 90) (layer Edge.Cuts) (width 0.15))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

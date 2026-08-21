@@ -1,0 +1,56 @@
+{
+  "board_id": "medusa_medusa_rs422_rx",
+  "display_name": "medusa_medusa_rs422_rx",
+  "pcbench_directory": "PCBs/medusa_medusa_rs422_rx",
+  "source": "https://github.com/sharebrained/medusa",
+  "author": "sharebrained",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:42.101935+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 46,
+    "dimensions_mm": {
+      "width": 71.5,
+      "height": 42.0
+    },
+    "area_cm2": 30.03,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 235,
+    "vias": 40,
+    "track_length_mm": 497.37,
+    "kicad_drc_violations": 215,
+    "kicad_drc_breakdown": {
+      "total_violations": 215,
+      "unconnected_count": 36,
+      "by_type": {
+        "lib_footprint_issues": 46,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 26,
+        "silk_overlap": 16,
+        "text_height": 67,
+        "via_dangling": 40
+      },
+      "by_severity": {
+        "warning": 215
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

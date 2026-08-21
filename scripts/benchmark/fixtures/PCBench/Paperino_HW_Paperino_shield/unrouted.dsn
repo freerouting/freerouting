@@ -1,0 +1,267 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Paperino_HW_Paperino_shield\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  168138 -63102.4  168412 -63140.7  168679 -63216.4  168932 -63327.9
+            169167 -63473.2  169381 -63649.5  169568 -63853.4  169725 -64081.1
+            169849 -64328.3  169938 -64590.3  169990 -64862  170000 -65000
+            170000 -98000  169997 -98142.9  169957 -98425.7  169876 -98699.8
+            169758 -98959.7  169603 -99200.1  169416 -99416  169200 -99603.1
+            168960 -99757.6  168700 -99876.3  168426 -99956.8  168143 -99997.5
+            168000 -100000  102000 -100000  101857 -99997.5  101574 -99956.8
+            101300 -99876.3  101040 -99757.6  100800 -99603.1  100584 -99416
+            100397 -99200.1  100242 -98959.7  100124 -98699.8  100043 -98425.7
+            100003 -98142.9  100000 -98000  100000 -65100  100003 -64957.1
+            100043 -64674.3  100124 -64400.2  100242 -64140.3  100397 -63899.9
+            100584 -63684  100800 -63496.9  101040 -63342.4  101300 -63223.7
+            101574 -63143.2  101857 -63102.5  102000 -63100  168000 -63100
+            168138 -63102.4)
+    )
+    (keepout "" (polygon signal 0  163942 -74052.4  163749 -74090.7  163567 -74165.9  163404 -74275.1
+            163265 -74414.1  163156 -74577.5  163081 -74759  163042 -74951.7
+            163040 -75050  163040 -88050  163042 -88148.3  163081 -88341
+            163156 -88522.5  163265 -88685.9  163404 -88824.9  163567 -88934.1
+            163749 -89009.3  163942 -89047.6  164040 -89050  165840 -89050
+            165938 -89047.6  166131 -89009.3  166313 -88934.1  166476 -88824.9
+            166615 -88685.9  166724 -88522.5  166799 -88341  166838 -88148.3
+            166840 -88050  166840 -75050  166838 -74951.7  166799 -74759
+            166724 -74577.5  166615 -74414.1  166476 -74275.1  166313 -74165.9
+            166131 -74090.7  165938 -74052.4  165840 -74050  164040 -74050
+            163942 -74052.4))
+    (via "Via[0-1]_600:300_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Paperino:paperino_module
+      (place A2 149570 -81550 back 270 (PN paperino_module))
+    )
+    (component Paperino:mounting_hole_1.5
+      (place M1 102540 -97460 front 0 (PN Mounting_hole))
+      (place M2 167460 -65640 front 0 (PN Mounting_hole))
+      (place M3 102540 -65640 front 0 (PN Mounting_hole))
+      (place M4 167460 -97460 front 0 (PN Mounting_hole))
+    )
+    (component Paperino:photon_headers
+      (place A1 108880 -99908 front 0 (PN Photon))
+    )
+    (component "Symbols:OSHW-Symbol_6.7x6mm_SilkScreen"
+      (place REF*** 118786 -93050 back 90 (PN "OSHW-Symbol_6.7x6mm_SilkScreen"))
+    )
+  )
+  (library
+    (image Paperino:paperino_module
+      (outline (path signal 150  -12700 11000  12700 11000))
+      (outline (path signal 150  -12700 -11000  12700 -11000))
+      (outline (path signal 150  -12700 11000  -12700 5000))
+      (outline (path signal 150  12700 5000  12700 11000))
+      (pin "Rect[T][-500.000000,0.000000]Pad_2000.000000x2000.000000_um" 1 -12700 3400)
+      (pin Rect[T][500.000000,0.000000]Pad_2000.000000x2000.000000_um 7 12700 -9300)
+      (pin "Rect[T][-500.000000,0.000000]Pad_2000.000000x2000.000000_um" 2 -12700 860)
+      (pin "Rect[T][-500.000000,0.000000]Pad_2000.000000x2000.000000_um" 3 -12700 -1680)
+      (pin "Rect[T][-500.000000,0.000000]Pad_2000.000000x2000.000000_um" 4 -12700 -4220)
+      (pin "Rect[T][-500.000000,0.000000]Pad_2000.000000x2000.000000_um" 5 -12700 -6760)
+      (pin "Rect[T][-500.000000,0.000000]Pad_2000.000000x2000.000000_um" 6 -12700 -9300)
+      (pin Rect[T][500.000000,0.000000]Pad_2000.000000x2000.000000_um 8 12700 -6760)
+      (pin Rect[T][500.000000,0.000000]Pad_2000.000000x2000.000000_um 9 12700 -4220)
+      (pin Rect[T][500.000000,0.000000]Pad_2000.000000x2000.000000_um 10 12700 -1680)
+      (pin Rect[T][500.000000,0.000000]Pad_2000.000000x2000.000000_um 11 12700 860)
+      (pin Rect[T][500.000000,0.000000]Pad_2000.000000x2000.000000_um 12 12700 3400)
+    )
+    (image Paperino:mounting_hole_1.5
+      (keepout "" (circle F.Cu 2000))
+      (keepout "" (circle B.Cu 2000))
+    )
+    (image Paperino:photon_headers
+      (outline (path signal 150  0 3048  0 34076))
+      (outline (path signal 150  1524 1000  18796 1000))
+      (outline (path signal 150  20320 3048  20320 34074.1))
+      (outline (path signal 150  0 34076  6146.8 34076))
+      (outline (path signal 150  6146.8 34076  6146.8 35981))
+      (outline (path signal 150  6146.8 35981  14173.2 35981))
+      (outline (path signal 150  14173.2 35981  14173.2 34076))
+      (outline (path signal 150  14173.2 34076  20320 34076))
+      (outline (path signal 150  1524 1000  0 3048))
+      (outline (path signal 150  20320 3048  18796 1000))
+      (pin Round[A]Pad_1900.000000_um 1 1270 32258)
+      (pin Round[A]Pad_1900.000000_um 13 19050 4318)
+      (pin Round[A]Pad_1900.000000_um 2 1270 29718)
+      (pin Round[A]Pad_1900.000000_um 3 1270 27178)
+      (pin Round[A]Pad_1900.000000_um 4 1270 24638)
+      (pin Round[A]Pad_1900.000000_um 5 1270 22098)
+      (pin Round[A]Pad_1900.000000_um 6 1270 19558)
+      (pin Round[A]Pad_1900.000000_um 7 1270 17018)
+      (pin Round[A]Pad_1900.000000_um 8 1270 14478)
+      (pin Round[A]Pad_1900.000000_um 9 1270 11938)
+      (pin Round[A]Pad_1900.000000_um 10 1270 9398)
+      (pin Round[A]Pad_1900.000000_um 11 1270 6858)
+      (pin Round[A]Pad_1900.000000_um 12 1270 4318)
+      (pin Round[A]Pad_1900.000000_um 14 19050 6858)
+      (pin Round[A]Pad_1900.000000_um 15 19050 9398)
+      (pin Round[A]Pad_1900.000000_um 16 19050 11938)
+      (pin Round[A]Pad_1900.000000_um 17 19050 14478)
+      (pin Round[A]Pad_1900.000000_um 18 19050 17018)
+      (pin Round[A]Pad_1900.000000_um 19 19050 19558)
+      (pin Round[A]Pad_1900.000000_um 20 19050 22098)
+      (pin Round[A]Pad_1900.000000_um 21 19050 24638)
+      (pin Round[A]Pad_1900.000000_um 22 19050 27178)
+      (pin Round[A]Pad_1900.000000_um 23 19050 29718)
+      (pin Round[A]Pad_1900.000000_um 24 19050 32258)
+      (pin Round[A]Pad_1900.000000_um 1@1 -1270 32258)
+      (pin Round[A]Pad_1900.000000_um 2@1 -1270 29718)
+      (pin Round[A]Pad_1900.000000_um 3@1 -1270 27178)
+      (pin Round[A]Pad_1900.000000_um 4@1 -1270 24638)
+      (pin Round[A]Pad_1900.000000_um 5@1 -1270 22098)
+      (pin Round[A]Pad_1900.000000_um 6@1 -1270 19558)
+      (pin Round[A]Pad_1900.000000_um 7@1 -1270 17018)
+      (pin Round[A]Pad_1900.000000_um 8@1 -1270 14478)
+      (pin Round[A]Pad_1900.000000_um 9@1 -1270 11938)
+      (pin Round[A]Pad_1900.000000_um 10@1 -1270 9398)
+      (pin Round[A]Pad_1900.000000_um 11@1 -1270 6858)
+      (pin Round[A]Pad_1900.000000_um 12@1 -1270 4318)
+      (pin Round[A]Pad_1900.000000_um 13@1 21590 4318)
+      (pin Round[A]Pad_1900.000000_um 14@1 21590 6858)
+      (pin Round[A]Pad_1900.000000_um 15@1 21590 9398)
+      (pin Round[A]Pad_1900.000000_um 16@1 21590 11938)
+      (pin Round[A]Pad_1900.000000_um 17@1 21590 14478)
+      (pin Round[A]Pad_1900.000000_um 18@1 21590 17018)
+      (pin Round[A]Pad_1900.000000_um 19@1 21590 19558)
+      (pin Round[A]Pad_1900.000000_um 20@1 21590 22098)
+      (pin Round[A]Pad_1900.000000_um 21@1 21590 24638)
+      (pin Round[A]Pad_1900.000000_um 22@1 21590 27178)
+      (pin Round[A]Pad_1900.000000_um 23@1 21590 29718)
+      (pin Round[A]Pad_1900.000000_um 24@1 21590 32258)
+    )
+    (image "Symbols:OSHW-Symbol_6.7x6mm_SilkScreen"
+    )
+    (padstack Round[A]Pad_1900.000000_um
+      (shape (circle F.Cu 1900))
+      (shape (circle B.Cu 1900))
+      (attach off)
+    )
+    (padstack "Rect[T][-500.000000,0.000000]Pad_2000.000000x2000.000000_um"
+      (shape (rect F.Cu -1500 -1000 500 1000))
+      (attach off)
+    )
+    (padstack Rect[T][500.000000,0.000000]Pad_2000.000000x2000.000000_um
+      (shape (rect F.Cu -500 -1000 1500 1000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:300_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(A1-Pad1)"
+      (pins A1-1 A1-1@1)
+    )
+    (net "Net-(A1-Pad13)"
+      (pins A1-13 A1-13@1)
+    )
+    (net GND
+      (pins A2-2 A1-2 A1-21 A1-2@1 A1-21@1)
+    )
+    (net "Net-(A1-Pad3)"
+      (pins A1-3 A1-3@1)
+    )
+    (net "Net-(A1-Pad4)"
+      (pins A1-4 A1-4@1)
+    )
+    (net /INT1
+      (pins A2-6 A1-5 A1-5@1)
+    )
+    (net "Net-(A1-Pad6)"
+      (pins A1-6 A1-6@1)
+    )
+    (net /SPI_MOSI
+      (pins A2-8 A1-7 A1-7@1)
+    )
+    (net /SPI_MISO
+      (pins A2-7 A1-8 A1-8@1)
+    )
+    (net /SPI_CLK
+      (pins A2-9 A1-9 A1-9@1)
+    )
+    (net /SPI_CS1
+      (pins A2-10 A1-10 A1-10@1)
+    )
+    (net "/~{BUSY}"
+      (pins A2-12 A1-11 A1-11@1)
+    )
+    (net "/~{RST}"
+      (pins A2-11 A1-12 A1-12@1)
+    )
+    (net "Net-(A1-Pad14)"
+      (pins A1-14 A1-14@1)
+    )
+    (net "Net-(A1-Pad15)"
+      (pins A1-15 A1-15@1)
+    )
+    (net "Net-(A1-Pad16)"
+      (pins A1-16 A1-16@1)
+    )
+    (net "Net-(A1-Pad17)"
+      (pins A1-17 A1-17@1)
+    )
+    (net /SPI_CS2
+      (pins A2-4 A1-19 A1-19@1)
+    )
+    (net "Net-(A1-Pad20)"
+      (pins A1-20 A1-20@1)
+    )
+    (net "Net-(A1-Pad22)"
+      (pins A1-22 A1-22@1)
+    )
+    (net "Net-(A1-Pad23)"
+      (pins A1-23 A1-23@1)
+    )
+    (net +3V3
+      (pins A2-1 A1-24 A1-24@1)
+    )
+    (net "Net-(A2-Pad3)"
+      (pins A2-3)
+    )
+    (net /INT2
+      (pins A2-5 A1-18 A1-18@1)
+    )
+    (class kicad_default +3V3 /INT1 /INT2 /SPI_CLK /SPI_CS1 /SPI_CS2 /SPI_MISO
+      /SPI_MOSI "/~{BUSY}" "/~{RST}" GND "Net-(A1-Pad1)" "Net-(A1-Pad13)"
+      "Net-(A1-Pad14)" "Net-(A1-Pad15)" "Net-(A1-Pad16)" "Net-(A1-Pad17)"
+      "Net-(A1-Pad20)" "Net-(A1-Pad22)" "Net-(A1-Pad23)" "Net-(A1-Pad3)" "Net-(A1-Pad4)"
+      "Net-(A1-Pad6)" "Net-(A2-Pad3)"
+      (circuit
+        (use_via "Via[0-1]_600:300_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

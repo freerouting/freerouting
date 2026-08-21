@@ -1,0 +1,68 @@
+{
+  "board_id": "mechkeys_isp",
+  "display_name": "mechkeys_isp",
+  "pcbench_directory": "PCBs/mechkeys_isp",
+  "source": "https://github.com/BalzGuenat/mechkeys",
+  "author": "BalzGuenat",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.641894+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 38.1,
+      "height": 20.32
+    },
+    "area_cm2": 7.74,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 74,
+    "vias": 0,
+    "track_length_mm": 122.62,
+    "kicad_drc_violations": 58,
+    "kicad_drc_breakdown": {
+      "total_violations": 58,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 20,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "drill_out_of_range": 6,
+        "lib_footprint_issues": 16,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 11,
+        "silk_overlap": 1
+      },
+      "by_severity": {
+        "error": 28,
+        "warning": 30
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.029585+00:00",
+    "elapsed_seconds": 9.4,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

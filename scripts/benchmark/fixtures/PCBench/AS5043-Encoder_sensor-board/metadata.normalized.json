@@ -1,0 +1,69 @@
+{
+  "board_id": "AS5043-Encoder_sensor-board",
+  "display_name": "AS5043-Encoder_sensor-board",
+  "pcbench_directory": "PCBs/AS5043-Encoder_sensor-board",
+  "source": "https://github.com/LongHairedHacker/AS5043-Encoder",
+  "author": "LongHairedHacker",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.802084+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 35.56,
+      "height": 35.56
+    },
+    "area_cm2": 12.65,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 95,
+    "vias": 2,
+    "track_length_mm": 190.61,
+    "kicad_drc_violations": 167,
+    "kicad_drc_breakdown": {
+      "total_violations": 167,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 74,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 13,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 39,
+        "silk_overlap": 9,
+        "solder_mask_bridge": 15,
+        "text_height": 13,
+        "text_thickness": 2
+      },
+      "by_severity": {
+        "error": 90,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.825781+00:00",
+    "elapsed_seconds": 6.79,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "board_id": "Inkjet_InkjetBreakout",
+  "display_name": "Inkjet_InkjetBreakout",
+  "pcbench_directory": "PCBs/Inkjet_InkjetBreakout",
+  "source": "https://github.com/danielprint/Inkjet",
+  "author": "danielprint",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.033993+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 2,
+    "dimensions_mm": {
+      "width": 24.13,
+      "height": 30.48
+    },
+    "area_cm2": 7.35,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 123,
+    "vias": 6,
+    "track_length_mm": 327.88,
+    "kicad_drc_violations": 50,
+    "kicad_drc_breakdown": {
+      "total_violations": 50,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 47,
+        "lib_footprint_issues": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 47,
+        "warning": 3
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.958388+00:00",
+    "elapsed_seconds": 10.28,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

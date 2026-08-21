@@ -1,0 +1,62 @@
+{
+  "board_id": "navelino-leaf_navelino-leaf",
+  "display_name": "navelino-leaf_navelino-leaf",
+  "pcbench_directory": "PCBs/navelino-leaf_navelino-leaf",
+  "source": "https://github.com/HackerspaceVLC/navelino-leaf",
+  "author": "HackerspaceVLC",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.194159+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 54.02,
+      "height": 62.5
+    },
+    "area_cm2": 33.76,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 180,
+    "vias": 16,
+    "track_length_mm": 327.49,
+    "kicad_drc_violations": 20,
+    "kicad_drc_breakdown": {
+      "total_violations": 20,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 4,
+        "lib_footprint_issues": 12,
+        "silk_over_copper": 4
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.044811+00:00",
+    "elapsed_seconds": 8.26,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

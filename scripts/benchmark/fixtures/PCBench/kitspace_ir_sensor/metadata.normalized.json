@@ -1,0 +1,64 @@
+{
+  "board_id": "kitspace_ir_sensor",
+  "display_name": "kitspace_ir_sensor",
+  "pcbench_directory": "PCBs/kitspace_ir_sensor",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:27.029471+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 32.0,
+      "height": 100.0
+    },
+    "area_cm2": 32.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 12,
+    "vias": 0,
+    "track_length_mm": 132.46,
+    "kicad_drc_violations": 8,
+    "kicad_drc_breakdown": {
+      "total_violations": 8,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 4,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 7
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.992147+00:00",
+    "elapsed_seconds": 4.51,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ipod-serial-adapter_s1_ipod_serial",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 325299,
+      "sha256": "2fef6ab8e35703e712a68a4afec3782ce2c5bd174848ce2fd753f6c6b752c54a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 268198,
+      "sha256": "f7821cebe92c81f36dac78b5ff51ffbe078a9ee8b6ab6e46f988118c605593dd"
+    },
+    "metadata_json": {
+      "bytes": 529,
+      "sha256": "15b13e52c1479ca08db126fabdee83e2844ecb9f8edf14369b0cef101658aff3"
+    },
+    "final_json": {
+      "bytes": 101918,
+      "sha256": "ea6cbddfcbc52eae58cfff6834fd9d1543bfd2aebee35145cfdddf9f7dca035a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:59:30.852376+00:00"
+  }
+}

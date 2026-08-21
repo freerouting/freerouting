@@ -1,0 +1,31 @@
+{
+  "board": "xwhatits-capsense-controller_displaywriter-usb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\xwhatits-capsense-controller_displaywriter-usb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 69,
+  "segment_count": 827,
+  "approximate_track_length_mm": 2002.67,
+  "kicad_drc_violations": 464,
+  "generated_at": "2026-08-18T19:58:15.172657+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 464,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 184,
+      "copper_edge_clearance": 7,
+      "hole_clearance": 3,
+      "isolated_copper": 2,
+      "padstack": 2,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 193,
+      "silk_overlap": 4,
+      "text_height": 65
+    },
+    "by_severity": {
+      "error": 196,
+      "warning": 268
+    }
+  }
+}

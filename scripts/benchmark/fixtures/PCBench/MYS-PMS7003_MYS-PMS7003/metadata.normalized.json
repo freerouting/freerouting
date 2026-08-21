@@ -1,0 +1,66 @@
+{
+  "board_id": "MYS-PMS7003_MYS-PMS7003",
+  "display_name": "MYS-PMS7003_MYS-PMS7003",
+  "pcbench_directory": "PCBs/MYS-PMS7003_MYS-PMS7003",
+  "source": "https://github.com/dirkjankrijnders/MYS-PMS7003",
+  "author": "dirkjankrijnders",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.226183+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 107.0,
+      "height": 68.0
+    },
+    "area_cm2": 72.76,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 704,
+    "vias": 50,
+    "track_length_mm": 2253.47,
+    "kicad_drc_violations": 344,
+    "kicad_drc_breakdown": {
+      "total_violations": 344,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 13,
+        "clearance": 149,
+        "copper_edge_clearance": 58,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 43,
+        "npth_inside_courtyard": 1,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 26,
+        "silk_overlap": 23,
+        "solder_mask_bridge": 17,
+        "starved_thermal": 2,
+        "text_height": 1,
+        "track_dangling": 2,
+        "via_dangling": 2,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 243,
+        "warning": 101
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

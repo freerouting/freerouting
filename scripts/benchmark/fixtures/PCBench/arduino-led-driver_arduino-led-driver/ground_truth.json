@@ -1,0 +1,30 @@
+{
+  "board": "arduino-led-driver_arduino-led-driver",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\arduino-led-driver_arduino-led-driver\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 145,
+  "segment_count": 945,
+  "approximate_track_length_mm": 2099.36,
+  "kicad_drc_violations": 372,
+  "generated_at": "2026-08-18T18:29:02.213633+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 372,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 216,
+      "copper_edge_clearance": 7,
+      "holes_co_located": 1,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 118,
+      "silk_edge_clearance": 2,
+      "silk_overlap": 5,
+      "starved_thermal": 17,
+      "track_dangling": 5
+    },
+    "by_severity": {
+      "error": 241,
+      "warning": 131
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "board_id": "ezusb-logicanalyzer_cypress_logic_analyzer",
+  "display_name": "ezusb-logicanalyzer_cypress_logic_analyzer",
+  "pcbench_directory": "PCBs/ezusb-logicanalyzer_cypress_logic_analyzer",
+  "source": "https://github.com/ExplodingLemur/ezusb-logicanalyzer",
+  "author": "ExplodingLemur",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:31.889814+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 41,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 35.56,
+      "height": 40.64
+    },
+    "area_cm2": 14.45,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 110,
+    "vias": 4,
+    "track_length_mm": 428.21,
+    "kicad_drc_violations": 72,
+    "kicad_drc_breakdown": {
+      "total_violations": 72,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 40,
+        "lib_footprint_issues": 13,
+        "silk_edge_clearance": 18,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 40,
+        "warning": 32
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,30 @@
+{
+  "board": "Thremal-Printer_thermal printer",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Thremal-Printer_thermal printer\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 35,
+  "segment_count": 306,
+  "approximate_track_length_mm": 1118.28,
+  "kicad_drc_violations": 271,
+  "generated_at": "2026-08-18T19:52:12.290968+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 271,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 9,
+      "clearance": 219,
+      "copper_edge_clearance": 2,
+      "isolated_copper": 1,
+      "lib_footprint_issues": 17,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 2,
+      "silk_overlap": 16,
+      "starved_thermal": 2
+    },
+    "by_severity": {
+      "error": 232,
+      "warning": 39
+    }
+  }
+}

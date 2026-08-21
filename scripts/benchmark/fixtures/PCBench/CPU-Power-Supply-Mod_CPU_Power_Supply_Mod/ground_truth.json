@@ -1,0 +1,28 @@
+{
+  "board": "CPU-Power-Supply-Mod_CPU_Power_Supply_Mod",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\CPU-Power-Supply-Mod_CPU_Power_Supply_Mod\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 497,
+  "approximate_track_length_mm": 2624.24,
+  "kicad_drc_violations": 130,
+  "generated_at": "2026-08-18T18:39:43.415442+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 130,
+    "unconnected_count": 10,
+    "by_type": {
+      "clearance": 9,
+      "hole_clearance": 4,
+      "invalid_outline": 1,
+      "isolated_copper": 1,
+      "silk_overlap": 103,
+      "solder_mask_bridge": 4,
+      "text_height": 8
+    },
+    "by_severity": {
+      "error": 18,
+      "warning": 112
+    }
+  }
+}

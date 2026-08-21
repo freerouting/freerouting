@@ -1,0 +1,60 @@
+{
+  "board_id": "SIUSBSC_SIUSBSC",
+  "display_name": "SIUSBSC_SIUSBSC",
+  "pcbench_directory": "PCBs/SIUSBSC_SIUSBSC",
+  "source": "https://github.com/jcreedon/SIUSBSC",
+  "author": "jcreedon",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:26.313749+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 25.4
+    },
+    "area_cm2": 6.45,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 201,
+    "vias": 15,
+    "track_length_mm": 225.39,
+    "kicad_drc_violations": 152,
+    "kicad_drc_breakdown": {
+      "total_violations": 152,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 31,
+        "silk_over_copper": 40,
+        "solder_mask_bridge": 35,
+        "starved_thermal": 1,
+        "text_height": 27,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 52,
+        "warning": 100
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

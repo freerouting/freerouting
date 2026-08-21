@@ -1,0 +1,61 @@
+{
+  "board_id": "kitspace_Driverino-Shield",
+  "display_name": "kitspace_Driverino-Shield",
+  "pcbench_directory": "PCBs/kitspace_Driverino-Shield",
+  "source": "https://github.com/weirdgyn/Driverino-Shield",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/weirdgyn/Driverino-Shield/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:22:35.578430+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 58,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 102
+  },
+  "reference": {
+    "segments": 229,
+    "vias": 45,
+    "track_length_mm": 1022.64,
+    "kicad_drc_violations": 190,
+    "kicad_drc_breakdown": {
+      "total_violations": 190,
+      "unconnected_count": 3,
+      "by_type": {
+        "clearance": 101,
+        "copper_edge_clearance": 4,
+        "lib_footprint_issues": 23,
+        "lib_footprint_mismatch": 33,
+        "mirrored_text_on_front_layer": 1,
+        "silk_over_copper": 4,
+        "silk_overlap": 3,
+        "text_height": 16,
+        "track_dangling": 1,
+        "zones_intersect": 4
+      },
+      "by_severity": {
+        "error": 109,
+        "warning": 81
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,59 @@
+{
+  "board_id": "raspberrypi-3-usb-hub_usb_hub",
+  "display_name": "raspberrypi-3-usb-hub_usb_hub",
+  "pcbench_directory": "PCBs/raspberrypi-3-usb-hub_usb_hub",
+  "source": "https://github.com/ar13pit/raspberrypi-3-usb-hub",
+  "author": "ar13pit",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:34.101840+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 127.0,
+      "height": 60.96
+    },
+    "area_cm2": 77.42,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 66,
+    "vias": 0,
+    "track_length_mm": 473.31,
+    "kicad_drc_violations": 71,
+    "kicad_drc_breakdown": {
+      "total_violations": 71,
+      "unconnected_count": 40,
+      "by_type": {
+        "annular_width": 4,
+        "courtyards_overlap": 1,
+        "holes_co_located": 6,
+        "lib_footprint_issues": 21,
+        "pth_inside_courtyard": 2,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 10,
+        "silk_overlap": 7
+      },
+      "by_severity": {
+        "error": 7,
+        "warning": 64
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "domotics_power-supply",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 72680,
+      "sha256": "2607b00151856a805a1fea6462d9db8bc1a51fc68bb8c03d237752158ef83157"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 90381,
+      "sha256": "cd949d5c83335a3584a4abdba27e1a9195e9f2d5038b304917e7cec700161061"
+    },
+    "metadata_json": {
+      "bytes": 463,
+      "sha256": "f392fe6552759a9ca02b356ea2b420789d540020e0c7a1dc4fdedcb65c6cd56a"
+    },
+    "final_json": {
+      "bytes": 63034,
+      "sha256": "70a7e3584b7a5801a3c113fc96ba0f99428df262dd7fd1ab25b3bef541db4ddc"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:42:36.399677+00:00"
+  }
+}

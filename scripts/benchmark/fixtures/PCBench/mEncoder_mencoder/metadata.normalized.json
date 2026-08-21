@@ -1,0 +1,62 @@
+{
+  "board_id": "mEncoder_mencoder",
+  "display_name": "mEncoder_mencoder",
+  "pcbench_directory": "PCBs/mEncoder_mencoder",
+  "source": "https://github.com/biosafetylvl5/mEncoder",
+  "author": "biosafetylvl5",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:48.574011+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 14.73,
+      "height": 11.94
+    },
+    "area_cm2": 1.76,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 55,
+    "vias": 4,
+    "track_length_mm": 72.59,
+    "kicad_drc_violations": 32,
+    "kicad_drc_breakdown": {
+      "total_violations": 32,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 9,
+        "courtyards_overlap": 8,
+        "lib_footprint_issues": 9,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 1,
+        "via_diameter": 4
+      },
+      "by_severity": {
+        "error": 22,
+        "warning": 10
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.032099+00:00",
+    "elapsed_seconds": 8.64,
+    "unrouted_nets": 0,
+    "clearance_violations": 6,
+    "quality_score": 920.0
+  }
+}

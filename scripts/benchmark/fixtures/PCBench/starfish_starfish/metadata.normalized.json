@@ -1,0 +1,64 @@
+{
+  "board_id": "starfish_starfish",
+  "display_name": "starfish_starfish",
+  "pcbench_directory": "PCBs/starfish_starfish",
+  "source": "https://github.com/kevinmehall/starfish",
+  "author": "kevinmehall",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.058017+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 41,
+    "dimensions_mm": {
+      "width": 38.0,
+      "height": 24.0
+    },
+    "area_cm2": 9.12,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 723,
+    "vias": 80,
+    "track_length_mm": 971.96,
+    "kicad_drc_violations": 310,
+    "kicad_drc_breakdown": {
+      "total_violations": 310,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 147,
+        "copper_edge_clearance": 17,
+        "courtyards_overlap": 2,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 41,
+        "padstack": 4,
+        "silk_edge_clearance": 18,
+        "silk_over_copper": 66,
+        "silk_overlap": 5,
+        "starved_thermal": 2,
+        "track_dangling": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 173,
+        "warning": 137
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

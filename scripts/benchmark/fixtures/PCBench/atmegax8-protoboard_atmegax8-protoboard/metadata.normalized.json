@@ -1,0 +1,62 @@
+{
+  "board_id": "atmegax8-protoboard_atmegax8-protoboard",
+  "display_name": "atmegax8-protoboard_atmegax8-protoboard",
+  "pcbench_directory": "PCBs/atmegax8-protoboard_atmegax8-protoboard",
+  "source": "https://github.com/sgreg/atmegax8-protoboard",
+  "author": "sgreg",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.202065+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 21.34,
+      "height": 54.1
+    },
+    "area_cm2": 11.54,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 72,
+    "vias": 3,
+    "track_length_mm": 267.7,
+    "kicad_drc_violations": 103,
+    "kicad_drc_breakdown": {
+      "total_violations": 103,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 87,
+        "lib_footprint_issues": 7,
+        "silk_edge_clearance": 4,
+        "starved_thermal": 4,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 91,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.827918+00:00",
+    "elapsed_seconds": 10.25,
+    "unrouted_nets": 0,
+    "clearance_violations": 56,
+    "quality_score": 733.33
+  }
+}

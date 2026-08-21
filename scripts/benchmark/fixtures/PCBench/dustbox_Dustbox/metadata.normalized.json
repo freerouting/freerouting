@@ -1,0 +1,62 @@
+{
+  "board_id": "dustbox_Dustbox",
+  "display_name": "dustbox_Dustbox",
+  "pcbench_directory": "PCBs/dustbox_Dustbox",
+  "source": "https://github.com/citizensense/dustbox",
+  "author": "citizensense",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.521963+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 58.0,
+      "height": 58.0
+    },
+    "area_cm2": 33.64,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 46,
+    "vias": 0,
+    "track_length_mm": 283.02,
+    "kicad_drc_violations": 29,
+    "kicad_drc_breakdown": {
+      "total_violations": 29,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 5,
+        "lib_footprint_issues": 19,
+        "padstack": 5
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 24
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.900641+00:00",
+    "elapsed_seconds": 4.7,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

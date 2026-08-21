@@ -1,0 +1,61 @@
+{
+  "board_id": "MySRaspiGW_MySRaspiGW_PA_LNA",
+  "display_name": "MySRaspiGW_MySRaspiGW_PA_LNA",
+  "pcbench_directory": "PCBs/MySRaspiGW_MySRaspiGW_PA_LNA",
+  "source": "https://github.com/emc2cube/MySRaspiGW",
+  "author": "emc2cube",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.269960+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 11.5,
+      "height": 11.9
+    },
+    "area_cm2": 1.37,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 65,
+    "vias": 2,
+    "track_length_mm": 97.98,
+    "kicad_drc_violations": 30,
+    "kicad_drc_breakdown": {
+      "total_violations": 30,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 8,
+        "lib_footprint_issues": 5,
+        "malformed_courtyard": 3,
+        "silk_overlap": 2,
+        "text_height": 12
+      },
+      "by_severity": {
+        "error": 11,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.041297+00:00",
+    "elapsed_seconds": 14.83,
+    "unrouted_nets": 2,
+    "clearance_violations": 3,
+    "quality_score": 799.99
+  }
+}

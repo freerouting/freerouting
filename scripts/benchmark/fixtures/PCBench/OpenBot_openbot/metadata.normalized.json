@@ -1,0 +1,57 @@
+{
+  "board_id": "OpenBot_openbot",
+  "display_name": "OpenBot_openbot",
+  "pcbench_directory": "PCBs/OpenBot_openbot",
+  "source": "https://github.com/adnbr/OpenBot",
+  "author": "adnbr",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.954074+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 44.45,
+      "height": 53.34
+    },
+    "area_cm2": 23.71,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 259,
+    "vias": 18,
+    "track_length_mm": 803.02,
+    "kicad_drc_violations": 244,
+    "kicad_drc_breakdown": {
+      "total_violations": 244,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 128,
+        "copper_edge_clearance": 2,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 55,
+        "silk_overlap": 53,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 130,
+        "warning": 114
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

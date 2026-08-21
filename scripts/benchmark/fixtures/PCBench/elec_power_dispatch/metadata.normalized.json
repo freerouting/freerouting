@@ -1,0 +1,62 @@
+{
+  "board_id": "elec_power_dispatch",
+  "display_name": "elec_power_dispatch",
+  "pcbench_directory": "PCBs/elec_power_dispatch",
+  "source": "https://github.com/utcoupe/elec",
+  "author": "utcoupe",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.678153+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 58,
+    "components": 97,
+    "dimensions_mm": {
+      "width": 78.0,
+      "height": 63.5
+    },
+    "area_cm2": 49.53,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 487,
+    "vias": 29,
+    "track_length_mm": 1024.03,
+    "kicad_drc_violations": 266,
+    "kicad_drc_breakdown": {
+      "total_violations": 266,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 74,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 15,
+        "drill_out_of_range": 25,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 4,
+        "lib_footprint_mismatch": 85,
+        "silk_edge_clearance": 40,
+        "silk_over_copper": 3,
+        "silk_overlap": 5,
+        "text_height": 10
+      },
+      "by_severity": {
+        "error": 119,
+        "warning": 147
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

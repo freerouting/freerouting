@@ -1,0 +1,64 @@
+{
+  "board_id": "shieldfoxuino_sigfoxuino",
+  "display_name": "shieldfoxuino_sigfoxuino",
+  "pcbench_directory": "PCBs/shieldfoxuino_sigfoxuino",
+  "source": "https://github.com/minbiocabanon/shieldfoxuino",
+  "author": "minbiocabanon",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.398079+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 45,
+    "dimensions_mm": {
+      "width": 68.99,
+      "height": 53.52
+    },
+    "area_cm2": 36.92,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 335,
+    "vias": 90,
+    "track_length_mm": 1198.41,
+    "kicad_drc_violations": 730,
+    "kicad_drc_breakdown": {
+      "total_violations": 730,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 188,
+        "copper_edge_clearance": 2,
+        "invalid_outline": 10,
+        "padstack": 4,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 117,
+        "silk_overlap": 54,
+        "solder_mask_bridge": 201,
+        "starved_thermal": 2,
+        "text_height": 48,
+        "track_dangling": 1,
+        "via_diameter": 90
+      },
+      "by_severity": {
+        "error": 497,
+        "warning": 233
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

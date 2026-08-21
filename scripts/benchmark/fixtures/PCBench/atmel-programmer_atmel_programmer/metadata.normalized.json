@@ -1,0 +1,53 @@
+{
+  "board_id": "atmel-programmer_atmel_programmer",
+  "display_name": "atmel-programmer_atmel_programmer",
+  "pcbench_directory": "PCBs/atmel-programmer_atmel_programmer",
+  "source": "https://github.com/stackmagic/atmel-programmer",
+  "author": "stackmagic",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:32.405821+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 71,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 76.2,
+      "height": 58.42
+    },
+    "area_cm2": 44.52,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 107,
+    "vias": 5,
+    "track_length_mm": 785.58,
+    "kicad_drc_violations": 334,
+    "kicad_drc_breakdown": {
+      "total_violations": 334,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 322,
+        "lib_footprint_issues": 12
+      },
+      "by_severity": {
+        "error": 322,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

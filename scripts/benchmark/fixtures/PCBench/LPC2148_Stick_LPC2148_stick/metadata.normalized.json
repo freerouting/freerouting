@@ -1,0 +1,59 @@
+{
+  "board_id": "LPC2148_Stick_LPC2148_stick",
+  "display_name": "LPC2148_Stick_LPC2148_stick",
+  "pcbench_directory": "PCBs/LPC2148_Stick_LPC2148_stick",
+  "source": "https://github.com/ExploreEmbedded/LPC2148_Stick",
+  "author": "ExploreEmbedded",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:26.373749+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 63,
+    "components": 73,
+    "dimensions_mm": {
+      "width": 132.0,
+      "height": 51.0
+    },
+    "area_cm2": 67.32,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1915,
+    "vias": 116,
+    "track_length_mm": 5513.91,
+    "kicad_drc_violations": 726,
+    "kicad_drc_breakdown": {
+      "total_violations": 726,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 257,
+        "copper_edge_clearance": 9,
+        "lib_footprint_issues": 73,
+        "silk_over_copper": 199,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 74,
+        "text_height": 69,
+        "track_dangling": 40
+      },
+      "by_severity": {
+        "error": 340,
+        "warning": 386
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

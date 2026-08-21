@@ -1,0 +1,26 @@
+{
+  "board": "hackyflasher_Flasher",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\hackyflasher_Flasher\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 54,
+  "approximate_track_length_mm": 669.45,
+  "kicad_drc_violations": 135,
+  "generated_at": "2026-08-18T18:51:51.238716+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 135,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 55,
+      "lib_footprint_issues": 14,
+      "silk_over_copper": 60,
+      "silk_overlap": 5,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 55,
+      "warning": 80
+    }
+  }
+}

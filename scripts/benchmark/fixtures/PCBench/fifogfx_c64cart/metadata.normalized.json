@@ -1,0 +1,55 @@
+{
+  "board_id": "fifogfx_c64cart",
+  "display_name": "fifogfx_c64cart",
+  "pcbench_directory": "PCBs/fifogfx_c64cart",
+  "source": "https://github.com/MagerValp/fifogfx",
+  "author": "MagerValp",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:22.605705+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 58.42,
+      "height": 80.01
+    },
+    "area_cm2": 46.74,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 323,
+    "vias": 0,
+    "track_length_mm": 3209.52,
+    "kicad_drc_violations": 151,
+    "kicad_drc_breakdown": {
+      "total_violations": 151,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 6,
+        "padstack": 44,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 15,
+        "solder_mask_bridge": 84
+      },
+      "by_severity": {
+        "error": 84,
+        "warning": 67
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

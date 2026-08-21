@@ -63,1743 +63,188 @@
         <h2>Benchmarks</h2>
         <!-- BENCHMARK_TABLE_START -->
         <div class='benchmark-container'>
-          <div class='benchmark-report-info'>Generated on: 2026-08-18 00:06:19 &middot; System: AMD Ryzen 5 3600 6-Core Processor (6 Cores, 31.9 GB RAM)</div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm01.dsn</h3>
-            <p class='fixture-meta'>Size: 30.5 kB  &middot;  Layers: 2  &middot;  Nets: 99  &middot;  Components: 20  &middot;  Dimensions: 101.6 x 53.3 mm (54.2 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+          <div class='benchmark-report-info'>Generated on: 2026-08-21 11:04:03 &middot; System:  ( Cores,  GB RAM)</div>
+          <div class='summary-section' style='margin-bottom: 24px;'>
+            <h3 class='fixture-title' style='margin-bottom: 4px;'>Summary Table (All Tiers Combined)</h3>
+            <p class='fixture-meta' style='margin-bottom: 12px;'>Comprehensive performance across all benchmark fixtures.</p>
             <table class='benchmark-table'>
               <thead>
                 <tr class='header-row'>
                   <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
+                  <th>Fixtures</th>
+                  <th>Clean (0 DRC)</th>
+                  <th>Fully-Routed</th>
+                  <th>Timeouts</th>
+                  <th>Failures</th>
+                  <th>Avg. Score</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>1229.46</td>
-                  <td class='text-right'>20+10+18</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>229</td>
-                  <td class='text-right'>42 / 0</td>
+                <tr>
+                  <td><strong>1.9.0</strong></td>
+                  <td>1157</td>
+                  <td>419/1157 (36.2%)</td>
+                  <td>578/1157 (50%)</td>
+                  <td>0/1157 (0%)</td>
+                  <td>3/1157 (0.3%)</td>
+                  <td><strong>968.1</strong></td>
                 </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>89.24</td>
-                  <td class='text-right'>0+18+4</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>1709</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>264.84</td>
-                  <td class='text-right'>4+21+1</td>
-                  <td class='text-right'>4</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>979</td>
-                  <td class='text-right'>920</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>416.30</td>
-                  <td class='text-right'>4+36+1</td>
-                  <td class='text-right'>4</td>
-                  <td class='text-right'>20</td>
-                  <td class='text-right'>979</td>
-                  <td class='text-right'>1249</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>337.37</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>5</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>974</td>
-                  <td class='text-right'>978</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>458.38</td>
-                  <td class='text-right'>4+36+1</td>
-                  <td class='text-right'>4</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>979</td>
-                  <td class='text-right'>1175</td>
-                  <td class='text-right'>4 / 0</td>
+                <tr>
+                  <td><strong>v2.3.1-SNAPSHOT</strong></td>
+                  <td>1157</td>
+                  <td>358/1157 (30.9%)</td>
+                  <td>598/1157 (51.7%)</td>
+                  <td>0/1157 (0%)</td>
+                  <td>0/1157 (0%)</td>
+                  <td>925.5</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm02.dsn</h3>
-            <p class='fixture-meta'>Size: 79.7 kB  &middot;  Layers: 2  &middot;  Nets: 34  &middot;  Components: 13  &middot;  Dimensions: 50.8 x 22.9 mm (11.6 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+          <div class='summary-section' style='margin-bottom: 24px;'>
+            <h3 class='fixture-title' style='margin-bottom: 4px;'>Tier A: Canary Gate</h3>
+            <p class='fixture-meta' style='margin-bottom: 12px;'>Fast-solving 2-layer boards (0 unrouted, 0 clearance violations expected).</p>
             <table class='benchmark-table'>
               <thead>
                 <tr class='header-row'>
                   <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
+                  <th>Fixtures</th>
+                  <th>Clean (0 DRC)</th>
+                  <th>Fully-Routed</th>
+                  <th>Timeouts</th>
+                  <th>Failures</th>
+                  <th>Avg. Score</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>37.06</td>
-                  <td class='text-right'>20+4+13</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>157</td>
-                  <td class='text-right'>0 / 0</td>
+                <tr>
+                  <td><strong>1.9.0</strong></td>
+                  <td>169</td>
+                  <td>136/169 (80.5%)</td>
+                  <td>139/169 (82.2%)</td>
+                  <td>0/169 (0%)</td>
+                  <td>0/169 (0%)</td>
+                  <td>990.8</td>
                 </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>7.99</td>
-                  <td class='text-right'>0+6+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>1573</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.63</td>
-                  <td class='text-right'>7+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>456</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.81</td>
-                  <td class='text-right'>7+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>4</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>508</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.22</td>
-                  <td class='text-right'>7+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>492</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.95</td>
-                  <td class='text-right'>7+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>496</td>
-                  <td class='text-right'>2 / 0</td>
+                <tr>
+                  <td><strong>v2.3.1-SNAPSHOT</strong></td>
+                  <td>169</td>
+                  <td>169/169 (100%)</td>
+                  <td>169/169 (100%)</td>
+                  <td>0/169 (0%)</td>
+                  <td>0/169 (0%)</td>
+                  <td><strong>1000.0</strong></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm04.dsn</h3>
-            <p class='fixture-meta'>Size: 27 kB  &middot;  Layers: 16  &middot;  Nets: 80  &middot;  Components: 16  &middot;  Dimensions: 43.9 x 35.1 mm (15.4 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+          <div class='summary-section' style='margin-bottom: 24px;'>
+            <h3 class='fixture-title' style='margin-bottom: 4px;'>Tier B: Routine Benchmarks</h3>
+            <p class='fixture-meta' style='margin-bottom: 12px;'>Standard 2-4 layer boards evaluated for routine optimization progress.</p>
             <table class='benchmark-table'>
               <thead>
                 <tr class='header-row'>
                   <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
+                  <th>Fixtures</th>
+                  <th>Clean (0 DRC)</th>
+                  <th>Fully-Routed</th>
+                  <th>Timeouts</th>
+                  <th>Failures</th>
+                  <th>Avg. Score</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>1814.20</td>
-                  <td class='text-right'>20+24+3</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>986</td>
-                  <td class='text-right'>293</td>
-                  <td class='text-right'>2 / 0</td>
+                <tr>
+                  <td><strong>1.9.0</strong></td>
+                  <td>844</td>
+                  <td>260/844 (30.8%)</td>
+                  <td>400/844 (47.4%)</td>
+                  <td>0/844 (0%)</td>
+                  <td>2/844 (0.2%)</td>
+                  <td><strong>966.2</strong></td>
                 </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>117.60</td>
-                  <td class='text-right'>0+18+2</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>986</td>
-                  <td class='text-right'>1951</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>559.66</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>3</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>979</td>
-                  <td class='text-right'>1754</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>533.39</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>3</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>979</td>
-                  <td class='text-right'>1655</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>633.15</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>3</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>979</td>
-                  <td class='text-right'>1597</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>602.62</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>3</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>979</td>
-                  <td class='text-right'>1544</td>
-                  <td class='text-right'>2 / 0</td>
+                <tr>
+                  <td><strong>v2.3.1-SNAPSHOT</strong></td>
+                  <td>844</td>
+                  <td>171/844 (20.3%)</td>
+                  <td>391/844 (46.3%)</td>
+                  <td>0/844 (0%)</td>
+                  <td>0/844 (0%)</td>
+                  <td>915.3</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm05.dsn</h3>
-            <p class='fixture-meta'>Size: 16.8 kB  &middot;  Layers: 2  &middot;  Nets: 54  &middot;  Components: 9  &middot;  Dimensions: 40 x 41 mm (16.4 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+          <div class='summary-section' style='margin-bottom: 24px;'>
+            <h3 class='fixture-title' style='margin-bottom: 4px;'>Tier C: Complex / Multi-Layer</h3>
+            <p class='fixture-meta' style='margin-bottom: 12px;'>Dense and 6+ layer boards requiring deeper pathfinding.</p>
             <table class='benchmark-table'>
               <thead>
                 <tr class='header-row'>
                   <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
+                  <th>Fixtures</th>
+                  <th>Clean (0 DRC)</th>
+                  <th>Fully-Routed</th>
+                  <th>Timeouts</th>
+                  <th>Failures</th>
+                  <th>Avg. Score</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>1800.93</td>
-                  <td class='text-right'>20+33+4</td>
-                  <td class='text-right'>37</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>589</td>
-                  <td class='text-right'>164</td>
-                  <td class='text-right'>42 / 0</td>
+                <tr>
+                  <td><strong>1.9.0</strong></td>
+                  <td>122</td>
+                  <td>21/122 (17.2%)</td>
+                  <td>32/122 (26.2%)</td>
+                  <td>0/122 (0%)</td>
+                  <td>1/122 (0.8%)</td>
+                  <td><strong>947.1</strong></td>
                 </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>73.25</td>
-                  <td class='text-right'>0+22+2</td>
-                  <td class='text-right'>37</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>570</td>
-                  <td class='text-right'>1666</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>141.26</td>
-                  <td class='text-right'>7+18+1</td>
-                  <td class='text-right'>22</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>785</td>
-                  <td class='text-right'>705</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>140.03</td>
-                  <td class='text-right'>7+18+1</td>
-                  <td class='text-right'>22</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>785</td>
-                  <td class='text-right'>657</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>160.07</td>
-                  <td class='text-right'>7+18+1</td>
-                  <td class='text-right'>22</td>
-                  <td class='text-right'>7</td>
-                  <td class='text-right'>785</td>
-                  <td class='text-right'>580</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>142.23</td>
-                  <td class='text-right'>7+18+1</td>
-                  <td class='text-right'>22</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>785</td>
-                  <td class='text-right'>640</td>
-                  <td class='text-right'>2 / 0</td>
+                <tr>
+                  <td><strong>v2.3.1-SNAPSHOT</strong></td>
+                  <td>122</td>
+                  <td>18/122 (14.8%)</td>
+                  <td>34/122 (27.9%)</td>
+                  <td>0/122 (0%)</td>
+                  <td>0/122 (0%)</td>
+                  <td>896.2</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm06.dsn</h3>
-            <p class='fixture-meta'>Size: 22.9 kB  &middot;  Layers: 2  &middot;  Nets: 38  &middot;  Components: 13  &middot;  Dimensions: 55 x 28 mm (15.4 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
+          <div class='summary-section' style='margin-bottom: 24px;'>
+            <h3 class='fixture-title' style='margin-bottom: 4px;'>Tier D: Extreme Stress / Diagnostic</h3>
+            <p class='fixture-meta' style='margin-bottom: 12px;'>High net-count and large surface-area stress boards.</p>
             <table class='benchmark-table'>
               <thead>
                 <tr class='header-row'>
                   <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
+                  <th>Fixtures</th>
+                  <th>Clean (0 DRC)</th>
+                  <th>Fully-Routed</th>
+                  <th>Timeouts</th>
+                  <th>Failures</th>
+                  <th>Avg. Score</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>1377.45</td>
-                  <td class='text-right'>20+23+5</td>
-                  <td class='text-right'>8</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>892</td>
-                  <td class='text-right'>155</td>
-                  <td class='text-right'>5 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>25.15</td>
-                  <td class='text-right'>0+18+2</td>
-                  <td class='text-right'>8</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>882</td>
-                  <td class='text-right'>1611</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>33.69</td>
-                  <td class='text-right'>5+18+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>963</td>
-                  <td class='text-right'>627</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>33.05</td>
-                  <td class='text-right'>5+18+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>8</td>
-                  <td class='text-right'>963</td>
-                  <td class='text-right'>628</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>35.41</td>
-                  <td class='text-right'>5+18+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>8</td>
-                  <td class='text-right'>963</td>
-                  <td class='text-right'>598</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>34.61</td>
-                  <td class='text-right'>5+18+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>963</td>
-                  <td class='text-right'>653</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm07.dsn</h3>
-            <p class='fixture-meta'>Size: 14.9 kB  &middot;  Layers: 2  &middot;  Nets: 52  &middot;  Components: 13  &middot;  Dimensions: 22 x 60 mm (13.2 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>40.13</td>
-                  <td class='text-right'>2+5+10</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>159</td>
-                  <td class='text-right'>0 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>44.52</td>
-                  <td class='text-right'>0+9+3</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>1574</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>17.61</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>3</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>965</td>
-                  <td class='text-right'>548</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>17.10</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>3</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>965</td>
-                  <td class='text-right'>505</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>19.18</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>3</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>965</td>
-                  <td class='text-right'>594</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>16.78</td>
-                  <td class='text-right'>4+22+1</td>
-                  <td class='text-right'>3</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>965</td>
-                  <td class='text-right'>581</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm08.dsn</h3>
-            <p class='fixture-meta'>Size: 5.5 kB  &middot;  Layers: 2  &middot;  Nets: 15  &middot;  Components: 4  &middot;  Dimensions: 20.5 x 13.9 mm (2.8 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>1.16</td>
-                  <td class='text-right'>2+0+2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>133</td>
-                  <td class='text-right'>0 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.23</td>
-                  <td class='text-right'>0+2+2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>1481</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1.26</td>
-                  <td class='text-right'>2+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>185</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1.23</td>
-                  <td class='text-right'>2+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>435</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1.36</td>
-                  <td class='text-right'>2+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>185</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1.21</td>
-                  <td class='text-right'>2+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>185</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm09.dsn</h3>
-            <p class='fixture-meta'>Size: 25.1 kB  &middot;  Layers: 16  &middot;  Nets: 70  &middot;  Components: 13  &middot;  Dimensions: 56.4 x 86.4 mm (48.7 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>16.07</td>
-                  <td class='text-right'>0+2+2</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>991</td>
-                  <td class='text-right'>125</td>
-                  <td class='text-right'>0 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>24.38</td>
-                  <td class='text-right'>0+2+2</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>983</td>
-                  <td class='text-right'>1539</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>15.04</td>
-                  <td class='text-right'>0+18+0</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>991</td>
-                  <td class='text-right'>429</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>12.69</td>
-                  <td class='text-right'>0+18+0</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>991</td>
-                  <td class='text-right'>445</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>12.42</td>
-                  <td class='text-right'>0+18+0</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>991</td>
-                  <td class='text-right'>404</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>13.33</td>
-                  <td class='text-right'>0+18+0</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>991</td>
-                  <td class='text-right'>393</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm10.dsn</h3>
-            <p class='fixture-meta'>Size: 31.3 kB  &middot;  Layers: 4  &middot;  Nets: 63  &middot;  Components: 21  &middot;  Dimensions: 86 x 71.5 mm (61.5 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>389.67</td>
-                  <td class='text-right'>20+3+5</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>438</td>
-                  <td class='text-right'>7 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>28.31</td>
-                  <td class='text-right'>0+6+3</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>2007</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>81.83</td>
-                  <td class='text-right'>12+4+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>784</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>66.17</td>
-                  <td class='text-right'>12+4+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>8</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>840</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>75.84</td>
-                  <td class='text-right'>12+4+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>861</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>74.56</td>
-                  <td class='text-right'>12+4+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>822</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>DAC2020_boards / DAC2020_bm11.dsn</h3>
-            <p class='fixture-meta'>Size: 26.2 kB  &middot;  Layers: 4  &middot;  Nets: 35  &middot;  Components: 21  &middot;  Dimensions: 58 x 59.5 mm (34.5 cm²)  &middot;  CAD: KiCad's Pcbnew (v9.0.6)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>1785.41</td>
-                  <td class='text-right'>20+25+9</td>
-                  <td class='text-right'>6</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>919</td>
-                  <td class='text-right'>320</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>37.13</td>
-                  <td class='text-right'>0+18+2</td>
-                  <td class='text-right'>7</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>900</td>
-                  <td class='text-right'>1678</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>98.47</td>
-                  <td class='text-right'>3+18+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>987</td>
-                  <td class='text-right'>754</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>94.09</td>
-                  <td class='text-right'>3+18+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>987</td>
-                  <td class='text-right'>669</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>105.42</td>
-                  <td class='text-right'>3+18+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>987</td>
-                  <td class='text-right'>694</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>92.70</td>
-                  <td class='text-right'>3+18+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>987</td>
-                  <td class='text-right'>771</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / CM5_MINIMA_3.dsn</h3>
-            <p class='fixture-meta'>Size: 146.8 kB  &middot;  Layers: 6  &middot;  Nets: 220  &middot;  Components: 51  &middot;  Dimensions: 61.2 x 64.2 mm (39.3 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>280.28</td>
-                  <td class='text-right'>20+5+3</td>
-                  <td class='text-right'>4</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>971</td>
-                  <td class='text-right'>247</td>
-                  <td class='text-right'>23 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>175.07</td>
-                  <td class='text-right'>0+20+2</td>
-                  <td class='text-right'>6</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>954</td>
-                  <td class='text-right'>2018</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3569.28</td>
-                  <td class='text-right'>5+1+0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>896</td>
-                  <td class='text-right'>1433</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1190.39</td>
-                  <td class='text-right'>5+5+0</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>29</td>
-                  <td class='text-right'>974</td>
-                  <td class='text-right'>908</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1308.97</td>
-                  <td class='text-right'>5+5+0</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>29</td>
-                  <td class='text-right'>974</td>
-                  <td class='text-right'>768</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3564.51</td>
-                  <td class='text-right'>5+1+0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1423</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / complex_hierarchy.dsn</h3>
-            <p class='fixture-meta'>Size: 53.3 kB  &middot;  Layers: 2  &middot;  Nets: 52  &middot;  Components: 21  &middot;  Dimensions: 100.7 x 80 mm (80.6 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>74.30</td>
-                  <td class='text-right'>0+27+2</td>
-                  <td class='text-right'>6</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>938</td>
-                  <td class='text-right'>92</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>15.74</td>
-                  <td class='text-right'>0+7+2</td>
-                  <td class='text-right'>8</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>912</td>
-                  <td class='text-right'>1585</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>17.25</td>
-                  <td class='text-right'>0+18+1</td>
-                  <td class='text-right'>9</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>911</td>
-                  <td class='text-right'>547</td>
-                  <td class='text-right'>4 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>15.80</td>
-                  <td class='text-right'>0+18+1</td>
-                  <td class='text-right'>9</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>911</td>
-                  <td class='text-right'>616</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>16.86</td>
-                  <td class='text-right'>0+18+1</td>
-                  <td class='text-right'>9</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>911</td>
-                  <td class='text-right'>616</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>15.30</td>
-                  <td class='text-right'>0+18+1</td>
-                  <td class='text-right'>9</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>911</td>
-                  <td class='text-right'>611</td>
-                  <td class='text-right'>4 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / ecc83-pp.dsn</h3>
-            <p class='fixture-meta'>Size: 34.8 kB  &middot;  Layers: 2  &middot;  Nets: 13  &middot;  Components: 9  &middot;  Dimensions: 52.1 x 46.4 mm (24.2 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>0.68</td>
-                  <td class='text-right'>0+1+2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>78</td>
-                  <td class='text-right'>0 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>2.24</td>
-                  <td class='text-right'>0+2+2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>1586</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>0.46</td>
-                  <td class='text-right'>0+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>103</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>0.37</td>
-                  <td class='text-right'>0+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>107</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>0.39</td>
-                  <td class='text-right'>0+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>107</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>0.36</td>
-                  <td class='text-right'>0+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>103</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / ecc83-pp_v2.dsn</h3>
-            <p class='fixture-meta'>Size: 38.2 kB  &middot;  Layers: 2  &middot;  Nets: 13  &middot;  Components: 9  &middot;  Dimensions: 48.3 x 41.9 mm (20.2 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>1.02</td>
-                  <td class='text-right'>0+1+2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>771</td>
-                  <td class='text-right'>143</td>
-                  <td class='text-right'>14 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.58</td>
-                  <td class='text-right'>0+2+2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>771</td>
-                  <td class='text-right'>1686</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1.24</td>
-                  <td class='text-right'>0+2+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>771</td>
-                  <td class='text-right'>659</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1.06</td>
-                  <td class='text-right'>0+2+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>24</td>
-                  <td class='text-right'>771</td>
-                  <td class='text-right'>215</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1.05</td>
-                  <td class='text-right'>0+2+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>24</td>
-                  <td class='text-right'>771</td>
-                  <td class='text-right'>151</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>1.20</td>
-                  <td class='text-right'>0+2+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>771</td>
-                  <td class='text-right'>675</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / interf_u.dsn</h3>
-            <p class='fixture-meta'>Size: 67.6 kB  &middot;  Layers: 2  &middot;  Nets: 173  &middot;  Components: 19  &middot;  Dimensions: 115.6 x 108.2 mm (125.1 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>254.82</td>
-                  <td class='text-right'>20+28+9</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>938</td>
-                  <td class='text-right'>121</td>
-                  <td class='text-right'>13 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>67.81</td>
-                  <td class='text-right'>0+21+2</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>928</td>
-                  <td class='text-right'>1642</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>192.57</td>
-                  <td class='text-right'>7+19+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>938</td>
-                  <td class='text-right'>744</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>167.31</td>
-                  <td class='text-right'>7+19+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>62</td>
-                  <td class='text-right'>938</td>
-                  <td class='text-right'>711</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>335.79</td>
-                  <td class='text-right'>7+19+2</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>62</td>
-                  <td class='text-right'>938</td>
-                  <td class='text-right'>641</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>176.39</td>
-                  <td class='text-right'>7+19+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>938</td>
-                  <td class='text-right'>622</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / multichannel_mixer.dsn</h3>
-            <p class='fixture-meta'>Size: 49.2 kB  &middot;  Layers: 2  &middot;  Nets: 80  &middot;  Components: 15  &middot;  Dimensions: 110 x 111 mm (122.1 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>8.58</td>
-                  <td class='text-right'>1+2+2</td>
-                  <td class='text-right'>75</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>212</td>
-                  <td class='text-right'>265</td>
-                  <td class='text-right'>0 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>68.98</td>
-                  <td class='text-right'>0+18+2</td>
-                  <td class='text-right'>75</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>202</td>
-                  <td class='text-right'>1318</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>96.27</td>
-                  <td class='text-right'>2+18+1</td>
-                  <td class='text-right'>75</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>212</td>
-                  <td class='text-right'>422</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>97.33</td>
-                  <td class='text-right'>2+18+1</td>
-                  <td class='text-right'>75</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>212</td>
-                  <td class='text-right'>416</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>105.93</td>
-                  <td class='text-right'>2+18+1</td>
-                  <td class='text-right'>75</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>212</td>
-                  <td class='text-right'>421</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>85.15</td>
-                  <td class='text-right'>2+18+1</td>
-                  <td class='text-right'>75</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>212</td>
-                  <td class='text-right'>499</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / multichannel_mixer-unrouted.dsn</h3>
-            <p class='fixture-meta'>Size: 62 kB  &middot;  Layers: 2  &middot;  Nets: 224  &middot;  Components: 15  &middot;  Dimensions: 110 x 111 mm (122.1 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>0+0+0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>20.16</td>
-                  <td class='text-right'>0+2+2</td>
-                  <td class='text-right'>59</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1124</td>
-                  <td class='text-right'>22 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>370.80</td>
-                  <td class='text-right'>2+18+1</td>
-                  <td class='text-right'>59</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>592</td>
-                  <td class='text-right'>8 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>187.23</td>
-                  <td class='text-right'>2+18+1</td>
-                  <td class='text-right'>59</td>
-                  <td class='text-right'>612</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>632</td>
-                  <td class='text-right'>4 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>208.01</td>
-                  <td class='text-right'>2+18+1</td>
-                  <td class='text-right'>59</td>
-                  <td class='text-right'>612</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>496</td>
-                  <td class='text-right'>4 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>300.64</td>
-                  <td class='text-right'>2+18+1</td>
-                  <td class='text-right'>59</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>701</td>
-                  <td class='text-right'>8 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / pic_programmer.dsn</h3>
-            <p class='fixture-meta'>Size: 104.2 kB  &middot;  Layers: 2  &middot;  Nets: 111  &middot;  Components: 29  &middot;  Dimensions: 160 x 99.1 mm (158.6 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>7.04</td>
-                  <td class='text-right'>20+2+2</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>959</td>
-                  <td class='text-right'>166</td>
-                  <td class='text-right'>0 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>18.19</td>
-                  <td class='text-right'>0+2+2</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>983</td>
-                  <td class='text-right'>1537</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.71</td>
-                  <td class='text-right'>2+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>998</td>
-                  <td class='text-right'>425</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.32</td>
-                  <td class='text-right'>2+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>998</td>
-                  <td class='text-right'>330</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.76</td>
-                  <td class='text-right'>2+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1</td>
-                  <td class='text-right'>998</td>
-                  <td class='text-right'>418</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>3.32</td>
-                  <td class='text-right'>2+2+0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>998</td>
-                  <td class='text-right'>414</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / sonde xilinx.dsn</h3>
-            <p class='fixture-meta'>Size: 30.8 kB  &middot;  Layers: 2  &middot;  Nets: 42  &middot;  Components: 10  &middot;  Dimensions: 80.4 x 43.2 mm (34.7 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>5.34</td>
-                  <td class='text-right'>1+1+4</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>163</td>
-                  <td class='text-right'>66 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>0+0+0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>12 / 6</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>10.89</td>
-                  <td class='text-right'>3+2+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>697</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>9.06</td>
-                  <td class='text-right'>3+2+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>299</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>10.14</td>
-                  <td class='text-right'>3+2+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>488</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>9.68</td>
-                  <td class='text-right'>3+2+1</td>
-                  <td class='text-right'>0</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>1000</td>
-                  <td class='text-right'>380</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class='fixture-section'>
-            <h3 class='fixture-title'>KiCad_10_demos / StickHub.dsn</h3>
-            <p class='fixture-meta'>Size: 83.4 kB  &middot;  Layers: 2  &middot;  Nets: 47  &middot;  Components: 58  &middot;  Dimensions: 16.5 x 40 mm (6.6 cm²)  &middot;  CAD: KiCad's Pcbnew (v10.0.2)</p>
-            <table class='benchmark-table'>
-              <thead>
-                <tr class='header-row'>
-                  <th>Version</th>
-                  <th>Mode</th>
-                  <th>Total Time (s)</th>
-                  <th>Passes</th>
-                  <th>Unrouted</th>
-                  <th>Violations</th>
-                  <th>Score</th>
-                  <th>Peak Heap (MB)</th>
-                  <th>Warn/Err</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class='data-row'>
-                  <td>1.9.0</td>
-                  <td>GUI</td>
-                  <td class='text-right'>768.56</td>
-                  <td class='text-right'>20+29+9</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>990</td>
-                  <td class='text-right'>208</td>
-                  <td class='text-right'>44 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.2.4</td>
-                  <td>CLI</td>
-                  <td class='text-right'>49.85</td>
-                  <td class='text-right'>0+18+2</td>
-                  <td class='text-right'>5</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>977</td>
-                  <td class='text-right'>1623</td>
-                  <td class='text-right'>16 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>2.3.0</td>
-                  <td>CLI</td>
-                  <td class='text-right'>310.68</td>
-                  <td class='text-right'>20+29+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>990</td>
-                  <td class='text-right'>569</td>
-                  <td class='text-right'>2 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/naming-and-packages</td>
-                  <td>CLI</td>
-                  <td class='text-right'>170.53</td>
-                  <td class='text-right'>20+29+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>5</td>
-                  <td class='text-right'>990</td>
-                  <td class='text-right'>619</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>refactor/restructure</td>
-                  <td>CLI</td>
-                  <td class='text-right'>182.42</td>
-                  <td class='text-right'>20+29+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>5</td>
-                  <td class='text-right'>990</td>
-                  <td class='text-right'>522</td>
-                  <td class='text-right'>1 / 0</td>
-                </tr>
-                <tr class='data-row'>
-                  <td>soc-gui-separation-and-accessibility</td>
-                  <td>CLI</td>
-                  <td class='text-right'>283.84</td>
-                  <td class='text-right'>20+29+1</td>
-                  <td class='text-right'>2</td>
-                  <td class='text-right'>N/A</td>
-                  <td class='text-right'>990</td>
-                  <td class='text-right'>624</td>
-                  <td class='text-right'>2 / 0</td>
+                <tr>
+                  <td><strong>1.9.0</strong></td>
+                  <td>22</td>
+                  <td>2/22 (9.1%)</td>
+                  <td>7/22 (31.8%)</td>
+                  <td>0/22 (0%)</td>
+                  <td>0/22 (0%)</td>
+                  <td><strong>982.7</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>v2.3.1-SNAPSHOT</strong></td>
+                  <td>22</td>
+                  <td>0/22 (0%)</td>
+                  <td>4/22 (18.2%)</td>
+                  <td>0/22 (0%)</td>
+                  <td>0/22 (0%)</td>
+                  <td>907.4</td>
                 </tr>
               </tbody>
             </table>

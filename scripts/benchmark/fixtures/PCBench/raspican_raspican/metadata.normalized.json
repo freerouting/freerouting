@@ -1,0 +1,55 @@
+{
+  "board_id": "raspican_raspican",
+  "display_name": "raspican_raspican",
+  "pcbench_directory": "PCBs/raspican_raspican",
+  "source": "https://github.com/jerkey/raspican",
+  "author": "jerkey",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.366091+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 32,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 56.0
+    },
+    "area_cm2": 47.6,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 115,
+    "vias": 5,
+    "track_length_mm": 511.89,
+    "kicad_drc_violations": 80,
+    "kicad_drc_breakdown": {
+      "total_violations": 80,
+      "unconnected_count": 15,
+      "by_type": {
+        "copper_edge_clearance": 6,
+        "courtyards_overlap": 13,
+        "lib_footprint_issues": 21,
+        "silk_edge_clearance": 13,
+        "silk_overlap": 27
+      },
+      "by_severity": {
+        "error": 19,
+        "warning": 61
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

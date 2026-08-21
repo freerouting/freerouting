@@ -1,0 +1,29 @@
+{
+  "board": "yamsek.kicad_i2c_bridge_secondary",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\yamsek.kicad_i2c_bridge_secondary\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 84,
+  "approximate_track_length_mm": 130.53,
+  "kicad_drc_violations": 73,
+  "generated_at": "2026-08-18T19:58:40.460514+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 73,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 18,
+      "copper_edge_clearance": 6,
+      "lib_footprint_issues": 14,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 6,
+      "silk_overlap": 9,
+      "solder_mask_bridge": 3,
+      "text_height": 11
+    },
+    "by_severity": {
+      "error": 27,
+      "warning": 46
+    }
+  }
+}

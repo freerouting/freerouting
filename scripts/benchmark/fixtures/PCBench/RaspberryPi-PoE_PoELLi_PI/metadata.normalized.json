@@ -1,0 +1,60 @@
+{
+  "board_id": "RaspberryPi-PoE_PoELLi_PI",
+  "display_name": "RaspberryPi-PoE_PoELLi_PI",
+  "pcbench_directory": "PCBs/RaspberryPi-PoE_PoELLi_PI",
+  "source": "https://github.com/ojousima/RaspberryPi-PoE",
+  "author": "ojousima",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:38.657894+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 50,
+    "components": 46,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 56.0
+    },
+    "area_cm2": 47.6,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 291,
+    "vias": 36,
+    "track_length_mm": 667.06,
+    "kicad_drc_violations": 251,
+    "kicad_drc_breakdown": {
+      "total_violations": 251,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 84,
+        "copper_edge_clearance": 55,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 46,
+        "mirrored_text_on_front_layer": 2,
+        "silk_edge_clearance": 45,
+        "silk_over_copper": 13,
+        "silk_overlap": 4,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 140,
+        "warning": 111
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

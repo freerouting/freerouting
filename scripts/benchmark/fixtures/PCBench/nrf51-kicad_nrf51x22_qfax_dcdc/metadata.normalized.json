@@ -1,0 +1,65 @@
+{
+  "board_id": "nrf51-kicad_nrf51x22_qfax_dcdc",
+  "display_name": "nrf51-kicad_nrf51x22_qfax_dcdc",
+  "pcbench_directory": "PCBs/nrf51-kicad_nrf51x22_qfax_dcdc",
+  "source": "https://github.com/jacobrosenthal/nrf51-kicad",
+  "author": "jacobrosenthal",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:31.897815+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 46,
+    "dimensions_mm": {
+      "width": 14.84,
+      "height": 16.41
+    },
+    "area_cm2": 2.44,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 194,
+    "vias": 6,
+    "track_length_mm": 240.86,
+    "kicad_drc_violations": 327,
+    "kicad_drc_breakdown": {
+      "total_violations": 327,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 38,
+        "copper_edge_clearance": 53,
+        "invalid_outline": 12,
+        "items_not_allowed": 26,
+        "lib_footprint_issues": 46,
+        "pth_inside_courtyard": 4,
+        "shorting_items": 1,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 31,
+        "silk_overlap": 4,
+        "solder_mask_bridge": 55,
+        "starved_thermal": 3,
+        "text_height": 22,
+        "track_dangling": 31
+      },
+      "by_severity": {
+        "error": 192,
+        "warning": 135
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

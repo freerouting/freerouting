@@ -1,0 +1,35 @@
+{
+  "board": "SAMPad_SAMPad",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SAMPad_SAMPad\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 127,
+  "segment_count": 1942,
+  "approximate_track_length_mm": 5540.64,
+  "kicad_drc_violations": 1232,
+  "generated_at": "2026-08-18T19:43:18.241455+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1232,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 60,
+      "clearance": 419,
+      "copper_edge_clearance": 20,
+      "hole_clearance": 124,
+      "hole_to_hole": 54,
+      "items_not_allowed": 129,
+      "lib_footprint_issues": 154,
+      "silk_edge_clearance": 12,
+      "silk_over_copper": 75,
+      "silk_overlap": 127,
+      "solder_mask_bridge": 54,
+      "text_height": 2,
+      "track_dangling": 1,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 806,
+      "warning": 426
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "board_id": "audio_relay_input_switch_relay_switch",
+  "display_name": "audio_relay_input_switch_relay_switch",
+  "pcbench_directory": "PCBs/audio_relay_input_switch_relay_switch",
+  "source": "https://github.com/jjrh/audio_relay_input_switch",
+  "author": "jjrh",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:45.013969+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 25.65,
+      "height": 64.62
+    },
+    "area_cm2": 16.58,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 205,
+    "vias": 3,
+    "track_length_mm": 550.07,
+    "kicad_drc_violations": 158,
+    "kicad_drc_breakdown": {
+      "total_violations": 158,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 18,
+        "lib_footprint_issues": 20,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 10,
+        "silk_overlap": 19,
+        "text_height": 81
+      },
+      "by_severity": {
+        "error": 18,
+        "warning": 140
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.829927+00:00",
+    "elapsed_seconds": 26.7,
+    "unrouted_nets": 0,
+    "clearance_violations": 9,
+    "quality_score": 956.09
+  }
+}

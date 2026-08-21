@@ -1,0 +1,61 @@
+{
+  "board_id": "Baofeng-Interface_BaofengInterface",
+  "display_name": "Baofeng-Interface_BaofengInterface",
+  "pcbench_directory": "PCBs/Baofeng-Interface_BaofengInterface",
+  "source": "https://github.com/AG6GR/Baofeng-Interface",
+  "author": "AG6GR",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:48.678012+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 69,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 25.4
+    },
+    "area_cm2": 6.45,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 32,
+    "vias": 0,
+    "track_length_mm": 90.47,
+    "kicad_drc_violations": 157,
+    "kicad_drc_breakdown": {
+      "total_violations": 157,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 37,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 2,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 69,
+        "pth_inside_courtyard": 20,
+        "silk_edge_clearance": 4,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 6,
+        "text_height": 14
+      },
+      "by_severity": {
+        "error": 68,
+        "warning": 89
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

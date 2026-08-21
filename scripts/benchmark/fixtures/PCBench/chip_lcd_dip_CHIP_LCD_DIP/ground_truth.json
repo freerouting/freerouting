@@ -1,0 +1,30 @@
+{
+  "board": "chip_lcd_dip_CHIP_LCD_DIP",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\chip_lcd_dip_CHIP_LCD_DIP\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 50,
+  "segment_count": 723,
+  "approximate_track_length_mm": 1745.46,
+  "kicad_drc_violations": 696,
+  "generated_at": "2026-08-18T18:38:34.211160+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 696,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 397,
+      "copper_edge_clearance": 26,
+      "lib_footprint_issues": 26,
+      "malformed_courtyard": 8,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 180,
+      "silk_overlap": 10,
+      "solder_mask_bridge": 46,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 478,
+      "warning": 218
+    }
+  }
+}

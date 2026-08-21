@@ -1,0 +1,61 @@
+{
+  "board_id": "cleanhawk250_cleanhawk250-pdb",
+  "display_name": "cleanhawk250_cleanhawk250-pdb",
+  "pcbench_directory": "PCBs/cleanhawk250_cleanhawk250-pdb",
+  "source": "https://github.com/kylemanna/cleanhawk250",
+  "author": "kylemanna",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:38.313890+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 80,
+    "dimensions_mm": {
+      "width": 134.44,
+      "height": 79.37
+    },
+    "area_cm2": 106.71,
+    "zones": 11
+  },
+  "reference": {
+    "segments": 505,
+    "vias": 74,
+    "track_length_mm": 1374.55,
+    "kicad_drc_violations": 841,
+    "kicad_drc_breakdown": {
+      "total_violations": 841,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 499,
+        "copper_edge_clearance": 2,
+        "hole_clearance": 44,
+        "lib_footprint_issues": 80,
+        "shorting_items": 3,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 160,
+        "silk_overlap": 10,
+        "solder_mask_bridge": 38,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 586,
+        "warning": 255
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

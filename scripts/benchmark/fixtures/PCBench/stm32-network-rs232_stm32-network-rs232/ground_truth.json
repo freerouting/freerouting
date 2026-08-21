@@ -1,0 +1,29 @@
+{
+  "board": "stm32-network-rs232_stm32-network-rs232",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\stm32-network-rs232_stm32-network-rs232\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 61,
+  "segment_count": 587,
+  "approximate_track_length_mm": 1221.47,
+  "kicad_drc_violations": 569,
+  "generated_at": "2026-08-18T19:48:32.352929+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 569,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 6,
+      "clearance": 217,
+      "hole_clearance": 6,
+      "lib_footprint_issues": 57,
+      "silk_over_copper": 85,
+      "silk_overlap": 64,
+      "starved_thermal": 7,
+      "text_height": 127
+    },
+    "by_severity": {
+      "error": 236,
+      "warning": 333
+    }
+  }
+}

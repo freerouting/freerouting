@@ -1,0 +1,56 @@
+{
+  "board_id": "PSU-5V-6V-Dual9V_PSU-5V-6V-Dual9V",
+  "display_name": "PSU-5V-6V-Dual9V_PSU-5V-6V-Dual9V",
+  "pcbench_directory": "PCBs/PSU-5V-6V-Dual9V_PSU-5V-6V-Dual9V",
+  "source": "https://github.com/ohdsp/PSU-5V-6V-Dual9V",
+  "author": "ohdsp",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:58.826131+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 103,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 394,
+    "vias": 132,
+    "track_length_mm": 1296.15,
+    "kicad_drc_violations": 243,
+    "kicad_drc_breakdown": {
+      "total_violations": 243,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 117,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 103,
+        "silk_over_copper": 14,
+        "solder_mask_bridge": 8
+      },
+      "by_severity": {
+        "error": 126,
+        "warning": 117
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

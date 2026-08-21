@@ -1,0 +1,64 @@
+{
+  "board_id": "fingerprint-with-esp32_quet van tay",
+  "display_name": "fingerprint-with-esp32_quet van tay",
+  "pcbench_directory": "PCBs/fingerprint-with-esp32_quet van tay",
+  "source": "https://github.com/PhuongNguyenNMP/fingerprint-with-esp32",
+  "author": "PhuongNguyenNMP",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:58.882132+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 33,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 68.53,
+      "height": 53.3
+    },
+    "area_cm2": 36.53,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 106,
+    "vias": 6,
+    "track_length_mm": 562.66,
+    "kicad_drc_violations": 133,
+    "kicad_drc_breakdown": {
+      "total_violations": 133,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 114,
+        "lib_footprint_issues": 9,
+        "silk_over_copper": 8,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "error": 114,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.924511+00:00",
+    "elapsed_seconds": 8.0,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

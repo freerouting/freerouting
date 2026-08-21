@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "hardware-designs_solar-harvester",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 111826,
+      "sha256": "1fa7aeb61bd0c3fdc3378170f2005183acff1a7fc98f1cdfbb988f77aae86753"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 73552,
+      "sha256": "82f888adc6f7abaa7ffb811838f83d13f89039b74eb5dc02c90f4c49d78020a2"
+    },
+    "metadata_json": {
+      "bytes": 537,
+      "sha256": "1051b1b0eb0d68fc00261f645cf62700faa1e7637bcffbb20fbee63b56ea8a86"
+    },
+    "final_json": {
+      "bytes": 26590,
+      "sha256": "52598354f1809fa49d84a63b17f682942fcc38e08aad0e9e8417c4d2f4d39104"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:52:49.971695+00:00"
+  }
+}

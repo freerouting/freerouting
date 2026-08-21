@@ -1,0 +1,65 @@
+{
+  "board_id": "disco-dongle_DiscoDongle",
+  "display_name": "disco-dongle_DiscoDongle",
+  "pcbench_directory": "PCBs/disco-dongle_DiscoDongle",
+  "source": "https://github.com/jgillick/disco-dongle",
+  "author": "jgillick",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:23:01.242160+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 49.4,
+      "height": 15.8
+    },
+    "area_cm2": 7.81,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 132,
+    "vias": 17,
+    "track_length_mm": 255.7,
+    "kicad_drc_violations": 128,
+    "kicad_drc_breakdown": {
+      "total_violations": 128,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 80,
+        "copper_edge_clearance": 15,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 22,
+        "silk_edge_clearance": 5,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 99,
+        "warning": 29
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.896242+00:00",
+    "elapsed_seconds": 34.9,
+    "unrouted_nets": 0,
+    "clearance_violations": 4,
+    "quality_score": 985.45
+  }
+}

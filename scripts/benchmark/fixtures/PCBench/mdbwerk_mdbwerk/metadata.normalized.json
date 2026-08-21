@@ -1,0 +1,57 @@
+{
+  "board_id": "mdbwerk_mdbwerk",
+  "display_name": "mdbwerk_mdbwerk",
+  "pcbench_directory": "PCBs/mdbwerk_mdbwerk",
+  "source": "https://github.com/HubertD/mdbwerk",
+  "author": "HubertD",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:46.269984+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 45,
+    "dimensions_mm": {
+      "width": 51.8,
+      "height": 24.9
+    },
+    "area_cm2": 12.9,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 341,
+    "vias": 34,
+    "track_length_mm": 523.35,
+    "kicad_drc_violations": 81,
+    "kicad_drc_breakdown": {
+      "total_violations": 81,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 13,
+        "copper_edge_clearance": 8,
+        "courtyards_overlap": 4,
+        "hole_clearance": 8,
+        "lib_footprint_issues": 45,
+        "silk_over_copper": 3
+      },
+      "by_severity": {
+        "error": 33,
+        "warning": 48
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,55 @@
+{
+  "board_id": "bobc_matrix_clock",
+  "display_name": "bobc_matrix_clock",
+  "pcbench_directory": "PCBs/bobc_matrix_clock",
+  "source": "https://github.com/bobc/bobc_hardware",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 93,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 98.0
+    },
+    "area_cm2": 98.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 868,
+    "vias": 60,
+    "track_length_mm": 5606.76,
+    "kicad_drc_violations": 98,
+    "kicad_drc_breakdown": {
+      "total_violations": 98,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 36,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 13,
+        "silk_overlap": 26
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 95
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

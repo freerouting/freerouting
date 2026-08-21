@@ -1,0 +1,36 @@
+{
+  "board": "pcb_HDMI2RGB_HDMI2RGB",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\pcb_HDMI2RGB_HDMI2RGB\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 110,
+  "segment_count": 1466,
+  "approximate_track_length_mm": 3032.68,
+  "kicad_drc_violations": 639,
+  "generated_at": "2026-08-18T18:23:06.639898+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 639,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 6,
+      "clearance": 66,
+      "copper_edge_clearance": 8,
+      "courtyards_overlap": 7,
+      "hole_clearance": 3,
+      "lib_footprint_issues": 115,
+      "padstack": 1,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 152,
+      "silk_overlap": 35,
+      "starved_thermal": 3,
+      "text_height": 116,
+      "text_thickness": 116,
+      "track_dangling": 6,
+      "zones_intersect": 1
+    },
+    "by_severity": {
+      "error": 94,
+      "warning": 545
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "board_id": "kitspace_f-91w",
+  "display_name": "kitspace_f-91w",
+  "pcbench_directory": "PCBs/kitspace_f-91w",
+  "source": "https://github.com/carrotIndustries/pluto",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/carrotIndustries/pluto/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:09:41.009243+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 24.4,
+      "height": 24.38
+    },
+    "area_cm2": 5.95,
+    "zones": 11
+  },
+  "reference": {
+    "segments": 617,
+    "vias": 68,
+    "track_length_mm": 635.19,
+    "kicad_drc_violations": 334,
+    "kicad_drc_breakdown": {
+      "total_violations": 334,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 55,
+        "copper_edge_clearance": 46,
+        "courtyards_overlap": 9,
+        "hole_clearance": 50,
+        "invalid_outline": 16,
+        "lib_footprint_issues": 37,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 9,
+        "solder_mask_bridge": 105,
+        "text_height": 1,
+        "track_dangling": 3,
+        "zones_intersect": 2
+      },
+      "by_severity": {
+        "error": 283,
+        "warning": 51
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

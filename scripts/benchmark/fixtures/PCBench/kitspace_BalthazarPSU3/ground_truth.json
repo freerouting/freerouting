@@ -1,0 +1,26 @@
+{
+  "board": "kitspace_BalthazarPSU3",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_BalthazarPSU3\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 83,
+  "segment_count": 509,
+  "approximate_track_length_mm": 656.24,
+  "kicad_drc_violations": 104,
+  "generated_at": "2026-08-18T18:16:47.988250+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 104,
+    "unconnected_count": 0,
+    "by_type": {
+      "footprint_type_mismatch": 2,
+      "lib_footprint_issues": 5,
+      "lib_footprint_mismatch": 74,
+      "silk_over_copper": 21,
+      "silk_overlap": 1,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "warning": 104
+    }
+  }
+}

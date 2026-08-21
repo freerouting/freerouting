@@ -1,0 +1,62 @@
+{
+  "board_id": "keyboard_converter_converter",
+  "display_name": "keyboard_converter_converter",
+  "pcbench_directory": "PCBs/keyboard_converter_converter",
+  "source": "https://github.com/tmk/keyboard_converter",
+  "author": "tmk",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.865720+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 61,
+    "dimensions_mm": {
+      "width": 26.0,
+      "height": 37.0
+    },
+    "area_cm2": 9.62,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 497,
+    "vias": 26,
+    "track_length_mm": 726.51,
+    "kicad_drc_violations": 406,
+    "kicad_drc_breakdown": {
+      "total_violations": 406,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 190,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 57,
+        "padstack": 4,
+        "shorting_items": 2,
+        "silk_over_copper": 34,
+        "silk_overlap": 56,
+        "solder_mask_bridge": 36,
+        "text_height": 19,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 234,
+        "warning": 172
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,57 @@
+{
+  "board_id": "retrocon_bbb-adapter",
+  "display_name": "retrocon_bbb-adapter",
+  "pcbench_directory": "PCBs/retrocon_bbb-adapter",
+  "source": "https://github.com/phooky/retrocon",
+  "author": "phooky",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.534010+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 84,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 58.42,
+      "height": 80.01
+    },
+    "area_cm2": 46.74,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 180,
+    "vias": 5,
+    "track_length_mm": 829.98,
+    "kicad_drc_violations": 80,
+    "kicad_drc_breakdown": {
+      "total_violations": 80,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 53,
+        "holes_co_located": 2,
+        "lib_footprint_issues": 15,
+        "silk_edge_clearance": 6,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 57,
+        "warning": 23
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "routine",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

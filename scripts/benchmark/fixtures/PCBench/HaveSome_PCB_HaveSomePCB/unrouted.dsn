@@ -1,0 +1,195 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\HaveSome_PCB_HaveSomePCB\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  143510 -112395  135890 -112395  135890 -93980  143510 -93980
+            143510 -112395)
+    )
+    (via "Via[0-1]_685.8:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Measurement_Points:Measurement_Point_Square-SMD-Pad_Big"
+      (place REF**22_2 139700 -96139 back 180 (PN "Measurement_Point_Square-SMD-Pad_Big"))
+      (place REF**22 141224 -99187 back 180 (PN "Measurement_Point_Square-SMD-Pad_Big"))
+      (place REF**12 138176 -99187 back 180 (PN "Measurement_Point_Square-SMD-Pad_Big"))
+      (place REF**23 141224 -102235 back 180 (PN "Measurement_Point_Square-SMD-Pad_Big"))
+      (place REF**13 138176 -102235 back 180 (PN "Measurement_Point_Square-SMD-Pad_Big"))
+    )
+    (component "SOT-23"
+      (place SOT23 137795 -99060 front 0 (PN "APE8865NL-33-HF-3"))
+    )
+    (component "SOT-223"
+      (place SOT223 139700 -99060 front 0 (PN LD1117S33CTR))
+    )
+    (component "SOT-323"
+      (place SOT323 141605 -99060 front 90 (PN BFR92))
+    )
+    (component R_0402
+      (place SMD402 141732 -106045 front 180 (PN R0402))
+    )
+    (component R_0603
+      (place SMD603 138303 -106045 front 180 (PN R0603))
+    )
+    (component R_0805
+      (place SMD805 141732 -106045 front 180 (PN R0805))
+    )
+    (component R_1206
+      (place SMD1206 138303 -106045 front 180 (PN R1206))
+    )
+    (component Pin_Header_Straight_1x03
+      (place PINS1 137160 -110490 front 90 (PN CONN_01X03))
+    )
+    (component HaveSomeLib:NoteZone
+      (place G*** 139700 -108204 back 180 (PN LOGO))
+    )
+  )
+  (library
+    (image "Measurement_Points:Measurement_Point_Square-SMD-Pad_Big"
+      (outline (polygon signal 0  1745 -1745  -1745 -1745  -1745 1745  1745 1745))
+      (pin Rect[T]Pad_3000.000000x3000.000000_um 1 0 0)
+    )
+    (image "SOT-23"
+      (outline (polygon signal 0  1645 -1595  -1645 -1595  -1645 1595  1645 1595))
+      (pin Rect[T]Pad_800.100000x800.100000_um 1 -950 -1000.76)
+      (pin Rect[T]Pad_800.100000x800.100000_um 2 950 -1000.76)
+      (pin Rect[T]Pad_800.100000x800.100000_um 3 0 998.22)
+    )
+    (image "SOT-223"
+      (pin Rect[T]Pad_3657.600000x2032.000000_um 4 0 3302)
+      (pin Rect[T]Pad_1016.000000x2032.000000_um 2 0 -3302)
+      (pin Rect[T]Pad_1016.000000x2032.000000_um 3 2286 -3302)
+      (pin Rect[T]Pad_1016.000000x2032.000000_um 1 -2286 -3302)
+    )
+    (image "SOT-323"
+      (pin Rect[T]Pad_599.440000x1000.760000_um 2 -650.24 949.96)
+      (pin Rect[T]Pad_599.440000x1000.760000_um 1 650.24 949.96)
+      (pin Rect[T]Pad_599.440000x1000.760000_um 3 0 -949.96)
+    )
+    (image R_0402
+      (outline (polygon signal 0  -945 645  945 645  945 -645  -945 -645))
+      (pin Rect[T]Pad_400.000000x600.000000_um 1 -450 0)
+      (pin Rect[T]Pad_400.000000x600.000000_um 2 450 0)
+    )
+    (image R_0603
+      (outline (polygon signal 0  -1295 795  1295 795  1295 -795  -1295 -795))
+      (pin Rect[T]Pad_500.000000x900.000000_um 1 -750 0)
+      (pin Rect[T]Pad_500.000000x900.000000_um 2 750 0)
+    )
+    (image R_0805
+      (outline (polygon signal 0  -1595 995  1595 995  1595 -995  -1595 -995))
+      (pin Rect[T]Pad_700.000000x1300.000000_um 1 -950 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um 2 950 0)
+    )
+    (image R_1206
+      (outline (polygon signal 0  -2195 1195  2195 1195  2195 -1195  -2195 -1195))
+      (pin Rect[T]Pad_900.000000x1700.000000_um 1 -1450 0)
+      (pin Rect[T]Pad_900.000000x1700.000000_um 2 1450 0)
+    )
+    (image Pin_Header_Straight_1x03
+      (outline (polygon signal 0  -1745 -6845  -1745 1745  1745 1745  1745 -6845))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+    )
+    (image HaveSomeLib:NoteZone
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3000.000000x3000.000000_um
+      (shape (rect F.Cu -1500 -1500 1500 1500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3657.600000x2032.000000_um
+      (shape (rect F.Cu -1828.8 -1016 1828.8 1016))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x600.000000_um
+      (shape (rect F.Cu -200 -300 200 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x900.000000_um
+      (shape (rect F.Cu -250 -450 250 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_599.440000x1000.760000_um
+      (shape (rect F.Cu -299.72 -500.38 299.72 500.38))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x1300.000000_um
+      (shape (rect F.Cu -350 -650 350 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.100000x800.100000_um
+      (shape (rect F.Cu -400.05 -400.05 400.05 400.05))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_900.000000x1700.000000_um
+      (shape (rect F.Cu -450 -850 450 850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1016.000000x2032.000000_um
+      (shape (rect F.Cu -508 -1016 508 1016))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(PINS1-Pad2)"
+      (pins REF**22_2-1 REF**22-1 REF**12-1 REF**23-1 REF**13-1 SOT23-2 SOT223-4 SOT223-2
+        SOT323-2 SMD402-2 SMD603-1 SMD805-2 SMD1206-1 PINS1-2)
+    )
+    (net "Net-(PINS1-Pad1)"
+      (pins SOT23-1 SOT223-1 SOT323-1 SMD603-2 SMD1206-2 PINS1-1)
+    )
+    (net "Net-(PINS1-Pad3)"
+      (pins SOT23-3 SOT223-3 SOT323-3 SMD402-1 SMD805-1 PINS1-3)
+    )
+    (class kicad_default "Net-(PINS1-Pad1)" "Net-(PINS1-Pad2)" "Net-(PINS1-Pad3)"
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

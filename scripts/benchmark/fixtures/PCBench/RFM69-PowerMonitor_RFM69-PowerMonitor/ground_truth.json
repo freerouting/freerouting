@@ -1,0 +1,29 @@
+{
+  "board": "RFM69-PowerMonitor_RFM69-PowerMonitor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RFM69-PowerMonitor_RFM69-PowerMonitor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 163,
+  "approximate_track_length_mm": 424.44,
+  "kicad_drc_violations": 90,
+  "generated_at": "2026-08-18T19:40:24.170910+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 90,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 23,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 19,
+      "silk_over_copper": 32,
+      "silk_overlap": 3,
+      "solder_mask_bridge": 2,
+      "text_thickness": 2,
+      "track_dangling": 8
+    },
+    "by_severity": {
+      "error": 26,
+      "warning": 64
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "board_id": "kitspace_LED%20Zappelin",
+  "display_name": "kitspace_LED%20Zappelin",
+  "pcbench_directory": "PCBs/kitspace_LED%20Zappelin",
+  "source": "https://github.com/BadenLab/LED-Zappelin",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/BadenLab/LED-Zappelin/master/LICENSE'}, {'name': 'CERN', 'link': 'https://raw.githubusercontent.com/BadenLab/LED-Zappelin/master/PCB/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:15:17.472256+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 39,
+    "components": 45,
+    "dimensions_mm": {
+      "width": 125.0,
+      "height": 75.0
+    },
+    "area_cm2": 93.75,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 325,
+    "vias": 0,
+    "track_length_mm": 2266.42,
+    "kicad_drc_violations": 97,
+    "kicad_drc_breakdown": {
+      "total_violations": 97,
+      "unconnected_count": 30,
+      "by_type": {
+        "annular_width": 1,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 35,
+        "lib_footprint_mismatch": 4,
+        "malformed_courtyard": 1,
+        "pth_inside_courtyard": 30,
+        "shorting_items": 2,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 6,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 39,
+        "warning": 58
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

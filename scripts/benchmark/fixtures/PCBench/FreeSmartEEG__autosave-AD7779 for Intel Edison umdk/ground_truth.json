@@ -1,0 +1,31 @@
+{
+  "board": "FreeSmartEEG__autosave-AD7779 for Intel Edison umdk",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\FreeSmartEEG__autosave-AD7779 for Intel Edison umdk\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 507,
+  "approximate_track_length_mm": 3845.03,
+  "kicad_drc_violations": 861,
+  "generated_at": "2026-08-18T18:50:31.387001+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 861,
+    "unconnected_count": 13,
+    "by_type": {
+      "clearance": 61,
+      "courtyards_overlap": 36,
+      "lib_footprint_issues": 82,
+      "pth_inside_courtyard": 51,
+      "shorting_items": 134,
+      "silk_over_copper": 71,
+      "silk_overlap": 198,
+      "solder_mask_bridge": 201,
+      "track_dangling": 6,
+      "tracks_crossing": 21
+    },
+    "by_severity": {
+      "error": 504,
+      "warning": 357
+    }
+  }
+}

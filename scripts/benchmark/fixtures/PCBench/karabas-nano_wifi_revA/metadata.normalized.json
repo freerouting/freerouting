@@ -1,0 +1,56 @@
+{
+  "board_id": "karabas-nano_wifi_revA",
+  "display_name": "karabas-nano_wifi_revA",
+  "pcbench_directory": "PCBs/karabas-nano_wifi_revA",
+  "source": "https://github.com/andykarpov/karabas-nano",
+  "author": "andykarpov",
+  "license": "Do What The F*ck You Want To Public License",
+  "license_spdx": "WTFPL",
+  "retrieved_at": "2023-08-17T17:22:32.125817+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 66,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 51.82,
+      "height": 30.99
+    },
+    "area_cm2": 16.06,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 67,
+    "vias": 30,
+    "track_length_mm": 267.04,
+    "kicad_drc_violations": 29,
+    "kicad_drc_breakdown": {
+      "total_violations": 29,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 7,
+        "copper_edge_clearance": 9,
+        "lib_footprint_issues": 7,
+        "lib_footprint_mismatch": 4,
+        "silk_edge_clearance": 2
+      },
+      "by_severity": {
+        "error": 16,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,72 @@
+{
+  "board_id": "Practicas-Curso-Kicad_Ej2",
+  "display_name": "Practicas-Curso-Kicad_Ej2",
+  "pcbench_directory": "PCBs/Practicas-Curso-Kicad_Ej2",
+  "source": "https://github.com/INTI-CMNB/Practicas-Curso-Kicad",
+  "author": "INTI-CMNB",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.878073+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 40.64,
+      "height": 60.96
+    },
+    "area_cm2": 24.77,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 229,
+    "vias": 18,
+    "track_length_mm": 494.35,
+    "kicad_drc_violations": 224,
+    "kicad_drc_breakdown": {
+      "total_violations": 224,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 176,
+        "copper_edge_clearance": 2,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 15,
+        "shorting_items": 1,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 3,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 1,
+        "text_height": 14,
+        "track_dangling": 4,
+        "tracks_crossing": 1
+      },
+      "by_severity": {
+        "error": 182,
+        "warning": 42
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.074449+00:00",
+    "elapsed_seconds": 8.2,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

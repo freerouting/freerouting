@@ -1,0 +1,56 @@
+{
+  "board_id": "wordclock_ledboard2",
+  "display_name": "wordclock_ledboard2",
+  "pcbench_directory": "PCBs/wordclock_ledboard2",
+  "source": "https://github.com/apparentlymart/wordclock",
+  "author": "apparentlymart",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.742083+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 100,
+    "components": 109,
+    "dimensions_mm": {
+      "width": 161.0,
+      "height": 170.0
+    },
+    "area_cm2": 273.7,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 430,
+    "vias": 2,
+    "track_length_mm": 6049.31,
+    "kicad_drc_violations": 777,
+    "kicad_drc_breakdown": {
+      "total_violations": 777,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 199,
+        "clearance": 465,
+        "lib_footprint_issues": 109,
+        "silk_over_copper": 3,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 664,
+        "warning": 113
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

@@ -1,0 +1,57 @@
+{
+  "board_id": "opendous_Upconverter",
+  "display_name": "opendous_Upconverter",
+  "pcbench_directory": "PCBs/opendous_Upconverter",
+  "source": "https://github.com/opendous/Upconverter1v3",
+  "author": "",
+  "license": "[{'name': 'The Unlicense', 'link': 'https://api.github.com/licenses/unlicense'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 670,
+    "dimensions_mm": {
+      "width": 96.52,
+      "height": 50.8
+    },
+    "area_cm2": 49.03,
+    "zones": 81
+  },
+  "reference": {
+    "segments": 1184,
+    "vias": 0,
+    "track_length_mm": 2206.06,
+    "kicad_drc_violations": 576,
+    "kicad_drc_breakdown": {
+      "total_violations": 576,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 284,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 128,
+        "silk_overlap": 29,
+        "solder_mask_bridge": 20,
+        "text_height": 99,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 304,
+        "warning": 272
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
+}

@@ -1,0 +1,60 @@
+{
+  "board_id": "655_testboard",
+  "display_name": "655_testboard",
+  "pcbench_directory": "PCBs/655_testboard",
+  "source": "https://github.com/johnfertitta/655",
+  "author": "johnfertitta",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.186183+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 39.17,
+      "height": 62.92
+    },
+    "area_cm2": 24.65,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 626,
+    "vias": 72,
+    "track_length_mm": 1080.47,
+    "kicad_drc_violations": 212,
+    "kicad_drc_breakdown": {
+      "total_violations": 212,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "hole_clearance": 3,
+        "invalid_outline": 6,
+        "lib_footprint_issues": 30,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 57,
+        "silk_overlap": 29,
+        "solder_mask_bridge": 80,
+        "track_dangling": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 92,
+        "warning": 120
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

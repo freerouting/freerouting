@@ -1,0 +1,67 @@
+{
+  "board_id": "ESP-Breakout_ESP-Breakout",
+  "display_name": "ESP-Breakout_ESP-Breakout",
+  "pcbench_directory": "PCBs/ESP-Breakout_ESP-Breakout",
+  "source": "https://github.com/baoshi/ESP-Breakout",
+  "author": "baoshi",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:20.897685+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 50.8,
+      "height": 20.32
+    },
+    "area_cm2": 10.32,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 192,
+    "vias": 53,
+    "track_length_mm": 396.37,
+    "kicad_drc_violations": 65,
+    "kicad_drc_breakdown": {
+      "total_violations": 65,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 5,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 17,
+        "silk_edge_clearance": 22,
+        "silk_over_copper": 16,
+        "silk_overlap": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 57
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.905084+00:00",
+    "elapsed_seconds": 8.28,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

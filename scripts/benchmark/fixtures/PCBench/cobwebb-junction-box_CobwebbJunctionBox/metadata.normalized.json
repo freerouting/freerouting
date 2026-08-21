@@ -1,0 +1,50 @@
+{
+  "board_id": "cobwebb-junction-box_CobwebbJunctionBox",
+  "display_name": "cobwebb-junction-box_CobwebbJunctionBox",
+  "pcbench_directory": "PCBs/cobwebb-junction-box_CobwebbJunctionBox",
+  "source": "https://github.com/efosmark/cobwebb-junction-box",
+  "author": "efosmark",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:42.529940+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 150.0,
+      "height": 50.0
+    },
+    "area_cm2": 75.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 41,
+    "vias": 0,
+    "track_length_mm": 480.22,
+    "kicad_drc_violations": 8,
+    "kicad_drc_breakdown": {
+      "total_violations": 8,
+      "unconnected_count": 3,
+      "by_type": {
+        "lib_footprint_issues": 8
+      },
+      "by_severity": {
+        "warning": 8
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,27 @@
+{
+  "board": "android_debug_cable_android_debug_cable",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\android_debug_cable_android_debug_cable\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 19,
+  "segment_count": 232,
+  "approximate_track_length_mm": 276.54,
+  "kicad_drc_violations": 121,
+  "generated_at": "2026-08-18T18:28:22.661081+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 121,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 11,
+      "copper_edge_clearance": 23,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 11,
+      "solder_mask_bridge": 66,
+      "text_height": 9
+    },
+    "by_severity": {
+      "error": 101,
+      "warning": 20
+    }
+  }
+}

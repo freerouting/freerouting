@@ -1,0 +1,63 @@
+{
+  "board_id": "SNAP-Badge_SNAP_badge",
+  "display_name": "SNAP-Badge_SNAP_badge",
+  "pcbench_directory": "PCBs/SNAP-Badge_SNAP_badge",
+  "source": "https://github.com/DavidEwing/SNAP-Badge",
+  "author": "DavidEwing",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.822155+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 59,
+    "components": 157,
+    "dimensions_mm": {
+      "width": 63.5,
+      "height": 127.0
+    },
+    "area_cm2": 80.64,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1514,
+    "vias": 268,
+    "track_length_mm": 5089.85,
+    "kicad_drc_violations": 798,
+    "kicad_drc_breakdown": {
+      "total_violations": 798,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 5,
+        "clearance": 404,
+        "copper_edge_clearance": 2,
+        "holes_co_located": 8,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 157,
+        "padstack": 5,
+        "silk_over_copper": 199,
+        "silk_overlap": 4,
+        "solder_mask_bridge": 3,
+        "starved_thermal": 5,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 421,
+        "warning": 377
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

@@ -1,0 +1,57 @@
+{
+  "board_id": "radio_saw_dcc6c",
+  "display_name": "radio_saw_dcc6c",
+  "pcbench_directory": "PCBs/radio_saw_dcc6c",
+  "source": "https://github.com/hedj/radio",
+  "author": "hedj",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:23.353714+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 4,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 28.4,
+      "height": 20.0
+    },
+    "area_cm2": 5.68,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 156,
+    "vias": 131,
+    "track_length_mm": 184.92,
+    "kicad_drc_violations": 113,
+    "kicad_drc_breakdown": {
+      "total_violations": 113,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 15,
+        "lib_footprint_issues": 7,
+        "silk_edge_clearance": 20,
+        "silk_over_copper": 47,
+        "silk_overlap": 11,
+        "text_height": 13
+      },
+      "by_severity": {
+        "error": 15,
+        "warning": 98
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

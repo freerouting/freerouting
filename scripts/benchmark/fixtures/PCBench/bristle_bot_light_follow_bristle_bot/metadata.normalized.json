@@ -1,0 +1,61 @@
+{
+  "board_id": "bristle_bot_light_follow_bristle_bot",
+  "display_name": "bristle_bot_light_follow_bristle_bot",
+  "pcbench_directory": "PCBs/bristle_bot_light_follow_bristle_bot",
+  "source": "https://github.com/facelesstech/bristle_bot_light_follow",
+  "author": "facelesstech",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.474080+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 50.04,
+      "height": 35.05
+    },
+    "area_cm2": 17.54,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 43,
+    "vias": 0,
+    "track_length_mm": 224.39,
+    "kicad_drc_violations": 83,
+    "kicad_drc_breakdown": {
+      "total_violations": 83,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 48,
+        "copper_edge_clearance": 6,
+        "silk_overlap": 27,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 54,
+        "warning": 29
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.853624+00:00",
+    "elapsed_seconds": 8.7,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 952.38
+  }
+}

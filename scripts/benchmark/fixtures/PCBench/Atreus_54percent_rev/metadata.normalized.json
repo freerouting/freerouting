@@ -1,0 +1,62 @@
+{
+  "board_id": "Atreus_54percent_rev",
+  "display_name": "Atreus_54percent_rev",
+  "pcbench_directory": "PCBs/Atreus_54percent_rev",
+  "source": "https://github.com/wolffjj/Atreus_54percent",
+  "author": "wolffjj",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:25.353738+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 151,
+    "components": 191,
+    "dimensions_mm": {
+      "width": 277.0,
+      "height": 110.75
+    },
+    "area_cm2": 306.78,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 2766,
+    "vias": 70,
+    "track_length_mm": 9004.87,
+    "kicad_drc_violations": 1363,
+    "kicad_drc_breakdown": {
+      "total_violations": 1363,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 417,
+        "copper_edge_clearance": 21,
+        "hole_clearance": 3,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 191,
+        "shorting_items": 202,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 199,
+        "silk_overlap": 120,
+        "solder_mask_bridge": 200,
+        "track_dangling": 8
+      },
+      "by_severity": {
+        "error": 844,
+        "warning": 519
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

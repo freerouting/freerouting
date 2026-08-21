@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "bmw-ibus-bluetooth_bmw_bt_cdcemu_digital",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 233601,
+      "sha256": "27c46861dc40ccd5b1219823dae542d9f5ef8037ba4ecdad2a8c86ce4c9d8ad8"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 167165,
+      "sha256": "6b98919b5ff32e751bd1dfb18e7acde966bf1decbf4e0c4fbbc8c474d0f67d1d"
+    },
+    "metadata_json": {
+      "bytes": 727,
+      "sha256": "a8c41a9a7260510674df21f52a2032c9f0a933318bfd313bf152c4166c0e2f3d"
+    },
+    "final_json": {
+      "bytes": 118890,
+      "sha256": "e8126e3047a34b4e0b98b8dfb0c1f0b2388c86376c1aa4989ba1220f08c7fb64"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:34:54.625884+00:00"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "description": "Frozen baseline for autopilot accept/reject comparisons. Regenerated when an experiment is accepted on autopilot/main.",
+  "git_sha": "unknown",
+  "jar_path": "scripts/benchmark/binaries/freerouting-current.jar",
+  "created_at": null,
+  "benchmarks_json": "scripts/benchmark/results/benchmarks.json",
+  "noise_floor_json": "scripts/benchmark/baselines/noise_floor.json"
+}

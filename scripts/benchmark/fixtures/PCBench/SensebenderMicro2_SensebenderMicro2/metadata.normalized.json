@@ -1,0 +1,64 @@
+{
+  "board_id": "SensebenderMicro2_SensebenderMicro2",
+  "display_name": "SensebenderMicro2_SensebenderMicro2",
+  "pcbench_directory": "PCBs/SensebenderMicro2_SensebenderMicro2",
+  "source": "https://github.com/tbowmo/SensebenderMicro2",
+  "author": "tbowmo",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:59.842143+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 86,
+    "dimensions_mm": {
+      "width": 21.5,
+      "height": 32.0
+    },
+    "area_cm2": 6.88,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 576,
+    "vias": 43,
+    "track_length_mm": 598.15,
+    "kicad_drc_violations": 451,
+    "kicad_drc_breakdown": {
+      "total_violations": 451,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 188,
+        "copper_edge_clearance": 32,
+        "courtyards_overlap": 32,
+        "lib_footprint_issues": 86,
+        "malformed_courtyard": 2,
+        "pth_inside_courtyard": 42,
+        "shorting_items": 1,
+        "silk_over_copper": 10,
+        "silk_overlap": 18,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 1,
+        "text_height": 34,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 299,
+        "warning": 152
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

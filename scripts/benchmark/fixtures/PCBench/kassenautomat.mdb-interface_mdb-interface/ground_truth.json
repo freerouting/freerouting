@@ -1,0 +1,30 @@
+{
+  "board": "kassenautomat.mdb-interface_mdb-interface",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kassenautomat.mdb-interface_mdb-interface\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 40,
+  "segment_count": 823,
+  "approximate_track_length_mm": 2838.89,
+  "kicad_drc_violations": 834,
+  "generated_at": "2026-08-18T19:00:46.722691+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 834,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 281,
+      "lib_footprint_issues": 80,
+      "padstack": 4,
+      "silk_over_copper": 171,
+      "silk_overlap": 128,
+      "solder_mask_bridge": 65,
+      "text_height": 97,
+      "text_thickness": 4
+    },
+    "by_severity": {
+      "error": 350,
+      "warning": 484
+    }
+  }
+}

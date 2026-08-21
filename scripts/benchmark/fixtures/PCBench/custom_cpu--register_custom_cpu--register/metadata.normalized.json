@@ -1,0 +1,57 @@
+{
+  "board_id": "custom_cpu--register_custom_cpu--register",
+  "display_name": "custom_cpu--register_custom_cpu--register",
+  "pcbench_directory": "PCBs/custom_cpu--register_custom_cpu--register",
+  "source": "https://github.com/lelandbatey/custom_cpu--register",
+  "author": "lelandbatey",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:51.830049+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 37,
+    "components": 47,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 63.0
+    },
+    "area_cm2": 63.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 207,
+    "vias": 38,
+    "track_length_mm": 1341.01,
+    "kicad_drc_violations": 154,
+    "kicad_drc_breakdown": {
+      "total_violations": 154,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 79,
+        "copper_edge_clearance": 4,
+        "lib_footprint_issues": 47,
+        "silk_over_copper": 4,
+        "silk_overlap": 19,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 84,
+        "warning": 70
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

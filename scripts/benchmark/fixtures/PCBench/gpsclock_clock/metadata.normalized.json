@@ -1,0 +1,62 @@
+{
+  "board_id": "gpsclock_clock",
+  "display_name": "gpsclock_clock",
+  "pcbench_directory": "PCBs/gpsclock_clock",
+  "source": "https://github.com/mmastrac/gpsclock",
+  "author": "mmastrac",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.322149+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 48.26,
+      "height": 78.74
+    },
+    "area_cm2": 38.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 191,
+    "vias": 15,
+    "track_length_mm": 1585.23,
+    "kicad_drc_violations": 6,
+    "kicad_drc_breakdown": {
+      "total_violations": 6,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "silk_over_copper": 1,
+        "silk_overlap": 4
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 5
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.934197+00:00",
+    "elapsed_seconds": 9.5,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "2d_conduction_sk9822-matrix",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 495021,
+      "sha256": "8aec25abfa76de14ccca3a090878e92067b7e1aba96d787e304ae7e27cc9f710"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 340265,
+      "sha256": "051f255e25ee0db5bfdecf7c111aaf40534a5ac0b481df52bff8d4e14e6791cb"
+    },
+    "metadata_json": {
+      "bytes": 501,
+      "sha256": "a5357da749931c2ce169f558a2cd83a20cad40c269e50d0b0382347e89febc25"
+    },
+    "final_json": {
+      "bytes": 271901,
+      "sha256": "eac723152d94c995759c390997e959f41cdd0b3d79b0601abe14abe03b669b85"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:26:09.155837+00:00"
+  }
+}

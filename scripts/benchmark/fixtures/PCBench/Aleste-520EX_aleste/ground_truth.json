@@ -1,0 +1,31 @@
+{
+  "board": "Aleste-520EX_aleste",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Aleste-520EX_aleste\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1041,
+  "segment_count": 8264,
+  "approximate_track_length_mm": 57005.55,
+  "kicad_drc_violations": 868,
+  "generated_at": "2026-08-18T18:27:45.974233+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 868,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 77,
+      "courtyards_overlap": 20,
+      "holes_co_located": 105,
+      "lib_footprint_issues": 199,
+      "silk_edge_clearance": 24,
+      "silk_over_copper": 173,
+      "silk_overlap": 199,
+      "track_dangling": 47,
+      "tracks_crossing": 4,
+      "via_dangling": 20
+    },
+    "by_severity": {
+      "error": 101,
+      "warning": 767
+    }
+  }
+}

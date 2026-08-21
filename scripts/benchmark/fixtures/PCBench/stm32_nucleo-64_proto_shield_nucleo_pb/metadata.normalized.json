@@ -1,0 +1,57 @@
+{
+  "board_id": "stm32_nucleo-64_proto_shield_nucleo_pb",
+  "display_name": "stm32_nucleo-64_proto_shield_nucleo_pb",
+  "pcbench_directory": "PCBs/stm32_nucleo-64_proto_shield_nucleo_pb",
+  "source": "https://github.com/AnttiNykanen/stm32_nucleo-64_proto_shield",
+  "author": "AnttiNykanen",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.997898+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 32,
+    "components": 273,
+    "dimensions_mm": {
+      "width": 91.44,
+      "height": 91.44
+    },
+    "area_cm2": 83.61,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 503,
+    "vias": 0,
+    "track_length_mm": 1909.57,
+    "kicad_drc_violations": 206,
+    "kicad_drc_breakdown": {
+      "total_violations": 206,
+      "unconnected_count": 62,
+      "by_type": {
+        "invalid_outline": 2,
+        "shorting_items": 1,
+        "silk_over_copper": 1,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 1,
+        "track_dangling": 1,
+        "tracks_crossing": 1
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 201
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

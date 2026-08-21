@@ -1,0 +1,59 @@
+{
+  "board_id": "Hardware_Playground_NRF52832_Touch_Switch_Power_Supply",
+  "display_name": "Hardware_Playground_NRF52832_Touch_Switch_Power_Supply",
+  "pcbench_directory": "PCBs/Hardware_Playground_NRF52832_Touch_Switch_Power_Supply",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 56,
+    "dimensions_mm": {
+      "width": 21.23,
+      "height": 20.88
+    },
+    "area_cm2": 4.43,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 296,
+    "vias": 85,
+    "track_length_mm": 543.11,
+    "kicad_drc_violations": 153,
+    "kicad_drc_breakdown": {
+      "total_violations": 153,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 56,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 10,
+        "silk_overlap": 11,
+        "text_height": 58,
+        "text_thickness": 10
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 148
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

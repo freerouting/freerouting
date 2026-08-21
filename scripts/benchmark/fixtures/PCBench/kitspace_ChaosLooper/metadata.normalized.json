@@ -1,0 +1,63 @@
+{
+  "board_id": "kitspace_ChaosLooper",
+  "display_name": "kitspace_ChaosLooper",
+  "pcbench_directory": "PCBs/kitspace_ChaosLooper",
+  "source": "https://github.com/GaudiLabs/ChaosLooper",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/GaudiLabs/ChaosLooper/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:09:07.916224+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 29,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 136.5,
+      "height": 67.2
+    },
+    "area_cm2": 91.73,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 182,
+    "vias": 17,
+    "track_length_mm": 778.47,
+    "kicad_drc_violations": 296,
+    "kicad_drc_breakdown": {
+      "total_violations": 296,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 151,
+        "copper_edge_clearance": 10,
+        "invalid_outline": 15,
+        "lib_footprint_issues": 33,
+        "padstack": 4,
+        "shorting_items": 5,
+        "silk_edge_clearance": 17,
+        "silk_over_copper": 43,
+        "solder_mask_bridge": 8,
+        "track_dangling": 4,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 193,
+        "warning": 103
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

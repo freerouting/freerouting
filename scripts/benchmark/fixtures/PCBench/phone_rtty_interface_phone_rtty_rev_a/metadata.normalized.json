@@ -1,0 +1,58 @@
+{
+  "board_id": "phone_rtty_interface_phone_rtty_rev_a",
+  "display_name": "phone_rtty_interface_phone_rtty_rev_a",
+  "pcbench_directory": "PCBs/phone_rtty_interface_phone_rtty_rev_a",
+  "source": "https://github.com/4x1md/phone_rtty_interface",
+  "author": "4x1md",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:22.037699+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 35,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 114,
+    "vias": 0,
+    "track_length_mm": 319.03,
+    "kicad_drc_violations": 248,
+    "kicad_drc_breakdown": {
+      "total_violations": 248,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 121,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 8,
+        "lib_footprint_issues": 35,
+        "silk_over_copper": 4,
+        "silk_overlap": 72,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 136,
+        "warning": 112
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

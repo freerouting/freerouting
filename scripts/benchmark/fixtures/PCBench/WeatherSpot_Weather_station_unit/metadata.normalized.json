@@ -1,0 +1,64 @@
+{
+  "board_id": "WeatherSpot_Weather_station_unit",
+  "display_name": "WeatherSpot_Weather_station_unit",
+  "pcbench_directory": "PCBs/WeatherSpot_Weather_station_unit",
+  "source": "https://github.com/hak8or/WeatherSpot",
+  "author": "hak8or",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:44.045958+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 42,
+    "dimensions_mm": {
+      "width": 50.55,
+      "height": 25.4
+    },
+    "area_cm2": 12.84,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 363,
+    "vias": 54,
+    "track_length_mm": 508.77,
+    "kicad_drc_violations": 341,
+    "kicad_drc_breakdown": {
+      "total_violations": 341,
+      "unconnected_count": 3,
+      "by_type": {
+        "annular_width": 36,
+        "clearance": 116,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 1,
+        "drill_out_of_range": 8,
+        "hole_clearance": 9,
+        "invalid_outline": 4,
+        "lib_footprint_issues": 42,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 52,
+        "silk_overlap": 4,
+        "text_height": 48,
+        "via_dangling": 16
+      },
+      "by_severity": {
+        "error": 176,
+        "warning": 165
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

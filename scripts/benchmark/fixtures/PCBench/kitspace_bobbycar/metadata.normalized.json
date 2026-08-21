@@ -1,0 +1,61 @@
+{
+  "board_id": "kitspace_bobbycar",
+  "display_name": "kitspace_bobbycar",
+  "pcbench_directory": "PCBs/kitspace_bobbycar",
+  "source": "https://github.com/Jana-Marie/hoverboard-breakout",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Jana-Marie/hoverboard-breakout/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:09:56.801980+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 61.72,
+      "height": 26.92
+    },
+    "area_cm2": 16.62,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 89,
+    "vias": 19,
+    "track_length_mm": 271.28,
+    "kicad_drc_violations": 102,
+    "kicad_drc_breakdown": {
+      "total_violations": 102,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 5,
+        "courtyards_overlap": 4,
+        "footprint_type_mismatch": 3,
+        "lib_footprint_issues": 29,
+        "silk_edge_clearance": 16,
+        "silk_over_copper": 20,
+        "silk_overlap": 18,
+        "starved_thermal": 2,
+        "text_height": 2,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 14,
+        "warning": 88
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,63 @@
+{
+  "board_id": "rufs_spv1040_power_controller",
+  "display_name": "rufs_spv1040_power_controller",
+  "pcbench_directory": "PCBs/rufs_spv1040_power_controller",
+  "source": "https://github.com/mik4el/rufs",
+  "author": "mik4el",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:49.038016+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 37.8,
+      "height": 22.1
+    },
+    "area_cm2": 8.35,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 148,
+    "vias": 11,
+    "track_length_mm": 245.05,
+    "kicad_drc_violations": 111,
+    "kicad_drc_breakdown": {
+      "total_violations": 111,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 50,
+        "copper_edge_clearance": 23,
+        "lib_footprint_issues": 22,
+        "silk_over_copper": 9,
+        "silk_overlap": 1,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 73,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.105846+00:00",
+    "elapsed_seconds": 17.47,
+    "unrouted_nets": 0,
+    "clearance_violations": 7,
+    "quality_score": 964.1
+  }
+}

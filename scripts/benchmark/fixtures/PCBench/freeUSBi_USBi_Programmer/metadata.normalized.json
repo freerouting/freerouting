@@ -1,0 +1,71 @@
+{
+  "board_id": "freeUSBi_USBi_Programmer",
+  "display_name": "freeUSBi_USBi_Programmer",
+  "pcbench_directory": "PCBs/freeUSBi_USBi_Programmer",
+  "source": "https://github.com/freeDSP/freeUSBi",
+  "author": "freeDSP",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:22.929709+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 31,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 40.0,
+      "height": 40.0
+    },
+    "area_cm2": 16.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 235,
+    "vias": 11,
+    "track_length_mm": 618.88,
+    "kicad_drc_violations": 176,
+    "kicad_drc_breakdown": {
+      "total_violations": 176,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 111,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 24,
+        "mirrored_text_on_front_layer": 1,
+        "padstack": 2,
+        "silk_edge_clearance": 6,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 8,
+        "starved_thermal": 1,
+        "track_dangling": 8
+      },
+      "by_severity": {
+        "error": 123,
+        "warning": 53
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.928515+00:00",
+    "elapsed_seconds": 9.51,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

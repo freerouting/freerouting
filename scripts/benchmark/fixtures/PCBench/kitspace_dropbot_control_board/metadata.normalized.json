@@ -1,0 +1,65 @@
+{
+  "board_id": "kitspace_dropbot_control_board",
+  "display_name": "kitspace_dropbot_control_board",
+  "pcbench_directory": "PCBs/kitspace_dropbot_control_board",
+  "source": "https://github.com/sci-bots/dropbot-control-board.kicad",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/sci-bots/dropbot-control-board.kicad/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:11:15.298849+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 70,
+    "components": 141,
+    "dimensions_mm": {
+      "width": 115.0,
+      "height": 92.0
+    },
+    "area_cm2": 105.8,
+    "zones": 13
+  },
+  "reference": {
+    "segments": 1037,
+    "vias": 153,
+    "track_length_mm": 2384.17,
+    "kicad_drc_violations": 439,
+    "kicad_drc_breakdown": {
+      "total_violations": 439,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 41,
+        "hole_clearance": 3,
+        "lib_footprint_issues": 141,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 37,
+        "silk_overlap": 18,
+        "solder_mask_bridge": 170,
+        "starved_thermal": 10,
+        "text_height": 3,
+        "text_thickness": 1,
+        "track_dangling": 4,
+        "via_dangling": 4
+      },
+      "by_severity": {
+        "error": 229,
+        "warning": 210
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

@@ -1,0 +1,60 @@
+{
+  "board_id": "kitspace_TuneShroom",
+  "display_name": "kitspace_TuneShroom",
+  "pcbench_directory": "PCBs/kitspace_TuneShroom",
+  "source": "https://github.com/ollyoid/TuneShroom",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/ollyoid/TuneShroom/master/lufa/Demos/Device/LowLevel/BulkVendor/WindowsDriver/license/libusb0/installer_license.txt'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:16:58.893713+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 44,
+    "dimensions_mm": {
+      "width": 89.43,
+      "height": 96.35
+    },
+    "area_cm2": 86.17,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 384,
+    "vias": 59,
+    "track_length_mm": 1202.14,
+    "kicad_drc_violations": 391,
+    "kicad_drc_breakdown": {
+      "total_violations": 391,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "copper_edge_clearance": 12,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 38,
+        "lib_footprint_mismatch": 6,
+        "shorting_items": 60,
+        "silk_edge_clearance": 59,
+        "silk_over_copper": 1,
+        "solder_mask_bridge": 207,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 284,
+        "warning": 107
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

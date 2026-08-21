@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "E202VAR-Natural-Radio-Receiver_e202var-vlf-radio-receiver",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 284366,
+      "sha256": "732849512ccd093e8dfc62bb388b5d4a3544e743b933c732a4bf80da3bf9abc0"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 142818,
+      "sha256": "cc4658342c0c6825e5ac31a176f2ec2c53726235f2eea0329c32d4b67d75d23f"
+    },
+    "metadata_json": {
+      "bytes": 732,
+      "sha256": "37ca08aa8e3fbaeec5164a3a153bceb388bc36047c9151a7826bdc54a8abb9b7"
+    },
+    "final_json": {
+      "bytes": 89519,
+      "sha256": "0b19f67b73a8100157b695481ee84005e11835a313df88aad329ca69d999101b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:43:35.876715+00:00"
+  }
+}

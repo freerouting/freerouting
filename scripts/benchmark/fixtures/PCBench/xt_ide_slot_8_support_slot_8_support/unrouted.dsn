@@ -1,0 +1,169 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\xt_ide_slot_8_support_slot_8_support\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  135011 -127130  116454 -127130  116454 -91310.5  135011 -91310.5
+            135011 -127130)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Capacitors_SMD:C_1206_HandSoldering
+      (place C1 125730 -95250 front 180 (PN 0.1uF))
+    )
+    (component Resistors_SMD:R_1206_HandSoldering
+      (place R1 125730 -99695 front 180 (PN 10K))
+      (place R2 125730 -104140 front 180 (PN 10K))
+    )
+    (component "SMD_Packages:SOIC-14_N"
+      (place U1 125730 -112395 front -90 (PN 74LS33))
+    )
+    (component "Wire_Pads:SolderWirePad_single_0-8mmDrill"
+      (place P6 118110 -92710 front 90 (PN CONN_1))
+      (place P7 133350 -125730 front -90 (PN CONN_1))
+      (place /CS_ROM1 118110 -113030 front 0 (PN CONN_1))
+      (place /MEMR1 118110 -107950 front 0 (PN CONN_1))
+    )
+    (component testpoints:SMD_TESTPOINT
+      (place TP1 127508 -119888 front 0 (PN CONN_1))
+      (place TP2 122428 -124714 front 0 (PN CONN_1))
+      (place TP3 127508 -124714 front 0 (PN CONN_1))
+    )
+  )
+  (library
+    (image Capacitors_SMD:C_1206_HandSoldering
+      (outline (polygon signal 0  -3295 1145  3295 1145  3295 -1145  -3295 -1145))
+      (outline (path signal 150  -1000 -1025  1000 -1025))
+      (outline (path signal 150  1000 1025  -1000 1025))
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 2 2000 0)
+    )
+    (image Resistors_SMD:R_1206_HandSoldering
+      (outline (polygon signal 0  -3295 1195  3295 1195  3295 -1195  -3295 -1195))
+      (outline (path signal 150  -1000 1075  1000 1075))
+      (outline (path signal 150  1000 -1075  -1000 -1075))
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 2 2000 0)
+    )
+    (image "SMD_Packages:SOIC-14_N"
+      (outline (path signal 150  -4445 -762  -5080 -762))
+      (outline (path signal 150  -4445 508  -4445 -762))
+      (outline (path signal 150  -5080 508  -4445 508))
+      (outline (path signal 150  -5080 2286  5080 2286))
+      (outline (path signal 150  -5080 -2540  -5080 2286))
+      (outline (path signal 150  5080 -2540  -5080 -2540))
+      (outline (path signal 150  5080 2286  5080 -2540))
+      (pin Rect[T]Pad_508.000000x1143.000000_um 1 -3810 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 2 -2540 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 3 -1270 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 4 0 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 5 1270 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 6 2540 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 7 3810 -3302)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 8 3810 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 9 2540 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 11 0 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 12 -1270 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 13 -2540 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 14 -3810 3048)
+      (pin Rect[T]Pad_508.000000x1143.000000_um 10 1270 3048)
+    )
+    (image "Wire_Pads:SolderWirePad_single_0-8mmDrill"
+      (pin Round[A]Pad_1998.980000_um 1 0 0)
+    )
+    (image testpoints:SMD_TESTPOINT
+      (pin Round[T]Pad_2540.000000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1998.980000_um
+      (shape (circle F.Cu 1998.98))
+      (shape (circle B.Cu 1998.98))
+      (attach off)
+    )
+    (padstack Round[T]Pad_2540.000000_um
+      (shape (circle F.Cu 2540))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1600.000000_um
+      (shape (rect F.Cu -1000 -800 1000 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1700.000000_um
+      (shape (rect F.Cu -1000 -850 1000 850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_508.000000x1143.000000_um
+      (shape (rect F.Cu -254 -571.5 254 571.5))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net VCC
+      (pins C1-1 R1-1 R2-1 U1-14 P6-1)
+    )
+    (net GND
+      (pins C1-2 U1-7 U1-11 U1-12 P7-1)
+    )
+    (net "Net-(R1-Pad2)"
+      (pins R1-2 U1-4 U1-8)
+    )
+    (net "Net-(R2-Pad2)"
+      (pins R2-2 U1-1 U1-9)
+    )
+    (net "Net-(TP1-Pad1)"
+      (pins U1-10 TP1-1)
+    )
+    (net "Net-(TP2-Pad1)"
+      (pins U1-5 TP2-1)
+    )
+    (net "Net-(TP3-Pad1)"
+      (pins U1-6 TP3-1)
+    )
+    (net "Net-(/CS_ROM1-Pad1)"
+      (pins U1-3 /CS_ROM1-1)
+    )
+    (net "Net-(/MEMR1-Pad1)"
+      (pins U1-2 /MEMR1-1)
+    )
+    (class kicad_default GND "Net-(/CS_ROM1-Pad1)" "Net-(/MEMR1-Pad1)" "Net-(R1-Pad2)"
+      "Net-(R2-Pad2)" "Net-(TP1-Pad1)" "Net-(TP2-Pad1)" "Net-(TP3-Pad1)" VCC
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

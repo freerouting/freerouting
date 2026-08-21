@@ -1,0 +1,26 @@
+{
+  "board": "domotics_relay-board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\domotics_relay-board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 206,
+  "approximate_track_length_mm": 871.66,
+  "kicad_drc_violations": 163,
+  "generated_at": "2026-08-18T18:42:41.523980+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 163,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 17,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 26,
+      "silk_edge_clearance": 23,
+      "silk_overlap": 96
+    },
+    "by_severity": {
+      "error": 18,
+      "warning": 145
+    }
+  }
+}

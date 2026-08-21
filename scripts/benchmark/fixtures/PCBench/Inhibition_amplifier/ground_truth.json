@@ -1,0 +1,32 @@
+{
+  "board": "Inhibition_amplifier",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Inhibition_amplifier\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 31,
+  "segment_count": 476,
+  "approximate_track_length_mm": 2310.76,
+  "kicad_drc_violations": 775,
+  "generated_at": "2026-08-18T18:58:53.371796+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 775,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 16,
+      "clearance": 469,
+      "courtyards_overlap": 18,
+      "invalid_outline": 3,
+      "lib_footprint_issues": 67,
+      "padstack": 7,
+      "pth_inside_courtyard": 6,
+      "silk_edge_clearance": 9,
+      "silk_over_copper": 45,
+      "silk_overlap": 130,
+      "starved_thermal": 5
+    },
+    "by_severity": {
+      "error": 517,
+      "warning": 258
+    }
+  }
+}

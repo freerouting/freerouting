@@ -1,0 +1,57 @@
+{
+  "board_id": "nikon_gps_nikon_gps",
+  "display_name": "nikon_gps_nikon_gps",
+  "pcbench_directory": "PCBs/nikon_gps_nikon_gps",
+  "source": "https://github.com/4x1md/nikon_gps",
+  "author": "4x1md",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:25.341738+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 34,
+    "dimensions_mm": {
+      "width": 28.0,
+      "height": 28.0
+    },
+    "area_cm2": 7.84,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 159,
+    "vias": 31,
+    "track_length_mm": 231.98,
+    "kicad_drc_violations": 98,
+    "kicad_drc_breakdown": {
+      "total_violations": 98,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "copper_edge_clearance": 9,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 34,
+        "solder_mask_bridge": 7,
+        "text_height": 41
+      },
+      "by_severity": {
+        "error": 23,
+        "warning": 75
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

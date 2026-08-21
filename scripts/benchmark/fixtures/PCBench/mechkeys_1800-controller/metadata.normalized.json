@@ -1,0 +1,64 @@
+{
+  "board_id": "mechkeys_1800-controller",
+  "display_name": "mechkeys_1800-controller",
+  "pcbench_directory": "PCBs/mechkeys_1800-controller",
+  "source": "https://github.com/BalzGuenat/mechkeys",
+  "author": "BalzGuenat",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.641894+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 80,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 45.0
+    },
+    "area_cm2": 45.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 433,
+    "vias": 8,
+    "track_length_mm": 798.1,
+    "kicad_drc_violations": 259,
+    "kicad_drc_breakdown": {
+      "total_violations": 259,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 132,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 1,
+        "drill_out_of_range": 12,
+        "lib_footprint_issues": 80,
+        "mirrored_text_on_front_layer": 2,
+        "padstack": 1,
+        "pth_inside_courtyard": 1,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 14,
+        "silk_overlap": 1,
+        "starved_thermal": 5
+      },
+      "by_severity": {
+        "error": 156,
+        "warning": 103
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,62 @@
+{
+  "board_id": "bt-tnc_bttnc2",
+  "display_name": "bt-tnc_bttnc2",
+  "pcbench_directory": "PCBs/bt-tnc_bttnc2",
+  "source": "https://github.com/hitov/bt-tnc",
+  "author": "hitov",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.550081+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 95,
+    "components": 105,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 40.01
+    },
+    "area_cm2": 28.01,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1123,
+    "vias": 148,
+    "track_length_mm": 1796.8,
+    "kicad_drc_violations": 653,
+    "kicad_drc_breakdown": {
+      "total_violations": 653,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 358,
+        "copper_edge_clearance": 34,
+        "courtyards_overlap": 15,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 105,
+        "silk_edge_clearance": 21,
+        "silk_over_copper": 84,
+        "silk_overlap": 16,
+        "text_height": 8,
+        "track_dangling": 9
+      },
+      "by_severity": {
+        "error": 410,
+        "warning": 243
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

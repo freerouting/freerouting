@@ -96,6 +96,13 @@ public class RouterSettings implements Serializable, Cloneable {
   public Integer maxThreads;
 
   /**
+   * Optional path for a machine-readable routing result manifest (JSON). Used by benchmark and
+   * autopilot harnesses; ignored when null or blank.
+   */
+  @SerializedName("result_json")
+  public String resultJsonPath;
+
+  /**
    * When {@code true}, per-layer trace costs were initialized from board geometry (or set
    * explicitly by the user) and must not be overwritten by subsequent calls to {@link
    * #applyBoardSpecificOptimizations}.

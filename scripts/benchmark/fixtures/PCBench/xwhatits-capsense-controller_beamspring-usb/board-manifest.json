@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "xwhatits-capsense-controller_beamspring-usb",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 255777,
+      "sha256": "da617c65defb487145e1488fc01f88b8e0fa14fca91ff4209cef21701db6affd"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 169096,
+      "sha256": "c540a81d9cce7599834cf44126c2addf33b7762195f846aed1ac05bbf56115b0"
+    },
+    "metadata_json": {
+      "bytes": 733,
+      "sha256": "b504e327b94d3a1fd5ae14502de6f558efe19045fbe38a31770feccdaa9d0655"
+    },
+    "final_json": {
+      "bytes": 215375,
+      "sha256": "c1786e3864596c95e81fa5edd3013e710cb4fbbe367e72ee7e5f87aa80ae7301"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:58:10.054931+00:00"
+  }
+}

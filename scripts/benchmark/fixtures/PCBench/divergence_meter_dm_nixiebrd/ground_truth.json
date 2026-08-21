@@ -1,0 +1,29 @@
+{
+  "board": "divergence_meter_dm_nixiebrd",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\divergence_meter_dm_nixiebrd\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 166,
+  "segment_count": 1594,
+  "approximate_track_length_mm": 5578.38,
+  "kicad_drc_violations": 139,
+  "generated_at": "2026-08-18T18:42:12.449053+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 139,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 69,
+      "copper_edge_clearance": 7,
+      "courtyards_overlap": 2,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 51,
+      "silk_edge_clearance": 1,
+      "silk_overlap": 7,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 79,
+      "warning": 60
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "board": "RPi-ATtiny85-Programmer_rpi_attiny85_programmer",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RPi-ATtiny85-Programmer_rpi_attiny85_programmer\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 66,
+  "approximate_track_length_mm": 211.02,
+  "kicad_drc_violations": 115,
+  "generated_at": "2026-08-18T19:42:06.611826+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 115,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 64,
+      "copper_edge_clearance": 5,
+      "isolated_copper": 2,
+      "lib_footprint_issues": 11,
+      "silk_over_copper": 10,
+      "silk_overlap": 13,
+      "text_height": 9,
+      "zones_intersect": 1
+    },
+    "by_severity": {
+      "error": 70,
+      "warning": 45
+    }
+  }
+}

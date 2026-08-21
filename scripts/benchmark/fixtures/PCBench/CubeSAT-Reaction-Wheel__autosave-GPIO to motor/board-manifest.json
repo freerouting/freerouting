@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "CubeSAT-Reaction-Wheel__autosave-GPIO to motor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 213816,
+      "sha256": "f79b63d93c97af14c2e86c229731079cb07e81459bacd5a7b4da8a4cb23ba421"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 52489,
+      "sha256": "5d1f5f943160270754792eb7dee2b24aab618514424dde873afa760d265cc2bb"
+    },
+    "metadata_json": {
+      "bytes": 549,
+      "sha256": "f068156c6d56c78e7a4b1e5ef3f56ccb66f8e718e15818bc4ab4403e8bd3ebe3"
+    },
+    "final_json": {
+      "bytes": 45583,
+      "sha256": "46e7eec5c54da0a548a8e568480bfbbbe3a9b205b6aa907fd1e158f543164c72"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:39:57.494090+00:00"
+  }
+}

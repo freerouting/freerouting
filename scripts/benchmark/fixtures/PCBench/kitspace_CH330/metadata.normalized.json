@@ -1,0 +1,64 @@
+{
+  "board_id": "kitspace_CH330",
+  "display_name": "kitspace_CH330",
+  "pcbench_directory": "PCBs/kitspace_CH330",
+  "source": "https://github.com/Jana-Marie/CH330_Hardware",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Jana-Marie/CH330_Hardware/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:20:28.282730+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 10.0,
+      "height": 10.0
+    },
+    "area_cm2": 1.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 43,
+    "vias": 4,
+    "track_length_mm": 46.01,
+    "kicad_drc_violations": 40,
+    "kicad_drc_breakdown": {
+      "total_violations": 40,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "copper_edge_clearance": 14,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 8,
+        "solder_mask_bridge": 5,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 25,
+        "warning": 15
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.982918+00:00",
+    "elapsed_seconds": 16.95,
+    "unrouted_nets": 2,
+    "clearance_violations": 12,
+    "quality_score": 816.66
+  }
+}

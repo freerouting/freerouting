@@ -1,0 +1,29 @@
+{
+  "board": "VM-sensor-PT1000_vm-sensor-pt100",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\VM-sensor-PT1000_vm-sensor-pt100\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 44,
+  "segment_count": 171,
+  "approximate_track_length_mm": 516.11,
+  "kicad_drc_violations": 137,
+  "generated_at": "2026-08-18T19:56:03.638863+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 137,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 52,
+      "lib_footprint_issues": 27,
+      "silk_edge_clearance": 14,
+      "silk_overlap": 16,
+      "solder_mask_bridge": 2,
+      "starved_thermal": 1,
+      "text_height": 1,
+      "via_dangling": 24
+    },
+    "by_severity": {
+      "error": 55,
+      "warning": 82
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "board_id": "bobc_control_panel",
+  "display_name": "bobc_control_panel",
+  "pcbench_directory": "PCBs/bobc_control_panel",
+  "source": "https://github.com/bobc/bobc_hardware",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 35,
+    "dimensions_mm": {
+      "width": 91.0,
+      "height": 73.0
+    },
+    "area_cm2": 66.43,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 358,
+    "vias": 0,
+    "track_length_mm": 2392.27,
+    "kicad_drc_violations": 304,
+    "kicad_drc_breakdown": {
+      "total_violations": 304,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 18,
+        "clearance": 13,
+        "padstack": 18,
+        "shorting_items": 9,
+        "silk_overlap": 198,
+        "solder_mask_bridge": 40,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 80,
+        "warning": 224
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

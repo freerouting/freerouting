@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "a123-battery-integration_BCM",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 418368,
+      "sha256": "7711048751a47761b744d9ab47b615dc5511fe0c0cd9f5a70086f44e9bd78b8e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 196114,
+      "sha256": "4b1603769e1e9a988cba0098f2932ff6c1cc3384035244feb29f35f904fb46b7"
+    },
+    "metadata_json": {
+      "bytes": 652,
+      "sha256": "8843e003f2031689652224b158d72b23dfead2d10e61c227e6eac169986c2dbb"
+    },
+    "final_json": {
+      "bytes": 165199,
+      "sha256": "d15d56429d91686edea9936a8c2f567723e9963e21f7e0423a98108d9485fe64"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T17:47:09.045293+00:00"
+  }
+}

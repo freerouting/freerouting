@@ -1,0 +1,63 @@
+{
+  "board_id": "Usb-Serial-Breakout-Cp2102_cp2102",
+  "display_name": "Usb-Serial-Breakout-Cp2102_cp2102",
+  "pcbench_directory": "PCBs/Usb-Serial-Breakout-Cp2102_cp2102",
+  "source": "https://github.com/Lembed/Usb-Serial-Breakout-Cp2102",
+  "author": "Lembed",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:47.702000+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 21.84,
+      "height": 15.75
+    },
+    "area_cm2": 3.44,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 126,
+    "vias": 12,
+    "track_length_mm": 148.26,
+    "kicad_drc_violations": 283,
+    "kicad_drc_breakdown": {
+      "total_violations": 283,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 50,
+        "copper_edge_clearance": 12,
+        "lib_footprint_issues": 10,
+        "malformed_courtyard": 2,
+        "silk_over_copper": 199,
+        "text_height": 10
+      },
+      "by_severity": {
+        "error": 64,
+        "warning": 219
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.156668+00:00",
+    "elapsed_seconds": 28.75,
+    "unrouted_nets": 3,
+    "clearance_violations": 26,
+    "quality_score": 658.32
+  }
+}

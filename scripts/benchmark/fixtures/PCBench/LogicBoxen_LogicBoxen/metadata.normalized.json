@@ -1,0 +1,62 @@
+{
+  "board_id": "LogicBoxen_LogicBoxen",
+  "display_name": "LogicBoxen_LogicBoxen",
+  "pcbench_directory": "PCBs/LogicBoxen_LogicBoxen",
+  "source": "https://github.com/mittelab/LogicBoxen",
+  "author": "mittelab",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.390162+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 37,
+    "components": 47,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 35.0
+    },
+    "area_cm2": 17.5,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 392,
+    "vias": 50,
+    "track_length_mm": 794.31,
+    "kicad_drc_violations": 225,
+    "kicad_drc_breakdown": {
+      "total_violations": 225,
+      "unconnected_count": 28,
+      "by_type": {
+        "annular_width": 3,
+        "clearance": 100,
+        "copper_edge_clearance": 1,
+        "hole_clearance": 4,
+        "isolated_copper": 1,
+        "lib_footprint_issues": 47,
+        "padstack": 3,
+        "silk_edge_clearance": 35,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 27,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 135,
+        "warning": 90
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

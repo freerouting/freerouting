@@ -1,0 +1,60 @@
+{
+  "board_id": "bldc-gimbal-1d_r1_gimbal-board",
+  "display_name": "bldc-gimbal-1d_r1_gimbal-board",
+  "pcbench_directory": "PCBs/bldc-gimbal-1d_r1_gimbal-board",
+  "source": "https://github.com/swedishhat/bldc-gimbal-1d",
+  "author": "swedishhat",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:53.594070+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 34,
+    "dimensions_mm": {
+      "width": 79.0,
+      "height": 45.0
+    },
+    "area_cm2": 35.55,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 368,
+    "vias": 37,
+    "track_length_mm": 922.55,
+    "kicad_drc_violations": 275,
+    "kicad_drc_breakdown": {
+      "total_violations": 275,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 179,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 34,
+        "padstack": 4,
+        "silk_over_copper": 4,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 45,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 231,
+        "warning": 44
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

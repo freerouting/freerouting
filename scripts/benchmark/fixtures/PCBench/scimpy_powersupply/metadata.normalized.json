@@ -1,0 +1,61 @@
+{
+  "board_id": "scimpy_powersupply",
+  "display_name": "scimpy_powersupply",
+  "pcbench_directory": "PCBs/scimpy_powersupply",
+  "source": "https://github.com/maqifrnswa/scimpy",
+  "author": "maqifrnswa",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:21.285690+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 51.82,
+      "height": 46.99
+    },
+    "area_cm2": 24.35,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 53,
+    "vias": 0,
+    "track_length_mm": 287.68,
+    "kicad_drc_violations": 14,
+    "kicad_drc_breakdown": {
+      "total_violations": 14,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 13
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.108847+00:00",
+    "elapsed_seconds": 5.47,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

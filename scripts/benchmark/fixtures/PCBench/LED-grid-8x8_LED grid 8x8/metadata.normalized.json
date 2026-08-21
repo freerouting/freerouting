@@ -1,0 +1,55 @@
+{
+  "board_id": "LED-grid-8x8_LED grid 8x8",
+  "display_name": "LED-grid-8x8_LED grid 8x8",
+  "pcbench_directory": "PCBs/LED-grid-8x8_LED grid 8x8",
+  "source": "https://github.com/MarginallyClever/LED-grid-8x8",
+  "author": "MarginallyClever",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.302066+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 37,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 61,
+    "vias": 0,
+    "track_length_mm": 666.29,
+    "kicad_drc_violations": 156,
+    "kicad_drc_breakdown": {
+      "total_violations": 156,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 142,
+        "lib_footprint_issues": 11,
+        "silk_overlap": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 143,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

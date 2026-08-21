@@ -1,0 +1,60 @@
+{
+  "board_id": "Practicas-Curso-Kicad_Fusari_Diego",
+  "display_name": "Practicas-Curso-Kicad_Fusari_Diego",
+  "pcbench_directory": "PCBs/Practicas-Curso-Kicad_Fusari_Diego",
+  "source": "https://github.com/INTI-CMNB/Practicas-Curso-Kicad",
+  "author": "INTI-CMNB",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.878073+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 6,
+    "dimensions_mm": {
+      "width": 27.31,
+      "height": 16.51
+    },
+    "area_cm2": 4.51,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 16,
+    "vias": 2,
+    "track_length_mm": 46.84,
+    "kicad_drc_violations": 21,
+    "kicad_drc_breakdown": {
+      "total_violations": 21,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 6,
+        "silk_overlap": 13
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.076457+00:00",
+    "elapsed_seconds": 6.69,
+    "unrouted_nets": 0,
+    "clearance_violations": 2,
+    "quality_score": 950.0
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "board_id": "mechkeys_BluePad",
+  "display_name": "mechkeys_BluePad",
+  "pcbench_directory": "PCBs/mechkeys_BluePad",
+  "source": "https://github.com/BalzGuenat/mechkeys",
+  "author": "BalzGuenat",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.641894+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 43,
+    "components": 187,
+    "dimensions_mm": {
+      "width": 76.2,
+      "height": 95.25
+    },
+    "area_cm2": 72.58,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1052,
+    "vias": 104,
+    "track_length_mm": 4240.48,
+    "kicad_drc_violations": 1273,
+    "kicad_drc_breakdown": {
+      "total_violations": 1273,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 113,
+        "clearance": 499,
+        "copper_edge_clearance": 11,
+        "courtyards_overlap": 6,
+        "drill_out_of_range": 113,
+        "hole_clearance": 19,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 148,
+        "padstack": 113,
+        "pth_inside_courtyard": 22,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 16,
+        "silk_overlap": 36,
+        "solder_mask_bridge": 174
+      },
+      "by_severity": {
+        "error": 958,
+        "warning": 315
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

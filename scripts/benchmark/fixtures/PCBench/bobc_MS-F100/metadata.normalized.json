@@ -1,0 +1,59 @@
+{
+  "board_id": "bobc_MS-F100",
+  "display_name": "bobc_MS-F100",
+  "pcbench_directory": "PCBs/bobc_MS-F100",
+  "source": "https://github.com/bobc/bobc_hardware",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 50.8,
+      "height": 17.78
+    },
+    "area_cm2": 9.03,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 557,
+    "vias": 23,
+    "track_length_mm": 1010.89,
+    "kicad_drc_violations": 300,
+    "kicad_drc_breakdown": {
+      "total_violations": 300,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "copper_edge_clearance": 20,
+        "silk_edge_clearance": 13,
+        "silk_over_copper": 43,
+        "silk_overlap": 15,
+        "solder_mask_bridge": 167,
+        "text_height": 39,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 189,
+        "warning": 111
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

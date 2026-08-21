@@ -1,0 +1,60 @@
+{
+  "board_id": "technoshield-ui-hw_technoshield",
+  "display_name": "technoshield-ui-hw_technoshield",
+  "pcbench_directory": "PCBs/technoshield-ui-hw_technoshield",
+  "source": "https://github.com/jscastonguay/technoshield-ui-hw",
+  "author": "jscastonguay",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:52.430056+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 63,
+    "components": 49,
+    "dimensions_mm": {
+      "width": 85.85,
+      "height": 99.95
+    },
+    "area_cm2": 85.81,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 444,
+    "vias": 61,
+    "track_length_mm": 2213.76,
+    "kicad_drc_violations": 460,
+    "kicad_drc_breakdown": {
+      "total_violations": 460,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 352,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 3,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 49,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 44,
+        "silk_overlap": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 364,
+        "warning": 96
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

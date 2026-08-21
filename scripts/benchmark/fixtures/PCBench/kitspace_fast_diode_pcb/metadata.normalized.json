@@ -1,0 +1,65 @@
+{
+  "board_id": "kitspace_fast_diode_pcb",
+  "display_name": "kitspace_fast_diode_pcb",
+  "pcbench_directory": "PCBs/kitspace_fast_diode_pcb",
+  "source": "https://github.com/amchagas/fast-response-diode",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/amchagas/fast-response-diode/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:58.225787+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 48.89,
+      "height": 29.21
+    },
+    "area_cm2": 14.28,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 28,
+    "vias": 0,
+    "track_length_mm": 84.07,
+    "kicad_drc_violations": 27,
+    "kicad_drc_breakdown": {
+      "total_violations": 27,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "copper_edge_clearance": 2,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 4,
+        "silk_edge_clearance": 5,
+        "solder_mask_bridge": 5,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 16,
+        "warning": 11
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.985930+00:00",
+    "elapsed_seconds": 10.84,
+    "unrouted_nets": 0,
+    "clearance_violations": 2,
+    "quality_score": 978.94
+  }
+}

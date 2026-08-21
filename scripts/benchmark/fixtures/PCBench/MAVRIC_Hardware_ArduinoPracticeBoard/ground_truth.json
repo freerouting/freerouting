@@ -1,0 +1,26 @@
+{
+  "board": "MAVRIC_Hardware_ArduinoPracticeBoard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MAVRIC_Hardware_ArduinoPracticeBoard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 34,
+  "segment_count": 212,
+  "approximate_track_length_mm": 539.48,
+  "kicad_drc_violations": 130,
+  "generated_at": "2026-08-18T19:20:18.036551+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 130,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 82,
+      "lib_footprint_issues": 15,
+      "silk_edge_clearance": 2,
+      "solder_mask_bridge": 28,
+      "starved_thermal": 3
+    },
+    "by_severity": {
+      "error": 113,
+      "warning": 17
+    }
+  }
+}

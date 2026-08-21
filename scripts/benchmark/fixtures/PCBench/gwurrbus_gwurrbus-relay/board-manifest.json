@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "gwurrbus_gwurrbus-relay",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 68755,
+      "sha256": "6437d679686b64d22c2d27225a41698b4676716e81fd2f86c768bfeef15af5c8"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 58908,
+      "sha256": "2d05fcf99e63454eb56e56d65e8f6a4d0814a384aa6ce9111a8b2f5406c55f3e"
+    },
+    "metadata_json": {
+      "bytes": 470,
+      "sha256": "044c51660730db90b3f6cb227374dfb5afe92a12d0433067ac62dc75b7d8631f"
+    },
+    "final_json": {
+      "bytes": 48326,
+      "sha256": "e3d3abe30b3188de8377594a03d1d995bcdba3991fb4a89bb2b6bf2587e139b8"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:51:37.388958+00:00"
+  }
+}

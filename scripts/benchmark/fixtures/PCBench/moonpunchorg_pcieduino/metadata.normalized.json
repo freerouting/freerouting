@@ -1,0 +1,58 @@
+{
+  "board_id": "moonpunchorg_pcieduino",
+  "display_name": "moonpunchorg_pcieduino",
+  "pcbench_directory": "PCBs/moonpunchorg_pcieduino",
+  "source": "https://github.com/moonpunchorg/pcieduino",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 32,
+    "dimensions_mm": {
+      "width": 50.95,
+      "height": 30.0
+    },
+    "area_cm2": 15.29,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 500,
+    "vias": 57,
+    "track_length_mm": 999.73,
+    "kicad_drc_violations": 332,
+    "kicad_drc_breakdown": {
+      "total_violations": 332,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 119,
+        "copper_edge_clearance": 54,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 76,
+        "silk_overlap": 41,
+        "starved_thermal": 9,
+        "text_height": 31
+      },
+      "by_severity": {
+        "error": 182,
+        "warning": 150
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

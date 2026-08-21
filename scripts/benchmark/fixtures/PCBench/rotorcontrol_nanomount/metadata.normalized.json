@@ -1,0 +1,60 @@
+{
+  "board_id": "rotorcontrol_nanomount",
+  "display_name": "rotorcontrol_nanomount",
+  "pcbench_directory": "PCBs/rotorcontrol_nanomount",
+  "source": "https://github.com/moho1/rotorcontrol",
+  "author": "moho1",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.414150+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 21,
+    "components": 2,
+    "dimensions_mm": {
+      "width": 50.8,
+      "height": 45.72
+    },
+    "area_cm2": 23.23,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 83,
+    "vias": 0,
+    "track_length_mm": 471.92,
+    "kicad_drc_violations": 3,
+    "kicad_drc_breakdown": {
+      "total_violations": 3,
+      "unconnected_count": 2,
+      "by_type": {
+        "lib_footprint_issues": 2,
+        "silk_edge_clearance": 1
+      },
+      "by_severity": {
+        "warning": 3
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.100615+00:00",
+    "elapsed_seconds": 7.51,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

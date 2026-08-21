@@ -1,0 +1,64 @@
+{
+  "board_id": "shutter_Shutter V4",
+  "display_name": "shutter_Shutter V4",
+  "pcbench_directory": "PCBs/shutter_Shutter V4",
+  "source": "https://github.com/anome/shutter",
+  "author": "anome",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:55.006086+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 41.27,
+      "height": 64.77
+    },
+    "area_cm2": 26.73,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 218,
+    "vias": 9,
+    "track_length_mm": 688.2,
+    "kicad_drc_violations": 211,
+    "kicad_drc_breakdown": {
+      "total_violations": 211,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 159,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 20,
+        "silk_overlap": 19,
+        "starved_thermal": 1,
+        "text_height": 6,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 163,
+        "warning": 48
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.110850+00:00",
+    "elapsed_seconds": 14.38,
+    "unrouted_nets": 3,
+    "clearance_violations": 4,
+    "quality_score": 934.48
+  }
+}

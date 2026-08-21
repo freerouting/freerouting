@@ -1,0 +1,63 @@
+{
+  "board_id": "kitspace_RPi_shield",
+  "display_name": "kitspace_RPi_shield",
+  "pcbench_directory": "PCBs/kitspace_RPi_shield",
+  "source": "https://github.com/matiasandina/FEDWatcher",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/matiasandina/FEDWatcher/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:14:42.652448+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 64.01,
+      "height": 56.13
+    },
+    "area_cm2": 35.93,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 23,
+    "vias": 0,
+    "track_length_mm": 200.38,
+    "kicad_drc_violations": 31,
+    "kicad_drc_breakdown": {
+      "total_violations": 31,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 5,
+        "lib_footprint_issues": 2,
+        "lib_footprint_mismatch": 5,
+        "nonmirrored_text_on_back_layer": 1,
+        "pth_inside_courtyard": 14,
+        "silk_over_copper": 4
+      },
+      "by_severity": {
+        "error": 19,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.001193+00:00",
+    "elapsed_seconds": 9.23,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 954.54
+  }
+}

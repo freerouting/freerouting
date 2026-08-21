@@ -1,0 +1,56 @@
+{
+  "board_id": "SmartLaserCO2-PCB__autosave-SmartLaserShield",
+  "display_name": "SmartLaserCO2-PCB__autosave-SmartLaserShield",
+  "pcbench_directory": "PCBs/SmartLaserCO2-PCB__autosave-SmartLaserShield",
+  "source": "https://github.com/smartDIYs/SmartLaserCO2-PCB",
+  "author": "smartDIYs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.450080+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 40,
+    "dimensions_mm": {
+      "width": 79.0,
+      "height": 53.0
+    },
+    "area_cm2": 41.87,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 403,
+    "vias": 50,
+    "track_length_mm": 1430.14,
+    "kicad_drc_violations": 242,
+    "kicad_drc_breakdown": {
+      "total_violations": 242,
+      "unconnected_count": 0,
+      "by_type": {
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 153,
+        "silk_overlap": 13,
+        "text_height": 36,
+        "text_thickness": 26,
+        "via_dangling": 13
+      },
+      "by_severity": {
+        "warning": 242
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

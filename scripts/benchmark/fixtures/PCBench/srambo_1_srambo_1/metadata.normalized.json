@@ -1,0 +1,56 @@
+{
+  "board_id": "srambo_1_srambo_1",
+  "display_name": "srambo_1_srambo_1",
+  "pcbench_directory": "PCBs/srambo_1_srambo_1",
+  "source": "https://github.com/piotr-wiszowaty/srambo_1",
+  "author": "piotr-wiszowaty",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:38.869897+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 113.0,
+      "height": 42.0
+    },
+    "area_cm2": 47.46,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 603,
+    "vias": 39,
+    "track_length_mm": 3481.16,
+    "kicad_drc_violations": 238,
+    "kicad_drc_breakdown": {
+      "total_violations": 238,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 103,
+        "lib_footprint_issues": 30,
+        "silk_over_copper": 6,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 96
+      },
+      "by_severity": {
+        "error": 199,
+        "warning": 39
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

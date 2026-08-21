@@ -1,0 +1,56 @@
+{
+  "board_id": "kitspace_sop8breakout",
+  "display_name": "kitspace_sop8breakout",
+  "pcbench_directory": "PCBs/kitspace_sop8breakout",
+  "source": "https://github.com/jasiek/antenna-analyser",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:22:53.770712+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 48,
+    "dimensions_mm": {
+      "width": 83.32,
+      "height": 63.24
+    },
+    "area_cm2": 52.69,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 608,
+    "vias": 0,
+    "track_length_mm": 1714.48,
+    "kicad_drc_violations": 208,
+    "kicad_drc_breakdown": {
+      "total_violations": 208,
+      "unconnected_count": 120,
+      "by_type": {
+        "copper_edge_clearance": 64,
+        "invalid_outline": 54,
+        "lib_footprint_issues": 48,
+        "nonmirrored_text_on_back_layer": 2,
+        "silk_edge_clearance": 24,
+        "track_dangling": 16
+      },
+      "by_severity": {
+        "error": 118,
+        "warning": 90
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

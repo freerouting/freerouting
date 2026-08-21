@@ -1,0 +1,56 @@
+{
+  "board_id": "hillhacks2016_badge_badge1",
+  "display_name": "hillhacks2016_badge_badge1",
+  "pcbench_directory": "PCBs/hillhacks2016_badge_badge1",
+  "source": "https://github.com/ntavish/hillhacks2016_badge",
+  "author": "ntavish",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:43.569952+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 49.95,
+      "height": 99.95
+    },
+    "area_cm2": 49.93,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 182,
+    "vias": 2,
+    "track_length_mm": 777.03,
+    "kicad_drc_violations": 106,
+    "kicad_drc_breakdown": {
+      "total_violations": 106,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 61,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 24,
+        "silk_over_copper": 19,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 63,
+        "warning": 43
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

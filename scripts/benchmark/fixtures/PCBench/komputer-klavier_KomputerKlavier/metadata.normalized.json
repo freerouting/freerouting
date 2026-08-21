@@ -1,0 +1,56 @@
+{
+  "board_id": "komputer-klavier_KomputerKlavier",
+  "display_name": "komputer-klavier_KomputerKlavier",
+  "pcbench_directory": "PCBs/komputer-klavier_KomputerKlavier",
+  "source": "https://github.com/haramcore/komputer-klavier",
+  "author": "haramcore",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:23:01.370161+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 43,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 58.42,
+      "height": 50.8
+    },
+    "area_cm2": 29.68,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 216,
+    "vias": 5,
+    "track_length_mm": 664.32,
+    "kicad_drc_violations": 171,
+    "kicad_drc_breakdown": {
+      "total_violations": 171,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 148,
+        "lib_footprint_issues": 19,
+        "silk_over_copper": 1,
+        "silk_overlap": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 149,
+        "warning": 22
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,62 @@
+{
+  "board_id": "kicad-esp8266-led-shld_ESP8266_LED_shld",
+  "display_name": "kicad-esp8266-led-shld_ESP8266_LED_shld",
+  "pcbench_directory": "PCBs/kicad-esp8266-led-shld_ESP8266_LED_shld",
+  "source": "https://github.com/papricasix/kicad-esp8266-led-shld",
+  "author": "papricasix",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:34.253842+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 59.06,
+      "height": 52.7
+    },
+    "area_cm2": 31.12,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 248,
+    "vias": 11,
+    "track_length_mm": 768.9,
+    "kicad_drc_violations": 284,
+    "kicad_drc_breakdown": {
+      "total_violations": 284,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 187,
+        "courtyards_overlap": 1,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 29,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 22,
+        "silk_overlap": 15,
+        "solder_mask_bridge": 6,
+        "starved_thermal": 1,
+        "text_height": 16,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 198,
+        "warning": 86
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

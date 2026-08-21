@@ -1,0 +1,61 @@
+{
+  "board_id": "kitspace_USB-C-Screen-Adapter-LDR6023SS",
+  "display_name": "kitspace_USB-C-Screen-Adapter-LDR6023SS",
+  "pcbench_directory": "PCBs/kitspace_USB-C-Screen-Adapter-LDR6023SS",
+  "source": "https://github.com/Jana-Marie/OtterScreenAdapter",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Jana-Marie/OtterScreenAdapter/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:15:55.110433+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 42,
+    "dimensions_mm": {
+      "width": 31.0,
+      "height": 34.35
+    },
+    "area_cm2": 10.65,
+    "zones": 16
+  },
+  "reference": {
+    "segments": 686,
+    "vias": 154,
+    "track_length_mm": 640.34,
+    "kicad_drc_violations": 155,
+    "kicad_drc_breakdown": {
+      "total_violations": 155,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 25,
+        "copper_edge_clearance": 10,
+        "courtyards_overlap": 24,
+        "hole_clearance": 10,
+        "lib_footprint_issues": 3,
+        "lib_footprint_mismatch": 35,
+        "silk_edge_clearance": 2,
+        "text_height": 40,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 73,
+        "warning": 82
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

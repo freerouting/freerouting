@@ -1,0 +1,25 @@
+{
+  "board": "SynthDrumTrigger_Synth Drum Trigger",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SynthDrumTrigger_Synth Drum Trigger\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 97,
+  "approximate_track_length_mm": 311.29,
+  "kicad_drc_violations": 148,
+  "generated_at": "2026-08-18T19:49:31.120361+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 148,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 20,
+      "lib_footprint_issues": 31,
+      "silk_overlap": 89,
+      "text_height": 8
+    },
+    "by_severity": {
+      "error": 20,
+      "warning": 128
+    }
+  }
+}

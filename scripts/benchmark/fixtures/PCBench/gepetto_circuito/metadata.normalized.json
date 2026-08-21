@@ -1,0 +1,55 @@
+{
+  "board_id": "gepetto_circuito",
+  "display_name": "gepetto_circuito",
+  "pcbench_directory": "PCBs/gepetto_circuito",
+  "source": "https://github.com/ivandivito/gepetto",
+  "author": "ivandivito",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:51.494045+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 86.61,
+      "height": 58.41
+    },
+    "area_cm2": 50.59,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 212,
+    "vias": 32,
+    "track_length_mm": 1271.29,
+    "kicad_drc_violations": 41,
+    "kicad_drc_breakdown": {
+      "total_violations": 41,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 20,
+        "silk_edge_clearance": 1,
+        "silk_overlap": 12,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "error": 2,
+        "warning": 39
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

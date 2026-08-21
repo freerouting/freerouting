@@ -1,0 +1,63 @@
+{
+  "board_id": "PsuFanController_FanController",
+  "display_name": "PsuFanController_FanController",
+  "pcbench_directory": "PCBs/PsuFanController_FanController",
+  "source": "https://github.com/bbtinkerer/PsuFanController",
+  "author": "bbtinkerer",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:40.913921+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 43.22,
+      "height": 25.55
+    },
+    "area_cm2": 11.04,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 37,
+    "vias": 0,
+    "track_length_mm": 180.17,
+    "kicad_drc_violations": 24,
+    "kicad_drc_breakdown": {
+      "total_violations": 24,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 12,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 6
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 21
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.080458+00:00",
+    "elapsed_seconds": 5.57,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

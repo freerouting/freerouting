@@ -1,0 +1,27 @@
+{
+  "board": "Usb-Serial-Breakout-Cp2102_cp2102",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Usb-Serial-Breakout-Cp2102_cp2102\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 12,
+  "segment_count": 126,
+  "approximate_track_length_mm": 148.26,
+  "kicad_drc_violations": 283,
+  "generated_at": "2026-08-18T19:55:08.443402+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 283,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 50,
+      "copper_edge_clearance": 12,
+      "lib_footprint_issues": 10,
+      "malformed_courtyard": 2,
+      "silk_over_copper": 199,
+      "text_height": 10
+    },
+    "by_severity": {
+      "error": 64,
+      "warning": 219
+    }
+  }
+}

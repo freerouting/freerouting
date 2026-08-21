@@ -1,0 +1,60 @@
+{
+  "board_id": "motor-3xdrv8833-hw_ver1",
+  "display_name": "motor-3xdrv8833-hw_ver1",
+  "pcbench_directory": "PCBs/motor-3xdrv8833-hw_ver1",
+  "source": "https://github.com/ledalert/motor-3xdrv8833-hw",
+  "author": "ledalert",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:50.142029+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 73,
+    "dimensions_mm": {
+      "width": 61.0,
+      "height": 59.0
+    },
+    "area_cm2": 35.99,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1146,
+    "vias": 118,
+    "track_length_mm": 2671.42,
+    "kicad_drc_violations": 689,
+    "kicad_drc_breakdown": {
+      "total_violations": 689,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 202,
+        "copper_edge_clearance": 14,
+        "lib_footprint_issues": 73,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 199,
+        "silk_overlap": 52,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 1,
+        "text_height": 142
+      },
+      "by_severity": {
+        "error": 221,
+        "warning": 468
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

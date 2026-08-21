@@ -1,0 +1,58 @@
+{
+  "board_id": "devttys0_IRis",
+  "display_name": "devttys0_IRis",
+  "pcbench_directory": "PCBs/devttys0_IRis",
+  "source": "https://github.com/devttys0/IRis",
+  "author": "",
+  "license": "[{'name': 'The Unlicense', 'link': 'https://api.github.com/licenses/unlicense'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 12.7,
+      "height": 9.14
+    },
+    "area_cm2": 1.16,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 97,
+    "vias": 4,
+    "track_length_mm": 132.53,
+    "kicad_drc_violations": 72,
+    "kicad_drc_breakdown": {
+      "total_violations": 72,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 29,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 30,
+        "silk_over_copper": 2,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 3
+      },
+      "by_severity": {
+        "error": 38,
+        "warning": 34
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "temperature-alarm_controller",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 88448,
+      "sha256": "b1a30c9b220772529a013d10fbfafc9297a4ff24311185b9bf3db4d8a7a6f424"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 57637,
+      "sha256": "bd1184ddf5858fdaf81468bf3f9005f056a5fdec2d594fdbb5373d96860e12d8"
+    },
+    "metadata_json": {
+      "bytes": 660,
+      "sha256": "b0102e58fac988ad0141eb66f9b1d117dedd1f2a1ce32f5e74a648915cc261cf"
+    },
+    "final_json": {
+      "bytes": 49416,
+      "sha256": "35a3b6150bf92063fca3ee5422d1f65282055e809c25fd68006001dad0b72498"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:51:14.086324+00:00"
+  }
+}

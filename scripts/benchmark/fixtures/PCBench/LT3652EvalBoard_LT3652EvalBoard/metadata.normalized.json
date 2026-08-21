@@ -1,0 +1,59 @@
+{
+  "board_id": "LT3652EvalBoard_LT3652EvalBoard",
+  "display_name": "LT3652EvalBoard_LT3652EvalBoard",
+  "pcbench_directory": "PCBs/LT3652EvalBoard_LT3652EvalBoard",
+  "source": "https://github.com/malcolmspiteri/LT3652EvalBoard",
+  "author": "malcolmspiteri",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.894156+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 47,
+    "dimensions_mm": {
+      "width": 49.8,
+      "height": 49.8
+    },
+    "area_cm2": 24.8,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 186,
+    "vias": 8,
+    "track_length_mm": 460.1,
+    "kicad_drc_violations": 178,
+    "kicad_drc_breakdown": {
+      "total_violations": 178,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 93,
+        "lib_footprint_issues": 47,
+        "silk_over_copper": 13,
+        "silk_overlap": 8,
+        "starved_thermal": 1,
+        "text_height": 14,
+        "text_thickness": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 94,
+        "warning": 84
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

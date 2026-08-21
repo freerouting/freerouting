@@ -1,0 +1,59 @@
+{
+  "board_id": "stlinkv2_breakout_stlink_breakout",
+  "display_name": "stlinkv2_breakout_stlink_breakout",
+  "pcbench_directory": "PCBs/stlinkv2_breakout_stlink_breakout",
+  "source": "https://github.com/slightlynybbled/stlinkv2_breakout",
+  "author": "slightlynybbled",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.674012+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 2,
+    "dimensions_mm": {
+      "width": 34.8,
+      "height": 15.24
+    },
+    "area_cm2": 5.3,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 19,
+    "vias": 1,
+    "track_length_mm": 65.3,
+    "kicad_drc_violations": 10,
+    "kicad_drc_breakdown": {
+      "total_violations": 10,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "lib_footprint_issues": 2
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 2
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.127387+00:00",
+    "elapsed_seconds": 6.0,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 941.18
+  }
+}

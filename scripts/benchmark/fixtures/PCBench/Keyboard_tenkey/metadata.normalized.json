@@ -1,0 +1,60 @@
+{
+  "board_id": "Keyboard_tenkey",
+  "display_name": "Keyboard_tenkey",
+  "pcbench_directory": "PCBs/Keyboard_tenkey",
+  "source": "https://github.com/kenbarbour/Keyboard",
+  "author": "kenbarbour",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:03.154182+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 39,
+    "components": 58,
+    "dimensions_mm": {
+      "width": 75.95,
+      "height": 96.39
+    },
+    "area_cm2": 73.21,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 487,
+    "vias": 6,
+    "track_length_mm": 1365.86,
+    "kicad_drc_violations": 377,
+    "kicad_drc_breakdown": {
+      "total_violations": 377,
+      "unconnected_count": 4,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 41,
+        "copper_edge_clearance": 6,
+        "lib_footprint_issues": 58,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 40,
+        "silk_overlap": 199,
+        "text_height": 22,
+        "text_thickness": 3,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 49,
+        "warning": 328
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

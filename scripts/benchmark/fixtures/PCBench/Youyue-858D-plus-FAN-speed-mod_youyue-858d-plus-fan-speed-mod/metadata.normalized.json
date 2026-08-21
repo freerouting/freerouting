@@ -1,0 +1,60 @@
+{
+  "board_id": "Youyue-858D-plus-FAN-speed-mod_youyue-858d-plus-fan-speed-mod",
+  "display_name": "Youyue-858D-plus-FAN-speed-mod_youyue-858d-plus-fan-speed-mod",
+  "pcbench_directory": "PCBs/Youyue-858D-plus-FAN-speed-mod_youyue-858d-plus-fan-speed-mod",
+  "source": "https://github.com/madworm/Youyue-858D-plus-FAN-speed-mod",
+  "author": "madworm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:31.841814+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 17.0,
+      "height": 30.4
+    },
+    "area_cm2": 5.17,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 111,
+    "vias": 13,
+    "track_length_mm": 206.63,
+    "kicad_drc_violations": 41,
+    "kicad_drc_breakdown": {
+      "total_violations": 41,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 22,
+        "silk_over_copper": 16,
+        "solder_mask_bridge": 2
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.169829+00:00",
+    "elapsed_seconds": 6.31,
+    "unrouted_nets": 0,
+    "clearance_violations": 1,
+    "quality_score": 993.74
+  }
+}

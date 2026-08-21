@@ -1,0 +1,29 @@
+{
+  "board": "MSGEQ7-Breakout-Board_MSGEQ7_Breakout_Board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MSGEQ7-Breakout-Board_MSGEQ7_Breakout_Board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 53,
+  "approximate_track_length_mm": 134.38,
+  "kicad_drc_violations": 108,
+  "generated_at": "2026-08-18T19:25:52.650435+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 108,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 68,
+      "copper_edge_clearance": 2,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 9,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 11,
+      "silk_overlap": 8,
+      "text_height": 5
+    },
+    "by_severity": {
+      "error": 71,
+      "warning": 37
+    }
+  }
+}

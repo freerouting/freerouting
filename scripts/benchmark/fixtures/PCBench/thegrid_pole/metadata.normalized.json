@@ -1,0 +1,67 @@
+{
+  "board_id": "thegrid_pole",
+  "display_name": "thegrid_pole",
+  "pcbench_directory": "PCBs/thegrid_pole",
+  "source": "https://github.com/cillian64/thegrid",
+  "author": "cillian64",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:56.714107+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 15.0,
+      "height": 39.0
+    },
+    "area_cm2": 5.85,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 257,
+    "vias": 29,
+    "track_length_mm": 310.27,
+    "kicad_drc_violations": 129,
+    "kicad_drc_breakdown": {
+      "total_violations": 129,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 10,
+        "copper_edge_clearance": 32,
+        "courtyards_overlap": 10,
+        "drill_out_of_range": 24,
+        "hole_clearance": 13,
+        "lib_footprint_issues": 24,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 6,
+        "track_dangling": 5,
+        "via_dangling": 4
+      },
+      "by_severity": {
+        "error": 89,
+        "warning": 40
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.141374+00:00",
+    "elapsed_seconds": 34.97,
+    "unrouted_nets": 0,
+    "clearance_violations": 23,
+    "quality_score": 925.8
+  }
+}

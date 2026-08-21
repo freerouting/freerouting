@@ -1,0 +1,58 @@
+{
+  "board_id": "Hangul-Clock_Hangul",
+  "display_name": "Hangul-Clock_Hangul",
+  "pcbench_directory": "PCBs/Hangul-Clock_Hangul",
+  "source": "https://github.com/09labs/Hangul-Clock",
+  "author": "09labs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.285984+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 65,
+    "components": 87,
+    "dimensions_mm": {
+      "width": 99.0,
+      "height": 99.0
+    },
+    "area_cm2": 98.01,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 626,
+    "vias": 25,
+    "track_length_mm": 2937.54,
+    "kicad_drc_violations": 687,
+    "kicad_drc_breakdown": {
+      "total_violations": 687,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 466,
+        "courtyards_overlap": 2,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 87,
+        "silk_over_copper": 18,
+        "silk_overlap": 108,
+        "starved_thermal": 5
+      },
+      "by_severity": {
+        "error": 474,
+        "warning": 213
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

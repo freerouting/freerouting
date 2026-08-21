@@ -1,0 +1,32 @@
+{
+  "board": "LogicBoxen_LogicBoxen",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LogicBoxen_LogicBoxen\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 50,
+  "segment_count": 392,
+  "approximate_track_length_mm": 794.31,
+  "kicad_drc_violations": 225,
+  "generated_at": "2026-08-18T19:17:17.006793+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 225,
+    "unconnected_count": 28,
+    "by_type": {
+      "annular_width": 3,
+      "clearance": 100,
+      "copper_edge_clearance": 1,
+      "hole_clearance": 4,
+      "isolated_copper": 1,
+      "lib_footprint_issues": 47,
+      "padstack": 3,
+      "silk_edge_clearance": 35,
+      "silk_overlap": 3,
+      "solder_mask_bridge": 27,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 135,
+      "warning": 90
+    }
+  }
+}

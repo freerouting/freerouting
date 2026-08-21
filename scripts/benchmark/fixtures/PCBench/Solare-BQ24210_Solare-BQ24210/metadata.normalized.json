@@ -1,0 +1,65 @@
+{
+  "board_id": "Solare-BQ24210_Solare-BQ24210",
+  "display_name": "Solare-BQ24210_Solare-BQ24210",
+  "pcbench_directory": "PCBs/Solare-BQ24210_Solare-BQ24210",
+  "source": "https://github.com/adamjvr/Solare-BQ24210",
+  "author": "adamjvr",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:32.681824+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 27.1,
+      "height": 15.9
+    },
+    "area_cm2": 4.31,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 153,
+    "vias": 52,
+    "track_length_mm": 224.07,
+    "kicad_drc_violations": 86,
+    "kicad_drc_breakdown": {
+      "total_violations": 86,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 28,
+        "copper_edge_clearance": 12,
+        "lib_footprint_issues": 15,
+        "solder_mask_bridge": 12,
+        "text_height": 19
+      },
+      "by_severity": {
+        "error": 52,
+        "warning": 34
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.120871+00:00",
+    "elapsed_seconds": 9.55,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "board_id": "HellScribe_HellScribe",
+  "display_name": "HellScribe_HellScribe",
+  "pcbench_directory": "PCBs/HellScribe_HellScribe",
+  "source": "https://github.com/devttys0/HellScribe",
+  "author": "devttys0",
+  "license": "The Unlicense",
+  "license_spdx": "Unlicense",
+  "retrieved_at": "2023-08-17T17:22:47.173994+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 38,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 173.74,
+      "height": 28.45
+    },
+    "area_cm2": 49.43,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 297,
+    "vias": 71,
+    "track_length_mm": 1367.67,
+    "kicad_drc_violations": 179,
+    "kicad_drc_breakdown": {
+      "total_violations": 179,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 122,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 49,
+        "silk_over_copper": 2,
+        "silk_overlap": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 124,
+        "warning": 55
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

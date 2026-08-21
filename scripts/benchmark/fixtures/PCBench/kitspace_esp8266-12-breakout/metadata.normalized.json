@@ -1,0 +1,69 @@
+{
+  "board_id": "kitspace_esp8266-12-breakout",
+  "display_name": "kitspace_esp8266-12-breakout",
+  "pcbench_directory": "PCBs/kitspace_esp8266-12-breakout",
+  "source": "https://github.com/mattvenn/esp8266-breakout",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:08:44.698524+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 15,
+    "dimensions_mm": {
+      "width": 32.39,
+      "height": 39.37
+    },
+    "area_cm2": 12.75,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 229,
+    "vias": 16,
+    "track_length_mm": 601.33,
+    "kicad_drc_violations": 168,
+    "kicad_drc_breakdown": {
+      "total_violations": 168,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 72,
+        "copper_edge_clearance": 3,
+        "items_not_allowed": 19,
+        "lib_footprint_issues": 15,
+        "malformed_courtyard": 2,
+        "silk_over_copper": 48,
+        "silk_overlap": 6,
+        "starved_thermal": 1,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 97,
+        "warning": 71
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.984425+00:00",
+    "elapsed_seconds": 9.36,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

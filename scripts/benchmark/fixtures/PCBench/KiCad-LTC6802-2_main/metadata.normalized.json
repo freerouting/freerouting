@@ -1,0 +1,66 @@
+{
+  "board_id": "KiCad-LTC6802-2_main",
+  "display_name": "KiCad-LTC6802-2_main",
+  "pcbench_directory": "PCBs/KiCad-LTC6802-2_main",
+  "source": "https://github.com/johaa1993/KiCad-LTC6802-2",
+  "author": "johaa1993",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.306184+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 21,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 50.8,
+      "height": 40.64
+    },
+    "area_cm2": 20.65,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 114,
+    "vias": 0,
+    "track_length_mm": 478.52,
+    "kicad_drc_violations": 36,
+    "kicad_drc_breakdown": {
+      "total_violations": 36,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 5,
+        "isolated_copper": 4,
+        "lib_footprint_issues": 9,
+        "silk_over_copper": 6,
+        "silk_overlap": 10,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 31
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.968848+00:00",
+    "elapsed_seconds": 9.59,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

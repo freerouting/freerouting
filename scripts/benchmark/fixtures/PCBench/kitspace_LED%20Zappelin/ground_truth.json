@@ -1,0 +1,34 @@
+{
+  "board": "kitspace_LED%20Zappelin",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_LED%20Zappelin\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 325,
+  "approximate_track_length_mm": 2266.42,
+  "kicad_drc_violations": 97,
+  "generated_at": "2026-08-18T19:08:08.452684+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 97,
+    "unconnected_count": 30,
+    "by_type": {
+      "annular_width": 1,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 35,
+      "lib_footprint_mismatch": 4,
+      "malformed_courtyard": 1,
+      "pth_inside_courtyard": 30,
+      "shorting_items": 2,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 6,
+      "silk_overlap": 7,
+      "solder_mask_bridge": 2,
+      "starved_thermal": 2,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 39,
+      "warning": 58
+    }
+  }
+}

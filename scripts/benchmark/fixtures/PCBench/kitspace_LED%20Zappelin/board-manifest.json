@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_LED%20Zappelin",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 438744,
+      "sha256": "63623fb50279c935c284a9c7fd18e1fab2c7fc30644a21dbdbf75699d5257943"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 371560,
+      "sha256": "fe7f52d9f68cab7f8f26c06ea38d7d188d436cff50e10d50bfa6c1ad37936356"
+    },
+    "metadata_json": {
+      "bytes": 680,
+      "sha256": "43a9795c6cf53008b2d08f3da3ea0abf8e881f460207fe791cada3331a354107"
+    },
+    "final_json": {
+      "bytes": 117188,
+      "sha256": "3ee96a66153726bbace9778b0357433707480e7a57d0714d4e4222611604ace5"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:08:08.469388+00:00"
+  }
+}

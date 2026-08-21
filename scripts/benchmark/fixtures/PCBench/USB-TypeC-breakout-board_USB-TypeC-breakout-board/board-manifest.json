@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "USB-TypeC-breakout-board_USB-TypeC-breakout-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 42065,
+      "sha256": "265c096d85330ae5aadf244ffb6f96cfa782b717dfeccf24e13598faecb37688"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 26560,
+      "sha256": "3e0df16a9d4bfc92ea73e43ed9de8b067f1d7e8f0fe54891f9604524ec2daadd"
+    },
+    "metadata_json": {
+      "bytes": 701,
+      "sha256": "5b3031ec6803e49dcec4db9a41f2ff2f28ab15f4b9b5ef39d6189902d5b8d331"
+    },
+    "final_json": {
+      "bytes": 36609,
+      "sha256": "3e82e42e626e48cd299baffd8da3afae476f2b042a2d721fad45ba811943aa70"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:55:13.148558+00:00"
+  }
+}

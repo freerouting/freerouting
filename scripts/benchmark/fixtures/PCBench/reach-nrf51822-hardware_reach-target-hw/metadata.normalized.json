@@ -1,0 +1,65 @@
+{
+  "board_id": "reach-nrf51822-hardware_reach-target-hw",
+  "display_name": "reach-nrf51822-hardware_reach-target-hw",
+  "pcbench_directory": "PCBs/reach-nrf51822-hardware_reach-target-hw",
+  "source": "https://github.com/tessel/reach-nrf51822-hardware",
+  "author": "tessel",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.689989+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 62,
+    "dimensions_mm": {
+      "width": 41.91,
+      "height": 27.94
+    },
+    "area_cm2": 11.71,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 1092,
+    "vias": 124,
+    "track_length_mm": 1251.17,
+    "kicad_drc_violations": 699,
+    "kicad_drc_breakdown": {
+      "total_violations": 699,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 215,
+        "copper_edge_clearance": 81,
+        "drill_out_of_range": 24,
+        "hole_clearance": 9,
+        "hole_to_hole": 5,
+        "lib_footprint_issues": 62,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 95,
+        "silk_overlap": 83,
+        "solder_mask_bridge": 19,
+        "text_height": 51,
+        "text_thickness": 50,
+        "track_dangling": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 348,
+        "warning": 351
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

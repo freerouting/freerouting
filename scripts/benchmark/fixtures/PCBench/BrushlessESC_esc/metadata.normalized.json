@@ -1,0 +1,62 @@
+{
+  "board_id": "BrushlessESC_esc",
+  "display_name": "BrushlessESC_esc",
+  "pcbench_directory": "PCBs/BrushlessESC_esc",
+  "source": "https://github.com/Tynogc/BrushlessESC",
+  "author": "Tynogc",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.329961+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 29,
+    "components": 79,
+    "dimensions_mm": {
+      "width": 50.04,
+      "height": 60.45
+    },
+    "area_cm2": 30.25,
+    "zones": 12
+  },
+  "reference": {
+    "segments": 1095,
+    "vias": 112,
+    "track_length_mm": 1771.63,
+    "kicad_drc_violations": 832,
+    "kicad_drc_breakdown": {
+      "total_violations": 832,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 133,
+        "copper_edge_clearance": 11,
+        "courtyards_overlap": 3,
+        "drill_out_of_range": 194,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 79,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "starved_thermal": 1,
+        "track_dangling": 8
+      },
+      "by_severity": {
+        "error": 344,
+        "warning": 488
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

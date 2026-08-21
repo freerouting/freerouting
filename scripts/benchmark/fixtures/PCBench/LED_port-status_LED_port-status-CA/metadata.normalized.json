@@ -1,0 +1,62 @@
+{
+  "board_id": "LED_port-status_LED_port-status-CA",
+  "display_name": "LED_port-status_LED_port-status-CA",
+  "pcbench_directory": "PCBs/LED_port-status_LED_port-status-CA",
+  "source": "https://github.com/madworm/LED_port-status",
+  "author": "madworm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.226007+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 13,
+    "dimensions_mm": {
+      "width": 23.75,
+      "height": 8.97
+    },
+    "area_cm2": 2.13,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 59,
+    "vias": 8,
+    "track_length_mm": 77.91,
+    "kicad_drc_violations": 264,
+    "kicad_drc_breakdown": {
+      "total_violations": 264,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 61,
+        "copper_edge_clearance": 2,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 199,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 64,
+        "warning": 200
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.014950+00:00",
+    "elapsed_seconds": 15.11,
+    "unrouted_nets": 2,
+    "clearance_violations": 0,
+    "quality_score": 916.66
+  }
+}

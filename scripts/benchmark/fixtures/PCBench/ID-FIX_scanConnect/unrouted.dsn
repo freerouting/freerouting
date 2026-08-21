@@ -1,0 +1,192 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\ID-FIX_scanConnect\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  175408 -108902  140018 -108902  140018 -77682.5  175408 -77682.5
+            175408 -108902)
+    )
+    (keepout "" (polygon signal 0  142220 -104970  141980 -105031  141752 -105131  141545 -105267
+            141362 -105435  141210 -105631  141091 -105849  141011 -106084
+            140970 -106328  140970 -106577  141011 -106821  141091 -107056
+            141210 -107274  141362 -107470  141545 -107638  141752 -107774
+            141980 -107874  142220 -107935  142468 -107955  142715 -107935
+            142955 -107874  143183 -107774  143390 -107638  143573 -107470
+            143725 -107274  143844 -107056  143924 -106821  143965 -106577
+            143968 -106452  143965 -106328  143924 -106084  143844 -105849
+            143725 -105631  143573 -105435  143390 -105267  143183 -105131
+            142955 -105031  142715 -104970  142468 -104950  142220 -104970))
+    (keepout "" (polygon signal 0  172710 -104970  172470 -105031  172242 -105131  172035 -105267
+            171852 -105435  171700 -105631  171581 -105849  171501 -106084
+            171460 -106328  171460 -106577  171501 -106821  171581 -107056
+            171700 -107274  171852 -107470  172035 -107638  172242 -107774
+            172470 -107874  172710 -107935  172958 -107955  173205 -107935
+            173445 -107874  173673 -107774  173880 -107638  174063 -107470
+            174215 -107274  174334 -107056  174414 -106821  174455 -106577
+            174458 -106452  174455 -106328  174414 -106084  174334 -105849
+            174215 -105631  174063 -105435  173880 -105267  173673 -105131
+            173445 -105031  173205 -104970  172958 -104950  172710 -104970))
+    (keepout "" (polygon signal 0  142220 -78650.4  141980 -78711.3  141752 -78811  141545 -78946.8
+            141362 -79114.8  141210 -79310.7  141091 -79528.9  141011 -79763.6
+            140970 -80008.4  140970 -80256.6  141011 -80501.4  141091 -80736.1
+            141210 -80954.3  141362 -81150.2  141545 -81318.2  141752 -81454
+            141980 -81553.7  142220 -81614.6  142468 -81635.1  142715 -81614.6
+            142955 -81553.7  143183 -81454  143390 -81318.2  143573 -81150.2
+            143725 -80954.3  143844 -80736.1  143924 -80501.4  143965 -80256.6
+            143968 -80132.5  143965 -80008.4  143924 -79763.6  143844 -79528.9
+            143725 -79310.7  143573 -79114.8  143390 -78946.8  143183 -78811
+            142955 -78711.3  142715 -78650.4  142468 -78629.9  142220 -78650.4))
+    (keepout "" (polygon signal 0  172710 -78650.4  172470 -78711.3  172242 -78811  172035 -78946.8
+            171852 -79114.8  171700 -79310.7  171581 -79528.9  171501 -79763.6
+            171460 -80008.4  171460 -80256.6  171501 -80501.4  171581 -80736.1
+            171700 -80954.3  171852 -81150.2  172035 -81318.2  172242 -81454
+            172470 -81553.7  172710 -81614.6  172958 -81635.1  173205 -81614.6
+            173445 -81553.7  173673 -81454  173880 -81318.2  174063 -81150.2
+            174215 -80954.3  174334 -80736.1  174414 -80501.4  174455 -80256.6
+            174458 -80132.5  174455 -80008.4  174414 -79763.6  174334 -79528.9
+            174215 -79310.7  174063 -79114.8  173880 -78946.8  173673 -78811
+            173445 -78711.3  173205 -78650.4  172958 -78629.9  172710 -78650.4))
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 600)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component rj9Test:RJ9
+      (place P4 151511 -100838 front 0 (PN RJ9))
+      (place P3 163957 -100838 front 0 (PN RJ9))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x04
+      (place P1 167767 -86995 front -90 (PN CONN_01X04))
+      (place P2 155321 -86995 front -90 (PN CONN_01X04))
+    )
+    (component Wire_Pads:SolderWirePad_single_1mmDrill
+      (place REF**_4 142494 -80137 front 0 (PN SolderWirePad_single_1mmDrill))
+      (place REF**_3 172974 -80137 front 0 (PN SolderWirePad_single_1mmDrill))
+      (place REF**_2 172974 -106426 front 0 (PN SolderWirePad_single_1mmDrill))
+      (place REF** 142494 -106426 front 0 (PN SolderWirePad_single_1mmDrill))
+    )
+  )
+  (library
+    (image rj9Test:RJ9
+      (outline (path signal 150  5715 -1905  -5715 -1905))
+      (outline (path signal 150  5715 10160  5715 -1270))
+      (outline (path signal 150  -5715 10160  5715 10160))
+      (outline (path signal 150  -5715 -1270  -5715 10160))
+      (outline (path signal 150  5715 -1905  5715 -1270))
+      (outline (path signal 150  -5715 -1905  5715 -1905))
+      (outline (path signal 150  -5715 -1270  -5715 -1905))
+      (pin Round[A]Pad_1524.000000_um 1 1905 8890)
+      (pin Round[A]Pad_1524.000000_um 2 635 6350)
+      (pin Round[A]Pad_1524.000000_um 3 -635 8890)
+      (pin Round[A]Pad_1524.000000_um 4 -1905 6350)
+      (pin Round[A]Pad_3600.000000_um @1 -3810 0)
+      (pin Round[A]Pad_3600.000000_um @2 3810 0)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x04
+      (outline (polygon signal 0  1745 1745  1745 -9395  -1745 -9395  -1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1270 -8890  1270 -8890))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  1270 -8890))
+      (outline (path signal 150  -1270 -1270  -1270 -8890))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+    )
+    (image Wire_Pads:SolderWirePad_single_1mmDrill
+      (pin Round[A]Pad_2499.360000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2499.360000_um
+      (shape (circle F.Cu 2499.36))
+      (shape (circle B.Cu 2499.36))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3600.000000_um
+      (shape (circle F.Cu 3600))
+      (shape (circle B.Cu 3600))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net /COILA_A
+      (pins P1-1 P3-1)
+    )
+    (net /COILA_B
+      (pins P1-2 P3-2)
+    )
+    (net /COILB_A
+      (pins P1-3 P3-3)
+    )
+    (net /COILB_B
+      (pins P1-4 P3-4)
+    )
+    (net /VCC
+      (pins P4-1 P2-1 P2-4)
+    )
+    (net /GND
+      (pins P4-2 P2-2 P2-3)
+    )
+    (net "Net-(P4-Pad3)"
+      (pins P4-3)
+    )
+    (net "Net-(P4-Pad4)"
+      (pins P4-4)
+    )
+    (class kicad_default /COILA_A /COILA_B /COILB_A /COILB_B /GND /VCC "Net-(P4-Pad3)"
+      "Net-(P4-Pad4)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 600)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

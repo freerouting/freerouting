@@ -1,0 +1,66 @@
+{
+  "board_id": "kicad-guitar-preamp_Preamp-Instructables",
+  "display_name": "kicad-guitar-preamp_Preamp-Instructables",
+  "pcbench_directory": "PCBs/kicad-guitar-preamp_Preamp-Instructables",
+  "source": "https://github.com/jatf2/kicad-guitar-preamp",
+  "author": "jatf2",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.378185+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 18,
+    "vias": 0,
+    "track_length_mm": 83.14,
+    "kicad_drc_violations": 34,
+    "kicad_drc_breakdown": {
+      "total_violations": 34,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 13,
+        "courtyards_overlap": 1,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 11,
+        "silk_over_copper": 6,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "error": 15,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.965132+00:00",
+    "elapsed_seconds": 5.67,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

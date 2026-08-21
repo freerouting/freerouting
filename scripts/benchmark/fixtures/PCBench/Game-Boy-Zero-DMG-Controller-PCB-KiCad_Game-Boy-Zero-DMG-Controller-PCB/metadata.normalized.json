@@ -1,0 +1,61 @@
+{
+  "board_id": "Game-Boy-Zero-DMG-Controller-PCB-KiCad_Game-Boy-Zero-DMG-Controller-PCB",
+  "display_name": "Game-Boy-Zero-DMG-Controller-PCB-KiCad_Game-Boy-Zero-DMG-Controller-PCB",
+  "pcbench_directory": "PCBs/Game-Boy-Zero-DMG-Controller-PCB-KiCad_Game-Boy-Zero-DMG-Controller-PCB",
+  "source": "https://github.com/flyingtoaster0/Game-Boy-Zero-DMG-Controller-PCB-KiCad",
+  "author": "flyingtoaster0",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.550010+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 81.28,
+      "height": 52.32
+    },
+    "area_cm2": 42.53,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 218,
+    "vias": 10,
+    "track_length_mm": 730.92,
+    "kicad_drc_violations": 251,
+    "kicad_drc_breakdown": {
+      "total_violations": 251,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 5,
+        "lib_footprint_issues": 22,
+        "shorting_items": 85,
+        "solder_mask_bridge": 128,
+        "text_height": 11
+      },
+      "by_severity": {
+        "error": 218,
+        "warning": 33
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.932192+00:00",
+    "elapsed_seconds": 38.3,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 988.63
+  }
+}

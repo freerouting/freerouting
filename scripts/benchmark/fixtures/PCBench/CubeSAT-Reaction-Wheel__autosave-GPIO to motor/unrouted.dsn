@@ -1,0 +1,320 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\CubeSAT-Reaction-Wheel__autosave-GPIO to motor\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  109991 -66677.4  110260 -66716.2  110522 -66792.8  110769 -66905.9
+            110998 -67053  111204 -67231.2  111382 -67436.9  111529 -67665.9
+            111642 -67913.4  111719 -68174.5  111758 -68443.9  111760 -68580
+            111760 -75565  111760 -93980  111760 -95885  111760 -100330
+            111758 -100466  111719 -100735  111642 -100997  111529 -101244
+            111382 -101473  111204 -101679  110998 -101857  110769 -102004
+            110522 -102117  110260 -102194  109991 -102233  109855 -102235
+            81915 -102235  78105 -102235  59690 -102235  59553.9 -102233
+            59284.5 -102194  59023.4 -102117  58775.9 -102004  58546.9 -101857
+            58341.2 -101679  58163 -101473  58015.9 -101244  57902.8 -100997
+            57826.2 -100735  57787.4 -100466  57785 -100330  57785 -77470
+            57787.4 -77333.9  57826.2 -77064.5  57902.8 -76803.4  58015.9 -76555.9
+            58163 -76326.9  58341.2 -76121.2  58546.9 -75943  58775.9 -75795.9
+            59023.4 -75682.8  59284.5 -75606.2  59553.9 -75567.4  59690 -75565
+            78740 -75565  78876.1 -75562.6  79145.5 -75523.8  79406.6 -75447.2
+            79654.1 -75334.1  79883.1 -75187  80088.8 -75008.8  80267 -74803.1
+            80414.1 -74574.1  80527.2 -74326.6  80603.8 -74065.5  80642.6 -73796.1
+            80645 -73660  80645 -69215  80645 -68580  80647.4 -68443.9  80686.2 -68174.5
+            80762.8 -67913.4  80875.9 -67665.9  81023 -67436.9  81201.2 -67231.2
+            81406.9 -67053  81635.9 -66905.9  81883.4 -66792.8  82144.5 -66716.2
+            82413.9 -66677.4  82550 -66675  84455 -66675  104140 -66675
+            109855 -66675  109991 -66677.4)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_1x07
+      (place MaR1 85725 -86995 front 90 (PN CONN_01X07))
+      (place MaL2 85725 -94615 front 90 (PN CONN_01X07))
+      (place MbL2 85725 -81915 front 90 (PN CONN_01X07))
+      (place MbR1 85725 -74295 front 90 (PN CONN_01X07))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x10
+      (place PWM1 59690 -77470 front 0 (PN CONN_01X10))
+      (place GPIO1 69850 -77470 front 0 (PN CONN_01X10))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x02
+      (place A1 107315 -80645 front 90 (PN CONN_01X02))
+      (place B1 107315 -75565 front 90 (PN CONN_01X02))
+      (place C1 107315 -93345 front 90 (PN CONN_01X02))
+      (place D1 107315 -88265 front 90 (PN CONN_01X02))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x02::1
+      (place M_pwr1 104140 -68580 front 0 (PN CONN_01X02))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_1x07
+      (outline (polygon signal 0  -1745 -16995  -1745 1745  1745 1745  1745 -16995))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -16510  -1270 -1270))
+      (outline (path signal 150  1270 -16510  -1270 -16510))
+      (outline (path signal 150  1270 -1270  1270 -16510))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x10
+      (outline (polygon signal 0  1745 -24645  -1745 -24645  -1745 1745  1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -24130  -1270 -1270))
+      (outline (path signal 150  1270 -24130  -1270 -24130))
+      (outline (path signal 150  1270 -1270  1270 -24130))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 8 0 -17780)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 9 0 -20320)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 10 0 -22860)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x02
+      (outline (polygon signal 0  -1745 -4295  -1745 1745  1745 1745  1745 -4295))
+      (outline (path signal 150  -1270 -3810  1270 -3810))
+      (outline (path signal 150  -1270 -1270  -1270 -3810))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  1270 -3810))
+      (pin Rect[A]Pad_2032.000000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x2032.000000_um 2 0 -2540)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x02::1
+      (outline (polygon signal 0  1745 -4295  -1745 -4295  -1745 1745  1745 1745))
+      (outline (path signal 150  -1270 -3810  1270 -3810))
+      (outline (path signal 150  -1270 -1270  -1270 -3810))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  1270 -3810))
+      (pin Rect[A]Pad_2032.000000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x2032.000000_um 2 0 -2540)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x2032.000000_um
+      (shape (path F.Cu 2032  0 0  0 0))
+      (shape (path B.Cu 2032  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x2032.000000_um
+      (shape (rect F.Cu -1016 -1016 1016 1016))
+      (shape (rect B.Cu -1016 -1016 1016 1016))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(A1-Pad1)"
+      (pins A1-1 MbL2-3)
+    )
+    (net "Net-(A1-Pad2)"
+      (pins A1-2 MbL2-4)
+    )
+    (net "Net-(B1-Pad1)"
+      (pins B1-1 MbL2-5)
+    )
+    (net "Net-(B1-Pad2)"
+      (pins B1-2 MbL2-6)
+    )
+    (net "Net-(C1-Pad1)"
+      (pins C1-1 MaL2-3)
+    )
+    (net "Net-(C1-Pad2)"
+      (pins C1-2 MaL2-4)
+    )
+    (net "Net-(D1-Pad1)"
+      (pins D1-1 MaL2-5)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins D1-2 MaL2-6)
+    )
+    (net "Net-(GPIO1-Pad2)"
+      (pins GPIO1-2)
+    )
+    (net "Net-(GPIO1-Pad3)"
+      (pins GPIO1-3)
+    )
+    (net "Net-(GPIO1-Pad4)"
+      (pins GPIO1-4)
+    )
+    (net "Net-(GPIO1-Pad5)"
+      (pins GPIO1-5)
+    )
+    (net "Net-(GPIO1-Pad6)"
+      (pins MaR1-7 GPIO1-6 MbR1-7)
+    )
+    (net "Net-(GPIO1-Pad7)"
+      (pins GPIO1-7 MbR1-4)
+    )
+    (net "Net-(GPIO1-Pad8)"
+      (pins GPIO1-8 MbR1-6)
+    )
+    (net "Net-(GPIO1-Pad9)"
+      (pins MaR1-4 GPIO1-9)
+    )
+    (net "Net-(GPIO1-Pad10)"
+      (pins MaR1-6 GPIO1-10)
+    )
+    (net "Net-(PWM1-Pad2)"
+      (pins PWM1-2)
+    )
+    (net "Net-(PWM1-Pad3)"
+      (pins PWM1-3)
+    )
+    (net "Net-(PWM1-Pad4)"
+      (pins PWM1-4)
+    )
+    (net "Net-(PWM1-Pad5)"
+      (pins PWM1-5)
+    )
+    (net "Net-(PWM1-Pad6)"
+      (pins PWM1-6)
+    )
+    (net "Net-(MaL2-Pad7)"
+      (pins MaL2-7)
+    )
+    (net "Net-(MaR1-Pad3)"
+      (pins MaR1-3 PWM1-9)
+    )
+    (net "Net-(MaR1-Pad5)"
+      (pins MaR1-5 PWM1-10)
+    )
+    (net "Net-(MbL2-Pad7)"
+      (pins MbL2-7)
+    )
+    (net "Net-(MbR1-Pad3)"
+      (pins PWM1-7 MbR1-3)
+    )
+    (net "Net-(MbR1-Pad5)"
+      (pins PWM1-8 MbR1-5)
+    )
+    (net GND
+      (pins MaR1-1 GPIO1-1 MaL2-1 MbL2-1 MbR1-1 M_pwr1-1)
+    )
+    (net +BATT
+      (pins MaL2-2 MbL2-2 M_pwr1-2)
+    )
+    (net +3V3
+      (pins MaR1-2 PWM1-1 MbR1-2)
+    )
+    (class kicad_default
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+    (class +3.3V +3V3
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+    (class Motors "Net-(A1-Pad1)" "Net-(A1-Pad2)" "Net-(B1-Pad1)" "Net-(B1-Pad2)"
+      "Net-(C1-Pad1)" "Net-(C1-Pad2)" "Net-(D1-Pad1)" "Net-(D1-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 750)
+        (clearance 200)
+      )
+    )
+    (class +Batt +BATT
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 1500)
+        (clearance 200)
+      )
+    )
+    (class GND GND
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+    (class Signal "Net-(GPIO1-Pad10)" "Net-(GPIO1-Pad2)" "Net-(GPIO1-Pad3)"
+      "Net-(GPIO1-Pad4)" "Net-(GPIO1-Pad5)" "Net-(GPIO1-Pad6)" "Net-(GPIO1-Pad7)"
+      "Net-(GPIO1-Pad8)" "Net-(GPIO1-Pad9)" "Net-(MaL2-Pad7)" "Net-(MaR1-Pad3)"
+      "Net-(MaR1-Pad5)" "Net-(MbL2-Pad7)" "Net-(MbR1-Pad3)" "Net-(MbR1-Pad5)"
+      "Net-(PWM1-Pad2)" "Net-(PWM1-Pad3)" "Net-(PWM1-Pad4)" "Net-(PWM1-Pad5)"
+      "Net-(PWM1-Pad6)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

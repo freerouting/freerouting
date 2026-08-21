@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Camera-Modules_LG-G2-G3-13M-Breakout",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 244667,
+      "sha256": "eaa280a84cef0733d041bb9e3591a8f1900ce35cd1972a3691c72e07bbe464ec"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 148603,
+      "sha256": "e9f0d57ca4cfaba74f4377c2fd63343c5341c55cb6d6fc2b5f4fc4831af64360"
+    },
+    "metadata_json": {
+      "bytes": 640,
+      "sha256": "c6ce840f3b33ec0c6bd5086aef443ff9954f72c5ad68223358c9ac8d243695be"
+    },
+    "final_json": {
+      "bytes": 224803,
+      "sha256": "35aff4a8aa369b8afee86f7c0a666873a75bbcdf483e2ccb6479adce0536938c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:37:34.761183+00:00"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Microdox-PCB_Microdox-LEDs",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 651950,
+      "sha256": "0a6fbde20ecc81bd008753e8ee910961c0cf52fd8fe77c5972bac328f6a9bef8"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 307255,
+      "sha256": "31569a447696bbdf412c0ab481b2c1f56c6b620a63af0feaa4598f9dd1494571"
+    },
+    "metadata_json": {
+      "bytes": 669,
+      "sha256": "6390c552a996020493c1f66fb533ee48288baa42d2e782175cdf267d243e8929"
+    },
+    "final_json": {
+      "bytes": 259011,
+      "sha256": "1e673ce00e57534f50ab3fca31bd78f38cc6208218bb652af54d4506c18a855e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:22:46.107245+00:00"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "board_id": "qrp_swr_meter_swr_meter_rev_a",
+  "display_name": "qrp_swr_meter_swr_meter_rev_a",
+  "pcbench_directory": "PCBs/qrp_swr_meter_swr_meter_rev_a",
+  "source": "https://github.com/4x1md/qrp_swr_meter",
+  "author": "4x1md",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:25.545740+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 51.5,
+      "height": 77.0
+    },
+    "area_cm2": 39.66,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 90,
+    "vias": 0,
+    "track_length_mm": 379.36,
+    "kicad_drc_violations": 110,
+    "kicad_drc_breakdown": {
+      "total_violations": 110,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 1,
+        "copper_edge_clearance": 8,
+        "courtyards_overlap": 18,
+        "lib_footprint_issues": 26,
+        "npth_inside_courtyard": 2,
+        "pth_inside_courtyard": 18,
+        "silk_overlap": 37
+      },
+      "by_severity": {
+        "error": 47,
+        "warning": 63
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

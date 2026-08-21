@@ -1,0 +1,57 @@
+{
+  "board_id": "miniboard-opamp_miniboard-opamp",
+  "display_name": "miniboard-opamp_miniboard-opamp",
+  "pcbench_directory": "PCBs/miniboard-opamp_miniboard-opamp",
+  "source": "https://github.com/hyves42/miniboard-opamp",
+  "author": "hyves42",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:55.034087+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 35.56,
+      "height": 21.59
+    },
+    "area_cm2": 7.68,
+    "zones": 19
+  },
+  "reference": {
+    "segments": 196,
+    "vias": 34,
+    "track_length_mm": 357.72,
+    "kicad_drc_violations": 127,
+    "kicad_drc_breakdown": {
+      "total_violations": 127,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 47,
+        "copper_edge_clearance": 11,
+        "lib_footprint_issues": 26,
+        "silk_edge_clearance": 8,
+        "silk_over_copper": 4,
+        "solder_mask_bridge": 31
+      },
+      "by_severity": {
+        "error": 89,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

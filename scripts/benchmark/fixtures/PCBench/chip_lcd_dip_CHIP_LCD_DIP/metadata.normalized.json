@@ -1,0 +1,60 @@
+{
+  "board_id": "chip_lcd_dip_CHIP_LCD_DIP",
+  "display_name": "chip_lcd_dip_CHIP_LCD_DIP",
+  "pcbench_directory": "PCBs/chip_lcd_dip_CHIP_LCD_DIP",
+  "source": "https://github.com/cmnybo/chip_lcd_dip",
+  "author": "cmnybo",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.089935+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 41.4,
+      "height": 61.09
+    },
+    "area_cm2": 25.29,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 723,
+    "vias": 50,
+    "track_length_mm": 1745.46,
+    "kicad_drc_violations": 696,
+    "kicad_drc_breakdown": {
+      "total_violations": 696,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 397,
+        "copper_edge_clearance": 26,
+        "lib_footprint_issues": 26,
+        "malformed_courtyard": 8,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 180,
+        "silk_overlap": 10,
+        "solder_mask_bridge": 46,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 478,
+        "warning": 218
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

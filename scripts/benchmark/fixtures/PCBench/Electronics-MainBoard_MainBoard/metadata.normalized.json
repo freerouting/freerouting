@@ -1,0 +1,62 @@
+{
+  "board_id": "Electronics-MainBoard_MainBoard",
+  "display_name": "Electronics-MainBoard_MainBoard",
+  "pcbench_directory": "PCBs/Electronics-MainBoard_MainBoard",
+  "source": "https://github.com/BLUESINK/Electronics-MainBoard",
+  "author": "BLUESINK",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.218183+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 32,
+    "components": 89,
+    "dimensions_mm": {
+      "width": 120.0,
+      "height": 68.0
+    },
+    "area_cm2": 81.6,
+    "zones": 11
+  },
+  "reference": {
+    "segments": 941,
+    "vias": 87,
+    "track_length_mm": 3027.65,
+    "kicad_drc_violations": 1240,
+    "kicad_drc_breakdown": {
+      "total_violations": 1240,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 502,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 5,
+        "lib_footprint_issues": 89,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 199,
+        "silk_overlap": 77,
+        "solder_mask_bridge": 202,
+        "text_height": 133,
+        "text_thickness": 24,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 714,
+        "warning": 526
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

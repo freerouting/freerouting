@@ -1,0 +1,242 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\mini-whip_mini-whip-power-feed\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  187000 -126000  187000 -127000  125000 -127000  125000 -102000
+            187000 -102000  187000 -126000)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "sma-j:SMA-J"
+      (place P2_2 184544 -124400 back 180 (PN "SMA-J"))
+      (place P1_2 127700 -112780 back 180 (PN "SMA-J"))
+      (place P1 127675 -107727 front 0 (PN "SMA-J"))
+      (place P2 184544 -119368 front 0 (PN "SMA-J"))
+    )
+    (component Mounting_Holes:MountingHole_4mm
+      (place H2 161000 -121000 front 0 (PN MountingHole_4mm))
+      (place H1 135000 -121000 front 0 (PN MountingHole_4mm))
+    )
+    (component Capacitors_SMD:C_1206_HandSoldering
+      (place C101 154859 -106441 front 180 (PN 1u))
+    )
+    (component Capacitors_SMD:C_1206_HandSoldering::1
+      (place C102 139871 -110254 front 0 (PN 1u))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering
+      (place C103 168400 -111000 front 90 (PN 100n))
+    )
+    (component Connect:BARREL_JACK
+      (place CON101 179401 -109400 front 180 (PN BARREL_JACK))
+    )
+    (component "Diodes_SMD:DO-214BA"
+      (place D101 163046 -109859 front 0 (PN FM5817))
+    )
+    (component Fuse_Holders_and_Fuses:Fuse_SMD1206_Wave
+      (place F101 155670 -109826 front 0 (PN PTS120660V010))
+    )
+    (component Choke_Axial_ThroughHole:Choke_Horizontal_RM15mm
+      (place L101 141166 -106422 front 0 (PN 470u))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering
+      (place R101 148216 -113264 front -90 (PN 1k))
+    )
+  )
+  (library
+    (image "sma-j:SMA-J"
+      (pin Rect[T]Pad_3940.000000x1500.000000_um 1 0 -2500)
+      (pin Rect[T]Pad_3940.000000x1700.000000_um 2 0 0)
+      (pin Rect[T]Pad_3940.000000x1700.000000_um 2@1 0 -5080)
+    )
+    (image Mounting_Holes:MountingHole_4mm
+      (outline (path signal 381  4000 0  3980.74 -392.069  3923.14 -780.361  3827.76 -1161.14
+            3695.52 -1530.73  3527.68 -1885.59  3325.88 -2222.28  3092.04 -2537.57
+            2828.43 -2828.43  2537.57 -3092.04  2222.28 -3325.88  1885.59 -3527.68
+            1530.73 -3695.52  1161.14 -3827.76  780.361 -3923.14  392.069 -3980.74
+            0 -4000  -392.069 -3980.74  -780.361 -3923.14  -1161.14 -3827.76
+            -1530.73 -3695.52  -1885.59 -3527.68  -2222.28 -3325.88  -2537.57 -3092.04
+            -2828.43 -2828.43  -3092.04 -2537.57  -3325.88 -2222.28  -3527.68 -1885.59
+            -3695.52 -1530.73  -3827.76 -1161.14  -3923.14 -780.361  -3980.74 -392.069
+            -4000 0  -3980.74 392.069  -3923.14 780.361  -3827.76 1161.14
+            -3695.52 1530.73  -3527.68 1885.59  -3325.88 2222.28  -3092.04 2537.57
+            -2828.43 2828.43  -2537.57 3092.04  -2222.28 3325.88  -1885.59 3527.68
+            -1530.73 3695.52  -1161.14 3827.76  -780.361 3923.14  -392.069 3980.74
+            0 4000  392.069 3980.74  780.361 3923.14  1161.14 3827.76  1530.73 3695.52
+            1885.59 3527.68  2222.28 3325.88  2537.57 3092.04  2828.43 2828.43
+            3092.04 2537.57  3325.88 2222.28  3527.68 1885.59  3695.52 1530.73
+            3827.76 1161.14  3923.14 780.361  3980.74 392.069  4000 0))
+      (keepout "" (circle F.Cu 4500))
+      (keepout "" (circle B.Cu 4500))
+    )
+    (image Capacitors_SMD:C_1206_HandSoldering
+      (outline (polygon signal 0  -3295 1145  3295 1145  3295 -1145  -3295 -1145))
+      (outline (path signal 150  -1000 -1025  1000 -1025))
+      (outline (path signal 150  1000 1025  -1000 1025))
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 2 2000 0)
+    )
+    (image Capacitors_SMD:C_1206_HandSoldering::1
+      (outline (polygon signal 0  3295 -1145  -3295 -1145  -3295 1145  3295 1145))
+      (outline (path signal 150  -1000 -1025  1000 -1025))
+      (outline (path signal 150  1000 1025  -1000 1025))
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1600.000000_um 2 2000 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering
+      (outline (polygon signal 0  -2295 -995  -2295 995  2295 995  2295 -995))
+      (outline (path signal 150  -500 -850  500 -850))
+      (outline (path signal 150  500 850  -500 850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image Connect:BARREL_JACK
+      (outline (path signal 150  7000.24 4500.88  -7500.62 4500.88))
+      (outline (path signal 150  7000.24 -4500.88  7000.24 4500.88))
+      (outline (path signal 150  -7500.62 -4500.88  7000.24 -4500.88))
+      (outline (path signal 150  -7500.62 4500.88  -7500.62 -4500.88))
+      (outline (path signal 150  -4000.5 4500.88  -4000.5 -4500.88))
+      (pin Rect[A]Pad_3500.120000x3500.120000_um 1 6200.14 0)
+      (pin Rect[A]Pad_3500.120000x3500.120000_um 2 200.66 0)
+      (pin Rect[A]Pad_3500.120000x3500.120000_um 3 3200.4 -4699)
+    )
+    (image "Diodes_SMD:DO-214BA"
+      (outline (polygon signal 0  2995 -2245  -2995 -2245  -2995 2245  2995 2245))
+      (outline (path signal 150  2250 -1950  -2250 -1950))
+      (outline (path signal 150  -2250 1950  2250 1950))
+      (outline (path signal 150  -1200 1550  -1200 1950))
+      (outline (path signal 150  -1350 1550  -1200 1550))
+      (outline (path signal 150  -1350 1950  -1350 1550))
+      (outline (path signal 150  -1200 -1550  -1200 -1950))
+      (outline (path signal 150  -1350 -1550  -1200 -1550))
+      (outline (path signal 150  -1350 -1950  -1350 -1550))
+      (outline (path signal 150  2250 1950  2250 1550))
+      (outline (path signal 150  2250 -1950  2250 -1550))
+      (outline (path signal 150  -2250 -1950  -2250 -1550))
+      (outline (path signal 150  -2250 1950  -2250 1550))
+      (pin Rect[T]Pad_2000.000000x2500.000000_um 2 1700 0)
+      (pin Rect[T]Pad_2000.000000x2500.000000_um 1 -1700 0)
+    )
+    (image Fuse_Holders_and_Fuses:Fuse_SMD1206_Wave
+      (pin Rect[T]Pad_2029.460000x1651.000000_um (rotate 90) 1 -1584.96 0)
+      (pin Rect[T]Pad_2029.460000x1651.000000_um (rotate 90) 2 1584.96 0)
+    )
+    (image Choke_Axial_ThroughHole:Choke_Horizontal_RM15mm
+      (outline (path signal 150  -4960.62 -1270  -4960.62 1270))
+      (outline (path signal 150  5199.38 -1270  -4960.62 -1270))
+      (outline (path signal 150  5199.38 1270  5199.38 -1270))
+      (outline (path signal 150  -4960.62 1270  5199.38 1270))
+      (outline (path signal 150  -4960.62 0  -5976.62 0))
+      (outline (path signal 150  5199.38 0  6215.38 0))
+      (pin Round[A]Pad_1998.980000_um 1 -7500.62 0)
+      (pin Round[A]Pad_1998.980000_um 2 7739.38 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering
+      (outline (polygon signal 0  2395 995  2395 -995  -2395 -995  -2395 995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (padstack Round[A]Pad_1998.980000_um
+      (shape (circle F.Cu 1998.98))
+      (shape (circle B.Cu 1998.98))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x2500.000000_um
+      (shape (rect F.Cu -1000 -1250 1000 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1600.000000_um
+      (shape (rect F.Cu -1000 -800 1000 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2029.460000x1651.000000_um
+      (shape (rect F.Cu -1014.73 -825.5 1014.73 825.5))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_3500.120000x3500.120000_um
+      (shape (rect F.Cu -1750.06 -1750.06 1750.06 1750.06))
+      (shape (rect B.Cu -1750.06 -1750.06 1750.06 1750.06))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3940.000000x1500.000000_um
+      (shape (rect F.Cu -1970 -750 1970 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3940.000000x1700.000000_um
+      (shape (rect F.Cu -1970 -850 1970 850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1250.000000_um
+      (shape (rect F.Cu -750 -625 750 625))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1300.000000_um
+      (shape (rect F.Cu -750 -650 750 650))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins P2_2-2 P2_2-2@1 P1_2-2 P1_2-2@1 C101-1 C103-1 CON101-2 CON101-3 P1-2 P1-2@1
+        P2-2 P2-2@1 R101-2)
+    )
+    (net "Net-(C101-Pad2)"
+      (pins C101-2 F101-1 L101-2)
+    )
+    (net "Net-(C102-Pad1)"
+      (pins P1_2-1 C102-1 L101-1 P1-1)
+    )
+    (net "Net-(C102-Pad2)"
+      (pins P2_2-1 C102-2 P2-1 R101-1)
+    )
+    (net "Net-(C103-Pad2)"
+      (pins C103-2 CON101-1 D101-2)
+    )
+    (net "Net-(D101-Pad1)"
+      (pins D101-1 F101-2)
+    )
+    (class kicad_default GND "Net-(C101-Pad2)" "Net-(C102-Pad1)" "Net-(C102-Pad2)"
+      "Net-(C103-Pad2)" "Net-(D101-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

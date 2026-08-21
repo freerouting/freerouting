@@ -1,0 +1,61 @@
+{
+  "board_id": "mppt-2420-hpx_mppt-2420-hpx",
+  "display_name": "mppt-2420-hpx_mppt-2420-hpx",
+  "pcbench_directory": "PCBs/mppt-2420-hpx_mppt-2420-hpx",
+  "source": "https://github.com/LibreSolar/mppt-2420-hpx",
+  "author": "LibreSolar",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:28.221771+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 94,
+    "components": 191,
+    "dimensions_mm": {
+      "width": 120.0,
+      "height": 100.0
+    },
+    "area_cm2": 120.0,
+    "zones": 33
+  },
+  "reference": {
+    "segments": 1413,
+    "vias": 274,
+    "track_length_mm": 3695.05,
+    "kicad_drc_violations": 431,
+    "kicad_drc_breakdown": {
+      "total_violations": 431,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 29,
+        "copper_edge_clearance": 11,
+        "courtyards_overlap": 4,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 161,
+        "lib_footprint_mismatch": 18,
+        "pth_inside_courtyard": 3,
+        "silk_edge_clearance": 28,
+        "silk_over_copper": 4,
+        "silk_overlap": 172
+      },
+      "by_severity": {
+        "error": 48,
+        "warning": 383
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

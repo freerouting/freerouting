@@ -1,0 +1,29 @@
+{
+  "board": "Hardware_Playground_livolo_1_channel_1way_eu_switch",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_livolo_1_channel_1way_eu_switch\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 17,
+  "segment_count": 204,
+  "approximate_track_length_mm": 522.72,
+  "kicad_drc_violations": 152,
+  "generated_at": "2026-08-18T18:53:53.550223+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 152,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 6,
+      "copper_edge_clearance": 35,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 31,
+      "shorting_items": 10,
+      "silk_over_copper": 7,
+      "starved_thermal": 1,
+      "text_height": 61
+    },
+    "by_severity": {
+      "error": 53,
+      "warning": 99
+    }
+  }
+}

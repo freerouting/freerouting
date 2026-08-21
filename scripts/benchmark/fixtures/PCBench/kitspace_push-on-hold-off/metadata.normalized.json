@@ -1,0 +1,67 @@
+{
+  "board_id": "kitspace_push-on-hold-off",
+  "display_name": "kitspace_push-on-hold-off",
+  "pcbench_directory": "PCBs/kitspace_push-on-hold-off",
+  "source": "https://github.com/kasbah/push-on-hold-off",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:10:19.846743+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 22.86,
+      "height": 12.7
+    },
+    "area_cm2": 2.9,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 184,
+    "vias": 13,
+    "track_length_mm": 165.63,
+    "kicad_drc_violations": 88,
+    "kicad_drc_breakdown": {
+      "total_violations": 88,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 27,
+        "copper_edge_clearance": 7,
+        "lib_footprint_issues": 17,
+        "silk_over_copper": 8,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 1,
+        "text_height": 27
+      },
+      "by_severity": {
+        "error": 35,
+        "warning": 53
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.999193+00:00",
+    "elapsed_seconds": 14.23,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

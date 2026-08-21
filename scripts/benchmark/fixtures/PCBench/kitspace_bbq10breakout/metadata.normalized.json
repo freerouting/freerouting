@@ -1,0 +1,63 @@
+{
+  "board_id": "kitspace_bbq10breakout",
+  "display_name": "kitspace_bbq10breakout",
+  "pcbench_directory": "PCBs/kitspace_bbq10breakout",
+  "source": "https://github.com/arturo182/bbq10kbd_breakout",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:19:50.162672+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 16.51,
+      "height": 21.59
+    },
+    "area_cm2": 3.56,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 103,
+    "vias": 10,
+    "track_length_mm": 167.43,
+    "kicad_drc_violations": 87,
+    "kicad_drc_breakdown": {
+      "total_violations": 87,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 10,
+        "clearance": 50,
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 4,
+        "solder_mask_bridge": 21,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 83,
+        "warning": 4
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.979405+00:00",
+    "elapsed_seconds": 34.9,
+    "unrouted_nets": 2,
+    "clearance_violations": 0,
+    "quality_score": 933.32
+  }
+}

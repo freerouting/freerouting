@@ -1,0 +1,58 @@
+{
+  "board_id": "thegrid_shield",
+  "display_name": "thegrid_shield",
+  "pcbench_directory": "PCBs/thegrid_shield",
+  "source": "https://github.com/cillian64/thegrid",
+  "author": "cillian64",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:56.714107+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 38,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 364,
+    "vias": 72,
+    "track_length_mm": 882.23,
+    "kicad_drc_violations": 169,
+    "kicad_drc_breakdown": {
+      "total_violations": 169,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 114,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 29,
+        "silk_over_copper": 18,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 118,
+        "warning": 51
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

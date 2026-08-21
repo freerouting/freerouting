@@ -1,0 +1,55 @@
+{
+  "board_id": "mosavr_pcie1x_backplane",
+  "display_name": "mosavr_pcie1x_backplane",
+  "pcbench_directory": "PCBs/mosavr_pcie1x_backplane",
+  "source": "https://github.com/andrew-bolin/mosavr",
+  "author": "andrew-bolin",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:45.577976+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 64,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 93.0,
+      "height": 46.0
+    },
+    "area_cm2": 42.78,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 175,
+    "vias": 0,
+    "track_length_mm": 1108.8,
+    "kicad_drc_violations": 59,
+    "kicad_drc_breakdown": {
+      "total_violations": 59,
+      "unconnected_count": 8,
+      "by_type": {
+        "clearance": 27,
+        "hole_clearance": 8,
+        "lib_footprint_issues": 8,
+        "solder_mask_bridge": 16
+      },
+      "by_severity": {
+        "error": 51,
+        "warning": 8
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "routine",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

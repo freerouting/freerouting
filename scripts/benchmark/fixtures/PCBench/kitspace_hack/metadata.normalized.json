@@ -1,0 +1,61 @@
+{
+  "board_id": "kitspace_hack",
+  "display_name": "kitspace_hack",
+  "pcbench_directory": "PCBs/kitspace_hack",
+  "source": "https://github.com/kitspace-forks/HACK",
+  "author": "",
+  "license": "[{'name': 'CERN', 'link': 'https://raw.githubusercontent.com/kitspace-forks/HACK/master/LICENCE.txt'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:08:06.336152+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 32,
+    "dimensions_mm": {
+      "width": 36.83,
+      "height": 19.05
+    },
+    "area_cm2": 7.02,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 401,
+    "vias": 33,
+    "track_length_mm": 545.23,
+    "kicad_drc_violations": 288,
+    "kicad_drc_breakdown": {
+      "total_violations": 288,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 93,
+        "copper_edge_clearance": 90,
+        "items_not_allowed": 37,
+        "lib_footprint_issues": 26,
+        "malformed_courtyard": 4,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 2,
+        "silk_overlap": 6,
+        "starved_thermal": 1,
+        "text_height": 26
+      },
+      "by_severity": {
+        "error": 225,
+        "warning": 63
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

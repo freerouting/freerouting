@@ -1,0 +1,28 @@
+{
+  "board": "abus-cfa1000-display-grabber_acs-display-grabber",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\abus-cfa1000-display-grabber_acs-display-grabber\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 91,
+  "segment_count": 758,
+  "approximate_track_length_mm": 3577.29,
+  "kicad_drc_violations": 242,
+  "generated_at": "2026-08-18T18:27:08.764826+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 242,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 179,
+      "lib_footprint_issues": 47,
+      "padstack": 4,
+      "silk_over_copper": 6,
+      "silk_overlap": 1,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 184,
+      "warning": 58
+    }
+  }
+}

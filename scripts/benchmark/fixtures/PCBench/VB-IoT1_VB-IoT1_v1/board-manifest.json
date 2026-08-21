@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "VB-IoT1_VB-IoT1_v1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1708411,
+      "sha256": "b0a6d420020e216c04b85efaa460fd5c41583889ae66c285ce90ba5700af78e4"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 1170433,
+      "sha256": "a983c8cc4b6e1ab6663e8d46da247b0e1c140625c2433c5d33be558df4708596"
+    },
+    "metadata_json": {
+      "bytes": 588,
+      "sha256": "8627a86b8166711272ad40dda21516e25662cd9a8c88af29be95883819403c57"
+    },
+    "final_json": {
+      "bytes": 1103995,
+      "sha256": "34b02604e286b6b941ac0fb8cbe32ba8a4f0c48da145a919b3215e5e0ea9e925"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:25:42.748594+00:00"
+  }
+}

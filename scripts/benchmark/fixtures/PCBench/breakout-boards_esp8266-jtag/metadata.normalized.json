@@ -1,0 +1,69 @@
+{
+  "board_id": "breakout-boards_esp8266-jtag",
+  "display_name": "breakout-boards_esp8266-jtag",
+  "pcbench_directory": "PCBs/breakout-boards_esp8266-jtag",
+  "source": "https://github.com/myelin/breakout-boards",
+  "author": "myelin",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:24.229724+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 30.48,
+      "height": 28.45
+    },
+    "area_cm2": 8.67,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 166,
+    "vias": 7,
+    "track_length_mm": 344.83,
+    "kicad_drc_violations": 95,
+    "kicad_drc_breakdown": {
+      "total_violations": 95,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 28,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 14,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 26,
+        "silk_overlap": 8,
+        "starved_thermal": 1,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 37,
+        "warning": 58
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.850121+00:00",
+    "elapsed_seconds": 9.03,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

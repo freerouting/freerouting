@@ -1,0 +1,27 @@
+{
+  "board": "ULPI-Pmod_ULPI-Pmod",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ULPI-Pmod_ULPI-Pmod\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 11,
+  "segment_count": 235,
+  "approximate_track_length_mm": 445.08,
+  "kicad_drc_violations": 227,
+  "generated_at": "2026-08-18T19:54:40.879472+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 227,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 126,
+      "copper_edge_clearance": 2,
+      "invalid_outline": 6,
+      "lib_footprint_issues": 17,
+      "solder_mask_bridge": 75,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 209,
+      "warning": 18
+    }
+  }
+}

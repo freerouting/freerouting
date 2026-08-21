@@ -1,0 +1,62 @@
+{
+  "board_id": "BirthdayCakeKeyboard_10Key",
+  "display_name": "BirthdayCakeKeyboard_10Key",
+  "pcbench_directory": "PCBs/BirthdayCakeKeyboard_10Key",
+  "source": "https://github.com/JimGage/BirthdayCakeKeyboard",
+  "author": "JimGage",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:26.053746+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 50,
+    "components": 65,
+    "dimensions_mm": {
+      "width": 73.0,
+      "height": 102.5
+    },
+    "area_cm2": 74.83,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1575,
+    "vias": 92,
+    "track_length_mm": 5029.24,
+    "kicad_drc_violations": 481,
+    "kicad_drc_breakdown": {
+      "total_violations": 481,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 328,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 1,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 65,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 1,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 45,
+        "track_dangling": 25,
+        "via_dangling": 3
+      },
+      "by_severity": {
+        "error": 379,
+        "warning": 102
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

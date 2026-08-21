@@ -1,0 +1,54 @@
+{
+  "board_id": "LiFePO4-Charge-Controller_LiFePO4-Charge-Controller",
+  "display_name": "LiFePO4-Charge-Controller_LiFePO4-Charge-Controller",
+  "pcbench_directory": "PCBs/LiFePO4-Charge-Controller_LiFePO4-Charge-Controller",
+  "source": "https://github.com/spmp/LiFePO4-Charge-Controller",
+  "author": "spmp",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:42.869944+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 66.22,
+      "height": 60.98
+    },
+    "area_cm2": 40.38,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 334,
+    "vias": 1,
+    "track_length_mm": 888.55,
+    "kicad_drc_violations": 278,
+    "kicad_drc_breakdown": {
+      "total_violations": 278,
+      "unconnected_count": 0,
+      "by_type": {
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 147,
+        "silk_overlap": 93,
+        "text_height": 34
+      },
+      "by_severity": {
+        "warning": 278
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,23 @@
+{
+  "board": "boatcontrol_CommonCathode60A",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\boatcontrol_CommonCathode60A\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 0,
+  "segment_count": 337,
+  "approximate_track_length_mm": 3624.34,
+  "kicad_drc_violations": 13,
+  "generated_at": "2026-08-18T18:13:44.824825+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 13,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 11,
+      "lib_footprint_mismatch": 1,
+      "text_thickness": 1
+    },
+    "by_severity": {
+      "warning": 13
+    }
+  }
+}

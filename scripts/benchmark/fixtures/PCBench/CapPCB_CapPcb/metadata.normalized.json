@@ -1,0 +1,63 @@
+{
+  "board_id": "CapPCB_CapPcb",
+  "display_name": "CapPCB_CapPcb",
+  "pcbench_directory": "PCBs/CapPCB_CapPcb",
+  "source": "https://github.com/vedderb/CapPCB",
+  "author": "vedderb",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.937744+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 26.42,
+      "height": 12.7
+    },
+    "area_cm2": 3.36,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 0,
+    "vias": 0,
+    "track_length_mm": 0.0,
+    "kicad_drc_violations": 206,
+    "kicad_drc_breakdown": {
+      "total_violations": 206,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 10,
+        "copper_edge_clearance": 6,
+        "lib_footprint_issues": 7,
+        "pth_inside_courtyard": 8,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 172
+      },
+      "by_severity": {
+        "error": 24,
+        "warning": 182
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.859881+00:00",
+    "elapsed_seconds": 30,
+    "unrouted_nets": 999,
+    "clearance_violations": 999,
+    "quality_score": 0.0
+  }
+}

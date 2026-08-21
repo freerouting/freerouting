@@ -1,0 +1,62 @@
+{
+  "board_id": "Hornbill-ESP32-DEV_Hornbill Devboard",
+  "display_name": "Hornbill-ESP32-DEV_Hornbill Devboard",
+  "pcbench_directory": "PCBs/Hornbill-ESP32-DEV_Hornbill Devboard",
+  "source": "https://github.com/ExploreEmbedded/Hornbill-ESP32-DEV",
+  "author": "ExploreEmbedded",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.257713+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 60.83
+    },
+    "area_cm2": 15.45,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 930,
+    "vias": 95,
+    "track_length_mm": 1290.6,
+    "kicad_drc_violations": 266,
+    "kicad_drc_breakdown": {
+      "total_violations": 266,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "copper_edge_clearance": 40,
+        "courtyards_overlap": 5,
+        "lib_footprint_issues": 51,
+        "pth_inside_courtyard": 1,
+        "silk_over_copper": 24,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 77,
+        "text_height": 39,
+        "track_dangling": 12,
+        "via_dangling": 12
+      },
+      "by_severity": {
+        "error": 125,
+        "warning": 141
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

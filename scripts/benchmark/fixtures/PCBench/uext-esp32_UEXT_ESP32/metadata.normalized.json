@@ -1,0 +1,63 @@
+{
+  "board_id": "uext-esp32_UEXT_ESP32",
+  "display_name": "uext-esp32_UEXT_ESP32",
+  "pcbench_directory": "PCBs/uext-esp32_UEXT_ESP32",
+  "source": "https://github.com/LibreSolar/uext-esp32",
+  "author": "LibreSolar",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:44.065958+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 32,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 26.5,
+      "height": 24.0
+    },
+    "area_cm2": 6.36,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 118,
+    "vias": 15,
+    "track_length_mm": 242.75,
+    "kicad_drc_violations": 29,
+    "kicad_drc_breakdown": {
+      "total_violations": 29,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 13,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 6,
+        "lib_footprint_mismatch": 3,
+        "silk_edge_clearance": 3,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 17,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.154581+00:00",
+    "elapsed_seconds": 19.28,
+    "unrouted_nets": 2,
+    "clearance_violations": 2,
+    "quality_score": 895.64
+  }
+}

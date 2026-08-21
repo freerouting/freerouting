@@ -1,0 +1,61 @@
+{
+  "board_id": "miniboard-stm32f0_miniboard-stm32f0",
+  "display_name": "miniboard-stm32f0_miniboard-stm32f0",
+  "pcbench_directory": "PCBs/miniboard-stm32f0_miniboard-stm32f0",
+  "source": "https://github.com/hyves42/miniboard-stm32f0",
+  "author": "hyves42",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:23:00.242148+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 39.05,
+      "height": 19.43
+    },
+    "area_cm2": 7.59,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 390,
+    "vias": 37,
+    "track_length_mm": 583.05,
+    "kicad_drc_violations": 174,
+    "kicad_drc_breakdown": {
+      "total_violations": 174,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 68,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 27,
+        "padstack": 3,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 16,
+        "silk_overlap": 35,
+        "solder_mask_bridge": 10,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 85,
+        "warning": 89
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

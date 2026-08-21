@@ -1,0 +1,69 @@
+{
+  "board_id": "Own-Mailbox-Hardware_mailbox-before",
+  "display_name": "Own-Mailbox-Hardware_mailbox-before",
+  "pcbench_directory": "PCBs/Own-Mailbox-Hardware_mailbox-before",
+  "source": "https://github.com/pparent76/Own-Mailbox-Hardware",
+  "author": "pparent76",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.253995+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 196,
+    "components": 154,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 4636,
+    "vias": 308,
+    "track_length_mm": 2884.24,
+    "kicad_drc_violations": 1429,
+    "kicad_drc_breakdown": {
+      "total_violations": 1429,
+      "unconnected_count": 58,
+      "by_type": {
+        "annular_width": 17,
+        "clearance": 325,
+        "copper_edge_clearance": 43,
+        "drill_out_of_range": 16,
+        "hole_clearance": 129,
+        "holes_co_located": 35,
+        "isolated_copper": 2,
+        "lib_footprint_issues": 154,
+        "nonmirrored_text_on_back_layer": 21,
+        "padstack": 1,
+        "shorting_items": 46,
+        "silk_edge_clearance": 11,
+        "silk_over_copper": 199,
+        "silk_overlap": 199,
+        "text_height": 180,
+        "text_thickness": 7,
+        "track_dangling": 13,
+        "tracks_crossing": 31
+      },
+      "by_severity": {
+        "error": 607,
+        "warning": 822
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

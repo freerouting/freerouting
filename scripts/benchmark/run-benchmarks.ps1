@@ -14,6 +14,7 @@ param(
     [bool]    $RouterEnabled  = $true,
     [bool]    $OptimizerEnabled = $true,
     [int]     $MaxItems       = 0,
+    [int]     $RunsPerConfig  = 1,
     [int]     $TimeoutGraceSeconds = 45,
     [int]     $DrcTimeoutSeconds = 300,
     [switch]  $Profile,
@@ -53,7 +54,6 @@ $null = New-Item -ItemType Directory -Force -Path $OutputsDir -ErrorAction Silen
 
 $JsonPath = Join-Path $ResultsDir "benchmarks.json"
 $MdPath = Join-Path $ResultsDir "benchmarks.md"
-$CsvPath = Join-Path $ResultsDir "benchmarks.csv"
 $ChartDataPath = Join-Path $ResultsDir "benchmarks-chart-data.json"
 
 # Load current cache
@@ -63,7 +63,7 @@ $cache = $store.Cache
 
 function Update-BenchmarkReports {
     param([Hashtable]$Cache)
-    Export-MarkdownReport $Cache $MdPath $CsvPath $ChartDataPath
+    Export-MarkdownReport $Cache $MdPath $ChartDataPath
     if (-not $SkipWebsiteUpdate) {
         Update-BenchmarksHtml $Cache $WebsiteHtml
     }
@@ -80,7 +80,7 @@ if ($ReportOnly) {
 $allBinaries = @(Get-ChildItem $BinariesDir -Filter "*.jar")
 $binaries = @($allBinaries | Where-Object { $_.Name -like $FilterBinary })
 $fixtures = @(Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object {
-    $_.Name -like $FilterFixture -and (Test-IsActiveBenchmarkFixtureFile $_)
+    ($_.Name -like $FilterFixture -or ($_.FullName -replace '\\', '/') -like "*$($FilterFixture -replace '\\', '/')*") -and (Test-IsActiveBenchmarkFixtureFile $_)
 })
 
 if ($binaries.Count -eq 0) {
@@ -115,6 +115,7 @@ if ($gitBranch -and $gitBranch -notin @('master', 'main')) {
 }
 
 # Settings object
+$gitSha = Get-GitShaShort (Join-Path $PSScriptRoot "..\..")
 $settingsObj = [PSCustomObject]@{
     max_passes        = $MaxPasses
     max_time          = $MaxTime
@@ -125,6 +126,8 @@ $settingsObj = [PSCustomObject]@{
     router_enabled    = $RouterEnabled
     optimizer_enabled = $OptimizerEnabled
     max_items         = $MaxItems
+    runs_per_config   = $RunsPerConfig
+    git_sha           = $gitSha
     fanout_timeout    = "00:15:00"
     optimizer_timeout = "00:10:00"
     timeout_grace_period_seconds = $TimeoutGraceSeconds
@@ -132,6 +135,7 @@ $settingsObj = [PSCustomObject]@{
     profile_enabled = $Profile.IsPresent
     retain_autoroute_database = $RetainAutorouteDatabase.IsPresent
 }
+Write-Output "Git SHA: $gitSha"
 
 # CLI Probe Cache
 $cliSupportCache = @{}
@@ -173,7 +177,7 @@ foreach ($fixture in $fixtures) {
 $pendingRuns = @()
 foreach ($binary in $binaries) {
     foreach ($fixture in $fixtures) {
-        $cacheKey = Get-BenchmarkCacheKey $binary $fixture $settingsObj
+        $cacheKey = Get-BenchmarkCacheKey $binary $fixture $settingsObj $gitSha
         if (-not $cache.ContainsKey($cacheKey) -or $Force) {
             $fGroup = Split-Path (Split-Path $fixture.FullName -Parent) -Leaf
             $fPath = "$fGroup/$($fixture.Name)"
@@ -204,7 +208,7 @@ foreach ($binary in $binaries) {
         $runIdx++
         $fixtureGroup = Split-Path (Split-Path $fixture.FullName -Parent) -Leaf
         $fixtureStem = $fixture.BaseName
-        $cacheKey = Get-BenchmarkCacheKey $binary $fixture $settingsObj
+        $cacheKey = Get-BenchmarkCacheKey $binary $fixture $settingsObj $gitSha
         $isCached = $cache.ContainsKey($cacheKey) -and -not $Force
 
         # Calculate ETA
@@ -278,31 +282,72 @@ foreach ($binary in $binaries) {
 
         $runStartTime = Get-Date
 
-        # Invoke benchmark
-        Write-Output "  -> Running..."
-        $runResult = Invoke-BenchmarkRun $binary $fixture $baseName $LogsDir $OutputsDir $settingsObj $supportsCli
+        $sampleCount = [math]::Max(1, [int]$RunsPerConfig)
+        $sampleRecords = @()
+        $runResult = $null
+        $drcResult = $null
+        $logMetrics = $null
+
+        for ($sampleIdx = 1; $sampleIdx -le $sampleCount; $sampleIdx++) {
+            $sampleBase = $baseName
+            if ($sampleCount -gt 1) {
+                $sampleBase = "${baseName}-r$sampleIdx"
+                Write-Output "  -> Running sample $sampleIdx/$sampleCount..."
+            } else {
+                Write-Output "  -> Running..."
+            }
+            $runResult = Invoke-BenchmarkRun $binary $fixture $sampleBase $LogsDir $OutputsDir $settingsObj $supportsCli
+
+            Write-Output "  -> Running DRC check..."
+            $drcResult = Invoke-DrcCheck `
+                $binaryCurrent `
+                $fixture `
+                (Get-Item $runResult.OutputFile -ErrorAction SilentlyContinue) `
+                $OutputsDir `
+                $sampleBase `
+                $DrcTimeoutSeconds
+
+            $logMetrics = Get-PhaseMetrics $runResult.LogFile $verLabel $runResult.TimedOut
+            if ($runResult.ResultJsonFile -and (Test-Path $runResult.ResultJsonFile)) {
+                $logMetrics = Import-ResultManifestMetrics $runResult.ResultJsonFile $logMetrics
+            }
+            $sampleRecords += [PSCustomObject]@{
+                sample_index = $sampleIdx
+                final_unrouted = $logMetrics.autorouter.final_unrouted
+                clearance_violations = $logMetrics.autorouter.final_violations
+                quality_score = $logMetrics.autorouter.final_score
+                wall_clock_seconds = $runResult.WallClockSeconds
+                peak_heap_mb = $logMetrics.autorouter.peak_heap_mb
+                result_json = $runResult.ResultJsonFile
+            }
+        }
 
         $runEndTime = Get-Date
         $runSecs = ($runEndTime - $runStartTime).TotalSeconds
 
-        # Invoke DRC using current version on outputs
-        Write-Output "  -> Running DRC check..."
-        $drcResult = Invoke-DrcCheck `
-            $binaryCurrent `
-            $fixture `
-            (Get-Item $runResult.OutputFile -ErrorAction SilentlyContinue) `
-            $OutputsDir `
-            $baseName `
-            $DrcTimeoutSeconds
-
-        # Parse metrics from logs
-        $logMetrics = Get-PhaseMetrics $runResult.LogFile $verLabel $runResult.TimedOut
         $routingCompletionPct = $null
         if (($logMetrics.autorouter.initial_unrouted_count -ne $null) -and ($logMetrics.autorouter.final_unrouted -ne $null) -and ($logMetrics.autorouter.initial_unrouted_count -gt 0)) {
             $routingCompletionPct = [math]::Round((100.0 * ($logMetrics.autorouter.initial_unrouted_count - $logMetrics.autorouter.final_unrouted) / $logMetrics.autorouter.initial_unrouted_count), 1)
         }
 
+        function Get-MedianValue($values) {
+            $sorted = @($values | Where-Object { $_ -ne $null } | Sort-Object)
+            if ($sorted.Count -eq 0) { return $null }
+            return $sorted[[math]::Floor($sorted.Count / 2)]
+        }
+
+        if ($sampleCount -gt 1) {
+            $logMetrics.autorouter.final_unrouted = Get-MedianValue ($sampleRecords.final_unrouted)
+            $logMetrics.autorouter.final_violations = Get-MedianValue ($sampleRecords.clearance_violations)
+            $logMetrics.autorouter.final_score = Get-MedianValue ($sampleRecords.quality_score)
+        }
+
         # Build run record
+        $relativeLogFile = $runResult.LogFile
+        try {
+            $relativeLogFile = (Resolve-Path $runResult.LogFile -Relative)
+        } catch {}
+
         $runObj = [PSCustomObject]@{
             cache_key = $cacheKey
             run_at    = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
@@ -313,6 +358,7 @@ foreach ($binary in $binaries) {
                 version_label = $verLabel
                 sha256        = (Get-FileHash $binary.FullName -Algorithm SHA256).Hash
                 size_bytes    = $binary.Length
+                git_sha       = $gitSha
             }
             fixture   = [PSCustomObject]@{
                 filename            = $fixture.Name
@@ -364,8 +410,11 @@ foreach ($binary in $binaries) {
                 oom_detected = $runResult.OomDetected
                 timed_out    = $runResult.TimedOut
             }
-            log_file  = $runResult.LogFile
+            log_file    = $relativeLogFile
+            result_json = $runResult.ResultJsonFile
             output_file = $runResult.OutputFile
+            samples     = $sampleRecords
+            schema_version = 2
         }
 
         # Update cache

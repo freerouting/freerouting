@@ -1,0 +1,60 @@
+{
+  "board_id": "esp32-ethernet_esp32-ethernet",
+  "display_name": "esp32-ethernet_esp32-ethernet",
+  "pcbench_directory": "PCBs/esp32-ethernet_esp32-ethernet",
+  "source": "https://github.com/russss/esp32-ethernet",
+  "author": "russss",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:27.629764+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 40,
+    "dimensions_mm": {
+      "width": 54.0,
+      "height": 40.0
+    },
+    "area_cm2": 21.6,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 625,
+    "vias": 61,
+    "track_length_mm": 1317.06,
+    "kicad_drc_violations": 154,
+    "kicad_drc_breakdown": {
+      "total_violations": 154,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 86,
+        "copper_edge_clearance": 11,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 40,
+        "pth_inside_courtyard": 4,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 2,
+        "starved_thermal": 2,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 104,
+        "warning": 50
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

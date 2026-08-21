@@ -1,0 +1,55 @@
+{
+  "board_id": "kitspace_flypi_v2",
+  "display_name": "kitspace_flypi_v2",
+  "pcbench_directory": "PCBs/kitspace_flypi_v2",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:26.084126+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 35,
+    "dimensions_mm": {
+      "width": 76.0,
+      "height": 85.0
+    },
+    "area_cm2": 64.6,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 183,
+    "vias": 0,
+    "track_length_mm": 1372.03,
+    "kicad_drc_violations": 44,
+    "kicad_drc_breakdown": {
+      "total_violations": 44,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "lib_footprint_issues": 32,
+        "silk_overlap": 4,
+        "starved_thermal": 6
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

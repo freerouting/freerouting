@@ -1,0 +1,60 @@
+{
+  "board_id": "PDB_OSD_HARDWARE_Quadcopter Power Board",
+  "display_name": "PDB_OSD_HARDWARE_Quadcopter Power Board",
+  "pcbench_directory": "PCBs/PDB_OSD_HARDWARE_Quadcopter Power Board",
+  "source": "https://github.com/ckflight/PDB_OSD_HARDWARE",
+  "author": "ckflight",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:46.897991+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 42,
+    "components": 140,
+    "dimensions_mm": {
+      "width": 38.0,
+      "height": 44.6
+    },
+    "area_cm2": 16.95,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 377,
+    "vias": 41,
+    "track_length_mm": 439.41,
+    "kicad_drc_violations": 518,
+    "kicad_drc_breakdown": {
+      "total_violations": 518,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 152,
+        "copper_edge_clearance": 5,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 140,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 73,
+        "silk_overlap": 18,
+        "text_height": 72,
+        "text_thickness": 53
+      },
+      "by_severity": {
+        "error": 161,
+        "warning": 357
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

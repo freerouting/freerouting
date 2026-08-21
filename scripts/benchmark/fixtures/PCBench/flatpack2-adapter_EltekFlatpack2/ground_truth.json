@@ -1,0 +1,34 @@
+{
+  "board": "flatpack2-adapter_EltekFlatpack2",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\flatpack2-adapter_EltekFlatpack2\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 116,
+  "segment_count": 26,
+  "approximate_track_length_mm": 78.59,
+  "kicad_drc_violations": 137,
+  "generated_at": "2026-08-18T18:49:50.114562+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 137,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 18,
+      "copper_edge_clearance": 22,
+      "courtyards_overlap": 6,
+      "hole_clearance": 6,
+      "holes_co_located": 6,
+      "lib_footprint_issues": 10,
+      "lib_footprint_mismatch": 3,
+      "npth_inside_courtyard": 4,
+      "pth_inside_courtyard": 38,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 6,
+      "silk_overlap": 9,
+      "zones_intersect": 8
+    },
+    "by_severity": {
+      "error": 102,
+      "warning": 35
+    }
+  }
+}

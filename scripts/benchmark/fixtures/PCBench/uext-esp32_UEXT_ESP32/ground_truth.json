@@ -1,0 +1,27 @@
+{
+  "board": "uext-esp32_UEXT_ESP32",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\uext-esp32_UEXT_ESP32\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 15,
+  "segment_count": 118,
+  "approximate_track_length_mm": 242.75,
+  "kicad_drc_violations": 29,
+  "generated_at": "2026-08-18T19:54:35.710535+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 29,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 13,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 6,
+      "lib_footprint_mismatch": 3,
+      "silk_edge_clearance": 3,
+      "starved_thermal": 2
+    },
+    "by_severity": {
+      "error": 17,
+      "warning": 12
+    }
+  }
+}

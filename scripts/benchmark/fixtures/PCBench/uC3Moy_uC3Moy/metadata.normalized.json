@@ -1,0 +1,67 @@
+{
+  "board_id": "uC3Moy_uC3Moy",
+  "display_name": "uC3Moy_uC3Moy",
+  "pcbench_directory": "PCBs/uC3Moy_uC3Moy",
+  "source": "https://github.com/UC3Music/uC3Moy",
+  "author": "UC3Music",
+  "license": "GNU General Public License v2.0",
+  "license_spdx": "GPL-2.0",
+  "retrieved_at": "2023-08-17T17:22:25.597740+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 35.5,
+      "height": 68.44
+    },
+    "area_cm2": 24.3,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 71,
+    "vias": 0,
+    "track_length_mm": 197.01,
+    "kicad_drc_violations": 314,
+    "kicad_drc_breakdown": {
+      "total_violations": 314,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 10,
+        "clearance": 95,
+        "copper_edge_clearance": 14,
+        "courtyards_overlap": 2,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 25,
+        "padstack": 10,
+        "silk_edge_clearance": 24,
+        "silk_over_copper": 45,
+        "silk_overlap": 88
+      },
+      "by_severity": {
+        "error": 122,
+        "warning": 192
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.152445+00:00",
+    "elapsed_seconds": 23.45,
+    "unrouted_nets": 3,
+    "clearance_violations": 10,
+    "quality_score": 878.05
+  }
+}

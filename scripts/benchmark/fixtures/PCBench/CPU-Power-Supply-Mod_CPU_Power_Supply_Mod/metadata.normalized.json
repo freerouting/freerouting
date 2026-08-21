@@ -1,0 +1,58 @@
+{
+  "board_id": "CPU-Power-Supply-Mod_CPU_Power_Supply_Mod",
+  "display_name": "CPU-Power-Supply-Mod_CPU_Power_Supply_Mod",
+  "pcbench_directory": "PCBs/CPU-Power-Supply-Mod_CPU_Power_Supply_Mod",
+  "source": "https://github.com/Supercap2F/CPU-Power-Supply-Mod",
+  "author": "Supercap2F",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:50.774037+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 38,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 497,
+    "vias": 0,
+    "track_length_mm": 2624.24,
+    "kicad_drc_violations": 130,
+    "kicad_drc_breakdown": {
+      "total_violations": 130,
+      "unconnected_count": 10,
+      "by_type": {
+        "clearance": 9,
+        "hole_clearance": 4,
+        "invalid_outline": 1,
+        "isolated_copper": 1,
+        "silk_overlap": 103,
+        "solder_mask_bridge": 4,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 18,
+        "warning": 112
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

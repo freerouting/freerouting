@@ -1,0 +1,177 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\DIYDAC_DIYDAC\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  204470 -100838  204470 -101981  204470 -111760  204470 -113030
+            204470 -113284  204468 -113395  204429 -113613  204353 -113822
+            204242 -114014  204100 -114184  203930 -114326  203738 -114437
+            203529 -114513  203311 -114552  203200 -114554  182880 -114554
+            181864 -114554  181610 -114300  179072 -111759  179072 -102107
+            179072 -101853  179072 -101726  179961 -100837  180342 -100837
+            204470 -100838)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 800)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Resistors_SMD:R_0603_HandSoldering
+      (place 2R0 180340 -107950 front -90 (PN " "))
+      (place 2R1 182880 -107950 front -90 (PN " "))
+      (place 2R2 185420 -107950 front -90 (PN " "))
+      (place 2R3 187960 -107950 front -90 (PN " "))
+      (place 2R4 190500 -107950 front -90 (PN " "))
+      (place 2R5 193040 -107950 front -90 (PN " "))
+      (place 2R6 195580 -107950 front -90 (PN " "))
+      (place 2R7 198120 -107950 front -90 (PN " "))
+      (place 2R8 200660 -107950 front -90 (PN " "))
+    )
+    (component Resistors_SMD:R_0603_HandSoldering::1
+      (place R1 184150 -111125 front 0 (PN " "))
+      (place R2 186690 -113030 front 0 (PN " "))
+      (place R3 189230 -111125 front 0 (PN " "))
+      (place R4 191770 -113030 front 0 (PN " "))
+      (place R5 194310 -111125 front 0 (PN " "))
+      (place R6 196850 -113030 front 0 (PN " "))
+      (place R7 199390 -111125 front 0 (PN " "))
+    )
+    (component diydac:SMD_10P_100mil_laying_short
+      (place P1 180340 -103632 front 0 (PN CONN_01X10))
+    )
+  )
+  (library
+    (image Resistors_SMD:R_0603_HandSoldering
+      (outline (polygon signal 0  1995 795  1995 -795  -1995 -795  -1995 795))
+      (outline (path signal 150  500 -675  -500 -675))
+      (outline (path signal 150  -500 675  500 675))
+      (pin Rect[T]Pad_1200.000000x900.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1200.000000x900.000000_um 2 1100 0)
+    )
+    (image Resistors_SMD:R_0603_HandSoldering::1
+      (outline (polygon signal 0  1995 -795  -1995 -795  -1995 795  1995 795))
+      (outline (path signal 150  500 -675  -500 -675))
+      (outline (path signal 150  -500 675  500 675))
+      (pin Rect[T]Pad_1200.000000x900.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1200.000000x900.000000_um 2 1100 0)
+    )
+    (image diydac:SMD_10P_100mil_laying_short
+      (outline (path signal 150  23876 2540  23876 -2032))
+      (outline (path signal 150  -1016 1778  -1016 -2032))
+      (outline (path signal 150  -1016 1778  -254 2540))
+      (outline (path signal 150  -254 2540  23876 2540))
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 10 22860 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 9 20320 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 8 17780 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 7 15240 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 6 12700 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 5 10160 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 4 7620 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 3 5080 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 2 2540 0)
+      (pin Rect[T]Pad_1000.000000x4000.000000_um 1 0 0)
+    )
+    (padstack Rect[T]Pad_1000.000000x4000.000000_um
+      (shape (rect F.Cu -500 -2000 500 2000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x900.000000_um
+      (shape (rect F.Cu -600 -450 600 450))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins 2R0-1 P1-1)
+    )
+    (net "Net-(2R0-Pad2)"
+      (pins 2R0-2 2R1-2 R1-1)
+    )
+    (net "Net-(2R1-Pad1)"
+      (pins 2R1-1 P1-2)
+    )
+    (net "Net-(2R2-Pad1)"
+      (pins 2R2-1 P1-3)
+    )
+    (net "Net-(2R2-Pad2)"
+      (pins 2R2-2 R1-2 R2-1)
+    )
+    (net "Net-(2R3-Pad1)"
+      (pins 2R3-1 P1-4)
+    )
+    (net "Net-(2R3-Pad2)"
+      (pins 2R3-2 R2-2 R3-1)
+    )
+    (net "Net-(2R4-Pad1)"
+      (pins 2R4-1 P1-5)
+    )
+    (net "Net-(2R4-Pad2)"
+      (pins 2R4-2 R3-2 R4-1)
+    )
+    (net "Net-(2R5-Pad1)"
+      (pins 2R5-1 P1-6)
+    )
+    (net "Net-(2R5-Pad2)"
+      (pins 2R5-2 R4-2 R5-1)
+    )
+    (net "Net-(2R6-Pad1)"
+      (pins 2R6-1 P1-7)
+    )
+    (net "Net-(2R6-Pad2)"
+      (pins 2R6-2 R5-2 R6-1)
+    )
+    (net "Net-(2R7-Pad1)"
+      (pins 2R7-1 P1-8)
+    )
+    (net "Net-(2R7-Pad2)"
+      (pins 2R7-2 R6-2 R7-1)
+    )
+    (net "Net-(2R8-Pad1)"
+      (pins 2R8-1 P1-9)
+    )
+    (net "Net-(2R8-Pad2)"
+      (pins 2R8-2 R7-2 P1-10)
+    )
+    (class kicad_default GND "Net-(2R0-Pad2)" "Net-(2R1-Pad1)" "Net-(2R2-Pad1)"
+      "Net-(2R2-Pad2)" "Net-(2R3-Pad1)" "Net-(2R3-Pad2)" "Net-(2R4-Pad1)"
+      "Net-(2R4-Pad2)" "Net-(2R5-Pad1)" "Net-(2R5-Pad2)" "Net-(2R6-Pad1)"
+      "Net-(2R6-Pad2)" "Net-(2R7-Pad1)" "Net-(2R7-Pad2)" "Net-(2R8-Pad1)"
+      "Net-(2R8-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 800)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

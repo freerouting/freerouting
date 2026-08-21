@@ -1,0 +1,62 @@
+{
+  "board_id": "thingBot-LoRa_thingBot-LoRa_v1P1",
+  "display_name": "thingBot-LoRa_thingBot-LoRa_v1P1",
+  "pcbench_directory": "PCBs/thingBot-LoRa_thingBot-LoRa_v1P1",
+  "source": "https://github.com/automote/thingBot-LoRa",
+  "author": "automote",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:59.798143+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 45,
+    "dimensions_mm": {
+      "width": 24.38,
+      "height": 32.93
+    },
+    "area_cm2": 8.03,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 98,
+    "vias": 5,
+    "track_length_mm": 240.71,
+    "kicad_drc_violations": 156,
+    "kicad_drc_breakdown": {
+      "total_violations": 156,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 21,
+        "copper_edge_clearance": 25,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 45,
+        "padstack": 2,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 30,
+        "silk_overlap": 3,
+        "starved_thermal": 2,
+        "text_height": 16,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 50,
+        "warning": 106
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

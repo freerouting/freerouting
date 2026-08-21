@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Atmel-ICE-Header-Adapter_ice header adapter pcb",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 248286,
+      "sha256": "6318354aafdfa27cc8ccb04bbcf2785fbaa68c2bde108440e8c675551579f8eb"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 81215,
+      "sha256": "ed712e508df3dd9dca3ed3b29c702ff0c6054795b63800f527dc5d00acf1a5de"
+    },
+    "metadata_json": {
+      "bytes": 552,
+      "sha256": "5dc3fb980489bc3eece83876b7832468821b91a23a5cc4ff07d726134c8bf2e4"
+    },
+    "final_json": {
+      "bytes": 61070,
+      "sha256": "905f6fb7e9d8f5c9c384cac7424ce135ef5d7c56816ec0cba1982aa4f8ee086e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:57.578136+00:00"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "board": "polearm-weapon_rod",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\polearm-weapon_rod\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 169,
+  "approximate_track_length_mm": 1093.45,
+  "kicad_drc_violations": 85,
+  "generated_at": "2026-08-18T19:34:42.456566+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 85,
+    "unconnected_count": 12,
+    "by_type": {
+      "annular_width": 6,
+      "copper_edge_clearance": 9,
+      "lib_footprint_issues": 29,
+      "padstack": 6,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 24,
+      "silk_overlap": 5
+    },
+    "by_severity": {
+      "error": 15,
+      "warning": 70
+    }
+  }
+}

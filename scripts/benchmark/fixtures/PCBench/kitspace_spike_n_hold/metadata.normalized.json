@@ -1,0 +1,57 @@
+{
+  "board_id": "kitspace_spike_n_hold",
+  "display_name": "kitspace_spike_n_hold",
+  "pcbench_directory": "PCBs/kitspace_spike_n_hold",
+  "source": "https://github.com/Sussex-Neuroscience/odour-stimulator",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Sussex-Neuroscience/odour-stimulator/master/LICENSE'}, {'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/Sussex-Neuroscience/odour-stimulator/master/build_instructions/_build/license.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:19:26.695428+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 54,
+    "dimensions_mm": {
+      "width": 63.0,
+      "height": 110.5
+    },
+    "area_cm2": 69.61,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 191,
+    "vias": 2,
+    "track_length_mm": 997.96,
+    "kicad_drc_violations": 62,
+    "kicad_drc_breakdown": {
+      "total_violations": 62,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 5,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 44,
+        "silk_edge_clearance": 1,
+        "silk_overlap": 8,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 57
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

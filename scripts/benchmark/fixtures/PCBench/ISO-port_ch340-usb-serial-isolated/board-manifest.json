@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ISO-port_ch340-usb-serial-isolated",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 163162,
+      "sha256": "474345ac8a0c7cbc089ad84fc98787059e508210d10803304aae85d4054e58fb"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 88727,
+      "sha256": "d7bbc33a08efe2ffd7f3fc92f4042a908a51b2f36104e9ca5e3c06c1834b1d36"
+    },
+    "metadata_json": {
+      "bytes": 496,
+      "sha256": "d7b4a36dc22ac04c3ff936d83eeb1b581af8fcde045290391a383f8515289a8e"
+    },
+    "final_json": {
+      "bytes": 81151,
+      "sha256": "978586668b8500937031f34d29af8f53370f2dbfd3d3e9a875f4fdab9d8e24f7"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:59:40.239674+00:00"
+  }
+}

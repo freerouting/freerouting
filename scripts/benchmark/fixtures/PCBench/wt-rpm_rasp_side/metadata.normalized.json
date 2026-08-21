@@ -1,0 +1,59 @@
+{
+  "board_id": "wt-rpm_rasp_side",
+  "display_name": "wt-rpm_rasp_side",
+  "pcbench_directory": "PCBs/wt-rpm_rasp_side",
+  "source": "https://github.com/mupuf/wt-rpm",
+  "author": "mupuf",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.625776+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 84,
+    "dimensions_mm": {
+      "width": 99.7,
+      "height": 99.7
+    },
+    "area_cm2": 99.4,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 638,
+    "vias": 0,
+    "track_length_mm": 2559.19,
+    "kicad_drc_violations": 492,
+    "kicad_drc_breakdown": {
+      "total_violations": 492,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 10,
+        "clearance": 325,
+        "padstack": 10,
+        "silk_edge_clearance": 23,
+        "silk_overlap": 83,
+        "solder_mask_bridge": 25,
+        "starved_thermal": 1,
+        "text_height": 15
+      },
+      "by_severity": {
+        "error": 361,
+        "warning": 131
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,30 @@
+{
+  "board": "radio_antenna-iridium",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\radio_antenna-iridium\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 175,
+  "segment_count": 265,
+  "approximate_track_length_mm": 520.99,
+  "kicad_drc_violations": 295,
+  "generated_at": "2026-08-18T18:23:48.333173+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 295,
+    "unconnected_count": 28,
+    "by_type": {
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 5,
+      "lib_footprint_issues": 37,
+      "pth_inside_courtyard": 2,
+      "silk_over_copper": 16,
+      "silk_overlap": 6,
+      "solder_mask_bridge": 12,
+      "text_height": 40,
+      "via_dangling": 175
+    },
+    "by_severity": {
+      "error": 21,
+      "warning": 274
+    }
+  }
+}

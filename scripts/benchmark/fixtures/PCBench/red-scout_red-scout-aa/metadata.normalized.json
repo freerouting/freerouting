@@ -1,0 +1,61 @@
+{
+  "board_id": "red-scout_red-scout-aa",
+  "display_name": "red-scout_red-scout-aa",
+  "pcbench_directory": "PCBs/red-scout_red-scout-aa",
+  "source": "https://github.com/tylercrumpton/red-scout",
+  "author": "tylercrumpton",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.270078+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 41,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 97.5
+    },
+    "area_cm2": 58.5,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 306,
+    "vias": 59,
+    "track_length_mm": 1055.83,
+    "kicad_drc_violations": 255,
+    "kicad_drc_breakdown": {
+      "total_violations": 255,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 9,
+        "clearance": 92,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 41,
+        "padstack": 5,
+        "silk_over_copper": 100,
+        "silk_overlap": 2,
+        "starved_thermal": 1,
+        "text_height": 2,
+        "tracks_crossing": 1
+      },
+      "by_severity": {
+        "error": 105,
+        "warning": 150
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

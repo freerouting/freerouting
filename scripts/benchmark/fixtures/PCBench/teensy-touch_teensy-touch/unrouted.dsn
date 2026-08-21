@@ -1,0 +1,346 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\teensy-touch_teensy-touch\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  173083 -146162  106834 -146162  106834 -85984.9  173083 -85984.9
+            173083 -146162)
+    )
+    (via "Via[0-1]_685.8:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Wickerlib:TEENSY-LC"
+      (place J1 151511 -105918 front 0 (PN "TEENSY-LC"))
+    )
+    (component "Wickerlib:Symbol_OSHW-Logo_SilkScreen"
+      (place REF** 167767 -133985 front -90 (PN "Symbol_OSHW-Logo_SilkScreen"))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x08
+      (place J2 168910 -108077 front 0 (PN OLED_128x64))
+    )
+    (component Wickerlib:CAPSENSE_CIRCLE_D10
+      (place CAP0 114300 -97155 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP1 128905 -93472 front 90 (PN CAPSENSE_CIRCLE))
+      (place CAP3 114427 -111379 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP4 128524 -107061 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP15 115062 -125476 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP16 128524 -121412 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP17 115570 -139573 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP18 128778 -136144 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP19 142367 -139827 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP22 157480 -139954 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP23 165227 -99695 front 0 (PN CAPSENSE_CIRCLE))
+    )
+    (component "teensy-big-oled:oshpark-silk-dpi72"
+      (place G*** 140843 -116967 back 180 (PN LOGO))
+    )
+  )
+  (library
+    (image "Wickerlib:TEENSY-LC"
+      (outline (polygon signal 0  6345 -24125  -11425 -24125  -11425 11425  6345 11425))
+      (pin Round[A]Pad_1727.200000_um G1 -10160 10160)
+      (pin Round[A]Pad_1727.200000_um 0 -10160 7620)
+      (pin Round[A]Pad_1727.200000_um 1 -10160 5080)
+      (pin Round[A]Pad_1727.200000_um 2 -10160 2540)
+      (pin Round[A]Pad_1727.200000_um 3 -10160 0)
+      (pin Round[A]Pad_1727.200000_um 4 -10160 -2540)
+      (pin Round[A]Pad_1727.200000_um 5 -10160 -5080)
+      (pin Round[A]Pad_1727.200000_um 6 -10160 -7620)
+      (pin Round[A]Pad_1727.200000_um 7 -10160 -10160)
+      (pin Round[A]Pad_1727.200000_um 8 -10160 -12700)
+      (pin Round[A]Pad_1727.200000_um 9 -10160 -15240)
+      (pin Round[A]Pad_1727.200000_um 10 -10160 -17780)
+      (pin Round[A]Pad_1727.200000_um 11 -10160 -20320)
+      (pin Round[A]Pad_1727.200000_um 12 -10160 -22860)
+      (pin Round[A]Pad_1727.200000_um 17A -7620 -22860)
+      (pin Round[A]Pad_1727.200000_um 3V1 -5080 -22860)
+      (pin Round[A]Pad_1727.200000_um G2 -2540 -22860)
+      (pin Round[A]Pad_1727.200000_um PGM 0 -22860)
+      (pin Round[A]Pad_1727.200000_um DAC 2540 -22860)
+      (pin Round[A]Pad_1727.200000_um 13 5080 -22860)
+      (pin Round[A]Pad_1727.200000_um 16 5080 -15240)
+      (pin Round[A]Pad_1727.200000_um 3V2 5080 5080)
+      (pin Round[A]Pad_1727.200000_um 18 5080 -10160)
+      (pin Round[A]Pad_1727.200000_um 17 5080 -12700)
+      (pin Round[A]Pad_1727.200000_um G3 5080 7620)
+      (pin Round[A]Pad_1727.200000_um 22 5080 0)
+      (pin Round[A]Pad_1727.200000_um VIN 5080 10160)
+      (pin Round[A]Pad_1727.200000_um 21 5080 -2540)
+      (pin Round[A]Pad_1727.200000_um 20 5080 -5080)
+      (pin Round[A]Pad_1727.200000_um 19 5080 -7620)
+      (pin Round[A]Pad_1727.200000_um 23 5080 2540)
+      (pin Round[A]Pad_1727.200000_um 14 5080 -20320)
+      (pin Round[A]Pad_1727.200000_um 15 5080 -17780)
+    )
+    (image "Wickerlib:Symbol_OSHW-Logo_SilkScreen"
+      (outline (path signal 150  350.52 -899.16  749.3 -1899.92))
+      (outline (path signal 150  -350.52 -899.16  -701.04 -1899.92))
+      (outline (path signal 150  -701.04 -701.04  -350.52 -899.16))
+      (outline (path signal 150  -949.96 -398.78  -701.04 -701.04))
+      (outline (path signal 150  -1000.76 99.06  -949.96 -398.78))
+      (outline (path signal 150  -850.9 551.18  -1000.76 99.06))
+      (outline (path signal 150  -449.58 899.16  -850.9 551.18))
+      (outline (path signal 150  -50.8 1000.76  -449.58 899.16))
+      (outline (path signal 150  398.78 949.96  -50.8 1000.76))
+      (outline (path signal 150  850.9 599.44  398.78 949.96))
+      (outline (path signal 150  1000.76 248.92  850.9 599.44))
+      (outline (path signal 150  1000.76 -149.86  1000.76 248.92))
+      (outline (path signal 150  850.9 -551.18  1000.76 -149.86))
+      (outline (path signal 150  650.24 -749.3  850.9 -551.18))
+      (outline (path signal 150  350.52 -899.16  650.24 -749.3))
+      (outline (path signal 150  -1930.4 -520.7  -1790.7 -919.48))
+      (outline (path signal 150  -2489.2 -320.04  -1930.4 -520.7))
+      (outline (path signal 150  -2479.04 381  -2489.2 -320.04))
+      (outline (path signal 150  -1930.4 480.06  -2479.04 381))
+      (outline (path signal 150  -1760.22 960.12  -1930.4 480.06))
+      (outline (path signal 150  -2009.14 1501.14  -1760.22 960.12))
+      (outline (path signal 150  -1490.98 2029.46  -2009.14 1501.14))
+      (outline (path signal 150  -939.8 1760.22  -1490.98 2029.46))
+      (outline (path signal 150  -520.7 1930.4  -939.8 1760.22))
+      (outline (path signal 150  -309.88 2479.04  -520.7 1930.4))
+      (outline (path signal 150  381 2461.26  -309.88 2479.04))
+      (outline (path signal 150  551.18 1920.24  381 2461.26))
+      (outline (path signal 150  1021.08 1719.58  551.18 1920.24))
+      (outline (path signal 150  1539.24 1981.2  1021.08 1719.58))
+      (outline (path signal 150  2009.14 1470.66  1539.24 1981.2))
+      (outline (path signal 150  1739.9 1000.76  2009.14 1470.66))
+      (outline (path signal 150  1940.56 429.26  1739.9 1000.76))
+      (outline (path signal 150  2499.36 289.56  1940.56 429.26))
+      (outline (path signal 150  2499.36 -391.16  2499.36 289.56))
+      (outline (path signal 150  1889.76 -579.12  2499.36 -391.16))
+      (outline (path signal 150  1699.26 -1049.02  1889.76 -579.12))
+      (outline (path signal 150  1981.2 -1529.08  1699.26 -1049.02))
+      (outline (path signal 150  1508.76 -2019.3  1981.2 -1529.08))
+      (outline (path signal 150  1069.34 -1689.1  1508.76 -2019.3))
+      (outline (path signal 150  739.14 -1879.6  1069.34 -1689.1))
+      (outline (path signal 150  -980.44 -1739.9  -701.04 -1899.92))
+      (outline (path signal 150  -1501.14 -2009.14  -980.44 -1739.9))
+      (outline (path signal 150  -2039.62 -1490.98  -1501.14 -2009.14))
+      (outline (path signal 150  -1780.54 -929.64  -2039.62 -1490.98))
+      (outline (path signal 150  -2039.62 -2788.92  -2400.3 -2659.38))
+      (outline (path signal 150  -1930.4 -3070.86  -2039.62 -2788.92))
+      (outline (path signal 150  -1879.6 -3479.8  -1930.4 -3070.86))
+      (outline (path signal 150  -1950.72 -3939.54  -1879.6 -3479.8))
+      (outline (path signal 150  -2169.16 -4119.88  -1950.72 -3939.54))
+      (outline (path signal 150  -2479.04 -4191  -2169.16 -4119.88))
+      (outline (path signal 150  -2730.5 -4069.08  -2479.04 -4191))
+      (outline (path signal 150  -2931.16 -3749.04  -2730.5 -4069.08))
+      (outline (path signal 150  -2959.1 -3401.06  -2931.16 -3749.04))
+      (outline (path signal 150  -2870.2 -2910.84  -2959.1 -3401.06))
+      (outline (path signal 150  -2628.9 -2669.54  -2870.2 -2910.84))
+      (outline (path signal 150  -2379.98 -2649.22  -2628.9 -2669.54))
+      (outline (path signal 150  -990.6 -4208.78  -1341.12 -4099.56))
+      (outline (path signal 150  -670.56 -4180.84  -990.6 -4208.78))
+      (outline (path signal 150  -439.42 -3959.86  -670.56 -4180.84))
+      (outline (path signal 150  -480.06 -3660.14  -439.42 -3959.86))
+      (outline (path signal 150  -660.4 -3500.12  -480.06 -3660.14))
+      (outline (path signal 150  -1049.02 -3370.58  -660.4 -3500.12))
+      (outline (path signal 150  -1290.32 -3129.28  -1049.02 -3370.58))
+      (outline (path signal 150  -1259.84 -2860.04  -1290.32 -3129.28))
+      (outline (path signal 150  -1021.08 -2659.38  -1259.84 -2860.04))
+      (outline (path signal 150  -701.04 -2669.54  -1021.08 -2659.38))
+      (outline (path signal 150  -350.52 -2750.82  -701.04 -2669.54))
+      (outline (path signal 150  200.66 -4218.94  210.82 -4208.78))
+      (outline (path signal 150  200.66 -2649.22  200.66 -4218.94))
+      (outline (path signal 150  1089.66 -2659.38  1089.66 -4201.16))
+      (outline (path signal 150  1049.02 -3380.74  1049.02 -3370.58))
+      (outline (path signal 150  1038.86 -3370.58  1049.02 -3380.74))
+      (outline (path signal 150  248.92 -3380.74  1038.86 -3370.58))
+      (outline (path signal 150  2618.74 -4170.68  2959.1 -2720.34))
+      (outline (path signal 150  2308.86 -3098.8  2618.74 -4170.68))
+      (outline (path signal 150  2029.46 -4160.52  2308.86 -3098.8))
+      (outline (path signal 150  1668.78 -2689.86  2029.46 -4160.52))
+    )
+    (image Wickerlib:Pin_Header_Straight_1x08
+      (outline (polygon signal 0  1745 -19545  -1745 -19545  -1745 1745  1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -19050  -1270 -1270))
+      (outline (path signal 150  1270 -19050  -1270 -19050))
+      (outline (path signal 150  1270 -1270  1270 -19050))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 8 0 -17780)
+    )
+    (image Wickerlib:CAPSENSE_CIRCLE_D10
+      (pin Round[T]Pad_10160.000000_um 1 0 0)
+    )
+    (image "teensy-big-oled:oshpark-silk-dpi72"
+    )
+    (padstack Round[T]Pad_10160.000000_um
+      (shape (circle F.Cu 10160))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1727.200000_um
+      (shape (circle F.Cu 1727.2))
+      (shape (circle B.Cu 1727.2))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(J1-Pad2)"
+      (pins J1-2)
+    )
+    (net "Net-(J1-Pad5)"
+      (pins J1-5)
+    )
+    (net "Net-(J1-Pad6)"
+      (pins J1-6)
+    )
+    (net "Net-(J1-Pad7)"
+      (pins J1-7)
+    )
+    (net "Net-(J1-Pad8)"
+      (pins J1-8)
+    )
+    (net "Net-(J1-Pad17A)"
+      (pins J1-17A)
+    )
+    (net "Net-(J1-Pad3V1)"
+      (pins J1-3V1)
+    )
+    (net "Net-(J1-PadG2)"
+      (pins J1-G2)
+    )
+    (net "Net-(J1-PadPGM)"
+      (pins J1-PGM)
+    )
+    (net "Net-(J1-PadDAC)"
+      (pins J1-DAC)
+    )
+    (net "Net-(J1-PadG3)"
+      (pins J1-G3)
+    )
+    (net "Net-(J1-PadVIN)"
+      (pins J1-VIN)
+    )
+    (net "Net-(J1-Pad21)"
+      (pins J1-21)
+    )
+    (net "Net-(J1-Pad20)"
+      (pins J1-20)
+    )
+    (net "Net-(J1-Pad14)"
+      (pins J1-14)
+    )
+    (net /CS
+      (pins J1-12 J2-4)
+    )
+    (net /RST
+      (pins J1-13 J2-5)
+    )
+    (net /GND
+      (pins J1-G1 J2-1)
+    )
+    (net /VIN
+      (pins J1-3V2 J2-2)
+    )
+    (net /Data
+      (pins J1-9 J2-8)
+    )
+    (net /CLK
+      (pins J1-10 J2-7)
+    )
+    (net /DC
+      (pins J1-11 J2-6)
+    )
+    (net "Net-(J2-Pad3)"
+      (pins J2-3)
+    )
+    (net "Net-(CAP0-Pad1)"
+      (pins J1-0 CAP0-1)
+    )
+    (net "Net-(CAP1-Pad1)"
+      (pins J1-1 CAP1-1)
+    )
+    (net "Net-(CAP3-Pad1)"
+      (pins J1-3 CAP3-1)
+    )
+    (net "Net-(CAP4-Pad1)"
+      (pins J1-4 CAP4-1)
+    )
+    (net /CAP16
+      (pins J1-16 CAP16-1)
+    )
+    (net /CAP18
+      (pins J1-18 CAP18-1)
+    )
+    (net /CAP17
+      (pins J1-17 CAP17-1)
+    )
+    (net /CAP22
+      (pins J1-22 CAP22-1)
+    )
+    (net /CAP19
+      (pins J1-19 CAP19-1)
+    )
+    (net /CAP23
+      (pins J1-23 CAP23-1)
+    )
+    (net /CAP15
+      (pins J1-15 CAP15-1)
+    )
+    (class kicad_default /CAP15 /CAP16 /CAP17 /CAP18 /CAP19 /CAP22 /CAP23
+      /CLK /CS /DC /Data /GND /RST /VIN "Net-(CAP0-Pad1)" "Net-(CAP1-Pad1)"
+      "Net-(CAP3-Pad1)" "Net-(CAP4-Pad1)" "Net-(J1-Pad14)" "Net-(J1-Pad17A)"
+      "Net-(J1-Pad2)" "Net-(J1-Pad20)" "Net-(J1-Pad21)" "Net-(J1-Pad3V1)"
+      "Net-(J1-Pad5)" "Net-(J1-Pad6)" "Net-(J1-Pad7)" "Net-(J1-Pad8)" "Net-(J1-PadDAC)"
+      "Net-(J1-PadG2)" "Net-(J1-PadG3)" "Net-(J1-PadPGM)" "Net-(J1-PadVIN)"
+      "Net-(J2-Pad3)"
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

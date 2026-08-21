@@ -1,0 +1,57 @@
+{
+  "board_id": "ssr-wifi_adapter",
+  "display_name": "ssr-wifi_adapter",
+  "pcbench_directory": "PCBs/ssr-wifi_adapter",
+  "source": "https://github.com/emard/ssr-wifi",
+  "author": "emard",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.817990+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 83.0,
+      "height": 86.0
+    },
+    "area_cm2": 71.38,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 150,
+    "vias": 4,
+    "track_length_mm": 628.75,
+    "kicad_drc_violations": 181,
+    "kicad_drc_breakdown": {
+      "total_violations": 181,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 81,
+        "invalid_outline": 16,
+        "silk_overlap": 53,
+        "solder_mask_bridge": 20,
+        "starved_thermal": 2,
+        "text_height": 9
+      },
+      "by_severity": {
+        "error": 119,
+        "warning": 62
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

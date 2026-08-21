@@ -1,0 +1,63 @@
+{
+  "board_id": "ATMEGA328-Motor-Board_ATMEGA328_Motor_Board",
+  "display_name": "ATMEGA328-Motor-Board_ATMEGA328_Motor_Board",
+  "pcbench_directory": "PCBs/ATMEGA328-Motor-Board_ATMEGA328_Motor_Board",
+  "source": "https://github.com/AntonioMR/ATMEGA328-Motor-Board",
+  "author": "AntonioMR",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:23.497716+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 46,
+    "components": 259,
+    "dimensions_mm": {
+      "width": 77.0,
+      "height": 100.0
+    },
+    "area_cm2": 77.0,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 4134,
+    "vias": 136,
+    "track_length_mm": 4454.57,
+    "kicad_drc_violations": 953,
+    "kicad_drc_breakdown": {
+      "total_violations": 953,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 508,
+        "copper_edge_clearance": 26,
+        "hole_clearance": 28,
+        "lib_footprint_issues": 199,
+        "padstack": 4,
+        "pth_inside_courtyard": 15,
+        "silk_edge_clearance": 38,
+        "silk_overlap": 72,
+        "solder_mask_bridge": 54,
+        "starved_thermal": 4,
+        "text_height": 1,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 635,
+        "warning": 318
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

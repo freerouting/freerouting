@@ -1,0 +1,30 @@
+{
+  "board": "Helium_helium_1-6",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Helium_helium_1-6\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 153,
+  "segment_count": 1170,
+  "approximate_track_length_mm": 2086.1,
+  "kicad_drc_violations": 412,
+  "generated_at": "2026-08-18T18:56:04.091686+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 412,
+    "unconnected_count": 4,
+    "by_type": {
+      "annular_width": 11,
+      "clearance": 73,
+      "shorting_items": 5,
+      "silk_over_copper": 120,
+      "silk_overlap": 62,
+      "solder_mask_bridge": 19,
+      "text_height": 114,
+      "text_thickness": 1,
+      "track_dangling": 7
+    },
+    "by_severity": {
+      "error": 108,
+      "warning": 304
+    }
+  }
+}

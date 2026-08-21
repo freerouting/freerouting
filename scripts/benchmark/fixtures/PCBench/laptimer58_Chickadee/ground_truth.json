@@ -1,0 +1,34 @@
+{
+  "board": "laptimer58_Chickadee",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\laptimer58_Chickadee\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 47,
+  "segment_count": 260,
+  "approximate_track_length_mm": 573.79,
+  "kicad_drc_violations": 209,
+  "generated_at": "2026-08-18T19:14:36.691597+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 209,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 127,
+      "copper_edge_clearance": 2,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 39,
+      "malformed_courtyard": 8,
+      "padstack": 2,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 11,
+      "silk_overlap": 6,
+      "starved_thermal": 5,
+      "track_dangling": 1,
+      "zones_intersect": 2
+    },
+    "by_severity": {
+      "error": 148,
+      "warning": 61
+    }
+  }
+}

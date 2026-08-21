@@ -1,0 +1,59 @@
+{
+  "board_id": "rxadc_14_rxadc_14",
+  "display_name": "rxadc_14_rxadc_14",
+  "pcbench_directory": "PCBs/rxadc_14_rxadc_14",
+  "source": "https://github.com/emeb/rxadc_14",
+  "author": "emeb",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:28.037769+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 47,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 32.77,
+      "height": 39.12
+    },
+    "area_cm2": 12.82,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 291,
+    "vias": 31,
+    "track_length_mm": 446.67,
+    "kicad_drc_violations": 314,
+    "kicad_drc_breakdown": {
+      "total_violations": 314,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 101,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 10,
+        "lib_footprint_issues": 50,
+        "pth_inside_courtyard": 15,
+        "solder_mask_bridge": 96,
+        "text_height": 35,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 225,
+        "warning": 89
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

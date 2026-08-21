@@ -1,0 +1,59 @@
+{
+  "board_id": "ESPLux_Board",
+  "display_name": "ESPLux_Board",
+  "pcbench_directory": "PCBs/ESPLux_Board",
+  "source": "https://github.com/pretenda/ESPLux",
+  "author": "pretenda",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:27.501763+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 43.0
+    },
+    "area_cm2": 30.1,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 202,
+    "vias": 14,
+    "track_length_mm": 715.91,
+    "kicad_drc_violations": 341,
+    "kicad_drc_breakdown": {
+      "total_violations": 341,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 116,
+        "lib_footprint_issues": 33,
+        "malformed_courtyard": 8,
+        "silk_edge_clearance": 16,
+        "silk_over_copper": 160,
+        "silk_overlap": 4,
+        "starved_thermal": 3,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 127,
+        "warning": 214
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

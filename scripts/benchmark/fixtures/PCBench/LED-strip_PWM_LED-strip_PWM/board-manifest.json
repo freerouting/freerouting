@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "LED-strip_PWM_LED-strip_PWM",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 80655,
+      "sha256": "0ac24568168702cddab7f2753ee825a8ce46f7258fc9d016fdb6e628b48bb6c5"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 72803,
+      "sha256": "9e0cb74f2238c7e7b1885248ecdf4b77bf612406211207e2dcfb5837a97d5cb1"
+    },
+    "metadata_json": {
+      "bytes": 490,
+      "sha256": "072fc8b190d63fd92f782aebad66eed39c6b8c8aecfceea660766fa64874a18f"
+    },
+    "final_json": {
+      "bytes": 36327,
+      "sha256": "b845afb8cbc257ce4d4416d6186a860f1fcc5186f7f3fad51da7832222753e39"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:15:19.378284+00:00"
+  }
+}

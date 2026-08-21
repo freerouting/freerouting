@@ -1,0 +1,68 @@
+{
+  "board_id": "thegrid_pole_panellised",
+  "display_name": "thegrid_pole_panellised",
+  "pcbench_directory": "PCBs/thegrid_pole_panellised",
+  "source": "https://github.com/cillian64/thegrid",
+  "author": "cillian64",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:56.714107+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 50,
+    "dimensions_mm": {
+      "width": 15.0,
+      "height": 39.0
+    },
+    "area_cm2": 5.85,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 514,
+    "vias": 58,
+    "track_length_mm": 620.54,
+    "kicad_drc_violations": 679,
+    "kicad_drc_breakdown": {
+      "total_violations": 679,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 63,
+        "copper_edge_clearance": 64,
+        "courtyards_overlap": 62,
+        "drill_out_of_range": 48,
+        "hole_clearance": 26,
+        "holes_co_located": 50,
+        "invalid_outline": 10,
+        "lib_footprint_issues": 48,
+        "npth_inside_courtyard": 14,
+        "pth_inside_courtyard": 24,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 31,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 23,
+        "track_dangling": 6,
+        "via_dangling": 8,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 335,
+        "warning": 344
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

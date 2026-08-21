@@ -1,0 +1,207 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\radio_saw_dcc6c\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer 1_top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer 2_gnd
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (layer 3_gnd
+      (type signal)
+      (property
+        (index 2)
+      )
+    )
+    (layer 4_bot
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (boundary
+      (path pcb 0  155400 -110000  127000 -110000  127000 -90000  155400 -90000
+            155400 -110000)
+    )
+    (via "Via[0-3]_685.8:330.2_um")
+    (rule
+      (width 300)
+      (clearance 300)
+      (clearance 75 (type smd_smd))
+    )
+  )
+  (placement
+    (component epcos_dcc6c:EPCOS_DCC6C
+      (place U1 146400 -100000 front 0 (PN EPCOS_DCC6C))
+    )
+    (component ipc_indc:IPC_INDC1608X95N
+      (place L1 139400 -100800 front -90 (PN L))
+    )
+    (component ipc_resc:IPC_RESC1608X55N
+      (place R1 134200 -100800 front -90 (PN R))
+    )
+    (component "rf_sma:EMERSON_142-0701-801"
+      (place P1 127000 -100000 front 90 (PN CONN_COAX))
+      (place P2 155400 -100000 front -90 (PN CONN_COAX))
+    )
+    (component ipc_capc:IPC_CAPC1608X95N
+      (place C1 136800 -100000 front 0 (PN 100N))
+      (place C2 142000 -100000 front 0 (PN 100N))
+    )
+  )
+  (library
+    (image epcos_dcc6c:EPCOS_DCC6C
+      (outline (path signal 152.4  -1500 -1500  -1500 1500))
+      (outline (path signal 152.4  1500 -1500  -1500 -1500))
+      (outline (path signal 152.4  1500 1500  1500 -1500))
+      (outline (path signal 152.4  -1500 1500  1500 1500))
+      (outline (path signal 152.4  -2500 -2000  -2500 2000))
+      (outline (path signal 152.4  2500 -2000  -2500 -2000))
+      (outline (path signal 152.4  2500 2000  2500 -2000))
+      (outline (path signal 152.4  -2500 2000  2500 2000))
+      (pin Rect[T]Pad_2000.000000x600.000000_um 1 -1000 1270)
+      (pin Rect[T]Pad_1100.000000x600.000000_um 2 -1450 0)
+      (pin Rect[T]Pad_1100.000000x600.000000_um 3 -1450 -1270)
+      (pin Rect[T]Pad_1100.000000x600.000000_um 4 1450 -1270)
+      (pin Rect[T]Pad_1100.000000x600.000000_um 5 1450 0)
+      (pin Rect[T]Pad_1100.000000x600.000000_um 6 1450 1270)
+    )
+    (image ipc_indc:IPC_INDC1608X95N
+      (outline (path signal 152.4  -1524 749.3  1524 749.3))
+      (outline (path signal 152.4  -1524 -749.3  -1524 749.3))
+      (outline (path signal 152.4  1524 -749.3  -1524 -749.3))
+      (outline (path signal 152.4  1524 749.3  1524 -749.3))
+      (pin Rect[T]Pad_949.960000x949.960000_um 1 -800.1 0)
+      (pin Rect[T]Pad_949.960000x949.960000_um 2 800.1 0)
+    )
+    (image ipc_resc:IPC_RESC1608X55N
+      (outline (path signal 152.4  -1501.14 -749.3  -1501.14 749.3))
+      (outline (path signal 152.4  1501.14 -749.3  -1501.14 -749.3))
+      (outline (path signal 152.4  1501.14 749.3  1501.14 -749.3))
+      (outline (path signal 152.4  -1501.14 749.3  1501.14 749.3))
+      (pin Rect[T]Pad_899.160000x1000.760000_um 1 -800.1 0)
+      (pin Rect[T]Pad_899.160000x1000.760000_um 2 800.1 0)
+    )
+    (image "rf_sma:EMERSON_142-0701-801"
+      (outline (path signal 152.4  -4762.5 0  -4762.5 -4749.8))
+      (outline (path signal 152.4  -3746.5 -4749.8  -4762.5 -4749.8))
+      (outline (path signal 152.4  -3746.5 0  -3746.5 -4749.8))
+      (outline (path signal 152.4  4762.5 -4749.8  4762.5 0))
+      (outline (path signal 152.4  3746.5 -4749.8  4762.5 -4749.8))
+      (outline (path signal 152.4  3746.5 0  3746.5 -4749.8))
+      (outline (path signal 152.4  381 -4749.8  381 0))
+      (outline (path signal 152.4  -381 -4749.8  381 -4749.8))
+      (outline (path signal 152.4  -381 0  -381 -4749.8))
+      (outline (path signal 152.4  -4762.5 1651  -4762.5 0))
+      (outline (path signal 152.4  4762.5 1651  -4762.5 1651))
+      (outline (path signal 152.4  4762.5 0  4762.5 1651))
+      (outline (path signal 152.4  -4762.5 0  4762.5 0))
+      (outline (path signal 152.4  -3556 9525  -3556 1651))
+      (outline (path signal 152.4  3556 9525  -3556 9525))
+      (outline (path signal 152.4  3556 1651  3556 9525))
+      (pin Rect[T]Pad_2413.000000x5080.000000_um 2 -4318 -2540)
+      (pin Rect[T]Pad_2413.000000x5080.000000_um 2@1 4318 -2540)
+      (pin Rect[T]Pad_2286.000000x5080.000000_um 1 0 -2540)
+      (pin Rect[B]Pad_2413.000000x5080.000000_um 2@2 4318 -2540)
+      (pin Rect[B]Pad_2413.000000x5080.000000_um 2@3 -4318 -2540)
+    )
+    (image ipc_capc:IPC_CAPC1608X95N
+      (outline (path signal 152.4  -1524 -749.3  -1524 749.3))
+      (outline (path signal 152.4  1524 -749.3  -1524 -749.3))
+      (outline (path signal 152.4  1524 749.3  1524 -749.3))
+      (outline (path signal 152.4  -1524 749.3  1524 749.3))
+      (pin Rect[T]Pad_949.960000x1000.760000_um 1 -800.1 0)
+      (pin Rect[T]Pad_949.960000x1000.760000_um 2 800.1 0)
+    )
+    (padstack Rect[T]Pad_2000.000000x600.000000_um
+      (shape (rect 1_top -1000 -300 1000 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2286.000000x5080.000000_um
+      (shape (rect 1_top -1143 -2540 1143 2540))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2413.000000x5080.000000_um
+      (shape (rect 1_top -1206.5 -2540 1206.5 2540))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_899.160000x1000.760000_um
+      (shape (rect 1_top -449.58 -500.38 449.58 500.38))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_949.960000x949.960000_um
+      (shape (rect 1_top -474.98 -474.98 474.98 474.98))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_949.960000x1000.760000_um
+      (shape (rect 1_top -474.98 -500.38 474.98 500.38))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100.000000x600.000000_um
+      (shape (rect 1_top -550 -300 550 300))
+      (attach off)
+    )
+    (padstack Rect[B]Pad_2413.000000x5080.000000_um
+      (shape (rect 4_bot -1206.5 -2540 1206.5 2540))
+      (attach off)
+    )
+    (padstack "Via[0-3]_685.8:330.2_um"
+      (shape (circle 1_top 685.8))
+      (shape (circle 2_gnd 685.8))
+      (shape (circle 3_gnd 685.8))
+      (shape (circle 4_bot 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins U1-1 U1-3 U1-4 U1-6 L1-2 R1-2 P1-2 P1-2@1 P1-2@2 P1-2@3 P2-2 P2-2@1 P2-2@2
+        P2-2@3)
+    )
+    (net "Net-(C1-Pad1)"
+      (pins R1-1 P1-1 C1-1)
+    )
+    (net "Net-(C1-Pad2)"
+      (pins L1-1 C1-2 C2-1)
+    )
+    (net "Net-(C2-Pad2)"
+      (pins U1-2 C2-2)
+    )
+    (net "Net-(P2-Pad1)"
+      (pins U1-5 P2-1)
+    )
+    (class kicad_default "Net-(C1-Pad1)" "Net-(C1-Pad2)" "Net-(C2-Pad2)" "Net-(P2-Pad1)"
+      (circuit
+        (use_via "Via[0-3]_685.8:330.2_um")
+      )
+      (rule
+        (width 300)
+        (clearance 300)
+      )
+    )
+    (class Power GND
+      (circuit
+        (use_via "Via[0-3]_685.8:330.2_um")
+      )
+      (rule
+        (width 600)
+        (clearance 300)
+      )
+    )
+  )
+  (wiring
+  )
+)

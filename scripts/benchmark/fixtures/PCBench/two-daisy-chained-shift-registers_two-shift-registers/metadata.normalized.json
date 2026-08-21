@@ -1,0 +1,56 @@
+{
+  "board_id": "two-daisy-chained-shift-registers_two-shift-registers",
+  "display_name": "two-daisy-chained-shift-registers_two-shift-registers",
+  "pcbench_directory": "PCBs/two-daisy-chained-shift-registers_two-shift-registers",
+  "source": "https://github.com/MarginallyClever/two-daisy-chained-shift-registers",
+  "author": "MarginallyClever",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.966074+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 53,
+    "components": 42,
+    "dimensions_mm": {
+      "width": 68.58,
+      "height": 53.34
+    },
+    "area_cm2": 36.58,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 142,
+    "vias": 0,
+    "track_length_mm": 717.12,
+    "kicad_drc_violations": 413,
+    "kicad_drc_breakdown": {
+      "total_violations": 413,
+      "unconnected_count": 7,
+      "by_type": {
+        "clearance": 195,
+        "lib_footprint_issues": 42,
+        "silk_over_copper": 32,
+        "silk_overlap": 143,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 196,
+        "warning": 217
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

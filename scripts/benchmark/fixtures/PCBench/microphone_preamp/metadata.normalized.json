@@ -1,0 +1,56 @@
+{
+  "board_id": "microphone_preamp",
+  "display_name": "microphone_preamp",
+  "pcbench_directory": "PCBs/microphone_preamp",
+  "source": "https://github.com/vlad-ivanov-name/microphone",
+  "author": "vlad-ivanov-name",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.278007+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 61.4,
+      "height": 17.2
+    },
+    "area_cm2": 10.56,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 148,
+    "vias": 25,
+    "track_length_mm": 321.76,
+    "kicad_drc_violations": 84,
+    "kicad_drc_breakdown": {
+      "total_violations": 84,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 49,
+        "lib_footprint_issues": 26,
+        "malformed_courtyard": 6,
+        "silk_over_copper": 1,
+        "solder_mask_bridge": 2
+      },
+      "by_severity": {
+        "error": 57,
+        "warning": 27
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

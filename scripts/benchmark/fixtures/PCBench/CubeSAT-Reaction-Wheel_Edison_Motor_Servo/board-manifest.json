@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "CubeSAT-Reaction-Wheel_Edison_Motor_Servo",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 37072,
+      "sha256": "1f26876fcf5742209e623590d9a262cc809d65bb7430c9532e312a98194ea658"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 22710,
+      "sha256": "47b31c8dfa6dbd004503cd4f6dfc6958904f859ae6d94262d06e5920362a6653"
+    },
+    "metadata_json": {
+      "bytes": 534,
+      "sha256": "f0c11516d7daa97adb2e98554697ce43e16654f3e4a5e6b9a26f3a8783007bb9"
+    },
+    "final_json": {
+      "bytes": 14799,
+      "sha256": "110edbda32bd7bb18af2e22e61f11790fced7e09db08b14ae76b0fe8b4530f83"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:39:52.677068+00:00"
+  }
+}

@@ -86,7 +86,7 @@ public class ClearanceViolation implements ItemInfoPrinter.Printable {
   public static double smallestClearance(Collection<Item> items) {
     double smallest = Double.MAX_VALUE;
     for (Item item : items) {
-      if ((item.smallestClearance > 0) && (item.smallestClearance < smallest)) {
+      if ((item.smallestClearance >= 0) && (item.smallestClearance < smallest)) {
         smallest = item.smallestClearance;
       }
     }

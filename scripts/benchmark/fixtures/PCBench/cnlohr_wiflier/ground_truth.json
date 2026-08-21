@@ -1,0 +1,27 @@
+{
+  "board": "cnlohr_wiflier",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\cnlohr_wiflier\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 85,
+  "segment_count": 800,
+  "approximate_track_length_mm": 805.47,
+  "kicad_drc_violations": 305,
+  "generated_at": "2026-08-18T18:39:14.856487+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 305,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 136,
+      "copper_edge_clearance": 35,
+      "silk_over_copper": 34,
+      "silk_overlap": 22,
+      "text_height": 73,
+      "track_dangling": 5
+    },
+    "by_severity": {
+      "error": 171,
+      "warning": 134
+    }
+  }
+}

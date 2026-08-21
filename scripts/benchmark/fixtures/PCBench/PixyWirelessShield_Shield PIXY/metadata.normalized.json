@@ -1,0 +1,60 @@
+{
+  "board_id": "PixyWirelessShield_Shield PIXY",
+  "display_name": "PixyWirelessShield_Shield PIXY",
+  "pcbench_directory": "PCBs/PixyWirelessShield_Shield PIXY",
+  "source": "https://github.com/aeracoop/PixyWirelessShield",
+  "author": "aeracoop",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:00.450150+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 36.83,
+      "height": 26.03
+    },
+    "area_cm2": 9.59,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 38,
+    "vias": 0,
+    "track_length_mm": 175.19,
+    "kicad_drc_violations": 7,
+    "kicad_drc_breakdown": {
+      "total_violations": 7,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 4,
+        "silk_edge_clearance": 3
+      },
+      "by_severity": {
+        "warning": 7
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.070356+00:00",
+    "elapsed_seconds": 5.09,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

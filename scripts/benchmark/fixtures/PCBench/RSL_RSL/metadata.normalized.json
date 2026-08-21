@@ -1,0 +1,59 @@
+{
+  "board_id": "RSL_RSL",
+  "display_name": "RSL_RSL",
+  "pcbench_directory": "PCBs/RSL_RSL",
+  "source": "https://github.com/ClubdeRobotica/RSL",
+  "author": "ClubdeRobotica",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.586070+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 49,
+    "dimensions_mm": {
+      "width": 160.5,
+      "height": 80.75
+    },
+    "area_cm2": 129.6,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 491,
+    "vias": 18,
+    "track_length_mm": 2101.57,
+    "kicad_drc_violations": 347,
+    "kicad_drc_breakdown": {
+      "total_violations": 347,
+      "unconnected_count": 5,
+      "by_type": {
+        "clearance": 237,
+        "courtyards_overlap": 3,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 49,
+        "pth_inside_courtyard": 4,
+        "silk_overlap": 45,
+        "text_height": 5,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 247,
+        "warning": 100
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

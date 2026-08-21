@@ -1,0 +1,59 @@
+{
+  "board_id": "Avem_Hardware_Avem_demo",
+  "display_name": "Avem_Hardware_Avem_demo",
+  "pcbench_directory": "PCBs/Avem_Hardware_Avem_demo",
+  "source": "https://github.com/avem-labs/Avem_Hardware",
+  "author": "avem-labs",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:32.669824+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 41,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 73.46,
+      "height": 40.77
+    },
+    "area_cm2": 29.95,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 261,
+    "vias": 41,
+    "track_length_mm": 557.41,
+    "kicad_drc_violations": 451,
+    "kicad_drc_breakdown": {
+      "total_violations": 451,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 139,
+        "courtyards_overlap": 16,
+        "lib_footprint_issues": 36,
+        "silk_edge_clearance": 61,
+        "silk_over_copper": 8,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 182,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 339,
+        "warning": 112
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

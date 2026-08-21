@@ -1,0 +1,62 @@
+{
+  "board_id": "Mechaduino-DR_Mechaduino DR 1.01",
+  "display_name": "Mechaduino-DR_Mechaduino DR 1.01",
+  "pcbench_directory": "PCBs/Mechaduino-DR_Mechaduino DR 1.01",
+  "source": "https://github.com/mountaindog65/Mechaduino-DR",
+  "author": "mountaindog65",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:50.430032+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 70,
+    "dimensions_mm": {
+      "width": 57.0,
+      "height": 57.0
+    },
+    "area_cm2": 32.49,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 811,
+    "vias": 76,
+    "track_length_mm": 1255.44,
+    "kicad_drc_violations": 861,
+    "kicad_drc_breakdown": {
+      "total_violations": 861,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 368,
+        "copper_edge_clearance": 2,
+        "hole_clearance": 6,
+        "lib_footprint_issues": 50,
+        "padstack": 2,
+        "silk_over_copper": 20,
+        "silk_overlap": 114,
+        "solder_mask_bridge": 149,
+        "text_height": 75,
+        "text_thickness": 72,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 525,
+        "warning": 336
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

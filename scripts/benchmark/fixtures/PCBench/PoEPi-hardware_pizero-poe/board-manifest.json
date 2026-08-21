@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PoEPi-hardware_pizero-poe",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 248667,
+      "sha256": "6b10f095724e8cb48f04392b95f6a9cf3ae64850b7ea9ca15f73fcdf69564c02"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 247955,
+      "sha256": "af6030bc943a23372c4681cd944a35a013680959d91e36b4f6ac79b117e88e25"
+    },
+    "metadata_json": {
+      "bytes": 478,
+      "sha256": "013a1c6eb6618f74bd9f45dd719465d705d5c2b7aa8e0ae5f33c8d60fdca6b54"
+    },
+    "final_json": {
+      "bytes": 243113,
+      "sha256": "84dc62aa517dc7f34c003a6203cd37ec3706620d79c9797eb2f40e367e7e1a2c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:34:32.805930+00:00"
+  }
+}

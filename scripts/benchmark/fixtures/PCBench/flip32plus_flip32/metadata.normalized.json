@@ -1,0 +1,61 @@
+{
+  "board_id": "flip32plus_flip32",
+  "display_name": "flip32plus_flip32",
+  "pcbench_directory": "PCBs/flip32plus_flip32",
+  "source": "https://github.com/simonantonio/flip32plus",
+  "author": "simonantonio",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.850143+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 60,
+    "dimensions_mm": {
+      "width": 36.0,
+      "height": 36.0
+    },
+    "area_cm2": 12.96,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 929,
+    "vias": 71,
+    "track_length_mm": 1445.94,
+    "kicad_drc_violations": 426,
+    "kicad_drc_breakdown": {
+      "total_violations": 426,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "copper_edge_clearance": 14,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 60,
+        "shorting_items": 18,
+        "silk_over_copper": 199,
+        "silk_overlap": 29,
+        "solder_mask_bridge": 16,
+        "text_height": 84,
+        "text_thickness": 2
+      },
+      "by_severity": {
+        "error": 52,
+        "warning": 374
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

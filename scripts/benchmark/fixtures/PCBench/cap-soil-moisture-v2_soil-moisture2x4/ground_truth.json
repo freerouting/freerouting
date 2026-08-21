@@ -1,0 +1,26 @@
+{
+  "board": "cap-soil-moisture-v2_soil-moisture2x4",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\cap-soil-moisture-v2_soil-moisture2x4\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 92,
+  "approximate_track_length_mm": 343.17,
+  "kicad_drc_violations": 61,
+  "generated_at": "2026-08-18T18:37:49.729858+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 61,
+    "unconnected_count": 2,
+    "by_type": {
+      "annular_width": 4,
+      "lib_footprint_issues": 21,
+      "padstack": 4,
+      "silk_edge_clearance": 4,
+      "silk_overlap": 28
+    },
+    "by_severity": {
+      "error": 4,
+      "warning": 57
+    }
+  }
+}

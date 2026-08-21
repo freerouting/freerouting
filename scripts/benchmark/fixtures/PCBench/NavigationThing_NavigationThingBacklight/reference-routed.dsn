@@ -1,0 +1,154 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\NavigationThing_NavigationThingBacklight\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  162000 -120000  140000 -120000  140000 -112000  162000 -112000
+            162000 -120000)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 700)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "LEDs:LED_RGB_PLLC-6"
+      (place D1 156500 -116000 front 180 (PN 5050_White))
+    )
+    (component "LEDs:LED_RGB_PLLC-6::1"
+      (place D2 145500 -116000 front 0 (PN 5050_White))
+    )
+    (component Resistors_SMD:R_0603_HandSoldering
+      (place R1 152000 -116000 front -90 (PN 330R))
+      (place R2 150000 -116000 front -90 (PN 330R))
+    )
+    (component Wire_Pads:SolderWirePad_single_SMD_5x10mm
+      (place P1 139500 -116000 front 180 (PN CONN_01X01))
+    )
+    (component Wire_Pads:SolderWirePad_single_SMD_5x10mm::1
+      (place P2 162500 -116000 front 0 (PN CONN_01X01))
+    )
+  )
+  (library
+    (image "LEDs:LED_RGB_PLLC-6"
+      (outline (polygon signal 0  -2745 1995  2645 1995  2645 -1995  -2745 -1995))
+      (outline (path signal 150  -2550 1800  -2550 900))
+      (outline (path signal 150  -2550 -1800  2350 -1800))
+      (outline (path signal 150  2350 1800  -2550 1800))
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 1 -1550 1100)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 2 -1550 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 3 -1550 -1100)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 4 1550 -1100)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 5 1550 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 6 1550 1100)
+    )
+    (image "LEDs:LED_RGB_PLLC-6::1"
+      (outline (polygon signal 0  2645 -1995  -2745 -1995  -2745 1995  2645 1995))
+      (outline (path signal 150  -2550 1800  -2550 900))
+      (outline (path signal 150  -2550 -1800  2350 -1800))
+      (outline (path signal 150  2350 1800  -2550 1800))
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 1 -1550 1100)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 2 -1550 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 3 -1550 -1100)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 4 1550 -1100)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 5 1550 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um (rotate 90) 6 1550 1100)
+    )
+    (image Resistors_SMD:R_0603_HandSoldering
+      (outline (polygon signal 0  1995 795  1995 -795  -1995 -795  -1995 795))
+      (outline (path signal 150  500 -675  -500 -675))
+      (outline (path signal 150  -500 675  500 675))
+      (pin Rect[T]Pad_1200.000000x900.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1200.000000x900.000000_um 2 1100 0)
+    )
+    (image Wire_Pads:SolderWirePad_single_SMD_5x10mm
+      (outline (polygon signal 0  -2745 5245  2745 5245  2745 -5245  -2745 -5245))
+      (pin Rect[T]Pad_5000.000000x10000.000000_um 1 0 0)
+    )
+    (image Wire_Pads:SolderWirePad_single_SMD_5x10mm::1
+      (outline (polygon signal 0  2745 -5245  -2745 -5245  -2745 5245  2745 5245))
+      (pin Rect[T]Pad_5000.000000x10000.000000_um 1 0 0)
+    )
+    (padstack Rect[T]Pad_5000.000000x10000.000000_um
+      (shape (rect F.Cu -2500 -5000 2500 5000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x1300.000000_um
+      (shape (rect F.Cu -350 -650 350 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x900.000000_um
+      (shape (rect F.Cu -600 -450 600 450))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(D1-Pad1)"
+      (pins D1-1 D1-2 D1-3 D2-1 D2-2 D2-3 P2-1)
+    )
+    (net "Net-(D1-Pad4)"
+      (pins D1-4 D1-5 D1-6 R1-2)
+    )
+    (net "Net-(D2-Pad4)"
+      (pins D2-4 D2-5 D2-6 R2-2)
+    )
+    (net "Net-(P1-Pad1)"
+      (pins R1-1 R2-1 P1-1)
+    )
+    (class kicad_default "Net-(D1-Pad1)" "Net-(D1-Pad4)" "Net-(D2-Pad4)" "Net-(P1-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 700)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 700  158050 -116000  162500 -116000)(net "Net-(D1-Pad1)")(type route))
+    (wire (path F.Cu 700  158050 -114900  158050 -116000)(net "Net-(D1-Pad1)")(type route))
+    (wire (path F.Cu 700  158050 -117500  158050 -117100)(net "Net-(D1-Pad1)")(type route))
+    (wire (path F.Cu 700  158050 -118150  158050 -117500  158050 -116000)(net "Net-(D1-Pad1)")(type route))
+    (wire (path F.Cu 700  143950 -117100  143950 -118150  144300 -118500  157700 -118500
+            158050 -118150)(net "Net-(D1-Pad1)")(type route))
+    (wire (path F.Cu 700  143950 -116000  143950 -117100)(net "Net-(D1-Pad1)")(type route))
+    (wire (path F.Cu 700  143950 -114900  143950 -116000)(net "Net-(D1-Pad1)")(type route))
+    (wire (path F.Cu 700  154950 -116000  154950 -114900)(net "Net-(D1-Pad4)")(type route))
+    (wire (path F.Cu 700  154950 -117100  154950 -116000)(net "Net-(D1-Pad4)")(type route))
+    (wire (path F.Cu 700  152000 -117100  154950 -117100)(net "Net-(D1-Pad4)")(type route))
+    (wire (path F.Cu 700  150000 -117100  147050 -117100)(net "Net-(D2-Pad4)")(type route))
+    (wire (path F.Cu 700  149900 -117100  150000 -117200)(net "Net-(D2-Pad4)")(type route))
+    (wire (path F.Cu 700  147050 -116000  147050 -117100)(net "Net-(D2-Pad4)")(type route))
+    (wire (path F.Cu 700  147050 -114900  147050 -116000)(net "Net-(D2-Pad4)")(type route))
+    (wire (path F.Cu 700  142500 -113000  139500 -116000)(net "Net-(P1-Pad1)")(type route))
+    (wire (path F.Cu 700  149100 -113000  142500 -113000)(net "Net-(P1-Pad1)")(type route))
+    (wire (path F.Cu 700  151000 -114900  150000 -114900)(net "Net-(P1-Pad1)")(type route))
+    (wire (path F.Cu 700  152000 -114900  151000 -114900  149100 -113000)(net "Net-(P1-Pad1)")(type route))
+  )
+)

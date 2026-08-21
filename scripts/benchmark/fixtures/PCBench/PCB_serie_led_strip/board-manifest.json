@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PCB_serie_led_strip",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 52268,
+      "sha256": "0391775dabe71cb028f2b7b86a9ac9f11109bf159631886c66f77dcdbd365014"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 30736,
+      "sha256": "7838565a677ec988f43e7105b8778c969c13b3c3bcd0d08b1312573527891c2a"
+    },
+    "metadata_json": {
+      "bytes": 648,
+      "sha256": "638086ca406647b7388111f5f7f1ebc7a9c5dd9573896392bc8509d389c19388"
+    },
+    "final_json": {
+      "bytes": 6416,
+      "sha256": "5fa5937b75991cac420a8e50a53a1acc4b0ae70e4af71b5d86492820f6ff66b4"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:32:12.108195+00:00"
+  }
+}

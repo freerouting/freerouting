@@ -1,0 +1,57 @@
+{
+  "board_id": "NoVo-Pi_NoVoPi",
+  "display_name": "NoVo-Pi_NoVoPi",
+  "pcbench_directory": "PCBs/NoVo-Pi_NoVoPi",
+  "source": "https://github.com/ricardozago/NoVo-Pi",
+  "author": "ricardozago",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:43.309949+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 55,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 54.7,
+      "height": 66.2
+    },
+    "area_cm2": 36.21,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 112,
+    "vias": 0,
+    "track_length_mm": 660.34,
+    "kicad_drc_violations": 105,
+    "kicad_drc_breakdown": {
+      "total_violations": 105,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 63,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 24,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 7,
+        "silk_overlap": 7
+      },
+      "by_severity": {
+        "error": 66,
+        "warning": 39
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

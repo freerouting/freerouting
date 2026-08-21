@@ -1,0 +1,35 @@
+{
+  "board": "edid-injector_edid-injector",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\edid-injector_edid-injector\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 326,
+  "segment_count": 776,
+  "approximate_track_length_mm": 1743.37,
+  "kicad_drc_violations": 444,
+  "generated_at": "2026-08-18T18:43:49.201298+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 444,
+    "unconnected_count": 4,
+    "by_type": {
+      "clearance": 253,
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 9,
+      "hole_clearance": 44,
+      "holes_co_located": 1,
+      "isolated_copper": 1,
+      "lib_footprint_issues": 44,
+      "nonmirrored_text_on_back_layer": 2,
+      "shorting_items": 1,
+      "silk_over_copper": 46,
+      "silk_overlap": 12,
+      "solder_mask_bridge": 24,
+      "track_dangling": 2,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 335,
+      "warning": 109
+    }
+  }
+}

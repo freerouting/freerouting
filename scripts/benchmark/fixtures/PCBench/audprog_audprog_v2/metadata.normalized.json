@@ -1,0 +1,60 @@
+{
+  "board_id": "audprog_audprog_v2",
+  "display_name": "audprog_audprog_v2",
+  "pcbench_directory": "PCBs/audprog_audprog_v2",
+  "source": "https://github.com/v-ladimir/audprog",
+  "author": "v-ladimir",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:27.721766+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 45.0,
+      "height": 30.0
+    },
+    "area_cm2": 13.5,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 351,
+    "vias": 9,
+    "track_length_mm": 699.98,
+    "kicad_drc_violations": 150,
+    "kicad_drc_breakdown": {
+      "total_violations": 150,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 30,
+        "courtyards_overlap": 1,
+        "isolated_copper": 2,
+        "lib_footprint_issues": 33,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 44,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 31,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 62,
+        "warning": 88
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

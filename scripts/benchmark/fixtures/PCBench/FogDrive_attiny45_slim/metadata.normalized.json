@@ -1,0 +1,60 @@
+{
+  "board_id": "FogDrive_attiny45_slim",
+  "display_name": "FogDrive_attiny45_slim",
+  "pcbench_directory": "PCBs/FogDrive_attiny45_slim",
+  "source": "https://github.com/DLFW/FogDrive",
+  "author": "DLFW",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:28.609776+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 16.51,
+      "height": 19.05
+    },
+    "area_cm2": 3.15,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 15,
+    "vias": 0,
+    "track_length_mm": 57.17,
+    "kicad_drc_violations": 15,
+    "kicad_drc_breakdown": {
+      "total_violations": 15,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 4,
+        "lib_footprint_issues": 9,
+        "silk_overlap": 1
+      },
+      "by_severity": {
+        "error": 5,
+        "warning": 10
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.926516+00:00",
+    "elapsed_seconds": 5.03,
+    "unrouted_nets": 0,
+    "clearance_violations": 2,
+    "quality_score": 966.66
+  }
+}

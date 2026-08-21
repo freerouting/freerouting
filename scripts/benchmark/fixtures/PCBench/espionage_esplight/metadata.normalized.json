@@ -1,0 +1,65 @@
+{
+  "board_id": "espionage_esplight",
+  "display_name": "espionage_esplight",
+  "pcbench_directory": "PCBs/espionage_esplight",
+  "source": "https://github.com/MisterRager/espionage",
+  "author": "MisterRager",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.562164+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 41.28,
+      "height": 29.59
+    },
+    "area_cm2": 12.21,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 160,
+    "vias": 14,
+    "track_length_mm": 446.1,
+    "kicad_drc_violations": 68,
+    "kicad_drc_breakdown": {
+      "total_violations": 68,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 14,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 32,
+        "silk_overlap": 8,
+        "solder_mask_bridge": 5,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 9,
+        "warning": 59
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.921737+00:00",
+    "elapsed_seconds": 7.52,
+    "unrouted_nets": 0,
+    "clearance_violations": 1,
+    "quality_score": 994.44
+  }
+}

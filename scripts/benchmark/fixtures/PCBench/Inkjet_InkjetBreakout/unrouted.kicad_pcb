@@ -1,0 +1,365 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 15)
+    (tracks 111)
+    (zones 0)
+    (modules 2)
+    (nets 15)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user hide)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user)
+  )
+
+  (setup
+    (last_trace_width 0.25)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.6)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.1)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.5 1.5)
+    (pad_drill 0.6)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x00000_00000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer false)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 4)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory ""))
+  )
+
+  (net 0 "")
+  (net 1 "Net-(P1-Pad1)")
+  (net 2 /VCC)
+  (net 3 "Net-(P1-Pad3)")
+  (net 4 "Net-(P1-Pad4)")
+  (net 5 "Net-(P1-Pad5)")
+  (net 6 "Net-(P1-Pad6)")
+  (net 7 "Net-(P1-Pad7)")
+  (net 8 "Net-(P1-Pad8)")
+  (net 9 "Net-(P1-Pad9)")
+  (net 10 "Net-(P1-Pad10)")
+  (net 11 "Net-(P1-Pad11)")
+  (net 12 "Net-(P1-Pad12)")
+  (net 13 "Net-(P1-Pad13)")
+  (net 14 "Net-(P1-Pad14)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net "Net-(P1-Pad1)")
+    (add_net "Net-(P1-Pad10)")
+    (add_net "Net-(P1-Pad11)")
+    (add_net "Net-(P1-Pad12)")
+    (add_net "Net-(P1-Pad13)")
+    (add_net "Net-(P1-Pad14)")
+    (add_net "Net-(P1-Pad3)")
+    (add_net "Net-(P1-Pad4)")
+    (add_net "Net-(P1-Pad5)")
+    (add_net "Net-(P1-Pad6)")
+    (add_net "Net-(P1-Pad7)")
+    (add_net "Net-(P1-Pad8)")
+    (add_net "Net-(P1-Pad9)")
+  )
+
+  (net_class VCC ""
+    (clearance 0.2)
+    (trace_width 0.5)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /VCC)
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_2x07 (layer F.Cu) (tedit 55842672) (tstamp 5583F767)
+    (at 39.37 59.69 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /5582B2A2)
+    (fp_text reference P1 (at 5.08 6.985 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_02X07 (at 1.905 -3.175 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end -1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 -1.27) (end 1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.55) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.81 -1.27) (end 1.27 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.81 16.51) (end -1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.81 16.51) (end 3.81 -1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 17) (end 4.3 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 4.3 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 4.3 -1.75) (end 4.3 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 17) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 1 "Net-(P1-Pad1)"))
+    (pad 2 thru_hole oval (at 2.54 0 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 /VCC))
+    (pad 3 thru_hole oval (at 0 2.54 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 "Net-(P1-Pad3)"))
+    (pad 4 thru_hole oval (at 2.54 2.54 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 4 "Net-(P1-Pad4)"))
+    (pad 5 thru_hole oval (at 0 5.08 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 5 "Net-(P1-Pad5)"))
+    (pad 6 thru_hole oval (at 2.54 5.08 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 6 "Net-(P1-Pad6)"))
+    (pad 7 thru_hole oval (at 0 7.62 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 7 "Net-(P1-Pad7)"))
+    (pad 8 thru_hole oval (at 2.54 7.62 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 8 "Net-(P1-Pad8)"))
+    (pad 9 thru_hole oval (at 0 10.16 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 9 "Net-(P1-Pad9)"))
+    (pad 10 thru_hole oval (at 2.54 10.16 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 10 "Net-(P1-Pad10)"))
+    (pad 11 thru_hole oval (at 0 12.7 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 11 "Net-(P1-Pad11)"))
+    (pad 12 thru_hole oval (at 2.54 12.7 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 12 "Net-(P1-Pad12)"))
+    (pad 13 thru_hole oval (at 0 15.24 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 13 "Net-(P1-Pad13)"))
+    (pad 14 thru_hole oval (at 2.54 15.24 90) (size 1.7272 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 14 "Net-(P1-Pad14)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_2x07.wrl
+      (offset (xyz 1.269999980926514 -7.619999885559082 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module myParts:SpringContact (layer F.Cu) (tedit 55842667) (tstamp 5583F778)
+    (at 44.45 45.72)
+    (path /5582DC46)
+    (fp_text reference P2 (at 1.905 -8.89) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value Printhead (at 1.905 1.27) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 5 smd rect (at -1.05 -0.375) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(P1-Pad8)"))
+    (pad 4 smd rect (at -1.05 -1.775) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(P1-Pad5)"))
+    (pad 3 smd rect (at -1.05 -3.175) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(P1-Pad6)"))
+    (pad 2 smd rect (at -1.05 -4.575) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(P1-Pad3)"))
+    (pad 1 smd rect (at -1.05 -5.975) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(P1-Pad4)"))
+    (pad 13 smd rect (at -1.05 -7.575) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 2 /VCC))
+    (pad 12 smd rect (at 4.86 -8.775) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 13 "Net-(P1-Pad13)"))
+    (pad 6 smd rect (at 4.86 -0.375) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(P1-Pad7)"))
+    (pad 7 smd rect (at 4.86 -1.775) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(P1-Pad10)"))
+    (pad 8 smd rect (at 4.86 -3.175) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(P1-Pad9)"))
+    (pad 9 smd rect (at 4.86 -4.575) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 12 "Net-(P1-Pad12)"))
+    (pad 10 smd rect (at 4.86 -5.975) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 11 "Net-(P1-Pad11)"))
+    (pad 11 smd rect (at 4.86 -7.375) (size 2.1 0.75) (layers F.Cu F.Paste F.Mask)
+      (net 14 "Net-(P1-Pad14)"))
+  )
+
+  (gr_text "51604A Breakout 1.0" (at 46.99 34.29) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.25)))
+  )
+  (gr_line (start 57.15 33.02) (end 54.61 33.02) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 57.15 35.56) (end 57.15 33.02) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 54.61 35.56) (end 57.15 35.56) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 35.56 33.02) (end 38.1 33.02) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 35.56 35.56) (end 35.56 33.02) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 38.1 35.56) (end 35.56 35.56) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 38.1 35.56) (end 38.1 52.07) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 54.61 35.56) (end 54.61 52.07) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 58.42 52.07) (end 58.42 63.5) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 54.61 52.07) (end 58.42 52.07) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 34.29 52.07) (end 38.1 52.07) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 34.29 63.5) (end 34.29 52.07) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 58.42 63.5) (end 34.29 63.5) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 38.1 33.02) (end 54.61 33.02) (angle 90) (layer Edge.Cuts) (width 0.1))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

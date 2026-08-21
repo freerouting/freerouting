@@ -1,0 +1,64 @@
+{
+  "board_id": "KiCad-Library_Teensy_test_layout",
+  "display_name": "KiCad-Library_Teensy_test_layout",
+  "pcbench_directory": "PCBs/KiCad-Library_Teensy_test_layout",
+  "source": "https://github.com/marshalltaylorSFE/KiCad-Library",
+  "author": "marshalltaylorSFE",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.177959+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 248,
+    "components": 1441,
+    "dimensions_mm": {
+      "width": 254.0,
+      "height": 127.0
+    },
+    "area_cm2": 322.58,
+    "zones": 19
+  },
+  "reference": {
+    "segments": 4357,
+    "vias": 374,
+    "track_length_mm": 11571.69,
+    "kicad_drc_violations": 1413,
+    "kicad_drc_breakdown": {
+      "total_violations": 1413,
+      "unconnected_count": 2,
+      "by_type": {
+        "annular_width": 32,
+        "clearance": 510,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 25,
+        "lib_footprint_issues": 199,
+        "padstack": 32,
+        "pth_inside_courtyard": 14,
+        "silk_edge_clearance": 36,
+        "silk_over_copper": 161,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 192,
+        "starved_thermal": 7,
+        "track_dangling": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 784,
+        "warning": 629
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
+}

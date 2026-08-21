@@ -1,0 +1,58 @@
+{
+  "board_id": "QRPCard_QRPCard",
+  "display_name": "QRPCard_QRPCard",
+  "pcbench_directory": "PCBs/QRPCard_QRPCard",
+  "source": "https://github.com/devttys0/QRPCard",
+  "author": "devttys0",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:53.638070+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 87.12,
+      "height": 76.71
+    },
+    "area_cm2": 66.83,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 174,
+    "vias": 15,
+    "track_length_mm": 483.13,
+    "kicad_drc_violations": 165,
+    "kicad_drc_breakdown": {
+      "total_violations": 165,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 111,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 33,
+        "silk_edge_clearance": 14,
+        "silk_over_copper": 2,
+        "silk_overlap": 1,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 113,
+        "warning": 52
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

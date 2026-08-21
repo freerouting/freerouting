@@ -1,0 +1,31 @@
+{
+  "board": "miniboard-stm32f0_miniboard-stm32f0",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\miniboard-stm32f0_miniboard-stm32f0\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 37,
+  "segment_count": 390,
+  "approximate_track_length_mm": 583.05,
+  "kicad_drc_violations": 174,
+  "generated_at": "2026-08-18T19:23:49.252950+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 174,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 68,
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 27,
+      "padstack": 3,
+      "silk_edge_clearance": 7,
+      "silk_over_copper": 16,
+      "silk_overlap": 35,
+      "solder_mask_bridge": 10,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 85,
+      "warning": 89
+    }
+  }
+}

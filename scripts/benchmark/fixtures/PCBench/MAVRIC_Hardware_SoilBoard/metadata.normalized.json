@@ -1,0 +1,63 @@
+{
+  "board_id": "MAVRIC_Hardware_SoilBoard",
+  "display_name": "MAVRIC_Hardware_SoilBoard",
+  "pcbench_directory": "PCBs/MAVRIC_Hardware_SoilBoard",
+  "source": "https://github.com/ISU-MAVRIC/MAVRIC_Hardware",
+  "author": "ISU-MAVRIC",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:58.634129+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 27.94,
+      "height": 38.73
+    },
+    "area_cm2": 10.82,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 144,
+    "vias": 18,
+    "track_length_mm": 233.71,
+    "kicad_drc_violations": 127,
+    "kicad_drc_breakdown": {
+      "total_violations": 127,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 95,
+        "lib_footprint_issues": 16,
+        "solder_mask_bridge": 16
+      },
+      "by_severity": {
+        "error": 111,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.027586+00:00",
+    "elapsed_seconds": 9.85,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

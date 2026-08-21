@@ -1,0 +1,26 @@
+{
+  "board": "USB-TypeC-breakout-board_USB-TypeC-breakout-board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\USB-TypeC-breakout-board_USB-TypeC-breakout-board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 115,
+  "approximate_track_length_mm": 537.74,
+  "kicad_drc_violations": 86,
+  "generated_at": "2026-08-18T19:55:13.134436+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 86,
+    "unconnected_count": 6,
+    "by_type": {
+      "clearance": 55,
+      "hole_clearance": 3,
+      "lib_footprint_issues": 2,
+      "solder_mask_bridge": 22,
+      "starved_thermal": 4
+    },
+    "by_severity": {
+      "error": 84,
+      "warning": 2
+    }
+  }
+}

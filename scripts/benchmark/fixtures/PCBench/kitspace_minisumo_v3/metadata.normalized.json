@@ -1,0 +1,58 @@
+{
+  "board_id": "kitspace_minisumo_v3",
+  "display_name": "kitspace_minisumo_v3",
+  "pcbench_directory": "PCBs/kitspace_minisumo_v3",
+  "source": "https://github.com/rosmo-robot/micro-bot",
+  "author": "",
+  "license": "[{'name': 'Apache', 'link': 'https://raw.githubusercontent.com/rosmo-robot/micro-bot/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:10:58.435653+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 56,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 98.91,
+      "height": 78.0
+    },
+    "area_cm2": 77.15,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 671,
+    "vias": 73,
+    "track_length_mm": 2413.57,
+    "kicad_drc_violations": 212,
+    "kicad_drc_breakdown": {
+      "total_violations": 212,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 30,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 99,
+        "silk_overlap": 19,
+        "solder_mask_bridge": 22,
+        "text_height": 16,
+        "text_thickness": 17
+      },
+      "by_severity": {
+        "error": 22,
+        "warning": 190
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,61 @@
+{
+  "board_id": "AVR-ISP_pogo-plug_1.27mm_AVR-ISP_pogo-plug_1.27mm",
+  "display_name": "AVR-ISP_pogo-plug_1.27mm_AVR-ISP_pogo-plug_1.27mm",
+  "pcbench_directory": "PCBs/AVR-ISP_pogo-plug_1.27mm_AVR-ISP_pogo-plug_1.27mm",
+  "source": "https://github.com/madworm/AVR-ISP_pogo-plug_1.27mm",
+  "author": "madworm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.041769+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 12.0,
+      "height": 19.0
+    },
+    "area_cm2": 2.28,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 54,
+    "vias": 0,
+    "track_length_mm": 54.01,
+    "kicad_drc_violations": 55,
+    "kicad_drc_breakdown": {
+      "total_violations": 55,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 1,
+        "padstack": 12,
+        "solder_mask_bridge": 40
+      },
+      "by_severity": {
+        "error": 42,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.832488+00:00",
+    "elapsed_seconds": 17.63,
+    "unrouted_nets": 0,
+    "clearance_violations": 14,
+    "quality_score": 844.44
+  }
+}

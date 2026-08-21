@@ -1,0 +1,64 @@
+{
+  "board_id": "esp8266_esp-output",
+  "display_name": "esp8266_esp-output",
+  "pcbench_directory": "PCBs/esp8266_esp-output",
+  "source": "https://github.com/panStamp/esp8266",
+  "author": "panStamp",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:32.389820+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 44,
+    "components": 70,
+    "dimensions_mm": {
+      "width": 158.6,
+      "height": 51.8
+    },
+    "area_cm2": 82.15,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 639,
+    "vias": 225,
+    "track_length_mm": 2211.22,
+    "kicad_drc_violations": 719,
+    "kicad_drc_breakdown": {
+      "total_violations": 719,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 208,
+        "copper_edge_clearance": 56,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 35,
+        "malformed_courtyard": 8,
+        "padstack": 4,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 39,
+        "silk_overlap": 178,
+        "solder_mask_bridge": 147,
+        "text_height": 34,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 428,
+        "warning": 291
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

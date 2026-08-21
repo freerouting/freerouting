@@ -1,0 +1,63 @@
+{
+  "board_id": "hardware-designs_solar-harvester",
+  "display_name": "hardware-designs_solar-harvester",
+  "pcbench_directory": "PCBs/hardware-designs_solar-harvester",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 46.23,
+      "height": 15.75
+    },
+    "area_cm2": 7.28,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 99,
+    "vias": 3,
+    "track_length_mm": 237.56,
+    "kicad_drc_violations": 137,
+    "kicad_drc_breakdown": {
+      "total_violations": 137,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 50,
+        "copper_edge_clearance": 11,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 21,
+        "silk_overlap": 35,
+        "text_height": 17
+      },
+      "by_severity": {
+        "error": 61,
+        "warning": 76
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.942282+00:00",
+    "elapsed_seconds": 5.65,
+    "unrouted_nets": 0,
+    "clearance_violations": 1,
+    "quality_score": 992.59
+  }
+}

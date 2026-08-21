@@ -1,0 +1,559 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\nikon_gps_nikon_gps\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  128000 -123000  125500 -123000  125336 -123003  125012 -123045
+            124696 -123130  124393 -123255  124110 -123419  123850 -123618
+            123618 -123850  123419 -124110  123255 -124393  123130 -124696
+            123045 -125012  123003 -125336  123000 -125500  123000 -128000
+            116500 -128000  116500 -125500  116497 -125336  116455 -125012
+            116370 -124696  116245 -124393  116081 -124110  115882 -123850
+            115650 -123618  115390 -123419  115107 -123255  114804 -123130
+            114488 -123045  114164 -123003  114000 -123000  113836 -123003
+            113512 -123045  113196 -123130  112893 -123255  112610 -123419
+            112350 -123618  112118 -123850  111919 -124110  111755 -124393
+            111630 -124696  111545 -125012  111503 -125336  111500 -125500
+            111500 -128000  100000 -128000  100000 -105000  102500 -105000
+            102664 -104997  102988 -104955  103304 -104870  103607 -104745
+            103890 -104581  104150 -104382  104382 -104150  104581 -103890
+            104745 -103607  104870 -103304  104955 -102988  104997 -102664
+            105000 -102500  105000 -100000  128000 -100000  128000 -123000)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 250)
+      (clearance 62.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component Nikon_GPS:ORG1411_GPS
+      (place U1 119888 -100965 front 180 (PN "Hornet ORG1411"))
+    )
+    (component "Nikon_GPS:SOT-23-5"
+      (place U2 102362 -109855 front -90 (PN SN74LV1T126_ALT))
+    )
+    (component "Nikon_GPS:SOT-23-5::1"
+      (place U4 110109 -118364 front 90 (PN "MIC5205-3.3"))
+    )
+    (component Nikon_GPS:LED_0805
+      (place D1 120904 -124206 front 0 (PN Red))
+    )
+    (component Nikon_GPS:LED_0805::1
+      (place D2 120904 -114808 front 180 (PN Blue))
+    )
+    (component Nikon_GPS:R_0603
+      (place F1 107061 -116840 front 180 (PN 0.1A))
+    )
+    (component Nikon_GPS:Connection_Pads_03
+      (place J1 103505 -119380 front -90 (PN Conn_01x03))
+    )
+    (component Nikon_GPS:SW_SPST_PTS645
+      (place SW1 120904 -119507 front 180 (PN ON/OFF))
+    )
+    (component "Nikon_GPS:SOT-23-6"
+      (place U3 114046 -114173 front -90 (PN MAX16054))
+    )
+    (component Nikon_GPS:C_0805
+      (place C1 107696 -109093 front 90 (PN 100nF))
+    )
+    (component Nikon_GPS:C_0805::1
+      (place C3 105156 -109855 front -90 (PN 100nF))
+      (place C4 116840 -114173 front -90 (PN 100nF))
+      (place C5 113030 -118364 front -90 (PN 470pF))
+      (place C8 107442 -119507 front -90 (PN 10uF))
+    )
+    (component Nikon_GPS:C_0805::2
+      (place C7 110172 -115316 front 0 (PN 10uF))
+    )
+    (component Nikon_GPS:R_0805
+      (place R1 121793 -109220 front 90 (PN 10K))
+      (place R2 121793 -106045 front 90 (PN 33))
+      (place R8 126365 -114427 front 90 (PN 330))
+    )
+    (component Nikon_GPS:R_0805::1
+      (place R3 123825 -109220 front -90 (PN 10K))
+      (place R5 101410 -113538 front -90 (PN 33))
+      (place R9 107696 -103759 front -90 (PN 270))
+    )
+    (component Nikon_GPS:R_0805::2
+      (place R4 103314 -106870 front 180 (PN 33))
+      (place R6 104140 -113538 front 180 (PN 0))
+      (place R7 110109 -121412 front 180 (PN 0))
+    )
+    (component Nikon_GPS:MountingHole_2.2mm_M2_DIN965
+      (place MH1 105250 -125750 front 0 (PN "M2 screw"))
+      (place MH2 122750 -102250 front 0 (PN "M2 screw"))
+    )
+    (component Nikon_GPS:C_0603
+      (place C2 105918 -105791 front 90 (PN 18pF))
+    )
+    (component Nikon_GPS:C_0603::1
+      (place C6 110109 -113538 front 0 (PN 1nF))
+    )
+    (component Nikon_GPS:L_0805
+      (place L1 107696 -112586 front -90 (PN 600Ohm))
+    )
+    (component "Nikon_GPS:Measurement_Point_Round-SMD-Pad_Small"
+      (place TP1 113665 -121793 front 0 (PN 5V))
+      (place TP2 124079 -112268 front 0 (PN 3.3V))
+      (place TP3 107950 -123825 front 0 (PN GND))
+    )
+    (component "Nikon_GPS:Measurement_Point_Square-SMD_1.0mmx1.0mm"
+      (place TP4 100965 -106870 front 0 (PN "GPS TX"))
+      (place TP5 124079 -106045 front 0 (PN "GPS RX"))
+    )
+  )
+  (library
+    (image Nikon_GPS:ORG1411_GPS
+      (outline (path signal 150  10750 2460  10766.9 2550.31  10815.2 2628.42  10888.6 2683.79
+            10976.9 2708.93  11068.4 2700.46  11150.7 2659.5  11212.6 2591.61
+            11245.7 2505.94  11245.7 2414.06  11212.6 2328.39  11150.7 2260.5
+            11068.4 2219.54  10976.9 2211.07  10888.6 2236.21  10815.2 2291.58
+            10766.9 2369.69  10750 2460))
+      (outline (path signal 150  10200 1800  10200 0))
+      (outline (path signal 150  200 0  10200 0))
+      (outline (path signal 150  200 10000  10200 10000))
+      (outline (path signal 150  200 10000  200 8200))
+      (outline (path signal 150  10200 10000  10200 8200))
+      (outline (path signal 150  200 1800  200 0))
+      (outline (path signal 150  2000 10000  2000 0))
+      (outline (path signal 150  8400 10000  8400 0))
+      (pin Rect[T]Pad_1422.000000x864.000000_um 6 711 7540)
+      (pin Rect[T]Pad_1422.000000x864.000000_um 7 711 6270)
+      (pin Rect[T]Pad_1422.000000x864.000000_um 8 711 5000)
+      (pin Rect[T]Pad_1422.000000x864.000000_um 9 711 3730)
+      (pin Rect[T]Pad_1422.000000x864.000000_um 10 711 2460)
+      (pin Rect[T]Pad_1422.000000x864.000000_um 5 9689 7540)
+      (pin Rect[T]Pad_1422.000000x864.000000_um 4 9689 6270)
+      (pin Rect[T]Pad_1422.000000x864.000000_um 3 9689 5000)
+      (pin Rect[T]Pad_1422.000000x864.000000_um 2 9689 3730)
+      (pin Rect[T]Pad_1676.000000x864.000000_um 1 9516.5 2460)
+      (keepout "" (circle F.Cu 2278 5200 5690))
+      (keepout "" (circle B.Cu 2278 5200 5690))
+    )
+    (image "Nikon_GPS:SOT-23-5"
+      (outline (polygon signal 0  1895 1795  1895 -1795  -1895 -1795  -1895 1795))
+      (outline (path signal 100  900 1550  900 -1550))
+      (outline (path signal 100  900 -1550  -900 -1550))
+      (outline (path signal 100  -900 900  -900 -1550))
+      (outline (path signal 100  900 1550  -250 1550))
+      (outline (path signal 100  -900 900  -250 1550))
+      (outline (path signal 120  900 1610  -1550 1610))
+      (outline (path signal 120  -900 -1610  900 -1610))
+      (pin Rect[T]Pad_1060.000000x650.000000_um 1 -1100 950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 2 -1100 0)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 3 -1100 -950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 4 1100 -950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 5 1100 950)
+    )
+    (image "Nikon_GPS:SOT-23-5::1"
+      (outline (polygon signal 0  -1895 -1795  -1895 1795  1895 1795  1895 -1795))
+      (outline (path signal 100  900 1550  900 -1550))
+      (outline (path signal 100  900 -1550  -900 -1550))
+      (outline (path signal 100  -900 900  -900 -1550))
+      (outline (path signal 100  900 1550  -250 1550))
+      (outline (path signal 100  -900 900  -250 1550))
+      (outline (path signal 120  900 1610  -1550 1610))
+      (outline (path signal 120  -900 -1610  900 -1610))
+      (pin Rect[T]Pad_1060.000000x650.000000_um 1 -1100 950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 2 -1100 0)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 3 -1100 -950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 4 1100 -950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 5 1100 950)
+    )
+    (image Nikon_GPS:LED_0805
+      (outline (polygon signal 0  1945 -845  -1945 -845  -1945 845  1945 845))
+      (outline (path signal 120  -1800 700  1000 700))
+      (outline (path signal 120  -1800 -700  1000 -700))
+      (outline (path signal 100  -1000 -600  -1000 600))
+      (outline (path signal 100  -1000 600  1000 600))
+      (outline (path signal 100  1000 600  1000 -600))
+      (outline (path signal 100  1000 -600  -1000 -600))
+      (outline (path signal 100  200 400  200 -400))
+      (outline (path signal 100  200 -400  -400 0))
+      (outline (path signal 100  -400 0  200 400))
+      (outline (path signal 100  -400 400  -400 -400))
+      (outline (path signal 120  -1800 700  -1800 -700))
+      (pin Rect[T]Pad_1200.000000x1200.000000_um (rotate 180) 2 1100 0)
+      (pin Rect[T]Pad_1200.000000x1200.000000_um (rotate 180) 1 -1100 0)
+    )
+    (image Nikon_GPS:LED_0805::1
+      (outline (polygon signal 0  -1945 845  1945 845  1945 -845  -1945 -845))
+      (outline (path signal 120  -1800 700  1000 700))
+      (outline (path signal 120  -1800 -700  1000 -700))
+      (outline (path signal 100  -1000 -600  -1000 600))
+      (outline (path signal 100  -1000 600  1000 600))
+      (outline (path signal 100  1000 600  1000 -600))
+      (outline (path signal 100  1000 -600  -1000 -600))
+      (outline (path signal 100  200 400  200 -400))
+      (outline (path signal 100  200 -400  -400 0))
+      (outline (path signal 100  -400 0  200 400))
+      (outline (path signal 100  -400 400  -400 -400))
+      (outline (path signal 120  -1800 700  -1800 -700))
+      (pin Rect[T]Pad_1200.000000x1200.000000_um (rotate 180) 2 1100 0)
+      (pin Rect[T]Pad_1200.000000x1200.000000_um (rotate 180) 1 -1100 0)
+    )
+    (image Nikon_GPS:R_0603
+      (outline (polygon signal 0  -1245 695  1245 695  1245 -695  -1245 -695))
+      (outline (path signal 120  -500 680  500 680))
+      (outline (path signal 120  500 -680  -500 -680))
+      (outline (path signal 100  -800 400  800 400))
+      (outline (path signal 100  800 400  800 -400))
+      (outline (path signal 100  800 -400  -800 -400))
+      (outline (path signal 100  -800 -400  -800 400))
+      (pin Rect[T]Pad_500.000000x900.000000_um 1 -750 0)
+      (pin Rect[T]Pad_500.000000x900.000000_um 2 750 0)
+    )
+    (image Nikon_GPS:Connection_Pads_03
+      (pin Oval[T]Pad_2000.000000x3500.000000_um 1 -2540 0)
+      (pin Oval[T]Pad_2000.000000x3500.000000_um 2 0 0)
+      (pin Oval[T]Pad_2000.000000x3500.000000_um 3 2540 0)
+    )
+    (image Nikon_GPS:SW_SPST_PTS645
+      (outline (polygon signal 0  -5045 3395  5045 3395  5045 -3395  -5045 -3395))
+      (outline (path signal 100  -1750.71 0  -1732.06 254.906  -1676.48 504.379  -1585.18 743.102
+            -1460.09 965.988  -1303.88 1168.28  -1119.88 1345.68  -912.018 1494.4
+            -684.713 1611.26  -442.814 1693.79  -191.478 1740.21  63.94 1749.55
+            317.994 1721.59  565.271 1656.94  800.501 1556.98  1018.67 1423.84
+            1215.12 1260.35  1385.68 1069.99  1526.71 856.831  1635.19 625.409
+            1708.83 380.658  1746.04 127.794  1746.04 -127.794  1708.83 -380.658
+            1635.19 -625.409  1526.71 -856.831  1385.68 -1069.99  1215.12 -1260.35
+            1018.67 -1423.84  800.501 -1556.98  565.271 -1656.94  317.994 -1721.59
+            63.94 -1749.55  -191.478 -1740.21  -442.814 -1693.79  -684.713 -1611.26
+            -912.018 -1494.4  -1119.88 -1345.68  -1303.88 -1168.28  -1460.09 -965.988
+            -1585.18 -743.102  -1676.48 -504.379  -1732.06 -254.906  -1750.71 0))
+      (outline (path signal 120  -3230 -3230  3230 -3230))
+      (outline (path signal 120  -3230 1300  -3230 -1300))
+      (outline (path signal 120  -3230 3230  3230 3230))
+      (outline (path signal 120  3230 1300  3230 -1300))
+      (outline (path signal 120  -3230 3200  -3230 3230))
+      (outline (path signal 120  -3230 -3230  -3230 -3200))
+      (outline (path signal 120  3230 -3230  3230 -3200))
+      (outline (path signal 120  3230 3230  3230 3200))
+      (outline (path signal 100  3000 3000  -3000 3000))
+      (outline (path signal 100  3000 -3000  3000 3000))
+      (outline (path signal 100  -3000 -3000  3000 -3000))
+      (outline (path signal 100  -3000 3000  -3000 -3000))
+      (pin Rect[T]Pad_1550.000000x1300.000000_um 2 -3980 -2250)
+      (pin Rect[T]Pad_1550.000000x1300.000000_um 1 -3980 2250)
+      (pin Rect[T]Pad_1550.000000x1300.000000_um 1@1 3980 2250)
+      (pin Rect[T]Pad_1550.000000x1300.000000_um 2@1 3980 -2250)
+    )
+    (image "Nikon_GPS:SOT-23-6"
+      (outline (polygon signal 0  1895 1795  1895 -1795  -1895 -1795  -1895 1795))
+      (outline (path signal 100  900 1550  900 -1550))
+      (outline (path signal 100  900 -1550  -900 -1550))
+      (outline (path signal 100  -900 900  -900 -1550))
+      (outline (path signal 100  900 1550  -250 1550))
+      (outline (path signal 100  -900 900  -250 1550))
+      (outline (path signal 120  900 1610  -1550 1610))
+      (outline (path signal 120  -900 -1610  900 -1610))
+      (pin Rect[T]Pad_1060.000000x650.000000_um 1 -1100 950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 2 -1100 0)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 3 -1100 -950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 4 1100 -950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 6 1100 950)
+      (pin Rect[T]Pad_1060.000000x650.000000_um 5 1100 0)
+    )
+    (image Nikon_GPS:C_0805
+      (outline (polygon signal 0  -1745 -865  -1745 875  1745 875  1745 -865))
+      (outline (path signal 120  -500 -850  500 -850))
+      (outline (path signal 120  500 850  -500 850))
+      (outline (path signal 100  -1000 620  1000 620))
+      (outline (path signal 100  1000 620  1000 -620))
+      (outline (path signal 100  1000 -620  -1000 -620))
+      (outline (path signal 100  -1000 -620  -1000 620))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+    )
+    (image Nikon_GPS:C_0805::1
+      (outline (polygon signal 0  1745 875  1745 -865  -1745 -865  -1745 875))
+      (outline (path signal 120  -500 -850  500 -850))
+      (outline (path signal 120  500 850  -500 850))
+      (outline (path signal 100  -1000 620  1000 620))
+      (outline (path signal 100  1000 620  1000 -620))
+      (outline (path signal 100  1000 -620  -1000 -620))
+      (outline (path signal 100  -1000 -620  -1000 620))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+    )
+    (image Nikon_GPS:C_0805::2
+      (outline (polygon signal 0  1745 -865  -1745 -865  -1745 875  1745 875))
+      (outline (path signal 120  -500 -850  500 -850))
+      (outline (path signal 120  500 850  -500 850))
+      (outline (path signal 100  -1000 620  1000 620))
+      (outline (path signal 100  1000 620  1000 -620))
+      (outline (path signal 100  1000 -620  -1000 -620))
+      (outline (path signal 100  -1000 -620  -1000 620))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+    )
+    (image Nikon_GPS:R_0805
+      (outline (polygon signal 0  -1545 -895  -1545 895  1545 895  1545 -895))
+      (outline (path signal 120  -600 880  600 880))
+      (outline (path signal 120  600 -880  -600 -880))
+      (outline (path signal 100  -1000 620  1000 620))
+      (outline (path signal 100  1000 620  1000 -620))
+      (outline (path signal 100  1000 -620  -1000 -620))
+      (outline (path signal 100  -1000 -620  -1000 620))
+      (pin Rect[T]Pad_700.000000x1300.000000_um 1 -950 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um 2 950 0)
+    )
+    (image Nikon_GPS:R_0805::1
+      (outline (polygon signal 0  1545 895  1545 -895  -1545 -895  -1545 895))
+      (outline (path signal 120  -600 880  600 880))
+      (outline (path signal 120  600 -880  -600 -880))
+      (outline (path signal 100  -1000 620  1000 620))
+      (outline (path signal 100  1000 620  1000 -620))
+      (outline (path signal 100  1000 -620  -1000 -620))
+      (outline (path signal 100  -1000 -620  -1000 620))
+      (pin Rect[T]Pad_700.000000x1300.000000_um 1 -950 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um 2 950 0)
+    )
+    (image Nikon_GPS:R_0805::2
+      (outline (polygon signal 0  -1545 895  1545 895  1545 -895  -1545 -895))
+      (outline (path signal 120  -600 880  600 880))
+      (outline (path signal 120  600 -880  -600 -880))
+      (outline (path signal 100  -1000 620  1000 620))
+      (outline (path signal 100  1000 620  1000 -620))
+      (outline (path signal 100  1000 -620  -1000 -620))
+      (outline (path signal 100  -1000 -620  -1000 620))
+      (pin Rect[T]Pad_700.000000x1300.000000_um 1 -950 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um 2 950 0)
+    )
+    (image Nikon_GPS:MountingHole_2.2mm_M2_DIN965
+      (outline (polygon signal 0  292.418 2127.5  579.388 2067.87  855.567 1969.71  1115.8 1834.87
+            1355.26 1665.84  1569.47 1465.78  1754.44 1238.42  1906.73 987.991
+            2023.5 719.157  2102.58 436.917  2142.5 146.51  2145 0  2142.5 -146.509
+            2102.58 -436.916  2023.5 -719.156  1906.73 -987.99  1754.44 -1238.42
+            1569.47 -1465.78  1355.26 -1665.84  1115.8 -1834.87  855.567 -1969.71
+            579.388 -2067.86  292.418 -2127.5  0 -2147.5  -292.419 -2127.5
+            -579.389 -2067.86  -855.568 -1969.71  -1115.81 -1834.87  -1355.26 -1665.84
+            -1569.47 -1465.78  -1754.44 -1238.42  -1906.73 -987.99  -2023.51 -719.156
+            -2102.59 -436.916  -2142.49 -146.553  -2142.49 146.554  -2102.59 436.917
+            -2023.51 719.157  -1906.73 987.991  -1754.44 1238.42  -1569.47 1465.78
+            -1355.26 1665.84  -1115.81 1834.87  -855.568 1969.71  -579.389 2067.87
+            -292.419 2127.5  0 2147.5))
+      (outline (path signal 150  1900 0  1880.66 -270.398  1823.04 -535.292  1728.3 -789.289
+            1598.38 -1027.22  1435.92 -1244.23  1244.23 -1435.92  1027.22 -1598.38
+            789.289 -1728.3  535.292 -1823.04  270.398 -1880.66  0 -1900
+            -270.398 -1880.66  -535.292 -1823.04  -789.289 -1728.3  -1027.22 -1598.38
+            -1244.23 -1435.92  -1435.92 -1244.23  -1598.38 -1027.22  -1728.3 -789.289
+            -1823.04 -535.292  -1880.66 -270.398  -1900 0  -1880.66 270.398
+            -1823.04 535.292  -1728.3 789.289  -1598.38 1027.22  -1435.92 1244.23
+            -1244.23 1435.92  -1027.22 1598.38  -789.289 1728.3  -535.292 1823.04
+            -270.398 1880.66  0 1900  270.398 1880.66  535.292 1823.04  789.289 1728.3
+            1027.22 1598.38  1244.23 1435.92  1435.92 1244.23  1598.38 1027.22
+            1728.3 789.289  1823.04 535.292  1880.66 270.398  1900 0))
+      (keepout "" (circle F.Cu 2700))
+      (keepout "" (circle B.Cu 2700))
+    )
+    (image Nikon_GPS:C_0603
+      (outline (polygon signal 0  -1395 -645  -1395 645  1395 645  1395 -645))
+      (outline (path signal 100  -800 -400  -800 400))
+      (outline (path signal 100  800 -400  -800 -400))
+      (outline (path signal 100  800 400  800 -400))
+      (outline (path signal 100  -800 400  800 400))
+      (outline (path signal 120  -350 600  350 600))
+      (outline (path signal 120  350 -600  -350 -600))
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+    )
+    (image Nikon_GPS:C_0603::1
+      (outline (polygon signal 0  1395 -645  -1395 -645  -1395 645  1395 645))
+      (outline (path signal 100  -800 -400  -800 400))
+      (outline (path signal 100  800 -400  -800 -400))
+      (outline (path signal 100  800 400  800 -400))
+      (outline (path signal 100  -800 400  800 400))
+      (outline (path signal 120  -350 600  350 600))
+      (outline (path signal 120  350 -600  -350 -600))
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+    )
+    (image Nikon_GPS:L_0805
+      (outline (polygon signal 0  1595 995  1595 -995  -1595 -995  -1595 995))
+      (outline (path signal 120  -600 880  600 880))
+      (outline (path signal 120  600 -880  -600 -880))
+      (outline (path signal 100  -1000 620  1000 620))
+      (outline (path signal 100  1000 620  1000 -620))
+      (outline (path signal 100  1000 -620  -1000 -620))
+      (outline (path signal 100  -1000 -620  -1000 620))
+      (pin Rect[T]Pad_700.000000x1300.000000_um 1 -950 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um 2 950 0)
+    )
+    (image "Nikon_GPS:Measurement_Point_Round-SMD-Pad_Small"
+      (outline (polygon signal 0  250.035 965.709  439.318 895.607  610.606 788.842  756.902 649.778
+            872.205 484.116  951.804 298.631  992.448 100.855  994.998 0
+            992.448 -100.854  951.804 -298.63  872.205 -484.115  756.902 -649.777
+            610.606 -788.841  439.318 -895.606  250.035 -965.708  50.529 -996.272
+            -151.062 -986.048  -346.454 -935.458  -527.668 -846.567  -687.281 -723.018
+            -818.755 -569.87  -916.709 -393.39  -977.134 -200.803  -997.553 0
+            -977.134 200.804  -916.709 393.391  -818.755 569.871  -687.281 723.019
+            -527.668 846.568  -346.454 935.459  -151.062 986.049  50.529 996.273))
+      (pin Round[T]Pad_1500.000000_um 1 0 0)
+    )
+    (image "Nikon_GPS:Measurement_Point_Square-SMD_1.0mmx1.0mm"
+      (outline (polygon signal 0  545 -545  -545 -545  -545 545  545 545))
+      (pin Rect[T]Pad_1000.000000x1000.000000_um 1 0 0)
+    )
+    (padstack Round[T]Pad_1500.000000_um
+      (shape (circle F.Cu 1500))
+      (attach off)
+    )
+    (padstack Oval[T]Pad_2000.000000x3500.000000_um
+      (shape (path F.Cu 2000  0 -750  0 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x900.000000_um
+      (shape (rect F.Cu -250 -450 250 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x1300.000000_um
+      (shape (rect F.Cu -350 -650 350 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x750.000000_um
+      (shape (rect F.Cu -400 -375 400 375))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1000.000000_um
+      (shape (rect F.Cu -500 -500 500 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1250.000000_um
+      (shape (rect F.Cu -500 -625 500 625))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1060.000000x650.000000_um
+      (shape (rect F.Cu -530 -325 530 325))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x1200.000000_um
+      (shape (rect F.Cu -600 -600 600 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1422.000000x864.000000_um
+      (shape (rect F.Cu -711 -432 711 432))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1550.000000x1300.000000_um
+      (shape (rect F.Cu -775 -650 775 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1676.000000x864.000000_um
+      (shape (rect F.Cu -838 -432 838 432))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net +5V
+      (pins U2-5 U4-1 F1-1 U3-6 C3-2 C4-2 R7-2 C8-1 TP1-1)
+    )
+    (net +3V3
+      (pins U4-5 C7-1 R1-1 R6-1 R8-2 C6-1 L1-2 TP2-1)
+    )
+    (net /GPS_TX
+      (pins U1-3 R4-1 C2-1)
+    )
+    (net /GPS_RX
+      (pins U1-10 TP5-1)
+    )
+    (net GND
+      (pins U1-5 U2-3 U4-2 D1-1 D2-1 J1-3 SW1-1 SW1-1@1 U3-2 U3-3 C1-1 C3-1 C4-1 C5-2
+        C7-2 R3-2 C8-2 C2-2 C6-2 TP3-1)
+    )
+    (net "Net-(F1-Pad2)"
+      (pins F1-2 J1-1)
+    )
+    (net "/~{CTS}"
+      (pins U1-7 R1-2)
+    )
+    (net /ON_OFF
+      (pins U1-1 R2-2)
+    )
+    (net /WAKEUP
+      (pins U1-6 R2-1 R3-1)
+    )
+    (net /GPS_OUT
+      (pins J1-2 R5-2)
+    )
+    (net /BUF_IN
+      (pins U2-2 R4-2 TP4-1)
+    )
+    (net /3.3V_EN
+      (pins U4-3 U3-4 R7-1)
+    )
+    (net /BUF_OUT
+      (pins U2-4 R5-1)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins D1-2 R8-1)
+    )
+    (net "Net-(D2-Pad2)"
+      (pins D2-2 R9-1)
+    )
+    (net /1PPS
+      (pins U1-2 R9-2)
+    )
+    (net /C_BYP
+      (pins U4-4 C5-1)
+    )
+    (net /BUF_EN
+      (pins U2-1 R6-2)
+    )
+    (net /ON_SW
+      (pins SW1-2 SW1-2@1 U3-1)
+    )
+    (net /3.3V_GPS
+      (pins U1-4 C1-2 L1-1)
+    )
+    (net "Net-(U1-Pad8)"
+      (pins U1-8)
+    )
+    (net "Net-(U1-Pad9)"
+      (pins U1-9)
+    )
+    (net "Net-(U3-Pad5)"
+      (pins U3-5)
+    )
+    (class kicad_default +3V3 +5V /1PPS /3.3V_EN /3.3V_GPS /BUF_EN /BUF_IN
+      /BUF_OUT /C_BYP /GPS_OUT /GPS_RX /GPS_TX /ON_OFF /ON_SW /WAKEUP "/~{CTS}"
+      GND "Net-(D1-Pad2)" "Net-(D2-Pad2)" "Net-(F1-Pad2)" "Net-(U1-Pad8)"
+      "Net-(U1-Pad9)" "Net-(U3-Pad5)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 250)
+      )
+    )
+  )
+  (wiring
+  )
+)

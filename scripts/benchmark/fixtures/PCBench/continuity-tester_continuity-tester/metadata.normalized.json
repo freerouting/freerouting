@@ -1,0 +1,63 @@
+{
+  "board_id": "continuity-tester_continuity-tester",
+  "display_name": "continuity-tester_continuity-tester",
+  "pcbench_directory": "PCBs/continuity-tester_continuity-tester",
+  "source": "https://github.com/iromero91/continuity-tester",
+  "author": "iromero91",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:38.917897+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 25.4
+    },
+    "area_cm2": 6.45,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 74,
+    "vias": 1,
+    "track_length_mm": 151.99,
+    "kicad_drc_violations": 29,
+    "kicad_drc_breakdown": {
+      "total_violations": 29,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 14,
+        "silk_edge_clearance": 4,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 4
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 23
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.886143+00:00",
+    "elapsed_seconds": 10.6,
+    "unrouted_nets": 1,
+    "clearance_violations": 0,
+    "quality_score": 966.66
+  }
+}

@@ -1,0 +1,369 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kitspace_RPi_shield\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  116586 -88646  52832 -88646  52578 -88646  52578 -32512
+            116586 -32512  116586 -88646)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component board_logo:board_logo
+      (place G*** 87630 -53848 back 90 (PN LOGO))
+    )
+    (component "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal"
+      (place J1 99822 -82804 front 180 (PN AudioJack3))
+      (place J3 88900 -82804 front 180 (PN AudioJack3))
+    )
+    (component "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal::1"
+      (place J2 77978 -82804 front 180 (PN AudioJack3))
+      (place J4 67056 -82804 front 180 (PN AudioJack3))
+    )
+    (component raspberrypi:RASPBERRYPI4B4GB
+      (place J5 108204 -37338 front 0 (PN "RASPBERRY_PI_4B_+_Samtec_ESP-120-33-G-D"))
+    )
+    (component Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal
+      (place M1 104648 -41656 front 0 (PN Fan))
+    )
+  )
+  (library
+    (image board_logo:board_logo
+    )
+    (image "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal"
+      (outline (polygon signal 0  -4495 5695  4695 5695  4695 -13295  -4495 -13295))
+      (outline (path signal 100  -2100 5200  3900 5200))
+      (outline (path signal 100  3900 5200  3900 1200))
+      (outline (path signal 100  3900 1200  4200 1200))
+      (outline (path signal 100  4200 1200  4200 -12800))
+      (outline (path signal 100  4200 -12800  -4000 -12800))
+      (outline (path signal 100  -4000 -12800  -4000 1200))
+      (outline (path signal 100  -4000 1200  -2100 1200))
+      (outline (path signal 100  -2100 1200  -2100 5200))
+      (outline (path signal 120  -2220 5320  4020 5320))
+      (outline (path signal 120  4020 5320  4020 1320))
+      (outline (path signal 120  4020 1320  4320 1320))
+      (outline (path signal 120  4320 1320  4320 -12920))
+      (outline (path signal 120  4320 -12920  -4120 -12920))
+      (outline (path signal 120  -4120 -12920  -4120 1320))
+      (outline (path signal 120  -4120 1320  -2220 1320))
+      (outline (path signal 120  -2220 1320  -2220 5320))
+      (pin Oval[A]Pad_2800.000000x1800.000000_um R 2000 -7900)
+      (pin Oval[A]Pad_2800.000000x1800.000000_um T 2000 -2400)
+      (pin Oval[A]Pad_2800.000000x1800.000000_um S 0 0)
+    )
+    (image "Connector_Audio:Jack_3.5mm_CUI_SJ1-3533NG_Horizontal::1"
+      (outline (polygon signal 0  -4495 5695  4695 5695  4695 -13295  -4495 -13295))
+      (outline (path signal 120  -2220 1320  -2220 5320))
+      (outline (path signal 120  -4120 1320  -2220 1320))
+      (outline (path signal 120  -4120 -12920  -4120 1320))
+      (outline (path signal 120  4320 -12920  -4120 -12920))
+      (outline (path signal 120  4320 1320  4320 -12920))
+      (outline (path signal 120  4020 1320  4320 1320))
+      (outline (path signal 120  4020 5320  4020 1320))
+      (outline (path signal 120  -2220 5320  4020 5320))
+      (outline (path signal 100  -2100 1200  -2100 5200))
+      (outline (path signal 100  -4000 1200  -2100 1200))
+      (outline (path signal 100  -4000 -12800  -4000 1200))
+      (outline (path signal 100  4200 -12800  -4000 -12800))
+      (outline (path signal 100  4200 1200  4200 -12800))
+      (outline (path signal 100  3900 1200  4200 1200))
+      (outline (path signal 100  3900 5200  3900 1200))
+      (outline (path signal 100  -2100 5200  3900 5200))
+      (pin Oval[A]Pad_2800.000000x1800.000000_um S 0 0)
+      (pin Oval[A]Pad_2800.000000x1800.000000_um T 2000 -2400)
+      (pin Oval[A]Pad_2800.000000x1800.000000_um R 2000 -7900)
+    )
+    (image raspberrypi:RASPBERRYPI4B4GB
+      (outline (polygon signal 0  5538.03 4762.64  5872.08 4725.01  6199.78 4650.21  6517.03 4539.2
+            6819.88 4393.36  7104.49 4214.52  7367.27 4004.96  7604.96 3767.27
+            7814.52 3504.49  7993.36 3219.88  8139.2 2917.03  8250.21 2599.78
+            8325 2272.08  8362.64 1938.03  8365 1769.93  8365 -48229.9  8362.64 -48398
+            8325 -48732.1  8250.21 -49059.8  8139.2 -49377  7993.36 -49679.9
+            7814.52 -49964.5  7604.96 -50227.3  7367.27 -50465  7104.49 -50674.5
+            6819.88 -50853.4  6517.03 -50999.2  6199.78 -51110.2  5872.08 -51185
+            5538.03 -51222.6  5369.93 -51225  -73629.9 -51225  -73798 -51222.6
+            -74132.1 -51185  -74459.8 -51110.2  -74777 -50999.2  -75079.9 -50853.4
+            -75364.5 -50674.5  -75627.3 -50465  -75865 -50227.3  -76074.5 -49964.5
+            -76253.4 -49679.9  -76399.2 -49377  -76510.2 -49059.8  -76585 -48732.1
+            -76622.6 -48398  -76625 -48229.9  -76625 1769.93  -76622.6 1938.03
+            -76585 2272.08  -76510.2 2599.78  -76399.2 2917.03  -76253.4 3219.88
+            -76074.5 3504.49  -75865 3767.27  -75627.3 4004.96  -75364.5 4214.52
+            -75079.9 4393.36  -74777 4539.2  -74459.8 4650.21  -74132.1 4725.01
+            -73798 4762.64  -73629.9 4765  5369.93 4765))
+      (outline (path signal 100  0 0  0 0))
+      (outline (path signal 100  0 0  0 0))
+      (outline (path signal 100  0 0  0 0))
+      (outline (path signal 100  0 0  0 0))
+      (outline (path signal 100  -49530 -1205  -49530 3745))
+      (outline (path signal 100  1270 -1205  -49530 -1205))
+      (outline (path signal 100  1270 3745  1270 -1205))
+      (outline (path signal 100  -49530 3745  1270 3745))
+      (outline (path signal 200  1270 -1205  1270 3745))
+      (outline (path signal 200  -49530 -1205  1270 -1205))
+      (outline (path signal 200  -49530 3745  -49530 -1205))
+      (outline (path signal 200  1270 3745  -49530 3745))
+      (pin Rect[A]Pad_1640.000000x1640.000000_um 1 0 0)
+      (pin Round[A]Pad_1640.000000_um 2 0 2540)
+      (pin Round[A]Pad_1640.000000_um 3 -2540 0)
+      (pin Round[A]Pad_1640.000000_um 4 -2540 2540)
+      (pin Round[A]Pad_1640.000000_um 5 -5080 0)
+      (pin Round[A]Pad_1640.000000_um 6 -5080 2540)
+      (pin Round[A]Pad_1640.000000_um 7 -7620 0)
+      (pin Round[A]Pad_1640.000000_um 8 -7620 2540)
+      (pin Round[A]Pad_1640.000000_um 9 -10160 0)
+      (pin Round[A]Pad_1640.000000_um 10 -10160 2540)
+      (pin Round[A]Pad_1640.000000_um 11 -12700 0)
+      (pin Round[A]Pad_1640.000000_um 12 -12700 2540)
+      (pin Round[A]Pad_1640.000000_um 13 -15240 0)
+      (pin Round[A]Pad_1640.000000_um 14 -15240 2540)
+      (pin Round[A]Pad_1640.000000_um 15 -17780 0)
+      (pin Round[A]Pad_1640.000000_um 16 -17780 2540)
+      (pin Round[A]Pad_1640.000000_um 17 -20320 0)
+      (pin Round[A]Pad_1640.000000_um 18 -20320 2540)
+      (pin Round[A]Pad_1640.000000_um 19 -22860 0)
+      (pin Round[A]Pad_1640.000000_um 20 -22860 2540)
+      (pin Round[A]Pad_1640.000000_um 21 -25400 0)
+      (pin Round[A]Pad_1640.000000_um 22 -25400 2540)
+      (pin Round[A]Pad_1640.000000_um 23 -27940 0)
+      (pin Round[A]Pad_1640.000000_um 24 -27940 2540)
+      (pin Round[A]Pad_1640.000000_um 25 -30480 0)
+      (pin Round[A]Pad_1640.000000_um 26 -30480 2540)
+      (pin Round[A]Pad_1640.000000_um 27 -33020 0)
+      (pin Round[A]Pad_1640.000000_um 28 -33020 2540)
+      (pin Round[A]Pad_1640.000000_um 29 -35560 0)
+      (pin Round[A]Pad_1640.000000_um 30 -35560 2540)
+      (pin Round[A]Pad_1640.000000_um 31 -38100 0)
+      (pin Round[A]Pad_1640.000000_um 32 -38100 2540)
+      (pin Round[A]Pad_1640.000000_um 33 -40640 0)
+      (pin Round[A]Pad_1640.000000_um 34 -40640 2540)
+      (pin Round[A]Pad_1640.000000_um 35 -43180 0)
+      (pin Round[A]Pad_1640.000000_um 36 -43180 2540)
+      (pin Round[A]Pad_1640.000000_um 37 -45720 0)
+      (pin Round[A]Pad_1640.000000_um 38 -45720 2540)
+      (pin Round[A]Pad_1640.000000_um 39 -48260 0)
+      (pin Round[A]Pad_1640.000000_um 40 -48260 2540)
+      (keepout "" (circle F.Cu 3200 4870 1270))
+      (keepout "" (circle B.Cu 3200 4870 1270))
+      (keepout "" (circle F.Cu 3200 -53130 1270))
+      (keepout "" (circle B.Cu 3200 -53130 1270))
+      (keepout "" (circle F.Cu 3200 -53130 -47730))
+      (keepout "" (circle B.Cu 3200 -53130 -47730))
+      (keepout "" (circle F.Cu 3200 4870 -47730))
+      (keepout "" (circle B.Cu 3200 4870 -47730))
+    )
+    (image Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal
+      (outline (polygon signal 0  10545 -4345  -1795 -4345  -1795 1795  10545 1795))
+      (outline (path signal 120  -1270 1270  0 1270))
+      (outline (path signal 120  -1270 0  -1270 1270))
+      (outline (path signal 120  1042.93 -2920  1440 -2920))
+      (outline (path signal 120  1042.93 -2160  1440 -2160))
+      (outline (path signal 120  10100 -2920  4100 -2920))
+      (outline (path signal 120  10100 -2160  10100 -2920))
+      (outline (path signal 120  4100 -2160  10100 -2160))
+      (outline (path signal 120  1440 -1270  4100 -1270))
+      (outline (path signal 120  1110 -380  1440 -380))
+      (outline (path signal 120  1110 380  1440 380))
+      (outline (path signal 120  4100 -280  10100 -280))
+      (outline (path signal 120  4100 -160  10100 -160))
+      (outline (path signal 120  4100 -40  10100 -40))
+      (outline (path signal 120  4100 80  10100 80))
+      (outline (path signal 120  4100 200  10100 200))
+      (outline (path signal 120  4100 320  10100 320))
+      (outline (path signal 120  10100 -380  4100 -380))
+      (outline (path signal 120  10100 380  10100 -380))
+      (outline (path signal 120  4100 380  10100 380))
+      (outline (path signal 120  4100 1330  1440 1330))
+      (outline (path signal 120  4100 -3870  4100 1330))
+      (outline (path signal 120  1440 -3870  4100 -3870))
+      (outline (path signal 120  1440 1330  1440 -3870))
+      (outline (path signal 100  4040 -2860  10040 -2860))
+      (outline (path signal 100  10040 -2220  10040 -2860))
+      (outline (path signal 100  4040 -2220  10040 -2220))
+      (outline (path signal 100  -320 -2860  1500 -2860))
+      (outline (path signal 100  -320 -2220  -320 -2860))
+      (outline (path signal 100  -320 -2220  1500 -2220))
+      (outline (path signal 100  4040 -320  10040 -320))
+      (outline (path signal 100  10040 320  10040 -320))
+      (outline (path signal 100  4040 320  10040 320))
+      (outline (path signal 100  -320 -320  1500 -320))
+      (outline (path signal 100  -320 320  -320 -320))
+      (outline (path signal 100  -320 320  1500 320))
+      (outline (path signal 100  1500 635  2135 1270))
+      (outline (path signal 100  1500 -3810  1500 635))
+      (outline (path signal 100  4040 -3810  1500 -3810))
+      (outline (path signal 100  4040 1270  4040 -3810))
+      (outline (path signal 100  2135 1270  4040 1270))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 0 0)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 2 0 -2540)
+    )
+    (padstack Round[A]Pad_1640.000000_um
+      (shape (circle F.Cu 1640))
+      (shape (circle B.Cu 1640))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1700.000000x1700.000000_um
+      (shape (path F.Cu 1700  0 0  0 0))
+      (shape (path B.Cu 1700  0 0  0 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2800.000000x1800.000000_um
+      (shape (path F.Cu 1800  -500 0  500 0))
+      (shape (path B.Cu 1800  -500 0  500 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1640.000000x1640.000000_um
+      (shape (rect F.Cu -820 -820 820 820))
+      (shape (rect B.Cu -820 -820 820 820))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect F.Cu -850 -850 850 850))
+      (shape (rect B.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net jack3
+      (pins J1-R J1-T J5-21)
+    )
+    (net GND
+      (pins J1-S J2-S J3-S J4-S J5-6 J5-9 J5-14 J5-20 J5-25 J5-30 J5-34 J5-39 M1-2)
+    )
+    (net jack2
+      (pins J2-T J2-R J5-29)
+    )
+    (net jack1
+      (pins J3-R J3-T J5-28)
+    )
+    (net jack4
+      (pins J4-T J4-R J5-33)
+    )
+    (net "Net-(J5-Pad1)"
+      (pins J5-1)
+    )
+    (net +5V
+      (pins J5-2 J5-4 M1-1)
+    )
+    (net "Net-(J5-Pad3)"
+      (pins J5-3)
+    )
+    (net "Net-(J5-Pad5)"
+      (pins J5-5)
+    )
+    (net "Net-(J5-Pad7)"
+      (pins J5-7)
+    )
+    (net "Net-(J5-Pad8)"
+      (pins J5-8)
+    )
+    (net "Net-(J5-Pad10)"
+      (pins J5-10)
+    )
+    (net "Net-(J5-Pad11)"
+      (pins J5-11)
+    )
+    (net "Net-(J5-Pad12)"
+      (pins J5-12)
+    )
+    (net "Net-(J5-Pad13)"
+      (pins J5-13)
+    )
+    (net "Net-(J5-Pad15)"
+      (pins J5-15)
+    )
+    (net "Net-(J5-Pad16)"
+      (pins J5-16)
+    )
+    (net "Net-(J5-Pad17)"
+      (pins J5-17)
+    )
+    (net "Net-(J5-Pad18)"
+      (pins J5-18)
+    )
+    (net "Net-(J5-Pad19)"
+      (pins J5-19)
+    )
+    (net "Net-(J5-Pad22)"
+      (pins J5-22)
+    )
+    (net "Net-(J5-Pad23)"
+      (pins J5-23)
+    )
+    (net "Net-(J5-Pad24)"
+      (pins J5-24)
+    )
+    (net "Net-(J5-Pad26)"
+      (pins J5-26)
+    )
+    (net "Net-(J5-Pad27)"
+      (pins J5-27)
+    )
+    (net "Net-(J5-Pad31)"
+      (pins J5-31)
+    )
+    (net "Net-(J5-Pad32)"
+      (pins J5-32)
+    )
+    (net "Net-(J5-Pad35)"
+      (pins J5-35)
+    )
+    (net "Net-(J5-Pad36)"
+      (pins J5-36)
+    )
+    (net "Net-(J5-Pad37)"
+      (pins J5-37)
+    )
+    (net "Net-(J5-Pad38)"
+      (pins J5-38)
+    )
+    (net "Net-(J5-Pad40)"
+      (pins J5-40)
+    )
+    (class kicad_default +5V GND "Net-(J5-Pad1)" "Net-(J5-Pad10)" "Net-(J5-Pad11)"
+      "Net-(J5-Pad12)" "Net-(J5-Pad13)" "Net-(J5-Pad15)" "Net-(J5-Pad16)"
+      "Net-(J5-Pad17)" "Net-(J5-Pad18)" "Net-(J5-Pad19)" "Net-(J5-Pad22)"
+      "Net-(J5-Pad23)" "Net-(J5-Pad24)" "Net-(J5-Pad26)" "Net-(J5-Pad27)"
+      "Net-(J5-Pad3)" "Net-(J5-Pad31)" "Net-(J5-Pad32)" "Net-(J5-Pad35)" "Net-(J5-Pad36)"
+      "Net-(J5-Pad37)" "Net-(J5-Pad38)" "Net-(J5-Pad40)" "Net-(J5-Pad5)" "Net-(J5-Pad7)"
+      "Net-(J5-Pad8)" jack1 jack2 jack3 jack4
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

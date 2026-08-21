@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "LSU_4-9_O2_Sensor_Controller_LO2SC",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 123038,
+      "sha256": "81e69da0fda0bd8d300d536a26988e0d2918de4a3d85bc0a36687173b4f99895"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 79148,
+      "sha256": "48bedc42d49a4901c58dc1e900a1e01bbf5df1d0a05f48b9e2a4c3aa3bfb6f21"
+    },
+    "metadata_json": {
+      "bytes": 523,
+      "sha256": "e1672a08163e915138b596de07f730a11f168547cb1d1876a3677ebfb19b1da8"
+    },
+    "final_json": {
+      "bytes": 76682,
+      "sha256": "3d09d993109dd2159ff0f516e7916a33abc38e34951568d0d72e93f17285e040"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:18:24.363084+00:00"
+  }
+}

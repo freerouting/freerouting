@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ToslinkCNC_toslink_arduino_shield",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 206996,
+      "sha256": "44adaab04ad42f4b7d210beb5f8a203e22e940a9f4fb35bf4c3c4084f0e97050"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 107379,
+      "sha256": "4dbf7aa3913755b2413d0aa6d726a9a2beb362c6f52c3f37873063a9d21b6c41"
+    },
+    "metadata_json": {
+      "bytes": 621,
+      "sha256": "e44fa5437004570251810af969991ef1d1bb9553669c2904b55bea36efe31810"
+    },
+    "final_json": {
+      "bytes": 129183,
+      "sha256": "2ecf6e30f11ebbb0ba1771151be3a4c548bc099bdf9d7ba52939d75a6d56b003"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:53:31.099209+00:00"
+  }
+}

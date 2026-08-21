@@ -1,0 +1,61 @@
+{
+  "board_id": "rufs_simple_kicad_schema_and_pcb_v1",
+  "display_name": "rufs_simple_kicad_schema_and_pcb_v1",
+  "pcbench_directory": "PCBs/rufs_simple_kicad_schema_and_pcb_v1",
+  "source": "https://github.com/mik4el/rufs",
+  "author": "mik4el",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:49.038016+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 3,
+    "dimensions_mm": {
+      "width": 35.56,
+      "height": 11.43
+    },
+    "area_cm2": 4.06,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 8,
+    "vias": 0,
+    "track_length_mm": 57.24,
+    "kicad_drc_violations": 7,
+    "kicad_drc_breakdown": {
+      "total_violations": 7,
+      "unconnected_count": 0,
+      "by_type": {
+        "invalid_outline": 4,
+        "lib_footprint_issues": 3
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 3
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.104846+00:00",
+    "elapsed_seconds": 4.16,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

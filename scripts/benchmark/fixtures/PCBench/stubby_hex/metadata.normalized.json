@@ -1,0 +1,58 @@
+{
+  "board_id": "stubby_hex",
+  "display_name": "stubby_hex",
+  "pcbench_directory": "PCBs/stubby_hex",
+  "source": "https://github.com/thebiguno/stubby",
+  "author": "thebiguno",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.881697+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 60,
+    "dimensions_mm": {
+      "width": 49.53,
+      "height": 49.53
+    },
+    "area_cm2": 24.53,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 727,
+    "vias": 31,
+    "track_length_mm": 1524.34,
+    "kicad_drc_violations": 397,
+    "kicad_drc_breakdown": {
+      "total_violations": 397,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 155,
+        "copper_edge_clearance": 11,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 101,
+        "silk_overlap": 36,
+        "starved_thermal": 5,
+        "text_height": 86
+      },
+      "by_severity": {
+        "error": 171,
+        "warning": 226
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

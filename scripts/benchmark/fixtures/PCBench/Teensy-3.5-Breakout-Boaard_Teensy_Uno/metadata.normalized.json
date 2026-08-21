@@ -1,0 +1,59 @@
+{
+  "board_id": "Teensy-3.5-Breakout-Boaard_Teensy_Uno",
+  "display_name": "Teensy-3.5-Breakout-Boaard_Teensy_Uno",
+  "pcbench_directory": "PCBs/Teensy-3.5-Breakout-Boaard_Teensy_Uno",
+  "source": "https://github.com/mjs513/Teensy-3.5-Breakout-Boaard",
+  "author": "mjs513",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:59.414138+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 60,
+    "components": 28,
+    "dimensions_mm": {
+      "width": 138.43,
+      "height": 67.31
+    },
+    "area_cm2": 93.18,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 426,
+    "vias": 14,
+    "track_length_mm": 3082.47,
+    "kicad_drc_violations": 187,
+    "kicad_drc_breakdown": {
+      "total_violations": 187,
+      "unconnected_count": 0,
+      "by_type": {
+        "courtyards_overlap": 12,
+        "lib_footprint_issues": 28,
+        "shorting_items": 1,
+        "silk_over_copper": 36,
+        "silk_overlap": 103,
+        "solder_mask_bridge": 1,
+        "text_height": 2,
+        "text_thickness": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 14,
+        "warning": 173
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

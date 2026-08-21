@@ -1,0 +1,63 @@
+{
+  "board_id": "DIYDAC_DIYDAC",
+  "display_name": "DIYDAC_DIYDAC",
+  "pcbench_directory": "PCBs/DIYDAC_DIYDAC",
+  "source": "https://github.com/AlexanderBrevig/DIYDAC",
+  "author": "AlexanderBrevig",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.842155+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 13.72
+    },
+    "area_cm2": 3.48,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 42,
+    "vias": 0,
+    "track_length_mm": 68.14,
+    "kicad_drc_violations": 47,
+    "kicad_drc_breakdown": {
+      "total_violations": 47,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 17,
+        "silk_edge_clearance": 12,
+        "silk_overlap": 12,
+        "text_height": 4,
+        "text_thickness": 1
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 46
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.899052+00:00",
+    "elapsed_seconds": 5.5,
+    "unrouted_nets": 0,
+    "clearance_violations": 1,
+    "quality_score": 992.0
+  }
+}

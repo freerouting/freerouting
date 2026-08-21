@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ozinverter_ozinverterkicad",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 406436,
+      "sha256": "2c0cfa7264b1017619b3dc542c7873bd665c4bf6fe6e9c6a639a4667773c4b32"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 187019,
+      "sha256": "3c9c2f36bcb1587aa38bd8bed4efa9b991b4b1c0f3a30ba6b982e73d6a13d37c"
+    },
+    "metadata_json": {
+      "bytes": 483,
+      "sha256": "9aa35efd6f3e78aa5e3e518c9653e601d806195b3f1327c4c3268fab9c720a49"
+    },
+    "final_json": {
+      "bytes": 120631,
+      "sha256": "4622959b3dc0a9bcb1931bda0428e74c06e5b6520ec1b16c6af03dc4d57bbb85"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:31:10.592451+00:00"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Inkjet_PiezoDriver",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 51273,
+      "sha256": "00c26117f2a01a03b2e0677dfa28625d5990f0e66e1182295aa6b32047f199a5"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 43397,
+      "sha256": "cc9b88f201ed35943a4ac9a4ab4eb800d45864d9d41a10e48653f97fd6dd0474"
+    },
+    "metadata_json": {
+      "bytes": 461,
+      "sha256": "e9e1875735885a656226e584ee70928a967f34e73f0813e7f4ce495e569eb75b"
+    },
+    "final_json": {
+      "bytes": 39873,
+      "sha256": "0e40bb484e06b733c33d5cbd6da01f371f57f13629206eff5a0df07fa4e002b4"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:59:13.227947+00:00"
+  }
+}

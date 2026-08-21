@@ -1,0 +1,31 @@
+{
+  "board": "LSU_4-9_O2_Sensor_Controller_LO2SC",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LSU_4-9_O2_Sensor_Controller_LO2SC\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 28,
+  "segment_count": 269,
+  "approximate_track_length_mm": 776.77,
+  "kicad_drc_violations": 279,
+  "generated_at": "2026-08-18T19:18:24.348495+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 279,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 108,
+      "copper_edge_clearance": 18,
+      "lib_footprint_issues": 28,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 27,
+      "silk_overlap": 20,
+      "solder_mask_bridge": 64,
+      "text_height": 2,
+      "text_thickness": 8,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 190,
+      "warning": 89
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "board_id": "Hardware_Playground_ws281x_led_strip_controller",
+  "display_name": "Hardware_Playground_ws281x_led_strip_controller",
+  "pcbench_directory": "PCBs/Hardware_Playground_ws281x_led_strip_controller",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 118,
+    "dimensions_mm": {
+      "width": 44.8,
+      "height": 23.35
+    },
+    "area_cm2": 10.46,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 315,
+    "vias": 32,
+    "track_length_mm": 561.06,
+    "kicad_drc_violations": 437,
+    "kicad_drc_breakdown": {
+      "total_violations": 437,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 89,
+        "clearance": 96,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 12,
+        "lib_footprint_issues": 29,
+        "pth_inside_courtyard": 77,
+        "silk_over_copper": 1,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 64,
+        "starved_thermal": 1,
+        "text_height": 57
+      },
+      "by_severity": {
+        "error": 344,
+        "warning": 93
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

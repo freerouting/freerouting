@@ -1,0 +1,56 @@
+{
+  "board_id": "hackyflasher_Flasher",
+  "display_name": "hackyflasher_Flasher",
+  "pcbench_directory": "PCBs/hackyflasher_Flasher",
+  "source": "https://github.com/splatski/hackyflasher",
+  "author": "splatski",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.105994+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 67.31,
+      "height": 99.06
+    },
+    "area_cm2": 66.68,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 54,
+    "vias": 6,
+    "track_length_mm": 669.45,
+    "kicad_drc_violations": 135,
+    "kicad_drc_breakdown": {
+      "total_violations": 135,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 55,
+        "lib_footprint_issues": 14,
+        "silk_over_copper": 60,
+        "silk_overlap": 5,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 55,
+        "warning": 80
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

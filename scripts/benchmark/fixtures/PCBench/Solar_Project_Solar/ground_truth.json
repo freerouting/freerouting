@@ -1,0 +1,33 @@
+{
+  "board": "Solar_Project_Solar",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Solar_Project_Solar\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 310,
+  "segment_count": 890,
+  "approximate_track_length_mm": 2556.12,
+  "kicad_drc_violations": 345,
+  "generated_at": "2026-08-18T18:24:41.048306+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 345,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 54,
+      "copper_edge_clearance": 1,
+      "courtyards_overlap": 1,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 132,
+      "pth_inside_courtyard": 1,
+      "silk_edge_clearance": 7,
+      "silk_over_copper": 75,
+      "silk_overlap": 56,
+      "solder_mask_bridge": 4,
+      "text_height": 8,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 63,
+      "warning": 282
+    }
+  }
+}

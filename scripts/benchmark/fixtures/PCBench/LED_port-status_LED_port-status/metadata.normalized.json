@@ -1,0 +1,61 @@
+{
+  "board_id": "LED_port-status_LED_port-status",
+  "display_name": "LED_port-status_LED_port-status",
+  "pcbench_directory": "PCBs/LED_port-status_LED_port-status",
+  "source": "https://github.com/madworm/LED_port-status",
+  "author": "madworm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.226007+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 23.75,
+      "height": 12.5
+    },
+    "area_cm2": 2.97,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 131,
+    "vias": 18,
+    "track_length_mm": 199.79,
+    "kicad_drc_violations": 96,
+    "kicad_drc_breakdown": {
+      "total_violations": 96,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 61,
+        "copper_edge_clearance": 17,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 16
+      },
+      "by_severity": {
+        "error": 80,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.013944+00:00",
+    "elapsed_seconds": 35.1,
+    "unrouted_nets": 62,
+    "clearance_violations": 128,
+    "quality_score": 355.88
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "board_id": "spisolator_spisolator",
+  "display_name": "spisolator_spisolator",
+  "pcbench_directory": "PCBs/spisolator_spisolator",
+  "source": "https://github.com/urjaman/spisolator",
+  "author": "urjaman",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:46.657988+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 16.51,
+      "height": 21.59
+    },
+    "area_cm2": 3.56,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 138,
+    "vias": 10,
+    "track_length_mm": 239.58,
+    "kicad_drc_violations": 47,
+    "kicad_drc_breakdown": {
+      "total_violations": 47,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 34,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 8,
+        "silk_overlap": 2,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 37,
+        "warning": 10
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.124375+00:00",
+    "elapsed_seconds": 12.91,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

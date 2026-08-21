@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "arduino_arduino leds",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 111194,
+      "sha256": "a10db4d7a0c8eb0c3d555282686490b0dd10ba65b9ae139ccaa01eb813fa84f9"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 68366,
+      "sha256": "cd0cf9307f4570237dd26b877d015621f2b10248fd678f02b09c80103d3259ca"
+    },
+    "metadata_json": {
+      "bytes": 478,
+      "sha256": "86c3ff8120e44c9a7b53d559c8b0254ac11eba2823e9dc5c58ca4642f7483769"
+    },
+    "final_json": {
+      "bytes": 45200,
+      "sha256": "dad83b58d1b7a397875c3e5f694c959447834b52fc2078ac860781fa90958324"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:17.095757+00:00"
+  }
+}

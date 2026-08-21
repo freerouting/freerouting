@@ -1,0 +1,65 @@
+{
+  "board_id": "Eggbot-Spherebot-polargraph-Controller_eggbot-spherebot-polargraph-controller",
+  "display_name": "Eggbot-Spherebot-polargraph-Controller_eggbot-spherebot-polargraph-controller",
+  "pcbench_directory": "PCBs/Eggbot-Spherebot-polargraph-Controller_eggbot-spherebot-polargraph-controller",
+  "source": "https://github.com/MarkJB/Eggbot-Spherebot-polargraph-Controller",
+  "author": "MarkJB",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.933744+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 83.82,
+      "height": 43.18
+    },
+    "area_cm2": 36.19,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 192,
+    "vias": 0,
+    "track_length_mm": 1165.18,
+    "kicad_drc_violations": 120,
+    "kicad_drc_breakdown": {
+      "total_violations": 120,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 93,
+        "lib_footprint_issues": 17,
+        "padstack": 4,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "error": 97,
+        "warning": 23
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.903491+00:00",
+    "elapsed_seconds": 8.62,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

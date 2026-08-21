@@ -1,0 +1,61 @@
+{
+  "board_id": "uedaino_uedaino",
+  "display_name": "uedaino_uedaino",
+  "pcbench_directory": "PCBs/uedaino_uedaino",
+  "source": "https://github.com/fabkominka/uedaino",
+  "author": "fabkominka",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.802096+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 65.0
+    },
+    "area_cm2": 32.5,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 607,
+    "vias": 71,
+    "track_length_mm": 1596.83,
+    "kicad_drc_violations": 92,
+    "kicad_drc_breakdown": {
+      "total_violations": 92,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 34,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "hole_to_hole": 1,
+        "holes_co_located": 5,
+        "lib_footprint_issues": 31,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 5,
+        "silk_overlap": 9,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 36,
+        "warning": 56
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

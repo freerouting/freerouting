@@ -1,0 +1,59 @@
+{
+  "board_id": "motor_control_hardware_poncho",
+  "display_name": "motor_control_hardware_poncho",
+  "pcbench_directory": "PCBs/motor_control_hardware_poncho",
+  "source": "https://github.com/cloud-9-team/motor_control_hardware",
+  "author": "cloud-9-team",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.234148+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 34,
+    "dimensions_mm": {
+      "width": 97.04,
+      "height": 58.31
+    },
+    "area_cm2": 56.58,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 178,
+    "vias": 15,
+    "track_length_mm": 1064.65,
+    "kicad_drc_violations": 208,
+    "kicad_drc_breakdown": {
+      "total_violations": 208,
+      "unconnected_count": 34,
+      "by_type": {
+        "clearance": 20,
+        "hole_clearance": 9,
+        "hole_to_hole": 14,
+        "holes_co_located": 16,
+        "lib_footprint_issues": 34,
+        "shorting_items": 37,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 29,
+        "solder_mask_bridge": 46
+      },
+      "by_severity": {
+        "error": 112,
+        "warning": 96
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,61 @@
+{
+  "board_id": "iCE40-IO_ICE40-IO_Rev_A",
+  "display_name": "iCE40-IO_ICE40-IO_Rev_A",
+  "pcbench_directory": "PCBs/iCE40-IO_ICE40-IO_Rev_A",
+  "source": "https://github.com/OLIMEX/iCE40-IO",
+  "author": "OLIMEX",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:44.561964+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 45.0,
+      "height": 50.0
+    },
+    "area_cm2": 22.5,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 751,
+    "vias": 146,
+    "track_length_mm": 2174.13,
+    "kicad_drc_violations": 465,
+    "kicad_drc_breakdown": {
+      "total_violations": 465,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 161,
+        "copper_edge_clearance": 144,
+        "hole_to_hole": 15,
+        "item_on_disabled_layer": 1,
+        "lib_footprint_issues": 43,
+        "silk_edge_clearance": 27,
+        "silk_overlap": 51,
+        "text_height": 21,
+        "track_dangling": 1,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 306,
+        "warning": 159
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

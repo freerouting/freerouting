@@ -1,0 +1,59 @@
+{
+  "board_id": "server_lader_server_lader",
+  "display_name": "server_lader_server_lader",
+  "pcbench_directory": "PCBs/server_lader_server_lader",
+  "source": "https://github.com/ep092/server_lader",
+  "author": "ep092",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:52.222054+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 27,
+    "components": 66,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 80.0
+    },
+    "area_cm2": 80.0,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 652,
+    "vias": 45,
+    "track_length_mm": 1739.58,
+    "kicad_drc_violations": 343,
+    "kicad_drc_breakdown": {
+      "total_violations": 343,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 64,
+        "lib_footprint_issues": 66,
+        "mirrored_text_on_front_layer": 1,
+        "silk_over_copper": 120,
+        "silk_overlap": 16,
+        "text_height": 62,
+        "text_thickness": 13,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 64,
+        "warning": 279
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

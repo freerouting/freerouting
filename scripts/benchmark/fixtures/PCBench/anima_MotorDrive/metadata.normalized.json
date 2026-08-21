@@ -1,0 +1,53 @@
+{
+  "board_id": "anima_MotorDrive",
+  "display_name": "anima_MotorDrive",
+  "pcbench_directory": "PCBs/anima_MotorDrive",
+  "source": "https://github.com/LeStarch/anima",
+  "author": "LeStarch",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.665941+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 78,
+    "components": 62,
+    "dimensions_mm": {
+      "width": 54.61,
+      "height": 63.5
+    },
+    "area_cm2": 34.68,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 525,
+    "vias": 46,
+    "track_length_mm": 1518.9,
+    "kicad_drc_violations": 109,
+    "kicad_drc_breakdown": {
+      "total_violations": 109,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 62,
+        "silk_over_copper": 23,
+        "silk_overlap": 22,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "warning": 109
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

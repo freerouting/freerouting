@@ -1,0 +1,29 @@
+{
+  "board": "constant-current-h-bridge_constant_current_source",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\constant-current-h-bridge_constant_current_source\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 18,
+  "segment_count": 358,
+  "approximate_track_length_mm": 2113.01,
+  "kicad_drc_violations": 321,
+  "generated_at": "2026-08-18T18:39:28.897541+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 321,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 219,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 44,
+      "shorting_items": 2,
+      "silk_over_copper": 17,
+      "silk_overlap": 29,
+      "starved_thermal": 5,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 227,
+      "warning": 94
+    }
+  }
+}

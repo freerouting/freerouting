@@ -21,12 +21,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import app.freerouting.core.RouterJobResourceUsage;
+import app.freerouting.core.results.RoutingResultManifest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -418,9 +421,11 @@ public class MainApplication extends WindowBase {
           startupOptions.fanout_enabled);
       new_frame.board_panel.board_handling.settings.autoroute_settings.setMaxItems(startupOptions.getMaxItems());
 
-      if (startupOptions.design_output_filename != null) {
-        // we need to set up a listener to save the design file when the autorouter is
-        // running
+      final long jobStartTime = System.currentTimeMillis();
+      final boolean[] timedOutFlag = new boolean[] {false};
+
+      if (startupOptions.design_output_filename != null || startupOptions.result_json_path != null) {
+        // we need to set up a listener to save the design file and manifest when the autorouter is running
         new_frame.board_panel.board_handling.autorouter_listener = new ThreadActionListener() {
           @Override
           public void autorouterStarted() {
@@ -428,54 +433,79 @@ public class MainApplication extends WindowBase {
 
           @Override
           public void autorouterAborted() {
-            ExportBoardToFile(startupOptions.design_output_filename);
+            finishAndExit(startupOptions.design_output_filename, timedOutFlag[0] ? "TIMED_OUT" : "ABORTED");
           }
 
           @Override
           public void autorouterFinished() {
-            ExportBoardToFile(startupOptions.design_output_filename);
+            finishAndExit(startupOptions.design_output_filename, "COMPLETED");
           }
 
-          private void ExportBoardToFile(String filename) {
-            if (filename == null) {
-              FRLogger.warn("Couldn't export board, filename not specified");
-              return;
-            }
+          private void finishAndExit(String filename, String finalState) {
+            boolean outputWritten = false;
+            int exitCode = 0;
 
-            if (!(filename.toLowerCase().endsWith(".dsn") ||
-                filename.toLowerCase().endsWith(".ses") ||
-                filename.toLowerCase().endsWith(".scr"))) {
-              FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
-              return;
-            }
+            if (filename != null) {
+              if (!(filename.toLowerCase().endsWith(".dsn") ||
+                  filename.toLowerCase().endsWith(".ses") ||
+                  filename.toLowerCase().endsWith(".scr"))) {
+                FRLogger.warn("Couldn't export board to '" + filename + "', unsupported extension");
+                exitCode = 1;
+              } else {
+                FRLogger.info("Saving '" + filename + "'...");
+                try {
+                  String filename_only = new File(filename).getName();
+                  String design_name = filename_only.substring(0, filename_only.length() - 4);
+                  String extension = filename_only.substring(filename_only.length() - 4);
 
-            FRLogger.info("Saving '" + filename + "'...");
-            try {
-              String filename_only = new File(filename).getName();
-              String design_name = filename_only.substring(0, filename_only.length() - 4);
-              String extension = filename_only.substring(filename_only.length() - 4);
+                  OutputStream output_stream = new FileOutputStream(filename);
 
-              OutputStream output_stream = new FileOutputStream(filename);
-
-              switch (extension) {
-                case ".dsn" -> new_frame.board_panel.board_handling.export_to_dsn_file(
-                    output_stream, design_name, false);
-                case ".ses" -> new_frame.board_panel.board_handling.export_specctra_session_file(
-                    design_name, output_stream);
-                case ".scr" -> {
-                  ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
-                  new_frame.board_panel.board_handling.export_specctra_session_file(
-                      filename, session_output_stream);
-                  InputStream input_stream = new ByteArrayInputStream(session_output_stream.toByteArray());
-                  new_frame.board_panel.board_handling.export_eagle_session_file(
-                      input_stream, output_stream);
+                  switch (extension) {
+                    case ".dsn" -> new_frame.board_panel.board_handling.export_to_dsn_file(
+                        output_stream, design_name, false);
+                    case ".ses" -> new_frame.board_panel.board_handling.export_specctra_session_file(
+                        design_name, output_stream);
+                    case ".scr" -> {
+                      ByteArrayOutputStream session_output_stream = new ByteArrayOutputStream();
+                      new_frame.board_panel.board_handling.export_specctra_session_file(
+                          filename, session_output_stream);
+                      InputStream input_stream = new ByteArrayInputStream(session_output_stream.toByteArray());
+                      new_frame.board_panel.board_handling.export_eagle_session_file(
+                          input_stream, output_stream);
+                    }
+                  }
+                  output_stream.close();
+                  outputWritten = new File(filename).exists() && new File(filename).length() > 0;
+                  if (!outputWritten) {
+                    exitCode = 1;
+                  }
+                } catch (Exception e) {
+                  FRLogger.error("Couldn't export board to file", e);
+                  exitCode = 1;
                 }
               }
-
-              System.exit(0);
-            } catch (Exception e) {
-              FRLogger.error("Couldn't export board to file", e);
             }
+
+            if (startupOptions.result_json_path != null) {
+              try {
+                RouterJobResourceUsage usage = RouterJobResourceUsage.capture(jobStartTime);
+                RoutingResultManifest manifest = RoutingResultManifest.create(
+                    new_frame.board_panel.board_handling.get_routing_board(),
+                    startupOptions.design_input_filename,
+                    outputWritten,
+                    exitCode,
+                    finalState,
+                    null,
+                    usage
+                );
+                RoutingResultManifest.write(Path.of(startupOptions.result_json_path), manifest);
+                FRLogger.info("Routing result manifest written to '" + startupOptions.result_json_path + "'");
+              } catch (Exception e) {
+                FRLogger.error("Couldn't write routing result manifest", e);
+              }
+            }
+
+            System.exit(exitCode);
           }
         };
       }
@@ -492,13 +522,11 @@ public class MainApplication extends WindowBase {
         }
       }
 
-      // start the auto-router automatically if both input and output files were
-      // passed as a parameter
+      // start the auto-router automatically if both input and output files were passed as a parameter
       if ((startupOptions.design_input_filename != null)
-          && (startupOptions.design_output_filename != null)) {
+          && (startupOptions.design_output_filename != null || startupOptions.result_json_path != null)) {
 
-        // Add a model dialog with timeout to confirm the autorouter start with the
-        // default settings
+        // Add a model dialog with timeout to confirm the autorouter start with the default settings
         final String START_NOW_TEXT = resources.getString("auto_start_routing_startnow_button");
         JButton startNowButton = new JButton(START_NOW_TEXT + " (" + startupOptions.dialog_confirmation_timeout + ")");
 
@@ -555,8 +583,6 @@ public class MainApplication extends WindowBase {
           InteractiveActionThread thread = new_frame.board_panel.board_handling.start_batch_autorouter();
 
           if (new_frame.board_panel.board_handling.autorouter_listener != null) {
-            // Add the auto-router listener to save the design file when the autorouter is
-            // running
             thread.addListener(new_frame.board_panel.board_handling.autorouter_listener);
           }
 
@@ -572,6 +598,7 @@ public class MainApplication extends WindowBase {
                 final long timeoutMillis = seconds * 1000;
                 Timer timeoutTimer = new Timer((int) timeoutMillis, e -> {
                   FRLogger.info("Job timeout reached. Stopping autorouter...");
+                  timedOutFlag[0] = true;
                   thread.request_stop_auto_router();
                   ((Timer) e.getSource()).stop();
                 });

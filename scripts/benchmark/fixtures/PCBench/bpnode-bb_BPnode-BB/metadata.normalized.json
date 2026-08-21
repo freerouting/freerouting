@@ -1,0 +1,65 @@
+{
+  "board_id": "bpnode-bb_BPnode-BB",
+  "display_name": "bpnode-bb_BPnode-BB",
+  "pcbench_directory": "PCBs/bpnode-bb_BPnode-BB",
+  "source": "https://github.com/tht/bpnode-bb",
+  "author": "tht",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:31.925815+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 19.81,
+      "height": 49.28
+    },
+    "area_cm2": 9.76,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 218,
+    "vias": 27,
+    "track_length_mm": 466.15,
+    "kicad_drc_violations": 204,
+    "kicad_drc_breakdown": {
+      "total_violations": 204,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 147,
+        "copper_edge_clearance": 18,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 10,
+        "silk_over_copper": 24,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 1,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 169,
+        "warning": 35
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.848123+00:00",
+    "elapsed_seconds": 18.1,
+    "unrouted_nets": 1,
+    "clearance_violations": 2,
+    "quality_score": 966.66
+  }
+}

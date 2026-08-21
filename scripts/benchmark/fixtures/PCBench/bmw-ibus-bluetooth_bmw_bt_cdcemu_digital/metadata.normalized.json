@@ -1,0 +1,59 @@
+{
+  "board_id": "bmw-ibus-bluetooth_bmw_bt_cdcemu_digital",
+  "display_name": "bmw-ibus-bluetooth_bmw_bt_cdcemu_digital",
+  "pcbench_directory": "PCBs/bmw-ibus-bluetooth_bmw_bt_cdcemu_digital",
+  "source": "https://github.com/the-vty/bmw-ibus-bluetooth",
+  "author": "the-vty",
+  "license": "GNU Lesser General Public License v3.0",
+  "license_spdx": "LGPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:25.601740+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 58,
+    "dimensions_mm": {
+      "width": 60.0,
+      "height": 40.0
+    },
+    "area_cm2": 24.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 362,
+    "vias": 12,
+    "track_length_mm": 780.03,
+    "kicad_drc_violations": 347,
+    "kicad_drc_breakdown": {
+      "total_violations": 347,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 127,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 58,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 85,
+        "silk_overlap": 33,
+        "solder_mask_bridge": 36
+      },
+      "by_severity": {
+        "error": 168,
+        "warning": 179
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

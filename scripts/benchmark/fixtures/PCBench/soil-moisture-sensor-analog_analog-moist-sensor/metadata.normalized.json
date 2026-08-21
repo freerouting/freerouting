@@ -1,0 +1,62 @@
+{
+  "board_id": "soil-moisture-sensor-analog_analog-moist-sensor",
+  "display_name": "soil-moisture-sensor-analog_analog-moist-sensor",
+  "pcbench_directory": "PCBs/soil-moisture-sensor-analog_analog-moist-sensor",
+  "source": "https://github.com/Miceuz/soil-moisture-sensor-analog",
+  "author": "Miceuz",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:25.901744+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 15.24,
+      "height": 114.2
+    },
+    "area_cm2": 17.4,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 185,
+    "vias": 19,
+    "track_length_mm": 325.02,
+    "kicad_drc_violations": 169,
+    "kicad_drc_breakdown": {
+      "total_violations": 169,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 54,
+        "copper_edge_clearance": 2,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 29,
+        "padstack": 2,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 32,
+        "silk_overlap": 36,
+        "starved_thermal": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 64,
+        "warning": 105
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

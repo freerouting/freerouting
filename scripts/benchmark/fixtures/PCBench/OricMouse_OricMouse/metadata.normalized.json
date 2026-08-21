@@ -1,0 +1,64 @@
+{
+  "board_id": "OricMouse_OricMouse",
+  "display_name": "OricMouse_OricMouse",
+  "pcbench_directory": "PCBs/OricMouse_OricMouse",
+  "source": "https://github.com/986-Studio/OricMouse",
+  "author": "986-Studio",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.565940+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 14,
+    "components": 43,
+    "dimensions_mm": {
+      "width": 85.09,
+      "height": 71.12
+    },
+    "area_cm2": 60.52,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 390,
+    "vias": 0,
+    "track_length_mm": 1997.02,
+    "kicad_drc_violations": 632,
+    "kicad_drc_breakdown": {
+      "total_violations": 632,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 501,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 9,
+        "drill_out_of_range": 16,
+        "lib_footprint_issues": 42,
+        "padstack": 4,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 7,
+        "silk_overlap": 18,
+        "starved_thermal": 1,
+        "text_height": 12,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 538,
+        "warning": 94
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

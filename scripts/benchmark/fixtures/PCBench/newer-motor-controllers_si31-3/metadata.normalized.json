@@ -1,0 +1,62 @@
+{
+  "board_id": "newer-motor-controllers_si31-3",
+  "display_name": "newer-motor-controllers_si31-3",
+  "pcbench_directory": "PCBs/newer-motor-controllers_si31-3",
+  "source": "https://github.com/lizardmech/newer-motor-controllers",
+  "author": "lizardmech",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.046016+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 55,
+    "components": 760,
+    "dimensions_mm": {
+      "width": 102.0,
+      "height": 100.0
+    },
+    "area_cm2": 102.0,
+    "zones": 57
+  },
+  "reference": {
+    "segments": 1064,
+    "vias": 85,
+    "track_length_mm": 3507.64,
+    "kicad_drc_violations": 690,
+    "kicad_drc_breakdown": {
+      "total_violations": 690,
+      "unconnected_count": 7,
+      "by_type": {
+        "clearance": 114,
+        "copper_edge_clearance": 16,
+        "courtyards_overlap": 7,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 119,
+        "pth_inside_courtyard": 41,
+        "shorting_items": 5,
+        "silk_over_copper": 199,
+        "silk_overlap": 107,
+        "solder_mask_bridge": 55,
+        "track_dangling": 23,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 240,
+        "warning": 450
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
+}

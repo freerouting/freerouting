@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "motor-high-current-sensors_CurrentSensorPCB_line",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1874879,
+      "sha256": "0b3de7ad3f102a629b7ea9af273d6f96bc0e3222e040a49217a0da4b4d46eecd"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 578166,
+      "sha256": "14d9785231aac6189e2756669008ecbbbb9e722ac35b2994eed21d399a6c3988"
+    },
+    "metadata_json": {
+      "bytes": 761,
+      "sha256": "cfcb2f45e2691c5f4ec6358cdf40e675d5c24da24908ef0d498a3e48eb91c024"
+    },
+    "final_json": {
+      "bytes": 477232,
+      "sha256": "ff157462f9fac96e2ffde726dbee03c52d8cb6549d7892c726ac0d8a0ff9f841"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:25:41.509678+00:00"
+  }
+}

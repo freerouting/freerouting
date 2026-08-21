@@ -1,0 +1,62 @@
+{
+  "board_id": "induction-hob_temperature-sensor",
+  "display_name": "induction-hob_temperature-sensor",
+  "pcbench_directory": "PCBs/induction-hob_temperature-sensor",
+  "source": "https://github.com/johannesc/induction-hob",
+  "author": "johannesc",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:40.981921+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 7.4,
+      "height": 7.1
+    },
+    "area_cm2": 0.53,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 59,
+    "vias": 8,
+    "track_length_mm": 45.96,
+    "kicad_drc_violations": 46,
+    "kicad_drc_breakdown": {
+      "total_violations": 46,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 1,
+        "lib_footprint_issues": 12,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 7,
+        "text_height": 20
+      },
+      "by_severity": {
+        "error": 1,
+        "warning": 45
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.958388+00:00",
+    "elapsed_seconds": 18.14,
+    "unrouted_nets": 2,
+    "clearance_violations": 5,
+    "quality_score": 799.99
+  }
+}

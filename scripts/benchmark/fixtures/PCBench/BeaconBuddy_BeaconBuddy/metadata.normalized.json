@@ -1,0 +1,59 @@
+{
+  "board_id": "BeaconBuddy_BeaconBuddy",
+  "display_name": "BeaconBuddy_BeaconBuddy",
+  "pcbench_directory": "PCBs/BeaconBuddy_BeaconBuddy",
+  "source": "https://github.com/angst7/BeaconBuddy",
+  "author": "angst7",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.354020+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 37,
+    "components": 112,
+    "dimensions_mm": {
+      "width": 25.4,
+      "height": 27.94
+    },
+    "area_cm2": 7.1,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 256,
+    "vias": 8,
+    "track_length_mm": 339.62,
+    "kicad_drc_violations": 244,
+    "kicad_drc_breakdown": {
+      "total_violations": 244,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 59,
+        "copper_edge_clearance": 38,
+        "hole_clearance": 10,
+        "lib_footprint_issues": 112,
+        "pth_inside_courtyard": 16,
+        "shorting_items": 1,
+        "silk_overlap": 5,
+        "starved_thermal": 3
+      },
+      "by_severity": {
+        "error": 127,
+        "warning": 117
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

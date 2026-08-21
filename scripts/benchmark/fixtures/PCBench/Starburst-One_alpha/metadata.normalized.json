@@ -1,0 +1,60 @@
+{
+  "board_id": "Starburst-One_alpha",
+  "display_name": "Starburst-One_alpha",
+  "pcbench_directory": "PCBs/Starburst-One_alpha",
+  "source": "https://github.com/74hc595/Starburst-One",
+  "author": "74hc595",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.222018+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 3,
+    "dimensions_mm": {
+      "width": 15.24,
+      "height": 22.86
+    },
+    "area_cm2": 3.48,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 63,
+    "vias": 4,
+    "track_length_mm": 107.85,
+    "kicad_drc_violations": 8,
+    "kicad_drc_breakdown": {
+      "total_violations": 8,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 3,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 1,
+        "silk_overlap": 1,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "warning": 8
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.125381+00:00",
+    "elapsed_seconds": 8.71,
+    "unrouted_nets": 0,
+    "clearance_violations": 36,
+    "quality_score": 640.0
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "board_id": "kitspace_threeboard",
+  "display_name": "kitspace_threeboard",
+  "pcbench_directory": "PCBs/kitspace_threeboard",
+  "source": "https://github.com/taylorconor/threeboard",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/taylorconor/threeboard/master/firmware/LICENSE.txt'}, {'name': 'CERN', 'link': 'https://raw.githubusercontent.com/taylorconor/threeboard/master/hardware/LICENSE.txt'}, {'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/taylorconor/threeboard/master/documentation/threeboard/LICENSE.txt'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:16:44.140585+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 52,
+    "dimensions_mm": {
+      "width": 58.17,
+      "height": 49.28
+    },
+    "area_cm2": 28.67,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 404,
+    "vias": 13,
+    "track_length_mm": 1178.72,
+    "kicad_drc_violations": 132,
+    "kicad_drc_breakdown": {
+      "total_violations": 132,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 25,
+        "lib_footprint_issues": 27,
+        "lib_footprint_mismatch": 25,
+        "silk_over_copper": 6,
+        "solder_mask_bridge": 44,
+        "starved_thermal": 1,
+        "text_thickness": 1,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 70,
+        "warning": 62
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

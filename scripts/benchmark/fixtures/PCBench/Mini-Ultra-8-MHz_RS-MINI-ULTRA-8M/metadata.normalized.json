@@ -1,0 +1,64 @@
+{
+  "board_id": "Mini-Ultra-8-MHz_RS-MINI-ULTRA-8M",
+  "display_name": "Mini-Ultra-8-MHz_RS-MINI-ULTRA-8M",
+  "pcbench_directory": "PCBs/Mini-Ultra-8-MHz_RS-MINI-ULTRA-8M",
+  "source": "https://github.com/rocketscream/Mini-Ultra-8-MHz",
+  "author": "rocketscream",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.037769+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 18.41,
+      "height": 39.37
+    },
+    "area_cm2": 7.25,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 322,
+    "vias": 45,
+    "track_length_mm": 507.25,
+    "kicad_drc_violations": 161,
+    "kicad_drc_breakdown": {
+      "total_violations": 161,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 123,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 8,
+        "lib_footprint_issues": 24,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 135,
+        "warning": 26
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.034691+00:00",
+    "elapsed_seconds": 34.34,
+    "unrouted_nets": 1,
+    "clearance_violations": 7,
+    "quality_score": 967.56
+  }
+}

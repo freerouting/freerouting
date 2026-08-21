@@ -1,0 +1,59 @@
+{
+  "board_id": "temperature-alarm_controller",
+  "display_name": "temperature-alarm_controller",
+  "pcbench_directory": "PCBs/temperature-alarm_controller",
+  "source": "https://github.com/domenipavec/temperature-alarm",
+  "author": "domenipavec",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:46.681988+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 111.12,
+      "height": 62.23
+    },
+    "area_cm2": 69.15,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 149,
+    "vias": 6,
+    "track_length_mm": 659.16,
+    "kicad_drc_violations": 107,
+    "kicad_drc_breakdown": {
+      "total_violations": 107,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 37,
+        "invalid_outline": 9,
+        "lib_footprint_issues": 18,
+        "lib_footprint_mismatch": 1,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 29,
+        "silk_overlap": 6,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 46,
+        "warning": 61
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

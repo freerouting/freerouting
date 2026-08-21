@@ -1,0 +1,62 @@
+{
+  "board_id": "dc25_spqr_badge_badge-kicad",
+  "display_name": "dc25_spqr_badge_badge-kicad",
+  "pcbench_directory": "PCBs/dc25_spqr_badge_badge-kicad",
+  "source": "https://github.com/netik/dc25_spqr_badge",
+  "author": "netik",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:26.205748+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 124,
+    "components": 129,
+    "dimensions_mm": {
+      "width": 152.67,
+      "height": 76.68
+    },
+    "area_cm2": 117.07,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1419,
+    "vias": 96,
+    "track_length_mm": 4462.82,
+    "kicad_drc_violations": 783,
+    "kicad_drc_breakdown": {
+      "total_violations": 783,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 499,
+        "copper_edge_clearance": 15,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 129,
+        "padstack": 2,
+        "shorting_items": 4,
+        "silk_over_copper": 4,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 116,
+        "starved_thermal": 5
+      },
+      "by_severity": {
+        "error": 643,
+        "warning": 140
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,65 @@
+{
+  "board_id": "8088_sbc2_pcb_8088_sbc2",
+  "display_name": "8088_sbc2_pcb_8088_sbc2",
+  "pcbench_directory": "PCBs/8088_sbc2_pcb_8088_sbc2",
+  "source": "https://github.com/TobiasKaiser/8088_sbc2_pcb",
+  "author": "TobiasKaiser",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.118088+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 82,
+    "components": 65,
+    "dimensions_mm": {
+      "width": 200.0,
+      "height": 100.0
+    },
+    "area_cm2": 200.0,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 1545,
+    "vias": 221,
+    "track_length_mm": 9829.87,
+    "kicad_drc_violations": 915,
+    "kicad_drc_breakdown": {
+      "total_violations": 915,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 199,
+        "clearance": 502,
+        "courtyards_overlap": 1,
+        "hole_clearance": 59,
+        "hole_to_hole": 1,
+        "holes_co_located": 2,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 65,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 9,
+        "solder_mask_bridge": 63,
+        "starved_thermal": 1,
+        "text_height": 1,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 827,
+        "warning": 88
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

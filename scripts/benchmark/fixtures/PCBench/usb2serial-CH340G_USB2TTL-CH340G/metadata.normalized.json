@@ -1,0 +1,67 @@
+{
+  "board_id": "usb2serial-CH340G_USB2TTL-CH340G",
+  "display_name": "usb2serial-CH340G_USB2TTL-CH340G",
+  "pcbench_directory": "PCBs/usb2serial-CH340G_USB2TTL-CH340G",
+  "source": "https://github.com/smslit/usb2serial-CH340G",
+  "author": "smslit",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:32.677824+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 18.0,
+      "height": 25.0
+    },
+    "area_cm2": 4.5,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 116,
+    "vias": 6,
+    "track_length_mm": 176.97,
+    "kicad_drc_violations": 107,
+    "kicad_drc_breakdown": {
+      "total_violations": 107,
+      "unconnected_count": 1,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 58,
+        "copper_edge_clearance": 2,
+        "lib_footprint_issues": 20,
+        "padstack": 2,
+        "silk_overlap": 5,
+        "text_height": 18
+      },
+      "by_severity": {
+        "error": 62,
+        "warning": 45
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.158669+00:00",
+    "elapsed_seconds": 8.94,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "board": "Ttl_wlan_radar",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Ttl_wlan_radar\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 509,
+  "segment_count": 1857,
+  "approximate_track_length_mm": 1527.39,
+  "kicad_drc_violations": 1321,
+  "generated_at": "2026-08-18T18:25:24.711580+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1321,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 290,
+      "copper_edge_clearance": 83,
+      "drill_out_of_range": 18,
+      "hole_to_hole": 3,
+      "lib_footprint_issues": 128,
+      "padstack": 18,
+      "shorting_items": 49,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 199,
+      "silk_overlap": 113,
+      "solder_mask_bridge": 208,
+      "starved_thermal": 6,
+      "text_height": 137,
+      "text_thickness": 65,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 654,
+      "warning": 667
+    }
+  }
+}

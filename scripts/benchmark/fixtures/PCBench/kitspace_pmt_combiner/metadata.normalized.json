@@ -1,0 +1,51 @@
+{
+  "board_id": "kitspace_pmt_combiner",
+  "display_name": "kitspace_pmt_combiner",
+  "pcbench_directory": "PCBs/kitspace_pmt_combiner",
+  "source": "https://github.com/Sussex-Neuroscience/pmt-combiner",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/Sussex-Neuroscience/pmt-combiner/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:13:23.604228+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 16,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 80.0,
+      "height": 64.5
+    },
+    "area_cm2": 51.6,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 115,
+    "vias": 4,
+    "track_length_mm": 676.39,
+    "kicad_drc_violations": 14,
+    "kicad_drc_breakdown": {
+      "total_violations": 14,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_mismatch": 12,
+        "silk_edge_clearance": 2
+      },
+      "by_severity": {
+        "warning": 14
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

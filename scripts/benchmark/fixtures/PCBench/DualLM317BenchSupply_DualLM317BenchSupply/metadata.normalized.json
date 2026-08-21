@@ -1,0 +1,57 @@
+{
+  "board_id": "DualLM317BenchSupply_DualLM317BenchSupply",
+  "display_name": "DualLM317BenchSupply_DualLM317BenchSupply",
+  "pcbench_directory": "PCBs/DualLM317BenchSupply_DualLM317BenchSupply",
+  "source": "https://github.com/pepaslabs/DualLM317BenchSupply",
+  "author": "pepaslabs",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:31.981816+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 52,
+    "dimensions_mm": {
+      "width": 99.06,
+      "height": 99.69
+    },
+    "area_cm2": 98.75,
+    "zones": 12
+  },
+  "reference": {
+    "segments": 127,
+    "vias": 0,
+    "track_length_mm": 642.97,
+    "kicad_drc_violations": 327,
+    "kicad_drc_breakdown": {
+      "total_violations": 327,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 56,
+        "copper_edge_clearance": 4,
+        "silk_edge_clearance": 17,
+        "silk_overlap": 141,
+        "text_height": 108,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 60,
+        "warning": 267
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

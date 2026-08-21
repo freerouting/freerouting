@@ -1,0 +1,31 @@
+{
+  "board": "RF_SIGNAL_GENERATOR_HARDWARE_RF Signal Generator",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RF_SIGNAL_GENERATOR_HARDWARE_RF Signal Generator\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 369,
+  "segment_count": 942,
+  "approximate_track_length_mm": 1107.79,
+  "kicad_drc_violations": 595,
+  "generated_at": "2026-08-18T18:24:08.908220+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 595,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 1,
+      "copper_edge_clearance": 61,
+      "items_not_allowed": 2,
+      "lib_footprint_issues": 98,
+      "silk_over_copper": 199,
+      "silk_overlap": 1,
+      "text_height": 128,
+      "text_thickness": 97,
+      "track_dangling": 4,
+      "via_dangling": 4
+    },
+    "by_severity": {
+      "error": 64,
+      "warning": 531
+    }
+  }
+}
