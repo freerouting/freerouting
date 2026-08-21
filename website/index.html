@@ -3,14 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Freerouting - Automatic PCB Routing Tool</title>
-    <meta content="Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers, and hobbyists."
+    <title>Freerouting - World's Leading Open-Source PCB Auto-Router | KiCad & Eagle Auto-Routing</title>
+    <meta content="Freerouting is the world's most popular open-source, fully-automated PCB routing engine. Seamlessly route printed circuit boards for KiCad, Eagle, EasyEDA, and more with high-speed multi-threaded optimization and AI/MCP agent support."
           name="description">
-    <meta content="PCB, routing, software, open-source, Freerouting, PCB design" name="keywords">
-    <meta content="Freerouting Team" name="author">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <meta content="PCB autorouter, PCB auto-router, KiCad autorouter, Eagle PCB routing, open-source EDA, Specctra DSN, automated PCB routing, topological router, PCB design software, MCP server PCB, PCB routing tool" name="keywords">
+    <meta content="Andras Fuchs" name="author">
+    <link rel="canonical" href="https://www.freerouting.app/">
+
+    <!-- Preconnect & Asset Performance -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Freerouting">
+    <meta property="og:title" content="Freerouting - Advanced Open-Source PCB Auto-Router">
+    <meta property="og:description" content="Free, multi-threaded automatic PCB router compatible with KiCad, Eagle, EasyEDA, and modern AI coding assistants.">
+    <meta property="og:url" content="https://www.freerouting.app/">
+    <meta property="og:image" content="https://www.freerouting.app/GUI_screenshot.png">
+    <meta property="og:image:alt" content="Freerouting PCB auto-routing graphical user interface">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Freerouting - Open-Source Automatic PCB Routing Tool">
+    <meta name="twitter:description" content="Powering 136,000+ engineers, makers, and students worldwide with high-performance automated PCB routing.">
+    <meta name="twitter:image" content="https://www.freerouting.app/GUI_screenshot.png">
+
+    <!-- Favicon & Stylesheet -->
     <link href="freerouting_icon_256x256_v3.ico" rel="icon" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
+
+    <!-- Structured Data: SoftwareApplication Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Freerouting",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Windows, macOS, Linux",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Open-source, fully automated PCB routing engine and multi-threaded optimizer supporting KiCad, Autodesk EAGLE, EasyEDA, and Specctra DSN format.",
+      "softwareVersion": "2.3.1",
+      "downloadUrl": "https://github.com/freerouting/freerouting/releases",
+      "featureList": [
+        "Automated Multi-Layer PCB Trace Routing",
+        "Multi-Threaded Optimization Engine",
+        "KiCad, EAGLE, and EasyEDA Compatibility",
+        "Specctra DSN and SES Import/Export",
+        "Model Context Protocol (MCP) AI Assistant Server",
+        "Headless CLI and Batch Job Processing",
+        "REST API for EDA Integration",
+        "26-Language Localization Support"
+      ],
+      "author": {
+        "@type": "Person",
+        "name": "Andras Fuchs",
+        "url": "https://www.freerouting.app/donate.html"
+      },
+      "url": "https://www.freerouting.app/",
+      "screenshot": "https://www.freerouting.app/GUI_screenshot.png",
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html"
+    }
+    </script>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JCLE6RZE0"></script>
     <script>
@@ -36,7 +96,7 @@
 
 <header class="header">
     <div class="header-container">
-        <img alt="Freerouting logo" src="logo_transparent.png">
+        <img alt="Freerouting logo - Open-source PCB routing tool" src="logo_transparent.png" width="48" height="48">
         <h1>freerouting</h1>
     </div>
     <p>The Open-Source, Automatic PCB Routing Tool</p>
@@ -45,6 +105,9 @@
     </a>
     <a class="btn" href="donate.html" id="donate_header">
         <i class="fas fa-heart" style="color: #e0245e;"></i> Support
+    </a>
+    <a class="btn" href="benchmarks.html" id="benchmarks_header">
+        <i class="fas fa-chart-line"></i> Benchmarks
     </a>
     <a class="btn" href="https://forms.gle/EqbxFZMSQiSsR4WM8" id="api_access">
         <i class="fas fa-network-wired"></i> Request API Access
@@ -64,124 +127,71 @@
     </section>
 
     <section class="section">
-        <h2>About Freerouting</h2>
-        <p>Freerouting is an open-source, fully-automated PCB routing software designed for engineers, PCB designers,
-            and hobbyists. It simplifies the complex and time-consuming process of routing printed circuit boards,
-            making it faster and easier to create intricate and high-quality designs.</p>
+        <h2>About Freerouting - The PCB Auto-Routing Standard</h2>
+        <p>
+            Freerouting is an open-source, fully automated PCB routing software engine designed for hardware engineers, PCB designers, makers, and students.
+            By taking the mathematical complexity out of routing printed circuit boards, Freerouting turns days of tedious manual trace placement into minutes of automated optimization, saving time and delivering clean, violation-free PCB layouts.
+        </p>
     </section>
 
     <section class="screenshot">
-        <h2>Freerouting Interface</h2>
-        <img alt="Screenshot of Freerouting GUI" loading="lazy" src="GUI_screenshot.png">
+        <h2>Modern Graphical User Interface & Interactive Routing</h2>
+        <img alt="Screenshot of Freerouting GUI displaying automated PCB traces, pads, and vias" loading="lazy" src="GUI_screenshot.png">
+    </section>
+
+    <section class="section">
+        <h2>Universal EDA Compatibility & Supported Formats</h2>
+        <p>
+            Freerouting integrates seamlessly with virtually all major Electronic Design Automation (EDA) suites and industry-standard exchange formats:
+        </p>
+        <ul>
+            <li><strong>KiCad Integration:</strong> Full bidirectional workflow via KiCad's Specctra export/import and dedicated community KiCad plugins.</li>
+            <li><strong>Autodesk EAGLE:</strong> Native ULP exporter integration for one-click routing and automatic back-annotation.</li>
+            <li><strong>EasyEDA:</strong> Direct support for automated trace generation via Specctra DSN export.</li>
+            <li><strong>Target 3001!, tscircuit & pcb-rnd:</strong> Automated routing pipelines across modern open-source and professional EDA platforms.</li>
+            <li><strong>Specctra DSN & SES Format:</strong> Full compliance with industry-standard <code>.dsn</code> design files and <code>.ses</code> routing session output.</li>
+        </ul>
     </section>
 
     <section class="section features">
-        <h2>Key Features</h2>
+        <h2>Key Features & Core Routing Capabilities</h2>
         <ul>
-            <li><strong>Enhanced Configuration Flexibility:</strong> Customize your workflow using JSON configuration
-                files,
-                environment variables, command-line arguments, or the graphical interface.
-            </li>
-            <li><strong>Localization Support:</strong> Improved language support for global users, including streamlined
-                sentence templates and placeholder control for easier translation.
-            </li>
-            <li><strong>API Access (Beta):</strong> Freerouting now has a public API that integrates seamlessly with
-                popular
-                EDA tools like KiCad, EasyEDA, and tscircuit, expanding its usability and interoperability.
-            </li>
-            <li><strong>MCP Server:</strong> Connect Freerouting to AI coding assistants (Cursor, Cline, Claude Desktop)
-                via the Model Context Protocol so agents can upload designs, run routing jobs, and download results
-                on your behalf.
-            </li>
-            <li><strong>CLI Interface:</strong> Freerouting now fully supports command-line operation, allowing you to
-                automate and control your routing tasks without a graphical interface.
-            </li>
-            <li><strong>Multi-Threaded Routing Job Scheduler:</strong> Freerouting can handle multiple routing tasks
-                simultaneously, significantly improving performance and efficiency.
-            </li>
-            <li><strong>Multi-Platform Support:</strong> Freerouting is compatible with Windows, Linux, macOS, and
-                offers
-                Docker images for both ARM64 and x64 architectures.
-            </li>
+            <li><strong>Multi-Threaded Optimization Engine:</strong> Freerouting leverages parallel CPU workers to run multiple rip-up and re-route passes simultaneously, finding optimal shortest paths and minimal via counts.</li>
+            <li><strong>Flexible Configuration Pipeline:</strong> Configure routing rules and clearances via JSON config files, environment variables, command-line arguments, or the interactive GUI.</li>
+            <li><strong>Headless CLI & Batch Automation:</strong> Integrate Freerouting directly into CI/CD pipelines, automated hardware testing, and build scripts with full command-line support.</li>
+            <li><strong>Model Context Protocol (MCP) Server:</strong> Connect AI agents (Cursor, Claude Desktop, Cline, Roo Cline) to execute PCB routing jobs as native tool calls.</li>
+            <li><strong>REST API:</strong> Deploy headless Freerouting instances in the cloud or on local servers for scalable automated routing services.</li>
+            <li><strong>Cross-Platform & Containerized:</strong> Native support for Windows, Linux, and macOS, alongside official multi-architecture Docker containers (x64 and ARM64).</li>
+            <li><strong>Global Localization:</strong> Professional localized user interfaces in 26 languages.</li>
         </ul>
     </section>
 
     <section class="section">
-        <h2>MCP Server for AI Assistants</h2>
+        <h2>MCP Server for AI Coding Assistants</h2>
         <p>
-            Freerouting includes a <strong>Model Context Protocol (MCP) server</strong> that lets LLM-based coding
-            assistants control the router directly from your editor or chat. Instead of clicking through the GUI, an
-            agent can create a session, upload a <code>.dsn</code> design, adjust settings, start autorouting, poll job
-            progress, and retrieve the finished <code>.ses</code> session file — all as structured tool calls.
+            Freerouting includes a native <strong>Model Context Protocol (MCP) server</strong> that empowers LLM-based coding assistants to manage PCB routing directly from your editor or chat. Instead of manual clicking, an agent can initiate sessions, upload <code>.dsn</code> design files, configure constraints, run multi-pass autorouting, and return the finished <code>.ses</code> session file.
         </p>
         <p>
-            <strong>Requirements:</strong> MCP tools talk to a Freerouting REST API backend, so you need one of the
-            following before you can route boards from an AI assistant:
+            <strong>Flexible Setup:</strong>
         </p>
         <ul>
-            <li><strong>Public API:</strong> A valid Freerouting API key — use the
-                <a href="https://forms.gle/EqbxFZMSQiSsR4WM8" id="mcp_api_access">Request API Access</a> button above
-                to obtain one, then configure it in your MCP client (for example as <code>FREEROUTING_API_KEY</code>).
-            </li>
-            <li><strong>Local / self-hosted:</strong> A Freerouting executable running on your machine with the REST
-                API and MCP server enabled (typical for offline use or when design files must stay on your computer).
-            </li>
-        </ul>
-        <p>Why use it?</p>
-        <ul>
-            <li><strong>Automate repetitive routing workflows:</strong> Batch-route boards, tweak settings, and re-run
-                passes without leaving your AI assistant.</li>
-            <li><strong>Fits your existing toolchain:</strong> Works with Cursor, Cline, Roo Cline, Claude Desktop, and
-                other MCP-capable clients — the same assistants you already use for code.</li>
-            <li><strong>Flexible deployment:</strong> Use the lightweight
-                <code>npx @freerouting/freerouting-mcp-server</code> bridge against the public API for a quick start,
-                or run the Java executable locally with MCP enabled so board data never leaves your machine.</li>
-            <li><strong>Token-efficient file handling:</strong> Tools can upload and download design files from disk
-                instead of stuffing Base64 into the model context, which keeps conversations fast and affordable.</li>
-            <li><strong>Full API surface as tools:</strong> Nearly every REST endpoint is exposed as an MCP tool, so
-                agents can orchestrate the complete routing pipeline end to end.</li>
+            <li><strong>Cloud Public API:</strong> Use a Freerouting API key (<a href="https://forms.gle/EqbxFZMSQiSsR4WM8" id="mcp_api_access">request access here</a>) and connect your assistant via <code>npx @freerouting/freerouting-mcp-server</code>.</li>
+            <li><strong>Local / Offline:</strong> Run the Freerouting executable on your local machine with MCP enabled to keep all proprietary hardware design files on your system.</li>
         </ul>
         <p>
             <a class="btn" href="https://github.com/freerouting/freerouting/blob/master/docs/API/MCP.md" id="mcp_docs">
-                <i class="fas fa-book"></i> MCP Documentation
+                <i class="fas fa-book"></i> MCP Server Documentation
             </a>
         </p>
     </section>
 
-    <section class="section">
-        <h2>Benefits for Users</h2>
-        <p>Freerouting offers substantial advantages for PCB designers and engineers:</p>
-        <ul>
-            <li><strong>Save Time and Boost Efficiency:</strong> With its automated routing and multi-threaded
-                scheduling,
-                Freerouting enables faster board design, saving valuable time.
-            </li>
-            <li><strong>High Degree of Customization:</strong> Freerouting adapts to your preferred workflow, with
-                flexible
-                configuration options available through multiple methods.
-            </li>
-            <li><strong>Integrate into Existing Toolchains:</strong> The public API allows easy integration into various
-                EDA
-                environments, offering a more seamless workflow.
-            </li>
-            <li><strong>Improved Localization:</strong> Freerouting’s enhanced localization tools allow users to work in
-                their preferred language without awkward phrasing or misaligned templates.
-            </li>
-            <li><strong>Cross-Platform Accessibility:</strong> Use Freerouting on Windows, Linux, and macOS, ensuring
-                compatibility across popular operating systems.
-            </li>
-        </ul>
-    </section>
-
     <section class="sponsors">
-        <h2>Sponsors & Support</h2>
+        <h2>Sponsors & Community Support</h2>
         <p>
-            A heartfelt thank you to all sponsors and supporters for their invaluable encouragement, which enables me to
-            continue volunteering as the lead developer and maintainer of Freerouting.
+            Freerouting is an independent open-source project maintained by Andras Fuchs. Powering over 136,000 designers worldwide requires substantial continuous development, testing across 1,100+ hardware benchmarks, and server compute.
         </p>
         <p>
-            Powering over 136,000 users worldwide with free and open-source PCB auto-routing takes substantial ongoing effort,
-            hosting, and AI compute. If you’d like to support this project with a one-time donation or monthly sponsorship:
+            If Freerouting saves you hours of manual work on your hardware designs, please consider supporting ongoing development with a donation or recurring sponsorship:
         </p>
         <p>
             <a class="btn" href="donate.html" id="sponsors_donate_btn">
@@ -196,11 +206,9 @@
 
 <footer class="footer">
     <p>
-        Freerouting is an open-source project maintained by <a href="donate.html"
-                                                               id="sponsors_footer">Andras Fuchs</a>.<br/>
+        Freerouting is an open-source project maintained by <a href="donate.html" id="sponsors_footer">Andras Fuchs</a>.<br/>
         Contributions, feedback, and support are always welcome.<br/>
-        Visit the <a href="https://github.com/freerouting/freerouting" id="github_footer">GitHub repository</a>
-        to learn more.
+        Visit the <a href="https://github.com/freerouting/freerouting" id="github_footer">GitHub repository</a> to learn more.
     </p>
 </footer>
 
