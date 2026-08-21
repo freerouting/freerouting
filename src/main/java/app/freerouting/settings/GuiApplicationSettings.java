@@ -22,6 +22,10 @@ public class GuiApplicationSettings implements Serializable {
   @SerializedName("dialog_confirmation_timeout")
   public int dialogConfirmationTimeout = 5;
 
+  /** Whether to show the routing summary dialog after autorouting finishes. */
+  @SerializedName("show_routing_summary")
+  public Boolean showRoutingSummary = true;
+
   /** Whether the application exits after the current operation finishes. */
   public transient boolean exitWhenFinished;
 }

@@ -49,12 +49,13 @@ public class WindowAbout extends BoardSavableSubWindow {
 
     windowPanel.add(new JLabel(tm.getText("warranty")), gridbagConstraints);
 
-    // Dynamically split and add the homepage/support panels
+    // Dynamically split and add the homepage/support/donate panels
     windowPanel.add(createMixedTextPanel(tm.getText("homepage")), gridbagConstraints);
     windowPanel.add(createMixedTextPanel(tm.getText("support")), gridbagConstraints);
+    windowPanel.add(createMixedTextPanel(tm.getText("donate")), gridbagConstraints);
 
     this.setResizable(false);
-    this.setMinimumSize(new Dimension(450, 220));
+    this.setMinimumSize(new Dimension(450, 240));
     this.pack();
   }
 

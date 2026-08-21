@@ -188,8 +188,8 @@ public class BoardMenuBar extends JMenuBar {
             locale,
             "help",
             GuiLocators.MENU_HELP,
-            new String[] {"about"},
-            new String[] {GuiLocators.MENU_HELP_ABOUT},
+            new String[] {"about", "sponsor"},
+            new String[] {GuiLocators.MENU_HELP_ABOUT, GuiLocators.MENU_HELP_SPONSOR},
             null,
             listener));
 

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Thank You for Supporting Freerouting! | Open-Source PCB Auto-Router</title>
+    <meta content="Thank you for supporting the open-source development and maintenance of Freerouting." name="description">
+    <meta content="noindex, follow" name="robots">
+    <link rel="canonical" href="https://www.freerouting.app/thank-you.html">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="freerouting_icon_256x256_v3.ico" rel="icon" type="image/x-icon">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        .thank-you-container {
+            max-width: 760px;
+            margin: 2.5em auto;
+            padding: 2.5em 2em;
+            background-color: rgb(30, 30, 30);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            border: 1px solid rgba(232, 204, 135, 0.2);
+        }
+        .thank-you-icon {
+            font-size: 4rem;
+            color: #e0245e;
+            margin-bottom: 0.5em;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .thank-you-title {
+            color: rgb(232, 204, 135);
+            font-size: 2.2em;
+            margin-bottom: 0.8em;
+        }
+        .thank-you-text {
+            font-size: 1.15em;
+            line-height: 1.8;
+            color: #d1d5db;
+            margin-bottom: 2em;
+            text-align: left;
+        }
+        .thank-you-actions {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JCLE6RZE0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4JCLE6RZE0');
+
+        // Track completed donation conversion event
+        gtag('event', 'donation_success', {
+            'event_category': 'conversion',
+            'event_label': 'stripe_checkout_completed'
+        });
+    </script>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-container">
+        <img alt="Freerouting logo" src="logo_transparent.png">
+        <h1>freerouting</h1>
+    </div>
+    <p>The Open-Source, Automatic PCB Routing Tool</p>
+</header>
+
+<main>
+    <div class="thank-you-container">
+        <div class="thank-you-icon">
+            <i class="fas fa-heart"></i>
+        </div>
+        <h2 class="thank-you-title">Thank You for Your Support!</h2>
+        <div class="thank-you-text">
+            <p>
+                Your contribution means the world to me and directly powers the ongoing development, performance optimization,
+                and AI compute behind Freerouting.
+            </p>
+            <p>
+                Thanks to your generosity, hundreds of thousands of hardware engineers, makers, and students around the globe
+                can continue relying on a free, high-performance, and open-source PCB auto-routing engine.
+            </p>
+            <p style="margin-top: 1.5em; text-align: right;">
+                <em>With heartfelt gratitude,</em><br>
+                <strong>Andras Fuchs</strong><br>
+                <small style="color: #9ca3af;">Lead Developer & Maintainer of Freerouting</small>
+            </p>
+        </div>
+
+        <div class="thank-you-actions">
+            <a class="btn" href="index.html" id="thankyou_home">
+                <i class="fas fa-home"></i> Back to Homepage
+            </a>
+            <a class="btn" href="https://github.com/freerouting/freerouting" id="thankyou_github" target="_blank">
+                <i class="fab fa-github"></i> Star on GitHub
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <p>
+        Freerouting is an open-source project maintained by <a href="donate.html">Andras Fuchs</a>.<br/>
+        Visit the <a href="https://github.com/freerouting/freerouting">GitHub repository</a> to learn more.
+    </p>
+</footer>
+
+</body>
+</html>
