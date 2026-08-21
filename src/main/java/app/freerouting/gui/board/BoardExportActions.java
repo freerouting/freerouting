@@ -151,10 +151,6 @@ public class BoardExportActions {
         new FileNameExtensionFilter("SPECCTRA Session file (*.ses)", "ses");
     fileChooser.addChoosableFileFilter(sesFilter);
 
-    FileNameExtensionFilter frbFilter =
-        new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
-    fileChooser.addChoosableFileFilter(frbFilter);
-
     FileNameExtensionFilter scrFilter =
         new FileNameExtensionFilter("Eagle Session Script file (*.scr)", "scr");
     fileChooser.addChoosableFileFilter(scrFilter);
@@ -169,7 +165,6 @@ public class BoardExportActions {
 
     fileChooser.setFileFilter(
         switch (output.format) {
-          case FRB -> frbFilter;
           case SCR -> scrFilter;
           case DSN -> dsnFilter;
           case KICAD_SESSION_JSON -> jsonSessionFilter;

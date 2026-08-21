@@ -49,7 +49,7 @@ public final class RoutingBoardUndoFacade {
 
       ByteArrayInputStream byteArrayInputStream =
           new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-      inputStream = new ObjectInputStream(byteArrayInputStream);
+      inputStream = new app.freerouting.util.SafeObjectInputStream(byteArrayInputStream);
       RoutingBoard boardCopy = (RoutingBoard) inputStream.readObject();
       boardCopy.clearAllItemTemporaryAutorouteData();
       boardCopy.finishAutoroute();

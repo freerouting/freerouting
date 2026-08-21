@@ -68,7 +68,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -804,44 +803,14 @@ public class BoardFrame extends WindowBase {
             listener -> listener.accept(boardPanel.boardHandling.getRoutingBoard()));
       }
     } else {
-      ObjectInputStream objectStream;
+      FRLogger.warn("Manual loading of binary .frb files is retired and no longer supported.");
       try {
-        objectStream = new ObjectInputStream(inputStream);
+        inputStream.close();
       } catch (IOException _) {
-        this.updateTexts();
-        return false;
+        // Ignored
       }
-      boolean readOk = boardPanel.boardHandling.loadFromBinary(objectStream);
-      if (!readOk) {
-        this.updateTexts();
-        return restoreTutorialBoardAfterFailedLoad(null);
-      }
-
-      // Raise an event to notify the observers that a new board has been loaded
-      this.boardLoadedEventListeners.forEach(
-          listener -> listener.accept(boardPanel.boardHandling.getRoutingBoard()));
-
-      // Read and set the GUI settings from the binary file
-      Point frameLocation;
-      Rectangle frameBounds;
-      try {
-        viewportPosition = (Point) objectStream.readObject();
-        frameLocation = (Point) objectStream.readObject();
-        frameBounds = (Rectangle) objectStream.readObject();
-      } catch (Exception _) {
-        this.updateTexts();
-        return false;
-      }
-      this.setLocation(frameLocation);
-      this.setBounds(frameBounds);
-
-      allocatePermanentSubwindows();
-
-      for (int i = 0; i < this.permanentSubwindows.length; i++) {
-        if (this.permanentSubwindows[i] != null) {
-          this.permanentSubwindows[i].read(objectStream);
-        }
-      }
+      this.updateTexts();
+      return restoreTutorialBoardAfterFailedLoad(null);
     }
 
     try {

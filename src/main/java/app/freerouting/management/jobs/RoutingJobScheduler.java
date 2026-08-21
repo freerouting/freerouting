@@ -36,6 +36,7 @@ import java.util.UUID;
  */
 public final class RoutingJobScheduler {
 
+  private static final int MAX_QUEUED_JOBS = 5_000;
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
   private final int maxParallelJobs = 5;
@@ -252,6 +253,20 @@ public final class RoutingJobScheduler {
     job.state = RoutingJobState.QUEUED;
 
     synchronized (jobs) {
+      if (this.jobs.size() >= MAX_QUEUED_JOBS) {
+        // Evict finished/terminal jobs first
+        this.jobs.removeIf(
+            j ->
+                j.state == RoutingJobState.COMPLETED
+                    || j.state == RoutingJobState.CANCELLED
+                    || j.state == RoutingJobState.INVALID
+                    || j.state == RoutingJobState.TIMED_OUT
+                    || j.state == RoutingJobState.TERMINATED);
+      }
+      if (this.jobs.size() >= MAX_QUEUED_JOBS) {
+        throw new IllegalStateException(
+            "Maximum job queue capacity reached (" + MAX_QUEUED_JOBS + ").");
+      }
       this.jobs.add(job);
     }
 
