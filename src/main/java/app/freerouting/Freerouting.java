@@ -454,7 +454,8 @@ public class Freerouting {
     // Set up the Jersey Servlet that handles the API
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
-    jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
+    jerseyServlet.setInitParameter(
+        "jakarta.ws.rs.Application", "app.freerouting.api.FreeroutingApplication");
     jerseyServlet.setInitParameter("jersey.config.application.disableJsonBinding", "true");
 
     // Add Listeners

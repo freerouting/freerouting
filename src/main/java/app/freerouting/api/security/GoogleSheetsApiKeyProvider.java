@@ -207,11 +207,16 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       List<List<Object>> values = response.getValues();
       if (values == null || values.isEmpty()) {
         FRLogger.warn("No data found in Google Sheet '" + firstSheetName + "'");
+        this.apiKeyCache = new ConcurrentHashMap<>();
+        this.isHealthy = false;
         return;
       }
 
       if (values.size() < 2) {
         FRLogger.warn("Google Sheet contains only headers, no API key data found");
+        this.apiKeyCache = new ConcurrentHashMap<>();
+        this.isHealthy = true;
+        this.lastSuccessfulRefresh = System.currentTimeMillis();
         return;
       }
 
@@ -221,12 +226,12 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
       int accessGrantedColumnIndex = findColumnIndex(headers, "Access granted?");
 
       if (apiKeyColumnIndex == -1 || accessGrantedColumnIndex == -1) {
-        FRLogger.error(
+        FRLogger.warn(
             "Required columns not found in Google Sheet. Expected 'API Key' and 'Access granted?'"
                 + " columns. Found: "
-                + headers,
-            null,
-            null);
+                + headers);
+        this.apiKeyCache = new ConcurrentHashMap<>();
+        this.isHealthy = false;
         return;
       }
 

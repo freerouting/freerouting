@@ -25,9 +25,20 @@ import java.util.UUID;
 public class BaseController {
 
   @Context private HttpHeaders httpHeaders;
+  @Context private jakarta.ws.rs.core.SecurityContext securityContext;
 
   /** Default constructor for BaseController. */
   public BaseController() {}
+
+  /**
+   * Returns the authenticated principal from the request's {@link
+   * jakarta.ws.rs.core.SecurityContext}, or {@code null} if unauthenticated.
+   *
+   * @return the caller's Principal or null
+   */
+  public java.security.Principal getAuthenticatedPrincipal() {
+    return securityContext != null ? securityContext.getUserPrincipal() : null;
+  }
 
   /**
    * Resolves and returns the authenticated caller's {@link UUID}.

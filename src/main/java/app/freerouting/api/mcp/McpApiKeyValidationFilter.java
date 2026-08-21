@@ -70,6 +70,35 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
               .entity(jsonBody)
               .type("application/json")
               .build());
+      return;
     }
+
+    final String authenticatedPrincipal = apiKey;
+    final boolean isSecure =
+        requestContext.getSecurityContext() != null
+            && requestContext.getSecurityContext().isSecure();
+    requestContext.setProperty("app.freerouting.authenticatedApiKey", authenticatedPrincipal);
+    requestContext.setSecurityContext(
+        new jakarta.ws.rs.core.SecurityContext() {
+          @Override
+          public java.security.Principal getUserPrincipal() {
+            return () -> authenticatedPrincipal;
+          }
+
+          @Override
+          public boolean isUserInRole(String role) {
+            return true;
+          }
+
+          @Override
+          public boolean isSecure() {
+            return isSecure;
+          }
+
+          @Override
+          public String getAuthenticationScheme() {
+            return "BEARER";
+          }
+        });
   }
 }
