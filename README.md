@@ -24,11 +24,11 @@ Freerouting is a powerful PCB autorouter compatible with any PCB design software
 >
 > For several years, I had been postponing a comprehensive overhaul and refactoring of the Freerouting codebase. As many of you have noticed, parts of it had become dated, with legacy constructs, inconsistent naming, and insufficient documentation.
 >
-> That refactoring is now underway, and I expect it to take approximately two weeks. The goal is to create a cleaner, more modern, and future-proof foundation for Freerouting.
+> That refactoring is now underway, and is expected to be 100% complete by 30th August, 2026, which is also the target release date of version 2.4. The goal is to create a cleaner, more modern, and future-proof foundation for Freerouting.
 >
 > During this period, please keep pull requests as small and focused as possible. This will make it significantly easier to rebase them onto the refactored codebase afterward.
 >
-> Once the refactoring is complete, I will tag the current codebase as [`pre-refactor-2026`](https://github.com/freerouting/freerouting/tree/pre-refactor-2026). Anyone who prefers to continue working from the pre-refactoring version will be able to use that tag as a stable starting point.
+> The codebase prior to the refactoring is already tagged as [`pre-refactor-2026`](https://github.com/freerouting/freerouting/tree/pre-refactor-2026). Anyone who prefers to continue working from the pre-refactoring version can use that tag as a stable starting point. Once the refactoring is complete, the codebase will also be tagged as `post-refactor-2026`.
 >
 > However, please keep in mind that future features and performance improvements will be developed exclusively on the upgraded codebase. Staying up to date with Freerouting will therefore require moving to the refactored version eventually.
 >
