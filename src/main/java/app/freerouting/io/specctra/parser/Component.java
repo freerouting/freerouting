@@ -38,11 +38,13 @@ public class Component extends ScopeKeyword {
     ComponentPlacement componentPlacement = new ComponentPlacement(name);
     Object prevToken = nextToken;
     nextToken = scanner.nextToken();
-    while (nextToken != CLOSED_BRACKET) {
+    while (nextToken != CLOSED_BRACKET && nextToken != null) {
       if (prevToken == OPEN_BRACKET && nextToken == PLACE) {
         ComponentPlacement.ComponentLocation nextLocation = readPlaceScope(scanner);
         if (nextLocation != null) {
           componentPlacement.locations.add(nextLocation);
+        } else {
+          return null;
         }
       }
       prevToken = nextToken;

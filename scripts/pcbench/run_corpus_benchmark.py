@@ -271,36 +271,38 @@ def route_single_board(
         with status_lock:
             active_procs[wid] = proc
 
-        if proc.stdout:
-            for line in proc.stdout:
-                if cancel_event.is_set():
-                    try:
-                        proc.kill()
-                    except Exception:
-                        pass
-                    break
-                stdout_lines.append(line)
-                clean = line.strip()
-                if clean:
-                    short = clean
-                    for pfx in (" INFO   ", " DEBUG  ", " WARN   ", " ERROR  "):
-                        if pfx in clean:
-                            short = clean.split(pfx, 1)[1]
-                            break
-                    with status_lock:
-                        worker_status[wid]["last_line"] = short[:70]
+        def stream_reader():
+            if proc.stdout:
+                for line in iter(proc.stdout.readline, ""):
+                    if not line:
+                        break
+                    stdout_lines.append(line)
+                    clean = line.strip()
+                    if clean:
+                        short = clean
+                        for pfx in (" INFO   ", " DEBUG  ", " WARN   ", " ERROR  "):
+                            if pfx in clean:
+                                short = clean.split(pfx, 1)[1]
+                                break
+                        with status_lock:
+                            worker_status[wid]["last_line"] = short[:70]
 
-        if not cancel_event.is_set():
-            proc.wait(timeout=timeout_sec + 20)
-            exit_code = proc.returncode
-    except subprocess.TimeoutExpired:
-        timed_out = True
+        reader_thread = threading.Thread(target=stream_reader, daemon=True)
+        reader_thread.start()
+
+        hard_timeout = timeout_sec + 30
         try:
-            proc.kill()
-        except Exception:
-            pass
-        exit_code = -1
-        stdout_lines.append("TIMEOUT")
+            exit_code = proc.wait(timeout=hard_timeout)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            try:
+                proc.kill()
+            except Exception:
+                pass
+            exit_code = -1
+            stdout_lines.append("\nTIMEOUT: Process exceeded hard timeout budget\n")
+
+        reader_thread.join(timeout=2.0)
     except Exception as e:
         crashed = True
         exit_code = -2
