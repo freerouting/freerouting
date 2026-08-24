@@ -203,9 +203,9 @@ dependencies {
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20260213-2.0.0'
 
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
-    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.53'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.53'
-    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.53'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.54'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.54'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.54'
 
     // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
     // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
