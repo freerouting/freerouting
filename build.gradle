@@ -215,13 +215,13 @@ dependencies {
     rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
 
     rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.88.0'
+    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.90.3'
+    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.90.3'
     rewrite sourceSets.rewriteRecipes.output
     testImplementation sourceSets.rewriteRecipes.output
-    testImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-core:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-java-25:8.88.0'
+    testImplementation 'org.openrewrite:rewrite-java:8.90.3'
+    testImplementation 'org.openrewrite:rewrite-core:8.90.3'
+    testImplementation 'org.openrewrite:rewrite-java-25:8.90.3'
 
 
     // ArchUnit: package-architecture enforcement
