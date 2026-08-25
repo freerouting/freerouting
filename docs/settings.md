@@ -67,7 +67,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       "enabled": false,
       "requests_per_window": 120,
       "window_seconds": 60
-    }
+    },
+    "max_parallel_jobs": 5
   },
   "mcp_server": {
     "enabled": false,
@@ -194,6 +195,8 @@ Configures the SMD-pin fanout pre-pass stage.
   - `enabled`: Enable/disable API-side rate limiting.
   - `requests_per_window`: Maximum accepted requests per identity in each window.
   - `window_seconds`: Window duration in seconds.
+- **`max_parallel_jobs`**: Maximum number of routing jobs the scheduler runs concurrently (default: `5`). Useful for self-hosted instances that size job concurrency to their hardware.
+  - Env var: `FREEROUTING__API_SERVER__MAX_PARALLEL_JOBS=10`
 
 #### **`mcp_server` Section**
 

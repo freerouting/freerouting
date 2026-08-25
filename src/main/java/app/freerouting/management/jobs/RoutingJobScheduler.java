@@ -37,8 +37,8 @@ import java.util.UUID;
 public final class RoutingJobScheduler {
 
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
+  private static final int DEFAULT_MAX_PARALLEL_JOBS = 5;
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
-  private final int maxParallelJobs = 5;
 
   // Private constructor to prevent instantiation
   private RoutingJobScheduler() {
@@ -73,7 +73,7 @@ public final class RoutingJobScheduler {
                                     .filter(j -> j.state == RoutingJobState.RUNNING)
                                     .count();
 
-                        if (parallelJobs < maxParallelJobs) {
+                        if (parallelJobs < getMaxParallelJobs()) {
                           if ((job.input == null) || (job.input.getData() == null)) {
                             FRLogger.warn("RoutingJob input is null, it is skipped.");
                             job.state = RoutingJobState.INVALID;
@@ -220,6 +220,23 @@ public final class RoutingJobScheduler {
    */
   public static RoutingJobScheduler getInstance() {
     return instance;
+  }
+
+  /**
+   * Returns the maximum number of routing jobs that may run concurrently, taken from the
+   * api_server.max_parallel_jobs setting. Falls back to the built-in default when the settings are
+   * not loaded yet or the configured value is not positive.
+   *
+   * @return The maximum number of parallel jobs.
+   */
+  private int getMaxParallelJobs() {
+    if ((globalSettings != null)
+        && (globalSettings.apiServerSettings != null)
+        && (globalSettings.apiServerSettings.maxParallelJobs != null)
+        && (globalSettings.apiServerSettings.maxParallelJobs > 0)) {
+      return globalSettings.apiServerSettings.maxParallelJobs;
+    }
+    return DEFAULT_MAX_PARALLEL_JOBS;
   }
 
   private String uuidToShortCode(UUID uuid) {
