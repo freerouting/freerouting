@@ -38,11 +38,13 @@ public class Component extends ScopeKeyword {
     ComponentPlacement componentPlacement = new ComponentPlacement(name);
     Object prevToken = nextToken;
     nextToken = scanner.nextToken();
-    while (nextToken != CLOSED_BRACKET) {
+    while (nextToken != CLOSED_BRACKET && nextToken != null) {
       if (prevToken == OPEN_BRACKET && nextToken == PLACE) {
         ComponentPlacement.ComponentLocation nextLocation = readPlaceScope(scanner);
         if (nextLocation != null) {
           componentPlacement.locations.add(nextLocation);
+        } else {
+          return null;
         }
       }
       prevToken = nextToken;
@@ -114,7 +116,7 @@ public class Component extends ScopeKeyword {
     scopeParameter.file.newLine();
     scopeParameter.file.write("(pin ");
     scopeParameter.identifierType.write(packagePin.name, scopeParameter.file);
-    scopeParameter.file.write(" (clearanceClass ");
+    scopeParameter.file.write(" (clearance_class ");
     scopeParameter.identifierType.write(clClassName, scopeParameter.file);
     scopeParameter.file.write("))");
   }
@@ -158,7 +160,7 @@ public class Component extends ScopeKeyword {
         scopeParameter.file.newLine();
         scopeParameter.file.write(keepoutType);
         scopeParameter.identifierType.write(currentKeepout.name, scopeParameter.file);
-        scopeParameter.file.write(" (clearanceClass ");
+        scopeParameter.file.write(" (clearance_class ");
         scopeParameter.identifierType.write(clClassName, scopeParameter.file);
         scopeParameter.file.write("))");
       }
@@ -321,7 +323,9 @@ public class Component extends ScopeKeyword {
     nextToken = scanner.nextToken();
     while (nextToken == OPEN_BRACKET) {
       nextToken = scanner.nextToken();
-      if (nextToken == CLEARANCE_CLASS) {
+      if (nextToken == CLEARANCE_CLASS
+          || (nextToken instanceof String s
+              && ("clearance_class".equalsIgnoreCase(s) || "clearanceClass".equalsIgnoreCase(s)))) {
         clClassName = DsnFile.readStringScope(scanner);
       } else {
         skipScope(scanner);

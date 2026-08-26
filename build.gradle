@@ -202,6 +202,13 @@ dependencies {
     implementation 'com.google.api-client:google-api-client:2.9.0'
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20260213-2.0.0'
 
+    // Security constraints for transitive dependencies
+    constraints {
+        implementation('io.netty:netty-common:4.1.118.Final') {
+            because 'CVE-2024-47535 and CVE-2025-25193: DoS vulnerability in Netty on Windows'
+        }
+    }
+
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
     implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.53'
     implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.53'

@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 /**
  * VersionChecker retrieves the latest release information from GitHub in the background and logs a
@@ -62,6 +63,7 @@ public class VersionChecker implements Runnable {
           HttpRequest.newBuilder()
               .uri(URI.create(GITHUB_RELEASES_URL))
               .header("User-Agent", "Freerouting-Version-Checker")
+              .timeout(Duration.ofSeconds(5))
               .build();
 
       httpClient
@@ -70,11 +72,11 @@ public class VersionChecker implements Runnable {
           .thenAccept(this::processResponse)
           .exceptionally(
               e -> {
-                FRLogger.warn("Failed to check for new version: " + e.getMessage());
+                FRLogger.debug("Version check skipped or timed out: " + e.getMessage());
                 return null;
               });
     } catch (Exception e) {
-      FRLogger.warn("Failed to initiate version check: " + e.getMessage());
+      FRLogger.debug("Failed to initiate version check: " + e.getMessage());
     }
   }
 
@@ -85,7 +87,7 @@ public class VersionChecker implements Runnable {
    */
   void processResponse(String responseBody) {
     if (responseBody == null || responseBody.isBlank()) {
-      FRLogger.warn("Received empty response body during version check.");
+      FRLogger.debug("Received empty response body during version check.");
       return;
     }
     try {
@@ -105,11 +107,13 @@ public class VersionChecker implements Runnable {
           FRLogger.debug(
               "No new version available. Current version is up to date: " + currentVersion);
         }
+      } else if (json.has("message")) {
+        FRLogger.debug("GitHub release check response: " + json.get("message").getAsString());
       } else {
-        FRLogger.warn("GitHub release response does not contain 'tag_name': " + responseBody);
+        FRLogger.debug("GitHub release response does not contain 'tag_name': " + responseBody);
       }
     } catch (Exception e) {
-      FRLogger.warn("Failed to parse version check response: " + e.getMessage());
+      FRLogger.debug("Failed to parse version check response: " + e.getMessage());
     }
   }
 }

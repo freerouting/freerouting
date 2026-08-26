@@ -43,6 +43,8 @@ public class FreeroutingApplication extends Application {
                 JobProgressResource.class,
                 SessionControllerV1.class,
                 SystemControllerV1.class,
+                OpenApiResource.class,
+                SwaggerUIResource.class,
                 ApiExceptionMapper.class,
                 NotFoundExceptionMapper.class,
                 CorrelationIdFilter.class,
@@ -55,6 +57,8 @@ public class FreeroutingApplication extends Application {
                 // individually by the controller methods with full request/response payloads.
                 ApiAnalyticsFilter.class,
                 ApiUsageFilter.class,
+                GsonMessageBodyHandler.class,
+                JsonStringMessageBodyWriter.class,
                 SseFeature.class));
     return classes;
   }

@@ -457,6 +457,19 @@ public class McpControllerV1 extends BaseController {
       throw new IllegalArgumentException("mcp_server.target_api_base_url must use http or https.");
     }
 
+    String host = targetBaseUri.getHost();
+    if (host == null) {
+      throw new IllegalArgumentException(
+          "mcp_server.target_api_base_url must specify a valid host.");
+    }
+    String hostLower = host.toLowerCase(Locale.ROOT);
+    if ("169.254.169.254".equals(hostLower)
+        || "metadata.google.internal".equals(hostLower)
+        || "instance-data".equals(hostLower)) {
+      throw new IllegalArgumentException(
+          "mcp_server.target_api_base_url cannot target cloud instance metadata services.");
+    }
+
     String basePath = targetBaseUri.getPath() == null ? "" : targetBaseUri.getPath();
     if (basePath.startsWith("/v1/mcp") || basePath.contains("/.well-known")) {
       throw new IllegalArgumentException(
@@ -483,6 +496,23 @@ public class McpControllerV1 extends BaseController {
     }
 
     return result;
+  }
+
+  private static java.nio.file.Path validateSandboxPath(String filePath) {
+    if (filePath == null || filePath.isBlank()) {
+      throw new IllegalArgumentException("File path must not be null or empty.");
+    }
+    java.nio.file.Path path = java.nio.file.Path.of(filePath).toAbsolutePath().normalize();
+    String pathStr = path.toString().toLowerCase(Locale.ROOT);
+    if (pathStr.startsWith("/etc")
+        || pathStr.startsWith("/proc")
+        || pathStr.startsWith("/sys")
+        || pathStr.startsWith("/root")
+        || pathStr.startsWith("c:\\windows")
+        || pathStr.startsWith("c:\\winnt")) {
+      throw new IllegalArgumentException("Access to system directory is forbidden: " + filePath);
+    }
+    return path;
   }
 
   private JsonObject handleCustomToolCall(
@@ -531,7 +561,8 @@ public class McpControllerV1 extends BaseController {
       String filePath = arguments.get("filePath").getAsString();
 
       try {
-        byte[] fileBytes = java.nio.file.Files.readAllBytes(java.nio.file.Path.of(filePath));
+        java.nio.file.Path inputPath = validateSandboxPath(filePath);
+        byte[] fileBytes = java.nio.file.Files.readAllBytes(inputPath);
         String base64Data = java.util.Base64.getEncoder().encodeToString(fileBytes);
 
         URI uri = buildUriWithQuery("/v1/jobs/" + jobId + "/input", new JsonObject());
@@ -570,6 +601,7 @@ public class McpControllerV1 extends BaseController {
       String filePath = arguments.get("filePath").getAsString();
 
       try {
+        final java.nio.file.Path outputPath = validateSandboxPath(filePath);
         URI uri = buildUriWithQuery("/v1/jobs/" + jobId + "/output", new JsonObject());
         HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
         forwardHeaders(builder, correlationId);
@@ -591,7 +623,6 @@ public class McpControllerV1 extends BaseController {
           String base64Data = respObj.get("data").getAsString();
           byte[] sesBytes = java.util.Base64.getDecoder().decode(base64Data);
 
-          java.nio.file.Path outputPath = java.nio.file.Path.of(filePath);
           if (outputPath.getParent() != null) {
             java.nio.file.Files.createDirectories(outputPath.getParent());
           }

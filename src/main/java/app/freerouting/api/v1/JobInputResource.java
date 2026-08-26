@@ -46,6 +46,8 @@ import java.util.UUID;
             + " jobs")
 public class JobInputResource extends BaseController {
 
+  private static final int MAX_INPUT_PAYLOAD_BYTES = 100 * 1024 * 1024; // 100 MB max payload limit
+
   /** Default constructor for JobInputResource. */
   public JobInputResource() {}
 
@@ -301,8 +303,28 @@ public class JobInputResource extends BaseController {
           .build();
     }
 
+    if (input.dataBase64.length() > (long) MAX_INPUT_PAYLOAD_BYTES * 4 / 3 + 1024) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Input file exceeds maximum allowed size of 100MB.\"}")
+          .build();
+    }
+
     // Decode the base64 encoded input data to a byte array
-    byte[] inputByteArray = Base64.getDecoder().decode(input.dataBase64);
+    byte[] inputByteArray;
+    try {
+      inputByteArray = Base64.getDecoder().decode(input.dataBase64);
+    } catch (IllegalArgumentException e) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Invalid base64 encoding for input file.\"}")
+          .build();
+    }
+
+    if (inputByteArray.length > MAX_INPUT_PAYLOAD_BYTES) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Input file exceeds maximum allowed size of 100MB.\"}")
+          .build();
+    }
+
     if (!job.setInput(inputByteArray)) {
       return Response.status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The input data is invalid.\"}")
@@ -388,6 +410,12 @@ public class JobInputResource extends BaseController {
     if (jsonBody == null || jsonBody.isBlank()) {
       return Response.status(Response.Status.BAD_REQUEST)
           .entity("{\"error\":\"The JSON input data must not be empty.\"}")
+          .build();
+    }
+
+    if (jsonBody.length() > MAX_INPUT_PAYLOAD_BYTES) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"JSON payload exceeds maximum allowed size of 100MB.\"}")
           .build();
     }
 

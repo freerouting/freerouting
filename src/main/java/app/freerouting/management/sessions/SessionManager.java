@@ -4,9 +4,9 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.core.Session;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Maintains the active and historical sessions for one Freerouting process.
@@ -16,8 +16,9 @@ import java.util.UUID;
  */
 public final class SessionManager {
 
+  private static final int MAX_SESSIONS = 5_000;
   private static final SessionManager instance = new SessionManager();
-  private static final Map<String, Session> sessions = new HashMap<>();
+  private static final Map<String, Session> sessions = new ConcurrentHashMap<>();
   private volatile UUID monitoredSessionId;
 
   private SessionManager() {}
@@ -81,6 +82,13 @@ public final class SessionManager {
    */
   public Session createSession(UUID userId, String host) {
     Session session = new Session(userId, host);
+    if (sessions.size() >= MAX_SESSIONS) {
+      var iterator = sessions.keySet().iterator();
+      if (iterator.hasNext()) {
+        iterator.next();
+        iterator.remove();
+      }
+    }
     sessions.put(session.id.toString(), session);
     globalSettings.statistics.incrementSessionsTotal();
     return session;

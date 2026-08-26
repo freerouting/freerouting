@@ -46,7 +46,7 @@ public final class BoardSnapshotManager {
   static BasicBoard deserialize(byte[] objectByteArray) {
     try {
       ByteArrayInputStream inputStream = new ByteArrayInputStream(objectByteArray);
-      ObjectInputStream objectStream = new ObjectInputStream(inputStream);
+      ObjectInputStream objectStream = new app.freerouting.util.SafeObjectInputStream(inputStream);
       return (BasicBoard) objectStream.readObject();
     } catch (Exception exception) {
       FRLogger.error("Couldn't deserialize board", exception);

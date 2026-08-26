@@ -112,11 +112,6 @@ public class BoardMenuFile extends JMenu {
         new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
     fileChooser.addChoosableFileFilter(dsnFilter);
 
-    // Add the file filter for Freerouting binary .FRB files
-    FileNameExtensionFilter frbFilter =
-        new FileNameExtensionFilter("Freerouting binary file (*.frb)", "frb");
-    fileChooser.addChoosableFileFilter(frbFilter);
-
     // Add the file filter for KiCad JSON .JSON files
     FileNameExtensionFilter jsonFilter =
         new FileNameExtensionFilter("KiCad Design JSON file (*.json)", "json");

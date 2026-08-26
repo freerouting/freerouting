@@ -392,10 +392,12 @@ public class Freerouting {
         continue;
       }
 
-      // Warn the user that HTTPS is not implemented yet
+      // Fail closed when HTTPS is requested, because TLS is not implemented yet
       if ("https".equals(protocol)) {
         FRLogger.warn(
-            "HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+            "HTTPS endpoint '%s' cannot be initialized because TLS is not implemented yet; rejecting plaintext fallback."
+                .formatted(endpointUrl));
+        continue;
       }
 
       String hostAndPort = endpointParts[1];
@@ -417,10 +419,15 @@ public class Freerouting {
     // Configure CORS if origins are provided
     if (apiServerSettings.corsOrigins != null && !"".equals(apiServerSettings.corsOrigins)) {
       String allowedOrigins = apiServerSettings.corsOrigins;
+      Set<String> originPatterns = splitCommaSeparated(allowedOrigins);
+      boolean hasWildcard = originPatterns.contains("*");
+      if (hasWildcard) {
+        FRLogger.warn("CORS configured with wildcard origin; disabling allowCredentials.");
+      }
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
-      corsHandler.setAllowCredentials(true);
-      corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
+      corsHandler.setAllowCredentials(!hasWildcard);
+      corsHandler.setAllowedOriginPatterns(originPatterns);
       corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
       corsHandler.setAllowedHeaders(
           Set.of(
@@ -447,7 +454,8 @@ public class Freerouting {
     // Set up the Jersey Servlet that handles the API
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
-    jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
+    jerseyServlet.setInitParameter(
+        "jakarta.ws.rs.Application", "app.freerouting.api.FreeroutingApplication");
     jerseyServlet.setInitParameter("jersey.config.application.disableJsonBinding", "true");
 
     // Add Listeners
@@ -529,9 +537,12 @@ public class Freerouting {
         continue;
       }
 
+      // Fail closed when HTTPS is requested, because TLS is not implemented yet
       if ("https".equals(protocol)) {
         FRLogger.warn(
-            "HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+            "HTTPS endpoint '%s' cannot be initialized because TLS is not implemented yet; rejecting plaintext fallback."
+                .formatted(endpointUrl));
+        continue;
       }
 
       String hostAndPort = endpointParts[1];
@@ -551,10 +562,15 @@ public class Freerouting {
 
     if (mcpServerSettings.corsOrigins != null && !"".equals(mcpServerSettings.corsOrigins)) {
       String allowedOrigins = mcpServerSettings.corsOrigins;
+      Set<String> originPatterns = splitCommaSeparated(allowedOrigins);
+      boolean hasWildcard = originPatterns.contains("*");
+      if (hasWildcard) {
+        FRLogger.warn("MCP CORS configured with wildcard origin; disabling allowCredentials.");
+      }
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
-      corsHandler.setAllowCredentials(true);
-      corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
+      corsHandler.setAllowCredentials(!hasWildcard);
+      corsHandler.setAllowedOriginPatterns(originPatterns);
       corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
       corsHandler.setAllowedHeaders(
           Set.of(
@@ -1202,7 +1218,8 @@ public class Freerouting {
     globalSettings.runtimeEnvironment.freeroutingVersion =
         Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;
     globalSettings.runtimeEnvironment.appStartedAt = Instant.now();
-    globalSettings.runtimeEnvironment.commandLineArguments = String.join(" ", args);
+    globalSettings.runtimeEnvironment.commandLineArguments =
+        app.freerouting.settings.RuntimeEnvironment.sanitizeCommandLineArguments(args);
     globalSettings.runtimeEnvironment.architecture =
         System.getProperty("os.name")
             + ","

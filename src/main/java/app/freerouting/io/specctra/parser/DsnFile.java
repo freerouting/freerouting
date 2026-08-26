@@ -189,12 +189,10 @@ public final class DsnFile {
 
   public static String readStringScope(IJFlexScanner scanner) {
     try {
-      scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      Object token = scanner.nextToken();
-      if (token == null) {
+      String result = scanner.nextString(true);
+      if (result == null) {
         return null;
       }
-      String result = token.toString();
       Object nextToken = scanner.nextToken();
       if (nextToken != Keyword.CLOSED_BRACKET) {
         FRLogger.warn(
