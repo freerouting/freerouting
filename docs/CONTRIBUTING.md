@@ -17,10 +17,11 @@ Responsibilities
 
 # Your First Contribution
 
-Unsure where to begin contributing to Freerouting? You can start by looking through these beginner and help-wanted issues:
-Beginner issues - issues which should only require a few lines of code, and a test or two.
-Help wanted issues - issues which should be a bit more involved than beginner issues.
-Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
+Unsure where to begin contributing to Freerouting? You can start by looking through these curated issues:
+- [Good first issues](https://github.com/freerouting/freerouting/labels/good%20first%20issue) - issues which should only require a few lines of code, and a test or two.
+- [Help wanted issues](https://github.com/freerouting/freerouting/labels/help%20wanted) - issues where community help is actively requested.
+
+For a comprehensive guide to all issue and PR labels, see [`docs/labels.md`](labels.md).
 
 ### Bonus points: Add a link to a resource for people who have never contributed to open source before.
 
