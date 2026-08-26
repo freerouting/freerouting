@@ -26,7 +26,7 @@ import java.util.Objects;
 /** Aggregates persisted, runtime, and source-specific Freerouting settings. */
 public class GlobalSettings implements Serializable {
 
-  private static Path userDataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
+  private static Path userDataPath = AppPaths.getDefaultUserDataPath();
   private static Path configurationFilePath = userDataPath.resolve("freerouting.json");
   private static Boolean isUserDataPathLocked = false;
   public final transient RuntimeEnvironment runtimeEnvironment = new RuntimeEnvironment();
@@ -188,7 +188,7 @@ public class GlobalSettings implements Serializable {
    */
   static void resetForTesting() {
     isUserDataPathLocked = false;
-    userDataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
+    userDataPath = AppPaths.getDefaultUserDataPath();
     configurationFilePath = userDataPath.resolve("freerouting.json");
   }
 
@@ -265,6 +265,10 @@ public class GlobalSettings implements Serializable {
    * regardless of how the caller handles the return value.
    */
   public static GlobalSettings load() throws IOException {
+    if (!Files.exists(configurationFilePath)
+        && userDataPath.equals(AppPaths.getDefaultUserDataPath())) {
+      AppPaths.migrateLegacyDirectory(AppPaths.getLegacyTempDirectory(), userDataPath);
+    }
     GlobalSettings loadedSettings = null;
     try (Reader reader = Files.newBufferedReader(configurationFilePath)) {
       loadedSettings = GsonProvider.GSON.fromJson(reader, GlobalSettings.class);

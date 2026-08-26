@@ -55,8 +55,29 @@ def check_latest_jre_version(os_name, architecture):
     jre_url = jre_version_info['binary']["package"]["link"]
     return latest_jre_version, jre_url
 
+def get_cache_dir():
+    system = platform.system().lower()
+    if "windows" in system:
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        if local_app_data:
+            cache_dir = os.path.join(local_app_data, "freerouting", "cache", "jre")
+        else:
+            cache_dir = os.path.join(os.path.expanduser("~"), "AppData", "Local", "freerouting", "cache", "jre")
+    elif "darwin" in system:
+        cache_dir = os.path.join(os.path.expanduser("~"), "Library", "Caches", "freerouting", "jre")
+    else:
+        xdg_cache = os.environ.get("XDG_CACHE_HOME")
+        if xdg_cache:
+            cache_dir = os.path.join(xdg_cache, "freerouting", "jre")
+        else:
+            cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "freerouting", "jre")
+    os.makedirs(cache_dir, exist_ok=True)
+    return cache_dir
+
+
 def get_local_java_executable_path(os_name):
-    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-21.*.*+*-jre", "bin", "java")
+    cache_dir = get_cache_dir()
+    java_exe_path = os.path.join(cache_dir, f"jdk-21.*.*+*-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"
 
@@ -91,7 +112,8 @@ def install_java_jre_21():
         jre_url = None
         return local_java_exe
 
-    java_exe_path = os.path.join(tempfile.gettempdir(), f"jdk-{jre_version}-jre", "bin", "java")
+    cache_dir = get_cache_dir()
+    java_exe_path = os.path.join(cache_dir, f"jdk-{jre_version}-jre", "bin", "java")
     if os_name == "windows":
         java_exe_path += ".exe"
 
@@ -108,7 +130,7 @@ def install_java_jre_21():
 
     # Unzip the downloaded file
     print("Extracting the downloaded file...")
-    unzip_command = f"tar -xf {file_name} -C {tempfile.gettempdir()}"
+    unzip_command = f"tar -xf {file_name} -C {cache_dir}"
     os.system(unzip_command)
 
     # Remove the downloaded zip file
