@@ -347,6 +347,110 @@ public class JobInputResource extends BaseController {
     }
   }
 
+  /** Upload design rules for the job in Specctra RULES format (.rules). */
+  @Operation(
+      summary = "Upload job design rules file",
+      description =
+          "Uploads a Specctra design rules (.rules) file for a routing job. The file must be"
+              + " Base64-encoded. For MCP/LLM clients, it is recommended to use the local"
+              + " 'encode_base64' tool to perform this conversion rather than running terminal"
+              + " commands.")
+  @RequestBody(
+      description = "Board file payload with Base64-encoded rules data",
+      required = true,
+      content =
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = BoardFilePayload.class)))
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Rules uploaded successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = RoutingJob.class))),
+        @ApiResponse(responseCode = "404", description = "Job not found"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid rules data or job already started")
+      })
+  @POST
+  @Path("/{jobId}/rules")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response uploadRules(
+      @Parameter(
+              description = "Unique identifier of the job",
+              example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathParam("jobId")
+          String jobId,
+      String requestBody) {
+    UUID userId = authenticateUser();
+
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+    if (job == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
+    if (session == null) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
+          .build();
+    }
+
+    if (job.state != RoutingJobState.QUEUED) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The job is already started and cannot be changed.\"}")
+          .build();
+    }
+
+    BoardFilePayload payload = GSON.fromJson(requestBody, BoardFilePayload.class);
+    if (payload == null || payload.dataBase64 == null || payload.dataBase64.isEmpty()) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity(
+              "{\"error\":\"The rules data must be base-64 encoded and put into the \\\"data\\\""
+                  + " field.\"}")
+          .build();
+    }
+
+    byte[] rulesByteArray;
+    try {
+      rulesByteArray = Base64.getDecoder().decode(payload.dataBase64);
+    } catch (IllegalArgumentException e) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Invalid base64 encoding for rules file.\"}")
+          .build();
+    }
+
+    if (rulesByteArray.length > MAX_INPUT_PAYLOAD_BYTES) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Rules file exceeds maximum allowed size of 100MB.\"}")
+          .build();
+    }
+
+    if (!job.setRules(rulesByteArray)) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The rules data is invalid.\"}")
+          .build();
+    }
+
+    if (payload.getFilename() != null && !payload.getFilename().isEmpty()) {
+      job.rules.setFilename(payload.getFilename());
+    } else {
+      job.rules.setFilename(job.name != null ? job.name + ".rules" : "design.rules");
+    }
+
+    var request =
+        GSON.toJson(payload)
+            .replace(payload.dataBase64, TextManager.shortenString(payload.dataBase64, 4));
+    var response = GSON.toJson(job);
+    FRAnalytics.apiEndpointCalled("POST v1/jobs/" + jobId + "/rules", request, response, userId);
+    return Response.ok(response).build();
+  }
+
   /**
    * Upload the input of the job in KiCad JSON format. The JSON payload is sent as the raw request
    * body (not Base64-encoded), which is more efficient for the IPC bridge workflow where the Python

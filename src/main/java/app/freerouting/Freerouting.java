@@ -126,6 +126,23 @@ public class Freerouting {
     settingsMerger.addOrReplaceSources(
         new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()));
 
+    if (globalSettings.initialRulesFile != null) {
+      try {
+        routingJob.setRules(globalSettings.initialRulesFile);
+        if (routingJob.rules != null && routingJob.rules.getData() != null) {
+          settingsMerger.addOrReplaceSources(
+              new app.freerouting.settings.sources.RulesFileSettings(
+                  routingJob.rules.getData(), routingJob.rules.getFilename()));
+        }
+      } catch (Exception e) {
+        FRLogger.warn(
+            "Couldn't load rules file '"
+                + globalSettings.initialRulesFile
+                + "': "
+                + e.getMessage());
+      }
+    }
+
     routingJob.routerSettings = settingsMerger.merge();
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
@@ -254,6 +271,26 @@ public class Freerouting {
     if (!BoardLoader.loadBoardIfNeeded(drcJob)) {
       FRLogger.error("Failed to load board for DRC check", null);
       System.exit(1);
+    }
+
+    // Load rules file if specified for DRC
+    if (globalSettings.initialRulesFile != null) {
+      try {
+        java.io.File rulesFile = new java.io.File(globalSettings.initialRulesFile);
+        if (rulesFile.exists()) {
+          FRLogger.info("Loading RULES file for DRC: " + globalSettings.initialRulesFile);
+          try (java.io.FileInputStream rulesStream = new java.io.FileInputStream(rulesFile)) {
+            String designName = drcJob.name != null ? drcJob.name : "board";
+            app.freerouting.io.specctra.RulesReader.read(
+                rulesStream, designName, drcJob.board, drcJob.routerSettings);
+            FRLogger.info("RULES file loaded for DRC successfully");
+          }
+        } else {
+          FRLogger.warn("RULES file for DRC not found: " + globalSettings.initialRulesFile);
+        }
+      } catch (Exception e) {
+        FRLogger.error("Failed to load RULES file for DRC", e);
+      }
     }
 
     // Load session file if specified for DRC

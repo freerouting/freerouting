@@ -1,5 +1,6 @@
 package app.freerouting.io.specctra;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,6 +10,7 @@ import app.freerouting.Freerouting;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.RouterSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -40,6 +42,51 @@ class RulesRoundTripTest {
     InputStream in = new ByteArrayInputStream(out.toByteArray());
     boolean ok = RulesReader.read(in, "Issue029-hw48na", board);
     assertTrue(ok, "RulesReader.read must return true on valid input");
+  }
+
+  @Test
+  void rulesRoundTripWithAutorouteSettings() throws Exception {
+    RoutingBoard board = DsnTestFixtures.loadBoard("Issue029-hw48na.dsn");
+
+    RouterSettings settings = new RouterSettings();
+    settings.setLayerCount(board.getLayerCount());
+    settings.setViaCosts(75);
+    settings.setPlaneViaCosts(8);
+    settings.setStartRipupCosts(120);
+    settings.setLayerActive(0, true);
+    settings.setLayerActive(1, true);
+    settings.setPreferredDirectionIsHorizontal(0, true);
+    settings.setPreferredDirectionIsHorizontal(1, false);
+    settings.setPreferredDirectionTraceCosts(0, 1.2);
+    settings.setAgainstPreferredDirectionTraceCosts(0, 2.8);
+    settings.setPreferredDirectionTraceCosts(1, 1.0);
+    settings.setAgainstPreferredDirectionTraceCosts(1, 3.1);
+
+    // Write rules with autoroute settings
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    RulesWriter.write(board, settings, out, "Issue029-hw48na");
+
+    String content = out.toString(StandardCharsets.UTF_8);
+    assertTrue(
+        content.contains("(autoroute_settings"),
+        "Rules file must contain autoroute_settings scope");
+    assertTrue(content.contains("(layer_rule"), "Rules file must contain layer_rule scopes");
+
+    // Read back rules and verify settings are populated
+    RouterSettings targetSettings = new RouterSettings();
+    InputStream in = new ByteArrayInputStream(out.toByteArray());
+    boolean ok = RulesReader.read(in, "Issue029-hw48na", board, targetSettings);
+    assertTrue(ok, "RulesReader.read must return true on valid input");
+
+    assertEquals(75, targetSettings.getViaCosts());
+    assertEquals(8, targetSettings.getPlaneViaCosts());
+    assertEquals(120, targetSettings.getStartRipupCosts());
+    assertTrue(targetSettings.getPreferredDirectionIsHorizontal(0));
+    assertFalse(targetSettings.getPreferredDirectionIsHorizontal(1));
+    assertEquals(1.2, targetSettings.getPreferredDirectionTraceCosts(0));
+    assertEquals(2.8, targetSettings.getAgainstPreferredDirectionTraceCosts(0));
+    assertEquals(1.0, targetSettings.getPreferredDirectionTraceCosts(1));
+    assertEquals(3.1, targetSettings.getAgainstPreferredDirectionTraceCosts(1));
   }
 
   @Test

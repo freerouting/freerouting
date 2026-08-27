@@ -56,6 +56,7 @@ class JobResourceContractTest {
             "POST /v1/jobs/{jobId}/settings",
             "POST /v1/jobs/{jobId}/input",
             "POST /v1/jobs/{jobId}/input/json",
+            "POST /v1/jobs/{jobId}/rules",
             "GET /v1/jobs/{jobId}/output",
             "GET /v1/jobs/{jobId}/output/json",
             "GET /v1/jobs/{jobId}/output/stream",

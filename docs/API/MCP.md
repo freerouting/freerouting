@@ -137,8 +137,9 @@ graph TD
 - **Encode**: It is recommended to use the local `encode_base64` tool to convert your plain-text board file (typically a `.dsn` Specctra file) into a Base64-encoded string. Prefer this over running external shell commands (like PowerShell or `base64`).
 - **Upload**: Call `upload_job_input_file` with the `jobId` and the generated Base64 string under `body.data`.
 
-#### Step 3.5 (Optional): Update Settings (`update_job_settings`)
-- Call `update_job_settings` with the `jobId` if you need to override default clearance classes, passes, optimizer settings, or rules.
+#### Step 3.5 (Optional): Update Settings or Rules (`update_job_settings` or `.rules` upload)
+- Call `update_job_settings` with the `jobId` if you need to override default clearance classes, passes, or optimizer settings.
+- If a `.rules` file is available, it can also be submitted via the API (`POST /v1/jobs/{jobId}/rules`) to supply custom design rules, net classes, clearances, and layer routing costs.
 
 #### Step 4: Start and Poll the Job (`start_job` & `get_job_details`)
 - **Start**: Call `start_job` with the `jobId`.

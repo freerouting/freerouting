@@ -92,6 +92,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @Schema(description = "Details of the routed output design file")
   public BoardFileDetails output;
 
+  @SerializedName("rules")
+  @Schema(description = "Details of the uploaded design rules (.rules) file")
+  public BoardFileDetails rules;
+
   @SerializedName("drc")
   @Schema(description = "Details of the design rules check output")
   public BoardFileDetails drc;
@@ -205,6 +209,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
                 && buffer[3] == (byte) 0x53)) {
           return FileFormat.SES;
         }
+
+        // Check if the file is a RULES file (it starts with "(rules" or "(RULES")
+        if (buffer[0] == (byte) 0x28
+            && (buffer[1] == (byte) 0x72 || buffer[1] == (byte) 0x52)
+            && (buffer[2] == (byte) 0x75 || buffer[2] == (byte) 0x55)
+            && (buffer[3] == (byte) 0x6C || buffer[3] == (byte) 0x4C)) {
+          return FileFormat.RULES;
+        }
       }
     } catch (IOException _) {
       // Ignore the exception, it can happen with the built-in template or if the user
@@ -224,6 +236,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         case DSN_FILE_EXTENSION -> FileFormat.DSN;
         case BINARY_FILE_EXTENSION -> FileFormat.FRB;
         case "ses" -> FileFormat.SES;
+        case RULES_FILE_EXTENSION -> FileFormat.RULES;
         case "scr" -> FileFormat.SCR;
         case "json" -> FileFormat.KICAD_DESIGN_JSON;
         default -> FileFormat.UNKNOWN;
@@ -269,6 +282,31 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   /** Loads the input file from the specified file. */
   public void setInput(File inputFile) throws IOException {
     setInputFromFile(inputFile);
+  }
+
+  /** Sets the rules from file content. */
+  public boolean setRules(byte[] rulesFileContent) {
+    this.rules = new BoardFileDetails();
+    this.rules.format = FileFormat.RULES;
+    this.rules.setData(rulesFileContent);
+    return true;
+  }
+
+  /** Loads the rules file from the specified path. */
+  public void setRules(String rulesFilePath) throws IOException {
+    setRules(new File(rulesFilePath));
+  }
+
+  /** Loads the rules file from the specified file. */
+  public void setRules(File rulesFile) throws IOException {
+    if (rulesFile != null && rulesFile.exists()) {
+      try (InputStream in = new FileInputStream(rulesFile)) {
+        this.rules = new BoardFileDetails();
+        this.rules.format = FileFormat.RULES;
+        this.rules.setFilename(rulesFile.getName());
+        this.rules.setData(in.readAllBytes());
+      }
+    }
   }
 
   /** Returns the rules file associated with the output file. */

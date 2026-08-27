@@ -15,7 +15,7 @@ public final class AutorouteSettings {
 
   private AutorouteSettings() {}
 
-  static RouterSettings readScope(IJFlexScanner scanner, LayerStructure layerStructure) {
+  public static RouterSettings readScope(IJFlexScanner scanner, LayerStructure layerStructure) {
     RouterSettings result = new RouterSettings();
     result.setLayerCount(layerStructure.layers.length);
     boolean withAutoroute = true;
@@ -163,7 +163,7 @@ public final class AutorouteSettings {
       IdentifierType identifierType)
       throws IOException {
     file.startScope();
-    file.write("autorouteSettings");
+    file.write("autoroute_settings");
     file.newLine();
     file.write("(autoroute ");
     if (settings.getRunRouter()) {
@@ -186,7 +186,7 @@ public final class AutorouteSettings {
       file.write("off)");
     }
     file.newLine();
-    file.write("(viaCosts ");
+    file.write("(via_costs ");
     {
       int viaCosts = settings.getViaCosts();
       file.write(String.valueOf(viaCosts));
@@ -200,7 +200,7 @@ public final class AutorouteSettings {
     }
     file.write(")");
     file.newLine();
-    file.write("(startRipupCosts ");
+    file.write("(start_ripup_costs ");
     {
       int ripupCosts = settings.getStartRipupCosts();
       file.write(String.valueOf(ripupCosts));

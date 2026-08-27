@@ -287,6 +287,17 @@ Settings are resolved by the `SettingsMerger` class, which collects all active `
 
 If a setting is not defined in any source, the hardcoded default from `DefaultSettings` is used.
 
+### Specctra `.rules` File Settings (Priority 40)
+
+When a `.rules` file is provided (via CLI `-dr`, `-de board.dsn+board.rules`, API `POST /v1/jobs/{jobId}/rules`, or an adjacent `<designName>.rules` file), `RulesFileSettings` parses both general routing rules and the `(autoroute_settings ...)` block. Supported parameters include:
+- `(autoroute on|off)` / `(postroute on|off)` / `(vias on|off)`
+- `(via_costs <int>)`, `(plane_via_costs <int>)`, `(start_ripup_costs <int>)`
+- Per-layer settings via `(layer_rule <layer_name> ...)`:
+  - `(active on|off)`
+  - `(preferred_direction horizontal|vertical)`
+  - `(preferred_direction_trace_costs <float>)`
+  - `(against_preferred_direction_trace_costs <float>)`
+
 ## Storage Locations
 
 Freerouting stores configuration (`freerouting.json`), user data (`data/`), and logs (`freerouting.log`) in dedicated, platform-standard operating system directories:

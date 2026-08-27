@@ -296,6 +296,26 @@ If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<V
   }
   ```
 
+- **Submit Design Rules for a Job**
+
+  ```http
+  POST /jobs/{jobId}/rules
+  ```
+
+  **Parameters:**
+    - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Submits optional Specctra design rules (`.rules`) data for a routing job. The rules file can define net classes, clearances, via definitions, as well as `(autoroute_settings ...)` and `(layer_rule ...)` parameters. The job must still be in `QUEUED` state.
+
+  **Request body:** Contains the filename and the [Base64-encoded](https://en.wikipedia.org/wiki/Base64) Specctra RULES data.
+
+  ```json
+  {
+    "filename": "BBD-Mars-64-revE.rules",
+    "data": "KHJ1bGVzIFBD...AgICAgKQogICkKKQ=="
+  }
+  ```
+
 - **Get Output for a Job**
 
   ```http

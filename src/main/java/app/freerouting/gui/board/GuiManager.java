@@ -511,7 +511,11 @@ public class GuiManager {
       FRLogger.info("Opening '" + rulesFileName + "'...");
       try (InputStream inputStream = new FileInputStream(rulesFile)) {
         if (dsnFileGeneratedByHost && WindowMessage.confirm(confirmMessage)) {
-          return RulesReader.read(inputStream, designName, boardHandling.getRoutingBoard());
+          return RulesReader.read(
+              inputStream,
+              designName,
+              boardHandling.getRoutingBoard(),
+              boardHandling.getCurrentRoutingJob().routerSettings);
         }
       }
     } catch (IOException e) {

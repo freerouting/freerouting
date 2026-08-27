@@ -49,4 +49,26 @@ class JobInputResourceTest {
     Response response = resource.uploadInputJson(jobId, "");
     assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
   }
+
+  @Test
+  void uploadRulesRejectsMalformedBase64() {
+    String malformedPayload = "{\"data\":\"%%%not-valid-base64%%%\"}";
+    Response response = resource.uploadRules(jobId, malformedPayload);
+    assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+  }
+
+  @Test
+  void uploadRulesAcceptsValidBase64() {
+    String rulesContent = "(rules PCB test (snap_angle fortyfive_degree))";
+    String base64 =
+        java.util.Base64.getEncoder()
+            .encodeToString(rulesContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    String payload = "{\"data\":\"" + base64 + "\",\"filename\":\"test.rules\"}";
+    Response response = resource.uploadRules(jobId, payload);
+    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+    RoutingJob job = RoutingJobScheduler.getInstance().getJob(jobId);
+    org.junit.jupiter.api.Assertions.assertNotNull(job.rules);
+    assertEquals("test.rules", job.rules.getFilename());
+  }
 }
