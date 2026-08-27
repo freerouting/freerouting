@@ -8,6 +8,7 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.io.FileFormat;
+import app.freerouting.io.specctra.RulesReader;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
@@ -16,8 +17,10 @@ import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.sources.ApiSettings;
 import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.settings.sources.RulesFileSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -105,6 +108,55 @@ public final class RoutingJobScheduler {
                                         job.input.getData(), job.input.getFilename()));
                               }
 
+                              // Rules file from job.rules, CLI initialRulesFile, or adjacent
+                              // <designName>.rules
+                              byte[] rulesData = null;
+                              String rulesFilename = null;
+                              if (job.rules != null && job.rules.getData() != null) {
+                                rulesData = job.rules.getData().readAllBytes();
+                                rulesFilename = job.rules.getFilename();
+                              } else if (globalSettings.initialRulesFile != null) {
+                                java.io.File rf = new java.io.File(globalSettings.initialRulesFile);
+                                if (rf.exists()) {
+                                  try {
+                                    rulesData = Files.readAllBytes(rf.toPath());
+                                    rulesFilename = rf.getName();
+                                  } catch (IOException e) {
+                                    FRLogger.warn(
+                                        "Failed to read rules file: "
+                                            + rf.getPath()
+                                            + ": "
+                                            + e.getMessage());
+                                  }
+                                }
+                              } else if (isDsn && job.input.getDirectoryPath() != null) {
+                                String baseName = job.input.getFilename();
+                                if (baseName.lastIndexOf('.') > 0) {
+                                  baseName = baseName.substring(0, baseName.lastIndexOf('.'));
+                                }
+                                java.io.File autoRules =
+                                    new java.io.File(
+                                        job.input.getDirectoryPath(), baseName + ".rules");
+                                if (autoRules.exists()) {
+                                  try {
+                                    rulesData = Files.readAllBytes(autoRules.toPath());
+                                    rulesFilename = autoRules.getName();
+                                  } catch (IOException e) {
+                                    FRLogger.warn(
+                                        "Failed to read adjacent rules file: "
+                                            + autoRules.getPath()
+                                            + ": "
+                                            + e.getMessage());
+                                  }
+                                }
+                              }
+
+                              if (rulesData != null) {
+                                settingsMerger.addOrReplaceSources(
+                                    new RulesFileSettings(
+                                        new ByteArrayInputStream(rulesData), rulesFilename));
+                              }
+
                               // Keep per-job overrides (e.g. tests toggling fanout/optimizer) by
                               // applying the job's current settings as highest-priority API
                               // settings.
@@ -116,6 +168,21 @@ public final class RoutingJobScheduler {
                               // Apply the final merged settings to the job and optimize them for
                               // the board
                               job.routerSettings = settingsMerger.merge();
+
+                              // Apply rules from rules file onto the board and routerSettings
+                              if (rulesData != null && job.board != null) {
+                                try {
+                                  String designName = job.name != null ? job.name : "board";
+                                  RulesReader.read(
+                                      new ByteArrayInputStream(rulesData),
+                                      designName,
+                                      job.board,
+                                      job.routerSettings);
+                                } catch (Exception e) {
+                                  FRLogger.error("Failed to apply rules from rules file", e);
+                                }
+                              }
+
                               job.routerSettings.applyBoardSpecificOptimizations(job.board);
 
                               // Load session file if specified

@@ -9,6 +9,7 @@ import app.freerouting.io.specctra.parser.Network;
 import app.freerouting.io.specctra.parser.Rule;
 import app.freerouting.io.specctra.parser.Structure;
 import app.freerouting.io.specctra.parser.WriteScopeParameter;
+import app.freerouting.settings.RouterSettings;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -34,11 +35,30 @@ public final class RulesWriter {
    */
   public static void write(BasicBoard board, OutputStream out, String designName)
       throws IOException {
+    write(board, null, out, designName);
+  }
+
+  /**
+   * Writes the design rules of {@code board} and optional {@code settings} to {@code out} in
+   * Specctra rules format.
+   *
+   * <p>The stream is <em>not</em> closed by this method — the caller is responsible.
+   *
+   * @param board the board whose rules are written
+   * @param settings optional router settings to serialize into the {@code (autoroute_settings ...)}
+   *     scope
+   * @param out destination stream
+   * @param designName the PCB design name written into the {@code (rules PCB ...)} header
+   * @throws IOException if writing fails
+   */
+  public static void write(
+      BasicBoard board, RouterSettings settings, OutputStream out, String designName)
+      throws IOException {
     IndentFileWriter outputFile = new IndentFileWriter(out);
     WriteScopeParameter scopeParameter =
         new WriteScopeParameter(
             board,
-            null,
+            settings,
             outputFile,
             board.communication.specctraParserInfo.stringQuote,
             board.communication.coordinateTransform,

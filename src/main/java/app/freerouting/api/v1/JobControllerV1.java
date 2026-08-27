@@ -305,6 +305,46 @@ public class JobControllerV1 extends BaseController {
     return new JobInputResource().uploadInput(jobId, requestBody);
   }
 
+  /** Upload design rules for the job in Specctra RULES format (.rules). */
+  @Operation(
+      summary = "Upload job design rules file",
+      description =
+          "Uploads a Specctra design rules (.rules) file for a routing job. The file must be"
+              + " Base64-encoded. For MCP/LLM clients, it is recommended to use the local"
+              + " 'encode_base64' tool to perform this conversion rather than running terminal"
+              + " commands.")
+  @RequestBody(
+      description = "Board file payload with Base64-encoded rules data",
+      required = true,
+      content =
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = BoardFilePayload.class)))
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Rules uploaded successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = RoutingJob.class))),
+        @ApiResponse(responseCode = "404", description = "Job not found"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid rules data or job already started")
+      })
+  @Path("/{jobId}/rules")
+  public Response uploadRules(
+      @Parameter(
+              description = "Unique identifier of the job",
+              example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathParam("jobId")
+          String jobId,
+      String requestBody) {
+    return new JobInputResource().uploadRules(jobId, requestBody);
+  }
+
   /**
    * Upload the input of the job in KiCad JSON format. The JSON payload is sent as the raw request
    * body (not Base64-encoded), which is more efficient for the IPC bridge workflow where the Python
