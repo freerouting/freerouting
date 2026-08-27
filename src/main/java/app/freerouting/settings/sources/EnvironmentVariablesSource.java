@@ -49,35 +49,43 @@ public class EnvironmentVariablesSource implements SettingsSource {
     int parsedCount = 0;
 
     for (Map.Entry<String, String> entry : environment.entrySet()) {
-      String key = entry.getKey();
+      String rawKey = entry.getKey();
       String value = entry.getValue();
 
+      // Convert all environment variable names to uppercase first
+      String uppercaseKey = rawKey.toUpperCase();
+
       // Only process variables starting with FREEROUTING__ROUTER__
-      if (!key.startsWith(ENV_PREFIX + ROUTER_PREFIX)) {
+      if (!uppercaseKey.startsWith(ENV_PREFIX + ROUTER_PREFIX)) {
         continue;
       }
 
-      // Remove the FREEROUTING__ROUTER__ prefix and convert to property path
+      // Remove the FREEROUTING__ROUTER__ prefix and convert double underscores to property path
       String propertyPath =
-          key.substring((ENV_PREFIX + ROUTER_PREFIX).length()).toLowerCase().replace("__", ".");
+          uppercaseKey.substring((ENV_PREFIX + ROUTER_PREFIX).length()).replace("__", ".");
 
       // Try to set the value using reflection
       try {
         ReflectionUtil.setFieldValue(settings, propertyPath, value);
-        parsedVariables.put(key, value);
+        parsedVariables.put(rawKey, value);
         parsedCount++;
         FRLogger.debug(
-            "Parsed environment variable: " + key + " → " + propertyPath + " = " + value);
+            "Parsed environment variable: " + rawKey + " → " + propertyPath + " = " + value);
       } catch (NoSuchFieldException e) {
         FRLogger.warn(
             "Unknown router setting in environment variable: "
-                + key
+                + rawKey
                 + " (property: "
                 + propertyPath
                 + ")");
       } catch (Exception e) {
         FRLogger.warn(
-            "Failed to parse environment variable: " + key + " = " + value + ": " + e.getMessage());
+            "Failed to parse environment variable: "
+                + rawKey
+                + " = "
+                + value
+                + ": "
+                + e.getMessage());
       }
     }
 

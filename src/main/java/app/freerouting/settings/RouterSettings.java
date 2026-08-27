@@ -63,6 +63,7 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("layers")
   public transient LayerSettings[] layers;
 
+  @SerializedName("save_intermediate_stages")
   public transient Boolean saveIntermediateStages;
 
   @SerializedName("ignore_net_classes")
