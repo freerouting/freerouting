@@ -18,6 +18,23 @@ real default_drill_size, default_via_size, min_pad_t, rv_pad_t, max_pad_t, min_p
 int u_layer_start = 100, u_layer_end = 120;
 string wire_protect = "", poly_protect = "", poly_drop = "", via_protect = "";
 
+string num2str(real val) {
+	string s;
+	sprintf(s, "%.4f", val);
+	int len = strlen(s);
+	if (strstr(s, ".") >= 0) {
+		while (len > 0 && s[len - 1] == '0') {
+			s = strsub(s, 0, len - 1);
+			len--;
+		}
+		if (len > 0 && s[len - 1] == '.') {
+			s = strsub(s, 0, len - 1);
+		}
+	}
+	if (strlen(s) == 0 || s == "-0") s = "0";
+	return s;
+}
+
 string via_sig(int shape, int dia, int drill, int start, int end) {
 	string s, t; int count = 1;
 	sprintf(t, "%d:%d:%d:%d:%d", shape, dia, drill, start, end);
@@ -32,7 +49,7 @@ string via_sig(int shape, int dia, int drill, int start, int end) {
 		case VIA_SHAPE_OCTAGON: s = "Octagon"; break;
 		default:                s = "Round"; break;
 	}
-	sprintf(V_name[Vnum], "\"%s%d$%f\"", s, count, U2G * drill);
+	sprintf(V_name[Vnum], "\"%s%d$%s\"", s, count, num2str(U2G * drill));
 	return V_name[Vnum];
 }
 
@@ -70,7 +87,7 @@ string smd_sig(int rns, int x, int y, int layer, real angl) {
 
 string W_Circle(string lname, real dia) {
 	string t;
-	sprintf(t, T3 + "(shape (circle %s %f 0 0))\n", lname, dia);
+	sprintf(t, T3 + "(shape (circle %s %s 0 0))\n", lname, num2str(dia));
 	return t;
 }
 
@@ -81,7 +98,7 @@ string W_Quart(real x, real y, real rad, real rot) {
 		angle = PI * i / 32;
 		lx = x * cos(rot) + rad * cos(angle + rot);
 		ly = y * sin(rot) + rad * sin(angle + rot);
-		sprintf(s, " %f %f", lx, ly); t += s;
+		sprintf(s, " %s %s", num2str(lx), num2str(ly)); t += s;
 	}
 	return t;
 }
@@ -93,7 +110,7 @@ string W_Octagon(string lname, real dia, real rotate) {
 	for (int i = 0; i < 8; i++) {
 		angle = step * i + PI/8 + rotate * PI/180;
 		dx = rad * cos(angle); dy = rad * sin(angle);
-		sprintf(s, " %f %f", dx, dy); t += s;
+		sprintf(s, " %s %s", num2str(dx), num2str(dy)); t += s;
 	}
 	return t + "))\n";
 }
@@ -112,12 +129,12 @@ string W_SMDpad(string lname, real dx, real dy, real rot, real rdness) {
 	sprintf(t, T3 + "(shape (polygon %s 0", lname);
 	for (k = 0; k <= 3; k++) {
 		real tx = brad * cos(ax[k] + rot), ty = brad * sin(ax[k] + rot);
-		if (rdness == 0) { sprintf(s, " %f %f", tx, ty); t += s; }
+		if (rdness == 0) { sprintf(s, " %s %s", num2str(tx), num2str(ty)); t += s; }
 		else {
 			for (int j = 0; j <= 5 + adj[k]; j++) {
 				real angle = j * PI/10 + k * PI/2 + rot;
 				real rx = crad * cos(angle), ry = crad * sin(angle);
-				sprintf(s, " %f %f", tx + rx, ty + ry); t += s;
+				sprintf(s, " %s %s", num2str(tx + rx), num2str(ty + ry)); t += s;
 			}
 		}
 	}
@@ -127,7 +144,7 @@ string W_SMDpad(string lname, real dx, real dy, real rot, real rdness) {
 string W_Rect(string lname, real x, real y, real rotate) {
 	string s, t;
 	if (rotate == 0 || rotate == 180.0) {
-		sprintf(t, T3 + "(shape (rect %s %f %f %f %f))\n", lname, -x/2, -y/2, x/2, y/2);
+		sprintf(t, T3 + "(shape (rect %s %s %s %s %s))\n", lname, num2str(-x/2), num2str(-y/2), num2str(x/2), num2str(y/2));
 		return t;
 	}
 	real step = PI/4, rad = sqrt(x * x + y * y)/2, angle[], dx, dy;
@@ -137,7 +154,7 @@ string W_Rect(string lname, real x, real y, real rotate) {
 	sprintf(t, T3 + "(shape (polygon %s 0 ", lname);
 	for (int i = 0; i < 5; i++) {
 		dx = rad * cos(angle[i] + rotate); dy = rad * sin(angle[i] + rotate);
-		sprintf(s, "%f %f ", dx, dy); t += s;
+		sprintf(s, "%s %s ", num2str(dx), num2str(dy)); t += s;
 	}
 	return t + "))\n";
 }
@@ -148,12 +165,12 @@ string W_Pshape(string lname, real dia, real elong, char offset, real r) {
 	if (offset) { sx = 0; ex = x; }
 	r *= PI/180;
 	if (r) {
-		sprintf(t, T3 + "(shape (path %s %f %f %f %f %f (aperture_type round)))\n",
-			lname, dia, sx * cos(r), sx * sin(r), ex * cos(r), ex * sin(r));
+		sprintf(t, T3 + "(shape (path %s %s %s %s %s %s (aperture_type round)))\n",
+			lname, num2str(dia), num2str(sx * cos(r)), num2str(sx * sin(r)), num2str(ex * cos(r)), num2str(ex * sin(r)));
 		return t;
 	}
-	sprintf(t, T3 + "(shape (path %s %f %f %f %f %f (aperture_type round)))\n",
-		lname, dia, sx, 0.0, ex, 0.0);
+	sprintf(t, T3 + "(shape (path %s %s %s 0 %s 0 (aperture_type round)))\n",
+		lname, num2str(dia), num2str(sx), num2str(ex));
 	return t;
 }
 
@@ -219,7 +236,7 @@ string write_arc2line(int j) {
 		real ax = U2G * xc[j] + r * cos(angle);
 		real ay = U2G * yc[j] + r * sin(angle);
 		calc_boundary(ax, ay);
-		sprintf(s, "%f %f ", ax, ay); t += s;
+		sprintf(s, "%s %s ", num2str(ax), num2str(ay)); t += s;
 	}
 	return t;
 }
@@ -272,14 +289,14 @@ string write_wire_shape(string pre, string post, char add_size) {
 	for (i = 1; i <= p[0]; i++) {
 		if (p[i] < 0) {
 			j = i; go = true; t += pre; p[j] = -p[j];
-			if (add_size) { sprintf(s, " %f ", U2G * width[j]); t += s; }
+			if (add_size) { sprintf(s, " %s ", num2str(U2G * width[j])); t += s; }
 			while (go) {
 				xloc = U2G * x1[j]; yloc = U2G * y1[j]; calc_boundary(xloc, yloc);
-				sprintf(s, "%f %f", xloc, yloc); t += s + " ";
+				sprintf(s, "%s %s", num2str(xloc), num2str(yloc)); t += s + " ";
 				if (rad[j]) t += write_arc2line(j);
 				if (p[j] == j || j > p[0]) go = false; else j = p[j];
 			}
-			sprintf(s, " %f %f", U2G * x2[j], U2G * y2[j]); t += s; t += post;
+			sprintf(s, " %s %s", num2str(U2G * x2[j]), num2str(U2G * y2[j])); t += s; t += post;
 		}
 	}
 	p[0] = 0;
@@ -440,7 +457,12 @@ string LN2name(int nmbr) {
 	for (int i = 1; i <= Lnum; i++) {
 		if (B_layers[i] == nmbr) return L_names[i];
 	}
-	return "signal";
+	board(B) {
+		B.layers(L) {
+			if (L.number == nmbr) return L.name;
+		}
+	}
+	return "Top";
 }
 
 /* SPECCTRA descriptor generators ******************************************************/
@@ -468,9 +490,26 @@ string Resolution_d(void) {
 
 string Layer_d(void) {
 	string s, t;
-	for (int i = 1; i <= Lnum; i++) {
-		sprintf(s, T2 + "(layer %s\n" + T3 + "(type signal)\n" + T3 + "(property\n" + T4 + "(index %d)\n" + T3 + ")\n" + T2 + ")\n", L_names[i], i - 1);
-		t += s;
+	board(B) {
+		for (int i = 1; i <= Lnum; i++) {
+			int is_power = 0;
+			if (B_layers[i] > 1 && B_layers[i] < 16) {
+				B.signals(N) {
+					N.polyPours(P) {
+						if (P.layer == B_layers[i]) is_power = 1;
+					}
+				}
+				B.layers(L) {
+					if (L.number == B_layers[i] && (strstr(L.name, "$") >= 0 || strstr(L.name, "GND") >= 0 || strstr(L.name, "VCC") >= 0)) {
+						is_power = 1;
+					}
+				}
+			}
+			string type_str = is_power ? "power" : "signal";
+			sprintf(s, T2 + "(layer %s\n" + T3 + "(type %s)\n" + T3 + "(property\n" + T4 + "(index %d)\n" + T3 + ")\n" + T2 + ")\n",
+				L_names[i], type_str, i - 1);
+			t += s;
+		}
 	}
 	return t;
 }
@@ -483,9 +522,9 @@ string Boundary_d(void) {
 				get_boundary(true);
 				real rad = C.radius * U2G, cx = C.x * U2G, cy = C.y * U2G;
 				calc_boundary(cx - rad, cy - rad); calc_boundary(cx + rad, cy + rad);
-				ct += T2 + "(boundary\n      (path signal 0 ";
+				ct += T2 + "(boundary\n      (path pcb 0 ";
 				for (int i = 0; i < 256; i++) {
-					sprintf(s, "%f %f ", cx + cos(i * PI / 128) * rad, cy + sin(i * PI / 128) * rad); ct += s;
+					sprintf(s, "%s %s ", num2str(cx + cos(i * PI / 128) * rad), num2str(cy + sin(i * PI / 128) * rad)); ct += s;
 				}
 				ct += ")\n" + T3 + "(clearance_class boundary)\n    )\n";
 			}
@@ -498,11 +537,37 @@ string Boundary_d(void) {
 	}
 	process_wires();
 	if (p[0]) get_boundary(true);
-	s = write_wire_shape("    (boundary\n      (path signal 0 ", ")\n      (clearance_class boundary)\n    )\n", false);
+	s = write_wire_shape("    (boundary\n      (path pcb 0 ", ")\n      (clearance_class boundary)\n    )\n", false);
 	get_boundary(false);
 	if (xmax - xmin == 0 || ymax - ymin == 0) ERROR("No PCB outline defined!");
-	sprintf(t, "    (boundary\n      (rect pcb %f %f %f %f))\n", xmin, ymin, xmax, ymax);
-	return t + ct + s;
+	if (strlen(s) == 0 && strlen(ct) == 0) {
+		sprintf(t, "    (boundary\n      (rect pcb %s %s %s %s))\n", num2str(xmin), num2str(ymin), num2str(xmax), num2str(ymax));
+		return t;
+	}
+	return ct + s;
+}
+
+string Plane_d(void) {
+	string s, t;
+	string processed_planes = ",";
+	board(B) {
+		B.signals(N) {
+			N.polyPours(P) {
+				if (P.layer > 1 && P.layer < 16) {
+					string key = "";
+					sprintf(key, ",%s#%d,", N.name, P.layer);
+					if (strstr(processed_planes, key) < 0) {
+						processed_planes += key;
+						sprintf(s, T2 + "(plane \"%s\"\n" + T3 + "(polygon %s 0 %s %s %s %s %s %s %s %s %s %s))\n",
+							N.name, LN2name(P.layer),
+							num2str(xmin), num2str(ymin), num2str(xmax), num2str(ymin), num2str(xmax), num2str(ymax), num2str(xmin), num2str(ymax), num2str(xmin), num2str(ymin));
+						t += s;
+					}
+				}
+			}
+		}
+	}
+	return t;
 }
 
 string Keepout_d(void) {
@@ -535,13 +600,13 @@ string Keepout_d(void) {
 				t += write_wire_shape(pre, "))\n", false);
 				B.circles(C) {
 					if (C.layer == L.number) {
-						sprintf(s, T2 + "(%s(circ %s %f %f %f))\n", KOname, Lname, U2G * C.radius * 2, U2G * C.x, U2G * C.y);
+						sprintf(s, T2 + "(%s(circ %s %s %s %s))\n", KOname, Lname, num2str(U2G * C.radius * 2), num2str(U2G * C.x), num2str(U2G * C.y));
 						t += s;
 					}
 				}
 				B.rectangles(R) {
 					if (R.layer == L.number) {
-						sprintf(s, T2 + "(%s(rect %s %f %f %f %f))\n", KOname, Lname, U2G * R.x1, U2G * R.y1, U2G * R.x2, U2G * R.y2);
+						sprintf(s, T2 + "(%s(rect %s %s %s %s %s))\n", KOname, Lname, num2str(U2G * R.x1), num2str(U2G * R.y1), num2str(U2G * R.x2), num2str(U2G * R.y2));
 						t += s;
 					}
 				}
@@ -549,7 +614,7 @@ string Keepout_d(void) {
 					if (PO.layer == L.number) {
 						sprintf(s, T2 + "(%s(polygon %s 0", KOname, Lname); t += s;
 						PO.contours(W) {
-							sprintf(s, " %f %f", U2G * W.x1, U2G * W.y1); t += s;
+							sprintf(s, " %s %s", num2str(U2G * W.x1), num2str(U2G * W.y1)); t += s;
 						}
 						t += "))\n";
 					}
@@ -557,7 +622,7 @@ string Keepout_d(void) {
 			}
 		}
 		B.holes(H) {
-			sprintf(s, "    (keepout (circ signal %f %f %f))\n", U2G * H.drill + 2 * dim_clearance, U2G * H.x, U2G * H.y);
+			sprintf(s, "    (keepout (circ signal %s %s %s))\n", num2str(U2G * H.drill + 2 * dim_clearance), num2str(U2G * H.x), num2str(U2G * H.y));
 			t += s;
 		}
 	}
@@ -568,7 +633,7 @@ string Via_d(void) {
 	string t = "    (via\n";
 	if (!Vnum || Lnum == 1) {
 		via_sig(VIA_SHAPE_ROUND, default_via_size / U2G, default_drill_size / U2G, 0, 0);
-		sprintf(V_name[Vnum], "\"ViaDefault$%f\"", default_drill_size);
+		sprintf(V_name[Vnum], "\"ViaDefault$%s\"", num2str(default_drill_size));
 	}
 	for (int i = 1; i <= Vnum; i++) t += T3 + V_name[i] + "\n";
 	t += T2 + ")\n";
@@ -578,14 +643,14 @@ string Via_d(void) {
 
 string print_cl(real cl_val, string cl_type) {
 	string t;
-	if (cl_val > 0 && cl_val != default_clearance) sprintf(t, "    (rule (clearance %f (type %s)))\n", cl_val, cl_type);
+	if (cl_val > 0 && cl_val != default_clearance) sprintf(t, "    (rule (clearance %s (type %s)))\n", num2str(cl_val), cl_type);
 	return t;
 }
 
 string Rule_d(void) {
 	string s, t;
-	sprintf(t, "    (rule (width %f)(clearance %f))\n", default_wire_width, default_clearance);
-	sprintf(s, "    (rule (clearance %f (type default_boundary)))\n", dim_clearance);
+	sprintf(t, "    (rule (width %s)(clearance %s))\n", num2str(default_wire_width), num2str(default_clearance));
+	sprintf(s, "    (rule (clearance %s (type default_boundary)))\n", num2str(dim_clearance));
 	t += s;
 	t += print_cl(clearance_wire_pad, "wire_pin");
 	t += print_cl(clearance_wire_smd, "wire_smd");
@@ -606,13 +671,10 @@ string Placement_d(void) {
 	string s;
 	board(B) {
 		B.elements(C) {
-			t += "    (component ";
-			t += "\"" + C.package.name + "$" + C.package.library + "\"\n";
-			sprintf(s, "      (place \"%s\" %f %f ", C.name, C.x * U2G, C.y * U2G);
-			t += s;
-			if (C.mirror) { t += "Back"; }
-			else { t += "Front"; }
-			sprintf(s, " %f)\n    )\n", C.angle);
+			string pkg_id = "\"" + C.package.name + "$" + C.package.library + "\"";
+			string side = C.mirror ? "Back" : "Front";
+			sprintf(s, "    (component %s\n      (place \"%s\" %s %s %s %s)\n    )\n",
+				pkg_id, C.name, num2str(C.x * U2G), num2str(C.y * U2G), side, num2str(C.angle));
 			t += s;
 		}
 	}
@@ -658,13 +720,13 @@ string single_image_d(UL_PACKAGE P) {
 				}
 				P.circles(C) {
 					if (C.layer == L.number) {
-						sprintf(s, T3 + "(%s(circ %s %f %f %f))\n", KOname, Lname, U2G * C.radius * 2, U2G * C.x, U2G * C.y);
+						sprintf(s, T3 + "(%s(circ %s %s %s %s))\n", KOname, Lname, num2str(U2G * C.radius * 2), num2str(U2G * C.x), num2str(U2G * C.y));
 						t += s;
 					}
 				}
 				P.rectangles(R) {
 					if (R.layer == L.number) {
-						sprintf(s, T3 + "(%s(rect %s %f %f %f %f))\n", KOname, Lname, U2G * R.x1, U2G * R.y1, U2G * R.x2, U2G * R.y2);
+						sprintf(s, T3 + "(%s(rect %s %s %s %s %s))\n", KOname, Lname, num2str(U2G * R.x1), num2str(U2G * R.y1), num2str(U2G * R.x2), num2str(U2G * R.y2));
 						t += s;
 					}
 				}
@@ -672,7 +734,7 @@ string single_image_d(UL_PACKAGE P) {
 					if (PO.layer == L.number) {
 						sprintf(s, T2 + "(%s(polygon %s 0", KOname, Lname); t += s;
 						PO.contours(W) {
-							sprintf(s, " %f %f", U2G * W.x1, U2G * W.y1); t += s;
+							sprintf(s, " %s %s", num2str(U2G * W.x1), num2str(U2G * W.y1)); t += s;
 						}
 						t += "))\n";
 					}
@@ -680,7 +742,7 @@ string single_image_d(UL_PACKAGE P) {
 			}
 		}
 		P.holes(H) {
-			sprintf(s, T3 + "(keepout (circ signal %f %f %f))\n", U2G * H.drill + 2 * dim_clearance, U2G * H.x, U2G * H.y);
+			sprintf(s, T3 + "(keepout (circ signal %s %s %s))\n", num2str(U2G * H.drill + 2 * dim_clearance), num2str(U2G * H.x), num2str(U2G * H.y));
 			t += s + T3 + "(clearance_class boundary)\n";
 		}
 		P.contacts(C) {
@@ -689,12 +751,12 @@ string single_image_d(UL_PACKAGE P) {
 				int act_pad_shape = max(C.pad.shape[LAYER_TOP], C.pad.shape[LAYER_BOTTOM]);
 				int act_pad_dia = max(C.pad.diameter[LAYER_TOP], C.pad.diameter[LAYER_BOTTOM]);
 				pname = pad_sig(act_pad_shape, act_pad_dia, C.pad.drill, C.pad.elongation, C.pad.angle);
-				sprintf(s, T3 + "(pin %s \"%s\" %f %f)\n", pname, C.name, U2G * C.x, U2G * C.y);
+				sprintf(s, T3 + "(pin %s \"%s\" %s %s)\n", pname, C.name, num2str(U2G * C.x), num2str(U2G * C.y));
 				t += s;
 			}
 			if (C.smd) {
 				pname = smd_sig(C.smd.roundness, C.smd.dx, C.smd.dy, C.smd.layer, C.smd.angle);
-				sprintf(s, T3 + "(pin %s \"%s\" %f %f)\n", pname, C.name, U2G * C.x, U2G * C.y);
+				sprintf(s, T3 + "(pin %s \"%s\" %s %s)\n", pname, C.name, num2str(U2G * C.x), num2str(U2G * C.y));
 				t += s;
 			}
 		}
@@ -718,7 +780,7 @@ string Padstack_d(void) {
 	string s, t, pmem[], vmem[], last_line = T3 + "(attach off)\n" + T2 + ")\n";
 	real dia, x, y, drill, elong, rotate; int i, j, offset;
 
-	sprintf(s, T2 + "(padstack \"ViaDefault$%f\"\n", default_drill_size); t += s;
+	sprintf(s, T2 + "(padstack \"ViaDefault$%s\"\n", num2str(default_drill_size)); t += s;
 	t += W_Circle("signal", default_via_size) + last_line;
 
 	for (i = 1; i <= Vnum; i++) {
@@ -817,12 +879,12 @@ string Network_d(void) {
 			if (CL.width != 0) {
 				real w_width = CL.width;
 				if (w_width <= 0) w_width = default_wire_width;
-				sprintf(s, T4 + "(width %f)\n", U2G * w_width); t += s;
+				sprintf(s, T4 + "(width %s)\n", num2str(U2G * w_width)); t += s;
 			}
 			if (CL.clearance != 0) {
 				real clearance = CL.clearance;
 				if (clearance <= 0) clearance = default_clearance;
-				sprintf(s, T4 + "(clearance %f)\n", U2G * clearance); t += s;
+				sprintf(s, T4 + "(clearance %s)\n", num2str(U2G * clearance)); t += s;
 			}
 			t += T3 + ")\n" + T2 + ")\n";
 		}
@@ -835,9 +897,9 @@ string Wiring_d(void) {
 	board(B) {
 		B.signals(N) {
 			N.wires(W) {
-				if ((W.layer >= 1) && (W.layer <= 999) && (W.layer != 19)) {
+				if ((W.layer >= 1) && (W.layer <= 16)) {
 					load_one_wire(W);
-					sprintf(s, T2 + "(wire\n" + T3 + "(path %s %f ", LN2name(W.layer), U2G * W.width);
+					sprintf(s, T2 + "(wire\n" + T3 + "(path %s %s ", LN2name(W.layer), num2str(U2G * W.width));
 					t += write_wire_shape(s, ") \n", false);
 					sprintf(s, "      (net \"%s\")", N.name); t += s;
 					protect = max(strstr(wire_protect + ",", N.name + ","), strstr(wire_protect, "*"));
@@ -846,7 +908,7 @@ string Wiring_d(void) {
 				}
 			}
 			N.polyPours(P) {
-				if ((P.layer >= 1) && (P.layer <= 999)) {
+				if ((P.layer == LAYER_TOP) || (P.layer == LAYER_BOTTOM)) {
 					protect = max(strstr(poly_drop + ",", N.name + ","), strstr(poly_drop, "*"));
 					if (protect >= 0) {
 						sprintf(s, T2 + "# Polygon pour with signal %s in layer %d removed on user request\n", N.name, P.layer);
@@ -862,7 +924,7 @@ string Wiring_d(void) {
 						if (max(strstr(poly_protect + ",", N.name + ","), strstr(poly_protect, "*")) >= 0) {
 							protect_tag = " (type protect)";
 						}
-						sprintf(width_str, "%f ", U2G * P.width);
+						sprintf(width_str, "%s ", num2str(U2G * P.width));
 						pre_wire = "    (wire\n      (poly " + LN2name(P.layer) + " " + width_str;
 						post_wire = ") \n      (net \"" + N.name + "\")" + protect_tag + "\n    )\n";
 						t += write_wire_shape(pre_wire, post_wire, false);
@@ -870,9 +932,9 @@ string Wiring_d(void) {
 				}
 			}
 			N.vias(V) {
-				Vname = via_sig(V.shape[LAYER_TOP], V.diameter[LAYER_TOP], V.drill, V.start, V.end);
-				sprintf(s, T2 + "(via\n" + T3 + Vname + " %f %f\n" + T3 + "(net \"%s\")",
-					U2G * V.x, U2G * V.y, N.name);
+				Vname = via_sig(V.shape[LAYER_VIAS], V.diameter[LAYER_TOP], V.drill, V.start, V.end);
+				sprintf(s, T2 + "(via\n" + T3 + Vname + " %s %s\n" + T3 + "(net \"%s\")",
+					num2str(U2G * V.x), num2str(U2G * V.y), N.name);
 				t += s;
 				protect = max(strstr(via_protect + ",", N.name + ","), strstr(via_protect, "*"));
 				if (protect >= 0) t += " (type protect)";
@@ -915,6 +977,7 @@ int do_export_dsn(string target_file) {
 		printf(T1 + "(structure\n");
 		printf(Layer_d());
 		printf(Boundary_d());
+		printf(Plane_d());
 		printf(Keepout_d());
 		printf(Via_d());
 		printf(Rule_d());

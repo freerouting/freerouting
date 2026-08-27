@@ -139,8 +139,13 @@ int do_run_freerouting(int is_headless) {
 	} else {
 		log_info("Launching Freerouting GUI...");
 		status_message = "Freerouting GUI launched. Save script when done.";
-		sprintf(cmd, "start \"Freerouting\" \"%s\" -jar \"%s\" -de \"%s\" -do \"%s\" -l \"%s\" --api_server.enabled=false --mcp_server.enabled=false",
-			win_java, win_jar, win_dsn, win_scr, router_log);
+		string win_javaw = win_java;
+		int jpos = strstr(win_javaw, "java.exe");
+		if (jpos >= 0) {
+			win_javaw = strsub(win_javaw, 0, jpos) + "javaw.exe";
+		}
+		sprintf(cmd, "cmd.exe /c start \"\" \"%s\" -jar \"%s\" -de \"%s\" -do \"%s\" -l \"%s\" --api_server.enabled=false --mcp_server.enabled=false",
+			win_javaw, win_jar, win_dsn, win_scr, router_log);
 	}
 
 	log_info("Executing command: " + cmd);
