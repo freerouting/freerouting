@@ -217,7 +217,7 @@ public class GuiManager {
                             sessionOutputStream, filename);
                         InputStream inputStream =
                             new ByteArrayInputStream(sessionOutputStream.toByteArray());
-                        newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsEagleScriptScr(
+                        newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsFusionScriptScr(
                             inputStream, outputStream);
                       }
                       default -> {

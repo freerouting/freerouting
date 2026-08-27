@@ -39,19 +39,31 @@
 
 ![image](https://user-images.githubusercontent.com/910321/210981925-d32fb974-e3e6-4e65-832e-ed033ef3b3db.png)
 
-## [Autodesk EAGLE](https://www.autodesk.com/products/eagle/overview)
+## [Autodesk Fusion](https://www.autodesk.com/products/fusion-360/overview)
 
-1) Download the latest [eagle2freerouter ulp file](https://github.com/freerouting/freerouting/tree/master/integrations/Eagle)
+Autodesk Fusion Electronics (which replaced standalone Autodesk EAGLE) integrates with Freerouting via a two-way ULP/Script workflow.
 
-2) Start EAGLE and open in the control panel of Eagle for example the design my_design.brd.
+### 1) Export DSN from Autodesk Fusion
 
-3) Choose in the Files pulldown-menu of Eagle the item "execute ULP" and select the Eagle2freerouter ulp file. A file with name my_design.dsn is generated.
+1. In Autodesk Fusion, open your PCB layout.
+2. In the top toolbar, go to the **Automate** tab and click **Run ULP** (or type `run` in the command line at the bottom).
+3. Select [`freerouting_fusion_plugin.ulp`](../integrations/AutodeskFusion/freerouting_fusion_plugin.ulp).
+4. Click **Export DSN** and confirm the save location for `<your_design>.dsn`.
 
-4) Start the router, push the "Open Your Own Design" button and select my_design.dsn in the file chooser.
+### 2) Autoroute with Freerouting
 
-5) After making some changes to the design with the router select "export Eagle session script" in the Files pulldown-menu. A file with name my_design.scr is generated.
+1. Open Freerouting and open `<your_design>.dsn`.
+2. Run autorouting.
+3. Save the routed result as an Autodesk Fusion script:
+   - **GUI:** Click **File > Save as...** and select **Autodesk Fusion Script (*.scr)** to generate `<your_design>.scr`.
+   - **CLI:** `freerouting -de <your_design>.dsn -do <your_design>.scr`
 
-6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
+### 3) Import Routed Script into Autodesk Fusion
+
+1. Switch back to your PCB layout in Autodesk Fusion.
+2. In the **Automate** tab, click **Run Script** (or type `script` in the command line at the bottom).
+3. Select `<your_design>.scr`.
+4. Fusion rips up old traces, places the newly routed tracks and vias, and recalculates the ratsnest.
 
 ## [Target 3001!](https://ibfriedrich.com/)
 

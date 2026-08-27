@@ -174,26 +174,29 @@ public final class NetworkProxyConfig {
         && !settings.customTruststorePath.isBlank()) {
       trustStorePath = settings.customTruststorePath.trim();
     }
-    if (trustStorePath == null || trustStorePath.isBlank()) {
-      trustStorePath = getFirstEnv("SSL_CERT_FILE", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE");
-    }
 
+    // Only set System.setProperty("javax.net.ssl.trustStore") if explicitly configured as a
+    // Java KeyStore file (e.g. .jks, .p12, .pfx), and NOT for PEM/CRT certificate bundles.
+    // Environment variables SSL_CERT_FILE / REQUESTS_CA_BUNDLE / CURL_CA_BUNDLE point to PEM
+    // bundles (e.g. from Autodesk Fusion or Python) which break Java's DefaultSSLContext if set
+    // as javax.net.ssl.trustStore. PEM bundles are handled safely in
+    // getCompositeSslSocketFactory().
     if (trustStorePath != null
         && !trustStorePath.isBlank()
         && Files.exists(Path.of(trustStorePath))
         && System.getProperty("javax.net.ssl.trustStore") == null) {
-      System.setProperty("javax.net.ssl.trustStore", trustStorePath);
-      if (settings != null
-          && settings.customTruststorePassword != null
-          && !settings.customTruststorePassword.isBlank()) {
-        System.setProperty("javax.net.ssl.trustStorePassword", settings.customTruststorePassword);
+      String lower = trustStorePath.toLowerCase(Locale.ROOT);
+      if (!lower.endsWith(".pem") && !lower.endsWith(".crt") && !lower.endsWith(".cer")) {
+        System.setProperty("javax.net.ssl.trustStore", trustStorePath);
+        if (settings.customTruststorePassword != null
+            && !settings.customTruststorePassword.isBlank()) {
+          System.setProperty("javax.net.ssl.trustStorePassword", settings.customTruststorePassword);
+        }
+        if (settings.customTruststoreType != null && !settings.customTruststoreType.isBlank()) {
+          System.setProperty("javax.net.ssl.trustStoreType", settings.customTruststoreType);
+        }
+        FRLogger.info("Configured custom SSL truststore: " + trustStorePath);
       }
-      if (settings != null
-          && settings.customTruststoreType != null
-          && !settings.customTruststoreType.isBlank()) {
-        System.setProperty("javax.net.ssl.trustStoreType", settings.customTruststoreType);
-      }
-      FRLogger.info("Configured custom SSL truststore: " + trustStorePath);
     }
   }
 

@@ -101,10 +101,10 @@ public final class SesReader {
     }
   }
 
-  /** Transforms a Specctra session file into an Eagle script file. */
-  public static boolean saveSpecctraSessionSesAsEagleScriptScr(
+  /** Transforms a Specctra session file into an Autodesk Fusion script file. */
+  public static boolean saveSpecctraSessionSesAsFusionScriptScr(
       InputStream inputStream, OutputStream outputStream, BasicBoard board) {
-    return app.freerouting.io.specctra.parser.SessionToEagle.getInstance(
+    return app.freerouting.io.specctra.parser.SessionToFusion.getInstance(
         inputStream, outputStream, board);
   }
 

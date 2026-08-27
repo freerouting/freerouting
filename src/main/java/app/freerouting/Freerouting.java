@@ -204,8 +204,23 @@ public class Freerouting {
     }
     try {
       Path outputFilePath = Path.of(globalSettings.initialOutputFile);
+      FRLogger.info(
+          "Saving output file '"
+              + outputFilePath.toAbsolutePath()
+              + "' ("
+              + routingJob.output.format
+              + ")...");
       Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
-      return Files.exists(outputFilePath) && Files.size(outputFilePath) > 0;
+      boolean success = Files.exists(outputFilePath) && Files.size(outputFilePath) > 0;
+      if (success) {
+        FRLogger.info(
+            "Successfully saved output file '"
+                + outputFilePath.toAbsolutePath()
+                + "' ("
+                + Files.size(outputFilePath)
+                + " bytes).");
+      }
+      return success;
     } catch (IOException e) {
       FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
       return false;
@@ -1044,6 +1059,13 @@ public class Freerouting {
           consoleLoggingLevel = arg.substring("--logging.console.level=".length());
         } else if (arg.startsWith("--logging.file.location=")) {
           fileLoggingLocation = arg.substring("--logging.file.location=".length());
+        } else if (arg.startsWith("-l=")) {
+          fileLoggingLocation = arg.substring("-l=".length());
+        } else if ("-l".equals(arg)) {
+          int index = Arrays.asList(args).indexOf("-l");
+          if (index >= 0 && index < args.length - 1) {
+            fileLoggingLocation = args[index + 1];
+          }
         } else if (arg.startsWith("--logging.file.pattern=")) {
           fileLoggingPattern = arg.substring("--logging.file.pattern=".length());
         } else if (arg.startsWith("--debug.enable_detailed_logging=")) {

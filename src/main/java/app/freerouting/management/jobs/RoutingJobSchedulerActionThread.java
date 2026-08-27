@@ -291,6 +291,18 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       } catch (Exception e) {
         FRLogger.error("Couldn't save the SES output into the job object.", e);
       }
+    } else if (job.output.format == FileFormat.SCR) {
+      HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+      boardManager.replaceRoutingBoard(job.board);
+
+      // Save the SCR file after the auto-router has finished
+      try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        if (boardManager.saveAsFusionScriptScr(baos, job.name)) {
+          job.output.setData(baos.toByteArray());
+        }
+      } catch (Exception e) {
+        FRLogger.error("Couldn't save the SCR output into the job object.", e);
+      }
     }
   }
 }

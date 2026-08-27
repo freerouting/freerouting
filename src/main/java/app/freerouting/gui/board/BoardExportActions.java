@@ -152,7 +152,7 @@ public class BoardExportActions {
     fileChooser.addChoosableFileFilter(sesFilter);
 
     FileNameExtensionFilter scrFilter =
-        new FileNameExtensionFilter("Eagle Session Script file (*.scr)", "scr");
+        new FileNameExtensionFilter("Autodesk Fusion Script file (*.scr)", "scr");
     fileChooser.addChoosableFileFilter(scrFilter);
 
     FileNameExtensionFilter dsnFilter =
@@ -191,7 +191,7 @@ public class BoardExportActions {
     }
   }
 
-  public void saveAsEagleScriptScr(File outputFile, String designName) {
+  public void saveAsFusionScriptScr(File outputFile, String designName) {
     ByteArrayOutputStream sesOutputStream = new ByteArrayOutputStream();
     GuiBoardManager boardHandling = boardFrame.boardPanel.boardHandling;
     if (!boardHandling.saveAsSpecctraSessionSes(sesOutputStream, designName)) {
@@ -202,17 +202,18 @@ public class BoardExportActions {
     FRLogger.info("Saving '" + outputFile.getPath() + "'...");
 
     try (OutputStream outputStream = new FileOutputStream(outputFile)) {
-      if (boardHandling.saveSpecctraSessionSesAsEagleScriptScr(sesInputStream, outputStream)) {
+      if (boardHandling.saveSpecctraSessionSesAsFusionScriptScr(sesInputStream, outputStream)) {
         boardFrame.screenMessages.setStatusMessage(
-            boardFrame.tm.getText("message_eagle_saved", outputFile.getPath()));
+            boardFrame.tm.getText("message_fusion_saved", outputFile.getPath()));
       } else {
         boardFrame.screenMessages.setStatusMessage(
-            boardFrame.tm.getText("message_eagle_save_failed", outputFile.getPath()));
+            boardFrame.tm.getText("message_fusion_save_failed", outputFile.getPath()));
       }
     } catch (IOException e) {
-      FRLogger.error("unable to save Eagle script file '" + outputFile.getPath() + "'", e);
+      FRLogger.error(
+          "unable to save Autodesk Fusion script file '" + outputFile.getPath() + "'", e);
       boardFrame.screenMessages.setStatusMessage(
-          boardFrame.tm.getText("message_eagle_save_failed", outputFile.getPath()));
+          boardFrame.tm.getText("message_fusion_save_failed", outputFile.getPath()));
     }
   }
 

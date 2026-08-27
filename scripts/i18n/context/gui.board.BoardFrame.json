@@ -314,10 +314,10 @@
     ],
     "ui_role": "message"
   },
-  "message_eagle_save_failed": {
+  "message_fusion_save_failed": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "f759a3607a62b739389c64e246a7db94112a949b1227c8370b21bb12641a45ee",
+    "english_hash": "3a5484dbbba1f8c0bd5743e5797cfb37a0bd50b945116b13405ae9828e6763c6",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
@@ -328,14 +328,14 @@
       "{{filename}}"
     ],
     "related_keys": [
-      "message_eagle_saved"
+      "message_fusion_saved"
     ],
     "ui_role": "message"
   },
-  "message_eagle_saved": {
+  "message_fusion_saved": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "4c0800759cb8715d636d423a6ed4255522c2b933428823217e887c4f7abcfa1f",
+    "english_hash": "0578922af276ba8074b5eff447e58bcf407a469569969c3f65e9f204a9e88351",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
@@ -346,7 +346,7 @@
       "{{filename}}"
     ],
     "related_keys": [
-      "message_eagle_save_failed"
+      "message_fusion_save_failed"
     ],
     "ui_role": "message"
   },

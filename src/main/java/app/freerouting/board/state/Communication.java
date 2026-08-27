@@ -57,11 +57,13 @@ public class Communication implements Serializable {
         new BoardObserverAdaptor());
   }
 
-  /** HostCadIsEagle. */
-  public boolean hostCadIsEagle() {
-    return specctraParserInfo != null
-        && specctraParserInfo.hostCad != null
-        && "CadSoft".equalsIgnoreCase(specctraParserInfo.hostCad);
+  /** Checks whether the board's host CAD is Autodesk Fusion or legacy EAGLE. */
+  public boolean hostCadIsFusion() {
+    if (specctraParserInfo == null || specctraParserInfo.hostCad == null) {
+      return false;
+    }
+    String cad = specctraParserInfo.hostCad.toLowerCase();
+    return cad.contains("fusion") || cad.contains("cadsoft") || cad.contains("eagle");
   }
 
   /** Host is old kicad. */

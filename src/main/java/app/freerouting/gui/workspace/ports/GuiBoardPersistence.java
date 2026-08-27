@@ -95,12 +95,12 @@ public final class GuiBoardPersistence {
     return manager.saveHeadlessSpecctraSessionSes(outputStream, designName);
   }
 
-  public boolean saveSpecctraSessionSesAsEagleScriptScr(
+  public boolean saveSpecctraSessionSesAsFusionScriptScr(
       InputStream inputStream, OutputStream outputStream) {
     if (manager.isBoardReadOnlyForPersistence()) {
       return false;
     }
-    return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsEagleScriptScr(
+    return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsFusionScriptScr(
         inputStream, outputStream, manager.getPersistenceBoard());
   }
 

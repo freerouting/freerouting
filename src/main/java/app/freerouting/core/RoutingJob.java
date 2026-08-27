@@ -32,7 +32,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public static final String BINARY_FILE_EXTENSION = "frb";
   private static final String RULES_FILE_EXTENSION = "rules";
   private static final String SES_FILE_EXTENSION = "ses";
-  private static final String EAGLE_SCRIPT_FILE_EXTENSION = "scr";
+  private static final String FUSION_SCRIPT_FILE_EXTENSION = "scr";
 
   @SerializedName("id")
   @Schema(name = "id", description = "Unique identifier for the routing job")
@@ -314,10 +314,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return new File(changeFileExtension(this.output.getAbsolutePath(), RULES_FILE_EXTENSION));
   }
 
-  /** Returns the EAGLE script file associated with the output file. */
-  public File getEagleScriptFile() {
+  /** Returns the Autodesk Fusion script file associated with the output file. */
+  public File getFusionScriptFile() {
     return new File(
-        changeFileExtension(this.output.getAbsolutePath(), EAGLE_SCRIPT_FILE_EXTENSION));
+        changeFileExtension(this.output.getAbsolutePath(), FUSION_SCRIPT_FILE_EXTENSION));
   }
 
   /** Sets a placeholder input file for the specified path. */

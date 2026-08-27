@@ -12,7 +12,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - Log4j (logging)
   - Gson, Jakarta EE APIs, Google Cloud & Sheets APIs, Swagger/OpenAPI.
 - **Python Client Library:** The project ecosystem includes a Python client library for headless interactions and REST API integrations; it is maintained outside this repository (release workflow reference: `docs/developer.md`).
-- **EDA Integrations:** In-repo integration assets exist under `integrations/` for KiCad, Autodesk EAGLE, Target3001!, and EasyEDA; `README.md` and `docs/integrations.md` also document tscircuit and pcb-rnd workflows.
+- **EDA Integrations:** In-repo integration assets exist under `integrations/` for KiCad, Autodesk Fusion, Target3001!, and EasyEDA; `README.md` and `docs/integrations.md` also document tscircuit and pcb-rnd workflows.
 
 # Architecture & Standards
 
