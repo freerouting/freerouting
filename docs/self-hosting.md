@@ -270,7 +270,7 @@ nssm start Freerouting
 | Disable authentication | `--api_server.authentication.enabled=false` | `true` | Allows requests without an API key. Recommended for local use. |
 | Bind address | `--api_server-endpoints=http://0.0.0.0:37864` | `http://127.0.0.1:37864` | Address and port the server listens on. |
 | CORS origins | `--api_server.cors_origins=*` | _(none)_ | Allows browser-based clients to call the API. Set to `*` or a specific origin. |
-| Data directory | `--user_data_path=/path/to/data` | OS temp dir | Where logs and saved jobs are stored. |
+| Data directory | `--user_data_path=/path/to/data` | OS standard user-data dir (`%APPDATA%\freerouting`, `~/Library/Application Support/freerouting`, or `~/.config/freerouting`) | Where logs and saved jobs are stored. |
 | Save jobs to disk | `--feature_flags.save_jobs=true` | `false` | Persists routing jobs (input/output files + metadata) under `user_data_path`. |
 | Max routing passes | `--router.max_passes=100` | `100` | Upper limit on autorouting passes per job. |
 | Thread count | `-mt 4` or `--router.max_threads=4` | CPU count − 1 | Worker threads for route optimisation. |

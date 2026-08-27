@@ -290,7 +290,8 @@ def route_single_board(
         reader_thread = threading.Thread(target=stream_reader, daemon=True)
         reader_thread.start()
 
-        hard_timeout = timeout_sec + 30
+        # Allow a grace period for post-timeout routing wrap-up, DRC calculation, SES export, and JVM shutdown
+        hard_timeout = timeout_sec + max(120, int(timeout_sec * 0.10))
         try:
             exit_code = proc.wait(timeout=hard_timeout)
         except subprocess.TimeoutExpired:
@@ -554,7 +555,8 @@ def main() -> int:
         boards = [b for b in boards if b.get("tier") == args.tier]
 
     if args.filter:
-        boards = [b for b in boards if args.filter.lower() in b.get("board_id", "").lower()]
+        filter_terms = [f.strip().lower() for f in args.filter.split(",") if f.strip()]
+        boards = [b for b in boards if any(term in b.get("board_id", "").lower() for term in filter_terms)]
 
     if args.max_boards > 0:
         boards = boards[: args.max_boards]

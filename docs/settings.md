@@ -287,6 +287,18 @@ Settings are resolved by the `SettingsMerger` class, which collects all active `
 
 If a setting is not defined in any source, the hardcoded default from `DefaultSettings` is used.
 
+## Storage Locations
+
+Freerouting stores configuration (`freerouting.json`), user data (`data/`), and logs (`freerouting.log`) in dedicated, platform-standard operating system directories:
+
+| Platform | Configuration (`freerouting.json`) & Data (`data/`) | Logs (`freerouting.log`) | Cache (JREs, artifacts) |
+|---|---|---|---|
+| **Windows** | `%APPDATA%\freerouting` (e.g. `C:\Users\<User>\AppData\Roaming\freerouting`) | `%LOCALAPPDATA%\freerouting\logs` | `%LOCALAPPDATA%\freerouting\cache` |
+| **macOS** | `~/Library/Application Support/freerouting` | `~/Library/Logs/freerouting` | `~/Library/Caches/freerouting` |
+| **Linux / POSIX (XDG)** | `$XDG_CONFIG_HOME/freerouting` (`~/.config/freerouting`) | `$XDG_STATE_HOME/freerouting/logs` (`~/.local/state/freerouting/logs`) | `$XDG_CACHE_HOME/freerouting` (`~/.cache/freerouting`) |
+
+You can override the base configuration/data root directory using `--user_data_path=<dir>` or the `FREEROUTING__USER_DATA_PATH` environment variable. On first launch, Freerouting automatically migrates any legacy configuration found in `<tmpdir>/freerouting/freerouting.json`.
+
 ## Settings Architecture — Why Fields Must Be Nullable
 
 `RouterSettings` intentionally declares all its fields as nullable reference types (e.g. `Integer`, `Boolean`, `String`) **with no default initializers**. This is a deliberate architectural constraint required by the merge mechanism:

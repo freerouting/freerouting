@@ -887,9 +887,9 @@ public class Freerouting {
 
     // the first thing we need to do is to determine the user directory, because all
     // settings and logs will be located there
-    // 1, set it to the temp directory by default
-    Path userdataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
-    String userdataPathSource = "default (java.io.tmpdir)";
+    // 1, set it to the OS standard user data directory by default
+    Path userdataPath = app.freerouting.settings.AppPaths.getDefaultUserDataPath();
+    String userdataPathSource = "default (OS standard user-data path)";
     // 2, check if we need to override it with the "FREEROUTING__USER_DATA_PATH"
     // environment variable value
     if (System.getenv("FREEROUTING__USER_DATA_PATH") != null) {
@@ -1029,10 +1029,14 @@ public class Freerouting {
     }
 
     // Resolve the log file location
+    Path defaultLogDir =
+        userdataPathSource.startsWith("default")
+            ? app.freerouting.settings.AppPaths.getDefaultLogDirectory()
+            : userdataPath;
     if (fileLoggingLocation == null || fileLoggingLocation.isBlank()) {
-      fileLoggingLocation = resolveLogPath(null, userdataPath).toString();
+      fileLoggingLocation = resolveLogPath(null, defaultLogDir).toString();
     } else {
-      fileLoggingLocation = resolveLogPath(fileLoggingLocation, userdataPath).toString();
+      fileLoggingLocation = resolveLogPath(fileLoggingLocation, defaultLogDir).toString();
     }
 
     // Set system properties for log4j2 ConfigurationFactory to read
