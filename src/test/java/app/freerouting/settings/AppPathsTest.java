@@ -18,35 +18,38 @@ class AppPathsTest {
 
   @Test
   void windowsPathResolutionWithEnvVars() {
+    String appData = tempDir.resolve("AppData/Roaming").toString();
+    String localAppData = tempDir.resolve("AppData/Local").toString();
     Map<String, String> env =
         Map.of(
-            "APPDATA", "C:\\Users\\TestUser\\AppData\\Roaming",
-            "LOCALAPPDATA", "C:\\Users\\TestUser\\AppData\\Local");
+            "APPDATA", appData,
+            "LOCALAPPDATA", localAppData);
 
-    Path config = AppPaths.resolveConfigDirectory("Windows 11", "C:\\Users\\TestUser", env);
-    Path data = AppPaths.resolveDataDirectory("Windows 11", "C:\\Users\\TestUser", env);
-    Path logs = AppPaths.resolveLogDirectory("Windows 11", "C:\\Users\\TestUser", env);
-    Path cache = AppPaths.resolveCacheDirectory("Windows 11", "C:\\Users\\TestUser", env);
+    Path config = AppPaths.resolveConfigDirectory("Windows 11", tempDir.toString(), env);
+    Path data = AppPaths.resolveDataDirectory("Windows 11", tempDir.toString(), env);
+    Path logs = AppPaths.resolveLogDirectory("Windows 11", tempDir.toString(), env);
+    Path cache = AppPaths.resolveCacheDirectory("Windows 11", tempDir.toString(), env);
 
-    assertEquals(Path.of("C:\\Users\\TestUser\\AppData\\Roaming\\freerouting"), config);
-    assertEquals(Path.of("C:\\Users\\TestUser\\AppData\\Roaming\\freerouting\\data"), data);
-    assertEquals(Path.of("C:\\Users\\TestUser\\AppData\\Local\\freerouting\\logs"), logs);
-    assertEquals(Path.of("C:\\Users\\TestUser\\AppData\\Local\\freerouting\\cache"), cache);
+    assertEquals(Path.of(appData, "freerouting"), config);
+    assertEquals(Path.of(appData, "freerouting", "data"), data);
+    assertEquals(Path.of(localAppData, "freerouting", "logs"), logs);
+    assertEquals(Path.of(localAppData, "freerouting", "cache"), cache);
   }
 
   @Test
   void windowsPathResolutionFallbackWithoutEnvVars() {
     Map<String, String> env = Collections.emptyMap();
+    String userHome = tempDir.toString();
 
-    Path config = AppPaths.resolveConfigDirectory("Windows 10", "C:\\Users\\TestUser", env);
-    Path data = AppPaths.resolveDataDirectory("Windows 10", "C:\\Users\\TestUser", env);
-    Path logs = AppPaths.resolveLogDirectory("Windows 10", "C:\\Users\\TestUser", env);
-    Path cache = AppPaths.resolveCacheDirectory("Windows 10", "C:\\Users\\TestUser", env);
+    Path config = AppPaths.resolveConfigDirectory("Windows 10", userHome, env);
+    Path data = AppPaths.resolveDataDirectory("Windows 10", userHome, env);
+    Path logs = AppPaths.resolveLogDirectory("Windows 10", userHome, env);
+    Path cache = AppPaths.resolveCacheDirectory("Windows 10", userHome, env);
 
-    assertEquals(Path.of("C:\\Users\\TestUser\\AppData\\Roaming\\freerouting"), config);
-    assertEquals(Path.of("C:\\Users\\TestUser\\AppData\\Roaming\\freerouting\\data"), data);
-    assertEquals(Path.of("C:\\Users\\TestUser\\AppData\\Local\\freerouting\\logs"), logs);
-    assertEquals(Path.of("C:\\Users\\TestUser\\AppData\\Local\\freerouting\\cache"), cache);
+    assertEquals(Path.of(userHome, "AppData", "Roaming", "freerouting"), config);
+    assertEquals(Path.of(userHome, "AppData", "Roaming", "freerouting", "data"), data);
+    assertEquals(Path.of(userHome, "AppData", "Local", "freerouting", "logs"), logs);
+    assertEquals(Path.of(userHome, "AppData", "Local", "freerouting", "cache"), cache);
   }
 
   @Test
