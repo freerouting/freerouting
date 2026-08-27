@@ -204,4 +204,76 @@ class EnvironmentVariablesSourceTest {
     assertEquals("freerouting-router-v19", settings.algorithm);
     assertEquals(1, source.getParsedCount());
   }
+
+  @Test
+  void saveIntermediateStages() {
+    Map<String, String> env = new HashMap<>();
+    env.put("FREEROUTING__ROUTER__SAVE_INTERMEDIATE_STAGES", "true");
+
+    EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
+    RouterSettings settings = source.getSettings();
+
+    assertNotNull(settings);
+    assertTrue(settings.saveIntermediateStages);
+    assertEquals(1, source.getParsedCount());
+  }
+
+  @Test
+  void optimizerStrategies() {
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "FREEROUTING__ROUTER__OPTIMIZER__BOARD_UPDATE_STRATEGY", "GREEDY",
+                "FREEROUTING__ROUTER__OPTIMIZER__HYBRID_RATIO", "1:1",
+                "FREEROUTING__ROUTER__OPTIMIZER__ITEM_SELECTION_STRATEGY", "SEQUENTIAL"));
+
+    EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
+    RouterSettings settings = source.getSettings();
+
+    assertNotNull(settings);
+    assertEquals(
+        app.freerouting.autoroute.BoardUpdateStrategy.GREEDY,
+        settings.optimizer.boardUpdateStrategy);
+    assertEquals("1:1", settings.optimizer.hybridRatio);
+    assertEquals(
+        app.freerouting.autoroute.ItemSelectionStrategy.SEQUENTIAL,
+        settings.optimizer.itemSelectionStrategy);
+    assertEquals(3, source.getParsedCount());
+  }
+
+  @Test
+  void lowercaseEnvironmentVariableNames() {
+    Map<String, String> env = new HashMap<>();
+    env.put("freerouting__router__max_passes", "100");
+    env.put("freerouting__router__save_intermediate_stages", "true");
+
+    EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
+    RouterSettings settings = source.getSettings();
+
+    assertNotNull(settings);
+    assertEquals(100, settings.maxPasses);
+    assertTrue(settings.saveIntermediateStages);
+    assertEquals(2, source.getParsedCount());
+  }
+
+  @Test
+  void traceCostSettings() {
+    Map<String, String> env =
+        new HashMap<>(
+            Map.of(
+                "FREEROUTING__ROUTER__SCORING__PREFERRED_DIRECTION_TRACE_COST", "1.5,2.0",
+                "FREEROUTING__ROUTER__SCORING__UNDESIRED_DIRECTION_TRACE_COST", "2.5,3.0"));
+
+    EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
+    RouterSettings settings = source.getSettings();
+
+    assertNotNull(settings);
+    assertNotNull(settings.scoring.preferredDirectionTraceCost);
+    assertEquals(2, settings.scoring.preferredDirectionTraceCost.length);
+    assertEquals(1.5, settings.scoring.preferredDirectionTraceCost[0]);
+    assertEquals(2.0, settings.scoring.preferredDirectionTraceCost[1]);
+    assertEquals(2.5, settings.scoring.undesiredDirectionTraceCost[0]);
+    assertEquals(3.0, settings.scoring.undesiredDirectionTraceCost[1]);
+    assertEquals(2, source.getParsedCount());
+  }
 }

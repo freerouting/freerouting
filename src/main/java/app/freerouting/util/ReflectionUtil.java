@@ -87,21 +87,24 @@ public final class ReflectionUtil {
     for (Field field : clazz.getDeclaredFields()) {
       SerializedName annotation = field.getAnnotation(SerializedName.class);
       if (annotation != null) {
-        if (annotation.value().equals(name)) {
+        if (annotation.value().equalsIgnoreCase(name)
+            || annotation.value().equalsIgnoreCase(camelName)
+            || snakeToLowerCamel(annotation.value()).equalsIgnoreCase(name)
+            || snakeToLowerCamel(annotation.value()).equalsIgnoreCase(camelName)) {
           return field;
         }
         for (String alt : annotation.alternate()) {
-          if (alt.equals(name)) {
+          if (alt.equalsIgnoreCase(name)
+              || alt.equalsIgnoreCase(camelName)
+              || snakeToLowerCamel(alt).equalsIgnoreCase(name)
+              || snakeToLowerCamel(alt).equalsIgnoreCase(camelName)) {
             return field;
           }
         }
       }
-      if (field.getName().equals(name) || field.getName().equals(camelName)) {
-        // Enforce that fields with a SerializedName must not be queried by their camelCase Java
-        // name
-        if (annotation != null && !name.equals(name.toLowerCase())) {
-          continue;
-        }
+      if (field.getName().equalsIgnoreCase(name)
+          || field.getName().equalsIgnoreCase(camelName)
+          || snakeToLowerCamel(field.getName()).equalsIgnoreCase(camelName)) {
         return field;
       }
     }
@@ -119,7 +122,8 @@ public final class ReflectionUtil {
     StringBuilder sb = new StringBuilder(parts[0].toLowerCase());
     for (int i = 1; i < parts.length; i++) {
       if (!parts[i].isEmpty()) {
-        sb.append(Character.toUpperCase(parts[i].charAt(0))).append(parts[i].substring(1));
+        sb.append(Character.toUpperCase(parts[i].charAt(0)))
+            .append(parts[i].substring(1).toLowerCase());
       }
     }
     return sb.toString();
@@ -148,6 +152,16 @@ public final class ReflectionUtil {
 
       return Boolean.parseBoolean(value.toString());
     }
+    if (targetType == float.class || targetType == Float.class) {
+      return Float.parseFloat(value.toString());
+    }
+    if (targetType.isEnum()) {
+      for (Object constant : targetType.getEnumConstants()) {
+        if (((Enum<?>) constant).name().equalsIgnoreCase(value.toString().trim())) {
+          return constant;
+        }
+      }
+    }
     if (targetType == String[].class) {
       // Parse a comma-separated string into a String array.
       // This allows CLI arguments and environment variables to supply list values,
@@ -161,6 +175,30 @@ public final class ReflectionUtil {
         tokens[i] = tokens[i].trim();
       }
       return tokens;
+    }
+    if (targetType == double[].class) {
+      String raw = value.toString().trim();
+      if (raw.isEmpty()) {
+        return new double[0];
+      }
+      String[] tokens = raw.split(",");
+      double[] result = new double[tokens.length];
+      for (int i = 0; i < tokens.length; i++) {
+        result[i] = Double.parseDouble(tokens[i].trim());
+      }
+      return result;
+    }
+    if (targetType == int[].class) {
+      String raw = value.toString().trim();
+      if (raw.isEmpty()) {
+        return new int[0];
+      }
+      String[] tokens = raw.split(",");
+      int[] result = new int[tokens.length];
+      for (int i = 0; i < tokens.length; i++) {
+        result[i] = Integer.parseInt(tokens[i].trim());
+      }
+      return result;
     }
     // Add more type conversions as needed
     return value;

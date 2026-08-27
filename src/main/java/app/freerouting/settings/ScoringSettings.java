@@ -26,9 +26,12 @@ public class ScoringSettings implements Serializable, Cloneable {
 
   // The cost of 1 mm of trace length if the trace is routed in the preferred
   // direction, defined for each layer.
+  @SerializedName("preferred_direction_trace_cost")
   public transient double[] preferredDirectionTraceCost;
+
   // The cost of 1 mm of trace length if the trace is routed in the undesired
   // direction, defined for each layer.
+  @SerializedName("undesired_direction_trace_cost")
   public transient double[] undesiredDirectionTraceCost;
 
   // The cost of 1 mm of trace length if the trace is routed in the preferred

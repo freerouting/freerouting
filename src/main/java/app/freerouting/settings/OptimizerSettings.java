@@ -76,15 +76,18 @@ public class OptimizerSettings implements Serializable, Cloneable {
    * GLOBAL_OPTIMAL (calculate updates in parallel and apply the single best improvement), or HYBRID
    * (combine GREEDY and GLOBAL_OPTIMAL).
    */
+  @SerializedName("board_update_strategy")
   public transient BoardUpdateStrategy boardUpdateStrategy;
 
   /** The ratio of GLOBAL_OPTIMAL to GREEDY updates when using the HYBRID strategy (e.g., "1:1"). */
+  @SerializedName("hybrid_ratio")
   public transient String hybridRatio;
 
   /**
    * The strategy for selecting and ordering the items to be optimized (e.g., SEQUENTIAL, RANDOM, or
    * PRIORITIZED).
    */
+  @SerializedName("item_selection_strategy")
   public transient ItemSelectionStrategy itemSelectionStrategy;
 
   /** Timeout for the optimizer stage (e.g., "5m", "300s"). Default is null (no timeout). */
