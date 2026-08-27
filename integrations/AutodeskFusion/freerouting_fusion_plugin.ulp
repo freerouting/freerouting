@@ -45,7 +45,7 @@ dlgDialog("Freerouting Bridge for Autodesk Fusion") {
 			dlgSpacing(800);
 		}
 		dlgHBoxLayout {
-			dlgLabel("<b><font size='+2'>Freerouting Fusion Plugin</font></b>");
+			dlgLabel("<b><font size='+2'>Freerouting&nbsp;Fusion&nbsp;Plugin</font></b>");
 			dlgStretch(1);
 			dlgLabel("<small>v" + version + "</small>");
 		}
@@ -55,18 +55,15 @@ dlgDialog("Freerouting Bridge for Autodesk Fusion") {
 		// Environment Setup Group
 		dlgGroup("Environment Setup") {
 			dlgGridLayout {
-				dlgCell(0, 0) {
-					dlgHBoxLayout {
-						dlgLabel("<b>Java Runtime:</b>  ");
-						if (java_status == 1) {
-							dlgLabel("<font color='#008800'><b>✓ Ready</b></font> (" + filename(java_path) + ")");
-						} else {
-							dlgLabel("<font color='#cc0000'><b>✗ Not Found</b></font>");
-						}
-						dlgStretch(1);
+				dlgCell(0, 0) dlgLabel("<b>Java Runtime:</b>");
+				dlgCell(0, 1) {
+					if (java_status == 1) {
+						dlgLabel("<font color='#008800'><b>✓&nbsp;Ready</b></font>&nbsp;(" + filename(java_path) + ")");
+					} else {
+						dlgLabel("<font color='#cc0000'><b>✗&nbsp;Not&nbsp;Found</b></font>");
 					}
 				}
-				dlgCell(0, 1) dlgPushButton("Check / Browse Java...") {
+				dlgCell(0, 2) dlgPushButton("Check / Browse Java...") {
 					string chosen_java = dlgFileOpen("Locate Java Executable (java.exe)", java_path, "Java Executable (java.exe);;All Files (*.*)");
 					if (strlen(chosen_java) > 0) {
 						java_path = to_ulp_path(chosen_java);
@@ -77,18 +74,15 @@ dlgDialog("Freerouting Bridge for Autodesk Fusion") {
 					}
 				};
 
-				dlgCell(1, 0) {
-					dlgHBoxLayout {
-						dlgLabel("<b>Freerouting JAR:</b>  ");
-						if (jar_status == 1) {
-							dlgLabel("<font color='#008800'><b>✓ Ready</b></font> (" + filename(jar_path) + ")");
-						} else {
-							dlgLabel("<font color='#cc0000'><b>✗ Not Located</b></font>");
-						}
-						dlgStretch(1);
+				dlgCell(1, 0) dlgLabel("<b>Freerouting JAR:</b>");
+				dlgCell(1, 1) {
+					if (jar_status == 1) {
+						dlgLabel("<font color='#008800'><b>✓&nbsp;Ready</b></font>&nbsp;(" + filename(jar_path) + ")");
+					} else {
+						dlgLabel("<font color='#cc0000'><b>✗&nbsp;Not&nbsp;Located</b></font>");
 					}
 				}
-				dlgCell(1, 1) dlgPushButton("Locate Freerouting JAR...") {
+				dlgCell(1, 2) dlgPushButton("Locate Freerouting JAR...") {
 					string chosen_jar = dlgFileOpen("Locate Freerouting JAR file", jar_path, "Executable JAR (*.jar);;All Files (*.*)");
 					if (strlen(chosen_jar) > 0) {
 						jar_path = to_ulp_path(chosen_jar);
