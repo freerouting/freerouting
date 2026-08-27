@@ -29,7 +29,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
     - Freerouting design rules file (`.rules` - optional)
 
   The DSN file is mandatory, while the SES and RULES files are optional.
-  They can be provided in any order, separately or appended by the `+` sign (e.g. `-de myboard.dsn+myboard.ses+myboard.rules`).
+  They can be provided in any order, separately or combined with the `+` delimiter (e.g. `-de myboard.dsn+myboard.ses+myboard.rules` or `-de myboard.dsn+myboard.rules`). When a `.rules` file is loaded, its design rules, net classes, clearances, via definitions, and `(autoroute_settings ...)` / `(layer_rule ...)` parameters are applied to the board and autorouter configuration. If no rules file is explicitly specified, Freerouting will automatically look for an adjacent `<boardname>.rules` file in the same directory as the DSN file.
 
 - **`-do [design output file]`**
   Saves the routing results when the routing is finished. The output can be:
@@ -43,7 +43,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   Sets the default folder for the open design dialogs when using the GUI.
 
 - **`-dr [design rules file]`**
-  Reads design rules from a previously saved `.rules` file.
+  Reads design rules from an explicit `.rules` file. Supports design rules, net classes, clearances, via definitions, and `(autoroute_settings ...)` / `(layer_rule ...)` blocks.
 
 - **`-drc [design rules check json file]`**
   Writes the design rules check report in KiCad JSON DRC schema format.
