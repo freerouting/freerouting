@@ -288,15 +288,50 @@ string write_wire_shape(string pre, string post, char add_size) {
 	real xloc, yloc;
 	for (i = 1; i <= p[0]; i++) {
 		if (p[i] < 0) {
-			j = i; go = true; t += pre; p[j] = -p[j];
-			if (add_size) { sprintf(s, " %s ", num2str(U2G * width[j])); t += s; }
+			j = i; go = true; p[j] = -p[j];
+			real pts_x[], pts_y[];
+			string pts_str[];
+			int pt_count = 0;
+
 			while (go) {
 				xloc = U2G * x1[j]; yloc = U2G * y1[j]; calc_boundary(xloc, yloc);
-				sprintf(s, "%s %s", num2str(xloc), num2str(yloc)); t += s + " ";
-				if (rad[j]) t += write_arc2line(j);
+				pts_x[pt_count] = xloc;
+				pts_y[pt_count] = yloc;
+				sprintf(pts_str[pt_count], "%s %s", num2str(xloc), num2str(yloc));
+				if (rad[j]) {
+					pts_str[pt_count] += write_arc2line(j);
+				}
+				pt_count++;
 				if (p[j] == j || j > p[0]) go = false; else j = p[j];
 			}
-			sprintf(s, " %s %s", num2str(U2G * x2[j]), num2str(U2G * y2[j])); t += s; t += post;
+			xloc = U2G * x2[j]; yloc = U2G * y2[j];
+			pts_x[pt_count] = xloc;
+			pts_y[pt_count] = yloc;
+			sprintf(pts_str[pt_count], "%s %s", num2str(xloc), num2str(yloc));
+			pt_count++;
+
+			// Check polygon orientation if closed (first point == last point)
+			real area = 0.0;
+			for (int k = 0; k < pt_count - 1; k++) {
+				area += (pts_x[k] * pts_y[k + 1] - pts_x[k + 1] * pts_y[k]);
+			}
+			int is_closed = (abs(pts_x[0] - pts_x[pt_count - 1]) < 0.1 && abs(pts_y[0] - pts_y[pt_count - 1]) < 0.1);
+			if (is_closed && area < 0) {
+				// Reverse vertex order to guarantee Counter-Clockwise (CCW) bounded shape
+				t += pre;
+				if (add_size) { sprintf(s, " %s ", num2str(U2G * width[i])); t += s; }
+				for (int k = pt_count - 1; k >= 0; k--) {
+					t += pts_str[k] + " ";
+				}
+				t += post;
+			} else {
+				t += pre;
+				if (add_size) { sprintf(s, " %s ", num2str(U2G * width[i])); t += s; }
+				for (int k = 0; k < pt_count; k++) {
+					t += pts_str[k] + " ";
+				}
+				t += post;
+			}
 		}
 	}
 	p[0] = 0;
