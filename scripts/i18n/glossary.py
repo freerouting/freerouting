@@ -8,10 +8,12 @@ from typing import Dict, List, Optional
 
 GLOSSARY_DIR = Path("scripts/i18n/glossary")
 
-# All shipped UI locales, including English source (en uses _default + en.json).
+# Locale glossaries that must exist and cover every _default.json term.
+# Includes shipped UI locales plus glossary-only locales prepared for upcoming translations.
 GLOSSARY_LOCALES = [
-    "ar", "bn", "cs", "de", "en", "es", "fr", "hi", "hu", "id", "it", "ja", "ko",
-    "nl", "pl", "pt", "pt_br", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh", "zh_tw",
+    "ar", "bn", "ca", "cs", "da", "de", "el", "en", "es", "fi", "fr", "he", "hi",
+    "hr", "hu", "id", "it", "ja", "ko", "lt", "nb", "nl", "pl", "pt", "pt_br", "ro",
+    "ru", "sk", "sl", "sv", "th", "tr", "uk", "vi", "zh", "zh_tw",
 ]
 
 

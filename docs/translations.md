@@ -47,7 +47,7 @@ cd c:\Work\freerouting
 pip install -r scripts/i18n/requirements.txt
 
 $env:GEMINI_API_KEY = "AQ...."  # restart Cursor after setting if translate fails
-$env:LLM_MODEL = "gemini-3.6-flash"   # optional; default
+$env:LLM_MODEL = "gemini-3.7-flash"   # optional; default
 $locale = "de"                  # target locale
 
 # Full overwrite for that locale
