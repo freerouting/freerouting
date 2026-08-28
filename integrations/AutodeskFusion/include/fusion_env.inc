@@ -134,8 +134,8 @@ int do_run_freerouting(int is_headless) {
 	if (is_headless) {
 		log_info("Running Freerouting in headless mode (synchronous)...");
 		status_message = "Running Freerouting auto-router in background...";
-		sprintf(cmd, "\"%s\" -jar \"%s\" -de \"%s\" -do \"%s\" -l \"%s\" --gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false",
-			win_java, win_jar, win_dsn, win_scr, router_log);
+		sprintf(cmd, "\"%s\" -jar \"%s\" -de \"%s\" -do \"%s\" -host \"Autodesk Fusion %d.%d\" -l \"%s\" --gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false",
+			win_java, win_jar, win_dsn, win_scr, EAGLE_VERSION, EAGLE_RELEASE, router_log);
 	} else {
 		log_info("Launching Freerouting GUI...");
 		status_message = "Freerouting GUI launched. Save script when done.";
@@ -144,8 +144,8 @@ int do_run_freerouting(int is_headless) {
 		if (jpos >= 0) {
 			win_javaw = strsub(win_javaw, 0, jpos) + "javaw.exe";
 		}
-		sprintf(cmd, "cmd.exe /c start \"\" \"%s\" -jar \"%s\" -de \"%s\" -do \"%s\" -l \"%s\" --api_server.enabled=false --mcp_server.enabled=false",
-			win_javaw, win_jar, win_dsn, win_scr, router_log);
+		sprintf(cmd, "cmd.exe /c start \"\" \"%s\" -jar \"%s\" -de \"%s\" -do \"%s\" -host \"Autodesk Fusion %d.%d\" -l \"%s\" --api_server.enabled=false --mcp_server.enabled=false",
+			win_javaw, win_jar, win_dsn, win_scr, EAGLE_VERSION, EAGLE_RELEASE, router_log);
 	}
 
 	log_info("Executing command: " + cmd);
