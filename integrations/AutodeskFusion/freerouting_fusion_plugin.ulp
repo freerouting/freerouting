@@ -66,6 +66,9 @@ dlgDialog("Freerouting Bridge for Autodesk Fusion") {
 					}
 				}
 				dlgCell(0, 2) dlgGroup("[0, 2]") {
+					dlgLabel("<div style='border: 2px solid #ff9900; padding: 2px;'>[New Column 2]</div>");
+				}
+				dlgCell(0, 3) dlgGroup("[0, 3]") {
 					dlgPushButton("Check / Browse Java...") {
 						string chosen_java = dlgFileOpen("Locate Java Executable (java.exe)", java_path, "Java Executable (java.exe);;All Files (*.*)");
 						if (strlen(chosen_java) > 0) {
@@ -89,6 +92,9 @@ dlgDialog("Freerouting Bridge for Autodesk Fusion") {
 					}
 				}
 				dlgCell(1, 2) dlgGroup("[1, 2]") {
+					dlgLabel("<div style='border: 2px solid #ff9900; padding: 2px;'>[New Column 2]</div>");
+				}
+				dlgCell(1, 3) dlgGroup("[1, 3]") {
 					dlgPushButton("Locate Freerouting JAR...") {
 						string chosen_jar = dlgFileOpen("Locate Freerouting JAR file", jar_path, "Executable JAR (*.jar);;All Files (*.*)");
 						if (strlen(chosen_jar) > 0) {
