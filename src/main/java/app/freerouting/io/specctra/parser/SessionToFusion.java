@@ -132,14 +132,10 @@ public class SessionToFusion {
       this.outFile.write("LAYER " + this.getFusionLayerString(i) + ";\n");
     }
 
-    // Standard CAD layers: 17 (Pads), 18 (Vias), 19 (Unrouted), 20 (Dimension),
-    // 23 (tOrigins), 24 (bOrigins)
+    // Standard CAD layers: 17 (Pads), 18 (Vias), 19 (Unrouted)
     this.outFile.write("LAYER 17;\n");
     this.outFile.write("LAYER 18;\n");
     this.outFile.write("LAYER 19;\n");
-    this.outFile.write("LAYER 20;\n");
-    this.outFile.write("LAYER 23;\n");
-    this.outFile.write("LAYER 24;\n");
 
     // Remove the complete existing route using GROUP and RIPUP
     IntBox boardBoundingBox = this.board.getBoundingBox();
