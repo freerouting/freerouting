@@ -41,7 +41,9 @@
 
 ## [Autodesk Fusion](https://www.autodesk.com/products/fusion-360/overview)
 
-Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freerouting Fusion Plugin ULP ([`freerouting_fusion_plugin.ulp`](../integrations/AutodeskFusion/freerouting_fusion_plugin.ulp)).
+Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freerouting Fusion Plugin ULP ([`freerouting_fusion_plugin.ulp`](https://github.com/freerouting/freerouting/blob/master/integrations/AutodeskFusion/freerouting_fusion_plugin.ulp)).
+
+> **Download Plugin:** Download the latest plugin package as a ZIP archive: [**`freerouting_fusion_plugin.zip`**](https://github.com/freerouting/freerouting/raw/master/integrations/AutodeskFusion/freerouting_fusion_plugin.zip). Extract the archive into your Autodesk Fusion ULP directory or any folder of your choice.
 
 ### Features
 * **1-Click Auto-Routing:** Exports the Specctra DSN, launches the Freerouting engine in the background (or GUI), and automatically imports the generated tracks and vias back into Fusion.
@@ -59,21 +61,21 @@ Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freero
 3. Under the **AUTOMATE** panel, click the **>ULP** button (or type `run` in the command line).
 
 <p align="center">
-  <img src="../assets/integrations/Fusion_01_Automate_Menu.png" alt="Autodesk Fusion Utilities Automate ULP Menu" align="center" width="750">
+  <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/integrations/Fusion_01_Automate_Menu.png" alt="Autodesk Fusion Utilities Automate ULP Menu" align="center" width="750">
 </p>
 
 #### 2. Browse for the Freerouting Plugin
 1. In the ULP dialog window, click the **Browse...** button in the lower-left corner.
 
 <p align="center">
-  <img src="../assets/integrations/Fusion_02_Browse_ULP.png" alt="Browse for ULP" align="center" width="550">
+  <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/integrations/Fusion_02_Browse_ULP.png" alt="Browse for ULP" align="center" width="550">
 </p>
 
-2. Navigate to the [`integrations/AutodeskFusion`](../integrations/AutodeskFusion) directory in your Freerouting repository.
+2. Navigate to the directory where you extracted [**`freerouting_fusion_plugin.zip`**](https://github.com/freerouting/freerouting/raw/master/integrations/AutodeskFusion/freerouting_fusion_plugin.zip) (or the [`integrations/AutodeskFusion`](https://github.com/freerouting/freerouting/tree/master/integrations/AutodeskFusion) directory in your cloned repository).
 3. Select `freerouting_fusion_plugin.ulp` and click **Open**.
 
 <p align="center">
-  <img src="../assets/integrations/Fusion_03_Select_ULP.png" alt="Select freerouting_fusion_plugin.ulp" align="center" width="650">
+  <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/integrations/Fusion_03_Select_ULP.png" alt="Select freerouting_fusion_plugin.ulp" align="center" width="650">
 </p>
 
 #### 3. Configure & Run Auto-Routing
@@ -84,7 +86,7 @@ Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freero
 3. Click **★ 1-Click Auto-Route (Export -> Route -> Import)** to route the board automatically.
 
 <p align="center">
-  <img src="../assets/integrations/Fusion_04_Run_Freerouting.png" alt="Freerouting Fusion Plugin Dialog Window" align="center" width="750">
+  <img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/integrations/Fusion_04_Run_Freerouting.png" alt="Freerouting Fusion Plugin Dialog Window" align="center" width="750">
 </p>
 
 4. Upon completion, Autodesk Fusion automatically executes the generated script, rips up previous unrouted airwires, places the new tracks and vias across all active layers, and recalculates the ratsnest.
