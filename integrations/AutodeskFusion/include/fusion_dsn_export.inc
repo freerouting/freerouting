@@ -652,11 +652,14 @@ string Keepout_d(void) {
 			}
 			if (in_range) {
 				B.wires(W) {
-					if (W.layer == L.number) load_layer_wires(W, L.number);
+					if (W.layer == L.number) {
+						load_one_wire(W);
+						real w_val = U2G * W.width;
+						if (w_val < 100) w_val = 100;
+						string pre = T2 + "(" + KOname + " (path " + Lname + " " + num2str(w_val) + " ";
+						t += write_wire_shape(pre, "))\n", false);
+					}
 				}
-				process_wires();
-				string pre = T2 + "(" + KOname + "(polygon " + Lname + " 0 ";
-				t += write_wire_shape(pre, "))\n", false);
 				B.circles(C) {
 					if (C.layer == L.number) {
 						sprintf(s, T2 + "(%s(circ %s %s %s %s))\n", KOname, Lname, num2str(U2G * C.radius * 2), num2str(U2G * C.x), num2str(U2G * C.y));
@@ -773,12 +776,15 @@ string single_image_d(UL_PACKAGE P) {
 						}
 					}
 				} else {
-					string pre = T3 + "(" + KOname + "(polygon " + Lname + " 0 ";
 					P.wires(W) {
-						if (W.layer == L.number) load_layer_wires(W, L.number);
+						if (W.layer == L.number) {
+							load_one_wire(W);
+							real w_val = U2G * W.width;
+							if (w_val < 100) w_val = 100;
+							string pre = T3 + "(" + KOname + " (path " + Lname + " " + num2str(w_val) + " ";
+							t += write_wire_shape(pre, "))\n", false);
+						}
 					}
-					process_wires();
-					t += write_wire_shape(pre, "))\n", false);
 				}
 				P.circles(C) {
 					if (C.layer == L.number) {
