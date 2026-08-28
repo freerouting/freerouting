@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.accessibility.AccessibleRole;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -81,6 +82,30 @@ class WindowRoutingSummaryA11yTest {
           Component root = GuiA11yHarness.findByLocator(panel, GuiLocators.ROUTING_SUMMARY_DIALOG);
           assertNotNull(root);
           assertEquals("Huzalozási összefoglaló", GuiA11yHarness.accessibleName(root));
+          GuiA11yHarness.requireNoLeakedGuiResources();
+        });
+  }
+
+  @Test
+  void formatsTotalTraceLengthWithThousandSeparator() {
+    GlobalSettings settings = new GlobalSettings();
+    RoutingSummaryData data =
+        new RoutingSummaryData(38, 2, 10, 59.5, 25, 538060.42, Unit.UM, 24.8, 959.18f, false);
+
+    JPanel panel =
+        GuiA11yHarness.onEdt(
+            () -> WindowRoutingSummary.createPanel(data, settings, Locale.US, () -> {}));
+
+    GuiA11yHarness.onEdt(
+        () -> {
+          boolean found = false;
+          for (Component comp : panel.getComponents()) {
+            if (comp instanceof JLabel label && "538,060.42 um".equals(label.getText())) {
+              found = true;
+              break;
+            }
+          }
+          assertTrue(found, "Expected label with thousand separator '538,060.42 um'");
           GuiA11yHarness.requireNoLeakedGuiResources();
         });
   }

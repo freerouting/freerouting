@@ -137,7 +137,7 @@ public final class WindowRoutingSummary {
 
     // Total Trace Length (lowercase unit)
     String lengthStr =
-        String.format(Locale.US, "%.2f %s", summaryData.totalTraceLength(), unitName);
+        String.format(Locale.US, "%,.2f %s", summaryData.totalTraceLength(), unitName);
     addStatRow(panel, gbc, 6, tm.getText("trace_length"), lengthStr);
 
     // Score (with 1000 = perfect explanation)

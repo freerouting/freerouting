@@ -49,6 +49,10 @@ public class JsonFileSettings implements SettingsSource {
       JsonElement routerElement = root.get("router");
       if (routerElement != null && routerElement.isJsonObject()) {
         RouterSettings loaded = GsonProvider.GSON.fromJson(routerElement, RouterSettings.class);
+        if (loaded != null && Integer.valueOf(1).equals(loaded.maxPasses)) {
+          // Historical clamp bug: 0 was previously clamped to 1 in freerouting.json
+          loaded.maxPasses = 0;
+        }
         FRLogger.debug("Loaded router settings from: " + jsonFilePath);
         return loaded;
       }

@@ -1094,7 +1094,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent evt) {
       if (evt.getKeyChar() == '\n') {
-        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
+        Integer currentVal = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
+        int oldValue = currentVal != null ? currentVal : 0;
         Object input = maxPassesField.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 0, 9999);
         // Use setter to fire property change event
@@ -1118,7 +1119,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent evt) {
       if (!maxPassesInputCompleted) {
         // Save the value when focus is lost
-        int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
+        Integer currentVal = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
+        int oldValue = currentVal != null ? currentVal : 0;
 
         // Commit the edit to ensure getValue() returns the typed value
         try {

@@ -351,6 +351,13 @@ public class GlobalSettings implements Serializable {
       ReflectionUtil.copyFields(loadedSettings, defaultSettings);
       defaultSettings.version = currentVersion;
 
+      // Migrate historical clamp bug: 0 was previously clamped to 1 in freerouting.json
+      if (defaultSettings.routerSettings != null
+          && Integer.valueOf(1).equals(defaultSettings.routerSettings.maxPasses)) {
+        defaultSettings.routerSettings.maxPasses = 0;
+        isSaveNeeded = true;
+      }
+
       if (isSaveNeeded) {
         // TODO: insert per-version migration steps here when needed, e.g.:
         //   migrateSettings(fileVersion, currentVersion, defaultSettings);
@@ -845,7 +852,7 @@ public class GlobalSettings implements Serializable {
 
   /** Returns the configured maximum router passes. */
   public int getMaxPasses() {
-    return routerSettings.maxPasses;
+    return routerSettings.maxPasses != null ? routerSettings.maxPasses : 0;
   }
 
   /** Returns the configured optimizer thread count. */
