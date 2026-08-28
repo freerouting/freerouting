@@ -117,22 +117,29 @@ public class SessionToFusion {
     }
 
     // Write header of the script file
-    this.outFile.write("GRID ");
-    this.outFile.write(this.unit.toString());
-    this.outFile.write("\n");
-    this.outFile.write("SET WIRE_BEND 2\n");
-    this.outFile.write("SET OPTIMIZING OFF\n");
+    String fusionUnit;
+    if (this.unit == app.freerouting.board.model.structure.Unit.UM) {
+      fusionUnit = "MIC";
+    } else {
+      fusionUnit = this.unit.toString().toUpperCase(Locale.US);
+    }
+    this.outFile.write("GRID " + fusionUnit + ";\n");
+    this.outFile.write("SET WIRE_BEND 2;\n");
+    this.outFile.write("SET OPTIMIZING OFF;\n");
 
     // Activate all signal layers
     for (int i = 0; i < this.board.layerStructure.layers.length; i++) {
       this.outFile.write("LAYER " + this.getFusionLayerString(i) + ";\n");
     }
 
-    // Standard CAD layers: 17 (Pads), 18 (Vias), 19 (Unrouted), 20 (Dimension)
+    // Standard CAD layers: 17 (Pads), 18 (Vias), 19 (Unrouted), 20 (Dimension),
+    // 23 (tOrigins), 24 (bOrigins)
     this.outFile.write("LAYER 17;\n");
     this.outFile.write("LAYER 18;\n");
     this.outFile.write("LAYER 19;\n");
     this.outFile.write("LAYER 20;\n");
+    this.outFile.write("LAYER 23;\n");
+    this.outFile.write("LAYER 24;\n");
 
     // Remove the complete existing route using GROUP and RIPUP
     IntBox boardBoundingBox = this.board.getBoundingBox();
@@ -169,16 +176,15 @@ public class SessionToFusion {
             return false;
           }
         } else if (nextToken == Keyword.PLACEMENT_SCOPE) {
-          if (!processPlacementScope()) {
-            return false;
-          }
+          // Autorouting only creates routes; do not move placed components in Fusion
+          ScopeKeyword.skipScope(this.scanner);
         } else {
           ScopeKeyword.skipScope(this.scanner);
         }
       }
     }
 
-    this.outFile.write("RATSNEST\n");
+    this.outFile.write("RATSNEST;\n");
     return true;
   }
 
@@ -353,8 +359,7 @@ public class SessionToFusion {
     if (layerIndex >= 0) {
       this.outFile.write(getFusionLayerString(layerIndex));
     } else {
-      String[] namePieces = wirePath.layer.name.split("#", 2);
-      this.outFile.write(namePieces[0]);
+      this.outFile.write(getFusionLayerString(wirePath.layer.name, -1));
     }
     this.outFile.write(";\n");
 
@@ -482,9 +487,30 @@ public class SessionToFusion {
       return "0";
     }
     String layerName = this.specctraLayerStructure.layers[layerIndex].name;
+    return getFusionLayerString(layerName, layerIndex);
+  }
+
+  private String getFusionLayerString(String layerName, int layerIndex) {
     String[] namePieces = layerName.split("#", 2);
-    if (namePieces[0].matches("\\d+")) {
-      return namePieces[0];
+    String rawName = namePieces[0].trim();
+    if (rawName.matches("\\d+")) {
+      return rawName;
+    }
+    if (rawName.equalsIgnoreCase("Top") || rawName.equalsIgnoreCase("F.Cu")) {
+      return "1";
+    }
+    if (rawName.equalsIgnoreCase("Bottom") || rawName.equalsIgnoreCase("B.Cu")) {
+      return "16";
+    }
+    if (rawName.toLowerCase(Locale.US).startsWith("route")
+        || rawName.toLowerCase(Locale.US).startsWith("in")) {
+      String num = rawName.replaceAll("\\D+", "");
+      if (!num.isEmpty()) {
+        return num;
+      }
+    }
+    if (layerIndex >= 0 && layerIndex == specctraLayerStructure.layers.length - 1) {
+      return "16";
     }
     return String.valueOf(layerIndex + 1);
   }
