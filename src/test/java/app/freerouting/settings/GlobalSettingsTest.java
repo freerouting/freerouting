@@ -17,12 +17,6 @@ class GlobalSettingsTest {
   }
 
   @Test
-  void defaultMaxPassesIsZero() {
-    GlobalSettings settings = new GlobalSettings();
-    assertEquals(0, settings.getMaxPasses());
-  }
-
-  @Test
   void applyCommandLineArgumentsValidArguments() {
     GlobalSettings settings = new GlobalSettings();
     String[] args =

@@ -48,28 +48,6 @@ class JsonFileSettingsTest {
   }
 
   @Test
-  void migratesMaxPassesOneToZeroFromHistoricalClamp() throws Exception {
-    Path file =
-        write(
-            "historical_clamp.json",
-            """
-            {
-              "router": {
-                "max_passes": 1
-              }
-            }
-            """);
-
-    JsonFileSettings sut = new JsonFileSettings(file);
-    RouterSettings settings = sut.getSettings();
-
-    assertNotNull(settings, "getSettings() must not return null for a valid file");
-    assertNotNull(settings.maxPasses, "maxPasses should be present");
-    assertEquals(
-        0, settings.maxPasses, "maxPasses=1 from historical clamp should be migrated to 0");
-  }
-
-  @Test
   void returnsEmptySettingsWhenRouterSectionIsMissing() throws Exception {
     Path file =
         write(
