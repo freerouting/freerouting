@@ -27,7 +27,7 @@ public class VersionChecker implements Runnable {
    * @param version the current version of the application (e.g. "1.2.3" or "v1.2.3")
    */
   public VersionChecker(String version) {
-    this(version, HttpClient.newHttpClient());
+    this(version, createDefaultHttpClient());
   }
 
   /**
@@ -47,6 +47,15 @@ public class VersionChecker implements Runnable {
     this.httpClient = httpClient;
   }
 
+  private static HttpClient createDefaultHttpClient() {
+    try {
+      return HttpClient.newHttpClient();
+    } catch (Throwable t) {
+      FRLogger.warn("Could not create HttpClient for VersionChecker: " + t.getMessage());
+      return null;
+    }
+  }
+
   /**
    * Gets the normalized current version (always starts with 'v').
    *
@@ -58,6 +67,9 @@ public class VersionChecker implements Runnable {
 
   @Override
   public void run() {
+    if (httpClient == null) {
+      return;
+    }
     try {
       HttpRequest request =
           HttpRequest.newBuilder()

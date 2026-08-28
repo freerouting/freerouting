@@ -39,19 +39,55 @@
 
 ![image](https://user-images.githubusercontent.com/910321/210981925-d32fb974-e3e6-4e65-832e-ed033ef3b3db.png)
 
-## [Autodesk EAGLE](https://www.autodesk.com/products/eagle/overview)
+## [Autodesk Fusion](https://www.autodesk.com/products/fusion-360/overview)
 
-1) Download the latest [eagle2freerouter ulp file](https://github.com/freerouting/freerouting/tree/master/integrations/Eagle)
+Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freerouting Fusion Plugin ULP ([`freerouting_fusion_plugin.ulp`](../integrations/AutodeskFusion/freerouting_fusion_plugin.ulp)).
 
-2) Start EAGLE and open in the control panel of Eagle for example the design my_design.brd.
+### Features
+* **1-Click Auto-Routing:** Exports the Specctra DSN, launches the Freerouting engine in the background (or GUI), and automatically imports the generated tracks and vias back into Fusion.
+* **Step-by-Step Execution:** Optionally export DSN, launch the router, and import the script as individual steps.
+* **Headless or Interactive GUI:** Choose between ultra-fast headless background routing or the visual Freerouting GUI to inspect traces before applying.
+* **Stackup & Keepout Translation:** Accurately maps 2-layer, 4-layer, and multi-layer stackups (including `Route2`, `Route15`, `Bottom`) and keepout wire geometries.
 
-3) Choose in the Files pulldown-menu of Eagle the item "execute ULP" and select the Eagle2freerouter ulp file. A file with name my_design.dsn is generated.
+---
 
-4) Start the router, push the "Open Your Own Design" button and select my_design.dsn in the file chooser.
+### Step-by-Step Guide
 
-5) After making some changes to the design with the router select "export Eagle session script" in the Files pulldown-menu. A file with name my_design.scr is generated.
+#### 1. Open your PCB Layout & Launch ULP
+1. In Autodesk Fusion, open your PCB layout document.
+2. In the top navigation bar, switch to the **UTILITIES** tab.
+3. Under the **AUTOMATE** panel, click the **>ULP** button (or type `run` in the command line).
 
-6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
+<p align="center">
+  <img src="../assets/integrations/Fusion_01_Automate_Menu.png" alt="Autodesk Fusion Utilities Automate ULP Menu" align="center" width="750">
+</p>
+
+#### 2. Browse for the Freerouting Plugin
+1. In the ULP dialog window, click the **Browse...** button in the lower-left corner.
+
+<p align="center">
+  <img src="../assets/integrations/Fusion_02_Browse_ULP.png" alt="Browse for ULP" align="center" width="550">
+</p>
+
+2. Navigate to the [`integrations/AutodeskFusion`](../integrations/AutodeskFusion) directory in your Freerouting repository.
+3. Select `freerouting_fusion_plugin.ulp` and click **Open**.
+
+<p align="center">
+  <img src="../assets/integrations/Fusion_03_Select_ULP.png" alt="Select freerouting_fusion_plugin.ulp" align="center" width="650">
+</p>
+
+#### 3. Configure & Run Auto-Routing
+1. In the **Environment Setup** section, verify that both **Java Runtime** and **Freerouting JAR** show a green `✓ Ready` status. *(If not found automatically, click the buttons on the right to locate `java.exe` or `freerouting-executable.jar`)*.
+2. Choose your desired **Execution Mode**:
+   * **Headless Mode:** Fast background routing with automatic script execution and import.
+   * **Interactive GUI:** Opens the visual Freerouting window for inspection.
+3. Click **★ 1-Click Auto-Route (Export -> Route -> Import)** to route the board automatically.
+
+<p align="center">
+  <img src="../assets/integrations/Fusion_04_Run_Freerouting.png" alt="Freerouting Fusion Plugin Dialog Window" align="center" width="750">
+</p>
+
+4. Upon completion, Autodesk Fusion automatically executes the generated script, rips up previous unrouted airwires, places the new tracks and vias across all active layers, and recalculates the ratsnest.
 
 ## [Target 3001!](https://ibfriedrich.com/)
 

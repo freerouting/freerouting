@@ -639,9 +639,9 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   }
 
   /** GUI workspace member. */
-  public boolean saveSpecctraSessionSesAsEagleScriptScr(
+  public boolean saveSpecctraSessionSesAsFusionScriptScr(
       InputStream inputStream, OutputStream outputStream) {
-    return persistence.saveSpecctraSessionSesAsEagleScriptScr(inputStream, outputStream);
+    return persistence.saveSpecctraSessionSesAsFusionScriptScr(inputStream, outputStream);
   }
 
   /** GUI workspace member. */

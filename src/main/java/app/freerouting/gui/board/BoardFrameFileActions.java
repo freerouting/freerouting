@@ -154,8 +154,8 @@ public class BoardFrameFileActions {
         FRAnalytics.buttonClicked("fileio_savefrb", boardFrame.routingJob.getOutputFileDetails());
       }
       case SCR -> {
-        boardFrame.saveAsEagleScriptScr(
-            boardFrame.routingJob.getEagleScriptFile(), boardFrame.routingJob.input.getFilename());
+        boardFrame.saveAsFusionScriptScr(
+            boardFrame.routingJob.getFusionScriptFile(), boardFrame.routingJob.input.getFilename());
         FRAnalytics.fileSaved("SCR", boardFrame.routingJob.input.getFilename());
         FRAnalytics.buttonClicked("fileio_savescr", "");
       }

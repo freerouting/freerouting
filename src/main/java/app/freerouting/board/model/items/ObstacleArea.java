@@ -186,9 +186,11 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public int tileShapeCount() {
+    if (this.board != null) {
+      return this.treeShapeCount(this.board.searchTreeManager.getDefaultTree());
+    }
     TileShape[] tileShapes = this.splitToConvex();
     if (tileShapes == null) {
-      // an error occurred while dividing the relativeArea
       return 0;
     }
     return tileShapes.length;
@@ -196,9 +198,20 @@ public class ObstacleArea extends Item implements Serializable {
 
   @Override
   public TileShape getTileShape(int no) {
+    if (this.board != null) {
+      return super.getTileShape(no);
+    }
     TileShape[] tileShapes = this.splitToConvex();
     if (tileShapes == null || no < 0 || no >= tileShapes.length) {
-      FRLogger.warn("ConvexObstacle.get_tile_shape: no out of range");
+      FRLogger.warn(
+          String.format(
+              "ConvexObstacle.get_tile_shape: requested index %d out of range (tileShapes=%s) for ObstacleArea id=%d layer=%d name=%s area=%s",
+              no,
+              tileShapes == null ? "null" : String.valueOf(tileShapes.length),
+              this.getId(),
+              this.layer,
+              this.name,
+              this.getArea() != null ? this.getArea().getClass().getSimpleName() : "null"));
       return null;
     }
     return tileShapes[no];

@@ -110,7 +110,12 @@ public class BoardFileDetails implements Serializable {
     this.crc32 = crc.getValue();
 
     // read the file contents to determine the file format
-    this.format = RoutingJob.getFileFormat(this.dataBytes);
+    FileFormat detectedFormat = RoutingJob.getFileFormat(this.dataBytes);
+    if (detectedFormat != FileFormat.UNKNOWN) {
+      this.format = detectedFormat;
+    } else if (this.format == FileFormat.UNKNOWN && !this.filename.isEmpty()) {
+      this.format = RoutingJob.getFileFormat(Path.of(this.filename));
+    }
 
     // set the statistical data based on the file content
     this.statistics = new BoardStatistics(this.dataBytes, this.format);

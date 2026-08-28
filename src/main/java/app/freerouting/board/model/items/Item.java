@@ -417,7 +417,16 @@ public abstract class Item
           TileShape shape1 = currentTileShape;
           TileShape shape2 = currentItem.getTileShape(currentEntry.shapeIndexInObject);
           if (shape1 == null || shape2 == null) {
-            FRLogger.warn("Item.clearanceViolations: unexpected null shape");
+            FRLogger.warn(
+                String.format(
+                    "Item.clearanceViolations: unexpected null shape (%s is null) between item1=%s[id=%d, layer=%d] and item2=%s[id=%d, shapeIdx=%d]",
+                    shape1 == null ? "shape1" : "shape2",
+                    this.getClass().getSimpleName(),
+                    this.getId(),
+                    shapeLayer(i),
+                    currentItem.getClass().getSimpleName(),
+                    currentItem.getId(),
+                    currentEntry.shapeIndexInObject));
             continue;
           }
 

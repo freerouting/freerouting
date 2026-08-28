@@ -21,7 +21,7 @@ Autodesk officially retired standalone EAGLE in 2026, fully transitioning its PC
 
 ## 2. Issues Breakdown & Technical Analysis
 
-### Issue #799: ULP Export from Autodesk Fusion (`eagle2freerouting.ulp` -> `fusion2freerouting.ulp`)
+### Issue #799: ULP Export from Autodesk Fusion (`eagle2freerouting.ulp` -> `freerouting_fusion_plugin.ulp`)
 
 When running `eagle2freerouting.ulp` on current Autodesk Fusion Electronics (build `v.2704.1.53` and later), export fails due to deprecated APIs, changed data models, and extended layer numbering:
 
@@ -100,36 +100,35 @@ flowchart TD
 
 ## 4. Detailed Task List
 
-### Phase 1: ULP Script Upgrade (`integrations/AutodeskFusion/fusion2freerouting.ulp`)
-- [ ] Rename/copy `integrations/Eagle/eagle2freerouting.ulp` to `integrations/AutodeskFusion/fusion2freerouting.ulp` (retain legacy `integrations/Eagle/` redirect notice).
-- [ ] Replace deprecated `polygons` loops with `polyShapes` and `polyPours`.
-- [ ] Replace `wires` calls on polygon objects with `contours`.
-- [ ] Replace `PO.width` on `PolyShape` with `0`.
-- [ ] Update layer scanning bounds from `<= 16` to `<= 999`.
-- [ ] Update `LN2name()` to support Fusion extended layer IDs (303, 304, etc.).
-- [ ] Add `&& (W.layer != 19)` to skip unrouted ratsnest lines in wire export.
-- [ ] Add `default:` fallback to round pad in pad-shape switch statements.
-- [ ] Fix parenthesis matching for multi-island polygon pours.
+### Phase 1: ULP Script Upgrade (`integrations/AutodeskFusion/freerouting_fusion_plugin.ulp`)
+- [x] Rename/copy `integrations/Eagle/eagle2freerouting.ulp` to `integrations/AutodeskFusion/freerouting_fusion_plugin.ulp` (retain legacy `integrations/Eagle/` redirect notice).
+- [x] Replace deprecated `polygons` loops with `polyShapes` and `polyPours`.
+- [x] Replace `wires` calls on polygon objects with `contours`.
+- [x] Replace `PO.width` on `PolyShape` with `0`.
+- [x] Update layer scanning bounds from `<= 16` to `<= 999`.
+- [x] Update `LN2name()` to support Fusion extended layer IDs (303, 304, etc.).
+- [x] Add `&& (W.layer != 19)` to skip unrouted ratsnest lines in wire export.
+- [x] Add `default:` fallback to round pad in pad-shape switch statements.
+- [x] Fix parenthesis matching for multi-island polygon pours.
 
-### Phase 2: SCR Exporter Fixes (`app.freerouting.io.specctra.parser.SessionToEagle`)
-- [ ] Refactor `SessionToEagle.java` (and alias/rename to `SessionToFusion.java` where appropriate).
-- [ ] Remove hardcoded non-copper layer activations (`LAYER 23`, `LAYER 24`).
-- [ ] Standardize `GRID` command output and ensure all wire widths, drill sizes, and coordinates are properly converted to millimetres (`GRID MM`).
-- [ ] Modify `processViaScope` to omit explicit layer range (e.g. `1-304` or `1-16`) for standard through-vias to avoid Fusion script syntax errors.
-- [ ] Ensure layer names emitted in `CHANGE LAYER` match valid numeric layer IDs.
+### Phase 2: SCR Exporter Fixes (`app.freerouting.io.specctra.parser.SessionToFusion`)
+- [x] Refactor and replace `SessionToEagle.java` with `SessionToFusion.java`.
+- [x] Remove hardcoded non-copper layer activations (`LAYER 23`, `LAYER 24`).
+- [x] Standardize `GRID` command output and ensure all wire widths, drill sizes, and coordinates are properly converted to millimetres (`GRID MM`).
+- [x] Modify `processViaScope` to omit explicit layer range (e.g. `1-304` or `1-16`) for standard through-vias to avoid Fusion script syntax errors.
+- [x] Ensure layer names emitted in `CHANGE LAYER` match valid numeric layer IDs.
 
 ### Phase 3: UI, I18N, and Documentation Updates
-- [ ] Update GUI menu items from `"Export as Eagle Session Script"` to `"Export as Autodesk Fusion / Eagle Script (.scr)"`.
-- [ ] Update resource bundles / translation keys (`message_eagle_saved`, etc.).
-- [ ] Update `docs/integrations.md` with step-by-step instructions for Autodesk Fusion Electronics.
-- [ ] Update `README.md` references to list **Autodesk Fusion** instead of standalone EAGLE.
-- [ ] Update `docs/architecture.md` to document the Autodesk Fusion integration path.
+- [x] Update GUI menu items and export options to `"Autodesk Fusion Script (*.scr)"`.
+- [x] Update resource bundles / translation keys (`message_fusion_saved`, etc.).
+- [x] Update `docs/integrations.md` with step-by-step instructions for Autodesk Fusion Electronics.
+- [x] Update `README.md` references to list **Autodesk Fusion** instead of standalone EAGLE.
+- [x] Update `AGENTS.md` to document the Autodesk Fusion integration path.
 
 ### Phase 4: Verification and Quality Gate
-- [ ] Add unit tests in `src/test/java/app/freerouting/io/specctra/parser/SessionToEagleTest.java` verifying generated `.scr` content (header, layer commands, via syntax, unit formatting).
-- [ ] Add fixture-based roundtrip tests for Fusion `.dsn` files.
-- [ ] Run `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`.
-- [ ] Run full test suite with `./gradlew test`.
+- [x] Add unit tests in `src/test/java/app/freerouting/io/specctra/parser/SessionToFusionTest.java` verifying generated `.scr` content (header, layer commands, via syntax, unit formatting).
+- [x] Run `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`.
+- [x] Run full test suite with `./gradlew test`.
 
 ---
 
@@ -147,7 +146,7 @@ flowchart TD
 
 ### Manual Verification
 1. Open Autodesk Fusion Electronics (Personal or Trial).
-2. Run `fusion2freerouting.ulp` via **Automate > Run ULP** on a test board.
+2. Run `freerouting_fusion_plugin.ulp` via **Automate > Run ULP** on a test board.
 3. Import the generated `.dsn` into Freerouting and run auto-routing.
 4. Export the resulting session script (`.scr`).
 5. In Fusion Electronics, run **Automate > Run Script** and select the `.scr` file to verify clean re-import with zero syntax errors.

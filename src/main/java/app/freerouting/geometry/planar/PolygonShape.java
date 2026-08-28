@@ -1,6 +1,7 @@
 package app.freerouting.geometry.planar;
 
 import app.freerouting.logger.FRLogger;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -767,7 +768,14 @@ public class PolygonShape extends PolylineShape {
         }
       }
       if (minProjectionDist == Integer.MAX_VALUE) {
-        FRLogger.warn("PolygonShape.DivisionPoint: projection not found");
+        FRLogger.warn(
+            String.format(
+                "PolygonShape.DivisionPoint: projection not found for concave corner #%d at (%s, %s) in polygon with %d corners: %s",
+                concaveCornerNo,
+                concaveCorner.x,
+                concaveCorner.y,
+                corners.length,
+                Arrays.toString(corners)));
       }
 
       projection = minProjection;

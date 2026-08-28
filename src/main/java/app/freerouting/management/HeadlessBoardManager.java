@@ -876,6 +876,29 @@ public class HeadlessBoardManager implements BoardManager {
     return wasSaveSuccessful;
   }
 
+  /**
+   * Saves the current routing board state as an Autodesk Fusion script (.scr).
+   *
+   * @param outputStream target output stream for the script
+   * @param designName name of the design
+   * @return true if save was successful, false otherwise
+   */
+  public boolean saveAsFusionScriptScr(OutputStream outputStream, String designName) {
+    try (java.io.ByteArrayOutputStream sesBaos = new java.io.ByteArrayOutputStream()) {
+      if (!saveAsSpecctraSessionSes(sesBaos, designName)) {
+        return false;
+      }
+      try (java.io.ByteArrayInputStream sesBais =
+          new java.io.ByteArrayInputStream(sesBaos.toByteArray())) {
+        return app.freerouting.io.specctra.SesReader.saveSpecctraSessionSesAsFusionScriptScr(
+            sesBais, outputStream, this.getRoutingBoard());
+      }
+    } catch (IOException e) {
+      FRLogger.error("unable to write Fusion script file", e);
+      return false;
+    }
+  }
+
   boolean conductionAreasOverlap(
       app.freerouting.board.model.items.ConductionArea ca1,
       app.freerouting.board.model.items.ConductionArea ca2) {

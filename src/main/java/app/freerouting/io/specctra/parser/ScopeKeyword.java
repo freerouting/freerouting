@@ -38,6 +38,7 @@ public class ScopeKeyword extends Keyword {
         --openBrackedCount;
       }
     }
+    scanner.yybegin(SpecctraDsnStreamReader.YYINITIAL);
     return true;
   }
 

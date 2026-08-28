@@ -35,7 +35,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   Saves the routing results when the routing is finished. The output can be:
   - Specctra board (`.dsn`)
   - Specctra session file (`.ses`)
-  - Eagle session script file (`.scr`)
+  - Autodesk Fusion script file (`.scr`)
 
   The output format is determined by the file extension provided.
 

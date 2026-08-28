@@ -120,8 +120,8 @@ public final class FRAnalytics {
     appLocationTable.put(
         "file_write_session_file_menuitem", "app.freerouting.gui/Board/Menu/File/ExportAsSpecctra");
     appLocationTable.put(
-        "file_write_eagle_session_script_menuitem",
-        "app.freerouting.gui/Board/Menu/File/ExportAsEagleScript");
+        "file_write_fusion_session_script_menuitem",
+        "app.freerouting.gui/Board/Menu/File/ExportAsFusionScript");
     appLocationTable.put(
         "displayVisibilityMenuitem", "app.freerouting.gui/Board/Menu/Appearance/Visibility");
     appLocationTable.put(

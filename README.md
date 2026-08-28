@@ -47,7 +47,7 @@ You can interact with Freerouting using the Graphical User Interface ([GUI](#gra
 Integrations are available with:
 
 - [KiCad](https://www.kicad.org/)
-- [Autodesk EAGLE](http://eagle.autodesk.com/)
+- [Autodesk Fusion](https://www.autodesk.com/products/fusion-360/overview)
 - [Target3001!](https://ibfriedrich.com/en/index.html)
 - [EasyEDA](https://www.easyeda.com/)
 - [tscircuit](https://tscircuit.com/)

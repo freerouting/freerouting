@@ -32,7 +32,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public static final String BINARY_FILE_EXTENSION = "frb";
   private static final String RULES_FILE_EXTENSION = "rules";
   private static final String SES_FILE_EXTENSION = "ses";
-  private static final String EAGLE_SCRIPT_FILE_EXTENSION = "scr";
+  private static final String FUSION_SCRIPT_FILE_EXTENSION = "scr";
 
   @SerializedName("id")
   @Schema(name = "id", description = "Unique identifier for the routing job")
@@ -152,15 +152,36 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     if (content == null) {
       return FileFormat.UNKNOWN;
     }
-    // First, check if it's a JSON file (the first non-whitespace character is '{')
-    for (byte b : content) {
-      if (b == ' ' || b == '\t' || b == '\r' || b == '\n') {
-        continue;
+    // First, check if it's a text-based format (JSON or SCR)
+    int firstNonWs = -1;
+    for (int i = 0; i < content.length; i++) {
+      byte b = content[i];
+      if (b != ' ' && b != '\t' && b != '\r' && b != '\n') {
+        firstNonWs = i;
+        break;
       }
-      if (b == '{') {
+    }
+    if (firstNonWs >= 0) {
+      if (content[firstNonWs] == '{') {
         return FileFormat.KICAD_DESIGN_JSON;
       }
-      break;
+      String textSample =
+          new String(
+                  content,
+                  firstNonWs,
+                  Math.min(content.length - firstNonWs, 64),
+                  java.nio.charset.StandardCharsets.ISO_8859_1)
+              .toUpperCase(java.util.Locale.ROOT);
+      if (textSample.startsWith("GRID ")
+          || textSample.startsWith("GRID;")
+          || textSample.startsWith("SET ")
+          || textSample.startsWith("LAYER ")
+          || textSample.startsWith("WIRE ")
+          || textSample.startsWith("CHANGE LAYER ")
+          || textSample.startsWith("SCRIPT")
+          || textSample.startsWith("RIPUP")) {
+        return FileFormat.SCR;
+      }
     }
 
     // Open the file as a binary file and read the first 6 bytes to determine the
@@ -314,10 +335,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     return new File(changeFileExtension(this.output.getAbsolutePath(), RULES_FILE_EXTENSION));
   }
 
-  /** Returns the EAGLE script file associated with the output file. */
-  public File getEagleScriptFile() {
+  /** Returns the Autodesk Fusion script file associated with the output file. */
+  public File getFusionScriptFile() {
     return new File(
-        changeFileExtension(this.output.getAbsolutePath(), EAGLE_SCRIPT_FILE_EXTENSION));
+        changeFileExtension(this.output.getAbsolutePath(), FUSION_SCRIPT_FILE_EXTENSION));
   }
 
   /** Sets a placeholder input file for the specified path. */

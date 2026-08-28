@@ -955,13 +955,13 @@ public class BoardFrame extends WindowBase {
   }
 
   /**
-   * Saves the current routing session as an Eagle script file.
+   * Saves the current routing session as an Autodesk Fusion script file.
    *
    * @param outputFile the destination script file
    * @param designName the design name written into the intermediate session
    */
-  public void saveAsEagleScriptScr(File outputFile, String designName) {
-    exportActions.saveAsEagleScriptScr(outputFile, designName);
+  public void saveAsFusionScriptScr(File outputFile, String designName) {
+    exportActions.saveAsFusionScriptScr(outputFile, designName);
   }
 
   /** Writes a Specctra Design File (DSN). Returns false, if write operation fails. */
