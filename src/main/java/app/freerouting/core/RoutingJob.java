@@ -152,15 +152,36 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     if (content == null) {
       return FileFormat.UNKNOWN;
     }
-    // First, check if it's a JSON file (the first non-whitespace character is '{')
-    for (byte b : content) {
-      if (b == ' ' || b == '\t' || b == '\r' || b == '\n') {
-        continue;
+    // First, check if it's a text-based format (JSON or SCR)
+    int firstNonWs = -1;
+    for (int i = 0; i < content.length; i++) {
+      byte b = content[i];
+      if (b != ' ' && b != '\t' && b != '\r' && b != '\n') {
+        firstNonWs = i;
+        break;
       }
-      if (b == '{') {
+    }
+    if (firstNonWs >= 0) {
+      if (content[firstNonWs] == '{') {
         return FileFormat.KICAD_DESIGN_JSON;
       }
-      break;
+      String textSample =
+          new String(
+                  content,
+                  firstNonWs,
+                  Math.min(content.length - firstNonWs, 64),
+                  java.nio.charset.StandardCharsets.ISO_8859_1)
+              .toUpperCase(java.util.Locale.ROOT);
+      if (textSample.startsWith("GRID ")
+          || textSample.startsWith("GRID;")
+          || textSample.startsWith("SET ")
+          || textSample.startsWith("LAYER ")
+          || textSample.startsWith("WIRE ")
+          || textSample.startsWith("CHANGE LAYER ")
+          || textSample.startsWith("SCRIPT")
+          || textSample.startsWith("RIPUP")) {
+        return FileFormat.SCR;
+      }
     }
 
     // Open the file as a binary file and read the first 6 bytes to determine the
