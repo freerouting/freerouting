@@ -6,9 +6,9 @@ import java.io.Serializable;
 /** Feature toggles controlling optional Freerouting capabilities. */
 public class FeatureFlagsSettings implements Serializable {
 
-  /** Whether multi-threaded operations are enabled. */
+  /** Whether multi-threaded operations are enabled. Default is false. */
   @SerializedName("multi_threading")
-  public boolean multiThreading = true;
+  public boolean multiThreading;
 
   /** Whether inspection mode is enabled. */
   @SerializedName("inspection_mode")

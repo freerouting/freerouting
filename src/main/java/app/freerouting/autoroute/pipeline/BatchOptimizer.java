@@ -55,7 +55,9 @@ public non-sealed class BatchOptimizer extends NamedAlgorithm {
   /** Creates the optimizer used by GUI jobs, honoring the GUI multithreading feature flag. */
   public static BatchOptimizer createForGui(RoutingJob job) {
     BatchOptimizer optimizer;
-    if (globalSettings.featureFlags.multiThreading && job.routerSettings.optimizer.maxThreads > 1) {
+    if (globalSettings != null
+        && globalSettings.featureFlags.multiThreading
+        && job.routerSettings.optimizer.maxThreads > 1) {
       optimizer = new BatchOptimizerMultiThreaded(job);
     } else {
       optimizer = new BatchOptimizer(job);
