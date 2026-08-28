@@ -8,14 +8,11 @@ import app.freerouting.gui.board.BoardSavableSubWindow;
 import app.freerouting.gui.support.GuiTextManager;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.settings.RouterSettings;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -28,13 +25,13 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 
 /** Window handling parameters of the automatic routing. */
 public class WindowAutorouteParameter extends BoardSavableSubWindow {
@@ -55,10 +52,10 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
   private final JFormattedTextField startRipupCosts;
   private final JFormattedTextField maxPassesField;
   private final JPanel jobTimeoutPanel;
-  private final JFormattedTextField jobTimeoutHoursField;
-  private final JFormattedTextField jobTimeoutMinutesField;
-  private final JFormattedTextField jobTimeoutSecondsField;
-  private final JLabel jobTimeoutPreviewLabel;
+  private final JButton jobTimeoutDecrementButton;
+  private final JFormattedTextField jobTimeoutValueField;
+  private final JButton jobTimeoutIncrementButton;
+  private final JComboBox<TimeoutUnitItem> jobTimeoutUnitComboBox;
   private final JFormattedTextField maxThreadsField;
   private final JFormattedTextField[] preferredDirectionTraceCostArr;
   private final JFormattedTextField[] againstPreferredDirectionTraceCostArr;
@@ -330,41 +327,64 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbag.setConstraints(jobTimeoutLabel, gridbagConstraints);
     mainPanel.add(jobTimeoutLabel);
 
-    final NumberFormat timeoutNumberFormat = new DecimalFormat("00");
+    final NumberFormat timeoutValueFormat = new DecimalFormat("#0");
 
-    this.jobTimeoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    this.jobTimeoutPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
     this.jobTimeoutPanel.setOpaque(false);
     this.jobTimeoutPanel.setToolTipText(tm.getText("job_timeout_tooltip"));
 
-    this.jobTimeoutHoursField =
-        createTimeoutField(timeoutNumberFormat, 3, tm.getText("job_timeout_tooltip"));
-    this.jobTimeoutMinutesField =
-        createTimeoutField(timeoutNumberFormat, 2, tm.getText("job_timeout_tooltip"));
-    this.jobTimeoutSecondsField =
-        createTimeoutField(timeoutNumberFormat, 2, tm.getText("job_timeout_tooltip"));
+    Dimension btnSize = new Dimension(26, 24);
+    this.jobTimeoutDecrementButton = new JButton("−");
+    this.jobTimeoutDecrementButton.setPreferredSize(btnSize);
+    this.jobTimeoutDecrementButton.setMargin(new Insets(0, 0, 0, 0));
+    this.jobTimeoutDecrementButton.setFocusable(false);
+    this.jobTimeoutDecrementButton.setToolTipText(tm.getText("job_timeout_tooltip"));
+    this.jobTimeoutDecrementButton.addActionListener(e -> decrementJobTimeout());
 
-    Dimension timeoutFieldSize = this.jobTimeoutHoursField.getPreferredSize();
-    this.jobTimeoutHoursField.setPreferredSize(timeoutFieldSize);
-    this.jobTimeoutMinutesField.setPreferredSize(timeoutFieldSize);
-    this.jobTimeoutSecondsField.setPreferredSize(timeoutFieldSize);
-    this.jobTimeoutHoursField.setMinimumSize(timeoutFieldSize);
-    this.jobTimeoutMinutesField.setMinimumSize(timeoutFieldSize);
-    this.jobTimeoutSecondsField.setMinimumSize(timeoutFieldSize);
-    this.jobTimeoutHoursField.setMaximumSize(timeoutFieldSize);
-    this.jobTimeoutMinutesField.setMaximumSize(timeoutFieldSize);
-    this.jobTimeoutSecondsField.setMaximumSize(timeoutFieldSize);
+    this.jobTimeoutValueField = new JFormattedTextField(timeoutValueFormat);
+    this.jobTimeoutValueField.setFocusLostBehavior(JFormattedTextField.COMMIT);
+    this.jobTimeoutValueField.setColumns(4);
+    this.jobTimeoutValueField.setHorizontalAlignment(JFormattedTextField.CENTER);
+    this.jobTimeoutValueField.setToolTipText(tm.getText("job_timeout_tooltip"));
+    this.jobTimeoutValueField.addFocusListener(
+        new FocusAdapter() {
+          @Override
+          public void focusGained(FocusEvent event) {
+            jobTimeoutValueField.selectAll();
+          }
 
-    this.jobTimeoutPanel.add(this.jobTimeoutHoursField);
-    this.jobTimeoutPanel.add(new JLabel(":"));
-    this.jobTimeoutPanel.add(this.jobTimeoutMinutesField);
-    this.jobTimeoutPanel.add(new JLabel(":"));
-    this.jobTimeoutPanel.add(this.jobTimeoutSecondsField);
+          @Override
+          public void focusLost(FocusEvent event) {
+            commitJobTimeoutEdit();
+          }
+        });
+    this.jobTimeoutValueField.addKeyListener(
+        new KeyAdapter() {
+          @Override
+          public void keyTyped(KeyEvent event) {
+            if (event.getKeyChar() == '\n') {
+              commitJobTimeoutEdit();
+            }
+          }
+        });
 
-    this.jobTimeoutPreviewLabel = new JLabel();
-    this.jobTimeoutPreviewLabel.setForeground(new Color(128, 128, 128));
-    this.jobTimeoutPreviewLabel.setBorder(new EmptyBorder(0, 8, 0, 0));
-    this.jobTimeoutPreviewLabel.setToolTipText(tm.getText("job_timeout_tooltip"));
-    this.jobTimeoutPanel.add(this.jobTimeoutPreviewLabel);
+    this.jobTimeoutIncrementButton = new JButton("+");
+    this.jobTimeoutIncrementButton.setPreferredSize(btnSize);
+    this.jobTimeoutIncrementButton.setMargin(new Insets(0, 0, 0, 0));
+    this.jobTimeoutIncrementButton.setFocusable(false);
+    this.jobTimeoutIncrementButton.setToolTipText(tm.getText("job_timeout_tooltip"));
+    this.jobTimeoutIncrementButton.addActionListener(e -> incrementJobTimeout());
+
+    this.jobTimeoutUnitComboBox = new JComboBox<>();
+    this.jobTimeoutUnitComboBox.setToolTipText(tm.getText("job_timeout_tooltip"));
+    populateTimeoutUnits();
+    this.jobTimeoutUnitComboBox.addActionListener(e -> onTimeoutUnitChanged());
+
+    this.jobTimeoutPanel.add(this.jobTimeoutDecrementButton);
+    this.jobTimeoutPanel.add(this.jobTimeoutValueField);
+    this.jobTimeoutPanel.add(this.jobTimeoutIncrementButton);
+    this.jobTimeoutPanel.add(Box.createHorizontalStrut(4));
+    this.jobTimeoutPanel.add(this.jobTimeoutUnitComboBox);
 
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(jobTimeoutPanel, gridbagConstraints);
@@ -524,6 +544,15 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     if (tm == null) {
       tm = new GuiTextManager(this.getClass(), locale);
     }
+    if (this.jobTimeoutUnitComboBox != null) {
+      populateTimeoutUnits();
+    }
+    if (this.jobTimeoutValueField != null
+        && this.boardHandling != null
+        && this.boardHandling.getCurrentRoutingJob() != null) {
+      setJobTimeoutFields(
+          this.boardHandling.getCurrentRoutingJob().routerSettings.jobTimeoutString);
+    }
   }
 
   /** Handle property change events from RouterSettings to update GUI controls. */
@@ -640,92 +669,142 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     super.parentDeiconified();
   }
 
-  private JFormattedTextField createTimeoutField(
-      NumberFormat numberFormat, int columns, String tooltipText) {
-    JFormattedTextField field = new JFormattedTextField(numberFormat);
-    field.setColumns(columns);
-    field.setHorizontalAlignment(JFormattedTextField.RIGHT);
-    field.setToolTipText(tooltipText);
-    field.addFocusListener(
-        new FocusAdapter() {
-          @Override
-          public void focusGained(FocusEvent event) {
-            field.selectAll();
-          }
+  private record TimeoutUnitItem(
+      WindowAutorouteParameterState.TimeoutUnit unit, String displayName) {
+    @Override
+    public String toString() {
+      return displayName;
+    }
+  }
 
-          @Override
-          public void focusLost(FocusEvent event) {
-            if (!isTimeoutEditorFocused()) {
-              commitJobTimeoutEdit();
-            }
-          }
-        });
-    field.addKeyListener(
-        new KeyAdapter() {
-          @Override
-          public void keyTyped(KeyEvent event) {
-            if (event.getKeyChar() == '\n') {
-              commitJobTimeoutEdit();
-            }
-          }
-        });
-    return field;
+  private void populateTimeoutUnits() {
+    WindowAutorouteParameterState.TimeoutUnit selected = getSelectedTimeoutUnit();
+    this.jobTimeoutUnitComboBox.removeAllItems();
+    for (WindowAutorouteParameterState.TimeoutUnit unit :
+        WindowAutorouteParameterState.TimeoutUnit.values()) {
+      String name =
+          switch (unit) {
+            case MINUTES -> this.tm.getText("timeout_unit_minutes");
+            case HOURS -> this.tm.getText("timeout_unit_hours");
+            case DAYS -> this.tm.getText("timeout_unit_days");
+            case WEEKS -> this.tm.getText("timeout_unit_weeks");
+          };
+      this.jobTimeoutUnitComboBox.addItem(new TimeoutUnitItem(unit, name));
+    }
+    setSelectedTimeoutUnit(
+        selected != null ? selected : WindowAutorouteParameterState.TimeoutUnit.HOURS);
+  }
+
+  private WindowAutorouteParameterState.TimeoutUnit getSelectedTimeoutUnit() {
+    TimeoutUnitItem item = (TimeoutUnitItem) this.jobTimeoutUnitComboBox.getSelectedItem();
+    return item != null ? item.unit() : null;
+  }
+
+  private void setSelectedTimeoutUnit(WindowAutorouteParameterState.TimeoutUnit unit) {
+    if (unit == null) {
+      return;
+    }
+    for (int i = 0; i < this.jobTimeoutUnitComboBox.getItemCount(); i++) {
+      TimeoutUnitItem item = this.jobTimeoutUnitComboBox.getItemAt(i);
+      if (item != null && item.unit() == unit) {
+        this.jobTimeoutUnitComboBox.setSelectedIndex(i);
+        break;
+      }
+    }
+  }
+
+  private long readTimeoutValue() {
+    try {
+      this.jobTimeoutValueField.commitEdit();
+    } catch (java.text.ParseException ignored) {
+      // Fall through to text or value parsing
+    }
+
+    String text = this.jobTimeoutValueField.getText();
+    if (text != null && !text.isBlank()) {
+      try {
+        return Math.max(1, Long.parseLong(text.trim()));
+      } catch (NumberFormatException ignored) {
+        // Fall back
+      }
+    }
+
+    Object val = this.jobTimeoutValueField.getValue();
+    if (val instanceof Number number) {
+      return Math.max(1, number.longValue());
+    }
+    return 1L;
+  }
+
+  private void decrementJobTimeout() {
+    long currentValue = readTimeoutValue();
+    long newValue = Math.max(1, currentValue - 1);
+    this.jobTimeoutValueField.setValue(newValue);
+    commitJobTimeoutEdit();
+  }
+
+  private void incrementJobTimeout() {
+    long currentValue = readTimeoutValue();
+    WindowAutorouteParameterState.TimeoutUnit unit = getSelectedTimeoutUnit();
+    long maxValue =
+        unit != null
+            ? unit.getMaxUnits()
+            : WindowAutorouteParameterState.TimeoutUnit.HOURS.getMaxUnits();
+    long newValue = Math.min(maxValue, currentValue + 1);
+    this.jobTimeoutValueField.setValue(newValue);
+    commitJobTimeoutEdit();
+  }
+
+  private void onTimeoutUnitChanged() {
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
+    long currentValue = readTimeoutValue();
+    WindowAutorouteParameterState.TimeoutUnit unit = getSelectedTimeoutUnit();
+    if (unit != null) {
+      if (currentValue > unit.getMaxUnits()) {
+        this.jobTimeoutValueField.setValue(unit.getMaxUnits());
+      } else if (currentValue < 1) {
+        this.jobTimeoutValueField.setValue(1);
+      }
+    }
+    commitJobTimeoutEdit();
   }
 
   // Set timeout fields based on the provided timeout string (in format "HH:MM:SS" or seconds)
   private void setJobTimeoutFields(String timeoutString) {
     WindowAutorouteParameterState.Timeout timeout =
         WindowAutorouteParameterState.parseTimeout(timeoutString);
-    this.jobTimeoutHoursField.setValue(timeout.hours());
-    this.jobTimeoutMinutesField.setValue(timeout.minutes());
-    this.jobTimeoutSecondsField.setValue(timeout.seconds());
-    this.jobTimeoutPreviewLabel.setText(
-        WindowAutorouteParameterState.formatTimeout(timeout.totalSeconds()));
+    WindowAutorouteParameterState.DecomposedTimeout decomposed =
+        WindowAutorouteParameterState.decomposeTimeout(timeout.totalSeconds());
+    this.jobTimeoutValueField.setValue(decomposed.value());
+    setSelectedTimeoutUnit(decomposed.unit());
   }
 
   private void commitJobTimeoutEdit() {
+    if (this.isUpdatingFromSettings) {
+      return;
+    }
     String oldValue = boardHandling.getCurrentRoutingJob().routerSettings.jobTimeoutString;
     String newValue = buildJobTimeoutString();
     if (newValue == null) {
       newValue = oldValue;
     }
 
-    isUpdatingFromSettings = true;
+    this.isUpdatingFromSettings = true;
     try {
       boardHandling.getCurrentRoutingJob().routerSettings.setJobTimeoutString(newValue);
     } finally {
-      isUpdatingFromSettings = false;
+      this.isUpdatingFromSettings = false;
     }
 
     setJobTimeoutFields(newValue);
   }
 
   private String buildJobTimeoutString() {
-    return WindowAutorouteParameterState.buildTimeout(
-        readTimeoutPart(jobTimeoutHoursField),
-        readTimeoutPart(jobTimeoutMinutesField),
-        readTimeoutPart(jobTimeoutSecondsField));
-  }
-
-  private String formatJobTimeoutSummary(long totalSeconds) {
-    return WindowAutorouteParameterState.formatTimeout(totalSeconds);
-  }
-
-  private long readTimeoutPart(JFormattedTextField field) {
-    String text = field.getText();
-    if ((text == null) || text.isBlank()) {
-      return 0L;
-    }
-    try {
-      return Long.parseLong(text.trim());
-    } catch (NumberFormatException e) {
-      return 0L;
-    }
-  }
-
-  private boolean isTimeoutEditorFocused() {
-    Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-    return (focusOwner != null) && SwingUtilities.isDescendingFrom(focusOwner, jobTimeoutPanel);
+    long value = readTimeoutValue();
+    WindowAutorouteParameterState.TimeoutUnit unit = getSelectedTimeoutUnit();
+    return WindowAutorouteParameterState.buildTimeout(value, unit);
   }
 
   private javax.swing.JComponent createWordWrapLabel(String key, int width, int height) {

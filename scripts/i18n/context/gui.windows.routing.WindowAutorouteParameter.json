@@ -296,7 +296,7 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowAutorouteParameter"
     ],
-    "english_hash": "42555e84b279cf1a3054080a78ce8a642610c507b7238cf309ace67c055c17a2",
+    "english_hash": "e76bf22b9da7784ba16dcc915e20fbcd8d88a04ea9de10f9f10e857902584c9e",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
@@ -647,6 +647,86 @@
       "start_ripup_costs"
     ],
     "ui_role": "tooltip"
+  },
+  "timeout_unit_days": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowAutorouteParameter"
+    ],
+    "english_hash": "e08c0aa8f558f39fa99077e92036cf7d2210fe88ffae4d3b30fd489d9ac99e02",
+    "grammatical_role": "fragment",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "timeout_unit_hours",
+      "timeout_unit_minutes",
+      "timeout_unit_weeks"
+    ],
+    "ui_role": "label"
+  },
+  "timeout_unit_hours": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowAutorouteParameter"
+    ],
+    "english_hash": "21e8492938abc179410c21f3598f141c4c59a8bf2d3b4e475b7d83e10adfc00f",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "timeout_unit_days",
+      "timeout_unit_minutes",
+      "timeout_unit_weeks"
+    ],
+    "ui_role": "label"
+  },
+  "timeout_unit_minutes": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowAutorouteParameter"
+    ],
+    "english_hash": "4f846a84e7fc9ef6e68468c270c9153c20204641bd7b839ad4b8e5233e1c86d0",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "timeout_unit_days",
+      "timeout_unit_hours",
+      "timeout_unit_weeks"
+    ],
+    "ui_role": "label"
+  },
+  "timeout_unit_weeks": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowAutorouteParameter"
+    ],
+    "english_hash": "cf64435fbb0dc7320480f03283eabf7eeee87a284bb0664e99543c39bc9c7001",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "timeout_unit_days",
+      "timeout_unit_hours",
+      "timeout_unit_minutes"
+    ],
+    "ui_role": "label"
   },
   "title": {
     "bundle_desc": "GUI (graphical user interface)",
