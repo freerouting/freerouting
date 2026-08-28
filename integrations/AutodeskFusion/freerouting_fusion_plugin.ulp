@@ -55,57 +55,43 @@ dlgDialog("Freerouting Bridge for Autodesk Fusion") {
 		// Environment Setup Group
 		dlgGroup("Environment Setup") {
 			dlgGridLayout {
-				dlgCell(0, 0) dlgGroup("[0, 0]") {
-					dlgLabel("<div style='border: 2px solid #0066cc; padding: 2px;'><b>Java Runtime:</b></div>");
-				}
-				dlgCell(0, 1) dlgGroup("[0, 1]") {
+				dlgCell(0, 0) dlgLabel("<b>Java Runtime:</b>");
+				dlgCell(0, 1, 0, 2) {
 					if (java_status == 1) {
-						dlgLabel("<div style='border: 2px solid #00aa00; padding: 2px;'><font color='#008800'><b>✓&nbsp;Ready</b></font>&nbsp;(" + filename(java_path) + ")</div>");
+						dlgLabel("<font color='#008800'><b>✓&nbsp;Ready</b></font>&nbsp;(" + filename(java_path) + ")");
 					} else {
-						dlgLabel("<div style='border: 2px solid #cc0000; padding: 2px;'><font color='#cc0000'><b>✗&nbsp;Not&nbsp;Found</b></font></div>");
+						dlgLabel("<font color='#cc0000'><b>✗&nbsp;Not&nbsp;Found</b></font>");
 					}
 				}
-				dlgCell(0, 2) dlgGroup("[0, 2]") {
-					dlgLabel("<div style='border: 2px solid #ff9900; padding: 2px;'>[New Column 2]</div>");
-				}
-				dlgCell(0, 3) dlgGroup("[0, 3]") {
-					dlgPushButton("Check / Browse Java...") {
-						string chosen_java = dlgFileOpen("Locate Java Executable (java.exe)", java_path, "Java Executable (java.exe);;All Files (*.*)");
-						if (strlen(chosen_java) > 0) {
-							java_path = to_ulp_path(chosen_java);
-							java_status = 1;
-							cfgset("Freerouting.JavaPath", java_path);
-							log_info("User manually set Java path: " + java_path);
-							dlgRedisplay();
-						}
-					};
-				}
+				dlgCell(0, 3) dlgPushButton("Check / Browse Java...") {
+					string chosen_java = dlgFileOpen("Locate Java Executable (java.exe)", java_path, "Java Executable (java.exe);;All Files (*.*)");
+					if (strlen(chosen_java) > 0) {
+						java_path = to_ulp_path(chosen_java);
+						java_status = 1;
+						cfgset("Freerouting.JavaPath", java_path);
+						log_info("User manually set Java path: " + java_path);
+						dlgRedisplay();
+					}
+				};
 
-				dlgCell(1, 0) dlgGroup("[1, 0]") {
-					dlgLabel("<div style='border: 2px solid #0066cc; padding: 2px;'><b>Freerouting JAR:</b></div>");
-				}
-				dlgCell(1, 1) dlgGroup("[1, 1]") {
+				dlgCell(1, 0) dlgLabel("<b>Freerouting JAR:</b>");
+				dlgCell(1, 1, 1, 2) {
 					if (jar_status == 1) {
-						dlgLabel("<div style='border: 2px solid #00aa00; padding: 2px;'><font color='#008800'><b>✓&nbsp;Ready</b></font>&nbsp;(" + filename(jar_path) + ")</div>");
+						dlgLabel("<font color='#008800'><b>✓&nbsp;Ready</b></font>&nbsp;(" + filename(jar_path) + ")");
 					} else {
-						dlgLabel("<div style='border: 2px solid #cc0000; padding: 2px;'><font color='#cc0000'><b>✗&nbsp;Not&nbsp;Located</b></font></div>");
+						dlgLabel("<font color='#cc0000'><b>✗&nbsp;Not&nbsp;Located</b></font>");
 					}
 				}
-				dlgCell(1, 2) dlgGroup("[1, 2]") {
-					dlgLabel("<div style='border: 2px solid #ff9900; padding: 2px;'>[New Column 2]</div>");
-				}
-				dlgCell(1, 3) dlgGroup("[1, 3]") {
-					dlgPushButton("Locate Freerouting JAR...") {
-						string chosen_jar = dlgFileOpen("Locate Freerouting JAR file", jar_path, "Executable JAR (*.jar);;All Files (*.*)");
-						if (strlen(chosen_jar) > 0) {
-							jar_path = to_ulp_path(chosen_jar);
-							jar_status = 1;
-							cfgset("Freerouting.JarPath", jar_path);
-							log_info("User manually set JAR path: " + jar_path);
-							dlgRedisplay();
-						}
-					};
-				}
+				dlgCell(1, 3) dlgPushButton("Locate Freerouting JAR...") {
+					string chosen_jar = dlgFileOpen("Locate Freerouting JAR file", jar_path, "Executable JAR (*.jar);;All Files (*.*)");
+					if (strlen(chosen_jar) > 0) {
+						jar_path = to_ulp_path(chosen_jar);
+						jar_status = 1;
+						cfgset("Freerouting.JarPath", jar_path);
+						log_info("User manually set JAR path: " + jar_path);
+						dlgRedisplay();
+					}
+				};
 			}
 		}
 
@@ -114,58 +100,40 @@ dlgDialog("Freerouting Bridge for Autodesk Fusion") {
 		// Board Files & Parameters Group
 		dlgGroup("Routing Settings") {
 			dlgGridLayout {
-				dlgCell(0, 0) dlgGroup("[0, 0]") {
-					dlgLabel("<div style='border: 2px solid #0066cc; padding: 2px;'>DSN Input File:</div>");
-				}
-				dlgCell(0, 1) dlgGroup("[0, 1]") {
-					dlgStringEdit(dsn_display_name);
-				}
-				dlgCell(0, 2) dlgGroup("[0, 2]") {
-					dlgPushButton("Browse DSN...") {
-						string chosen = dlgFileSave("Save Specctra DSN File", get_full_dsn_path(), "Specctra DSN (*.dsn);;All Files (*.*)");
-						if (strlen(chosen) > 0) {
-							chosen = to_ulp_path(chosen);
-							if (filedir(chosen) == log_dir + "/") {
-								dsn_display_name = filename(chosen);
-							} else {
-								dsn_display_name = chosen;
-							}
-							scr_display_name = filesetext(dsn_display_name, ".scr");
-							dlgRedisplay();
+				dlgCell(0, 0) dlgLabel("DSN Input File:");
+				dlgCell(0, 1) dlgStringEdit(dsn_display_name);
+				dlgCell(0, 2) dlgPushButton("Browse DSN...") {
+					string chosen = dlgFileSave("Save Specctra DSN File", get_full_dsn_path(), "Specctra DSN (*.dsn);;All Files (*.*)");
+					if (strlen(chosen) > 0) {
+						chosen = to_ulp_path(chosen);
+						if (filedir(chosen) == log_dir + "/") {
+							dsn_display_name = filename(chosen);
+						} else {
+							dsn_display_name = chosen;
 						}
-					};
-				}
+						scr_display_name = filesetext(dsn_display_name, ".scr");
+						dlgRedisplay();
+					}
+				};
 
-				dlgCell(1, 0) dlgGroup("[1, 0]") {
-					dlgLabel("<div style='border: 2px solid #0066cc; padding: 2px;'>SCR Output File:</div>");
-				}
-				dlgCell(1, 1) dlgGroup("[1, 1]") {
-					dlgStringEdit(scr_display_name);
-				}
-				dlgCell(1, 2) dlgGroup("[1, 2]") {
-					dlgPushButton("Browse SCR...") {
-						string chosen = dlgFileSave("Set Autodesk Fusion Script Destination", get_full_scr_path(), "Fusion Script (*.scr);;All Files (*.*)");
-						if (strlen(chosen) > 0) {
-							chosen = to_ulp_path(chosen);
-							if (filedir(chosen) == log_dir + "/") {
-								scr_display_name = filename(chosen);
-							} else {
-								scr_display_name = chosen;
-							}
-							dlgRedisplay();
+				dlgCell(1, 0) dlgLabel("SCR Output File:");
+				dlgCell(1, 1) dlgStringEdit(scr_display_name);
+				dlgCell(1, 2) dlgPushButton("Browse SCR...") {
+					string chosen = dlgFileSave("Set Autodesk Fusion Script Destination", get_full_scr_path(), "Fusion Script (*.scr);;All Files (*.*)");
+					if (strlen(chosen) > 0) {
+						chosen = to_ulp_path(chosen);
+						if (filedir(chosen) == log_dir + "/") {
+							scr_display_name = filename(chosen);
+						} else {
+							scr_display_name = chosen;
 						}
-					};
-				}
+						dlgRedisplay();
+					}
+				};
 
-				dlgCell(2, 0) dlgGroup("[2, 0]") {
-					dlgLabel("<div style='border: 2px solid #0066cc; padding: 2px;'>Execution Mode:</div>");
-				}
-				dlgCell(2, 1) dlgGroup("[2, 1]") {
-					dlgRadioButton("Headless Mode (Fast background routing, automatic import)", route_mode);
-				}
-				dlgCell(3, 1) dlgGroup("[3, 1]") {
-					dlgRadioButton("Interactive GUI (Visual router window for inspection)", route_mode);
-				}
+				dlgCell(2, 0) dlgLabel("Execution Mode:");
+				dlgCell(2, 1) dlgRadioButton("Headless Mode (Fast background routing, automatic import)", route_mode);
+				dlgCell(3, 1) dlgRadioButton("Interactive GUI (Visual router window for inspection)", route_mode);
 			}
 		}
 
@@ -183,7 +151,7 @@ dlgDialog("Freerouting Bridge for Autodesk Fusion") {
 					dlgStretch(1);
 				}
 				dlgSpacing(4);
-				dlgLabel("<center><small>— Or perform individual pipeline steps —</small></center>");
+				dlgLabel("<center><small>— or perform individual pipeline steps —</small></center>");
 				dlgSpacing(4);
 				dlgHBoxLayout {
 					dlgStretch(1);
