@@ -183,7 +183,21 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
-        // restore the text field.
+        double oldValue =
+            boardHandling.coordinateTransform.boardToUser(
+                boardHandling.getWorkspaceSettings().getHorizontalComponentGrid());
+        try {
+          horizontalGridField.commitEdit();
+        } catch (java.text.ParseException _) {
+          horizontalGridField.setValue(oldValue);
+        }
+        Object input = horizontalGridField.getValue();
+        double inputValue =
+            (input instanceof Number number) ? Math.max(0, number.doubleValue()) : 0;
+        boardHandling
+            .getWorkspaceSettings()
+            .setHorizontalComponentGrid(
+                (int) Math.round(boardHandling.coordinateTransform.userToBoard(inputValue)));
         setHorizontalGridField(boardHandling.getWorkspaceSettings().getHorizontalComponentGrid());
         keyInputCompleted = true;
       }
@@ -224,7 +238,21 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
-        // restore the text field.
+        double oldValue =
+            boardHandling.coordinateTransform.boardToUser(
+                boardHandling.getWorkspaceSettings().getVerticalComponentGrid());
+        try {
+          verticalGridField.commitEdit();
+        } catch (java.text.ParseException _) {
+          verticalGridField.setValue(oldValue);
+        }
+        Object input = verticalGridField.getValue();
+        double inputValue =
+            (input instanceof Number number) ? Math.max(0, number.doubleValue()) : 0;
+        boardHandling
+            .getWorkspaceSettings()
+            .setVerticalComponentGrid(
+                (int) Math.round(boardHandling.coordinateTransform.userToBoard(inputValue)));
         setVerticalGridField(boardHandling.getWorkspaceSettings().getVerticalComponentGrid());
         keyInputCompleted = true;
       }

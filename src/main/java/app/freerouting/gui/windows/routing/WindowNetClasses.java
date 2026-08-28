@@ -167,6 +167,34 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     netClass.isIgnoredByAutorouter = ignoredByAutorouter;
   }
 
+  public static Double parseTraceWidthValue(Object value) {
+    if (value instanceof Number number) {
+      return number.doubleValue();
+    }
+    if (value instanceof String stringValue) {
+      try {
+        return Double.parseDouble(stringValue.replace(',', '.').trim());
+      } catch (Exception _) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  public static boolean applyTraceWidth(
+      NetClass netClass, Object value, CoordinateTransform coordinateTransform) {
+    Double parsedValue = parseTraceWidthValue(value);
+    if (parsedValue == null || parsedValue <= 0 || coordinateTransform == null) {
+      return false;
+    }
+    int traceHalfWidth = (int) Math.round(coordinateTransform.userToBoard(0.5 * parsedValue));
+    if (traceHalfWidth <= 0) {
+      return false;
+    }
+    netClass.setTraceHalfWidth(traceHalfWidth);
+    return true;
+  }
+
   @Override
   public void refresh() {
     this.clClassComboBox.removeAllItems();
@@ -206,6 +234,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
   private void addTable() {
     this.tableModel = new NetClassTableModel();
     this.table = new NetClassTable(this.tableModel);
+    this.table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     final JScrollPane scrollPane = new JScrollPane(this.table);
     int tableHeight = TEXTFIELD_HEIGHT * this.tableModel.getRowCount();
     int tableWidth = TEXTFIELD_WIDTH * this.tableModel.getColumnCount();
@@ -633,7 +662,7 @@ public class WindowNetClasses extends BoardSavableSubWindow {
     public void setValueAt(Object value, int row, int col) {
       RoutingBoard routingBoard = boardFrame.boardPanel.boardHandling.getRoutingBoard();
       BoardRules boardRules = routingBoard.rules;
-      if (col == ColumnName.ON_LAYER.ordinal() || col == ColumnName.TRACE_WIDTH.ordinal()) {
+      if (col == ColumnName.ON_LAYER.ordinal()) {
         return;
       }
       Object netClassName = getValueAt(row, ColumnName.NAME.ordinal());
@@ -744,6 +773,13 @@ public class WindowNetClasses extends BoardSavableSubWindow {
           }
         }
         netRule.setTraceClearanceClass(newClClassIndex);
+      } else if (col == ColumnName.TRACE_WIDTH.ordinal()) {
+        CoordinateTransform coordinateTransform =
+            boardFrame.boardPanel.boardHandling.coordinateTransform;
+        if (!applyTraceWidth(netRule, value, coordinateTransform)) {
+          return;
+        }
+        boardFrame.boardPanel.repaint();
       }
       this.data[row][col] = value;
       fireTableCellUpdated(row, col);

@@ -91,6 +91,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
   private void addTable() {
     this.tableModel = new ViaTableModel();
     this.table = new JTable(this.tableModel);
+    this.table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     this.scrollPane = new JScrollPane(this.table);
     int tableHeight = TEXTFIELD_HEIGHT * this.tableModel.getRowCount();
     int tableWidth = TEXTFIELD_WIDTH * this.tableModel.getColumnCount();
