@@ -236,7 +236,7 @@ string write_arc2line(int j) {
 		real ax = U2G * xc[j] + r * cos(angle);
 		real ay = U2G * yc[j] + r * sin(angle);
 		calc_boundary(ax, ay);
-		sprintf(s, "%s %s ", num2str(ax), num2str(ay)); t += s;
+		sprintf(s, " %s %s", num2str(ax), num2str(ay)); t += s;
 	}
 	return t;
 }
@@ -316,16 +316,28 @@ string write_wire_shape(string pre, string post, char add_size) {
 				area += (pts_x[k] * pts_y[k + 1] - pts_x[k + 1] * pts_y[k]);
 			}
 			int is_closed = (abs(pts_x[0] - pts_x[pt_count - 1]) < 0.1 && abs(pts_y[0] - pts_y[pt_count - 1]) < 0.1);
+
+			string actual_pre = pre;
+			if (!is_closed && strstr(pre, "(polygon ") >= 0) {
+				int poly_pos = strstr(pre, "(polygon ");
+				string prefix = strsub(pre, 0, poly_pos);
+				string rest = strsub(pre, poly_pos + 9);
+				string tokens[];
+				strsplit(tokens, rest, ' ');
+				string layer_name = tokens[0];
+				actual_pre = prefix + "(path " + layer_name + " " + num2str(max(U2G * width[i], 100)) + " ";
+			}
+
 			if (is_closed && area < 0) {
 				// Reverse vertex order to guarantee Counter-Clockwise (CCW) bounded shape
-				t += pre;
+				t += actual_pre;
 				if (add_size) { sprintf(s, " %s ", num2str(U2G * width[i])); t += s; }
 				for (int k = pt_count - 1; k >= 0; k--) {
 					t += pts_str[k] + " ";
 				}
 				t += post;
 			} else {
-				t += pre;
+				t += actual_pre;
 				if (add_size) { sprintf(s, " %s ", num2str(U2G * width[i])); t += s; }
 				for (int k = 0; k < pt_count; k++) {
 					t += pts_str[k] + " ";
