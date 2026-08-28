@@ -195,7 +195,7 @@ Locale-specific PCB terms live in `scripts/i18n/glossary/`:
 
 | File | Purpose |
 |---|---|
-| `_default.json` | English definitions shared as fallback (50 Freerouting/Specctra terms) |
+| `_default.json` | English definitions shared as fallback (90 Freerouting/Specctra terms) |
 | `{locale}.json` | Locale-specific translation guidance (overrides `_default` in LLM prompts) |
 
 One `{locale}.json` exists for every shipped UI locale, plus glossary-only locales prepared for upcoming translations. `validate.py` fails if any file listed in `GLOSSARY_LOCALES` is missing or lacks a term from `_default.json`.
