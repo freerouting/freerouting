@@ -316,9 +316,21 @@ string write_wire_shape(string pre, string post, char add_size) {
 				area += (pts_x[k] * pts_y[k + 1] - pts_x[k + 1] * pts_y[k]);
 			}
 			int is_closed = (abs(pts_x[0] - pts_x[pt_count - 1]) < 0.1 && abs(pts_y[0] - pts_y[pt_count - 1]) < 0.1);
+			int has_self_intersection = 0;
+			if (is_closed) {
+				for (int a = 0; a < pt_count - 1; a++) {
+					for (int b = a + 1; b < pt_count - 1; b++) {
+						if (abs(pts_x[a] - pts_x[b]) < 0.1 && abs(pts_y[a] - pts_y[b]) < 0.1) {
+							has_self_intersection = 1;
+							break;
+						}
+					}
+					if (has_self_intersection) break;
+				}
+			}
 
 			string actual_pre = pre;
-			if (!is_closed && strstr(pre, "(polygon ") >= 0) {
+			if ((!is_closed || has_self_intersection) && strstr(pre, "(polygon ") >= 0) {
 				int poly_pos = strstr(pre, "(polygon ");
 				string prefix = strsub(pre, 0, poly_pos);
 				string rest = strsub(pre, poly_pos + 9);
