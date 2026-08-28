@@ -41,22 +41,22 @@ class SessionToFusionTest {
 
     // Verify grid and settings
     assertTrue(script.contains("GRID "), "Script must define GRID unit");
-    assertTrue(script.contains("SET WIRE_BEND 2\n"), "Script must set wire bend");
-    assertTrue(script.contains("SET OPTIMIZING OFF\n"), "Script must disable optimizing");
+    assertTrue(script.contains("SET WIRE_BEND 2;\n"), "Script must set wire bend");
+    assertTrue(script.contains("SET OPTIMIZING OFF;\n"), "Script must disable optimizing");
 
     // Verify standard layers are activated
     assertTrue(script.contains("LAYER 17;\n"), "Script must activate Pads layer 17");
     assertTrue(script.contains("LAYER 18;\n"), "Script must activate Vias layer 18");
     assertTrue(script.contains("LAYER 19;\n"), "Script must activate Unrouted layer 19");
-    assertTrue(script.contains("LAYER 20;\n"), "Script must activate Dimension layer 20");
 
     // Verify removed layers that previously caused Autodesk Fusion parser failures
+    assertFalse(script.contains("LAYER 20;\n"), "Script must not activate non-copper layer 20");
     assertFalse(script.contains("LAYER 23;\n"), "Script must not activate non-copper layer 23");
     assertFalse(script.contains("LAYER 24;\n"), "Script must not activate non-copper layer 24");
 
     // Verify cleanup and finish commands
     assertTrue(script.contains("RIPUP;\n"), "Script must include RIPUP command");
-    assertTrue(script.contains("RATSNEST\n"), "Script must end with RATSNEST command");
+    assertTrue(script.contains("RATSNEST;\n"), "Script must end with RATSNEST command");
   }
 
   @Test
