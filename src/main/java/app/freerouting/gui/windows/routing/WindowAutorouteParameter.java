@@ -569,7 +569,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       switch (propertyName) {
         case "maxPasses" -> {
           if (newValue != null) {
-            maxPassesField.setValue(newValue);
+            int val = (Integer) newValue;
+            maxPassesField.setValue(val == Integer.MAX_VALUE ? 0 : val);
           }
         }
         case "maxThreads" -> {
@@ -636,7 +637,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.planeViaCostField.setValue(settings.getPlaneViaCosts());
     this.startRipupCosts.setValue(settings.getStartRipupCosts());
     this.maxPassesField.setValue(
-        settings.maxPasses != null && settings.maxPasses == Integer.MAX_VALUE
+        settings.maxPasses == null || settings.maxPasses == Integer.MAX_VALUE
             ? 0
             : settings.maxPasses);
     setJobTimeoutFields(settings.jobTimeoutString);
@@ -1095,7 +1096,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
       if (evt.getKeyChar() == '\n') {
         int oldValue = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
         Object input = maxPassesField.getValue();
-        int inputValue = normalizeIntInput(input, oldValue, 1, 9999);
+        int inputValue = normalizeIntInput(input, oldValue, 0, 9999);
         // Use setter to fire property change event
         isUpdatingFromSettings = true;
         try {

@@ -677,7 +677,7 @@ public class GlobalSettings implements Serializable {
             routerSettings.maxPasses = Integer.decode(args[i + 1]);
 
             if (routerSettings.maxPasses < 0) {
-              routerSettings.maxPasses = 1;
+              routerSettings.maxPasses = 0;
             }
             if (routerSettings.maxPasses > 9999) {
               routerSettings.maxPasses = 9999;

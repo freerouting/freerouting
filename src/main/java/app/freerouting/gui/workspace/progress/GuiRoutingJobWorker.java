@@ -365,7 +365,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
         if (routingJob.routerSettings.maxPasses != null
             && routingJob.routerSettings.maxPasses > 0
-            && 1 > routingJob.routerSettings.maxPasses) {
+            && routingJob.getCurrentPass() > routingJob.routerSettings.maxPasses) {
           completionStatus = "completed with pass number limit hit:";
         }
 

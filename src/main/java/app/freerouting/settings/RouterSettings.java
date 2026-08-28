@@ -931,13 +931,12 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Validates and normalizes values that affect routing execution. */
   public void validate() {
     // Validate maxPasses (0 means no limit)
-    if (this.maxPasses < 0 || this.maxPasses > 9999) {
-      FRLogger.warn("Invalid maxPasses value: " + this.maxPasses + ", using default 9999");
-      this.maxPasses = 9999;
-    } else if (this.maxPasses == 0) {
-      // 0 means no limit, set to maximum
-      this.maxPasses = Integer.MAX_VALUE;
-      FRLogger.debug("maxPasses set to 0 (no limit), using Integer.MAX_VALUE");
+    if (this.maxPasses != null) {
+      if (this.maxPasses < 0 || (this.maxPasses > 9999 && this.maxPasses != Integer.MAX_VALUE)) {
+        FRLogger.warn(
+            "Invalid maxPasses value: " + this.maxPasses + ", using default 0 (no limit)");
+        this.maxPasses = 0;
+      }
     }
 
     // Validate maxThreads (0 means no limit - handled as max available during normalization)
