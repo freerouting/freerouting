@@ -168,6 +168,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
   private JPanel addClearanceTable(BoardFrame boardFrame) {
     this.clearanceTableModel = new ClearanceTableModel(boardFrame.boardPanel.boardHandling);
     this.clearanceTable = new JTable(clearanceTableModel);
+    this.clearanceTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 
     // Put the clearance table into a scroll pane.
     final int textfieldHeight = 16;

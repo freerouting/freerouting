@@ -47,6 +47,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
     this.tableModel = new AssignRuleTableModel();
     this.table = new AssignRuleTable(this.tableModel);
+    this.table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.scrollPane = new JScrollPane(this.table);
     int tableHeight = TEXTFIELD_HEIGHT * Math.min(this.tableModel.getRowCount(), 20);

@@ -45,12 +45,14 @@ public class ColorManager extends BoardSavableSubWindow {
     panel.setPreferredSize(new Dimension(10 + tableWidth, 90 + itemColorTableHeight));
 
     layersColorTable = new JTable(graphicsContext.itemColorTable);
+    layersColorTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     layersColorTable.setPreferredScrollableViewportSize(
         new Dimension(tableWidth, itemColorTableHeight));
     JScrollPane itemScrollPane = initColorTable(layersColorTable, boardFrame.getLocale());
     panel.add(itemScrollPane, BorderLayout.NORTH);
 
     generalColorTable = new JTable(graphicsContext.otherColorTable);
+    generalColorTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     generalColorTable.setPreferredScrollableViewportSize(
         new Dimension(tableWidth, textfieldHeight));
     JScrollPane otherScrollPane = initColorTable(generalColorTable, boardFrame.getLocale());

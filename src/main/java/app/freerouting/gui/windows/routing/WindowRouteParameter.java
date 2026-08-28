@@ -1024,8 +1024,21 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
         double edgeToTurnDist = guiBoardManager.getRoutingBoard().rules.getPinEdgeToTurnDist();
-        edgeToTurnDist = guiBoardManager.coordinateTransform.boardToUser(edgeToTurnDist);
-        edgeToTurnDistField.setValue(edgeToTurnDist);
+        double oldValue = guiBoardManager.coordinateTransform.boardToUser(edgeToTurnDist);
+        try {
+          edgeToTurnDistField.commitEdit();
+        } catch (java.text.ParseException _) {
+          edgeToTurnDistField.setValue(oldValue);
+        }
+        Object input = edgeToTurnDistField.getValue();
+        if (input instanceof Number number) {
+          float inputValue = number.floatValue();
+          guiBoardManager.setPinEdgeToTurnDist(inputValue);
+          settingsRoutingRestrictPinExitDirectionsCheckBox.setSelected(inputValue > 0);
+          refresh();
+        } else {
+          edgeToTurnDistField.setValue(oldValue);
+        }
         keyInputCompleted = true;
       }
     }
@@ -1059,9 +1072,23 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
-        regionWidthField.setValue(
+        double oldValue =
             WindowRouteParameter.this.guiBoardManager.coordinateTransform.boardToUser(
-                regionSlider.getValue() * c_region_scale_factor));
+                regionSlider.getValue() * c_region_scale_factor);
+        try {
+          regionWidthField.commitEdit();
+        } catch (java.text.ParseException _) {
+          regionWidthField.setValue(oldValue);
+        }
+        Object input = regionWidthField.getValue();
+        if (input instanceof Number number) {
+          double userValue = Math.max(0.0, number.doubleValue());
+          double boardValue = guiBoardManager.coordinateTransform.userToBoard(userValue);
+          int sliderValue = (int) Math.round(boardValue / c_region_scale_factor);
+          setPullTightRegionWidth(sliderValue);
+        } else {
+          regionWidthField.setValue(oldValue);
+        }
         keyInputCompleted = true;
       }
     }
@@ -1101,8 +1128,25 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
       if (!keyInputCompleted) {
         int accuracyBoardValue =
             (c_accuracy_max_slider_value - accuracySlider.getValue() + 1) * c_accuracy_scale_factor;
-        accuracyValueField.setValue(
-            guiBoardManager.coordinateTransform.boardToUser(accuracyBoardValue));
+        double oldValue = guiBoardManager.coordinateTransform.boardToUser(accuracyBoardValue);
+        try {
+          accuracyValueField.commitEdit();
+        } catch (java.text.ParseException _) {
+          accuracyValueField.setValue(oldValue);
+        }
+        Object input = accuracyValueField.getValue();
+        if (input instanceof Number number) {
+          double userValue = Math.max(0.0, number.doubleValue());
+          double boardValue = guiBoardManager.coordinateTransform.userToBoard(userValue);
+          int sliderValue =
+              c_accuracy_max_slider_value
+                  - (int) Math.round(boardValue / c_accuracy_scale_factor)
+                  + 1;
+          sliderValue = Math.max(0, Math.min(c_accuracy_max_slider_value, sliderValue));
+          accuracySlider.setValue(sliderValue);
+        } else {
+          accuracyValueField.setValue(oldValue);
+        }
         keyInputCompleted = true;
       }
     }

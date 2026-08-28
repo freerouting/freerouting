@@ -245,25 +245,33 @@ public class WindowManualRules extends BoardSavableSubWindow {
     }
   }
 
+  private void applyTraceWidthFromField() {
+    try {
+      traceWidthField.commitEdit();
+    } catch (java.text.ParseException _) {
+      setSelectedLayer(settingsRoutingManualRuleSelectionLayerComboBox.getSelectedLayer());
+      return;
+    }
+    Object input = traceWidthField.getValue();
+    if (input instanceof Number number && number.doubleValue() > 0) {
+      double inputValue = number.doubleValue();
+      double boardValue = boardHandling.coordinateTransform.userToBoard(inputValue);
+      int newHalfWidth = (int) Math.round(0.5 * boardValue);
+      boardHandling.setManualTraceHalfWidth(
+          settingsRoutingManualRuleSelectionLayerComboBox.getSelectedLayer().index, newHalfWidth);
+      setTraceWidthField(newHalfWidth);
+    } else {
+      setSelectedLayer(settingsRoutingManualRuleSelectionLayerComboBox.getSelectedLayer());
+    }
+  }
+
   private class TraceWidthFieldKeyListener extends KeyAdapter {
 
     @Override
     public void keyTyped(KeyEvent evt) {
       if (evt.getKeyChar() == '\n') {
+        applyTraceWidthFromField();
         keyInputCompleted = true;
-        Object input = traceWidthField.getValue();
-        if (!(input instanceof Number)) {
-          return;
-        }
-        double inputValue = ((Number) input).doubleValue();
-        if (inputValue <= 0) {
-          return;
-        }
-        double boardValue = boardHandling.coordinateTransform.userToBoard(inputValue);
-        int newHalfWidth = (int) Math.round(0.5 * boardValue);
-        boardHandling.setManualTraceHalfWidth(
-            settingsRoutingManualRuleSelectionLayerComboBox.getSelectedLayer().index, newHalfWidth);
-        setTraceWidthField(newHalfWidth);
       } else {
         keyInputCompleted = false;
       }
@@ -275,8 +283,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     @Override
     public void focusLost(FocusEvent evt) {
       if (!keyInputCompleted) {
-        // restore the text field.
-        setSelectedLayer(settingsRoutingManualRuleSelectionLayerComboBox.getSelectedLayer());
+        applyTraceWidthFromField();
         keyInputCompleted = true;
       }
     }
