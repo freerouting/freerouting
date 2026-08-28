@@ -12,7 +12,7 @@ import app.freerouting.util.TextManager;
 public class WindowAutorouteParameterState {
 
   static final long DEFAULT_TIMEOUT_SECONDS = 0L;
-  static final long MAX_TIMEOUT_SECONDS = 86400L;
+  static final long MAX_TIMEOUT_SECONDS = 4 * 7 * 24 * 3600L; // 4 weeks (28 days = 672 hours)
 
   private WindowAutorouteParameterState() {}
 
@@ -35,7 +35,7 @@ public class WindowAutorouteParameterState {
     if (!(input instanceof String stringValue)) {
       return oldValue;
     }
-    return stringValue.matches("^(\\d+\\.)?\\d{1,2}:\\d{2}:\\d{2}$") ? stringValue : oldValue;
+    return stringValue.matches("^(\\d+\\.)?\\d+:\\d{2}:\\d{2}$") ? stringValue : oldValue;
   }
 
   public static Timeout parseTimeout(String timeoutString) {

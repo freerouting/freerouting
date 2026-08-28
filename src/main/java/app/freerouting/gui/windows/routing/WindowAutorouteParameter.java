@@ -337,7 +337,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.jobTimeoutPanel.setToolTipText(tm.getText("job_timeout_tooltip"));
 
     this.jobTimeoutHoursField =
-        createTimeoutField(timeoutNumberFormat, 2, tm.getText("job_timeout_tooltip"));
+        createTimeoutField(timeoutNumberFormat, 3, tm.getText("job_timeout_tooltip"));
     this.jobTimeoutMinutesField =
         createTimeoutField(timeoutNumberFormat, 2, tm.getText("job_timeout_tooltip"));
     this.jobTimeoutSecondsField =

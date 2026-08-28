@@ -29,12 +29,24 @@ class WindowAutorouteParameterStateTest {
   }
 
   @Test
-  void capsTimeoutAtOneDay() {
-    var timeout = WindowAutorouteParameterState.parseTimeout("99:99:99");
+  void capsTimeoutAtFourWeeks() {
+    var timeout = WindowAutorouteParameterState.parseTimeout("999:99:99");
 
-    assertEquals(24, timeout.hours());
+    assertEquals(672, timeout.hours());
     assertEquals(0, timeout.minutes());
     assertEquals(0, timeout.seconds());
-    assertEquals("24:00:00", WindowAutorouteParameterState.buildTimeout(99, 99, 99));
+    assertEquals(2_419_200L, timeout.totalSeconds());
+    assertEquals("672:00:00", WindowAutorouteParameterState.buildTimeout(999, 99, 99));
+    assertEquals("672h", WindowAutorouteParameterState.formatTimeout(timeout.totalSeconds()));
+  }
+
+  @Test
+  void normalizesTimeoutInput() {
+    assertEquals(
+        "672:00:00", WindowAutorouteParameterState.normalizeTimeoutInput("672:00:00", "00:30:00"));
+    assertEquals(
+        "120:30:00", WindowAutorouteParameterState.normalizeTimeoutInput("120:30:00", "00:30:00"));
+    assertEquals(
+        "00:30:00", WindowAutorouteParameterState.normalizeTimeoutInput("invalid", "00:30:00"));
   }
 }
