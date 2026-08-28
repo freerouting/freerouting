@@ -746,24 +746,27 @@ string single_image_d(UL_PACKAGE P) {
 			if (in_range) {
 				if (KOname == "outline") {
 					string pre = T3 + "(outline (path signal 0 ";
-					P.wires(W) {
-						if (Outline == 1) {
-							load_layer_wires(W, L.number);
-							process_wires();
-							t += write_wire_shape(pre, "))\n", false);
+					if (Outline == 1) {
+						P.wires(W) {
+							if (W.layer == L.number) load_layer_wires(W, L.number);
 						}
-						if (Outline == 2) {
-							load_one_wire(W);
-							t += write_wire_shape(pre, "))\n", false);
+						process_wires();
+						t += write_wire_shape(pre, "))\n", false);
+					} else if (Outline == 2) {
+						P.wires(W) {
+							if (W.layer == L.number) {
+								load_one_wire(W);
+								t += write_wire_shape(pre, "))\n", false);
+							}
 						}
 					}
 				} else {
 					string pre = T3 + "(" + KOname + "(polygon " + Lname + " 0 ";
 					P.wires(W) {
-						load_layer_wires(W, L.number);
-						process_wires();
-						t += write_wire_shape(pre, "))\n", false);
+						if (W.layer == L.number) load_layer_wires(W, L.number);
 					}
+					process_wires();
+					t += write_wire_shape(pre, "))\n", false);
 				}
 				P.circles(C) {
 					if (C.layer == L.number) {
