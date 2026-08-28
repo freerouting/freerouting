@@ -41,29 +41,53 @@
 
 ## [Autodesk Fusion](https://www.autodesk.com/products/fusion-360/overview)
 
-Autodesk Fusion Electronics (which replaced standalone Autodesk EAGLE) integrates with Freerouting via a two-way ULP/Script workflow.
+Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freerouting Fusion Plugin ULP ([`freerouting_fusion_plugin.ulp`](../integrations/AutodeskFusion/freerouting_fusion_plugin.ulp)).
 
-### 1) Export DSN from Autodesk Fusion
+### Features
+* **1-Click Auto-Routing:** Exports the Specctra DSN, launches the Freerouting engine in the background (or GUI), and automatically imports the generated tracks and vias back into Fusion.
+* **Step-by-Step Execution:** Optionally export DSN, launch the router, and import the script as individual steps.
+* **Headless or Interactive GUI:** Choose between ultra-fast headless background routing or the visual Freerouting GUI to inspect traces before applying.
+* **Stackup & Keepout Translation:** Accurately maps 2-layer, 4-layer, and multi-layer stackups (including `Route2`, `Route15`, `Bottom`) and keepout wire geometries.
 
-1. In Autodesk Fusion, open your PCB layout.
-2. In the top toolbar, go to the **Automate** tab and click **Run ULP** (or type `run` in the command line at the bottom).
-3. Select [`freerouting_fusion_plugin.ulp`](../integrations/AutodeskFusion/freerouting_fusion_plugin.ulp).
-4. Click **Export DSN** and confirm the save location for `<your_design>.dsn`.
+---
 
-### 2) Autoroute with Freerouting
+### Step-by-Step Guide
 
-1. Open Freerouting and open `<your_design>.dsn`.
-2. Run autorouting.
-3. Save the routed result as an Autodesk Fusion script:
-   - **GUI:** Click **File > Save as...** and select **Autodesk Fusion Script (*.scr)** to generate `<your_design>.scr`.
-   - **CLI:** `freerouting -de <your_design>.dsn -do <your_design>.scr`
+#### 1. Open your PCB Layout & Launch ULP
+1. In Autodesk Fusion, open your PCB layout document.
+2. In the top navigation bar, switch to the **UTILITIES** tab.
+3. Under the **AUTOMATE** panel, click the **>ULP** button (or type `run` in the command line).
 
-### 3) Import Routed Script into Autodesk Fusion
+<p align="center">
+  <img src="../assets/integrations/Fusion_01_Automate_Menu.png" alt="Autodesk Fusion Utilities Automate ULP Menu" align="center" width="750">
+</p>
 
-1. Switch back to your PCB layout in Autodesk Fusion.
-2. In the **Automate** tab, click **Run Script** (or type `script` in the command line at the bottom).
-3. Select `<your_design>.scr`.
-4. Fusion rips up old traces, places the newly routed tracks and vias, and recalculates the ratsnest.
+#### 2. Browse for the Freerouting Plugin
+1. In the ULP dialog window, click the **Browse...** button in the lower-left corner.
+
+<p align="center">
+  <img src="../assets/integrations/Fusion_02_Browse_ULP.png" alt="Browse for ULP" align="center" width="550">
+</p>
+
+2. Navigate to the [`integrations/AutodeskFusion`](../integrations/AutodeskFusion) directory in your Freerouting repository.
+3. Select `freerouting_fusion_plugin.ulp` and click **Open**.
+
+<p align="center">
+  <img src="../assets/integrations/Fusion_03_Select_ULP.png" alt="Select freerouting_fusion_plugin.ulp" align="center" width="650">
+</p>
+
+#### 3. Configure & Run Auto-Routing
+1. In the **Environment Setup** section, verify that both **Java Runtime** and **Freerouting JAR** show a green `✓ Ready` status. *(If not found automatically, click the buttons on the right to locate `java.exe` or `freerouting-executable.jar`)*.
+2. Choose your desired **Execution Mode**:
+   * **Headless Mode:** Fast background routing with automatic script execution and import.
+   * **Interactive GUI:** Opens the visual Freerouting window for inspection.
+3. Click **★ 1-Click Auto-Route (Export -> Route -> Import)** to route the board automatically.
+
+<p align="center">
+  <img src="../assets/integrations/Fusion_04_Run_Freerouting.png" alt="Freerouting Fusion Plugin Dialog Window" align="center" width="750">
+</p>
+
+4. Upon completion, Autodesk Fusion automatically executes the generated script, rips up previous unrouted airwires, places the new tracks and vias across all active layers, and recalculates the ratsnest.
 
 ## [Target 3001!](https://ibfriedrich.com/)
 
