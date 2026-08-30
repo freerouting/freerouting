@@ -35,4 +35,8 @@ public class ApiServerSettings implements Serializable {
   /** Fixed-window request-rate limiting configuration. */
   @SerializedName("rate_limit")
   public RateLimitSettings rateLimit = new RateLimitSettings();
+
+  /** Maximum number of routing jobs the scheduler runs concurrently. */
+  @SerializedName("max_parallel_jobs")
+  public Integer maxParallelJobs = 5;
 }
