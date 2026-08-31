@@ -2,13 +2,13 @@
   "class_name": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "8b4592fb1e67923ba164be5a5093c47d4d7f14a2a90a8abb4652e46a9bd5970d",
-    "grammatical_role": "fragment",
+    "english_hash": "5774209573ced7ef59f350ae855f6753311b9fc1daf97cb8194662325378f228",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAssignNetClass",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "class_name_tooltip"
@@ -20,13 +20,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowAssignNetClass"
     ],
-    "english_hash": "7a80257427f9a40630d6a97dbaa9d97a2fc79faee65c8d1d41b4dcb7e91d9727",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "076554eec41f0668a284978af9466a0e2794281e69bdfd9f6e2bb6c02080c9fd",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAssignNetClass",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "class_name"
@@ -36,13 +36,13 @@
   "net_name": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "b29049c4beee11e875e086a29e9b7c72897acb282632926705aff1b3f3554fe5",
-    "grammatical_role": "fragment",
+    "english_hash": "84d4d7afc3e63f310daac30e4a81c9e14ca4ec3b6bbdaf080b6aeea92df722a1",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAssignNetClass",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "net_name_tooltip"
@@ -54,13 +54,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowAssignNetClass"
     ],
-    "english_hash": "68d7a2c8ff474a66ec5805303fca72309b5aeb5d61d69fd66853263273e13460",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "927014f68030e2d1f558b11d7a8dd8564621131831fed245da4f7f6719534379",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAssignNetClass",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "net_name"

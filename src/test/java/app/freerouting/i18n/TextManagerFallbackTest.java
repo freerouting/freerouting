@@ -70,7 +70,7 @@ class TextManagerFallbackTest {
     TextManager english =
         new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("en"));
 
-    assertEquals("No violations found", english.getText("listEmptyMessage"));
+    assertEquals("No clearance violations found.", english.getText("listEmptyMessage"));
   }
 
   @Test

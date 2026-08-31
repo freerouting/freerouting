@@ -132,13 +132,13 @@
     "code_references": [
       "app.freerouting.gui.menus.PopupMenuMove"
     ],
-    "english_hash": "aa2741b19635777511f20a8aaa173e3fb242e3411a38d36e00c2962d944c37c4",
+    "english_hash": "314f9855372674266d4296eb11aa725159afcf194af2c2ed03722bb35214d51c",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.menus.PopupMenuMove",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -148,13 +148,13 @@
     "code_references": [
       "app.freerouting.gui.menus.PopupMenuMove"
     ],
-    "english_hash": "dbceb4c7c4bfce8c039fe4c5570b91de21cacc67ddc91615d84edb7f4546c9c6",
+    "english_hash": "f618fec01046dc5d98f3970cd3930973a487445ce20c199eee8d95d5f28e9d3b",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.menus.PopupMenuMove",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

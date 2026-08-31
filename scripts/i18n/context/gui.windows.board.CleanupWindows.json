@@ -2,13 +2,13 @@
   "no_route_stubs_found": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "4cfb72ed6e6da0cd92c2a547f963acb0772e722124ae8cbbcf7df15290848098",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "31e9474452e31518304823bc4dc14ad1f195639a673c7b13c50344145194856f",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.CleanupWindows",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "no_unconnected_route_found"
@@ -18,13 +18,13 @@
   "no_unconnected_route_found": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "06313f98f3f4c2c8c7e5d571b2b72baa16a95205b017486871ed7b0be2aa3121",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "926ddbcf5f2da2811c74dea5ab5ac0121210c292e9aee672ef03dc4c4c029d27",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.CleanupWindows",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "no_route_stubs_found"
@@ -34,13 +34,13 @@
   "route_stub_row_message": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "0c9ccbef49ad94b401f1e3c50d800aa266a06dd0ac6f4431a8b8b809dc7c1483",
+    "english_hash": "6f71b97e83ffad30e76d0525c06c653bc641f18d7522b8852b033e23353fe4cd",
     "grammatical_role": "fragment",
     "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.CleanupWindows",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [
       "{{item}}",
       "{{layer}}",
@@ -85,13 +85,13 @@
   "unconnected_route": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "e036028f8686d147f8d95a5ba5cc95ab44c82ca2c77b2872a5b724e4075cdb13",
+    "english_hash": "0a3429bd58dc9a111137625c2865604d3c79077a3ce780b53a84abe068109a94",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.CleanupWindows",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "unconnected_route_row_message"
@@ -101,13 +101,13 @@
   "unconnected_route_row_message": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "39da48584947aa84e53dfc1eae0e4aa8daa1cdf449f29418301a1e03b061184e",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "429b68ac87973d0ac9544bf4bbe4976d66eadd3af65526980f91677c1a8c3907",
+    "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.CleanupWindows",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [
       "{{net}}",
       "{{trace_count}}",

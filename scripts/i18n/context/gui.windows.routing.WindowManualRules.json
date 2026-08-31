@@ -22,13 +22,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowManualRules"
     ],
-    "english_hash": "43e2569508d4e0a5fafb1a8a2c99b5a395d264a4ff265e00580dd86e9e1292fa",
+    "english_hash": "2128b385f6e5e68d9c48d4d2f05126974626454f37bd8d4456f8422e97696080",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "on_layer"
@@ -72,13 +72,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowManualRules"
     ],
-    "english_hash": "1be118c9f055640cc6dcffcfe1b941c0a71153ecab0d4194dd0577ed0f4dac7d",
+    "english_hash": "91e3e3722e13945187777641d24a38073d5d75359bdac2614fd19a76d2960457",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "trace_clearance_class"

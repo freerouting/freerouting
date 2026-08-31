@@ -2,13 +2,13 @@
   "list_empty": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "ba61eea246993d3ff552ff2645a632e9b743d05d0dd96a5cf93f3b472ab69c8a",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "b6bd25f93b9af49c63d5f8c82e5b3b74769e5f2f852c129d6afb180019f96f42",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectInfo",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

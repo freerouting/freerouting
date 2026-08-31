@@ -124,13 +124,13 @@
     "code_references": [
       "app.freerouting.gui.rendering.OtherColorTableModel"
     ],
-    "english_hash": "bebbec7708c9c10e8e2b29aebdeacf6d7b8ef310ba7a687c716bfb5d290a5c36",
+    "english_hash": "3a1279a4c8d1767b125f47f8425741b8703a0f3d5dd4889aa7ccc0b437b039a1",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.rendering.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "FAB_FRONT"
@@ -142,13 +142,13 @@
     "code_references": [
       "app.freerouting.gui.rendering.OtherColorTableModel"
     ],
-    "english_hash": "4ba949483bf9d573ac804a4eedad18d30f3be02561ff5d00e9caac8e438ee929",
+    "english_hash": "8d38f2e969e321431ce0938faaf1d4af4913818f8dd160ebfd9096b4003c9679",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.rendering.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "FAB_BACK"
@@ -260,13 +260,13 @@
     "code_references": [
       "app.freerouting.gui.rendering.OtherColorTableModel"
     ],
-    "english_hash": "e2b07cdb29e43660ed135e221c4469d253fb7547d55c5aa99d5f33f686109e60",
+    "english_hash": "ba65abfabaf5d5e847944da9ea874adf2a779dd104226ac8ae611f5a34ecfa47",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.rendering.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -308,13 +308,13 @@
     "code_references": [
       "app.freerouting.gui.rendering.ItemColorTableModel"
     ],
-    "english_hash": "3a773b4af5c370fabf0fcbb80d51747747738aa439f2dcdc74eed0f3c13e128b",
+    "english_hash": "ecde3703cba080f7f07b849e197666e70ba9376c75f8a5843692d34eb4e1e130",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.rendering.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -410,13 +410,13 @@
     "code_references": [
       "app.freerouting.gui.rendering.OtherColorTableModel"
     ],
-    "english_hash": "3f75292067cb23efc6a84fe4be1cbc3b84485e8fdab47f52b5b4e0b67d673415",
+    "english_hash": "be7d93bf6c6637e40ad42a57aae04ca6352d393b75323b90eedb8cfec257b741",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.rendering.ColorTableModel",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

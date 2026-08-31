@@ -1,6 +1,6 @@
 # English terminology implementation plan
 
-**Status:** In Progress (English files only; foreign files to be regenerated later)  
+**Status:** Completed (English pass; foreign files to be regenerated later)  
 **Authority:** Grok 4.6 High recommendations, accepted over Composer 2.5 where they differ. The side-by-side comparison is the Cursor canvas **terminology recommendations** from the same discussion; this document is the implementation contract.
 
 ### Execution Progress & Task List
@@ -22,9 +22,9 @@
   - [x] Phase C7: Push-and-shove, rename `ScreenMessages.setPostRouteInfo` -> `setOptimizationInfo`
   - [x] Phase C8: Sweep all `*_en.properties` for leftover terminology
   - [x] Phase D: Java comments / javadoc cleanup in touched files
-- [ ] **Task 4: Documentation contract & verification (Commit 4)**
-  - [ ] Phase E: Add English terminology contract to `docs/translations.md`
-  - [ ] Phase F: Refresh context (`extract-context.py`), validate English (`validate.py --locale en -v`), run parity test and code style checks
+- [x] **Task 4: Documentation contract & verification (Commit 4)**
+  - [x] Phase E: Add English terminology contract to `docs/translations.md`
+  - [x] Phase F: Refresh context (`extract-context.py`), validate English (`validate.py --locale en -v`), run parity test and code style checks
 
 ---
 
@@ -438,18 +438,18 @@ Record these as a checklist for the translation change:
 
 ## 9. Acceptance criteria (this pass)
 
-- [ ] No user-facing English string says EAGLE/Eagle as a current export target.
-- [ ] No user-facing English string advertises `.bin`.
-- [ ] Stage titles use **Auto-routing**; engine uses **Autorouter**; actions use **Autoroute**.
-- [ ] Score and summary labels say **incomplete connections**; end-of-run sentence may say **remain unrouted**.
-- [ ] Select/visibility UI says **Component keepout(s)**; glossary still has `place keepout` as Specctra alias.
-- [ ] Info menu cleanup item is **Unconnected traces and vias**, not Dangling copper.
-- [ ] `column_tooltip_5` mentions both shove and pull-tight.
-- [ ] `_default.json` and `en.json` match §6 Phase A; no new glossary keys.
-- [ ] `docs/translations.md` contains the canonical term table.
-- [ ] `extract-context.py --check`, `validate.py --all`, i18n parity test, and Checkstyle/Spotless check pass.
-- [ ] Non-English **wording** is unchanged except mechanical key/placeholder/filter-stub structure.
-- [ ] Helpset still stale (accepted); listed in §8.
+- [x] No user-facing English string says EAGLE/Eagle as a current export target.
+- [x] No user-facing English string advertises `.bin`.
+- [x] Stage titles use **Auto-routing**; engine uses **Autorouter**; actions use **Autoroute**.
+- [x] Score and summary labels say **incomplete connections**; end-of-run sentence may say **remain unrouted**.
+- [x] Select/visibility UI says **Component keepout(s)**; glossary still has `place keepout` as Specctra alias.
+- [x] Info menu cleanup item is **Unconnected traces and vias**, not Dangling copper.
+- [x] `column_tooltip_5` mentions both shove and pull-tight.
+- [x] `_default.json` and `en.json` match §6 Phase A; no new glossary keys.
+- [x] `docs/translations.md` contains the canonical term table.
+- [x] `extract-context.py --check`, `validate.py --locale en -v`, i18n parity test, and Checkstyle/Spotless check pass.
+- [x] Non-English **wording** is unchanged except mechanical key/placeholder/filter-stub structure.
+- [x] Helpset still stale (accepted); listed in §8.
 
 ---
 

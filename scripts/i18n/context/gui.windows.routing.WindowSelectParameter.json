@@ -62,13 +62,13 @@
   "B_Courtyard_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "af9490e916f45763bbec65a4f87a401b2d94e48cbd33eab351000589be1a7b2d",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "d84091f9b3eccaf39b222642e4b5ebff5f942c7037593aa8d83f93c5057a0de7",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "B_Courtyard"
@@ -102,13 +102,13 @@
   "B_Fab_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "b6f2a0696b502b1776f4b6245b31511b36e1cbca337a9ffc61973b987ab2ee04",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "c4edb9ed6184c59f49f6cfc9fca83fc4cc3311a2d49be9360b8bc670d5a4c4dd",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "B_Fab"
@@ -142,13 +142,13 @@
   "B_Silkscreen_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "c512dd47055fd17e6daffbed3c470899656d310bd12922ed5863e9e252019beb",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "8d3ec0bb57e326d5b88bdf50299c20d4b5fd3d7565a16b1b99b98ee95914da68",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "B_Silkscreen"
@@ -160,13 +160,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "304df9560c5dc33d8acb896e0f4a7eb90b41b3a84e62be49604ee5a56ba1b243",
-    "grammatical_role": "fragment",
+    "english_hash": "d63bcbcff29bc352800fd6c704622340b5178606ff1a8b434c0357d4734666a9",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "COMPONENT_KEEPOUT_tooltip"
@@ -286,13 +286,13 @@
   "F_Courtyard_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "cc75f726a3a0cf8a91b47629c0c45780e3a96665780d0faef17a1d39147411df",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "c7aba6584c80058275468843a15d89dc5232b817768adde8d736a0e99b99b72c",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "F_Courtyard"
@@ -326,13 +326,13 @@
   "F_Fab_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "791498fd79190541609c8c99d690b445047ec944ff2897ea42628590a9b3506d",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "166f24d24a08c13c0216b451c23f0e7caeb084bb840b66fabd92bdd2f596b213",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "F_Fab"
@@ -366,13 +366,13 @@
   "F_Silkscreen_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "cc785f7181654e1036c12b6f9fa6a0291ea3a30b2d7f0084380991100f3b2907",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "c2e9556d5bb121d5d6df71bbecf1b6c257256bc97630c2c8a91e37e99ed76687",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "F_Silkscreen"
@@ -400,13 +400,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "2d46f43f0f33e31f59b64db6a125552939c4ce385e7f9a88636aba4068a9199e",
+    "english_hash": "9eeb30d9377066e8a438df6718ac8a07f59024e3d80be8492983434b1f08b315",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "KEEPOUT"
@@ -555,13 +555,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "0e7f5c8dc8b37b571530e2c6039454bd41943f67e6c49e32b2c771c450cef1a8",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "5f10b54beb348114511da1378d45a68b3d42edb74618f94659a8c5001b273348",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "all_visible"
@@ -591,13 +591,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "4b0d3b084689d47e28ae531628d2b527b3c2a15e46706ad6eed127a2a47ad30f",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "fd1391726b5b824f8e254502aa06116f8ff08297640b4d02a7574cb80d63572b",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "current_layer"
@@ -629,13 +629,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "2b69b8c24ffcccaf29c2ea9059debbbe0520f97dc4e3abed9ad7075df05225bb",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "c96b0aadb2ebafb3b2ec4ed94b3f1fa4586ae2060a3be4a6f1d9f4aeb00d2939",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [
       "current_only"
@@ -647,13 +647,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "ccfc6724fd13b7a54c8c011055d74812c6b2ea1c31d63940be904b2537d4ba70",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "6bbcb92ae7972a540db81fb8afc311af8a381986eb8fee1562dbb3c4c125fdc3",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "tooltip"
@@ -663,13 +663,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "aafb461c307ced99e145ccbd9c603079741dccc9efc5d5bd8e491625627fc4c5",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "cad8345bc03556710a25f13c09824d5a1cfe468b2d0aa39c36d3738ba2c7f840",
+    "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [
       "{{layer_name}}"
     ],
@@ -683,13 +683,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "b4847a9f405303337fd746a0926af14c12e8b2c7c701aedba9174243658bfdc4",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "6041f3eaf4052e95b558552477197b4a8890990a976faf17aee658259cca9634",
+    "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [
       "{{layer_name}}"
     ],
@@ -751,13 +751,13 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowSelectParameter"
     ],
-    "english_hash": "da90b33303cba196af7c5d7ebde92900229c72917da77d0d51d2642a95887343",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "6c5c30be9bb19f50e0de4e2750cf5b2067d00d27bb9da0b33944214f254106b7",
+    "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": false,
+    "needs_retranslation": true,
     "placeholders": [
       "{{layer_name}}"
     ],
