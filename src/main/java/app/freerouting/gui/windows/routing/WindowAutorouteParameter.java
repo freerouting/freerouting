@@ -166,10 +166,12 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     gridbagConstraints.gridwidth = 2;
     JLabel viasAllowedLabel = new JLabel();
     tm.setText(viasAllowedLabel, "viasAllowed");
+    viasAllowedLabel.setToolTipText(tm.getText("vias_allowed_tooltip"));
     gridbag.setConstraints(viasAllowedLabel, gridbagConstraints);
     mainPanel.add(viasAllowedLabel);
 
     settingsAutorouterViasAllowed = new JCheckBox();
+    settingsAutorouterViasAllowed.setToolTipText(tm.getText("vias_allowed_tooltip"));
     settingsAutorouterViasAllowed.addActionListener(new ViasAllowedListener());
     settingsAutorouterViasAllowed.addActionListener(
         _ ->

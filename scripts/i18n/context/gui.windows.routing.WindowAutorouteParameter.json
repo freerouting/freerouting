@@ -302,7 +302,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "job_timeout"
@@ -805,7 +805,8 @@
     "placeholders": [],
     "related_keys": [
       "via_costs_tooltip",
-      "vias_allowed"
+      "vias_allowed",
+      "vias_allowed_tooltip"
     ],
     "ui_role": "label"
   },
@@ -838,7 +839,27 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [],
+    "related_keys": [
+      "vias_allowed_tooltip"
+    ],
     "ui_role": "label"
+  },
+  "vias_allowed_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowAutorouteParameter"
+    ],
+    "english_hash": "de33d85b996476d2a092b44d95783d0d4592c4bf2a7b7ad1aa50c89a878021f3",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "vias_allowed"
+    ],
+    "ui_role": "tooltip"
   }
 }

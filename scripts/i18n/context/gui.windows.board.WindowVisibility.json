@@ -223,7 +223,8 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "layer_visibility_control"
+      "layer_visibility_control",
+      "layer_visibility_control_tooltip"
     ],
     "ui_role": "dialog_title"
   },
@@ -241,9 +242,27 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "layer_section_title"
+      "layer_visibility_control_tooltip"
     ],
     "ui_role": "label"
+  },
+  "layer_visibility_control_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.board.WindowVisibility"
+    ],
+    "english_hash": "920dde0f73d9e8e9526ed0603e57a362251454fea4ac3f7b09152b0a5c9d23d4",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.board.WindowVisibility",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "layer_visibility_control"
+    ],
+    "ui_role": "tooltip"
   },
   "object_section_title": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -259,7 +278,8 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "object_visibility_control"
+      "object_visibility_control",
+      "object_visibility_control_tooltip"
     ],
     "ui_role": "dialog_title"
   },
@@ -277,9 +297,27 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "object_section_title"
+      "object_visibility_control_tooltip"
     ],
     "ui_role": "label"
+  },
+  "object_visibility_control_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.board.WindowVisibility"
+    ],
+    "english_hash": "6206abf04d314ca5e159ce8f7202acd39c28d9fd75b41431b2a05d9f206eaa16",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.board.WindowVisibility",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "object_visibility_control"
+    ],
+    "ui_role": "tooltip"
   },
   "reset_to_defaults": {
     "bundle_desc": "GUI (graphical user interface)",

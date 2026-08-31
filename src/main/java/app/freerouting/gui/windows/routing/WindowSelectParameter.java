@@ -111,6 +111,10 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     for (int i = 0; i < filterValues.length; i++) {
       this.settingsSelectItemSelectionChoices[i] =
           new JCheckBox(tm.getText(filterValues[i].toString()));
+      String tooltip = getItemSelectionTooltip(filterValues[i]);
+      if (tooltip != null) {
+        this.settingsSelectItemSelectionChoices[i].setToolTipText(tooltip);
+      }
       gridbag.setConstraints(this.settingsSelectItemSelectionChoices[i], gridbagConstraints);
       mainPanel.add(this.settingsSelectItemSelectionChoices[i], gridbagConstraints);
       settingsSelectItemSelectionChoices[i].addActionListener(new ItemSelectionListener(i));
@@ -252,6 +256,19 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     if (is != null) {
       is.addPropertyChangeListener(_ -> javax.swing.SwingUtilities.invokeLater(this::refresh));
     }
+  }
+
+  private String getItemSelectionTooltip(ItemSelectionFilter.SelectableChoices choice) {
+    return switch (choice) {
+      case CONDUCTION -> tm.getText("CONDUCTION_tooltip");
+      case KEEPOUT -> tm.getText("KEEPOUT_tooltip");
+      case VIA_KEEPOUT -> tm.getText("VIA_KEEPOUT_tooltip");
+      case COMPONENT_KEEPOUT -> tm.getText("COMPONENT_KEEPOUT_tooltip");
+      case BOARD_OUTLINE -> tm.getText("BOARD_OUTLINE_tooltip");
+      case FIXED -> tm.getText("FIXED_tooltip");
+      case UNFIXED -> tm.getText("UNFIXED_tooltip");
+      default -> null;
+    };
   }
 
   private JLabel createSwatch(Color c) {

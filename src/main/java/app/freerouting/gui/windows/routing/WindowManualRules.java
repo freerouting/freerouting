@@ -57,6 +57,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbagConstraints.anchor = GridBagConstraints.WEST;
 
     JLabel viaRuleLabel = new JLabel(tm.getText("viaRule"));
+    viaRuleLabel.setToolTipText(tm.getText("via_rule_tooltip"));
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(viaRuleLabel, gridbagConstraints);
     mainPanel.add(viaRuleLabel);
@@ -67,6 +68,8 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(
         this.settingsRoutingManualRuleSelectionViaRuleComboBox, gridbagConstraints);
+    this.settingsRoutingManualRuleSelectionViaRuleComboBox.setToolTipText(
+        tm.getText("via_rule_tooltip"));
     mainPanel.add(this.settingsRoutingManualRuleSelectionViaRuleComboBox);
     settingsRoutingManualRuleSelectionViaRuleComboBox.addActionListener(
         new ViaRuleComboBoxListener());
@@ -75,6 +78,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     // settingsRoutingManualRuleSelectionViaRuleComboBox.getSelectedItem().toString()));
 
     JLabel classLabel = new JLabel(tm.getText("traceClearanceClass"));
+    classLabel.setToolTipText(tm.getText("trace_clearance_class_tooltip"));
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(classLabel, gridbagConstraints);
     mainPanel.add(classLabel);
@@ -84,6 +88,8 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(
         this.settingsRoutingManualRuleSelectionClearanceComboBox, gridbagConstraints);
+    this.settingsRoutingManualRuleSelectionClearanceComboBox.setToolTipText(
+        tm.getText("trace_clearance_class_tooltip"));
     mainPanel.add(this.settingsRoutingManualRuleSelectionClearanceComboBox);
     settingsRoutingManualRuleSelectionClearanceComboBox.addActionListener(
         new ClearanceComboBoxListener());
@@ -97,6 +103,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     mainPanel.add(separator, gridbagConstraints);
 
     JLabel widthLabel = new JLabel(tm.getText("traceWidth"));
+    widthLabel.setToolTipText(tm.getText("trace_width_tooltip"));
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(widthLabel, gridbagConstraints);
     mainPanel.add(widthLabel);
@@ -106,6 +113,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     this.traceWidthField.setColumns(7);
     int currentHalfWidth = this.boardHandling.getWorkspaceSettings().getManualTraceHalfWidth(0);
     this.setTraceWidthField(currentHalfWidth);
+    this.traceWidthField.setToolTipText(tm.getText("trace_width_tooltip"));
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(traceWidthField, gridbagConstraints);
     mainPanel.add(traceWidthField);
@@ -113,6 +121,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     traceWidthField.addFocusListener(new TraceWidthFieldFocusListener());
 
     JLabel layerLabel = new JLabel(tm.getText("on_layer"));
+    layerLabel.setToolTipText(tm.getText("on_layer_tooltip"));
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(layerLabel, gridbagConstraints);
     mainPanel.add(layerLabel);
@@ -123,6 +132,8 @@ public class WindowManualRules extends BoardSavableSubWindow {
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(
         this.settingsRoutingManualRuleSelectionLayerComboBox, gridbagConstraints);
+    this.settingsRoutingManualRuleSelectionLayerComboBox.setToolTipText(
+        tm.getText("on_layer_tooltip"));
     mainPanel.add(this.settingsRoutingManualRuleSelectionLayerComboBox);
     settingsRoutingManualRuleSelectionLayerComboBox.addActionListener(new LayerComboBoxListener());
     settingsRoutingManualRuleSelectionLayerComboBox.addActionListener(

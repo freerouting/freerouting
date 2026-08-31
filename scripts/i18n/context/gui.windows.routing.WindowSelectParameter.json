@@ -12,8 +12,28 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [],
+    "related_keys": [
+      "BOARD_OUTLINE_tooltip"
+    ],
     "ui_role": "label"
+  },
+  "BOARD_OUTLINE_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowSelectParameter"
+    ],
+    "english_hash": "807d7b9c59664b8aaff309f58415b9fade0770c06233d7ae7d674d213479088e",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "BOARD_OUTLINE"
+    ],
+    "ui_role": "tooltip"
   },
   "B_Courtyard": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -30,6 +50,7 @@
     "placeholders": [],
     "related_keys": [
       "BOARD_OUTLINE",
+      "BOARD_OUTLINE_tooltip",
       "B_Courtyard_tooltip",
       "B_Fab",
       "B_Fab_tooltip",
@@ -69,6 +90,7 @@
     "placeholders": [],
     "related_keys": [
       "BOARD_OUTLINE",
+      "BOARD_OUTLINE_tooltip",
       "B_Courtyard",
       "B_Courtyard_tooltip",
       "B_Fab_tooltip",
@@ -108,6 +130,7 @@
     "placeholders": [],
     "related_keys": [
       "BOARD_OUTLINE",
+      "BOARD_OUTLINE_tooltip",
       "B_Courtyard",
       "B_Courtyard_tooltip",
       "B_Fab",
@@ -145,8 +168,28 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [],
+    "related_keys": [
+      "COMPONENT_KEEPOUT_tooltip"
+    ],
     "ui_role": "label"
+  },
+  "COMPONENT_KEEPOUT_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowSelectParameter"
+    ],
+    "english_hash": "c07def5f702e3278ddf872be56e5d9b77b4c28a9aabd59c370d073bf45246aef",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "COMPONENT_KEEPOUT"
+    ],
+    "ui_role": "tooltip"
   },
   "CONDUCTION": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -164,6 +207,24 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "CONDUCTION_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowSelectParameter"
+    ],
+    "english_hash": "352a3c2324e6064dbde6dab09d632d35b7b6b357e391ec749f3865b081e6840a",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "CONDUCTION"
+    ],
+    "ui_role": "tooltip"
+  },
   "FIXED": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
@@ -180,6 +241,24 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "FIXED_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowSelectParameter"
+    ],
+    "english_hash": "920714e4552a7d3871bd07ef22b7af3b58abc7a2b1e37dcf4a5bf67230f3fb88",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "FIXED"
+    ],
+    "ui_role": "tooltip"
+  },
   "F_Courtyard": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
@@ -195,6 +274,7 @@
     "placeholders": [],
     "related_keys": [
       "FIXED",
+      "FIXED_tooltip",
       "F_Courtyard_tooltip",
       "F_Fab",
       "F_Fab_tooltip",
@@ -234,6 +314,7 @@
     "placeholders": [],
     "related_keys": [
       "FIXED",
+      "FIXED_tooltip",
       "F_Courtyard",
       "F_Courtyard_tooltip",
       "F_Fab_tooltip",
@@ -273,6 +354,7 @@
     "placeholders": [],
     "related_keys": [
       "FIXED",
+      "FIXED_tooltip",
       "F_Courtyard",
       "F_Courtyard_tooltip",
       "F_Fab",
@@ -312,6 +394,24 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
+  },
+  "KEEPOUT_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowSelectParameter"
+    ],
+    "english_hash": "2d46f43f0f33e31f59b64db6a125552939c4ce385e7f9a88636aba4068a9199e",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "KEEPOUT"
+    ],
+    "ui_role": "tooltip"
   },
   "PINS": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -361,6 +461,24 @@
     "related_keys": [],
     "ui_role": "label"
   },
+  "UNFIXED_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowSelectParameter"
+    ],
+    "english_hash": "68a2e780e313eb4878e9a82d04a5bdc9e1ff7696f81302602abcb7fdda437769",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "UNFIXED"
+    ],
+    "ui_role": "tooltip"
+  },
   "VIAS": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
@@ -391,9 +509,28 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "VIAS"
+      "VIAS",
+      "VIA_KEEPOUT_tooltip"
     ],
     "ui_role": "label"
+  },
+  "VIA_KEEPOUT_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowSelectParameter"
+    ],
+    "english_hash": "5a00ffd749d2f02b4020b8de03d96c3626ed297957a0974ca00708c79ddcbda4",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "VIA_KEEPOUT"
+    ],
+    "ui_role": "tooltip"
   },
   "all_visible": {
     "bundle_desc": "GUI (graphical user interface)",

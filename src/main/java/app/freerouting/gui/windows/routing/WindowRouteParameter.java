@@ -109,8 +109,11 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     mainPanel.add(snapAngleLabel);
 
     settingsRoutingSnapAngle90Button = new JRadioButton(tm.getText("90_degree"));
+    settingsRoutingSnapAngle90Button.setToolTipText(tm.getText("90_degree_tooltip"));
     settingsRoutingSnapAngle45Button = new JRadioButton(tm.getText("45_degree"));
+    settingsRoutingSnapAngle45Button.setToolTipText(tm.getText("45_degree_tooltip"));
     settingsRoutingSnapAngleNoneButton = new JRadioButton(tm.getText("none"));
+    settingsRoutingSnapAngleNoneButton.setToolTipText(tm.getText("none_tooltip"));
 
     settingsRoutingSnapAngle90Button.addActionListener(new SnapAngle90Listener());
     settingsRoutingSnapAngle90Button.addActionListener(

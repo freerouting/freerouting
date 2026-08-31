@@ -69,12 +69,14 @@ public class WindowVisibility extends BoardSavableSubWindow {
     this.layerSection =
         new VisibilitySection(
             tm.getText("layer_section_title"),
+            tm.getText("layer_visibility_control_tooltip"),
             layerMessages,
             index -> getBoardHandling().graphicsContext.getRawLayerVisibility(index),
             (index, value) -> getBoardHandling().setLayerVisibility(index, value));
     this.objectSection =
         new VisibilitySection(
             tm.getText("object_section_title"),
+            tm.getText("object_visibility_control_tooltip"),
             objectMessages,
             index -> getBoardHandling().graphicsContext.colorIntensityTable.getValue(index),
             (index, value) ->
@@ -177,6 +179,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
     JLabel layerLabel = new JLabel(tm.getText("layer_section_title"));
     JSlider layerSlider = new JSlider(0, MAX_SLIDER_VALUE, MAX_SLIDER_VALUE);
+    layerSlider.setToolTipText(tm.getText("layer_visibility_control_tooltip"));
     A11y.tag(layerSlider, GuiLocators.DISPLAY_LAYER_VISIBILITY);
     A11y.describe(
         layerSlider, tm.getText("layer_visibility_control"), tm.getText("header_message"));
@@ -186,6 +189,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
     JLabel objectLabel = new JLabel(tm.getText("object_section_title"));
     JSlider objectSlider = new JSlider(0, MAX_SLIDER_VALUE, MAX_SLIDER_VALUE);
+    objectSlider.setToolTipText(tm.getText("object_visibility_control_tooltip"));
     A11y.tag(objectSlider, GuiLocators.DISPLAY_OBJECT_VISIBILITY);
     A11y.describe(
         objectSlider, tm.getText("object_visibility_control"), tm.getText("header_message"));
@@ -279,6 +283,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
   private final class VisibilitySection {
     private final String title;
+    private final String tooltip;
     private final String[] messageArr;
     private final JSlider[] sliderArr;
     private final JTextField[] valueArr;
@@ -289,10 +294,12 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
     private VisibilitySection(
         String title,
+        String tooltip,
         String[] messageArr,
         IntToDoubleFunction currentValueSupplier,
         BiConsumer<Integer, Double> changedValueConsumer) {
       this.title = title;
+      this.tooltip = tooltip;
       this.messageArr = messageArr;
       this.currentValueSupplier = currentValueSupplier;
       this.changedValueConsumer = changedValueConsumer;
@@ -313,6 +320,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
 
       JLabel sectionTitle = new JLabel(title, JLabel.LEFT);
       sectionTitle.setFont(sectionTitle.getFont().deriveFont(java.awt.Font.BOLD));
+      sectionTitle.setToolTipText(tooltip);
       panel.add(sectionTitle, constraints);
 
       for (int i = 0; i < messageArr.length; i++) {
@@ -326,6 +334,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
       JPanel rowPanel = new JPanel(new BorderLayout(2, 0));
 
       JLabel label = new JLabel(messageArr[index], JLabel.LEFT);
+      label.setToolTipText(tooltip);
       Dimension labelSize = new Dimension(LABEL_WIDTH, label.getPreferredSize().height);
       label.setPreferredSize(labelSize);
       rowPanel.add(label, BorderLayout.WEST);
@@ -338,12 +347,14 @@ public class WindowVisibility extends BoardSavableSubWindow {
       Dimension sliderSize =
           new Dimension(SLIDER_WIDTH, sliderArr[index].getPreferredSize().height);
       sliderArr[index].setPreferredSize(sliderSize);
+      sliderArr[index].setToolTipText(tooltip);
       sliderArr[index].addChangeListener(new SliderChangeListener(this, index));
       rowPanel.add(sliderArr[index], BorderLayout.CENTER);
 
       valueArr[index] = new JTextField(5);
       valueArr[index].setEditable(false);
       valueArr[index].setHorizontalAlignment(JTextField.RIGHT);
+      valueArr[index].setToolTipText(tooltip);
       Dimension valueSize =
           new Dimension(VALUE_FIELD_WIDTH, valueArr[index].getPreferredSize().height);
       valueArr[index].setPreferredSize(valueSize);

@@ -52,6 +52,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     gridbagConstraints.gridwidth = 2;
     JLabel horizontalGridLabel = new JLabel(tm.getText("horizontalComponentGrid"));
+    horizontalGridLabel.setToolTipText(tm.getText("horizontal_component_grid_tooltip"));
     gridbag.setConstraints(horizontalGridLabel, gridbagConstraints);
     mainPanel.add(horizontalGridLabel);
 
@@ -61,6 +62,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     this.horizontalGridField.setColumns(5);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(horizontalGridField, gridbagConstraints);
+    horizontalGridField.setToolTipText(tm.getText("horizontal_component_grid_tooltip"));
     mainPanel.add(horizontalGridField);
     setHorizontalGridField(this.boardHandling.getWorkspaceSettings().getHorizontalComponentGrid());
     horizontalGridField.addKeyListener(new HorizontalGridFieldKeyListener());
@@ -68,6 +70,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     gridbagConstraints.gridwidth = 2;
     JLabel verticalGridLabel = new JLabel(tm.getText("verticalComponentGrid"));
+    verticalGridLabel.setToolTipText(tm.getText("vertical_component_grid_tooltip"));
     gridbag.setConstraints(verticalGridLabel, gridbagConstraints);
     mainPanel.add(verticalGridLabel);
 
@@ -75,6 +78,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     this.verticalGridField.setColumns(5);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(verticalGridField, gridbagConstraints);
+    verticalGridField.setToolTipText(tm.getText("vertical_component_grid_tooltip"));
     mainPanel.add(verticalGridField);
     setVerticalGridField(this.boardHandling.getWorkspaceSettings().getVerticalComponentGrid());
     verticalGridField.addKeyListener(new VerticalGridFieldKeyListener());

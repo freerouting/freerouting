@@ -323,7 +323,7 @@
     "related_keys": [],
     "ui_role": "label"
   },
-  "column_tool_tip_1": {
+  "column_tooltip_1": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -337,18 +337,18 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_2",
-      "column_tool_tip_3",
-      "column_tool_tip_4",
-      "column_tool_tip_5",
-      "column_tool_tip_6",
-      "column_tool_tip_7",
-      "column_tool_tip_8",
-      "column_tool_tip_9"
+      "column_tooltip_2",
+      "column_tooltip_3",
+      "column_tooltip_4",
+      "column_tooltip_5",
+      "column_tooltip_6",
+      "column_tooltip_7",
+      "column_tooltip_8",
+      "column_tooltip_9"
     ],
     "ui_role": "label"
   },
-  "column_tool_tip_2": {
+  "column_tooltip_2": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -362,18 +362,18 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_1",
-      "column_tool_tip_3",
-      "column_tool_tip_4",
-      "column_tool_tip_5",
-      "column_tool_tip_6",
-      "column_tool_tip_7",
-      "column_tool_tip_8",
-      "column_tool_tip_9"
+      "column_tooltip_1",
+      "column_tooltip_3",
+      "column_tooltip_4",
+      "column_tooltip_5",
+      "column_tooltip_6",
+      "column_tooltip_7",
+      "column_tooltip_8",
+      "column_tooltip_9"
     ],
     "ui_role": "label"
   },
-  "column_tool_tip_3": {
+  "column_tooltip_3": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -387,18 +387,18 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_1",
-      "column_tool_tip_2",
-      "column_tool_tip_4",
-      "column_tool_tip_5",
-      "column_tool_tip_6",
-      "column_tool_tip_7",
-      "column_tool_tip_8",
-      "column_tool_tip_9"
+      "column_tooltip_1",
+      "column_tooltip_2",
+      "column_tooltip_4",
+      "column_tooltip_5",
+      "column_tooltip_6",
+      "column_tooltip_7",
+      "column_tooltip_8",
+      "column_tooltip_9"
     ],
     "ui_role": "label"
   },
-  "column_tool_tip_4": {
+  "column_tooltip_4": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -412,18 +412,18 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_1",
-      "column_tool_tip_2",
-      "column_tool_tip_3",
-      "column_tool_tip_5",
-      "column_tool_tip_6",
-      "column_tool_tip_7",
-      "column_tool_tip_8",
-      "column_tool_tip_9"
+      "column_tooltip_1",
+      "column_tooltip_2",
+      "column_tooltip_3",
+      "column_tooltip_5",
+      "column_tooltip_6",
+      "column_tooltip_7",
+      "column_tooltip_8",
+      "column_tooltip_9"
     ],
     "ui_role": "label"
   },
-  "column_tool_tip_5": {
+  "column_tooltip_5": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -437,18 +437,18 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_1",
-      "column_tool_tip_2",
-      "column_tool_tip_3",
-      "column_tool_tip_4",
-      "column_tool_tip_6",
-      "column_tool_tip_7",
-      "column_tool_tip_8",
-      "column_tool_tip_9"
+      "column_tooltip_1",
+      "column_tooltip_2",
+      "column_tooltip_3",
+      "column_tooltip_4",
+      "column_tooltip_6",
+      "column_tooltip_7",
+      "column_tooltip_8",
+      "column_tooltip_9"
     ],
     "ui_role": "label"
   },
-  "column_tool_tip_6": {
+  "column_tooltip_6": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -462,18 +462,18 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_1",
-      "column_tool_tip_2",
-      "column_tool_tip_3",
-      "column_tool_tip_4",
-      "column_tool_tip_5",
-      "column_tool_tip_7",
-      "column_tool_tip_8",
-      "column_tool_tip_9"
+      "column_tooltip_1",
+      "column_tooltip_2",
+      "column_tooltip_3",
+      "column_tooltip_4",
+      "column_tooltip_5",
+      "column_tooltip_7",
+      "column_tooltip_8",
+      "column_tooltip_9"
     ],
     "ui_role": "label"
   },
-  "column_tool_tip_7": {
+  "column_tooltip_7": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -487,18 +487,18 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_1",
-      "column_tool_tip_2",
-      "column_tool_tip_3",
-      "column_tool_tip_4",
-      "column_tool_tip_5",
-      "column_tool_tip_6",
-      "column_tool_tip_8",
-      "column_tool_tip_9"
+      "column_tooltip_1",
+      "column_tooltip_2",
+      "column_tooltip_3",
+      "column_tooltip_4",
+      "column_tooltip_5",
+      "column_tooltip_6",
+      "column_tooltip_8",
+      "column_tooltip_9"
     ],
     "ui_role": "label"
   },
-  "column_tool_tip_8": {
+  "column_tooltip_8": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -512,18 +512,18 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_1",
-      "column_tool_tip_2",
-      "column_tool_tip_3",
-      "column_tool_tip_4",
-      "column_tool_tip_5",
-      "column_tool_tip_6",
-      "column_tool_tip_7",
-      "column_tool_tip_9"
+      "column_tooltip_1",
+      "column_tooltip_2",
+      "column_tooltip_3",
+      "column_tooltip_4",
+      "column_tooltip_5",
+      "column_tooltip_6",
+      "column_tooltip_7",
+      "column_tooltip_9"
     ],
     "ui_role": "label"
   },
-  "column_tool_tip_9": {
+  "column_tooltip_9": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowNetClasses"
@@ -537,14 +537,14 @@
     "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
-      "column_tool_tip_1",
-      "column_tool_tip_2",
-      "column_tool_tip_3",
-      "column_tool_tip_4",
-      "column_tool_tip_5",
-      "column_tool_tip_6",
-      "column_tool_tip_7",
-      "column_tool_tip_8"
+      "column_tooltip_1",
+      "column_tooltip_2",
+      "column_tooltip_3",
+      "column_tooltip_4",
+      "column_tooltip_5",
+      "column_tooltip_6",
+      "column_tooltip_7",
+      "column_tooltip_8"
     ],
     "ui_role": "label"
   },

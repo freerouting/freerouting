@@ -12,8 +12,28 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [],
+    "related_keys": [
+      "45_degree_tooltip"
+    ],
     "ui_role": "label"
+  },
+  "45_degree_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowRouteParameter"
+    ],
+    "english_hash": "bbd875cb732cc86000878808c25bc56ce9614770397a6f1a74aa087daaad4477",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowRouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "45_degree"
+    ],
+    "ui_role": "tooltip"
   },
   "90_degree": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -28,8 +48,28 @@
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
-    "related_keys": [],
+    "related_keys": [
+      "90_degree_tooltip"
+    ],
     "ui_role": "label"
+  },
+  "90_degree_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowRouteParameter"
+    ],
+    "english_hash": "e0b4d01bdd1608c24e8d61738376f5b80b5fb5dd749a0a79b04438975ae95a4b",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowRouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "90_degree"
+    ],
+    "ui_role": "tooltip"
   },
   "automatic": {
     "bundle_desc": "GUI (graphical user interface)",
@@ -472,6 +512,24 @@
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
+  },
+  "none_tooltip": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowRouteParameter"
+    ],
+    "english_hash": "017e6a4b8680dac1ce82b124e14ee40e5e781475d1a4b45cf73d8205d0efcd99",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowRouteParameter",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [
+      "none"
+    ],
+    "ui_role": "tooltip"
   },
   "off": {
     "bundle_desc": "GUI (graphical user interface)",
