@@ -1,9 +1,30 @@
 # English terminology implementation plan
 
-**Status:** Planned (not started)  
+**Status:** In Progress (English files only; foreign files to be regenerated later)  
 **Authority:** Grok 4.6 High recommendations, accepted over Composer 2.5 where they differ. The side-by-side comparison is the Cursor canvas **terminology recommendations** from the same discussion; this document is the implementation contract.
 
-Do **not** start coding until this plan is reviewed. After implementation, do **not** run locale re-translation until the maintainer explicitly approves it.
+### Execution Progress & Task List
+
+- [x] **Task 1: Mechanical key and placeholder renames (Commit 1)**
+  - [x] Rename `eagle_*` keys to `fusion_*` in `BoardMenuFile_en.properties`
+  - [x] Rename placeholder token `{{unrouted_count}}` to `{{incomplete_count}}` in `ScreenMessages_en.properties`
+  - [x] Update `ScreenMessages.java` parameter `unroutedCount` -> `incompleteCount`
+- [ ] **Task 2: English glossary values alignment (Commit 2)**
+  - [ ] Update definitions in `scripts/i18n/glossary/_default.json`
+  - [ ] Update definitions in `scripts/i18n/glossary/en.json`
+- [ ] **Task 3: English UI terminology and code copy (Commit 3)**
+  - [ ] Phase C1: Autorouter / Auto-routing property updates
+  - [ ] Phase C2: Incomplete connections property updates
+  - [ ] Phase C3: Fusion and file formats copy updates (`BoardMenuFile_en.properties`, `BoardExportActions.java` string literals)
+  - [ ] Phase C4: Component keepout copy updates (`WindowSelectParameter_en`, `WindowVisibility_en`, `ColorTableModel_en`)
+  - [ ] Phase C5: Unconnected traces vs route stubs (`CleanupWindows_en`, `BoardMenuInfo_en`, javadoc)
+  - [ ] Phase C6: Net-class column tooltips (`WindowNetClasses_en`)
+  - [ ] Phase C7: Push-and-shove, rename `ScreenMessages.setPostRouteInfo` -> `setOptimizationInfo`
+  - [ ] Phase C8: Sweep all `*_en.properties` for leftover terminology
+  - [ ] Phase D: Java comments / javadoc cleanup in touched files
+- [ ] **Task 4: Documentation contract & verification (Commit 4)**
+  - [ ] Phase E: Add English terminology contract to `docs/translations.md`
+  - [ ] Phase F: Refresh context (`extract-context.py`), validate English (`validate.py --locale en -v`), run parity test and code style checks
 
 ---
 

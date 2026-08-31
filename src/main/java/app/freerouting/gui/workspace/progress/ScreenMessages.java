@@ -197,13 +197,13 @@ public class ScreenMessages {
   }
 
   /** Updates the displayed board score and routing counters. */
-  public void setBoardScore(float score, int unroutedCount, int violationCount) {
+  public void setBoardScore(float score, int incompleteCount, int violationCount) {
     requireEdt();
     scoreField.setText(
         tm.getText(
             "score",
             FRLogger.defaultFloatFormat.format(score),
-            String.valueOf(unroutedCount),
+            String.valueOf(incompleteCount),
             String.valueOf(violationCount)));
   }
 }
