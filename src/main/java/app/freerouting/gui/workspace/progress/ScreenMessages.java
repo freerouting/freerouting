@@ -135,8 +135,8 @@ public class ScreenMessages {
         tm.getText("batch_autoroute_layer", String.valueOf(ripped), String.valueOf(failed)));
   }
 
-  /** Updates the footer with post-route statistics. */
-  public void setPostRouteInfo(int viaCount, double traceLength, Unit unit) {
+  /** Updates the footer with optimization statistics. */
+  public void setOptimizationInfo(int viaCount, double traceLength, Unit unit) {
     requireEdt();
     addField.setText(tm.getText("post_route_add", String.valueOf(viaCount)));
     layerField.setText(

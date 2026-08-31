@@ -12,16 +12,16 @@
 - [x] **Task 2: English glossary values alignment (Commit 2)**
   - [x] Update definitions in `scripts/i18n/glossary/_default.json`
   - [x] Update definitions in `scripts/i18n/glossary/en.json`
-- [ ] **Task 3: English UI terminology and code copy (Commit 3)**
-  - [ ] Phase C1: Autorouter / Auto-routing property updates
-  - [ ] Phase C2: Incomplete connections property updates
-  - [ ] Phase C3: Fusion and file formats copy updates (`BoardMenuFile_en.properties`, `BoardExportActions.java` string literals)
-  - [ ] Phase C4: Component keepout copy updates (`WindowSelectParameter_en`, `WindowVisibility_en`, `ColorTableModel_en`)
-  - [ ] Phase C5: Unconnected traces vs route stubs (`CleanupWindows_en`, `BoardMenuInfo_en`, javadoc)
-  - [ ] Phase C6: Net-class column tooltips (`WindowNetClasses_en`)
-  - [ ] Phase C7: Push-and-shove, rename `ScreenMessages.setPostRouteInfo` -> `setOptimizationInfo`
-  - [ ] Phase C8: Sweep all `*_en.properties` for leftover terminology
-  - [ ] Phase D: Java comments / javadoc cleanup in touched files
+- [x] **Task 3: English UI terminology and code copy (Commit 3)**
+  - [x] Phase C1: Autorouter / Auto-routing property updates
+  - [x] Phase C2: Incomplete connections property updates
+  - [x] Phase C3: Fusion and file formats copy updates (`BoardMenuFile_en.properties`, `BoardExportActions.java` string literals)
+  - [x] Phase C4: Component keepout copy updates (`WindowSelectParameter_en`, `WindowVisibility_en`, `ColorTableModel_en`)
+  - [x] Phase C5: Unconnected traces vs route stubs (`CleanupWindows_en`, `BoardMenuInfo_en`, javadoc)
+  - [x] Phase C6: Net-class column tooltips (`WindowNetClasses_en`)
+  - [x] Phase C7: Push-and-shove, rename `ScreenMessages.setPostRouteInfo` -> `setOptimizationInfo`
+  - [x] Phase C8: Sweep all `*_en.properties` for leftover terminology
+  - [x] Phase D: Java comments / javadoc cleanup in touched files
 - [ ] **Task 4: Documentation contract & verification (Commit 4)**
   - [ ] Phase E: Add English terminology contract to `docs/translations.md`
   - [ ] Phase F: Refresh context (`extract-context.py`), validate English (`validate.py --locale en -v`), run parity test and code style checks

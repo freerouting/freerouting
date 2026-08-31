@@ -175,7 +175,8 @@ public final class WorkspacePortAdapter implements WorkspacePort {
             messages.setBatchAutorouteInfo(counters);
           }
           if (progress.viaCount() != null && progress.traceLength() != null) {
-            messages.setPostRouteInfo(progress.viaCount(), progress.traceLength(), progress.unit());
+            messages.setOptimizationInfo(
+                progress.viaCount(), progress.traceLength(), progress.unit());
           }
           messages.setBoardScore(
               progress.boardScore(), progress.incompleteCount(), progress.violationCount());
