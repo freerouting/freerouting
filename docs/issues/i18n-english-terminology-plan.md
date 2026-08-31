@@ -9,9 +9,9 @@
   - [x] Rename `eagle_*` keys to `fusion_*` in `BoardMenuFile_en.properties`
   - [x] Rename placeholder token `{{unrouted_count}}` to `{{incomplete_count}}` in `ScreenMessages_en.properties`
   - [x] Update `ScreenMessages.java` parameter `unroutedCount` -> `incompleteCount`
-- [ ] **Task 2: English glossary values alignment (Commit 2)**
-  - [ ] Update definitions in `scripts/i18n/glossary/_default.json`
-  - [ ] Update definitions in `scripts/i18n/glossary/en.json`
+- [x] **Task 2: English glossary values alignment (Commit 2)**
+  - [x] Update definitions in `scripts/i18n/glossary/_default.json`
+  - [x] Update definitions in `scripts/i18n/glossary/en.json`
 - [ ] **Task 3: English UI terminology and code copy (Commit 3)**
   - [ ] Phase C1: Autorouter / Auto-routing property updates
   - [ ] Phase C2: Incomplete connections property updates
