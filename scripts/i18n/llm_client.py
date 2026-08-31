@@ -40,19 +40,71 @@ def gemini_config() -> Tuple[str, str, str]:
     )
 
 
+CAPACITY_MAX_RETRIES = int(os.environ.get("LLM_CAPACITY_MAX_RETRIES", "100"))
+CAPACITY_DELAYS_S = [10.0, 15.0, 20.0, 30.0, 45.0, 60.0]
+
+
+def _is_server_capacity_error(exc: Exception) -> bool:
+    """HTTP 503: temporary server-side capacity / load spike on Google's infrastructure."""
+    msg = str(exc).lower()
+    return "503" in msg or "high demand" in msg or "unavailable" in msg
+
+
+def _is_quota_or_balance_error(exc: Exception) -> bool:
+    """HTTP 429: client/project quota limit reached or billing balance exhausted."""
+    msg = str(exc).lower()
+    return "429" in msg or "resource_exhausted" in msg or "quota" in msg
+
+
 def _call_with_retry(fn, description: str) -> Optional[str]:
+    capacity_attempt = 0
+    standard_attempt = 0
     last_error: Optional[Exception] = None
-    for attempt in range(MAX_RETRIES):
+
+    while True:
         try:
             return fn()
         except Exception as exc:  # noqa: BLE001 - surface provider errors to user
             last_error = exc
-            delay = RETRY_BASE_DELAY_S * (2 ** attempt)
-            err(f"  {description} failed (attempt {attempt + 1}/{MAX_RETRIES}): {exc}")
-            if attempt + 1 < MAX_RETRIES:
+
+            # 1. Quota or Account Balance Exhausted (HTTP 429) -> Action required from user
+            if _is_quota_or_balance_error(exc):
+                err("\n" + "=" * 68)
+                err("  [ACTION REQUIRED] Gemini API Quota or Account Balance Exhausted (429)")
+                err("  Google AI Studio reported: RESOURCE_EXHAUSTED.")
+                err("  Action needed: Please check your Google AI Studio billing or project quota:")
+                err("    -> https://aistudio.google.com/app/plan_information")
+                err("  Once your quota or balance is restored, re-run the translation command.")
+                err("=" * 68 + "\n")
+                return None
+
+            # 2. Server-side Capacity Spike (HTTP 503) -> Automated backoff & retry
+            if _is_server_capacity_error(exc):
+                if capacity_attempt < CAPACITY_MAX_RETRIES:
+                    delay = CAPACITY_DELAYS_S[min(capacity_attempt, len(CAPACITY_DELAYS_S) - 1)]
+                    capacity_attempt += 1
+                    err(
+                        f"  [Gemini Server Spike] Google's server is experiencing high demand (HTTP 503). "
+                        f"Waiting {delay:.0f}s before retry (attempt {capacity_attempt}/{CAPACITY_MAX_RETRIES})..."
+                    )
+                    time.sleep(delay)
+                    continue
+                err(
+                    f"\n  {description} capacity retries exhausted after "
+                    f"{CAPACITY_MAX_RETRIES} attempts ({sum(CAPACITY_DELAYS_S):.0f}s total wait): {last_error}"
+                )
+                return None
+
+            # 3. Other transient network or server errors -> Standard exponential retry
+            if standard_attempt < MAX_RETRIES:
+                delay = RETRY_BASE_DELAY_S * (2 ** standard_attempt)
+                standard_attempt += 1
+                err(f"  {description} failed (attempt {standard_attempt}/{MAX_RETRIES}): {exc}")
                 time.sleep(delay)
-    err(f"  {description} gave up after {MAX_RETRIES} attempts: {last_error}")
-    return None
+                continue
+
+            err(f"  {description} gave up after {MAX_RETRIES} attempts: {last_error}")
+            return None
 
 
 def call_llm(prompt: str, max_tokens: int = 2000) -> Optional[str]:
@@ -69,12 +121,10 @@ def _gemini_uses_thinking_level(model: str) -> bool:
     return normalized.startswith("gemini-3") or normalized.startswith("gemini-3.")
 
 
-def _gemini_thinking_level() -> str:
-    raw = os.environ.get("LLM_GEMINI_THINKING_LEVEL", "minimal").strip().lower()
-    allowed = {"minimal", "low", "medium", "high"}
-    if raw in allowed:
-        return raw
-    return "minimal"
+def _gemini_thinking_level() -> Optional[str]:
+    raw = os.environ.get("LLM_GEMINI_THINKING_LEVEL", "").strip().lower()
+    allowed = {"low", "medium", "high"}
+    return raw if raw in allowed else None
 
 
 def _gemini_thinking_budget() -> Optional[int]:
@@ -95,13 +145,14 @@ def _gemini_generation_config(model: str, max_tokens: int) -> Dict[str, Any]:
     """Build generationConfig for Gemini REST generateContent."""
     generation_config: Dict[str, Any] = {"maxOutputTokens": max_tokens}
 
-    # Gemini 3.x rejects temperature/top_p/top_k and thinkingBudget.
-    if _gemini_uses_thinking_level(model):
-        generation_config["thinkingConfig"] = {"thinkingLevel": _gemini_thinking_level()}
+    thinking_level = _gemini_thinking_level()
+    if thinking_level is not None:
+        generation_config["thinkingConfig"] = {"thinkingLevel": thinking_level}
     else:
-        thinking_budget = _gemini_thinking_budget()
-        if thinking_budget is not None:
-            generation_config["thinkingConfig"] = {"thinkingBudget": thinking_budget}
+        # Default: thinkingBudget = 0 (disables thinking for fastest speed and lowest cost)
+        budget = _gemini_thinking_budget()
+        if budget is not None:
+            generation_config["thinkingConfig"] = {"thinkingBudget": budget}
 
     return generation_config
 
@@ -201,21 +252,25 @@ def parse_json_response(text: str) -> Optional[Dict[str, Any]]:
 
 def translate_batch(
     prompt: str, expected_keys: List[str], *, english_values: Optional[List[str]] = None
-) -> Optional[Dict[str, str]]:
-    """Call Gemini with a batch prompt; parse JSON map of key -> translation."""
+) -> Tuple[Optional[Dict[str, str]], bool]:
+    """
+    Call Gemini with a batch prompt; returns (parsed_dict, api_success).
+    If api_success is False, the API call itself failed (e.g. 503/429/network).
+    If api_success is True but parsed_dict is None, JSON parsing failed.
+    """
     values = english_values or []
     response = call_llm(prompt, max_tokens=max_tokens_for_values(values))
     if response is None:
-        return None
+        return None, False
 
     parsed = _extract_json_object(response)
     if parsed is None:
         err("  Failed to parse batch JSON response; will retry keys individually")
-        return None
+        return None, True
 
     result: Dict[str, str] = {}
     for key in expected_keys:
         value = parsed.get(key)
         if isinstance(value, str) and value.strip():
             result[key] = value.strip().strip("\"'")
-    return result
+    return result, True

@@ -47,7 +47,7 @@ class LlmClientGeminiTest(unittest.TestCase):
         self.assertEqual(kwargs["headers"]["x-goog-api-key"], "test-key")
         generation_config = kwargs["json"]["generationConfig"]
         self.assertNotIn("temperature", generation_config)
-        self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "minimal")
+        self.assertEqual(generation_config["thinkingConfig"]["thinkingBudget"], 0)
 
     def test_call_gemini_requires_api_key(self) -> None:
         with self.assertRaisesRegex(ValueError, "GEMINI_API_KEY is not set"):
@@ -79,6 +79,16 @@ class LlmClientGeminiTest(unittest.TestCase):
         generation_config = mock_post.call_args.kwargs["json"]["generationConfig"]
         self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "low")
         self.assertNotIn("thinkingBudget", generation_config.get("thinkingConfig", {}))
+
+    def test_is_server_capacity_error(self) -> None:
+        self.assertTrue(llm_client._is_server_capacity_error(ValueError("503 Service Unavailable")))
+        self.assertTrue(llm_client._is_server_capacity_error(ValueError("This model is currently experiencing high demand")))
+        self.assertFalse(llm_client._is_server_capacity_error(ValueError("429 Resource Exhausted")))
+
+    def test_is_quota_or_balance_error(self) -> None:
+        self.assertTrue(llm_client._is_quota_or_balance_error(ValueError("429 RESOURCE_EXHAUSTED")))
+        self.assertTrue(llm_client._is_quota_or_balance_error(ValueError("Quota exceeded for quota metric")))
+        self.assertFalse(llm_client._is_quota_or_balance_error(ValueError("503 Service Unavailable")))
 
 
 if __name__ == "__main__":

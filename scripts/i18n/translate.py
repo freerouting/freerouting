@@ -268,7 +268,15 @@ def translate_items_batch(
 
     prompt = build_batch_prompt(bundle, entries, locale, previous_by_key=previous_by_key)
     english_values = [english_value for _key, english_value, _entry, _previous in normal_batch]
-    parsed = translate_batch(prompt, keys, english_values=english_values)
+    parsed, api_ok = translate_batch(prompt, keys, english_values=english_values)
+
+    if not api_ok:
+        # The API call itself failed (capacity spike, quota, or network error).
+        # Do not cascade into individual failing requests.
+        for key, english_value, _entry, _previous in normal_batch:
+            failed_keys.add(key)
+            failures += 1
+        return translations, failed_keys, failures
 
     if parsed is not None and len(parsed) == len(keys):
         for key, english_value, entry, _previous in normal_batch:
@@ -283,7 +291,7 @@ def translate_items_batch(
             translations[key] = accepted
         return translations, failed_keys, failures
 
-    # Fallback: one key at a time
+    # Fallback: one key at a time (only if the batch API call succeeded but parsing failed)
     for key, english_value, entry, previous in normal_batch:
         full_entry = enrich_entry(entry if entry else default_entry(bundle, key, english_value), english_value)
         prompt = build_single_prompt(full_entry, locale, previous_translation=previous)
@@ -327,7 +335,8 @@ def translate_bundle(
     existing_props = load_properties(locale_properties_path(english_path, locale))
     bundle = bundle_name_from_path(english_path)
 
-    result: Dict[str, str] = dict(existing_props)
+    # Only retain keys that exist in English (automatically eliminates orphan keys)
+    result: Dict[str, str] = {k: v for k, v in existing_props.items() if k in english_props}
     stale_count = 0
     fresh_count = 0
     unchanged_count = 0

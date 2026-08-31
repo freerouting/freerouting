@@ -81,8 +81,9 @@ public class GlobalSettings implements Serializable {
   public final transient DebugSettings debugSettings = new DebugSettings();
 
   private final transient String[] supportedLanguages = {
-    "en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko", "pl",
-    "nl", "tr", "vi", "id", "uk", "cs", "hu", "th", "sv", "ro"
+    "en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "pt_BR", "ja", "ko",
+    "pl", "nl", "tr", "vi", "id", "uk", "cs", "hu", "th", "sv", "ro", "ca", "da", "el", "fi", "he",
+    "hr", "lt", "nb", "sk", "sl"
   };
 
   @SerializedName("version")
@@ -138,7 +139,14 @@ public class GlobalSettings implements Serializable {
   /** Creates global settings with the supported system locale and default source merger. */
   public GlobalSettings() {
     // validate and set the current locale
-    if (Arrays.stream(supportedLanguages).noneMatch(currentLocale.getLanguage()::equals)) {
+    boolean isSupported =
+        Arrays.stream(supportedLanguages)
+            .anyMatch(
+                lang ->
+                    lang.equalsIgnoreCase(currentLocale.getLanguage())
+                        || lang.equalsIgnoreCase(currentLocale.toString())
+                        || lang.equalsIgnoreCase(currentLocale.toLanguageTag().replace("-", "_")));
+    if (!isSupported) {
       // the fallback language is English
       currentLocale = Locale.ENGLISH;
     }
