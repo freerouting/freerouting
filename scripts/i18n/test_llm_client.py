@@ -46,8 +46,8 @@ class LlmClientGeminiTest(unittest.TestCase):
         self.assertIn("/models/gemini-3.7-flash:generateContent", args[0])  # codespell:ignore
         self.assertEqual(kwargs["headers"]["x-goog-api-key"], "test-key")
         generation_config = kwargs["json"]["generationConfig"]
-        self.assertNotIn("temperature", generation_config)
-        self.assertEqual(generation_config["thinkingConfig"]["thinkingBudget"], 0)
+        self.assertEqual(generation_config["thinkingConfig"]["thinkingLevel"], "low")
+        self.assertNotIn("thinkingBudget", generation_config.get("thinkingConfig", {}))
 
     def test_call_gemini_requires_api_key(self) -> None:
         with self.assertRaisesRegex(ValueError, "GEMINI_API_KEY is not set"):

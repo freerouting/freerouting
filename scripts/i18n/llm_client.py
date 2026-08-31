@@ -45,9 +45,15 @@ CAPACITY_DELAYS_S = [10.0, 15.0, 20.0, 30.0, 45.0, 60.0]
 
 
 def _is_server_capacity_error(exc: Exception) -> bool:
-    """HTTP 503: temporary server-side capacity / load spike on Google's infrastructure."""
+    """HTTP 503 or transient network timeout on server-side."""
     msg = str(exc).lower()
-    return "503" in msg or "high demand" in msg or "unavailable" in msg
+    return (
+        "503" in msg
+        or "high demand" in msg
+        or "unavailable" in msg
+        or "timed out" in msg
+        or "timeout" in msg
+    )
 
 
 def _is_quota_or_balance_error(exc: Exception) -> bool:
@@ -121,10 +127,10 @@ def _gemini_uses_thinking_level(model: str) -> bool:
     return normalized.startswith("gemini-3") or normalized.startswith("gemini-3.")
 
 
-def _gemini_thinking_level() -> Optional[str]:
+def _gemini_thinking_level() -> str:
     raw = os.environ.get("LLM_GEMINI_THINKING_LEVEL", "").strip().lower()
     allowed = {"low", "medium", "high"}
-    return raw if raw in allowed else None
+    return raw if raw in allowed else "low"
 
 
 def _gemini_thinking_budget() -> Optional[int]:
@@ -145,11 +151,10 @@ def _gemini_generation_config(model: str, max_tokens: int) -> Dict[str, Any]:
     """Build generationConfig for Gemini REST generateContent."""
     generation_config: Dict[str, Any] = {"maxOutputTokens": max_tokens}
 
-    thinking_level = _gemini_thinking_level()
-    if thinking_level is not None:
-        generation_config["thinkingConfig"] = {"thinkingLevel": thinking_level}
+    if _gemini_uses_thinking_level(model):
+        # Gemini 3.x models require thinkingLevel ("low", "medium", "high"). Default is "low".
+        generation_config["thinkingConfig"] = {"thinkingLevel": _gemini_thinking_level()}
     else:
-        # Default: thinkingBudget = 0 (disables thinking for fastest speed and lowest cost)
         budget = _gemini_thinking_budget()
         if budget is not None:
             generation_config["thinkingConfig"] = {"thinkingBudget": budget}
@@ -190,7 +195,7 @@ def _call_gemini(prompt: str, model: str, api_key: str, base_url: str, max_token
             "x-goog-api-key": api_key,
         },
         json=payload,
-        timeout=120,
+        timeout=60,
     )
     if not resp.ok:
         raise ValueError(
