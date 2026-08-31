@@ -31,18 +31,34 @@
 </head>
 <body>
 
-<header class="header">
-    <div class="header-container">
-        <img alt="Freerouting logo" src="logo_transparent.png">
-        <h1>freerouting</h1>
+<!-- Sticky Navigation Bar -->
+<header class="navbar">
+    <div class="navbar-container">
+        <a class="brand" href="index.html" aria-label="Freerouting Homepage">
+            <img alt="Freerouting logo" src="logo_transparent.png" width="36" height="36">
+            <span class="brand-title">freerouting</span>
+        </a>
+
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <ul class="nav-menu" id="nav-menu">
+            <li><a class="nav-link" href="index.html">Home</a></li>
+            <li><a class="nav-link" href="index.html#features">Features</a></li>
+            <li><a class="nav-link" href="index.html#integrations">Integrations</a></li>
+            <li><a class="nav-link" href="donate.html"><i class="fas fa-heart" style="color: var(--accent-pink);"></i> Support</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <a class="btn btn-secondary btn-sm" href="https://github.com/freerouting/freerouting" id="nav_github" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-github"></i> <span class="nav-action-text">GitHub</span>
+            </a>
+            <a class="btn btn-primary btn-sm" href="https://github.com/freerouting/freerouting/releases" id="nav_download">
+                <i class="fas fa-download"></i> <span class="nav-action-text">Download</span>
+            </a>
+        </div>
     </div>
-    <p>Open-Source PCB Auto-Routing Software</p>
-    <a class="btn" href="index.html" id="nav_home">
-        <i class="fas fa-arrow-left"></i> Home
-    </a>
-    <a class="btn" href="donate.html" id="nav_donate">
-        <i class="fas fa-heart" style="color: #e0245e;"></i> Support & Donate
-    </a>
 </header>
 
 <main class="legal-container">
@@ -172,25 +188,76 @@
         We are neither obliged nor willing to participate in dispute resolution proceedings before a consumer arbitration board, preferring direct amicable resolution via <a href="mailto:info@freerouting.app">info@freerouting.app</a>.
     </p>
 
-    <div style="margin-top: 2.5em; text-align: center;">
-        <a class="btn" href="terms.html">View Terms & Conditions</a>
-        <a class="btn" href="privacy.html">View Privacy Policy</a>
+    <div style="margin-top: 2.5em; text-align: center; display: flex; gap: 1em; justify-content: center; flex-wrap: wrap;">
+        <a class="btn btn-secondary" href="terms.html">View Terms &amp; Conditions</a>
+        <a class="btn btn-secondary" href="privacy.html">View Privacy Policy</a>
     </div>
 </main>
 
+<!-- Modern Multi-Column Footer -->
 <footer class="footer">
-    <p>
-        Freerouting is an open-source project maintained by <strong>Andras Fuchs</strong> &bull; <strong>Foxy Laboratories OÜ</strong><br/>
-        Tartu maantee 67 1-13b, 10115 Tallinn, Harju, Estonia &bull; Contact: <a href="mailto:info@freerouting.app">info@freerouting.app</a>
-    </p>
-    <div class="footer-legal-links">
-        <a href="legal.html" id="footer_legal">Legal Notice (Impressum)</a> |
-        <a href="terms.html" id="footer_terms">Terms & Conditions</a> |
-        <a href="privacy.html" id="footer_privacy">Privacy Policy</a> |
-        <a href="#" onclick="openCookiePreferences(); return false;" id="footer_cookie_settings">Cookie Settings</a> |
-        <a href="https://github.com/freerouting/freerouting" target="_blank" rel="noopener noreferrer" id="footer_github">GitHub</a>
+    <div class="footer-container">
+        <div class="footer-col">
+            <div style="display: flex; align-items: center; gap: 0.6em; margin-bottom: 0.8em;">
+                <img alt="Freerouting logo" src="logo_transparent.png" width="30" height="30">
+                <strong style="font-size: 1.25em; color: var(--gold-primary); font-family: 'NotoSansItalic', sans-serif;">freerouting</strong>
+            </div>
+            <p class="footer-brand-desc">
+                World's leading open-source, fully-automated PCB routing software. Free and independent software empowering hardware engineers, makers, and students worldwide.
+            </p>
+            <p style="font-size: 0.9em; color: #9ca3af; margin-top: 1em;">
+                Maintained by <strong>Andras Fuchs</strong> &bull; <strong>Foxy Laboratories OÜ</strong><br>
+                Tartu maantee 67 1-13b, 10115 Tallinn, Harju, Estonia<br>
+                Contact: <a href="mailto:info@freerouting.app">info@freerouting.app</a>
+            </p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="https://github.com/freerouting/freerouting/releases">Download Releases</a></li>
+                <li><a href="donate.html">Support &amp; Donate</a></li>
+                <li><a href="benchmarks.html">Performance Benchmarks</a></li>
+                <li><a href="https://github.com/freerouting/freerouting/blob/master/docs/API/MCP.md">MCP AI Documentation</a></li>
+                <li><a href="https://forms.gle/EqbxFZMSQiSsR4WM8">Request API Access</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Legal &amp; Compliance</h4>
+            <ul class="footer-links">
+                <li><a href="legal.html" id="footer_legal">Legal Notice (Impressum)</a></li>
+                <li><a href="terms.html" id="footer_terms">Terms &amp; Conditions</a></li>
+                <li><a href="privacy.html" id="footer_privacy">Privacy Policy</a></li>
+                <li><a href="#" onclick="openCookiePreferences(); return false;" id="footer_cookie_settings">Cookie Settings</a></li>
+                <li><a href="https://github.com/freerouting/freerouting" target="_blank" rel="noopener noreferrer" id="footer_github">GitHub Repository</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 Freerouting &bull; Foxy Laboratories OÜ. All rights reserved. Open-source under GPLv3.</p>
+        <div class="footer-legal-links">
+            <a href="legal.html">Legal Notice</a>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="#" onclick="openCookiePreferences(); return false;">Cookies</a>
+        </div>
     </div>
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggle = document.getElementById('nav-toggle');
+        const menu = document.getElementById('nav-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', function() {
+                menu.classList.toggle('active');
+            });
+        }
+    });
+</script>
 
 </body>
 </html>
