@@ -353,6 +353,57 @@ def route_single_board(
         phases = parse_phases_from_text(stdout_text)
     resources = manifest_data.get("resource_usage", {})
 
+    if not manifest_data and stdout_text:
+        # Fallback to parsing metrics from stdout for versions without result_json (e.g. 2.2.4, 2.3.0)
+        m_comp = re.findall(
+            r"Auto-rout\w+ (?:session|stage) completed:.*final score:\s*([\d\.]+)(?:\s*\((.*?)\))?.*using ([\d\.]+) total CPU seconds,\s*([\d\.]+) GB total allocated,\s*and\s*([\d\.]+) MB peak heap usage",
+            stdout_text,
+        )
+        if m_comp:
+            score_str, extra, cpu_s, alloc_gb, peak_mb = m_comp[-1]
+            try:
+                score_val = float(score_str)
+            except Exception:
+                pass
+            try:
+                resources = {
+                    "cpu_time": float(cpu_s),
+                    "max_memory": float(alloc_gb),
+                    "peak_memory": float(peak_mb),
+                }
+            except Exception:
+                pass
+            unrouted_count = 0
+            violations_count = 0
+            if extra:
+                m_u = re.search(r"(\d+)\s+unrouted", extra)
+                if m_u:
+                    unrouted_count = int(m_u.group(1))
+                m_v = re.search(r"(\d+)\s+violations?", extra)
+                if m_v:
+                    violations_count = int(m_v.group(1))
+            elif score_val is not None and score_val < 990:
+                unrouted_count = 1
+        else:
+            m_pass = re.findall(r"Auto-rout\w+ pass #\d+.*(?:score of|score)\s*([\d\.]+)(?:\s*\((.*?)\))?", stdout_text)
+            if m_pass:
+                score_str, extra = m_pass[-1]
+                try:
+                    score_val = float(score_str)
+                except Exception:
+                    pass
+                unrouted_count = 0
+                violations_count = 0
+                if extra:
+                    m_u = re.search(r"(\d+)\s+unrouted", extra)
+                    if m_u:
+                        unrouted_count = int(m_u.group(1))
+                    m_v = re.search(r"(\d+)\s+violations?", extra)
+                    if m_v:
+                        violations_count = int(m_v.group(1))
+                elif score_val is not None and score_val < 990:
+                    unrouted_count = 1
+
     b_board = fixture_meta.get("board", {})
     b_cad = fixture_meta.get("cad", {})
     tier = fixture_meta.get("tier", "B")
