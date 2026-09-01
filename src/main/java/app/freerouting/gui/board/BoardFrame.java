@@ -1030,6 +1030,9 @@ public class BoardFrame extends WindowBase {
     if (this.logEntryAddedListener != null) {
       FRLogger.getLogEntries().removeLogEntryAddedListener(this.logEntryAddedListener);
     }
+    if (Freerouting.globalSettings != null && Freerouting.globalSettings.guiSettings != null) {
+      Freerouting.globalSettings.guiSettings.isRunning = false;
+    }
     super.dispose();
   }
 
@@ -1271,7 +1274,10 @@ public class BoardFrame extends WindowBase {
     @Override
     public void windowClosing(WindowEvent evt) {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-      boolean wasBoardChanged = boardPanel.boardHandling.isBoardChanged();
+      boolean wasBoardChanged =
+          boardPanel != null
+              && boardPanel.boardHandling != null
+              && boardPanel.boardHandling.isBoardChanged();
       if (wasBoardChanged) {
         // Create a JOptionPane with a warning icon and set the default option to NO
         Object[] options = {tm.getText("confirm_exit_yes"), tm.getText("confirm_exit_no")};
@@ -1304,9 +1310,25 @@ public class BoardFrame extends WindowBase {
 
       // If we started the GUI, we must shut down both the GUI and the API (if it's
       // running)
-      Freerouting.globalSettings.guiSettings.isRunning = false;
-      Freerouting.globalSettings.apiServerSettings.isRunning = false;
+      if (Freerouting.globalSettings != null) {
+        if (Freerouting.globalSettings.guiSettings != null) {
+          Freerouting.globalSettings.guiSettings.isRunning = false;
+        }
+        if (Freerouting.globalSettings.apiServerSettings != null) {
+          Freerouting.globalSettings.apiServerSettings.isRunning = false;
+        }
+        if (Freerouting.globalSettings.mcpServerSettings != null) {
+          Freerouting.globalSettings.mcpServerSettings.isRunning = false;
+        }
+      }
       Freerouting.stopApiServer();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent evt) {
+      if (Freerouting.globalSettings != null && Freerouting.globalSettings.guiSettings != null) {
+        Freerouting.globalSettings.guiSettings.isRunning = false;
+      }
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +77,10 @@ public class BoardMenuFile extends JMenu {
     fileExitMenuitem.setToolTipText(tm.getText("exit_tooltip"));
     fileExitMenuitem.setAccelerator(
         KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
-    fileExitMenuitem.addActionListener(_ -> boardFrame.dispose());
     fileExitMenuitem.addActionListener(
         _ -> FRAnalytics.buttonClicked("fileExitMenuitem", fileExitMenuitem.getText()));
+    fileExitMenuitem.addActionListener(
+        _ -> boardFrame.dispatchEvent(new WindowEvent(boardFrame, WindowEvent.WINDOW_CLOSING)));
 
     add(fileExitMenuitem);
 

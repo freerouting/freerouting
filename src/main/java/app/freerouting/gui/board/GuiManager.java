@@ -26,8 +26,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -321,14 +319,6 @@ public class GuiManager {
           FRAnalytics.buttonClicked("auto_start_routing_dialog_cancel", "Cancel");
         }
       }
-
-      newFrame.addWindowListener(
-          new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent evt) {
-              System.exit(0);
-            }
-          });
     } else {
       // we didn't have any input file passed as a parameter
       // we load a blank board
