@@ -34,7 +34,7 @@ class TextManagerFallbackTest {
   void resolvesItalianTranslationsFromLocaleBundle() {
     TextManager italian = new TextManager(BoardFrame.class, Locale.forLanguageTag("it-IT"));
 
-    assertEquals("annulla (Esc)", italian.getText("cancel"));
+    assertEquals("Annulla (Esc)", italian.getText("cancel"));
   }
 
   @Test

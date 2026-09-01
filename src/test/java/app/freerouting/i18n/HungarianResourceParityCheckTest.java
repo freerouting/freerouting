@@ -47,17 +47,6 @@ class HungarianResourceParityCheckTest {
     return properties;
   }
 
-  /** Keys renamed or added in English that will be populated when Hungarian is regenerated. */
-  private static final Set<String> PENDING_REGENERATION_KEYS =
-      Set.of(
-          "fusion_script",
-          "fusion_script_tooltip",
-          "info_fusion_scr_extension",
-          "status_creating_fusion_script",
-          "status_fusion_script_file_label",
-          "layer_visibility_control_tooltip",
-          "object_visibility_control_tooltip");
-
   @Test
   void mvpBundlesHaveCompleteHungarianVariants() throws Exception {
     for (String base : MVP_BUNDLES) {
@@ -65,7 +54,7 @@ class HungarianResourceParityCheckTest {
       Properties hu = load(base, "hu");
       Set<String> missing = new TreeSet<>();
       for (String key : en.stringPropertyNames()) {
-        if (!hu.containsKey(key) && !PENDING_REGENERATION_KEYS.contains(key)) {
+        if (!hu.containsKey(key) && !key.startsWith("text_manager_fallback_")) {
           missing.add(key);
         }
       }

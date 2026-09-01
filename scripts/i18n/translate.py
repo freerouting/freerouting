@@ -54,6 +54,8 @@ from properties_io import (  # noqa: E402
     write_properties,
 )
 
+FALLBACK_PROBE_KEYS = {"text_manager_fallback_class_probe", "text_manager_fallback_common_probe"}
+
 
 def validate_placeholders(english: str, translation: str) -> bool:
     eng_ph = set(PLACEHOLDER_RE.findall(english))
@@ -177,7 +179,7 @@ def get_work_items(
     items: List[Tuple[str, str, Dict[str, Any], Optional[str]]] = []
 
     for key, english_value in english_props.items():
-        if ICON_KEY_RE.match(english_value):
+        if ICON_KEY_RE.match(english_value) or key in FALLBACK_PROBE_KEYS:
             continue
 
         qualified = f"{bundle}.{key}"
@@ -225,13 +227,11 @@ def translate_items_batch(
 
     for key, english_value, entry, _previous in batch:
         if should_translate_by_segments(english_value):
-            segment_count = len(split_property_newlines(english_value))
-            out(f"  {symbol('sync')} Translating {key} by segments ({segment_count} lines)...")
             raw = translate_by_segments(
                 bundle, key, english_value, entry if entry else default_entry(bundle, key, english_value), locale
             )
             if raw is None:
-                out(" FAILED")
+                err(f"    {symbol('fail')} Segment translation failed for {key}")
                 failures += 1
                 failed_keys.add(key)
                 continue
@@ -243,11 +243,10 @@ def translate_items_batch(
                 assembled_from_segments=True,
             )
             if accepted is None:
-                out(" FAILED")
+                err(f"    {symbol('fail')} Segment validation failed for {key}")
                 failures += 1
                 failed_keys.add(key)
                 continue
-            out(" OK")
             translations[key] = accepted
         else:
             normal_batch.append((key, english_value, entry, _previous))
@@ -295,10 +294,9 @@ def translate_items_batch(
     for key, english_value, entry, previous in normal_batch:
         full_entry = enrich_entry(entry if entry else default_entry(bundle, key, english_value), english_value)
         prompt = build_single_prompt(full_entry, locale, previous_translation=previous)
-        out(f"  {symbol('sync')} Translating: {key}...", end="")
         translation = call_llm(prompt, max_tokens=max_tokens_for_values([english_value]))
         if translation is None:
-            out(" FAILED")
+            err(f"    {symbol('fail')} Translation failed for {key}")
             failures += 1
             failed_keys.add(key)
             continue
@@ -307,15 +305,13 @@ def translate_items_batch(
         )
         if accepted is None:
             if should_translate_by_segments(english_value):
-                out(" retrying by segments...", end="")
                 raw = translate_by_segments(bundle, key, english_value, full_entry, locale)
                 accepted = _accept_translation(key, english_value, raw or "", full_entry) if raw else None
             if accepted is None:
-                out(" FAILED")
+                err(f"    {symbol('fail')} Translation validation failed for {key}")
                 failures += 1
                 failed_keys.add(key)
                 continue
-        out(" OK")
         translations[key] = accepted
         time.sleep(0.05)
 
@@ -335,8 +331,11 @@ def translate_bundle(
     existing_props = load_properties(locale_properties_path(english_path, locale))
     bundle = bundle_name_from_path(english_path)
 
-    # Only retain keys that exist in English (automatically eliminates orphan keys)
-    result: Dict[str, str] = {k: v for k, v in existing_props.items() if k in english_props}
+    # Only retain keys that exist in English (automatically eliminates orphan keys and test probe keys)
+    result: Dict[str, str] = {
+        k: v for k, v in existing_props.items()
+        if k in english_props and k not in FALLBACK_PROBE_KEYS
+    }
     stale_count = 0
     fresh_count = 0
     unchanged_count = 0
@@ -369,8 +368,6 @@ def translate_bundle(
     size = batch_size()
     for offset in range(0, len(work_items), size):
         batch = work_items[offset: offset + size]
-        if len(batch) > 1:
-            out(f"  {symbol('sync')} Batch translating {len(batch)} keys...")
         translations, failed_keys, batch_failures = translate_items_batch(bundle, batch, locale)
         failure_count += batch_failures
 
@@ -401,9 +398,6 @@ def translate_locale(
     missing_only: bool = False,
     bundles: Optional[List[str]] = None,
 ) -> int:
-    out(f"\n{symbol('world')} Translating to locale: {locale.upper()}")
-    out("=" * 60)
-
     filtered = filter_bundles(context, bundles)
     bundle_names = sorted({entry["bundle"] for entry in filtered.values()})
     if bundles and not bundle_names:
@@ -416,12 +410,12 @@ def translate_locale(
     total_failures = 0
     total_bundles = 0
 
-    for bundle in bundle_names:
+    for index, bundle in enumerate(bundle_names, start=1):
         english_path = english_properties_path(bundle)
         if not english_path.exists():
             continue
 
-        out(f"\n{symbol('bundle')} Bundle: {bundle}")
+        out(f"  [{locale}] [{index}/{len(bundle_names)}] {bundle}")
         result, stale, fresh, unchanged, translated_keys, failures = translate_bundle(
             context,
             english_path,
@@ -440,7 +434,6 @@ def translate_locale(
             mark_keys_translated(context, bundle, translated_keys)
             locale_path = locale_properties_path(english_path, locale)
             write_properties(locale_path, result)
-            out(f"  {symbol('ok')} Wrote {len(result)} keys to {locale_path}")
 
     if not dry_run:
         save_context_dir(context, context_dir)

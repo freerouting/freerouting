@@ -802,6 +802,26 @@ public class GlobalSettings implements Serializable {
             currentLocale = Locale.forLanguageTag("sv-SE");
           } else if (localeString.startsWith("ro")) {
             currentLocale = Locale.forLanguageTag("ro-RO");
+          } else if (localeString.startsWith("ca")) {
+            currentLocale = Locale.forLanguageTag("ca-ES");
+          } else if (localeString.startsWith("da")) {
+            currentLocale = Locale.forLanguageTag("da-DK");
+          } else if (localeString.startsWith("el")) {
+            currentLocale = Locale.forLanguageTag("el-GR");
+          } else if (localeString.startsWith("fi")) {
+            currentLocale = Locale.forLanguageTag("fi-FI");
+          } else if (localeString.startsWith("he")) {
+            currentLocale = Locale.forLanguageTag("he-IL");
+          } else if (localeString.startsWith("hr")) {
+            currentLocale = Locale.forLanguageTag("hr-HR");
+          } else if (localeString.startsWith("lt")) {
+            currentLocale = Locale.forLanguageTag("lt-LT");
+          } else if (localeString.startsWith("nb")) {
+            currentLocale = Locale.forLanguageTag("nb-NO");
+          } else if (localeString.startsWith("sk")) {
+            currentLocale = Locale.forLanguageTag("sk-SK");
+          } else if (localeString.startsWith("sl")) {
+            currentLocale = Locale.forLanguageTag("sl-SI");
           }
 
         } else if (args[i].startsWith("-dl")) {

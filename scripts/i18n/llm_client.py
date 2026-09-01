@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from i18n_output import err
 
 DEFAULT_BATCH_SIZE = 15
-DEFAULT_GEMINI_MODEL = "gemini-3.7-flash"
+DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
 DEFAULT_GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
 MAX_RETRIES = 3
 RETRY_BASE_DELAY_S = 1.0

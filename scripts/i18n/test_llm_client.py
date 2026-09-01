@@ -19,7 +19,7 @@ class LlmClientGeminiTest(unittest.TestCase):
         with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}, clear=True):
             api_key, model, base_url = llm_client.gemini_config()
         self.assertEqual(api_key, "test-key")
-        self.assertEqual(model, "gemini-3.7-flash")
+        self.assertEqual(model, "gemini-3.6-flash")
         self.assertEqual(base_url, "https://generativelanguage.googleapis.com/v1beta")
 
     def test_gemini_api_key_accepts_google_api_key_alias(self) -> None:

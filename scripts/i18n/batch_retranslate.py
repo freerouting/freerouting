@@ -2,16 +2,17 @@
 """
 batch_retranslate.py — Resumable batch re-translation runner for Freerouting locales.
 
-Orchestrates clean full re-translation using Gemini 3.7 Flash:
+Orchestrates clean full re-translation using Gemini:
 1. Tracks progress persistently in scripts/i18n/.retranslation_progress.json so completed
    locales are never re-translated from scratch if interrupted.
-2. Auto-drops orphan keys on bundle write without destructive file purging.
-3. Translates bundles via translate_locale().
-4. Retries any failed keys with missing_only=True.
-5. Normalizes escape sequences via repair_locale_file().
-6. Validates output via validate_locale() (verifies 0 errors).
-7. Syncs context flags via sync_translated_flags().
-8. Records verified completion in progress state immediately.
+2. Reports progress, elapsed time, and ETA dynamically.
+3. Concise logging: reports bundle names with language codes and suppresses routine batch/write noise.
+4. Auto-drops orphan keys on bundle write without destructive file purging.
+5. Retries failed keys with missing_only=True.
+6. Normalizes escape sequences via repair_locale_file().
+7. Validates output via validate_locale() (verifies 0 errors).
+8. Syncs context flags via sync_translated_flags().
+9. Records verified completion in progress state immediately.
 
 Usage:
     python scripts/i18n/batch_retranslate.py --locales de fr es
@@ -51,6 +52,45 @@ from validate import validate_locale
 
 PROGRESS_FILE = Path("scripts/i18n/.retranslation_progress.json")
 
+LOCALE_NAMES: Dict[str, str] = {
+    "ar": "Arabic",
+    "bn": "Bengali",
+    "ca": "Catalan",
+    "cs": "Czech",
+    "da": "Danish",
+    "de": "German",
+    "el": "Greek",
+    "en": "English",
+    "es": "Spanish",
+    "fi": "Finnish",
+    "fr": "French",
+    "he": "Hebrew",
+    "hi": "Hindi",
+    "hr": "Croatian",
+    "hu": "Hungarian",
+    "id": "Indonesian",
+    "it": "Italian",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "lt": "Lithuanian",
+    "nb": "Norwegian Bokmål",
+    "nl": "Dutch",
+    "pl": "Polish",
+    "pt": "Portuguese",
+    "pt_br": "Portuguese (Brazil)",
+    "ro": "Romanian",
+    "ru": "Russian",
+    "sk": "Slovak",
+    "sl": "Slovenian",
+    "sv": "Swedish",
+    "th": "Thai",
+    "tr": "Turkish",
+    "uk": "Ukrainian",
+    "vi": "Vietnamese",
+    "zh": "Chinese (Simplified)",
+    "zh_tw": "Chinese (Traditional)",
+}
+
 BATCHES = {
     "1": ["de", "fr", "es", "it", "nl", "pt", "pt_br"],
     "2": ["pl", "cs", "hu", "ro", "ru", "uk", "sk"],
@@ -58,6 +98,19 @@ BATCHES = {
     "4": ["zh", "zh_tw", "ja", "ko", "vi", "th", "id"],
     "5": ["ar", "he", "hi", "bn", "tr", "hr", "lt"],
 }
+
+
+def format_duration(seconds: float) -> str:
+    """Format seconds into a human-friendly string (e.g. 1h 23m, 4m 12s, 45s)."""
+    if seconds < 60:
+        return f"{seconds:.0f}s"
+    total_minutes = int(seconds // 60)
+    rem_seconds = int(seconds % 60)
+    if total_minutes < 60:
+        return f"{total_minutes}m {rem_seconds:02d}s"
+    hours = total_minutes // 60
+    rem_minutes = total_minutes % 60
+    return f"{hours}h {rem_minutes:02d}m"
 
 
 def load_progress() -> Dict[str, Any]:
@@ -94,10 +147,6 @@ def retranslate_locale(
     force: bool = False,
 ) -> bool:
     """Run full re-translation lifecycle for a single locale with resumption support."""
-    out(f"\n{'=' * 65}")
-    out(f"  {symbol('world')} Processing locale: {locale.upper()}")
-    out(f"{'=' * 65}")
-
     completed_set: Set[str] = set(progress.get("completed_locales", []))
 
     # Check if already completed and verified
@@ -105,16 +154,17 @@ def retranslate_locale(
         out(f"  {symbol('ok')} Locale {locale.upper()} is already completed and verified. Skipping.")
         return True
 
+    locale_start = time.time()
+
     # 1. Load context
     context = load_context_dir(context_dir)
 
     # 2. Translate all bundles
-    out(f"  {symbol('sync')} Translating all bundles via Gemini 3.7 Flash...")
     failures = translate_locale(context, locale, context_dir, missing_only=False)
 
     # 3. Retry missing/failed keys if any failed
     if failures > 0:
-        out(f"  {symbol('warn')} Retrying {failures} failed keys with missing_only=True...")
+        out(f"  {symbol('warn')} [{locale}] Retrying {failures} failed keys with missing_only=True...")
         failures = translate_locale(context, locale, context_dir, missing_only=True)
 
     # 4. Repair escape sequences
@@ -123,36 +173,37 @@ def retranslate_locale(
         rewritten, _, _, _ = repair_locale_file(eng_path, locale)
         repaired_keys += rewritten
     if repaired_keys > 0:
-        out(f"  {symbol('ok')} Repaired escape sequences in {repaired_keys} key(s)")
+        out(f"  {symbol('ok')} [{locale}] Repaired escape sequences in {repaired_keys} key(s)")
 
     # 5. Validate
     context = load_context_dir(context_dir)
     total, missing, pl_v, html_v, esc_v, orphans, stale = validate_locale(
         locale, context, verbose=False
     )
-    out(
-        f"  {symbol('stats')} Validation: total={total}, missing={missing}, "
-        f"placeholders={pl_v}, html={html_v}, escapes={esc_v}, orphans={orphans}"
-    )
 
     is_valid = (missing == 0 and pl_v == 0 and html_v == 0 and esc_v == 0 and orphans == 0)
     if not is_valid:
-        err(f"  {symbol('fail')} Locale {locale.upper()} validation FAILED (has missing or invalid keys)")
+        err(
+            f"  {symbol('fail')} Locale {locale.upper()} validation FAILED: missing={missing}, "
+            f"placeholders={pl_v}, html={html_v}, escapes={esc_v}, orphans={orphans}"
+        )
         return False
 
     # 6. Sync translated flags
     cleared = sync_translated_flags(context, locale)
     save_context_dir(context, context_dir)
-    out(f"  {symbol('ok')} Synced context: cleared {cleared} needs_retranslation flags")
 
     # 7. Record progress permanently
     if locale not in completed_set:
         completed_set.add(locale)
         progress["completed_locales"] = sorted(completed_set)
         save_progress(progress)
-        out(f"  {symbol('ok')} Saved progress: {len(completed_set)} locale(s) completed")
 
-    out(f"  {symbol('ok')} Locale {locale.upper()} COMPLETED SUCCESSFULLY\n")
+    elapsed_locale = time.time() - locale_start
+    out(
+        f"  {symbol('ok')} [{locale.upper()}] COMPLETED in {format_duration(elapsed_locale)} "
+        f"({total} keys, 0 missing, 0 errors)\n"
+    )
     return True
 
 
@@ -198,31 +249,54 @@ def main() -> int:
         out(f"{symbol('ok')} All requested target locales are already completed!")
         return 0
 
-    start_time = time.time()
+    session_start = time.time()
     successful: List[str] = []
     failed: List[str] = []
+    durations: List[float] = []
 
     for index, locale in enumerate(targets, start=1):
+        lang_name = LOCALE_NAMES.get(locale, locale.upper())
+
         if locale not in remaining and not args.force:
-            out(f"\n>>> [{index}/{len(targets)}] {locale.upper()} (Already completed - skipping)")
+            out(f">>> [{index}/{len(targets)}] {locale.upper()} ({lang_name}) - Already completed, skipping")
             successful.append(locale)
             continue
 
-        out(f"\n>>> [{index}/{len(targets)}] Starting {locale.upper()}...")
+        completed_in_targets = len([t for t in targets if t in progress.get("completed_locales", [])])
+        pct = (completed_in_targets / len(targets)) * 100.0
+
+        time_line = f"Elapsed: {format_duration(time.time() - session_start)}"
+        if durations:
+            avg_time = sum(durations) / len(durations)
+            rem_locales = len([loc for loc in targets if loc not in progress.get("completed_locales", [])])
+            eta_str = format_duration(avg_time * rem_locales)
+            time_line += f" | ETA: ~{eta_str} (avg {format_duration(avg_time)}/locale)"
+
+        out(f"\n{'=' * 68}")
+        out(f">>> [{index}/{len(targets)} - {pct:.1f}%] Processing {locale.upper()} ({lang_name})")
+        out(f"    {time_line}")
+        out(f"{'=' * 68}")
+
+        loc_t0 = time.time()
         ok = retranslate_locale(locale, progress, force=args.force)
+        loc_dur = time.time() - loc_t0
+
         if ok:
             successful.append(locale)
+            durations.append(loc_dur)
+            new_pct = (len(progress.get("completed_locales", [])) / len(targets)) * 100.0
+            out(f"[PROGRESS] {len(progress.get('completed_locales', []))}/{len(targets)} locales completed ({new_pct:.1f}%)\n")
         else:
             failed.append(locale)
 
-    elapsed = time.time() - start_time
-    out(f"\n{'=' * 65}")
-    out(f"  BATCH SUMMARY: {len(successful)} completed, {len(failed)} failed in {elapsed:.1f}s")
+    elapsed = time.time() - session_start
+    out(f"\n{'=' * 68}")
+    out(f"  BATCH SUMMARY: {len(successful)} completed, {len(failed)} failed in {format_duration(elapsed)}")
     if successful:
         out(f"  {symbol('ok')} Completed: {', '.join(successful)}")
     if failed:
         err(f"  {symbol('fail')} Incomplete/Failed: {', '.join(failed)}")
-    out(f"{'=' * 65}\n")
+    out(f"{'=' * 68}\n")
 
     return 0 if not failed else 1
 
