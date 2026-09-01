@@ -68,7 +68,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "B_Courtyard"
@@ -108,7 +108,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "B_Fab"
@@ -148,7 +148,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "B_Silkscreen"
@@ -166,7 +166,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "COMPONENT_KEEPOUT_tooltip"
@@ -292,7 +292,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "F_Courtyard"
@@ -332,7 +332,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "F_Fab"
@@ -372,7 +372,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "F_Silkscreen"
@@ -406,7 +406,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "KEEPOUT"
@@ -561,7 +561,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "all_visible"
@@ -597,7 +597,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "current_layer"
@@ -635,7 +635,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "current_only"
@@ -653,7 +653,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "tooltip"
@@ -669,7 +669,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{layer_name}}"
     ],
@@ -689,7 +689,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{layer_name}}"
     ],
@@ -757,7 +757,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowSelectParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{layer_name}}"
     ],

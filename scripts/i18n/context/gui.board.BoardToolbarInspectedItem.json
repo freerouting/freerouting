@@ -36,7 +36,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "autoroute"
@@ -70,7 +70,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "cancel"
@@ -104,7 +104,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "components"
@@ -142,7 +142,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "conn_sets"
@@ -176,7 +176,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "connections"
@@ -206,7 +206,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "cutout"
@@ -236,7 +236,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "delete"
@@ -266,7 +266,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "fanout"
@@ -296,7 +296,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "fix"
@@ -330,7 +330,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "info"
@@ -364,7 +364,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "nets"
@@ -398,7 +398,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "new_component"
@@ -432,7 +432,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "new_net"
@@ -464,7 +464,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "pull_tight"
@@ -508,7 +508,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "spacing"
@@ -538,7 +538,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "unfix"
@@ -572,7 +572,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "violations"
@@ -612,7 +612,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "zoom_all"
@@ -652,7 +652,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "zoom_region"
@@ -692,7 +692,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbarInspectedItem",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "zoom_selection"

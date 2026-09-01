@@ -62,7 +62,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -94,7 +94,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "create",
@@ -113,7 +113,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "create_tooltip"
@@ -147,7 +147,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "edit",
@@ -166,7 +166,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "edit_tooltip"
@@ -216,7 +216,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "info",
@@ -236,7 +236,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "info_tooltip",
@@ -255,7 +255,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "info_tooltip",
@@ -274,7 +274,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "padstack_not_removed_in_use_message"
@@ -292,7 +292,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{name}}"
     ],
@@ -312,7 +312,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "prompt_new_padstack_name",
@@ -331,7 +331,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "prompt_new_via_rule_name"
@@ -349,7 +349,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "prompt_new_padstack_name"
@@ -401,7 +401,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "remove",
@@ -422,7 +422,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "remove_tooltip"
@@ -478,7 +478,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "select_start_layer",
@@ -497,7 +497,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowVia",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "select_end_layer",

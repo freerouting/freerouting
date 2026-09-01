@@ -206,7 +206,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowUserSettings",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "sponsor_button"

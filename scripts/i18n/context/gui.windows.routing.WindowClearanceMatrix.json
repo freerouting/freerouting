@@ -28,7 +28,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "add_class"
@@ -62,7 +62,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{class_a}}",
       "{{class_b}}"
@@ -83,7 +83,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{class_name}}"
     ],
@@ -103,7 +103,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{name}}"
     ],
@@ -137,7 +137,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "layer"
@@ -153,7 +153,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -169,7 +169,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -185,7 +185,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceMatrix",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "prune"

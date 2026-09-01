@@ -106,7 +106,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowDisplayMisc",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "tooltip"
@@ -138,7 +138,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowDisplayMisc",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "layer_dimming"
@@ -156,7 +156,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowDisplayMisc",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -220,7 +220,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowDisplayMisc",
     "max_length_hint": 30,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "dialog_title"
@@ -236,7 +236,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowDisplayMisc",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

@@ -8,7 +8,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "autoroute_button"
@@ -24,7 +24,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "cancel_button"
@@ -40,7 +40,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "debug_fast_forward"
@@ -56,7 +56,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "debug_next"
@@ -72,7 +72,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "debug_pause"
@@ -88,7 +88,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "debug_play"
@@ -104,7 +104,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "debug_previous"
@@ -120,7 +120,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "debug_rewind"
@@ -136,7 +136,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "delete_all_tracks_button"
@@ -152,7 +152,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "display_all_button"
@@ -168,7 +168,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "display_region_button"
@@ -200,7 +200,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "drag_button"
@@ -216,7 +216,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "incompletes_button"
@@ -248,7 +248,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "inspect_button"
@@ -280,7 +280,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "redo_button"
@@ -312,7 +312,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "route_button"
@@ -328,7 +328,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "settings_button"
@@ -360,7 +360,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "undo_button"
@@ -447,7 +447,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "unit_inch"
@@ -486,7 +486,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "unit_mil"
@@ -525,7 +525,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "unit_mm"
@@ -564,7 +564,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "unit_um"
@@ -580,7 +580,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "violations_button"
@@ -598,7 +598,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.board.BoardToolbar",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{allowed_length}}",
       "{{length}}",
@@ -32,7 +32,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{allowed_length}}",
       "{{length}}",
@@ -52,7 +52,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

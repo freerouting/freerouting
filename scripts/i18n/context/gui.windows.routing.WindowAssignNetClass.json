@@ -8,7 +8,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAssignNetClass",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "class_name_tooltip"
@@ -26,7 +26,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAssignNetClass",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "class_name"
@@ -42,7 +42,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAssignNetClass",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "net_name_tooltip"
@@ -60,7 +60,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAssignNetClass",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "net_name"

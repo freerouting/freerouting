@@ -28,7 +28,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "on_layer"
@@ -78,7 +78,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "trace_clearance_class"

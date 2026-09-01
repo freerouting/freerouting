@@ -64,7 +64,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -162,7 +162,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -176,7 +176,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "cancel"
@@ -206,7 +206,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "center"
@@ -238,7 +238,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "change_layer"
@@ -379,7 +379,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{actual_clearance_mm}}",
       "{{expected_clearance_mm}}"
@@ -421,7 +421,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -578,7 +578,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -592,7 +592,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -720,7 +720,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -1126,7 +1126,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -1249,7 +1249,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -1427,7 +1427,7 @@
     "is_html": true,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{connectable_item_description}}",
       "{{layer_name}}",
@@ -1542,7 +1542,7 @@
     "is_html": true,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{connectable_item_description}}",
       "{{from_layer}}",
@@ -1707,7 +1707,7 @@
     "is_html": false,
     "java_class": null,
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"

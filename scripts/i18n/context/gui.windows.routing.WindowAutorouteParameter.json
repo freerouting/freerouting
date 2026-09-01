@@ -24,7 +24,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "active"
@@ -58,7 +58,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "against_preferred_direction"
@@ -104,7 +104,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "autoroute"
@@ -138,7 +138,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "bend_cost"
@@ -154,7 +154,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "detail_parameter"
@@ -202,7 +202,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "fanout"
@@ -266,7 +266,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "in_preferred_direction"
@@ -284,7 +284,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "job_timeout_tooltip"
@@ -302,7 +302,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "job_timeout"
@@ -334,7 +334,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "layer"
@@ -352,7 +352,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "max_passes_tooltip",
@@ -372,7 +372,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "max_passes"
@@ -390,7 +390,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "max_passes",
@@ -410,7 +410,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "max_threads"
@@ -442,7 +442,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "optimization"
@@ -460,7 +460,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "plane_via_costs_tooltip"
@@ -478,7 +478,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "plane_via_costs"
@@ -496,7 +496,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "tooltip"
@@ -528,7 +528,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "preferred_direction"
@@ -562,7 +562,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "routing_stages"
@@ -623,7 +623,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "start_ripup_costs_tooltip"
@@ -641,7 +641,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "start_ripup_costs"
@@ -739,7 +739,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": 30,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "dialog_title"
@@ -753,7 +753,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "trace_costs_on_layer_tooltip"
@@ -769,7 +769,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "trace_costs_on_layer"
@@ -821,7 +821,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "via_costs"
@@ -855,7 +855,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowAutorouteParameter",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "vias_allowed"

@@ -24,7 +24,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceViolations",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [
       "{{clearance_mm}}",
       "{{item_a}}",
@@ -90,7 +90,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceViolations",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "message"

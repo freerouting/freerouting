@@ -10,7 +10,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowRoutingSummary",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -58,7 +58,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowRoutingSummary",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -90,7 +90,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowRoutingSummary",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "header_interrupted"
@@ -108,7 +108,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowRoutingSummary",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "header_completed"
@@ -176,7 +176,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowRoutingSummary",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "sponsor_button"

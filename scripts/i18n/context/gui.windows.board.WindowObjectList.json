@@ -40,7 +40,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "info"
@@ -74,7 +74,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "invert"
@@ -90,7 +90,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -122,7 +122,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "recalculate"
@@ -140,7 +140,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [],
     "ui_role": "label"
@@ -156,7 +156,7 @@
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
     "max_length_hint": null,
-    "needs_retranslation": true,
+    "needs_retranslation": false,
     "placeholders": [],
     "related_keys": [
       "select"
