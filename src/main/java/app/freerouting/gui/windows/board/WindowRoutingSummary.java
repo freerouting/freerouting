@@ -54,10 +54,9 @@ public final class WindowRoutingSummary {
 
     JDialog dialog = new JDialog(boardFrame, tm.getText("title"), true);
     JPanel panel = createPanel(summaryData, globalSettings, locale, dialog::dispose);
-    dialog.add(panel);
-    dialog.pack();
+    dialog.add(WindowBase.createScrollableContainer(panel));
     dialog.setResizable(false);
-    dialog.setLocationRelativeTo(boardFrame);
+    WindowBase.clampWindowHeight(dialog, boardFrame);
     dialog.setVisible(true);
   }
 

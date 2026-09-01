@@ -118,6 +118,7 @@ public class WindowViaRule extends WindowBase {
 
     this.add(mainPanel);
     this.pack();
+    clampWindowHeight(this, boardFrame);
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     this.setVisible(true);
   }

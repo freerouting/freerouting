@@ -84,7 +84,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     // create main panel
 
     final JPanel mainPanel = new JPanel();
-    getContentPane().add(mainPanel);
+    getContentPane().add(createScrollableContainer(mainPanel));
     GridBagLayout gridbag = new GridBagLayout();
     mainPanel.setLayout(gridbag);
 
@@ -501,6 +501,7 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
 
     // Register as listener for settings changes (bidirectional binding)
     this.boardHandling

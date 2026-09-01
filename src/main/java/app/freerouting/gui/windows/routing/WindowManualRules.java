@@ -49,7 +49,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     // create main panel
 
     final JPanel mainPanel = new JPanel();
-    getContentPane().add(mainPanel);
+    getContentPane().add(createScrollableContainer(mainPanel));
     GridBagLayout gridbag = new GridBagLayout();
     mainPanel.setLayout(gridbag);
     GridBagConstraints gridbagConstraints = new GridBagConstraints();
@@ -148,6 +148,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
 
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
   }
 
   /** Recalculates the values in the trace width fields. */

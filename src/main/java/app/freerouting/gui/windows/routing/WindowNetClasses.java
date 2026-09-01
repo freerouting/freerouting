@@ -952,8 +952,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       LayerRulesDialog dialog =
           new LayerRulesDialog(boardFrame, nc, boardFrame.boardPanel.boardHandling, tm);
       dialog.pack();
-      dialog.setLocationRelativeTo(boardFrame);
       dialog.setResizable(false);
+      clampWindowHeight(dialog, boardFrame);
       dialog.setVisible(true);
       fireEditingStopped();
       tableModel.fireTableRowsUpdated(modelRow, modelRow);

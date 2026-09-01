@@ -91,7 +91,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     // create main panel
     final JPanel mainPanel = new JPanel();
-    getContentPane().add(mainPanel);
+    getContentPane().add(createScrollableContainer(mainPanel));
     GridBagLayout gridbag = new GridBagLayout();
     mainPanel.setLayout(gridbag);
     GridBagConstraints gridbagConstraints = new GridBagConstraints();
@@ -465,6 +465,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
 
     WorkspaceSettings is = this.guiBoardManager.getWorkspaceSettings();
     if (is != null) {

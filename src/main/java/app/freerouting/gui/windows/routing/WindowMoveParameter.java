@@ -41,7 +41,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     // create main panel
 
     final JPanel mainPanel = new JPanel();
-    this.add(mainPanel);
+    this.add(createScrollableContainer(mainPanel));
     GridBagLayout gridbag = new GridBagLayout();
     mainPanel.setLayout(gridbag);
     GridBagConstraints gridbagConstraints = new GridBagConstraints();
@@ -130,6 +130,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
 
     // Subscribe to the WorkspaceSettings singleton so this window stays in sync.
     WorkspaceSettings is = this.boardHandling.getWorkspaceSettings();

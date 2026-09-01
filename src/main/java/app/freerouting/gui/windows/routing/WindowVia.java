@@ -214,6 +214,7 @@ public class WindowVia extends BoardSavableSubWindow {
 
     this.add(mainPanel);
     this.pack();
+    clampWindowHeight(this, boardFrame);
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
   }
 

@@ -39,7 +39,7 @@ public class WindowVisibility extends BoardSavableSubWindow {
   private static final int SLIDER_WIDTH = 160;
   private static final int LABEL_WIDTH = 160;
   private static final int VALUE_FIELD_WIDTH = 44;
-  private static final Dimension CONTENT_SIZE = new Dimension(500, 420);
+  private static final Dimension CONTENT_SIZE = new Dimension(500, 630);
   private static final java.util.Map<Locale, TextManager> text_manager_cache =
       new ConcurrentHashMap<>();
   protected final BoardPanel boardPanel;

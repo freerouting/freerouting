@@ -57,7 +57,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
 
     // create main panel
     final JPanel mainPanel = new JPanel();
-    getContentPane().add(mainPanel);
+    getContentPane().add(createScrollableContainer(mainPanel));
     GridBagLayout gridbag = new GridBagLayout();
     mainPanel.setLayout(gridbag);
     GridBagConstraints gridbagConstraints = new GridBagConstraints();
@@ -250,6 +250,7 @@ public class WindowSelectParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
 
     // Subscribe to the WorkspaceSettings singleton so this window stays in sync.
     WorkspaceSettings is = this.boardHandling.getWorkspaceSettings();
