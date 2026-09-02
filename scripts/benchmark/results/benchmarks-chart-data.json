@@ -616,6 +616,14 @@
         "score":  999.77527
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:37.266580+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  6.953125,
         "version":  "2.4.0-RC1",
         "unrouted":  1,
@@ -630,6 +638,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T07:58:21.686730+00:00",
         "score":  991.9981
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:50.812296+00:00",
+        "score":  0
     },
     {
         "cpu_time":  0,
@@ -1080,6 +1096,14 @@
         "score":  998.9136
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:37.524723+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  8.984375,
         "version":  "2.4.0-RC1",
         "unrouted":  1,
@@ -1206,6 +1230,22 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T11:41:16.778736+00:00",
         "score":  984.753
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:34:37.439940+00:00",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  1,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:05:39.840798+00:00",
+        "score":  790.11
     },
     {
         "cpu_time":  1.44,
@@ -1872,6 +1912,14 @@
         "score":  994.6
     },
     {
+        "cpu_time":  35.97,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:57:07.477061+00:00",
+        "score":  877.6
+    },
+    {
         "cpu_time":  50.203125,
         "version":  "1.9.0",
         "unrouted":  2,
@@ -2110,6 +2158,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T16:03:47.686920+00:00",
         "score":  999.8638
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:37.011668+00:00",
+        "score":  0
     },
     {
         "cpu_time":  0.75,
@@ -2440,6 +2496,14 @@
         "score":  999.7614
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:47.436353+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  33.66,
         "version":  "2.3.0",
         "unrouted":  2,
@@ -2470,6 +2534,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T23:39:33.750345+00:00",
         "score":  986.34
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:18:01.300966+00:00",
+        "score":  0
     },
     {
         "cpu_time":  3.16,
@@ -2598,6 +2670,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T03:57:38.248555+00:00",
         "score":  1000
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:59.330016+00:00",
+        "score":  0
     },
     {
         "cpu_time":  307.67188,
@@ -3120,6 +3200,14 @@
         "score":  996.89
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  29,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:37:29.939369+00:00",
+        "score":  935.67
+    },
+    {
         "cpu_time":  223.6875,
         "version":  "2.4.0-RC1",
         "unrouted":  5,
@@ -3422,6 +3510,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T03:28:49.940674+00:00",
         "score":  999.99
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  2,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:13:45.498634+00:00",
+        "score":  977.39
     },
     {
         "cpu_time":  274.76562,
@@ -4048,6 +4144,14 @@
         "score":  999.99
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:56.272103+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  2.5625,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -4182,6 +4286,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T00:47:23.741400+00:00",
         "score":  990.27
+    },
+    {
+        "cpu_time":  42.81,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:55:37.696147+00:00",
+        "score":  877.6
     },
     {
         "cpu_time":  6.171875,
@@ -4881,6 +4993,22 @@
     },
     {
         "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:52:24.943375+00:00",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:49.644295+00:00",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
         "version":  "2.2.4",
         "unrouted":  35,
         "fixture":  "unrouted.dsn",
@@ -5000,6 +5128,14 @@
         "score":  999.9824
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  8,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:38:21.223068+00:00",
+        "score":  688.88
+    },
+    {
         "cpu_time":  13.78,
         "version":  "2.3.0",
         "unrouted":  0,
@@ -5014,6 +5150,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T16:07:13.793505+00:00",
         "score":  999.7892
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:47.752269+00:00",
+        "score":  0
     },
     {
         "cpu_time":  59.984375,
@@ -5886,6 +6030,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T13:55:38.923501+00:00",
         "score":  998.09
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:37.494597+00:00",
+        "score":  0
     },
     {
         "cpu_time":  0,
@@ -6912,6 +7064,14 @@
         "score":  927.29755
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:41.188171+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  16.40625,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -7560,6 +7720,14 @@
         "score":  999.99
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:44.474044+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  151.90625,
         "version":  "2.4.0-RC1",
         "unrouted":  8,
@@ -8032,6 +8200,14 @@
         "score":  999.8714
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:44.139737+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  52.828125,
         "version":  "2.4.0-RC1",
         "unrouted":  9,
@@ -8150,6 +8326,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T08:29:20.946169+00:00",
         "score":  892.1561
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:40.301056+00:00",
+        "score":  0
     },
     {
         "cpu_time":  37.203125,
@@ -8496,6 +8680,14 @@
         "score":  989.75
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:52.636712+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  19.015625,
         "version":  "1.9.0",
         "unrouted":  0,
@@ -8542,6 +8734,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T09:01:46.399846+00:00",
         "score":  949.39
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  5,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:36:26.568939+00:00",
+        "score":  932.42
     },
     {
         "cpu_time":  22.109375,
@@ -8614,6 +8814,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T14:31:59.426600+00:00",
         "score":  975.02423
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  68,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:42:21.221704+00:00",
+        "score":  45.54
     },
     {
         "cpu_time":  24.578125,
@@ -10608,6 +10816,14 @@
         "score":  929.68
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:44.532186+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  30.390625,
         "version":  "1.9.0",
         "unrouted":  1,
@@ -11448,6 +11664,14 @@
         "score":  991.1
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:40.714940+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  1.28125,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -11712,6 +11936,14 @@
         "score":  1000
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:59.175968+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  7.90625,
         "version":  "1.9.0",
         "unrouted":  0,
@@ -11852,6 +12084,14 @@
         "version":  "2.2.4",
         "unrouted":  0,
         "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:52.638220+00:00",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T06:15:19.222531+00:00",
         "score":  0
     },
@@ -11966,6 +12206,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T13:43:42.650387+00:00",
         "score":  999.6096
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:43.216374+00:00",
+        "score":  0
     },
     {
         "cpu_time":  8.34375,
@@ -12633,6 +12881,14 @@
     },
     {
         "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  45,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:12:49.118288+00:00",
+        "score":  785.7
+    },
+    {
+        "cpu_time":  0,
         "version":  "2.2.4",
         "unrouted":  21,
         "fixture":  "unrouted.dsn",
@@ -13104,6 +13360,14 @@
         "score":  946.66
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:53.578275+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  23.703125,
         "version":  "1.9.0",
         "unrouted":  0,
@@ -13208,6 +13472,14 @@
         "score":  991.3
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:55.519391+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  3.31,
         "version":  "2.2.4",
         "unrouted":  1,
@@ -13310,6 +13582,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T00:51:33.975715+00:00",
         "score":  997.55
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:18:01.886431+00:00",
+        "score":  0
     },
     {
         "cpu_time":  805.4375,
@@ -13776,6 +14056,14 @@
         "score":  995.11
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  137,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:08:21.222535+00:00",
+        "score":  845.13
+    },
+    {
         "cpu_time":  13.78,
         "version":  "2.3.0",
         "unrouted":  0,
@@ -13966,6 +14254,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T10:22:55.927040+00:00",
         "score":  992.84985
+    },
+    {
+        "cpu_time":  42.66,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:57:36.221808+00:00",
+        "score":  985.18
     },
     {
         "cpu_time":  8.58,
@@ -14206,6 +14502,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T04:16:30.375863+00:00",
         "score":  999.99
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:54.283697+00:00",
+        "score":  0
     },
     {
         "cpu_time":  31.33,
@@ -14520,6 +14824,14 @@
         "score":  999.99
     },
     {
+        "cpu_time":  6.55,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:06:44.256359+00:00",
+        "score":  925.8
+    },
+    {
         "cpu_time":  12.765625,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -14790,6 +15102,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T12:58:10.197854+00:00",
         "score":  763.628
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  161,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:02:37.861951+00:00",
+        "score":  210.04
     },
     {
         "cpu_time":  0.625,
@@ -15214,6 +15534,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T18:44:08.015448+00:00",
         "score":  972.7845
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:47.785329+00:00",
+        "score":  0
     },
     {
         "cpu_time":  0,
@@ -16048,6 +16376,14 @@
         "score":  898.9407
     },
     {
+        "cpu_time":  109.78,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:52:01.728521+00:00",
+        "score":  976.08
+    },
+    {
         "cpu_time":  16.7,
         "version":  "2.3.0",
         "unrouted":  1,
@@ -16246,6 +16582,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T00:11:00.671528+00:00",
         "score":  996.9
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  4,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:06:14.929280+00:00",
+        "score":  988.94
     },
     {
         "cpu_time":  37.55,
@@ -17184,6 +17528,14 @@
         "score":  990.78
     },
     {
+        "cpu_time":  234.45,
+        "version":  "2.3.0",
+        "unrouted":  1,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:01:56.125498+00:00",
+        "score":  991.7
+    },
+    {
         "cpu_time":  0,
         "version":  "2.2.4",
         "unrouted":  10,
@@ -17646,6 +17998,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T08:59:04.862074+00:00",
         "score":  950
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  11,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:42:21.222707+00:00",
+        "score":  831.74
     },
     {
         "cpu_time":  0.52,
@@ -18128,6 +18488,14 @@
         "score":  997.63
     },
     {
+        "cpu_time":  17.39,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:58:43.976339+00:00",
+        "score":  951.51
+    },
+    {
         "cpu_time":  574.53125,
         "version":  "2.4.0-RC1",
         "unrouted":  36,
@@ -18302,6 +18670,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T08:48:25.965247+00:00",
         "score":  806.6573
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:50.454030+00:00",
+        "score":  0
     },
     {
         "cpu_time":  1.69,
@@ -18809,6 +19185,14 @@
     },
     {
         "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:18:00.366549+00:00",
+        "score":  0
+    },
+    {
+        "cpu_time":  0,
         "version":  "2.3.0",
         "unrouted":  1,
         "fixture":  "unrouted.dsn",
@@ -18870,6 +19254,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T18:06:26.508457+00:00",
         "score":  974.2178
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:37.146278+00:00",
+        "score":  0
     },
     {
         "cpu_time":  9.5,
@@ -19560,6 +19952,14 @@
         "score":  999.85144
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:56.302099+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  12.23,
         "version":  "2.2.4",
         "unrouted":  7,
@@ -19782,6 +20182,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T22:11:19.408227+00:00",
         "score":  994.95
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:18:02.279541+00:00",
+        "score":  0
     },
     {
         "cpu_time":  4.640625,
@@ -20160,6 +20568,14 @@
         "score":  999.8642
     },
     {
+        "cpu_time":  783.11,
+        "version":  "2.3.0",
+        "unrouted":  17,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:50:31.960822+00:00",
+        "score":  917.79
+    },
+    {
         "cpu_time":  20.71875,
         "version":  "1.9.0",
         "unrouted":  2,
@@ -20342,6 +20758,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T16:16:06.253364+00:00",
         "score":  993.256
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:58.623000+00:00",
+        "score":  0
     },
     {
         "cpu_time":  13.28,
@@ -21864,6 +22288,14 @@
         "score":  819.19165
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:59.628055+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  4.421875,
         "version":  "1.9.0",
         "unrouted":  1,
@@ -21918,6 +22350,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T00:49:49.488736+00:00",
         "score":  992.02
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:18:01.301965+00:00",
+        "score":  0
     },
     {
         "cpu_time":  17.0625,
@@ -22656,6 +23096,14 @@
         "score":  944.82
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:57.428825+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  4.41,
         "version":  "2.3.0",
         "unrouted":  0,
@@ -23152,6 +23600,14 @@
         "score":  956.03485
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  16,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:08:16.200725+00:00",
+        "score":  886.01
+    },
+    {
         "cpu_time":  82.140625,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -23254,6 +23710,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T21:56:19.279497+00:00",
         "score":  989.61
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:46.481272+00:00",
+        "score":  0
     },
     {
         "cpu_time":  8.109375,
@@ -24192,6 +24656,14 @@
         "score":  999.9885
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:43.584569+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  160.85938,
         "version":  "1.9.0",
         "unrouted":  43,
@@ -24880,6 +25352,14 @@
         "score":  971.38
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  242,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:12:12.312752+00:00",
+        "score":  756.77
+    },
+    {
         "cpu_time":  225.79688,
         "version":  "2.4.0-RC1",
         "unrouted":  2,
@@ -24918,6 +25398,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T19:11:26.959307+00:00",
         "score":  987.40894
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  177,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:52:21.244660+00:00",
+        "score":  525.16
     },
     {
         "cpu_time":  5.08,
@@ -25080,6 +25568,14 @@
         "score":  994.16
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:58.605958+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  14.21875,
         "version":  "2.4.0-RC1",
         "unrouted":  3,
@@ -25150,6 +25646,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T13:19:29.093841+00:00",
         "score":  966.6598
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:37.236014+00:00",
+        "score":  0
     },
     {
         "cpu_time":  17.6875,
@@ -25406,6 +25910,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T22:23:12.356416+00:00",
         "score":  961
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:34:54.164496+00:00",
+        "score":  0
     },
     {
         "cpu_time":  34.859375,
@@ -26072,6 +26584,14 @@
         "score":  999.8832
     },
     {
+        "cpu_time":  29.36,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:46:56.167033+00:00",
+        "score":  940.62
+    },
+    {
         "cpu_time":  197.34375,
         "version":  "1.9.0",
         "unrouted":  0,
@@ -26160,6 +26680,14 @@
         "score":  995.63
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  4,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:03:01.317475+00:00",
+        "score":  949.35
+    },
+    {
         "cpu_time":  5.66,
         "version":  "2.2.4",
         "unrouted":  1,
@@ -26216,6 +26744,14 @@
         "score":  0
     },
     {
+        "cpu_time":  29.03,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:47:16.306916+00:00",
+        "score":  938.17
+    },
+    {
         "cpu_time":  6.52,
         "version":  "2.3.0",
         "unrouted":  0,
@@ -26270,6 +26806,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T08:55:26.594343+00:00",
         "score":  951.01
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:44.491105+00:00",
+        "score":  0
     },
     {
         "cpu_time":  38.656246,
@@ -26744,6 +27288,14 @@
         "score":  999.86646
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:47.451900+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  5.4375,
         "version":  "1.9.0",
         "unrouted":  0,
@@ -27136,6 +27688,14 @@
         "score":  882.44
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:47.389285+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  124.3,
         "version":  "2.3.0",
         "unrouted":  1,
@@ -27184,6 +27744,14 @@
         "score":  924.4403
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:40.462095+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  21.484373,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -27206,6 +27774,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T12:49:07.364340+00:00",
         "score":  993.197
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:50.573929+00:00",
+        "score":  0
     },
     {
         "cpu_time":  737.3281,
@@ -27350,6 +27926,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T12:44:40.326776+00:00",
         "score":  999.99243
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:56.678472+00:00",
+        "score":  0
     },
     {
         "cpu_time":  6.703125,
@@ -28120,6 +28704,14 @@
         "score":  950.61
     },
     {
+        "cpu_time":  200.53,
+        "version":  "2.3.0",
+        "unrouted":  8,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:06:45.322535+00:00",
+        "score":  922.96
+    },
+    {
         "cpu_time":  0,
         "version":  "2.3.0",
         "unrouted":  3,
@@ -28632,6 +29224,14 @@
         "score":  999.5551
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:53.358851+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  15.38,
         "version":  "2.3.0",
         "unrouted":  0,
@@ -28832,6 +29432,14 @@
         "score":  886.78
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:49.829079+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  25.71875,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -28902,6 +29510,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T23:00:33.381677+00:00",
         "score":  997.05
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:55.692784+00:00",
+        "score":  0
     },
     {
         "cpu_time":  142.35938,
@@ -29440,6 +30056,14 @@
         "score":  999.98
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  1,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:57:28.859775+00:00",
+        "score":  987.43
+    },
+    {
         "cpu_time":  5.67,
         "version":  "2.2.4",
         "unrouted":  1,
@@ -29712,6 +30336,14 @@
         "score":  993.8697
     },
     {
+        "cpu_time":  187.28,
+        "version":  "2.3.0",
+        "unrouted":  11,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:07:44.196806+00:00",
+        "score":  884.9
+    },
+    {
         "cpu_time":  181.64062,
         "version":  "2.4.0-RC1",
         "unrouted":  5,
@@ -29726,6 +30358,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T09:16:19.818173+00:00",
         "score":  1000
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:02:39.689016+00:00",
+        "score":  0
     },
     {
         "cpu_time":  2.39,
@@ -29758,6 +30398,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T10:18:20.293914+00:00",
         "score":  999.99115
+    },
+    {
+        "cpu_time":  198.19,
+        "version":  "2.3.0",
+        "unrouted":  5,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:42:03.095114+00:00",
+        "score":  954.94
     },
     {
         "cpu_time":  1.140625,
@@ -29870,6 +30518,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T00:55:09.488052+00:00",
         "score":  982.88
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:37.494022+00:00",
+        "score":  0
     },
     {
         "cpu_time":  16,
@@ -29990,6 +30646,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T16:13:01.546826+00:00",
         "score":  992.2984
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:53.387937+00:00",
+        "score":  0
     },
     {
         "cpu_time":  108.21875,
@@ -30152,6 +30816,14 @@
         "score":  978.72
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:41.045447+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  195.94,
         "version":  "2.2.4",
         "unrouted":  0,
@@ -30200,6 +30872,14 @@
         "score":  999.94073
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:51.065551+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  16.390625,
         "version":  "2.4.0-RC1",
         "unrouted":  1,
@@ -30214,6 +30894,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T18:03:41.989863+00:00",
         "score":  999.6746
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:37.019185+00:00",
+        "score":  0
     },
     {
         "cpu_time":  3.38,
@@ -30726,6 +31414,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T04:58:24.929941+00:00",
         "score":  767.44
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:40.935068+00:00",
+        "score":  0
     },
     {
         "cpu_time":  28.09375,
@@ -31400,6 +32096,14 @@
         "score":  985.1888
     },
     {
+        "cpu_time":  62.16,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:11:37.190156+00:00",
+        "score":  953.97
+    },
+    {
         "cpu_time":  642.09375,
         "version":  "2.4.0-RC1",
         "unrouted":  29,
@@ -31520,6 +32224,14 @@
         "score":  388.82153
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:44.298731+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  1.6249999,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -31582,6 +32294,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T09:15:29.905197+00:00",
         "score":  970.9263
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  3,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:03:52.874074+00:00",
+        "score":  968.38
     },
     {
         "cpu_time":  42.27,
@@ -32792,6 +33512,14 @@
         "score":  999.9686
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  52,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:52:21.413332+00:00",
+        "score":  715.68
+    },
+    {
         "cpu_time":  175.40625,
         "version":  "2.4.0-RC1",
         "unrouted":  0,
@@ -33576,6 +34304,14 @@
         "score":  999.9919
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:40.511267+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  345.72,
         "version":  "2.3.0",
         "unrouted":  0,
@@ -33790,6 +34526,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T08:07:15.144146+00:00",
         "score":  972.4
+    },
+    {
+        "cpu_time":  169.39,
+        "version":  "2.3.0",
+        "unrouted":  12,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:59:14.781414+00:00",
+        "score":  910.25
     },
     {
         "cpu_time":  69.96875,
@@ -34158,6 +34902,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-08-20T16:55:17.388604+00:00",
         "score":  999.83215
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  9,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:12:26.727370+00:00",
+        "score":  933.33
     },
     {
         "cpu_time":  261.05,
@@ -35456,6 +36208,14 @@
         "score":  994.1598
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:46.482272+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  545.97,
         "version":  "2.2.4",
         "unrouted":  16,
@@ -35770,6 +36530,14 @@
     {
         "cpu_time":  0,
         "version":  "2.3.0",
+        "unrouted":  509,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:52:21.353242+00:00",
+        "score":  73.91
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
         "unrouted":  49,
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T05:14:37.684735+00:00",
@@ -36024,6 +36792,14 @@
         "score":  993.88
     },
     {
+        "cpu_time":  39.03,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:07:19.865225+00:00",
+        "score":  981.53
+    },
+    {
         "cpu_time":  9.875,
         "version":  "1.9.0",
         "unrouted":  1,
@@ -36086,6 +36862,14 @@
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-01T23:34:23.138205+00:00",
         "score":  984.02
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:36:29.627134+00:00",
+        "score":  0
     },
     {
         "cpu_time":  75.72,
@@ -36472,6 +37256,14 @@
         "score":  766.65967
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:54.055446+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  137.42188,
         "version":  "1.9.0",
         "unrouted":  18,
@@ -36568,6 +37360,14 @@
         "score":  657.14
     },
     {
+        "cpu_time":  0,
+        "version":  "2.2.4",
+        "unrouted":  0,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:17:50.689058+00:00",
+        "score":  0
+    },
+    {
         "cpu_time":  42.390625,
         "version":  "1.9.0",
         "unrouted":  0,
@@ -36608,12 +37408,28 @@
         "score":  996.65
     },
     {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  61,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T16:57:29.646636+00:00",
+        "score":  754.71
+    },
+    {
         "cpu_time":  8.53,
         "version":  "2.3.0",
         "unrouted":  2,
         "fixture":  "unrouted.dsn",
         "date":  "2026-09-02T03:50:20.140697+00:00",
         "score":  928.57
+    },
+    {
+        "cpu_time":  0,
+        "version":  "2.3.0",
+        "unrouted":  97,
+        "fixture":  "unrouted.dsn",
+        "date":  "2026-09-02T17:04:29.819441+00:00",
+        "score":  751.7
     },
     {
         "cpu_time":  26.75,

@@ -234,6 +234,7 @@ def route_single_board(
 
     cmd = [
         "java",
+        "-Dsun.stdout.buffered=false",
         "-Xmx4g",
         "-Dfreerouting.log.file.level=INFO",
         "-Dfreerouting.log.console.level=INFO",
@@ -281,6 +282,9 @@ def route_single_board(
                     stdout_lines.append(line)
                     clean = line.strip()
                     if clean:
+                        # Ignore async background version-checker lines so they don't overwrite router progress
+                        if "New version available" in clean or "Failed to check for new version" in clean:
+                            continue
                         short = clean
                         for pfx in (" INFO   ", " DEBUG  ", " WARN   ", " ERROR  "):
                             if pfx in clean:
@@ -288,6 +292,7 @@ def route_single_board(
                                 break
                         with status_lock:
                             worker_status[wid]["last_line"] = short[:70]
+                            worker_status[wid]["last_line_time"] = time.perf_counter()
 
         reader_thread = threading.Thread(target=stream_reader, daemon=True)
         reader_thread.start()
@@ -521,10 +526,13 @@ def render_dashboard(
                 dur_str = f"{run_sec // 60:02d}:{run_sec % 60:02d}"
                 board = info.get("board", "unknown")
                 last = info.get("last_line", "")
+                last_time = info.get("last_line_time")
+                idle_sec = int(now - last_time) if last_time else run_sec
+                idle_str = f" ({idle_sec // 60}m ago)" if idle_sec >= 60 and last else ""
                 lines.append(
                     f"  {C_BMAGENTA}[Worker {wid}]{C_RESET} "
                     f"{C_BWHITE}{board:<36}{C_RESET} "
-                    f"{C_BYELLOW}[{dur_str}]{C_RESET} -> {C_GRAY}{last}{C_RESET}"
+                    f"{C_BYELLOW}[{dur_str}]{C_RESET} -> {C_GRAY}{last}{idle_str}{C_RESET}"
                 )
             else:
                 lines.append(f"  {C_BMAGENTA}[Worker {wid}]{C_RESET} {C_DIM}Idle{C_RESET}")
