@@ -46,7 +46,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     // Create main panel
 
     final JPanel mainPanel = new JPanel();
-    getContentPane().add(mainPanel);
+    getContentPane().add(createScrollableContainer(mainPanel));
 
     // Initialize gridbag layout.
 
@@ -221,6 +221,7 @@ public class WindowDisplayMisc extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
   }
 
   /** Refreshes the displayed values in this window. */

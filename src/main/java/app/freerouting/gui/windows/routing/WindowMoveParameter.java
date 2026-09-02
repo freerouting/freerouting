@@ -41,7 +41,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     // create main panel
 
     final JPanel mainPanel = new JPanel();
-    this.add(mainPanel);
+    this.add(createScrollableContainer(mainPanel));
     GridBagLayout gridbag = new GridBagLayout();
     mainPanel.setLayout(gridbag);
     GridBagConstraints gridbagConstraints = new GridBagConstraints();
@@ -52,6 +52,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     gridbagConstraints.gridwidth = 2;
     JLabel horizontalGridLabel = new JLabel(tm.getText("horizontalComponentGrid"));
+    horizontalGridLabel.setToolTipText(tm.getText("horizontal_component_grid_tooltip"));
     gridbag.setConstraints(horizontalGridLabel, gridbagConstraints);
     mainPanel.add(horizontalGridLabel);
 
@@ -61,6 +62,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     this.horizontalGridField.setColumns(5);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(horizontalGridField, gridbagConstraints);
+    horizontalGridField.setToolTipText(tm.getText("horizontal_component_grid_tooltip"));
     mainPanel.add(horizontalGridField);
     setHorizontalGridField(this.boardHandling.getWorkspaceSettings().getHorizontalComponentGrid());
     horizontalGridField.addKeyListener(new HorizontalGridFieldKeyListener());
@@ -68,6 +70,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
 
     gridbagConstraints.gridwidth = 2;
     JLabel verticalGridLabel = new JLabel(tm.getText("verticalComponentGrid"));
+    verticalGridLabel.setToolTipText(tm.getText("vertical_component_grid_tooltip"));
     gridbag.setConstraints(verticalGridLabel, gridbagConstraints);
     mainPanel.add(verticalGridLabel);
 
@@ -75,6 +78,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     this.verticalGridField.setColumns(5);
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(verticalGridField, gridbagConstraints);
+    verticalGridField.setToolTipText(tm.getText("vertical_component_grid_tooltip"));
     mainPanel.add(verticalGridField);
     setVerticalGridField(this.boardHandling.getWorkspaceSettings().getVerticalComponentGrid());
     verticalGridField.addKeyListener(new VerticalGridFieldKeyListener());
@@ -126,6 +130,7 @@ public class WindowMoveParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
 
     // Subscribe to the WorkspaceSettings singleton so this window stays in sync.
     WorkspaceSettings is = this.boardHandling.getWorkspaceSettings();

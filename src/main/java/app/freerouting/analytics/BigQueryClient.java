@@ -7,6 +7,7 @@ import app.freerouting.analytics.dto.Properties;
 import app.freerouting.analytics.dto.Traits;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.TextManager;
+import com.google.api.gax.retrying.RetrySettings;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.BigQuery;
@@ -14,12 +15,22 @@ import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.InsertAllResponse;
 import com.google.cloud.bigquery.TableId;
+import com.google.cloud.http.HttpTransportOptions;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
+import java.net.NoRouteToHostException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Provides analytics delivery through Google BigQuery's API.
@@ -63,6 +74,17 @@ public class BigQueryClient implements AnalyticsClient {
   /** The authenticated BigQuery service. Owned exclusively by this instance. */
   private final BigQuery bigQuery;
 
+  private final ExecutorService executor =
+      Executors.newFixedThreadPool(
+          2,
+          r -> {
+            Thread t = new Thread(r, "analytics-bigquery-sender");
+            t.setDaemon(true);
+            return t;
+          });
+  private final AtomicInteger inFlightCount = new AtomicInteger(0);
+  private final Object flushLock = new Object();
+
   private boolean enabled = true;
 
   // -------------------------------------------------------------------------
@@ -80,6 +102,12 @@ public class BigQueryClient implements AnalyticsClient {
     // Enable TLS protocols
     System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
     bigQuery = createBigQueryService(serviceAccountKey.getBytes());
+  }
+
+  /** Package-private constructor for unit tests with a custom BigQuery instance. */
+  BigQueryClient(String libraryVersion, BigQuery bigQuery) {
+    this.libraryVersion = libraryVersion;
+    this.bigQuery = bigQuery;
   }
 
   // -------------------------------------------------------------------------
@@ -132,7 +160,31 @@ public class BigQueryClient implements AnalyticsClient {
           ServiceAccountCredentials.fromStream(keyStream)
               .createScoped("https://www.googleapis.com/auth/bigquery");
       credentials.refreshIfExpired();
-      return BigQueryOptions.newBuilder().setCredentials(credentials).build().getService();
+
+      HttpTransportOptions transportOptions =
+          HttpTransportOptions.newBuilder()
+              .setConnectTimeout(20_000)
+              .setReadTimeout(30_000)
+              .build();
+
+      RetrySettings retrySettings =
+          RetrySettings.newBuilder()
+              .setMaxAttempts(3)
+              .setInitialRetryDelayDuration(Duration.ofMillis(1_000))
+              .setRetryDelayMultiplier(2.0)
+              .setMaxRetryDelayDuration(Duration.ofMillis(5_000))
+              .setInitialRpcTimeoutDuration(Duration.ofMillis(20_000))
+              .setRpcTimeoutMultiplier(1.5)
+              .setMaxRpcTimeoutDuration(Duration.ofMillis(30_000))
+              .setTotalTimeoutDuration(Duration.ofMillis(60_000))
+              .build();
+
+      return BigQueryOptions.newBuilder()
+          .setCredentials(credentials)
+          .setTransportOptions(transportOptions)
+          .setRetrySettings(retrySettings)
+          .build()
+          .getService();
     } catch (IOException e) {
       throw new RuntimeException("Failed to create BigQuery client", e);
     }
@@ -218,7 +270,7 @@ public class BigQueryClient implements AnalyticsClient {
   }
 
   private void sendPayloadAsync(Payload payload) {
-    if (!enabled) {
+    if (!enabled || executor.isShutdown()) {
       return;
     }
 
@@ -226,52 +278,97 @@ public class BigQueryClient implements AnalyticsClient {
     // on mutable payload state.
     Map<String, String> fields = generateFieldsFromPayload(payload);
 
-    Thread senderThread =
-        new Thread(
-            () -> {
-              try {
-                // Table name is the event name with some formatting.
-                String tableName = payload.event.toLowerCase().replace(" ", "_").replace("-", "_");
+    inFlightCount.incrementAndGet();
+    executor.submit(
+        () -> {
+          try {
+            // Table name is the event name with some formatting.
+            String tableName = payload.event.toLowerCase().replace(" ", "_").replace("-", "_");
 
-                // Trait-only tables (identifies, user_snapshots) follow the Segment identifies
-                // schema:
-                // flattened traits + standard metadata, but no event / event_text columns.
-                if (!isTraitOnlyTable(tableName)) {
-                  fields.put("event_text", fields.get("event"));
-                  fields.remove("event");
-                  fields.put("event", tableName);
-                } else {
-                  fields.remove("event");
-                }
+            // Trait-only tables (identifies, user_snapshots) follow the Segment identifies
+            // schema:
+            // flattened traits + standard metadata, but no event / event_text columns.
+            if (!isTraitOnlyTable(tableName)) {
+              fields.put("event_text", fields.get("event"));
+              fields.remove("event");
+              fields.put("event", tableName);
+            } else {
+              fields.remove("event");
+            }
 
-                TableId tableId = TableId.of(BIGQUERY_PROJECT_ID, BIGQUERY_DATASET_ID, tableName);
-                InsertAllRequest request =
-                    InsertAllRequest.newBuilder(tableId)
-                        .setIgnoreUnknownValues(true)
-                        .addRow(InsertAllRequest.RowToInsert.of(fields))
-                        .build();
+            TableId tableId = TableId.of(BIGQUERY_PROJECT_ID, BIGQUERY_DATASET_ID, tableName);
+            InsertAllRequest request =
+                InsertAllRequest.newBuilder(tableId)
+                    .setIgnoreUnknownValues(true)
+                    .addRow(InsertAllRequest.RowToInsert.of(fields))
+                    .build();
 
-                InsertAllResponse response = bigQuery.insertAll(request);
-                if (response.hasErrors()) {
-                  response
-                      .getInsertErrors()
-                      .forEach(
-                          (_, errors) ->
-                              FRLogger.error(
-                                  "Error in BigQueryClient.sendPayloadAsync: ("
-                                      + tableName
-                                      + ") "
-                                      + errors,
-                                  null));
-                }
-              } catch (Exception e) {
-                FRLogger.error(
-                    "Exception in BigQueryClient.sendPayloadAsync: " + e.getMessage(), e);
-              }
-            },
-            "analytics-bigquery-sender");
-    senderThread.setDaemon(true);
-    senderThread.start();
+            InsertAllResponse response = bigQuery.insertAll(request);
+            if (response.hasErrors()) {
+              response
+                  .getInsertErrors()
+                  .forEach(
+                      (_, errors) ->
+                          FRLogger.error(
+                              "Error in BigQueryClient.sendPayloadAsync: ("
+                                  + tableName
+                                  + ") "
+                                  + errors,
+                              null));
+            }
+          } catch (Exception e) {
+            if (isTransientNetworkError(e)) {
+              FRLogger.warn(
+                  "Transient network issue in BigQueryClient.sendPayloadAsync: " + e.getMessage());
+            } else {
+              FRLogger.error("Exception in BigQueryClient.sendPayloadAsync: " + e.getMessage(), e);
+            }
+          } finally {
+            inFlightCount.decrementAndGet();
+            synchronized (flushLock) {
+              flushLock.notifyAll();
+            }
+          }
+        });
+  }
+
+  static boolean isTransientNetworkError(Throwable throwable) {
+    Throwable current = throwable;
+    while (current != null) {
+      if (current instanceof SocketTimeoutException
+          || current instanceof ConnectException
+          || current instanceof NoRouteToHostException
+          || current instanceof UnknownHostException
+          || current instanceof SocketException) {
+        return true;
+      }
+      current = current.getCause();
+    }
+    return false;
+  }
+
+  @Override
+  public void flush(long timeoutMs) {
+    long deadline = System.currentTimeMillis() + timeoutMs;
+    synchronized (flushLock) {
+      while (inFlightCount.get() > 0) {
+        long remaining = deadline - System.currentTimeMillis();
+        if (remaining <= 0) {
+          break;
+        }
+        try {
+          flushLock.wait(remaining);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          break;
+        }
+      }
+    }
+  }
+
+  @Override
+  public void shutdown() {
+    executor.shutdown();
   }
 
   private Map<String, String> generateFieldsFromPayload(Payload payload) {

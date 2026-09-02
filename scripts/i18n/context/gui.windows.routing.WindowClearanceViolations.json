@@ -18,7 +18,7 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowClearanceViolations"
     ],
-    "english_hash": "962f36a6dbaaaba54d22d2f73f0e04abec3980881c8876e9de0be66419fc1b0c",
+    "english_hash": "d4fa96144937ce67115f55703161dabb8041ffc21689b08205b52acf3ed14f9d",
     "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
@@ -84,8 +84,8 @@
   "list_empty_message": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "64b94c74b84606f7284e0c460ff5b4e3a66c6a5632b3fc269059240e225ce0c9",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "f05cadb7a9991ba475c78eaf27101870b24be7870e3134924d33894b5eb52372",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowClearanceViolations",

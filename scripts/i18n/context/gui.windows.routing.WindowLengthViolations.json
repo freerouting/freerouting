@@ -4,8 +4,8 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowLengthViolations"
     ],
-    "english_hash": "ef758d1e148f08f92c9dec1c57447f8d50fea284a3da707a48b6f483314e4b83",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "0d59c1bca849665ccc49356836f8fe7a306f05ed133968f07c8fa55adef70ced",
+    "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
@@ -26,8 +26,8 @@
     "code_references": [
       "app.freerouting.gui.windows.routing.WindowLengthViolations"
     ],
-    "english_hash": "d839fe63f41e691da0c36ea62fc3d48d5170564770edb50bca7251e19e7b9cf4",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "6ef92707bf5f8af9cb138f772a79749c91dc51b04d5ceb6b886643f872a59736",
+    "grammatical_role": "full_sentence",
     "has_placeholders": true,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
@@ -46,8 +46,8 @@
   "list_empty": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "47461bd0cbe0d971a472d4788c83487a0d1f864846ac3b99407318f945aaa3c4",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "acf21af7082ee48be2d90756641246efdc8a768b1c11339bf6e128e10e6ab09f",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",

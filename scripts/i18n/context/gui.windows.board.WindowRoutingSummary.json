@@ -4,7 +4,7 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowRoutingSummary"
     ],
-    "english_hash": "abcbe63cce3057d97b971a7fdbd0dfcea21efb4429b59b7b48e676b8a1095ade",
+    "english_hash": "872e6a810e306f791daf599505b019a048a1b82ab9a62280442a4208845333e2",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -52,7 +52,7 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowRoutingSummary"
     ],
-    "english_hash": "aab31b69b9b90fc074a3ec4b1102d6bdec64531ca4508f21a40fb9c160d9efb2",
+    "english_hash": "32c1347eb7da983fb34b25acca64ec582db9c7007a6cdf0087cbb8ad1552f7dc",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -84,7 +84,7 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowRoutingSummary"
     ],
-    "english_hash": "573f9fb370084e0191fa6c740d8115ef610abb757d4b73084cf69176c392e2b4",
+    "english_hash": "b2882ba1c9fd012fe6be9508466a1f445b357b9d9c70290c1cc007ec6b872ebf",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -102,7 +102,7 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowRoutingSummary"
     ],
-    "english_hash": "57f579558e371b7d0d2decae793c0d70a2767dff3def544e452d7238e7c06d30",
+    "english_hash": "688c4e0d1198f648b664e188b119e468b254387da9b6173cb5dfa7ef743b80ac",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -170,8 +170,8 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowRoutingSummary"
     ],
-    "english_hash": "1834f9fd0a757f193ab836dba9619d91ef64edbae9989fd92a1a5c6cf5d40358",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "e4b0dbede2eaa9295f07023a754e78b27ad22a7828af3686b5264936651627c3",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowRoutingSummary",

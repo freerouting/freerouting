@@ -54,10 +54,9 @@ public final class WindowRoutingSummary {
 
     JDialog dialog = new JDialog(boardFrame, tm.getText("title"), true);
     JPanel panel = createPanel(summaryData, globalSettings, locale, dialog::dispose);
-    dialog.add(panel);
-    dialog.pack();
+    dialog.add(WindowBase.createScrollableContainer(panel));
     dialog.setResizable(false);
-    dialog.setLocationRelativeTo(boardFrame);
+    WindowBase.clampWindowHeight(dialog, boardFrame);
     dialog.setVisible(true);
   }
 
@@ -137,7 +136,7 @@ public final class WindowRoutingSummary {
 
     // Total Trace Length (lowercase unit)
     String lengthStr =
-        String.format(Locale.US, "%.2f %s", summaryData.totalTraceLength(), unitName);
+        String.format(Locale.US, "%,.2f %s", summaryData.totalTraceLength(), unitName);
     addStatRow(panel, gbc, 6, tm.getText("trace_length"), lengthStr);
 
     // Score (with 1000 = perfect explanation)

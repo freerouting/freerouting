@@ -148,19 +148,19 @@ public class BoardExportActions {
     fileChooser.setMinimumSize(new Dimension(500, 250));
 
     FileNameExtensionFilter sesFilter =
-        new FileNameExtensionFilter("SPECCTRA Session file (*.ses)", "ses");
+        new FileNameExtensionFilter("Specctra session file (*.ses)", "ses");
     fileChooser.addChoosableFileFilter(sesFilter);
 
     FileNameExtensionFilter scrFilter =
-        new FileNameExtensionFilter("Autodesk Fusion Script file (*.scr)", "scr");
+        new FileNameExtensionFilter("Autodesk Fusion script (*.scr)", "scr");
     fileChooser.addChoosableFileFilter(scrFilter);
 
     FileNameExtensionFilter dsnFilter =
-        new FileNameExtensionFilter("SPECCTRA Design file (*.dsn)", "dsn");
+        new FileNameExtensionFilter("Specctra design file (*.dsn)", "dsn");
     fileChooser.addChoosableFileFilter(dsnFilter);
 
     FileNameExtensionFilter jsonSessionFilter =
-        new FileNameExtensionFilter("KiCad Session JSON file (*.json)", "json");
+        new FileNameExtensionFilter("KiCad session JSON file (*.json)", "json");
     fileChooser.addChoosableFileFilter(jsonSessionFilter);
 
     fileChooser.setFileFilter(

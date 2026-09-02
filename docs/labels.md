@@ -25,6 +25,7 @@ Labels identifying which functional interface or system component is affected.
 
 | Label | Color | Description | When to Apply |
 | :--- | :--- | :--- | :--- |
+| `routing-engine` | `#D93F0B` | Core autorouting pipeline: pathfinding, fanout, DRC clearance, optimizer, and route metrics | Issues or PRs related to spatial data structures, maze routing, pathfinding algorithms, DRC clearance rules, fanout, trace optimization, or unrouted items. |
 | `GUI` | `#7952B3` | Graphical User Interface, Swing components, rendering, and visual tools | Issues or PRs related to the Swing desktop UI, board visualizer, interactive mode, or accessibility. |
 | `CLI` | `#333333` | Command Line Interface, command arguments, and batch/headless execution | Command-line arguments, headless batch processing, CLI flags, or headless runner scripts. |
 | `API` | `#0E8A16` | REST API server, OpenAPI specifications, and headless API endpoints | Embedded Jetty server, Jersey JAX-RS REST endpoints, session management, or OpenAPI specs. |

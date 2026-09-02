@@ -34,7 +34,7 @@ class TextManagerFallbackTest {
   void resolvesItalianTranslationsFromLocaleBundle() {
     TextManager italian = new TextManager(BoardFrame.class, Locale.forLanguageTag("it-IT"));
 
-    assertEquals("annulla (Esc)", italian.getText("cancel"));
+    assertEquals("Annulla (Esc)", italian.getText("cancel"));
   }
 
   @Test
@@ -70,7 +70,7 @@ class TextManagerFallbackTest {
     TextManager english =
         new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("en"));
 
-    assertEquals("No violations found", english.getText("listEmptyMessage"));
+    assertEquals("No clearance violations found.", english.getText("listEmptyMessage"));
   }
 
   @Test

@@ -100,8 +100,8 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowDisplayMisc"
     ],
-    "english_hash": "3c0b85187d41f15bd582e50153b5c4e4a136e9f5f6f8a3263a5c4621bb478d37",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "3f7b95f6918eefa6b2037506eb8776df160ef689ca59fc2ca362dbc4024eb360",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowDisplayMisc",
@@ -132,8 +132,8 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowDisplayMisc"
     ],
-    "english_hash": "375c326ef56a65e59745ca6d2662100a77e99445889e70e2fc0c5e18d4d6bf17",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "9976a6f6885ac065566461fff30b0a1f4e675e10d36c318afbded1b33e033dd7",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowDisplayMisc",
@@ -150,7 +150,7 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowDisplayMisc"
     ],
-    "english_hash": "a1db53318bdc01d18a59df325e1ffaf39a54283a44ed02b915c5a191c7947d9d",
+    "english_hash": "151dfcb49d7e932e0b8ebaab3e2a9e59e81e0c93dab77c699ed4eff6d4688ab7",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -214,7 +214,7 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowDisplayMisc"
     ],
-    "english_hash": "1ad12fe7817a9ee5abf8f6dca7448f37071086a8824ba1cb975d08eff88cdd9f",
+    "english_hash": "f4cafffb6e93225c3ed45770fb679e2beda96c6883ea87498478d9b55d519aa2",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -230,7 +230,7 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowDisplayMisc"
     ],
-    "english_hash": "35a55dd4c9242a9daf499ac38fd70363a4a3cf3abdd1eeee4d5efcc37dece969",
+    "english_hash": "91957b47751de33ee873a0f6771e8f6da96b81069e2cf2ba123b6ae990d81ed3",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,

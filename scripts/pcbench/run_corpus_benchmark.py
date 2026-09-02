@@ -234,6 +234,8 @@ def route_single_board(
 
     cmd = [
         "java",
+        "-Dsun.stdout.buffered=false",
+        "-Xmx4g",
         "-Dfreerouting.log.file.level=INFO",
         "-Dfreerouting.log.console.level=INFO",
         "-jar",
@@ -241,6 +243,7 @@ def route_single_board(
         "--gui.enabled=false",
         "--api_server.enabled=false",
         "--mcp_server.enabled=false",
+        "--router.max_threads=1",
         "-de",
         str(dsn_path),
         "-do",
@@ -279,6 +282,9 @@ def route_single_board(
                     stdout_lines.append(line)
                     clean = line.strip()
                     if clean:
+                        # Ignore async background version-checker lines so they don't overwrite router progress
+                        if "New version available" in clean or "Failed to check for new version" in clean:
+                            continue
                         short = clean
                         for pfx in (" INFO   ", " DEBUG  ", " WARN   ", " ERROR  "):
                             if pfx in clean:
@@ -286,6 +292,7 @@ def route_single_board(
                                 break
                         with status_lock:
                             worker_status[wid]["last_line"] = short[:70]
+                            worker_status[wid]["last_line_time"] = time.perf_counter()
 
         reader_thread = threading.Thread(target=stream_reader, daemon=True)
         reader_thread.start()
@@ -352,6 +359,57 @@ def route_single_board(
     if not phases.get("autorouter", {}).get("duration_seconds") and stdout_text:
         phases = parse_phases_from_text(stdout_text)
     resources = manifest_data.get("resource_usage", {})
+
+    if not manifest_data and stdout_text:
+        # Fallback to parsing metrics from stdout for versions without result_json (e.g. 2.2.4, 2.3.0)
+        m_comp = re.findall(
+            r"Auto-rout\w+ (?:session|stage) completed:.*final score:\s*([\d\.]+)(?:\s*\((.*?)\))?.*using ([\d\.]+) total CPU seconds,\s*([\d\.]+) GB total allocated,\s*and\s*([\d\.]+) MB peak heap usage",
+            stdout_text,
+        )
+        if m_comp:
+            score_str, extra, cpu_s, alloc_gb, peak_mb = m_comp[-1]
+            try:
+                score_val = float(score_str)
+            except Exception:
+                pass
+            try:
+                resources = {
+                    "cpu_time": float(cpu_s),
+                    "max_memory": float(alloc_gb),
+                    "peak_memory": float(peak_mb),
+                }
+            except Exception:
+                pass
+            unrouted_count = 0
+            violations_count = 0
+            if extra:
+                m_u = re.search(r"(\d+)\s+unrouted", extra)
+                if m_u:
+                    unrouted_count = int(m_u.group(1))
+                m_v = re.search(r"(\d+)\s+violations?", extra)
+                if m_v:
+                    violations_count = int(m_v.group(1))
+            elif score_val is not None and score_val < 990:
+                unrouted_count = 1
+        else:
+            m_pass = re.findall(r"Auto-rout\w+ pass #\d+.*(?:score of|score)\s*([\d\.]+)(?:\s*\((.*?)\))?", stdout_text)
+            if m_pass:
+                score_str, extra = m_pass[-1]
+                try:
+                    score_val = float(score_str)
+                except Exception:
+                    pass
+                unrouted_count = 0
+                violations_count = 0
+                if extra:
+                    m_u = re.search(r"(\d+)\s+unrouted", extra)
+                    if m_u:
+                        unrouted_count = int(m_u.group(1))
+                    m_v = re.search(r"(\d+)\s+violations?", extra)
+                    if m_v:
+                        violations_count = int(m_v.group(1))
+                elif score_val is not None and score_val < 990:
+                    unrouted_count = 1
 
     b_board = fixture_meta.get("board", {})
     b_cad = fixture_meta.get("cad", {})
@@ -435,6 +493,7 @@ def render_dashboard(
     worker_status: dict[int, dict[str, Any]],
     recent_messages: collections.deque[str],
     status_lock: threading.Lock,
+    version_label: str = "",
     in_place: bool = True,
 ) -> None:
     """Print updated multi-worker dashboard with live logs and recent history."""
@@ -442,15 +501,15 @@ def render_dashboard(
     avg_per_board = elapsed / completed if completed > 0 else 0
     remaining_secs = avg_per_board * (total - completed)
     eta_str = time.strftime("%H:%M:%S", time.gmtime(remaining_secs))
-    elapsed_str = time.strftime("%H:%M:%S", time.gmtime(elapsed))
     pct = (completed / total) * 100.0 if total > 0 else 0.0
+
+    ver_part = f" | {C_BWHITE}Version:{C_RESET} {C_BCYAN}{version_label}{C_RESET}" if version_label else ""
 
     lines = []
     lines.append(f"{C_BCYAN}{'=' * 105}{C_RESET}")
     lines.append(
         f"{C_BWHITE}PCBench Benchmark:{C_RESET} {C_BYELLOW}{completed}/{total}{C_RESET} "
-        f"({C_BGREEN}{pct:5.1f}%{C_RESET}) | "
-        f"{C_BWHITE}Elapsed:{C_RESET} {C_CYAN}{elapsed_str}{C_RESET} | "
+        f"({C_BGREEN}{pct:5.1f}%{C_RESET}){ver_part} | "
         f"{C_BWHITE}ETA:{C_RESET} {C_CYAN}{eta_str}{C_RESET} ({C_YELLOW}{avg_per_board:.1f}s/board{C_RESET}) | "
         f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET} | "
         f"{C_DIM}[ESC / Q to exit]{C_RESET}"
@@ -467,10 +526,13 @@ def render_dashboard(
                 dur_str = f"{run_sec // 60:02d}:{run_sec % 60:02d}"
                 board = info.get("board", "unknown")
                 last = info.get("last_line", "")
+                last_time = info.get("last_line_time")
+                idle_sec = int(now - last_time) if last_time else run_sec
+                idle_str = f" ({idle_sec // 60}m ago)" if idle_sec >= 60 and last else ""
                 lines.append(
                     f"  {C_BMAGENTA}[Worker {wid}]{C_RESET} "
                     f"{C_BWHITE}{board:<36}{C_RESET} "
-                    f"{C_BYELLOW}[{dur_str}]{C_RESET} -> {C_GRAY}{last}{C_RESET}"
+                    f"{C_BYELLOW}[{dur_str}]{C_RESET} -> {C_GRAY}{last}{idle_str}{C_RESET}"
                 )
             else:
                 lines.append(f"  {C_BMAGENTA}[Worker {wid}]{C_RESET} {C_DIM}Idle{C_RESET}")
@@ -656,6 +718,7 @@ def main() -> int:
                     worker_status,
                     recent_messages,
                     status_lock,
+                    version_label=args.version_label,
                     in_place=True,
                 )
 
@@ -753,6 +816,7 @@ def main() -> int:
                         worker_status,
                         recent_messages,
                         status_lock,
+                        version_label=args.version_label,
                         in_place=True,
                     )
 
@@ -779,6 +843,7 @@ def main() -> int:
                         worker_status,
                         recent_messages,
                         status_lock,
+                        version_label=args.version_label,
                         in_place=True,
                     )
 

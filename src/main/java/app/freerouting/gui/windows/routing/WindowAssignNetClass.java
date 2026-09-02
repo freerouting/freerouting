@@ -58,6 +58,7 @@ public class WindowAssignNetClass extends BoardSavableSubWindow {
 
     this.add(mainPanel);
     this.pack();
+    clampWindowHeight(this, boardFrame);
   }
 
   private void addNetClassComboBox() {

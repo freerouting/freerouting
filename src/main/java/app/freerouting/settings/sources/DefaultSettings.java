@@ -96,7 +96,7 @@ public class DefaultSettings implements SettingsSource {
     settings.enabled = true;
     settings.algorithm = RouterSettings.ALGORITHM_CURRENT;
     settings.jobTimeoutString = "12:00:00";
-    settings.maxPasses = 9999;
+    settings.maxPasses = 0;
     settings.maxItems = Integer.MAX_VALUE;
     settings.tracePullTightAccuracy = 500;
     settings.viasAllowed = true;

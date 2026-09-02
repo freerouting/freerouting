@@ -81,8 +81,9 @@ public class GlobalSettings implements Serializable {
   public final transient DebugSettings debugSettings = new DebugSettings();
 
   private final transient String[] supportedLanguages = {
-    "en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko", "pl",
-    "nl", "tr", "vi", "id", "uk", "cs", "hu", "th", "sv", "ro"
+    "en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "pt_BR", "ja", "ko",
+    "pl", "nl", "tr", "vi", "id", "uk", "cs", "hu", "th", "sv", "ro", "ca", "da", "el", "fi", "he",
+    "hr", "lt", "nb", "sk", "sl"
   };
 
   @SerializedName("version")
@@ -138,7 +139,14 @@ public class GlobalSettings implements Serializable {
   /** Creates global settings with the supported system locale and default source merger. */
   public GlobalSettings() {
     // validate and set the current locale
-    if (Arrays.stream(supportedLanguages).noneMatch(currentLocale.getLanguage()::equals)) {
+    boolean isSupported =
+        Arrays.stream(supportedLanguages)
+            .anyMatch(
+                lang ->
+                    lang.equalsIgnoreCase(currentLocale.getLanguage())
+                        || lang.equalsIgnoreCase(currentLocale.toString())
+                        || lang.equalsIgnoreCase(currentLocale.toLanguageTag().replace("-", "_")));
+    if (!isSupported) {
       // the fallback language is English
       currentLocale = Locale.ENGLISH;
     }
@@ -677,7 +685,7 @@ public class GlobalSettings implements Serializable {
             routerSettings.maxPasses = Integer.decode(args[i + 1]);
 
             if (routerSettings.maxPasses < 0) {
-              routerSettings.maxPasses = 1;
+              routerSettings.maxPasses = 0;
             }
             if (routerSettings.maxPasses > 9999) {
               routerSettings.maxPasses = 9999;
@@ -794,6 +802,26 @@ public class GlobalSettings implements Serializable {
             currentLocale = Locale.forLanguageTag("sv-SE");
           } else if (localeString.startsWith("ro")) {
             currentLocale = Locale.forLanguageTag("ro-RO");
+          } else if (localeString.startsWith("ca")) {
+            currentLocale = Locale.forLanguageTag("ca-ES");
+          } else if (localeString.startsWith("da")) {
+            currentLocale = Locale.forLanguageTag("da-DK");
+          } else if (localeString.startsWith("el")) {
+            currentLocale = Locale.forLanguageTag("el-GR");
+          } else if (localeString.startsWith("fi")) {
+            currentLocale = Locale.forLanguageTag("fi-FI");
+          } else if (localeString.startsWith("he")) {
+            currentLocale = Locale.forLanguageTag("he-IL");
+          } else if (localeString.startsWith("hr")) {
+            currentLocale = Locale.forLanguageTag("hr-HR");
+          } else if (localeString.startsWith("lt")) {
+            currentLocale = Locale.forLanguageTag("lt-LT");
+          } else if (localeString.startsWith("nb")) {
+            currentLocale = Locale.forLanguageTag("nb-NO");
+          } else if (localeString.startsWith("sk")) {
+            currentLocale = Locale.forLanguageTag("sk-SK");
+          } else if (localeString.startsWith("sl")) {
+            currentLocale = Locale.forLanguageTag("sl-SI");
           }
 
         } else if (args[i].startsWith("-dl")) {

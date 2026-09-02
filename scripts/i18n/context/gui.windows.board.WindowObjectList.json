@@ -34,8 +34,8 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowObjectList"
     ],
-    "english_hash": "55fa3ae9930f5419277ceab88e9dc7f9a90c8139e57669f0582d7c56cf7c96e3",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "74e825f4101989bf218c9bdd08a8876c415f55fea904a8ff00a8dcf96aa925e8",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
@@ -68,8 +68,8 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowObjectList"
     ],
-    "english_hash": "d3d55370e697f5181f34bf29559b52d9720bd56c655fa58cf2d6846c3cdb5275",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "86dbd1fee5eee34a41c2a600ccfe9523102bf7b9b6d496a4873a7281ec7d4159",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
@@ -84,8 +84,8 @@
   "list_empty": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "949da6a3278e2d66078bda0e06f569110d872e46548e354c508af456e3c18715",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "32b55cc60c89785da4a84a2c9c8f321db6e177f5c21e1b88d67dffae0dccdd91",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
@@ -116,8 +116,8 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowObjectList"
     ],
-    "english_hash": "50d71acb801d3a9cd70dae29a1ad4459d7ae0e9f056a02a45132841a624e7172",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "f005380e245055dc3feaf1134c92f6de522d012d21e536748f6a3a1feb83ea96",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
@@ -134,8 +134,8 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowObjectList"
     ],
-    "english_hash": "0df6f1cad36c49da768a6efdcc2c4be102f5729f7381cb53e4ff8061d17eaeb6",
-    "grammatical_role": "fragment",
+    "english_hash": "2a78025de6aae5e7ff88e5a951bb3a78ddd67388913529cf9e2dd9653e62b02d",
+    "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",
@@ -150,8 +150,8 @@
     "code_references": [
       "app.freerouting.gui.windows.board.WindowObjectList"
     ],
-    "english_hash": "af8473f3a1a11128842fd20b11845e51515b16935be90ced1b4162aab7befac6",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "4757a044705454b31ca21db26a511746365744e47b4f9f292956595aacd50a24",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.windows.board.WindowObjectList",

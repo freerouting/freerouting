@@ -56,6 +56,7 @@ class DialogInteractionHandlersTest {
   @Test
   void autoRouterSettingsTextFieldNormalizationHandlesBoundsAndInvalidInputs() {
     assertEquals(1, WindowAutorouteParameter.normalizeIntInput(0, 9, 1, 9999));
+    assertEquals(0, WindowAutorouteParameter.normalizeIntInput(0, 9, 0, 9999));
     assertEquals(9999, WindowAutorouteParameter.normalizeIntInput(12000, 9, 1, 9999));
     assertEquals(42, WindowAutorouteParameter.normalizeIntInput(42, 9, 1, 9999));
     assertEquals(9, WindowAutorouteParameter.normalizeIntInput("bad", 9, 1, 9999));

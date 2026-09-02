@@ -34,7 +34,7 @@ public class WindowAbout extends BoardSavableSubWindow {
 
     // Initialize panel and layout in one step
     final JPanel windowPanel = new JPanel(new GridBagLayout());
-    this.add(windowPanel);
+    this.add(createScrollableContainer(windowPanel));
 
     GridBagConstraints gridbagConstraints = new GridBagConstraints();
     gridbagConstraints.insets = new Insets(5, 10, 5, 10);
@@ -57,6 +57,7 @@ public class WindowAbout extends BoardSavableSubWindow {
     this.setResizable(false);
     this.setMinimumSize(new Dimension(450, 240));
     this.pack();
+    clampWindowHeight(this, null);
   }
 
   /**

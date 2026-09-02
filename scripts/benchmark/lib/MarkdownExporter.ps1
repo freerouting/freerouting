@@ -156,6 +156,7 @@ function Export-MarkdownReport {
             $timeouts = 0
             $perfects = 0
             $allRouted = 0
+            $totalSeconds = 0.0
             $avgScoreValues = [System.Collections.ArrayList]::new()
 
             foreach ($fixtureGroup in $groupedByFixture) {
@@ -191,6 +192,10 @@ function Export-MarkdownReport {
 
                 $effectiveScore = if (-not $failed -and $score -ne $null) { $score } else { 0.0 }
                 [void]$avgScoreValues.Add($effectiveScore)
+
+                if ($latestRun.quality -and $latestRun.quality.wall_clock_seconds -ne $null) {
+                    $totalSeconds += [double]$latestRun.quality.wall_clock_seconds
+                }
             }
 
             $avgScore = $null
@@ -205,6 +210,7 @@ function Export-MarkdownReport {
                 AllRouted    = $allRouted
                 Timeouts     = $timeouts
                 Failures     = $failures
+                TotalMinutes = ($totalSeconds / 60.0)
                 AvgScore     = $avgScore
             }
         }
@@ -215,8 +221,8 @@ function Export-MarkdownReport {
             $maxAvgScore = ($avgScoreStats | Measure-Object -Property AvgScore -Maximum).Maximum
         }
 
-        $summaryHeaders = @("Version", "Fixtures", "Clean (0 DRC)", "Fully-Routed", "Timeouts", "Failures", "Avg. Score")
-        $summaryAlignments = @("L", "R", "R", "R", "R", "R", "R")
+        $summaryHeaders = @("Version", "Fixtures", "Clean (0 DRC)", "Fully-Routed", "Timeouts", "Failures", "Total Time", "Avg. Score")
+        $summaryAlignments = @("L", "R", "R", "R", "R", "R", "R", "R")
         $summaryRows = [System.Collections.ArrayList]::new()
 
         $formatRatioPctFn = {
@@ -236,6 +242,12 @@ function Export-MarkdownReport {
             $toStr   = & $formatRatioPctFn $stat.Timeouts $tot
             $failStr = & $formatRatioPctFn $stat.Failures $tot
 
+            $totalTimeStr = if ($stat.TotalMinutes -ne $null) {
+                $stat.TotalMinutes.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture)
+            } else {
+                "0.0"
+            }
+
             $avgScoreStr = if ($stat.AvgScore -ne $null) {
                 $formatted = $stat.AvgScore.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture)
                 if ($maxAvgScore -ne $null -and $stat.AvgScore -eq $maxAvgScore) { "**$formatted**" } else { $formatted }
@@ -250,6 +262,7 @@ function Export-MarkdownReport {
                 $allStr,
                 $toStr,
                 $failStr,
+                $totalTimeStr,
                 $avgScoreStr
             ))
         }

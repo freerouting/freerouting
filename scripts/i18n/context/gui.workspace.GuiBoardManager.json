@@ -2,8 +2,8 @@
   "clearance_violations_found": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "7082f980b02dd4faec00af651512a250c0694b3b3435d9b65455c6163b8c5ed0",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "168c5023d17b0633c705806f00306e05f269f8ed9d82bef3b55dbc570bd04bc1",
+    "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.workspace.GuiBoardManager",
@@ -30,7 +30,7 @@
   "dsn_reader_modal_title": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "a78491b3436a671526705eaecd34a495a43b8e9d66f76b5c050fe1d60e627a00",
+    "english_hash": "9b0a3479e409056d7991e266337f88ca77db705f0a8202eae48035e4cdd6d5ee",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
@@ -44,8 +44,8 @@
   "no_more_redo_possible": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "8f9e1039a4cae1077a0dc20556875d6f4a35df94e223665df86f7a6e139c578e",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "91d0110bcaa63d1ba40064527bedadb14ae664ac61e84d9b6c0ee29315218dac",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.workspace.GuiBoardManager",
@@ -60,8 +60,8 @@
   "no_more_undo_possible": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "9d12b8d65deb4dfde7bd0e2bf13ad4b202d06efaefef3dfa31ecf876aa70dc6c",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "53ce348566ebccb61e5ec164d47fd948c53c51987bb782fd54f804f0bf1ebc7e",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.workspace.GuiBoardManager",
@@ -76,7 +76,7 @@
   "ratsnest_status_incomplete_only": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "05b7ec5510cd26662c4ee2bec7ba26ddff1d2bff67de0d7da81275151763ef14",
+    "english_hash": "589fad7a2b60467c24796d3b982e00353793eee579ae4a221096bb344d748eff",
     "grammatical_role": "fragment",
     "has_placeholders": true,
     "is_html": false,
@@ -94,7 +94,7 @@
   "ratsnest_status_with_length_violations": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "1a4e9683628c5e1d43b92b043319fa826f799fee846b76fcc3c0716c68bb0b7a",
+    "english_hash": "8bdbe9a9548a1f8665170bb000357a5bb43e1d32cf7a50d23fc1e6ebcb3d9f65",
     "grammatical_role": "fragment",
     "has_placeholders": true,
     "is_html": false,
@@ -141,8 +141,8 @@
   "save_error": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "07932a884be34cb439779fa49627745c7800ed8b8430e044c8bb728b618ecee1",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "b960350942ea6901644d4d7c9fc0dd9ff8a007cba3a50f467686f5ad20561b86",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.workspace.GuiBoardManager",

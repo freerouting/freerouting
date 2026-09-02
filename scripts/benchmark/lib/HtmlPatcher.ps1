@@ -64,6 +64,7 @@ function Update-BenchmarksHtml {
             $timeouts = 0
             $perfects = 0
             $allRouted = 0
+            $totalSeconds = 0.0
             $avgScoreValues = [System.Collections.ArrayList]::new()
 
             foreach ($fixtureGroup in $groupedByFixture) {
@@ -98,6 +99,10 @@ function Update-BenchmarksHtml {
 
                 $effectiveScore = if (-not $failed -and $score -ne $null) { $score } else { 0.0 }
                 [void]$avgScoreValues.Add($effectiveScore)
+
+                if ($latestRun.quality -and $latestRun.quality.wall_clock_seconds -ne $null) {
+                    $totalSeconds += [double]$latestRun.quality.wall_clock_seconds
+                }
             }
 
             $avgScore = $null
@@ -112,6 +117,7 @@ function Update-BenchmarksHtml {
                 AllRouted    = $allRouted
                 Timeouts     = $timeouts
                 Failures     = $failures
+                TotalMinutes = ($totalSeconds / 60.0)
                 AvgScore     = $avgScore
             }
         }
@@ -137,6 +143,7 @@ function Update-BenchmarksHtml {
         [void]$hsb.AppendLine("          <th>Fully-Routed</th>")
         [void]$hsb.AppendLine("          <th>Timeouts</th>")
         [void]$hsb.AppendLine("          <th>Failures</th>")
+        [void]$hsb.AppendLine("          <th style='text-align: right;'>Total Time</th>")
         [void]$hsb.AppendLine("          <th>Avg. Score</th>")
         [void]$hsb.AppendLine("        </tr>")
         [void]$hsb.AppendLine("      </thead>")
@@ -154,6 +161,12 @@ function Update-BenchmarksHtml {
             $toStr   = "$($stat.Timeouts)/$tot ($toPct%)"
             $failStr = "$($stat.Failures)/$tot ($failPct%)"
 
+            $totalTimeStr = if ($stat.TotalMinutes -ne $null) {
+                $stat.TotalMinutes.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture)
+            } else {
+                "0.0"
+            }
+
             $avgScoreStr = if ($stat.AvgScore -ne $null) {
                 $formatted = $stat.AvgScore.ToString("F1", [System.Globalization.CultureInfo]::InvariantCulture)
                 if ($maxAvgScore -ne $null -and $stat.AvgScore -eq $maxAvgScore) { "<strong>$formatted</strong>" } else { $formatted }
@@ -168,6 +181,7 @@ function Update-BenchmarksHtml {
             [void]$hsb.AppendLine("          <td>$allStr</td>")
             [void]$hsb.AppendLine("          <td>$toStr</td>")
             [void]$hsb.AppendLine("          <td>$failStr</td>")
+            [void]$hsb.AppendLine("          <td style='text-align: right;'>$totalTimeStr</td>")
             [void]$hsb.AppendLine("          <td>$avgScoreStr</td>")
             [void]$hsb.AppendLine("        </tr>")
         }

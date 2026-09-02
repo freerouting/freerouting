@@ -257,4 +257,42 @@ class GlobalSettingsCommandLineTest {
     assertEquals(5, settings.mcpServerSettings.rateLimit.requestsPerWindow);
     assertEquals(12, settings.mcpServerSettings.rateLimit.windowSeconds);
   }
+
+  @Test
+  void newLanguagesViaCommandLineArgument() {
+    String[][] languageTests = {
+      {"sk", "sk", "Zrušiť (Esc)"},
+      {"da", "da", "Annuller (Esc)"},
+      {"hr", "hr", "Odustani (Esc)"},
+      {"nb", "nb", "Avbryt (Esc)"},
+      {"fi", "fi", "Peruuta (Esc)"},
+      {"sl", "sl", "Prekliči (Esc)"},
+      {"el", "el", "Ακύρωση (Esc)"},
+      {"he", "he", "ביטול (Esc)"},
+      {"ca", "ca", "Cancel·la (Esc)"},
+      {"lt", "lt", "Atšaukti (Esc)"}
+    };
+
+    for (String[] testCase : languageTests) {
+      String cliArg = testCase[0];
+      String expectedLanguage = testCase[1];
+      String expectedCancelText = testCase[2];
+
+      GlobalSettings gs = new GlobalSettings();
+      gs.applyCommandLineArguments(new String[] {"-l", cliArg});
+
+      assertEquals(
+          expectedLanguage,
+          gs.currentLocale.getLanguage(),
+          "Expected language " + expectedLanguage + " for CLI argument -l " + cliArg);
+
+      app.freerouting.util.TextManager tm =
+          new app.freerouting.util.TextManager(
+              app.freerouting.gui.board.BoardFrame.class, gs.currentLocale);
+      assertEquals(
+          expectedCancelText,
+          tm.getText("cancel"),
+          "Expected translated cancel text in " + expectedLanguage);
+    }
+  }
 }

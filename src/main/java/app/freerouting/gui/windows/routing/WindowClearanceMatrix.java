@@ -111,6 +111,7 @@ public class WindowClearanceMatrix extends BoardSavableSubWindow {
 
     this.add(mainPanel);
     this.pack();
+    clampWindowHeight(this, boardFrame);
   }
 
   public static boolean isLegalClassName(String value) {

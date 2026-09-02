@@ -22,6 +22,7 @@ import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.McpServerSettings;
+import app.freerouting.settings.RuntimeEnvironment;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -1295,6 +1296,7 @@ public class Freerouting {
         Locale.getDefault().getLanguage() + "," + Locale.getDefault();
     globalSettings.runtimeEnvironment.cpuCores = Runtime.getRuntime().availableProcessors();
     globalSettings.runtimeEnvironment.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
+    globalSettings.runtimeEnvironment.cpuScore = RuntimeEnvironment.measureCpuScore();
     FRLogger.debug("Version: " + globalSettings.runtimeEnvironment.freeroutingVersion);
     FRLogger.debug(
         "Command line arguments: '" + globalSettings.runtimeEnvironment.commandLineArguments + "'");
@@ -1304,7 +1306,9 @@ public class Freerouting {
     FRLogger.debug(
         "Hardware: "
             + globalSettings.runtimeEnvironment.cpuCores
-            + " CPU cores,"
+            + " CPU cores, "
+            + globalSettings.runtimeEnvironment.cpuScore
+            + " CPU score, "
             + globalSettings.runtimeEnvironment.ram
             + " MB RAM");
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
@@ -1401,6 +1405,7 @@ public class Freerouting {
         globalSettings.currentLocale,
         globalSettings.runtimeEnvironment.cpuCores,
         globalSettings.runtimeEnvironment.ram,
+        globalSettings.runtimeEnvironment.cpuScore,
         globalSettings.runtimeEnvironment.host,
         width,
         height,

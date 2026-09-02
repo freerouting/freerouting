@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/** Displays route segments that are not connected to their net. */
+/** Displays traces and vias that have no connection to a terminal item. */
 public class WindowUnconnectedRoute extends CleanupWindows {
 
   private int maxUnconnectedRouteInfoId;

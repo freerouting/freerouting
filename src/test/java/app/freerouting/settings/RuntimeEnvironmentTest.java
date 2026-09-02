@@ -44,4 +44,24 @@ class RuntimeEnvironmentTest {
     assertFalse(
         json.contains("AIzaSySecretKey123"), "googleApiKey must not be serialized into JSON");
   }
+
+  @Test
+  void measureCpuScoreReturnsPositiveScore() {
+    long start = System.currentTimeMillis();
+    int score = RuntimeEnvironment.measureCpuScore();
+    long elapsed = System.currentTimeMillis() - start;
+
+    org.junit.jupiter.api.Assertions.assertTrue(score > 0, "CPU score must be strictly positive");
+    org.junit.jupiter.api.Assertions.assertTrue(
+        elapsed < 1000, "CPU benchmark should complete well within a bounded startup window");
+  }
+
+  @Test
+  void cpuScoreIsSerializedIntoJson() {
+    RuntimeEnvironment env = new RuntimeEnvironment();
+    env.cpuScore = 1234;
+    String json = GsonProvider.GSON.toJson(env);
+    org.junit.jupiter.api.Assertions.assertTrue(
+        json.contains("\"cpu_score\": 1234"), "JSON must serialize cpu_score correctly");
+  }
 }

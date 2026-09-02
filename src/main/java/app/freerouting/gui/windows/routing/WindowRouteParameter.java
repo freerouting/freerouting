@@ -91,7 +91,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     // create main panel
     final JPanel mainPanel = new JPanel();
-    getContentPane().add(mainPanel);
+    getContentPane().add(createScrollableContainer(mainPanel));
     GridBagLayout gridbag = new GridBagLayout();
     mainPanel.setLayout(gridbag);
     GridBagConstraints gridbagConstraints = new GridBagConstraints();
@@ -109,8 +109,11 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     mainPanel.add(snapAngleLabel);
 
     settingsRoutingSnapAngle90Button = new JRadioButton(tm.getText("90_degree"));
+    settingsRoutingSnapAngle90Button.setToolTipText(tm.getText("90_degree_tooltip"));
     settingsRoutingSnapAngle45Button = new JRadioButton(tm.getText("45_degree"));
+    settingsRoutingSnapAngle45Button.setToolTipText(tm.getText("45_degree_tooltip"));
     settingsRoutingSnapAngleNoneButton = new JRadioButton(tm.getText("none"));
+    settingsRoutingSnapAngleNoneButton.setToolTipText(tm.getText("none_tooltip"));
 
     settingsRoutingSnapAngle90Button.addActionListener(new SnapAngle90Listener());
     settingsRoutingSnapAngle90Button.addActionListener(
@@ -462,6 +465,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     this.refresh();
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
 
     WorkspaceSettings is = this.guiBoardManager.getWorkspaceSettings();
     if (is != null) {

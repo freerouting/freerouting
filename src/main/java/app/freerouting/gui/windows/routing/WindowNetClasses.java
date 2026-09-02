@@ -551,15 +551,15 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       super(tableModel);
       columnToolTips = new String[10];
       columnToolTips[0] = null;
-      columnToolTips[1] = tm.getText("column_tool_tip_1");
-      columnToolTips[2] = tm.getText("column_tool_tip_2");
-      columnToolTips[3] = tm.getText("column_tool_tip_3");
-      columnToolTips[4] = tm.getText("column_tool_tip_4");
-      columnToolTips[5] = tm.getText("column_tool_tip_5");
-      columnToolTips[6] = tm.getText("column_tool_tip_6");
-      columnToolTips[7] = tm.getText("column_tool_tip_7");
-      columnToolTips[8] = tm.getText("column_tool_tip_8");
-      columnToolTips[9] = tm.getText("column_tool_tip_9");
+      columnToolTips[1] = tm.getText("column_tooltip_1");
+      columnToolTips[2] = tm.getText("column_tooltip_2");
+      columnToolTips[3] = tm.getText("column_tooltip_3");
+      columnToolTips[4] = tm.getText("column_tooltip_4");
+      columnToolTips[5] = tm.getText("column_tooltip_5");
+      columnToolTips[6] = tm.getText("column_tooltip_6");
+      columnToolTips[7] = tm.getText("column_tooltip_7");
+      columnToolTips[8] = tm.getText("column_tooltip_8");
+      columnToolTips[9] = tm.getText("column_tooltip_9");
     }
 
     // Implement table header tool tips.
@@ -952,8 +952,8 @@ public class WindowNetClasses extends BoardSavableSubWindow {
       LayerRulesDialog dialog =
           new LayerRulesDialog(boardFrame, nc, boardFrame.boardPanel.boardHandling, tm);
       dialog.pack();
-      dialog.setLocationRelativeTo(boardFrame);
       dialog.setResizable(false);
+      clampWindowHeight(dialog, boardFrame);
       dialog.setVisible(true);
       fireEditingStopped();
       tableModel.fireTableRowsUpdated(modelRow, modelRow);

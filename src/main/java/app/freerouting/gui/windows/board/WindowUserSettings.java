@@ -6,10 +6,10 @@ import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.gui.board.BoardFrame;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.GlobalSettings;
+import app.freerouting.util.TextManager;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -39,7 +40,9 @@ import javax.swing.event.DocumentListener;
  * contact preferences, as well as view usage statistics and access the project's sponsorship
  * options.
  */
-public final class WindowUserSettings extends WindowBase {
+public final class WindowUserSettings {
+
+  private final TextManager tm;
 
   /**
    * Creates and initializes a new user settings dialog window.
@@ -47,13 +50,10 @@ public final class WindowUserSettings extends WindowBase {
    * @param boardFrame the parent board frame, used to retrieve the active locale settings.
    */
   private WindowUserSettings(BoardFrame boardFrame) {
-    super(480, 355);
+    this.tm = new TextManager(WindowUserSettings.class, boardFrame.getLocale());
 
-    setLanguage(boardFrame.getLocale());
-
-    JDialog profileDialog = new JDialog((Frame) null, "User Settings", true);
-    profileDialog.setTitle(tm.getText("title"));
-    profileDialog.setLayout(new GridBagLayout());
+    JDialog profileDialog = new JDialog(boardFrame, tm.getText("title"), true);
+    JPanel contentPanel = new JPanel(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.insets = new Insets(5, 15, 5, 15);
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -68,14 +68,14 @@ public final class WindowUserSettings extends WindowBase {
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel userIdLabel = new JLabel(tm.getText("user_id"));
-    profileDialog.add(userIdLabel, gbc);
+    contentPanel.add(userIdLabel, gbc);
     gbc.gridx = 1;
     gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JTextField userIdField = new JTextField(globalSettings.userProfileSettings.userId);
     userIdField.setEditable(false);
-    profileDialog.add(userIdField, gbc);
+    contentPanel.add(userIdField, gbc);
 
     // Email
     gbc.gridx = 0;
@@ -84,7 +84,7 @@ public final class WindowUserSettings extends WindowBase {
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel emailLabel = new JLabel(tm.getText("email"));
-    profileDialog.add(emailLabel, gbc);
+    contentPanel.add(emailLabel, gbc);
     gbc.gridx = 1;
     gbc.gridwidth = 3;
     gbc.weightx = 1.0;
@@ -130,7 +130,7 @@ public final class WindowUserSettings extends WindowBase {
             emailField.repaint();
           }
         });
-    profileDialog.add(emailField, gbc);
+    contentPanel.add(emailField, gbc);
 
     // Email hint
     gbc.gridx = 1;
@@ -139,7 +139,7 @@ public final class WindowUserSettings extends WindowBase {
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JLabel emailHint = new JLabel(tm.getText("email_hint"));
-    profileDialog.add(emailHint, gbc);
+    contentPanel.add(emailHint, gbc);
 
     // Telemetry
     gbc.gridx = 0;
@@ -150,7 +150,7 @@ public final class WindowUserSettings extends WindowBase {
     telemetryCheckbox.addItemListener(
         _ ->
             globalSettings.userProfileSettings.isTelemetryAllowed = telemetryCheckbox.isSelected());
-    profileDialog.add(telemetryCheckbox, gbc);
+    contentPanel.add(telemetryCheckbox, gbc);
 
     // Contacting
     gbc.gridx = 0;
@@ -162,7 +162,7 @@ public final class WindowUserSettings extends WindowBase {
         _ ->
             globalSettings.userProfileSettings.isContactAllowed =
                 allowContactCheckbox.isSelected());
-    profileDialog.add(allowContactCheckbox, gbc);
+    contentPanel.add(allowContactCheckbox, gbc);
 
     // Update button
     gbc.gridx = 0;
@@ -196,7 +196,7 @@ public final class WindowUserSettings extends WindowBase {
         _ -> {
           /* profile analytics emitted in save handler */
         });
-    profileDialog.add(updateButton, gbc);
+    contentPanel.add(updateButton, gbc);
 
     // Enable the Update button if email or checkboxes change
     DocumentListener documentListener =
@@ -236,7 +236,7 @@ public final class WindowUserSettings extends WindowBase {
     gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.BOTH;
     JSeparator separator = new JSeparator();
-    profileDialog.add(separator, gbc);
+    contentPanel.add(separator, gbc);
 
     // Statistics header
     gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -247,7 +247,7 @@ public final class WindowUserSettings extends WindowBase {
     JLabel statisticsHeader =
         new JLabel(
             tm.getText("stats_header", globalSettings.statistics.startTime.substring(0, 10)));
-    profileDialog.add(statisticsHeader, gbc);
+    contentPanel.add(statisticsHeader, gbc);
 
     // Statistics
     gbc.gridwidth = 1;
@@ -256,13 +256,13 @@ public final class WindowUserSettings extends WindowBase {
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel sessionsLabel = new JLabel(tm.getText("sessions_total"));
-    profileDialog.add(sessionsLabel, gbc);
+    contentPanel.add(sessionsLabel, gbc);
     gbc.gridx = 1;
     gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JLabel sessionsValue = new JLabel(globalSettings.statistics.sessionsTotal.toString());
-    profileDialog.add(sessionsValue, gbc);
+    contentPanel.add(sessionsValue, gbc);
 
     gbc.gridx = 0;
     gbc.gridy = 9;
@@ -270,13 +270,13 @@ public final class WindowUserSettings extends WindowBase {
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel startedJobsLabel = new JLabel(tm.getText("jobs_started"));
-    profileDialog.add(startedJobsLabel, gbc);
+    contentPanel.add(startedJobsLabel, gbc);
     gbc.gridx = 1;
     gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JLabel startedJobsValue = new JLabel(globalSettings.statistics.jobsStarted.toString());
-    profileDialog.add(startedJobsValue, gbc);
+    contentPanel.add(startedJobsValue, gbc);
 
     gbc.gridx = 0;
     gbc.gridy = 10;
@@ -284,13 +284,13 @@ public final class WindowUserSettings extends WindowBase {
     gbc.weightx = 0;
     gbc.ipadx = ipadx;
     JLabel completedJobsLabel = new JLabel(tm.getText("jobs_completed"));
-    profileDialog.add(completedJobsLabel, gbc);
+    contentPanel.add(completedJobsLabel, gbc);
     gbc.gridx = 1;
     gbc.gridwidth = 3;
     gbc.weightx = 1.0;
     gbc.ipadx = 0;
     JLabel completedJobsValue = new JLabel(globalSettings.statistics.jobsCompleted.toString());
-    profileDialog.add(completedJobsValue, gbc);
+    contentPanel.add(completedJobsValue, gbc);
 
     // Visual separation for sponsor message
     gbc.gridx = 0;
@@ -298,7 +298,7 @@ public final class WindowUserSettings extends WindowBase {
     gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.BOTH;
     JSeparator separator2 = new JSeparator();
-    profileDialog.add(separator2, gbc);
+    contentPanel.add(separator2, gbc);
 
     // Sponsor message
     gbc.gridx = 0;
@@ -314,7 +314,7 @@ public final class WindowUserSettings extends WindowBase {
     sponsorMsgArea.setEditable(false);
     sponsorMsgArea.setFocusable(false);
     sponsorMsgArea.setColumns(28);
-    profileDialog.add(sponsorMsgArea, gbc);
+    contentPanel.add(sponsorMsgArea, gbc);
 
     // Sponsor button
     gbc.gridy = 13;
@@ -338,10 +338,12 @@ public final class WindowUserSettings extends WindowBase {
             FRLogger.error("Failed to open sponsor link", ex);
           }
         });
-    profileDialog.add(sponsorButton, gbc);
-    profileDialog.pack();
+    contentPanel.add(sponsorButton, gbc);
+    profileDialog.add(WindowBase.createScrollableContainer(contentPanel));
     profileDialog.setResizable(false);
-    profileDialog.setLocationRelativeTo(null);
+    profileDialog.pack();
+    profileDialog.setSize(profileDialog.getWidth(), profileDialog.getHeight() + 30);
+    WindowBase.clampWindowHeight(profileDialog, boardFrame);
     profileDialog.setVisible(true);
   }
 

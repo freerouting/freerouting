@@ -77,6 +77,7 @@ public class WindowEditVias extends BoardSavableSubWindow {
 
     this.add(mainPanel);
     this.pack();
+    clampWindowHeight(this, boardFrame);
   }
 
   /** Recalculates all values displayed in the parent window. */

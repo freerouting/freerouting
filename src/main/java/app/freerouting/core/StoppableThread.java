@@ -18,7 +18,7 @@ public abstract class StoppableThread extends Thread implements Stoppable {
     threadAction();
   }
 
-  /** Requests the thread to stop, including fanout, auto-router, and optimizer tasks. */
+  /** Requests the thread to stop, including fanout, Autorouter, and Optimizer tasks. */
   @Override
   public synchronized void requestStop() {
     this.stopRequestState = StopRequestState.ALL;
@@ -29,14 +29,14 @@ public abstract class StoppableThread extends Thread implements Stoppable {
     return this.stopRequestState == StopRequestState.ALL;
   }
 
-  /** Requests the auto-router to stop while other tasks continue. */
+  /** Requests the Autorouter to stop while other tasks continue. */
   public synchronized void requestStopAutoRouter() {
     if (this.stopRequestState == StopRequestState.NONE) {
       this.stopRequestState = StopRequestState.AUTO_ROUTER_ONLY;
     }
   }
 
-  /** Returns whether the auto-router should stop. */
+  /** Returns whether the Autorouter should stop. */
   public synchronized boolean isStopAutoRouterRequested() {
     return this.stopRequestState != StopRequestState.NONE;
   }

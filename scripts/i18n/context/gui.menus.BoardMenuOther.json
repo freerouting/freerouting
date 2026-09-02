@@ -22,8 +22,8 @@
     "code_references": [
       "app.freerouting.gui.menus.BoardMenuOther"
     ],
-    "english_hash": "fb76f170c78197f3fd663445396ec39e1dd8c8d816bd3e523cd340a2b29990b8",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "ce13142bbd4c9be42bf5048084097811c689d8801a43302cb95af4de59a0b50c",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.menus.BoardMenuOther",
@@ -68,8 +68,8 @@
   "snapshots_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [],
-    "english_hash": "853a4d46eb8b11e01906accaa5463a90534bcdc5a72415612c681831974658b2",
-    "grammatical_role": "noun_phrase",
+    "english_hash": "51cb6cbe9491d485d1ded6e29ffe08424d13d5388225ed4e9ce615cb6d216aef",
+    "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
     "java_class": "app.freerouting.gui.menus.BoardMenuOther",

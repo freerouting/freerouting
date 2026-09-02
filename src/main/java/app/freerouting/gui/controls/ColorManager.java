@@ -60,6 +60,7 @@ public class ColorManager extends BoardSavableSubWindow {
     getContentPane().add(panel, BorderLayout.CENTER);
     this.pack();
     this.setResizable(false);
+    clampWindowHeight(this, boardFrame);
   }
 
   /** Initializes colorTable and return the created scrollPane of the color table. */

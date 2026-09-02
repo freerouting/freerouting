@@ -2,6 +2,13 @@
 
 This directory contains the official integration assets for **Autodesk Fusion Electronics** (replacing standalone Autodesk EAGLE).
 
+## Installation & Download
+
+Download the latest version of the plugin package:
+* **[`freerouting_fusion_plugin.zip`](https://github.com/freerouting/freerouting/raw/master/integrations/AutodeskFusion/freerouting_fusion_plugin.zip)**
+
+Extract the contents of the zip archive (including `freerouting_fusion_plugin.ulp` and the `include/` directory) into your Autodesk Fusion ULP directory or any folder on your machine.
+
 ## Workflow Overview
 
 The integration follows a seamless two-step workflow between Autodesk Fusion Electronics and Freerouting:

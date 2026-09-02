@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interface for named algorithms, e.g. "Freerouting Classic Fast Auto-router v1.0" for auto-router,
- * "Freerouting Classic Optimizer v1.0" for route-optimization.
+ * Interface for named algorithms, e.g. "Freerouting Classic Fast Autorouter v1.0" for Autorouter,
+ * "Freerouting Classic Optimizer v1.0" for route optimization.
  */
 public abstract sealed class NamedAlgorithm implements Serializable
     permits BatchAutorouter, BatchOptimizer {

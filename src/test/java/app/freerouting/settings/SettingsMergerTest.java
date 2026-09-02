@@ -24,7 +24,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Verify default values
-    assertEquals(9999, merged.maxPasses);
+    assertEquals(0, merged.maxPasses);
     assertTrue(merged.enabled);
     assertTrue(merged.viasAllowed);
     assertTrue(merged.getRunOptimizer());
@@ -117,7 +117,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Should still have default values
-    assertEquals(9999, merged.maxPasses);
+    assertEquals(0, merged.maxPasses);
   }
 
   @Test

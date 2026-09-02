@@ -59,8 +59,12 @@ function Get-FilesystemSafeVersionLabel {
 function Get-BinaryVersionLabel {
     param([System.IO.FileInfo]$Binary)
 
-    # 1. Stable versioned filename: freerouting-2.2.4.jar -> "2.2.4"
-    if ($Binary.Name -match 'freerouting-(\d+\.\d+\.\d+)\.jar') {
+    if ($env:FREEROUTING_VERSION_LABEL -and ($Binary.Name -match 'current')) {
+        return $env:FREEROUTING_VERSION_LABEL
+    }
+
+    # 1. Versioned filename: freerouting-2.2.4.jar -> "2.2.4", freerouting-2.4.0-RC1.jar -> "2.4.0-RC1"
+    if ($Binary.Name -match 'freerouting-(\d+\.\d+\.\d+(?:-[A-Za-z0-9.]+)?)\.jar') {
         return $matches[1]
     }
 
