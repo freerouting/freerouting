@@ -379,6 +379,7 @@ public final class FRAnalytics {
    * @param guiLanguage the GUI locale
    * @param cpuCoreCount the number of available CPU cores
    * @param ramAmount the installed RAM amount
+   * @param cpuScore the single-threaded CPU benchmark score
    * @param host the host application identifier
    * @param width the screen width
    * @param height the screen height
@@ -397,6 +398,7 @@ public final class FRAnalytics {
       Locale guiLanguage,
       int cpuCoreCount,
       long ramAmount,
+      int cpuScore,
       String host,
       int width,
       int height,
@@ -418,6 +420,7 @@ public final class FRAnalytics {
     properties.put("gui_language", guiLanguage.toString());
     properties.put("cpu_core_count", Integer.toString(cpuCoreCount));
     properties.put("ram_amount", Long.toString(ramAmount));
+    properties.put("cpu_score", Integer.toString(cpuScore));
     properties.put("host", host);
     properties.put("screen_width", Integer.toString(width));
     properties.put("screen_height", Integer.toString(height));
