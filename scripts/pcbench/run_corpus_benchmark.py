@@ -234,6 +234,7 @@ def route_single_board(
 
     cmd = [
         "java",
+        "-Xmx4g",
         "-Dfreerouting.log.file.level=INFO",
         "-Dfreerouting.log.console.level=INFO",
         "-jar",
@@ -241,6 +242,7 @@ def route_single_board(
         "--gui.enabled=false",
         "--api_server.enabled=false",
         "--mcp_server.enabled=false",
+        "--router.max_threads=1",
         "-de",
         str(dsn_path),
         "-do",
