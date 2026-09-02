@@ -81,7 +81,7 @@ class WindowRoutingSummaryA11yTest {
         () -> {
           Component root = GuiA11yHarness.findByLocator(panel, GuiLocators.ROUTING_SUMMARY_DIALOG);
           assertNotNull(root);
-          assertEquals("Huzalozási összefoglaló", GuiA11yHarness.accessibleName(root));
+          assertEquals("Nyomvonalvezetési összegzés", GuiA11yHarness.accessibleName(root));
           GuiA11yHarness.requireNoLeakedGuiResources();
         });
   }
