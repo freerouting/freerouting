@@ -488,6 +488,7 @@ def render_dashboard(
     worker_status: dict[int, dict[str, Any]],
     recent_messages: collections.deque[str],
     status_lock: threading.Lock,
+    version_label: str = "",
     in_place: bool = True,
 ) -> None:
     """Print updated multi-worker dashboard with live logs and recent history."""
@@ -495,15 +496,15 @@ def render_dashboard(
     avg_per_board = elapsed / completed if completed > 0 else 0
     remaining_secs = avg_per_board * (total - completed)
     eta_str = time.strftime("%H:%M:%S", time.gmtime(remaining_secs))
-    elapsed_str = time.strftime("%H:%M:%S", time.gmtime(elapsed))
     pct = (completed / total) * 100.0 if total > 0 else 0.0
+
+    ver_part = f" | {C_BWHITE}Version:{C_RESET} {C_BCYAN}{version_label}{C_RESET}" if version_label else ""
 
     lines = []
     lines.append(f"{C_BCYAN}{'=' * 105}{C_RESET}")
     lines.append(
         f"{C_BWHITE}PCBench Benchmark:{C_RESET} {C_BYELLOW}{completed}/{total}{C_RESET} "
-        f"({C_BGREEN}{pct:5.1f}%{C_RESET}) | "
-        f"{C_BWHITE}Elapsed:{C_RESET} {C_CYAN}{elapsed_str}{C_RESET} | "
+        f"({C_BGREEN}{pct:5.1f}%{C_RESET}){ver_part} | "
         f"{C_BWHITE}ETA:{C_RESET} {C_CYAN}{eta_str}{C_RESET} ({C_YELLOW}{avg_per_board:.1f}s/board{C_RESET}) | "
         f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET} | "
         f"{C_DIM}[ESC / Q to exit]{C_RESET}"
@@ -709,6 +710,7 @@ def main() -> int:
                     worker_status,
                     recent_messages,
                     status_lock,
+                    version_label=args.version_label,
                     in_place=True,
                 )
 
@@ -806,6 +808,7 @@ def main() -> int:
                         worker_status,
                         recent_messages,
                         status_lock,
+                        version_label=args.version_label,
                         in_place=True,
                     )
 
@@ -832,6 +835,7 @@ def main() -> int:
                         worker_status,
                         recent_messages,
                         status_lock,
+                        version_label=args.version_label,
                         in_place=True,
                     )
 
