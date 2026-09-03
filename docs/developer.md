@@ -217,8 +217,14 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
   ```
 * Create and publish the new release on GitHub:
   * Draft a release for tag `v2.3.4` targeting the latest commit on `master`.
-  * Attach `freerouting-2.3.4.jar` and `kicad-freerouting-2.3.4.zip`.
-  * Publishing the release automatically triggers GitHub Actions to build cross-platform native installers and publish the multi-arch Docker image to [GHCR.io](https://github.com/freerouting/freerouting/pkgs/container/freerouting).
+  * You do not need to manually attach artifacts. Publishing the release automatically triggers GitHub Actions (`create-release.yml` and `docker-release.yml`) to build and attach:
+    * Universal executable JAR (`freerouting-2.3.4.jar`).
+    * Windows x64 installer (`freerouting-2.3.4-windows-x64.msi`).
+    * Linux x64 distribution package (`freerouting-2.3.4-linux-x64.zip`).
+    * macOS Apple Silicon ARM64 disk image (`freerouting-2.3.4-macos-arm64.dmg`).
+    * Multi-architecture Docker image automatically published to GitHub Container Registry ([`ghcr.io/freerouting/freerouting`](https://github.com/freerouting/freerouting/pkgs/container/freerouting)).
+  * *Note on Intel macOS (x86_64):* Intel-based macOS DMG installers are no longer generated because GitHub Actions has deprecated and retired x86_64 macOS runners (`macos-12`/`macos-13`) in favor of Apple Silicon ARM64 runners (`macos-14`/`macos-latest`). Native macOS DMG packages cannot be cross-compiled for x86_64 without dedicated Intel hardware; Intel Mac users can run the universal `freerouting-2.3.4.jar` directly with Java 25.
+  * *Note on KiCad plugin ZIP:* We do not attach `kicad-freerouting-2.3.4.zip` directly to the GitHub release; it is hosted in the repository under `integrations/KiCad/kicad-freerouting-2.3.4.zip` and distributed directly to users through KiCad's Plugin and Content Manager (PCM).
 * Publish the library to Maven Central:
     * Use the [Gradle Maven plugin](https://github.com/vanniktech/gradle-maven-publish-plugin) and verify properties in `~/.gradle/gradle.properties`:
       <img width="896" height="293" alt="image" src="https://github.com/user-attachments/assets/fa85332d-91d8-4715-924d-aa8b6f86c64c" />
@@ -233,27 +239,38 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
   ```
 * Test and publish a new version of the Python Freerouting Client on PyPI (in the separate `freerouting-python-client` repository). Keep the PyPI package version in sync with the Freerouting GA release (`2.3.4`).
 * Submit KiCad Addon Repository update:
-    * Delete previous fork at https://gitlab.com/freeroutingapp/metadata (Settings / General / Delete this project).
-    * Fork https://gitlab.com/kicad/addons/metadata again.
-    * Create a new branch, named `freerouting-2.3.4`.
-    * Replace `packages/app.freerouting.kicad-plugin/metadata.json` with the new one.
-    * Run KiCad Packaging Toolkit and its "Run KiCad repository validation" feature, because it confirms that the proper KiCad plugin ZIP file is indeed at the right URL at GitHub.
-    * Create a merge request at https://gitlab.com/kicad/addons/metadata.
-* Update the Docker image on Azure:
-    1. Build docker image locally for Linux x64 (~2 mins):
-       ```bash
-       docker build -t freerouting:latest .
-       ```
-    2. Tag the docker image:
-       ```bash
-       docker tag freerouting:latest freerouting.azurecr.io/freerouting/api:latest
-       ```
-    3. Push image to Azure as `freerouting.azurecr.io/freerouting/api:latest`:
-       ```bash
-       az login
-       az acr login --name freerouting
-       docker push freerouting.azurecr.io/freerouting/api:latest
-       ```
+    * You can perform this update directly on GitLab's website without cloning the repository locally:
+    * Go to your GitLab fork of the official repository: [`https://gitlab.com/freeroutingapp/metadata`](https://gitlab.com/freeroutingapp/metadata) (or fork [`https://gitlab.com/kicad/addons/metadata`](https://gitlab.com/kicad/addons/metadata) if not already done, and click **Update fork** to bring it up to date).
+    * Navigate to [`packages/app.freerouting.kicad-plugin/metadata.json`](https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json).
+    * Click **Edit** -> **Edit single file**.
+    * Paste the updated version entry or content from `integrations/KiCad/metadata.json` into the editor.
+    * In the **Commit changes** section:
+      * Set **Commit message**: `Update Freerouting Addon to 2.3.4`
+      * Set **Commit to a new branch**: enter a new branch name (e.g. `freerouting-2.3.4`). *Do not commit to `main`*, as GitLab CI package validation requires a dedicated branch.
+      * Ensure **Create a merge request for this change** is checked.
+      * Click **Commit changes**.
+    * On the Merge [Request page](https://gitlab.com/kicad/addons/metadata/-/merge_requests), the GitLab CI pipeline will automatically start and run the `validate` and `build` stages:
+      * Click the **Pipelines** tab on the MR to view progress.
+      * Once the `build` job finishes, open its log: it outputs a link to a temporary PCM repository containing only the updated package.
+      * In KiCad, open **Plugin and Content Manager (PCM)** -> **Manage** -> **Repository**, add that temporary repository URL, and test installing and running the plugin to verify everything works end-to-end.
+    * *Note:* After the merge request is approved and merged, a scheduled job syncs updates to the official KiCad PCM repository within ~24 hours.
+* **Docker Image Updates (GHCR & Azure):**
+    * **Automated (Primary):** The multi-architecture Docker image is automatically built and published to GitHub Container Registry ([`ghcr.io/freerouting/freerouting`](https://github.com/freerouting/freerouting/pkgs/container/freerouting)) via `.github/workflows/docker-release.yml` whenever a release is published on GitHub. No manual build or push is required.
+    * **Azure Container Registry (Legacy / Currently Not Used):** Direct publishing to Azure Container Registry (`freerouting.azurecr.io`) is currently not used in standard releases. If an Azure deployment is ever needed manually:
+        1. Build docker image locally for Linux x64 (~2 mins):
+           ```bash
+           docker build -t freerouting:latest .
+           ```
+        2. Tag the docker image:
+           ```bash
+           docker tag freerouting:latest freerouting.azurecr.io/freerouting/api:latest
+           ```
+        3. Push image to Azure:
+           ```bash
+           az login
+           az acr login --name freerouting
+           docker push freerouting.azurecr.io/freerouting/api:latest
+           ```
 * Optionally regenerate non-official SDK scaffolds from this repository before preparing SDK PRs:
     * `./scripts/sdk/regenerate-all.ps1 -SharedVersion 2.3.4`
     * `./scripts/sdk/generate-javascript-client.ps1`
