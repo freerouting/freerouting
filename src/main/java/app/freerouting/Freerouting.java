@@ -1426,11 +1426,31 @@ public class Freerouting {
       System.exit(0);
     }
 
+    boolean explicitApiServer = false;
+    boolean explicitMcpServer = false;
+    for (String arg : args) {
+      if (arg.startsWith("--api.server.enabled=") || arg.startsWith("--api_server.enabled=")) {
+        explicitApiServer = true;
+      }
+      if (arg.startsWith("--mcp.server.enabled=") || arg.startsWith("--mcp_server.enabled=")) {
+        explicitMcpServer = true;
+      }
+    }
+
     // Disable GUI and API if in DRC-only mode
     if (globalSettings.drcReportFile != null) {
       globalSettings.guiSettings.isEnabled = false;
       globalSettings.apiServerSettings.isEnabled = false;
       globalSettings.mcpServerSettings.isEnabled = false;
+    } else if (globalSettings.initialInputFile != null && !globalSettings.guiSettings.isEnabled) {
+      // In batch CLI mode with an input design, do not start background servers unless explicitly
+      // requested
+      if (!explicitApiServer) {
+        globalSettings.apiServerSettings.isEnabled = false;
+      }
+      if (!explicitMcpServer) {
+        globalSettings.mcpServerSettings.isEnabled = false;
+      }
     }
 
     // Create the settings merger prototype based on the sources that will not change at runtime
@@ -1483,14 +1503,14 @@ public class Freerouting {
       }
     }
 
-    // If the GUI is disabled and the API server is not running, then we are in CLI mode
+    // If the GUI is disabled, execute CLI routing / DRC or run in daemon mode
     boolean cliResult = true;
-    if (!globalSettings.guiSettings.isEnabled
-        && !globalSettings.apiServerSettings.isRunning
-        && !globalSettings.mcpServerSettings.isRunning) {
+    if (!globalSettings.guiSettings.isEnabled) {
       if (globalSettings.drcReportFile != null) {
         cliResult = initializeDrc(globalSettings);
-      } else {
+      } else if (globalSettings.initialInputFile != null
+          || (!globalSettings.apiServerSettings.isRunning
+              && !globalSettings.mcpServerSettings.isRunning)) {
         cliResult = initializeCli(globalSettings);
       }
     }
@@ -1501,6 +1521,13 @@ public class Freerouting {
       shutdownApplication();
       FRLogger.traceExit("MainApplication.main()");
       System.exit(1);
+    }
+
+    // If a batch CLI job was executed with an input file, shut down and exit immediately
+    if (globalSettings.initialInputFile != null && !globalSettings.guiSettings.isEnabled) {
+      shutdownApplication();
+      FRLogger.traceExit("MainApplication.main()");
+      System.exit(globalSettings.cliExitCode);
     }
 
     while (globalSettings.guiSettings.isRunning

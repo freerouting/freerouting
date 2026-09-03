@@ -153,10 +153,10 @@
       "version": "2.4.1",
       "status": "stable",
       "kicad_version": "6.0",
-      "download_sha256": "c9d05ae653ded91639755e88a3ff70be884a892d909fd52bdc6d08f1eaf754f8",
-      "download_size": 59256053,
+      "download_sha256": "89897040614e3c042c5289b26a3a4dae983ed4054bd8953a0869b130aa6b67d5",
+      "download_size": 59256090,
       "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.4.1.zip",
-      "install_size": 64222805
+      "install_size": 64222989
     }
   ]
 }
