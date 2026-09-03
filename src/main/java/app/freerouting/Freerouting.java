@@ -1426,31 +1426,11 @@ public class Freerouting {
       System.exit(0);
     }
 
-    boolean explicitApiServer = false;
-    boolean explicitMcpServer = false;
-    for (String arg : args) {
-      if (arg.startsWith("--api.server.enabled=") || arg.startsWith("--api_server.enabled=")) {
-        explicitApiServer = true;
-      }
-      if (arg.startsWith("--mcp.server.enabled=") || arg.startsWith("--mcp_server.enabled=")) {
-        explicitMcpServer = true;
-      }
-    }
-
     // Disable GUI and API if in DRC-only mode
     if (globalSettings.drcReportFile != null) {
       globalSettings.guiSettings.isEnabled = false;
       globalSettings.apiServerSettings.isEnabled = false;
       globalSettings.mcpServerSettings.isEnabled = false;
-    } else if (globalSettings.initialInputFile != null && !globalSettings.guiSettings.isEnabled) {
-      // In batch CLI mode with an input design, do not start background servers unless explicitly
-      // requested
-      if (!explicitApiServer) {
-        globalSettings.apiServerSettings.isEnabled = false;
-      }
-      if (!explicitMcpServer) {
-        globalSettings.mcpServerSettings.isEnabled = false;
-      }
     }
 
     // Create the settings merger prototype based on the sources that will not change at runtime

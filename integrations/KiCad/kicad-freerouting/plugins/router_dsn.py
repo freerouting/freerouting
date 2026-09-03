@@ -149,8 +149,8 @@ class DsnRouter:
             "-host",
             str(self.plugin.host),
             "--gui.enabled=false",
-            "--api.server.enabled=false",
-            "--mcp.server.enabled=false",
+            "--api_server.enabled=false",
+            "--mcp_server.enabled=false",
             f"--logging.file.location={LOG_DIR}",
         ]
         logger.info(f"Built DSN routing command: {' '.join(self.plugin.module_command)}")
