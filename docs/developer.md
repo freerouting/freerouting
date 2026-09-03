@@ -239,35 +239,22 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
   ```
 * Test and publish a new version of the Python Freerouting Client on PyPI (in the separate `freerouting-python-client` repository). Keep the PyPI package version in sync with the Freerouting GA release (`2.3.4`).
 * Submit KiCad Addon Repository update:
-    * Follow the official KiCad Addon Metadata Repository workflow ([`https://gitlab.com/kicad/addons/metadata`](https://gitlab.com/kicad/addons/metadata)):
-    * Ensure your local checkout of your GitLab fork (`https://gitlab.com/<username>/metadata`) is up to date:
-      ```bash
-      git fetch upstream
-      git rebase upstream/main
-      ```
-    * Create a dedicated feature branch for the release (do not use the default `main` branch, otherwise GitLab CI validation will not run properly):
-      ```bash
-      git checkout -b freerouting-2.3.4
-      ```
-    * Copy the updated `metadata.json` from `integrations/KiCad/metadata.json` into `packages/app.freerouting.kicad-plugin/metadata.json`. Ensure the icon file is also present if updated.
-    * (Optional but recommended) Run local validation with the Packaging Toolkit:
-      * Install dependencies if needed: `python -m pip install -r ci/requirements.txt`
-      * Launch using KiCad's bundled Python (or an environment with `wxpython`):
-        ```bash
-        python tools/packager.py
-        ```
-      * Use the tool to perform local metadata validation and confirm the package SHA-256 and download/install sizes match.
-    * Commit and push your branch to your GitLab fork:
-      ```bash
-      git add packages/app.freerouting.kicad-plugin/metadata.json
-      git commit -m "Update Freerouting plugin to 2.3.4"
-      git push -u origin freerouting-2.3.4
-      ```
-    * Pushing triggers the GitLab CI pipeline (`validate` and `build` stages). Check the pipeline under **CI/CD -> Pipelines** on your fork.
-    * Once the `validate` and `build` stages pass, check the build log: it provides a temporary PCM repository URL containing only the new/modified package.
-    * Add that temporary repository URL into KiCad's Plugin and Content Manager (PCM) settings to test installing and running the plugin directly from PCM.
-    * Once verified, submit the Merge Request to [https://gitlab.com/kicad/addons/metadata](https://gitlab.com/kicad/addons/metadata).
-    * *Note:* After the merge request is approved and merged by the KiCad team, changes do not appear immediately in the official PCM repository; a scheduled job syncs updates within ~24 hours.
+    * You can perform this update directly on GitLab's website without cloning the repository locally:
+    * Go to your GitLab fork of the official repository: [`https://gitlab.com/freeroutingapp/metadata`](https://gitlab.com/freeroutingapp/metadata) (or fork [`https://gitlab.com/kicad/addons/metadata`](https://gitlab.com/kicad/addons/metadata) if not already done, and click **Sync fork** to bring it up to date).
+    * Navigate to `packages/app.freerouting.kicad-plugin/metadata.json`.
+    * Click **Edit** -> **Edit single file** (or open in **Web IDE**).
+    * Paste the updated version entry or content from `integrations/KiCad/metadata.json` into the editor.
+    * In the **Commit changes** section:
+      * Set **Commit message**: `Update Freerouting plugin to 2.3.4`
+      * Set **Target branch**: enter a new branch name (e.g. `freerouting-2.3.4`). *Do not commit to `main`*, as GitLab CI package validation requires a dedicated branch.
+      * Ensure **Start a new merge request with these changes** is checked.
+      * Click **Commit changes**.
+    * On the Merge Request page, the GitLab CI pipeline will automatically start and run the `validate` and `build` stages:
+      * Click the **Pipelines** tab on the MR to view progress.
+      * Once the `build` job finishes, open its log: it outputs a link to a temporary PCM repository containing only the updated package.
+      * In KiCad, open **Plugin and Content Manager (PCM)** -> **Manage** -> **Repository**, add that temporary repository URL, and test installing and running the plugin to verify everything works end-to-end.
+    * Once verified, submit the Merge Request for the KiCad team to review.
+    * *Note:* After the merge request is approved and merged, a scheduled job syncs updates to the official KiCad PCM repository within ~24 hours.
 * **Docker Image Updates (GHCR & Azure):**
     * **Automated (Primary):** The multi-architecture Docker image is automatically built and published to GitHub Container Registry ([`ghcr.io/freerouting/freerouting`](https://github.com/freerouting/freerouting/pkgs/container/freerouting)) via `.github/workflows/docker-release.yml` whenever a release is published on GitHub. No manual build or push is required.
     * **Azure Container Registry (Legacy / Currently Not Used):** Direct publishing to Azure Container Registry (`freerouting.azurecr.io`) is currently not used in standard releases. If an Azure deployment is ever needed manually:
