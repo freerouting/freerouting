@@ -68,6 +68,21 @@ class SesRoundTripTest {
         "SES output must start with '(session '; got: "
             + content.substring(0, Math.min(50, content.length())));
     assertTrue(content.contains("(routes"), "SES output must contain '(routes' scope");
+    assertFalse(content.contains("(hostCad"), "SES output must not contain camelCase '(hostCad'");
+    assertFalse(
+        content.contains("(stringQuote"), "SES output must not contain camelCase '(stringQuote'");
+    assertFalse(
+        content.contains("(writeResolution"),
+        "SES output must not contain camelCase '(writeResolution'");
+    assertFalse(content.contains("(viaRule"), "SES output must not contain camelCase '(viaRule'");
+    assertFalse(
+        content.contains("(pullTight"), "SES output must not contain camelCase '(pullTight'");
+    assertFalse(
+        content.contains("(shoveFixed"), "SES output must not contain camelCase '(shoveFixed'");
+    assertFalse(content.contains("(useLayer"), "SES output must not contain camelCase '(useLayer'");
+    assertFalse(
+        content.contains("(clearanceClass"),
+        "SES output must not contain camelCase '(clearanceClass'");
   }
 
   /**

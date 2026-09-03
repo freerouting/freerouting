@@ -189,6 +189,7 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
     * Create a ZIP file from the `kicad-freerouting` folder and save it as both `kicad-freerouting.zip` and `kicad-freerouting-2.3.4.zip`.
     * Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to compute SHA-256 and file sizes.
     * Update `integrations/KiCad/metadata.json` with the new version entry, SHA-256, download size, and install size.
+    * Run a full routing session from KiCad after manually installing the plugin ZIP, to make sure that the router executes properly in CLI mode and the resulting SES file imports without corruption or parser errors.
 * Update documentation version references (`README.md`, `integrations.md`, `self-hosting.md`, and `settings.md`).
 * Run verification quality checks:
   ```bash
@@ -236,7 +237,7 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
     * Fork https://gitlab.com/kicad/addons/metadata again.
     * Create a new branch, named `freerouting-2.3.4`.
     * Replace `packages/app.freerouting.kicad-plugin/metadata.json` with the new one.
-    * Run the "Run KiCad repository validation" command in KiCad Packager.
+    * Run KiCad Packaging Toolkit and its "Run KiCad repository validation" feature, because it confirms that the proper KiCad plugin ZIP file is indeed at the right URL at GitHub.
     * Create a merge request at https://gitlab.com/kicad/addons/metadata.
 * Update the Docker image on Azure:
     1. Build docker image locally for Linux x64 (~2 mins):

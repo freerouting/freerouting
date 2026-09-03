@@ -126,7 +126,7 @@ public class Network extends ScopeKeyword {
     if (netClass.getViaRule() != null) {
       // write the via rule
       scopeParameter.file.newLine();
-      scopeParameter.file.write("(viaRule ");
+      scopeParameter.file.write("(via_rule ");
       scopeParameter.identifierType.write(netClass.getViaRule().name, scopeParameter.file);
       scopeParameter.file.write(")");
     }
@@ -138,12 +138,12 @@ public class Network extends ScopeKeyword {
 
     if (!netClass.getPullTight()) {
       scopeParameter.file.newLine();
-      scopeParameter.file.write("(pullTight off)");
+      scopeParameter.file.write("(pull_tight off)");
     }
 
     if (netClass.isShoveFixed()) {
       scopeParameter.file.newLine();
-      scopeParameter.file.write("(shoveFixed on)");
+      scopeParameter.file.write("(shove_fixed on)");
     }
 
     scopeParameter.file.endScope();
@@ -157,7 +157,7 @@ public class Network extends ScopeKeyword {
     scopeParameter.file.startScope();
     scopeParameter.file.write("circuit ");
     scopeParameter.file.newLine();
-    scopeParameter.file.write("(useLayer");
+    scopeParameter.file.write("(use_layer");
     int layerCount = netClass.layerCount();
     for (int i = 0; i < layerCount; i++) {
       if (netClass.isActiveRoutingLayer(i)) {

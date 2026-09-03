@@ -305,7 +305,7 @@ public abstract class Rule {
   public static void writeItemClearanceClass(
       String name, IndentFileWriter file, IdentifierType identifierType) throws IOException {
     file.newLine();
-    file.write("(clearanceClass ");
+    file.write("(clearance_class ");
     identifierType.write(name, file);
     file.write(")");
   }
