@@ -432,8 +432,9 @@ public class Freerouting {
       // Check if the protocol is HTTP or HTTPS
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
         FRLogger.warn(
-            "Can't use the endpoint '%s' for the API server, because its protocol is not HTTP "
-                + "or HTTPS.".formatted(endpointUrl));
+            ("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP "
+                    + "or HTTPS.")
+                .formatted(endpointUrl));
         continue;
       }
 
@@ -578,8 +579,9 @@ public class Freerouting {
 
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
         FRLogger.warn(
-            "Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP "
-                + "or HTTPS.".formatted(endpointUrl));
+            ("Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP "
+                    + "or HTTPS.")
+                .formatted(endpointUrl));
         continue;
       }
 

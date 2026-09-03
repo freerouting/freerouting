@@ -287,8 +287,9 @@ public class GoogleSheetsApiKeyProvider implements ApiKeyProvider {
 
       if (newCache.size() != previousCacheSize) {
         String message =
-            "Successfully refreshed %d valid API keys from Google Sheets (total entries: %d,"
-                + " skipped: %d)".formatted(validKeysCount, newCache.size(), skippedRows);
+            ("Successfully refreshed %d valid API keys from Google Sheets (total entries: %d,"
+                    + " skipped: %d)")
+                .formatted(validKeysCount, newCache.size(), skippedRows);
         FRLogger.info(message);
       } else {
         FRLogger.debug(
