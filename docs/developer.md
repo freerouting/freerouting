@@ -158,12 +158,16 @@ Creating a release takes about half an hour if everything goes according to the 
 
 Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 
+* Fetch the master branch
+* Create a new branch "release/v2.3.4"
 * Run the `gradlew wrapper --gradle-version latest` command to update the Gradle wrapper to the latest version.
 * Run the `./gradlew dependencyUpdates useLatestVersions` command to check if there are any dependencies that need to be updated. Update them manually if necessary and commit the changes.
 * Check if there are any [outstanding pull requests](https://github.com/freerouting/freerouting/pulls) and merge them as well
 * Change `ext.publishing.versionId` in `\gradle\project-info.gradle` to `2.3.4`
-* Push it to GitHub
+* Commit the changes and push it to GitHub
+* Create a PR from release/v2.3.4 → master
 * Check if it was built successfully on GitHub Actions
+* Merge it to master
 * Create a new draft release
 * Run `gradlew.bat executableJar` -> this will generate the files in `\build\libs\freerouting*.jar`
 * Rename to `freerouting-current-executable.jar` to `freerouting-2.3.4.jar`
