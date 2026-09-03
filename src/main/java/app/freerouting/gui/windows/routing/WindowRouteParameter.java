@@ -15,7 +15,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -46,7 +45,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   private static final int c_region_scale_factor = 200;
   private static final int c_accuracy_max_slider_value = 100;
   private static final int c_accuracy_scale_factor = 20;
-  public final WindowManualRules manualRuleWindow;
+  private final ManualRulesPanel manualRulesPanel;
   private final GuiBoardManager guiBoardManager;
   private final JSlider regionSlider;
   private final JFormattedTextField regionWidthField;
@@ -81,7 +80,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   /** Creates a new instance of RouteParameterWindow. */
   public WindowRouteParameter(BoardFrame boardFrame) {
     this.guiBoardManager = boardFrame.boardPanel.boardHandling;
-    this.manualRuleWindow = new WindowManualRules(boardFrame);
+    this.manualRulesPanel = new ManualRulesPanel(boardFrame);
 
     setLanguage(boardFrame.getLocale());
 
@@ -223,6 +222,11 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     mainPanel.add(settingsRoutingAutomaticButton);
     gridbag.setConstraints(settingsRoutingManualButton, gridbagConstraints);
     mainPanel.add(settingsRoutingManualButton);
+
+    // Inline panel for the manual rule selection, visible only while
+    // the "Manual" radio button is selected.
+    gridbag.setConstraints(this.manualRulesPanel, gridbagConstraints);
+    mainPanel.add(this.manualRulesPanel);
 
     addSeparator(mainPanel, gridbag, gridbagConstraints);
 
@@ -542,7 +546,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
   @Override
   public void dispose() {
-    manualRuleWindow.dispose();
     super.dispose();
   }
 
@@ -552,11 +555,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
     if (!readOk) {
       return false;
     }
-    readOk = manualRuleWindow.read(objectStream);
-    if (!readOk) {
-      return false;
-    }
-    this.manualTraceWidthListener.firstTime = false;
     this.refresh();
     return true;
   }
@@ -564,7 +562,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   @Override
   public void save(ObjectOutputStream objectStream) {
     super.save(objectStream);
-    manualRuleWindow.save(objectStream);
   }
 
   @Override
@@ -590,11 +587,10 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
       if (this.guiBoardManager.getWorkspaceSettings().getManualRuleSelection()) {
         settingsRoutingManualButton.setSelected(true);
-        if (this.manualRuleWindow != null) {
-          this.manualRuleWindow.setVisible(true);
-        }
+        updateManualRulesPanelVisibility(true);
       } else {
         settingsRoutingAutomaticButton.setSelected(true);
+        updateManualRulesPanelVisibility(false);
       }
 
       this.settingsRoutingShoveCheckBox.setSelected(
@@ -624,9 +620,7 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
           this.guiBoardManager.coordinateTransform.boardToUser(
               regionSliderValue * c_region_scale_factor));
 
-      if (this.manualRuleWindow != null) {
-        this.manualRuleWindow.refresh();
-      }
+      this.manualRulesPanel.refresh();
 
       this.edgeToTurnSuffixLabel.setText(
           this.guiBoardManager.coordinateTransform.userUnit.toString());
@@ -680,14 +674,19 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
   @Override
   public void parentIconified() {
-    manualRuleWindow.parentIconified();
     super.parentIconified();
   }
 
   @Override
   public void parentDeiconified() {
-    manualRuleWindow.parentDeiconified();
     super.parentDeiconified();
+  }
+
+  /** Shows or hides the inline manual-rules panel and reflows the containing dialog. */
+  private void updateManualRulesPanelVisibility(boolean visible) {
+    this.manualRulesPanel.setVisible(visible);
+    this.getContentPane().revalidate();
+    this.getContentPane().repaint();
   }
 
   private void setPullTightRegionWidth(int sliderValue) {
@@ -883,23 +882,16 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-      manualRuleWindow.setVisible(false);
+      updateManualRulesPanelVisibility(false);
       guiBoardManager.getWorkspaceSettings().setManualTracewidthSelection(false);
     }
   }
 
   private class ManualTraceWidthListener implements ActionListener {
 
-    boolean firstTime = true;
-
     @Override
     public void actionPerformed(ActionEvent evt) {
-      if (firstTime) {
-        Point location = getLocation();
-        manualRuleWindow.setLocation((int) location.getX() + 200, (int) location.getY() + 200);
-        firstTime = false;
-      }
-      manualRuleWindow.setVisible(true);
+      updateManualRulesPanelVisibility(true);
       guiBoardManager.getWorkspaceSettings().setManualTracewidthSelection(true);
     }
   }
