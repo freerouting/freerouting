@@ -545,11 +545,6 @@ public class WindowRouteParameter extends BoardSavableSubWindow {
   }
 
   @Override
-  public void dispose() {
-    super.dispose();
-  }
-
-  @Override
   public boolean read(ObjectInputStream objectStream) {
     boolean readOk = super.read(objectStream);
     if (!readOk) {

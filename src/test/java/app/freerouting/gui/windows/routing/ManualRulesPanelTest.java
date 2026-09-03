@@ -34,19 +34,16 @@ class ManualRulesPanelTest {
 
   @Test
   void englishBundleContainsAllRequiredKeys() {
-    ResourceBundle bundle =
-        ResourceBundle.getBundle(BUNDLE_BASE_NAME, Locale.forLanguageTag("en"));
+    ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, Locale.forLanguageTag("en"));
     for (String key : REQUIRED_KEYS) {
-      assertTrue(
-          bundle.containsKey(key), () -> "English bundle is missing required key: " + key);
+      assertTrue(bundle.containsKey(key), () -> "English bundle is missing required key: " + key);
       assertNotNull(bundle.getString(key), () -> "Key must have a non-null value: " + key);
     }
   }
 
   @Test
   void titleKeyKeepsItsCanonicalEnglishValue() {
-    ResourceBundle bundle =
-        ResourceBundle.getBundle(BUNDLE_BASE_NAME, Locale.forLanguageTag("en"));
+    ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, Locale.forLanguageTag("en"));
     // The former dialog title is now reused as the titled border of the inline panel.
     assertEquals("Manual Rules", bundle.getString("title"));
   }

@@ -30,8 +30,8 @@ import javax.swing.JPanel;
 /**
  * Inline panel for the manual choice of trace widths, clearance class and via rule in interactive
  * routing. Replaces the former free-floating {@code WindowManualRules} popup; it is embedded in the
- * route parameter window below the "Manual" radio button and shown only while manual rule
- * selection is active.
+ * route parameter window below the "Manual" radio button and shown only while manual rule selection
+ * is active.
  */
 public class ManualRulesPanel extends JPanel {
 
@@ -72,7 +72,8 @@ public class ManualRulesPanel extends JPanel {
     this.settingsRoutingManualRuleSelectionViaRuleComboBox.setToolTipText(
         tm.getText("via_rule_tooltip"));
     this.add(this.settingsRoutingManualRuleSelectionViaRuleComboBox);
-    settingsRoutingManualRuleSelectionViaRuleComboBox.addActionListener(new ViaRuleComboBoxListener());
+    settingsRoutingManualRuleSelectionViaRuleComboBox.addActionListener(
+        new ViaRuleComboBoxListener());
 
     JLabel classLabel = new JLabel(tm.getText("trace_clearance_class"));
     classLabel.setToolTipText(tm.getText("trace_clearance_class_tooltip"));
@@ -129,7 +130,7 @@ public class ManualRulesPanel extends JPanel {
         _ ->
             FRAnalytics.buttonClicked(
                 "settingsRoutingManualRuleSelectionLayerComboBox",
-                settingsRoutingManualRuleSelectionLayerComboBox.getSelectedItem().toString()));
+                String.valueOf(settingsRoutingManualRuleSelectionLayerComboBox.getSelectedItem())));
 
     // The panel is shown/hidden by the Manual/Automatic radio buttons in
     // WindowRouteParameter; the initial visibility is set by refresh().
