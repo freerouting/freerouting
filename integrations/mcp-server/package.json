@@ -2,9 +2,12 @@
   "name": "@freerouting/freerouting-mcp-server",
   "version": "2.4.0",
   "description": "Model Context Protocol bridge for the public Freerouting API",
-  "main": "src/index.js",
+  "main": "./src/index.js",
   "bin": {
     "freerouting-mcp-server": "./src/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "start": "node src/index.js"
