@@ -8,7 +8,7 @@ plugins {
     id 'maven-publish'
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
-    id 'io.github.ben-manes.versions' version '0.60.0'
+    id 'io.github.ben-manes.versions' version '0.61.0'
     id 'org.openrewrite.rewrite' version '7.38.0'
     id "com.diffplug.spotless" version "8.9.0"
 }
@@ -101,6 +101,7 @@ spotless {
 }
 
 tasks.named("dependencyUpdates").configure {
+    outputFormatter = "json"
     rejectVersionIf {
         def current = it.currentVersion
         def candidate = it.candidate.version
@@ -191,15 +192,15 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:2.0.18'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.50.0'
-    implementation 'com.google.api:gax:2.83.0'
-    implementation 'com.google.api-client:google-api-client-appengine:2.9.0'
-    implementation 'com.google.cloud:google-cloud-core:2.73.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.73.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.69.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.51.0'
+    implementation 'com.google.api:gax:2.84.0'
+    implementation 'com.google.api-client:google-api-client-appengine:2.9.1'
+    implementation 'com.google.cloud:google-cloud-core:2.74.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.74.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.70.0'
 
     // Add Google Sheets API dependencies for API key validation
-    implementation 'com.google.api-client:google-api-client:2.9.0'
+    implementation 'com.google.api-client:google-api-client:2.9.1'
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20260213-2.0.0'
 
     // Security constraints for transitive dependencies
@@ -210,9 +211,9 @@ dependencies {
     }
 
     // Add Swagger/OpenAPI dependencies for API documentation (OpenAPI 3.0)
-    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.53'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.53'
-    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.53'
+    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.55'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.55'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.55'
 
     // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
     // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
