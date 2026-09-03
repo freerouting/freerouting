@@ -319,7 +319,17 @@ public class GlobalSettings implements Serializable {
                 + ").");
       } else {
         int cmp = compareVersionStrings(fileVersion, currentVersion);
-        if (cmp > 0) {
+        if (cmp < 0) {
+          // File was written by an older version — the most common case after an upgrade.
+          FRLogger.warn(
+              "freerouting.json at '"
+                  + configurationFilePath
+                  + "' was written by an older version of Freerouting (file: "
+                  + fileVersion
+                  + ", current: "
+                  + currentVersion
+                  + ") - re-saving configuration with the updated version string.");
+        } else if (cmp > 0) {
           // File was written by a newer version — downgrade scenario.
           FRLogger.warn(
               "freerouting.json at '"
@@ -345,12 +355,6 @@ public class GlobalSettings implements Serializable {
       if (isSaveNeeded) {
         // TODO: insert per-version migration steps here when needed, e.g.:
         //   migrateSettings(fileVersion, currentVersion, defaultSettings);
-        FRLogger.info(
-            "freerouting.json config version updated from '"
-                + fileVersion
-                + "' to '"
-                + currentVersion
-                + "' - re-saving configuration.");
         saveAsJson(defaultSettings);
       }
       loadedSettings = defaultSettings;
