@@ -142,12 +142,21 @@
     },
     {
       "version": "2.4.0",
+      "status": "deprecated",
+      "kicad_version": "6.0",
+      "download_sha256": "276b92b5c7f81ff4132d2c8fc208ee0c5a31aead81eb74baef10964c126993a1",
+      "download_size": 59256048,
+      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.4.0.zip",
+      "install_size": 64222805
+    },
+    {
+      "version": "2.4.1",
       "status": "stable",
       "kicad_version": "6.0",
-      "download_sha256": "58b976ca7fc63509ccd0a88ea2143620f36ba996d74dbdad3cfecdfe5274e64d",
-      "download_size": 59307926,
-      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.4.0.zip",
-      "install_size": 64327722
+      "download_sha256": "b97d8dde3d034124d34470e4d44853982e980dcbc400eb5a2851631bf0d96841",
+      "download_size": 59255829,
+      "download_url": "https://github.com/freerouting/freerouting/raw/master/integrations/KiCad/kicad-freerouting-2.4.1.zip",
+      "install_size": 64222778
     }
   ]
 }

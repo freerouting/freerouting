@@ -1483,14 +1483,14 @@ public class Freerouting {
       }
     }
 
-    // If the GUI is disabled and the API server is not running, then we are in CLI mode
+    // If the GUI is disabled, execute CLI routing / DRC or run in daemon mode
     boolean cliResult = true;
-    if (!globalSettings.guiSettings.isEnabled
-        && !globalSettings.apiServerSettings.isRunning
-        && !globalSettings.mcpServerSettings.isRunning) {
+    if (!globalSettings.guiSettings.isEnabled) {
       if (globalSettings.drcReportFile != null) {
         cliResult = initializeDrc(globalSettings);
-      } else {
+      } else if (globalSettings.initialInputFile != null
+          || (!globalSettings.apiServerSettings.isRunning
+              && !globalSettings.mcpServerSettings.isRunning)) {
         cliResult = initializeCli(globalSettings);
       }
     }
@@ -1501,6 +1501,13 @@ public class Freerouting {
       shutdownApplication();
       FRLogger.traceExit("MainApplication.main()");
       System.exit(1);
+    }
+
+    // If a batch CLI job was executed with an input file, shut down and exit immediately
+    if (globalSettings.initialInputFile != null && !globalSettings.guiSettings.isEnabled) {
+      shutdownApplication();
+      FRLogger.traceExit("MainApplication.main()");
+      System.exit(globalSettings.cliExitCode);
     }
 
     while (globalSettings.guiSettings.isRunning

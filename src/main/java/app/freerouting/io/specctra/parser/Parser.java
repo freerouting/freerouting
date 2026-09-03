@@ -99,7 +99,7 @@ public class Parser extends ScopeKeyword {
     file.write("parser");
     if (!reduced) {
       file.newLine();
-      file.write("(stringQuote ");
+      file.write("(string_quote ");
       file.write(parserInfo.stringQuote);
       file.write(")");
       file.newLine();
@@ -107,13 +107,13 @@ public class Parser extends ScopeKeyword {
     }
     if (parserInfo.hostCad != null) {
       file.newLine();
-      file.write("(hostCad ");
+      file.write("(host_cad ");
       identifierType.write(parserInfo.hostCad, file);
       file.write(")");
     }
     if (parserInfo.hostVersion != null) {
       file.newLine();
-      file.write("(hostVersion ");
+      file.write("(host_version ");
       identifierType.write(parserInfo.hostVersion, file);
       file.write(")");
     }
@@ -130,7 +130,7 @@ public class Parser extends ScopeKeyword {
     }
     if (parserInfo.writeResolution != null) {
       file.newLine();
-      file.write("(writeResolution ");
+      file.write("(write_resolution ");
       file.write(parserInfo.writeResolution.charName.substring(0, 1));
       file.write(" ");
       int positiveInt = parserInfo.writeResolution.positiveInt;

@@ -320,8 +320,7 @@ public class GlobalSettings implements Serializable {
       } else {
         int cmp = compareVersionStrings(fileVersion, currentVersion);
         if (cmp < 0) {
-          // File was written by an older version — the most common case after an
-          // upgrade.  Migration logic is not yet implemented, so warn the user.
+          // File was written by an older version — the most common case after an upgrade.
           FRLogger.warn(
               "freerouting.json at '"
                   + configurationFilePath
@@ -329,11 +328,7 @@ public class GlobalSettings implements Serializable {
                   + fileVersion
                   + ", current: "
                   + currentVersion
-                  + "). "
-                  + "No migration logic is implemented for this version transition, so some "
-                  + "settings "
-                  + "may have been reset to their defaults. "
-                  + "The file will be re-saved with the updated version string.");
+                  + ") - re-saving configuration with the updated version string.");
         } else if (cmp > 0) {
           // File was written by a newer version — downgrade scenario.
           FRLogger.warn(
@@ -344,9 +339,7 @@ public class GlobalSettings implements Serializable {
                   + ", current: "
                   + currentVersion
                   + "). "
-                  + "Some settings from the newer version may not be understood or may be ignored. "
-                  + "Consider upgrading Freerouting to the version that originally wrote this "
-                  + "file.");
+                  + "Some settings from the newer version may not be understood or may be ignored.");
         }
       }
 
@@ -362,12 +355,6 @@ public class GlobalSettings implements Serializable {
       if (isSaveNeeded) {
         // TODO: insert per-version migration steps here when needed, e.g.:
         //   migrateSettings(fileVersion, currentVersion, defaultSettings);
-        FRLogger.info(
-            "freerouting.json config version changed from '"
-                + fileVersion
-                + "' to '"
-                + currentVersion
-                + "' – re-saving configuration.");
         saveAsJson(defaultSettings);
       }
       loadedSettings = defaultSettings;
