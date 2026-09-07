@@ -63,7 +63,8 @@ class JobResourceContractTest {
             "GET /v1/jobs/{jobId}/output/json/stream",
             "GET /v1/jobs/{jobId}/logs",
             "GET /v1/jobs/{jobId}/logs/stream",
-            "GET /v1/jobs/{jobId}/drc"),
+            "GET /v1/jobs/{jobId}/drc",
+            "GET /v1/jobs/{jobId}/drc/summary"),
         actual);
   }
 

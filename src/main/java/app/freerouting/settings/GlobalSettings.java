@@ -345,7 +345,8 @@ public class GlobalSettings implements Serializable {
                   + ", current: "
                   + currentVersion
                   + "). "
-                  + "Some settings from the newer version may not be understood or may be ignored.");
+                  + "Some settings from the newer version may not be understood or may be"
+                  + " ignored.");
         }
       }
 

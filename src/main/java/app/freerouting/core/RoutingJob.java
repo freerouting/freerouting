@@ -647,9 +647,9 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
     if (finishedAt != null) {
       json.addProperty("finished_at", finishedAt.toString());
     }
-    var dur = getDuration();
-    if (dur != null) {
-      json.addProperty("duration_seconds", dur.toMillis() / 1000.0);
+    var duration = getDuration();
+    if (duration != null) {
+      json.addProperty("duration_seconds", duration.toMillis() / 1000.0);
     }
 
     if (board != null) {

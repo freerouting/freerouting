@@ -195,7 +195,10 @@ public class CompositeBoardInput {
     if (effectiveRulesData == null && job.rules != null && job.rules.getData() != null) {
       effectiveRulesData = job.rules.getData().readAllBytes();
       effectiveRulesFilename = job.rules.getFilename();
-    } else if (effectiveRulesData == null && isDsn && job.input.getDirectoryPath() != null) {
+    } else if (effectiveRulesData == null
+        && isDsn
+        && job.input.getDirectoryPath() != null
+        && !job.input.getDirectoryPath().isBlank()) {
       String baseName = job.input.getFilename();
       if (baseName.lastIndexOf('.') > 0) {
         baseName = baseName.substring(0, baseName.lastIndexOf('.'));
@@ -260,9 +263,25 @@ public class CompositeBoardInput {
 
     if (effectiveSessionData != null && effectiveSessionData.length > 0 && job.board != null) {
       try {
-        if (effectiveSessionFormat == FileFormat.KICAD_SESSION_JSON
-            || (effectiveSessionFilename != null
-                && effectiveSessionFilename.toLowerCase().endsWith(".json"))) {
+        boolean isJsonSession =
+            effectiveSessionFormat == FileFormat.KICAD_SESSION_JSON
+                || effectiveSessionFormat == FileFormat.KICAD_DESIGN_JSON
+                || (effectiveSessionFilename != null
+                    && effectiveSessionFilename.toLowerCase().endsWith(".json"));
+
+        if (!isJsonSession) {
+          // Check payload header directly in case default extension (.ses) was supplied for JSON
+          for (byte b : effectiveSessionData) {
+            if (b != ' ' && b != '\t' && b != '\r' && b != '\n') {
+              if (b == '{') {
+                isJsonSession = true;
+              }
+              break;
+            }
+          }
+        }
+
+        if (isJsonSession) {
           FRLogger.info("Importing KiCad JSON session data onto board");
           try (Reader r =
               new InputStreamReader(

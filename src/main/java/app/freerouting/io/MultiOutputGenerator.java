@@ -159,10 +159,10 @@ public final class MultiOutputGenerator {
   }
 
   private static byte[] generateScrBytes(byte[] sesBytes, BasicBoard board) {
-    try (ByteArrayInputStream bais = new ByteArrayInputStream(sesBytes);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-      if (SesReader.saveSpecctraSessionSesAsFusionScriptScr(bais, baos, board)) {
-        return baos.toByteArray();
+    try (ByteArrayInputStream inStream = new ByteArrayInputStream(sesBytes);
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
+      if (SesReader.saveSpecctraSessionSesAsFusionScriptScr(inStream, outStream, board)) {
+        return outStream.toByteArray();
       }
     } catch (Exception e) {
       FRLogger.error("Failed to generate Fusion SCR output bytes", e);
