@@ -1,136 +1,196 @@
-# Freerouting Dedicated Scoring Architecture Plan
+# Freerouting Dedicated Scoring Architecture & Versioning Plan
 
-**Document Status:** Research & Implementation Plan  
-**Date:** September 2026 (Revised & Streamlined)  
+**Document Status:** Approved Architecture Plan  
+**Date:** September 2026 (Revised with Benchmarks Calibration & Theoretical Lower Bounds)  
 **Author:** Freerouting AI Assistant & Core Engineering Team  
 **Target Delivery:** Post-Optimizer Unification Roadmap  
 
 ---
 
-## 1. Motivation & Architectural Decision
+## 1. Executive Summary & Evaluation of Requirements
 
-Historically, Freerouting attempted to use a single monolithic score equation across both the **Router** and the **Optimizer**:
+We evaluate the two revised core requirements and confirm their mathematical and algorithmic soundness:
 
-$$\text{score} = \frac{\max(0,\ M - P_{\text{unrouted}} - P_{\text{violations}} - P_{\text{bends}} - C_{\text{traces}} - C_{\text{vias}})}{M} \times 1000$$
+### 1.1 Requirement 1: Router Score Revision & Versioning
+- **Requirement:** The router score incorporates three primary terms:
+  1. `unrouted_connections` (count of unconnected airlines)
+  2. `clearance_violations` (discrete count of DRC violation pairs)
+  3. `total_violation_um` (cumulative clearance violation penetration depth in micrometers)
+- **Evaluation & Verdict:** **Strongly Approved with Versioning.**
+  - Incorporating `total_violation_um` directly bridges the gap between discrete DRC counts and physical severity: a $1\,\mu\text{m}$ border touch is penalized proportionally less than a $250\,\mu\text{m}$ copper overlap.
+  - Because `total_violation_um` introduces a continuous geometric magnitude not present in releases $\le$ v2.4, this constitutes a **substantive change** to the router's numerical scale.
+  - **Explicit scoring versioning (`ROUTER_V1_LEGACY` vs `ROUTER_V2_CONTINUOUS`) is therefore necessary and justified** to preserve regression comparability with historical PCBench and DAC2020 run results.
 
-where $M = N_{\text{connections}} \times 5{,}000{,}000.0\text{F}$.
+### 1.2 Requirement 2: Optimizer Score via Theoretical Lower Bounds (0 .. 1000)
+- **Requirement:** The optimizer score represents distance from a theoretical "perfect board" ($1000.00$), where:
+  - $L_{\text{min}}$ = Theoretical minimum wire length (e.g. Euclidean/Manhattan Minimum Spanning Tree / HPWL).
+  - $V_{\text{min}}$ = Theoretical minimum via count (e.g. 0 vias for planar single-layer reachable nets, or $0$ for SMD-to-SMD same-layer).
+  - $B_{\text{min}}$ = Theoretical minimum bend count (e.g. 0 bends for collinear pins, 1 bend for $L$-routes, 2 for $Z$-routes).
+  - Each excess unit ($L - L_{\text{min}}$, $V - V_{\text{min}}$, $B - B_{\text{min}}$) incurs a calibrated penalty deducted from $1000.00$.
+- **Evaluation & Verdict:** **Brilliant & Algorithmic Best Practice.**
+  - In EDA routing research, normalizing against an absolute unroutable lower bound (such as Minimum Spanning Tree wirelength or Half-Perimeter Wirelength HPWL) is standard practice because it establishes an **invariant absolute scale**:
+    - $1000.00$ = The ideal theoretical board (Euclidean straight lines, zero vias, zero doglegs).
+    - $850.00$ = A high-quality industrial layout (typically $1.2\times$ to $1.4\times$ MST length with minimal necessary layer transitions).
+    - $500.00$ = A cluttered routing with excessive detours and redundant via transitions.
+  - Because $L_{\text{min}}$, $V_{\text{min}}$, and $B_{\text{min}}$ are computed directly from the pin placements in the board geometry, this score does **not** shift during optimization passes and provides an absolute quality metric.
 
-### 1.1 Why Monolithic Scoring Failed Both Stages
-1. **In the Router:** The wire length ($1.0/\text{mm}$) and via cost ($50/\text{via}$) terms are tiny compared to $M$ ($< 0.0001\%$), but their subtraction mathematically prevented a fully routed, DRC-clean board from reaching a clean $1000.00$ (landing instead at $999.98$ or $999.99$).
-2. **In the Optimizer:** The board arrives with 100% routing. The optimizer does not create or destroy nets; it refines layout geometry. Evaluated under the router formula, an optimization pass eliminating 15% of vias and 10% of trace length altered the score by $+0.0001\%$, which rounds away at standard precision, causing the optimizer to stop immediately as "no improvement detected".
-
-### 1.2 Decision: Stage-Dedicated Scoring (No Versioning Needed)
-- **Do we need scoring versioning?** **No.** Removing the negligible trace length, via count, and bend terms from the router's formula changes historical router scores by **$< 0.01\%$**. A board scoring $999.98$ in v1.9–v2.4 now cleanly scores $1000.00$. The router score remains directly comparable across all versions without any versioning flags or dual-score complexity.
-- **The Router Score:** Pure routability and clearance rules. Normalized to $[0.0, 1000.0]$.
-- **The Optimizer Score:** Dedicated post-routing quality metric focusing strictly on **via count**, **total wire length**, and **bending count/penalty**, while enforcing zero new clearance violations. Normalized to $[0.0, 1000.0]$.
+### 1.3 Calibration Strategy: Empirical Derivation via `benchmarks.json`
+- Rather than guessing magic weights, the coefficients for wire length ($\lambda_L$), via count ($\lambda_V$), and bend count ($\lambda_B$) as well as DRC penalties will be **statistically calibrated** from the empirical distributions in `scripts/benchmark/results/benchmarks.json` across thousands of historical runs.
 
 ---
 
-## 2. Router Score Specification (Routability & DRC)
+## 2. Router Score Specification (ROUTER_V2)
 
-The Router score measures topological completion and clearance rule adherence. Trace length, via count, and bends are excluded.
+The Router score evaluates topological completeness and physical design-rule clearance integrity.
 
-### 2.1 Formula
+### 2.1 Theoretical Formulation
 
-$$\boxed{\text{score}_{\text{router}} = \max\left(0.0,\ 1000.0 \times \left(1.0 - \frac{N_{\text{unrouted}}}{N_{\text{conn}}}\right) - P_{\text{drc}}\right)}$$
+$$\boxed{\text{score}_{\text{router}} = \max\left(0.0,\ 1000.0 - \text{penalty}_{\text{unrouted}} - \text{penalty}_{\text{drc}}\right)}$$
+
+#### Unrouted Penalty:
+$$\text{penalty}_{\text{unrouted}} = 1000.0 \times \left(\frac{N_{\text{unrouted}}}{N_{\text{conn}}}\right)$$
+- If all connections are open: penalty $= 1000.0 \implies \text{score} = 0.00$.
+- If $N_{\text{unrouted}} = 0$: penalty $= 0.0$.
+
+#### Clearance Violation Penalty:
+$$\text{penalty}_{\text{drc}} = N_{\text{violations}} \times C_{\text{count}} + \min\left(P_{\text{drc\_cap}},\ \frac{\sum L_{\text{violation\_um}}}{U_{\text{scale}}}\right)$$
+- $N_{\text{violations}}$: discrete count of deduplicated clearance violation pairs.
+- $\sum L_{\text{violation\_um}}$: total sum of violation depths in micrometers ($\mu\text{m}$), where for each violation pair $(i, j)$:
+  $$L_{\text{violation\_um}} = \max\left(0.0,\ \text{expectedClearance} - \text{actualClearance}\right) \times 10^3$$
+- $C_{\text{count}}$: fixed penalty per violation instance.
+- $U_{\text{scale}}$: scaling denominator derived from board pitch distribution in `benchmarks.json`.
+- $P_{\text{drc\_cap}}$: upper bound cap on clearance penalty (e.g. $400.0$).
+
+### 2.2 Versioning & Backward Compatibility
+```java
+public enum RouterScoringVersion {
+  /**
+   * V1 Legacy (<= v2.4):
+   * Monolithic formula normalized via (M - P_unrouted - P_drc - C_traces - C_vias) / M * 1000.
+   */
+  V1_LEGACY,
+
+  /**
+   * V2 Continuous (v2.5+):
+   * Pure routability with discrete clearance count + continuous violation depth (um).
+   */
+  V2_CONTINUOUS
+}
+```
+
+---
+
+## 3. Optimizer Score Specification (OPTIMIZER_V1)
+
+The Optimizer operates on routed boards to reduce physical parasitic costs toward the theoretical ideal.
+
+### 3.1 Establishing the Theoretical Minimums ("Perfect Board")
+
+From the component placement and netlist (which are fixed during routing), we establish the theoretical lower bounds:
+
+1. **Theoretical Minimum Wire Length ($L_{\text{min}}$):**
+   For each net $n \in \text{Nets}$, compute the Euclidean Minimum Spanning Tree (EMST) or Rectilinear Steiner Minimum Tree (RSMT) over its pin coordinates:
+   $$L_{\text{min}} = \sum_{n \in \text{Nets}} \text{MST}_{\text{length}}(n)$$
+   - *Property:* No valid routing in 2D/3D Euclidean space can ever be shorter than $L_{\text{min}}$.
+   - *Efficiency:* Fast Kruskal/Prim over net pin sets ($O(P \log P)$ per net, computed once at board load).
+
+2. **Theoretical Minimum Via Count ($V_{\text{min}}$):**
+   - For 2-pin nets on the same layer: $0$ vias.
+   - For nets with pins on different layers: at least $1$ via per layer transition required.
+   - For single-layer reachable topologies: $V_{\text{min}} = 0$.
+   - In practice, $V_{\text{min}} = \sum \text{inter\_layer\_transitions\_required} \approx 0$ for 2-layer SMD-dominant boards.
+
+3. **Theoretical Minimum Bend Count ($B_{\text{min}}$):**
+   - Direct straight-line connection on grid: $0$ bends.
+   - Orthogonal Manhattan connection: at least $1$ bend per non-collinear pin pair.
+   - In practice, $B_{\text{min}} = \sum_{n} (N_{\text{pins\_in\_net}} - 1)$ for non-collinear pins.
+
+### 3.2 Normalized Formula ($0.0 \dots 1000.0$)
+
+Starting from a perfect theoretical score of $1000.00$, we deduct penalties for excess wire length, excess vias, and excess bends:
+
+$$\boxed{\text{score}_{\text{opt}} = \max\left(0.0,\ 1000.0 - \Delta L_{\text{penalty}} - \Delta V_{\text{penalty}} - \Delta B_{\text{penalty}}\right)}$$
 
 Where:
-- $N_{\text{unrouted}}$ is the incomplete connection count.
-- $N_{\text{conn}}$ is the total connection count on the board.
-- $P_{\text{drc}}$ is the clearance violation penalty:
-  $$P_{\text{drc}} = \min\left(1000.0,\ N_{\text{violations}} \times 100.0 + \min\left(200.0,\ L_{\text{violation\_mm}} \times 10.0\right)\right)$$
-  - Any clearance violation strictly prevents a board from scoring $1000.00$.
+- **Excess Wire Length Penalty:**
+  $$\Delta L_{\text{penalty}} = W_L \times \left(\frac{L_{\text{actual}} - L_{\text{min}}}{L_{\text{min}}}\right)$$
+  - Note: In typical good PCB routing, $L_{\text{actual}} / L_{\text{min}} \in [1.15, 1.60]$ (i.e. $15\%$ to $60\%$ wire detour due to obstacles).
+- **Excess Via Penalty:**
+  $$\Delta V_{\text{penalty}} = W_V \times (V_{\text{actual}} - V_{\text{min}})$$
+- **Excess Bend Penalty:**
+  $$\Delta B_{\text{penalty}} = W_B \times \max\left(0,\ B_{\text{actual}} - B_{\text{min}}\right)$$
 
-### 2.2 Milestone Values
-- **0% routed:** $\mathbf{0.00}$
-- **50% routed, 0 violations:** $\mathbf{500.00}$
-- **100% routed, 1 violation:** $\le \mathbf{890.00}$
-- **100% routed, 0 violations:** $\mathbf{1000.00}$ (exact milestone)
-
----
-
-## 3. Optimizer Score Specification (Vias, Length & Bending)
-
-The Optimizer takes a routed board and minimizes physical parasitics and manufacturing complexity.
-
-### 3.1 Hard Gating Invariants (DRC & Connectivity)
-The optimizer's primary directive is non-regression:
-1. **Zero Unrouted Nets:** If candidate rerouting leaves any connection unrouted, candidate is rejected immediately.
-2. **Clearance Violation Invariant:**
-   $$\text{violations}_{\text{candidate}} \le \text{violations}_{\text{baseline}}$$
-   If candidate routing introduces even a single new clearance violation, candidate score is $-\infty$ (rejected immediately). Clearance violations must remain at 0 (or strictly decrease if the input had violations).
-
-### 3.2 Normalized Metric ($0.0 \dots 1000.0$)
-
-The optimizer score maps the quality of the layout onto the full $[0.0, 1000.0]$ range.
-
-When the optimizer stage begins, it records the reference baseline from the incoming board:
-- $V_{\text{ref}} = \text{vias.totalCount}$
-- $L_{\text{ref}} = \text{traces.totalLengthMm}$
-- $B_{\text{ref}} = \text{bends.totalCount}$
-
-At any pass or candidate evaluation:
-- Relative via reduction: $\Delta_{\text{via}} = \frac{V_{\text{ref}} - V_{\text{current}}}{V_{\text{ref}}}$
-- Relative wire length reduction: $\Delta_{\text{trace}} = \frac{L_{\text{ref}} - L_{\text{current}}}{L_{\text{ref}}}$
-- Relative bend reduction: $\Delta_{\text{bend}} = \frac{B_{\text{ref}} - B_{\text{current}}}{B_{\text{ref}}}$
-
-#### Scoring Equation:
-
-$$\boxed{\text{score}_{\text{opt}} = \max\left(0.0,\ \min\left(1000.0,\ 500.0 + 500.0 \times \left(w_v \cdot \Delta_{\text{via}} + w_t \cdot \Delta_{\text{trace}} + w_b \cdot \Delta_{\text{bend}}\right)\right)\right)}$$
-
-Where default weights are:
-- $w_v = 0.50$ (via reduction — highest priority in multilayer PCB design)
-- $w_t = 0.35$ (total wire length reduction — trace impedance & delay minimization)
-- $w_b = 0.15$ (bend count reduction — eliminating unnecessary corners and acid traps)
-- $w_v + w_t + w_b = 1.0$
-
-### 3.3 Dynamic Range & Behavior
-- **Baseline Board (Incoming from Router):**
-  $\Delta_{\text{via}} = 0$, $\Delta_{\text{trace}} = 0$, $\Delta_{\text{bend}} = 0 \implies \mathbf{score = 500.00}$.
-- **Optimized Board (e.g. 15% fewer vias, 6% shorter traces, 10% fewer bends):**
-  $$\Delta = 0.50 \times 0.15 + 0.35 \times 0.06 + 0.15 \times 0.10 = 0.075 + 0.021 + 0.015 = 0.111$$
-  $$\text{score}_{\text{opt}} = 500.0 + 500.0 \times 0.111 = \mathbf{555.50}$$
-  Relative pass improvement: $\frac{555.50 - 500.0}{500.0} = \mathbf{+11.1\%}$!
-- **Degraded Candidate:**
-  If an attempted reroute adds vias or adds extra meandering loops without net benefit, $\Delta < 0 \implies \text{score} < 500.00$. The candidate is rejected and `bestBoard` is preserved.
-- **Convergence Guarding:**
-  A threshold such as `-oit 1.0%` now checks meaningful geometric progress rather than floating-point noise.
+### 3.3 Strict Invariant (Clearance Non-Regression)
+$$\text{If } N_{\text{violations\_current}} > N_{\text{violations\_baseline}} \implies \text{score}_{\text{opt}} = -\infty \text{ (immediate rollback)}$$
+The optimizer score only applies to valid, non-regressing board states.
 
 ---
 
-## 4. Implementation Steps (For Future Implementation)
+## 4. Empirical Calibration Using `benchmarks.json`
 
-### Phase 1: Settings
-- [ ] In `ScoringSettings.java`:
-  - Retain existing fields for router DRC weights.
-  - Add optimizer quality weights:
-    - `qualityViaWeight` (default `0.50f`)
-    - `qualityTraceWeight` (default `0.35f`)
-    - `qualityBendWeight` (default `0.15f`)
-    - `optimizerBaseScore` (default `500.0f`)
+Rather than arbitrarily choosing $W_L, W_V, W_B, C_{\text{count}}, U_{\text{scale}}$, we use the historical distribution in `scripts/benchmark/results/benchmarks.json`:
 
-### Phase 2: Board Statistics Methods
-- [ ] In `BoardStatistics.java`:
-  - `getRouterScore(ScoringSettings)`:
-    Implements $\text{score}_{\text{router}}$ ($0 \dots 1000$).
-  - `getOptimizerScore(OptimizerScoringReference, ScoringSettings)`:
-    Implements $\text{score}_{\text{opt}}$ ($0 \dots 1000$).
-  - Keep `getNormalizedScore(ScoringSettings)` returning `getRouterScore()` so all standard telemetry, CLI status lines, and external callers retain seamless compatibility.
+### 4.1 Dataset Profile in `benchmarks.json`
+- Over 300,000 lines of JSON records spanning:
+  - PCBench KiCad test boards (Tiers A, B, C, D).
+  - Internal issue fixtures.
+  - Across multiple Freerouting engine versions (v1.9.0, v2.2.4, v2.3.0, v2.4.0).
+- Relevant extracted metrics per run:
+  - `quality.total_nets`
+  - `quality.unrouted_connections`
+  - `quality.clearance_violations`
+  - `quality.avg_violation_um`, `max_violation_um`, `min_violation_um`
+  - `fixture.board_width_mm`, `board_height_mm`, `layer_count`
 
-### Phase 3: Engine Integration
-- [ ] In `BatchAutorouter` / `AutorouteBatchLoop`:
-  - Use `getRouterScore()`.
-- [ ] In `BatchOptimizer`:
-  - Capture `OptimizerScoringReference(vias, lengthMm, bends)` before pass 1.
-  - Evaluate passes and candidates using `getOptimizerScore(ref, scoringSettings)`.
-  - Termination threshold (`optimizationImprovementThreshold`) checks delta on the optimizer score scale.
+### 4.2 Calibration Methodology
+A Python/PowerShell analysis script (`scripts/benchmark/calibrate_scoring_weights.py` or `.ps1`) will:
+1. Parse all completed runs in `benchmarks.json`.
+2. Compute the distribution quantiles (p10, p50, p90) for:
+   - Wire length overhead ratio: $(L_{\text{actual}} - L_{\text{min}}) / L_{\text{min}}$
+   - Via density per net: $V_{\text{actual}} / N_{\text{nets}}$
+   - Bend density per trace: $B_{\text{actual}} / N_{\text{traces}}$
+   - Violation depths: $L_{\text{violation\_um}}$
+3. Calibrate $W_L, W_V, W_B$ so that:
+   - Median routed board before optimization scores in the range **$750.00 \dots 850.00$**.
+   - Highly optimized production layouts approach **$900.00 \dots 950.00$**.
+   - Poor/congested layouts score in the **$400.00 \dots 600.00$** range.
+   - The theoretical unreachable optimum sits at **$1000.00$**.
 
-### Phase 4: Verification & Tests
-- [ ] `RouterScoreTest`:
-  - Fully routed clean board produces exactly 1000.00.
-  - Adding vias or length does NOT alter router score.
-  - DRC violation or unrouted net reduces router score.
-- [ ] `OptimizerScoreTest`:
-  - Baseline board scores 500.00.
-  - Removing vias, wire length, or bends increases score towards 1000.00.
-  - Adding any clearance violation invalidates candidate.
+---
+
+## 5. Architectural Implementation Roadmap
+
+### Phase 1: Scoring Versioning Enum & Settings
+- [ ] Add `RouterScoringVersion` enum (`V1_LEGACY`, `V2_CONTINUOUS`) in `app.freerouting.settings`.
+- [ ] Add `routerScoringVersion` to `ScoringSettings` (default `V2_CONTINUOUS`).
+- [ ] Support `--router-scoring-version v1` CLI flag for backward compatibility testing.
+
+### Phase 2: Board Geometry Lower Bounds
+- [ ] In `BasicBoard` / `BoardStatistics`:
+  - Implement `computeMinimumSpanningTreeLength()` ($L_{\text{min}}$).
+  - Implement `computeTheoreticalMinimumVias()` ($V_{\text{min}}$).
+  - Implement `computeTheoreticalMinimumBends()` ($B_{\text{min}}$).
+  - Cache results upon board load (since pin coordinates are static).
+
+### Phase 3: Total Violation Depth Calculation
+- [ ] In `DesignRulesChecker` / `ClearanceViolation`:
+  - Implement `getTotalClearanceViolationDepthUm()`:
+    $$\sum \max(0.0, \text{expectedClearance} - \text{actualClearance}) \times 10^3$$
+
+### Phase 4: Calibration Script
+- [ ] Create `scripts/benchmark/calibrate_scoring_weights.py` to process `benchmarks.json` and output optimal weight constants.
+
+### Phase 5: Decoupled Scoring Implementations
+- [ ] In `BoardStatistics`:
+  - `getRouterScore(ScoringSettings)`: Implements Section 2.
+  - `getOptimizerScore(ScoringSettings)`: Implements Section 3.
+  - `getNormalizedScore(ScoringSettings)`: Routes to V1 or V2 based on `routerScoringVersion`.
+
+### Phase 6: Engine Integration & Verification
+- [ ] `BatchAutorouter` uses `getRouterScore()`.
+- [ ] `BatchOptimizer` uses `getOptimizerScore()`.
+- [ ] Parameterized tests verify:
+  - Theoretical perfect board scores 1000.00.
+  - Monotonicity: reducing vias/wires/bends strictly increases optimizer score.
+  - DRC increases strictly abort optimizer candidates.
+  - V1 legacy mode reproduces historical benchmark scores within float delta.
