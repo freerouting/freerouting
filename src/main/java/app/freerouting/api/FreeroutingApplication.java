@@ -38,6 +38,7 @@ public class FreeroutingApplication extends Application {
         new HashSet<>(
             Set.of(
                 AnalyticsControllerV1.class,
+                app.freerouting.api.v1.AutorouteControllerV1.class,
                 JobInputResource.class,
                 JobOutputResource.class,
                 JobProgressResource.class,

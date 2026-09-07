@@ -96,6 +96,10 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @Schema(description = "Details of the uploaded design rules (.rules) file")
   public BoardFileDetails rules;
 
+  @SerializedName("initial_session")
+  @Schema(description = "Details of the initial session (.ses or .json) file to import")
+  public BoardFileDetails initialSession;
+
   @SerializedName("host_cad")
   @Schema(name = "host_cad", description = "The CAD system that generated the board")
   public String hostCad;
@@ -336,6 +340,27 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
         this.rules.format = FileFormat.RULES;
         this.rules.setFilename(rulesFile.getName());
         this.rules.setData(in.readAllBytes());
+      }
+    }
+  }
+
+  /** Sets the initial session from file content. */
+  public boolean setInitialSession(byte[] sessionFileContent, String filename) {
+    this.initialSession = new BoardFileDetails();
+    this.initialSession.setFilename(filename);
+    this.initialSession.format = getFileFormat(sessionFileContent);
+    if (this.initialSession.format == FileFormat.UNKNOWN && filename != null) {
+      this.initialSession.format = getFileFormat(Path.of(filename));
+    }
+    this.initialSession.setData(sessionFileContent);
+    return true;
+  }
+
+  /** Loads the initial session file from the specified file. */
+  public void setInitialSession(File sessionFile) throws IOException {
+    if (sessionFile != null && sessionFile.exists()) {
+      try (InputStream in = new FileInputStream(sessionFile)) {
+        setInitialSession(in.readAllBytes(), sessionFile.getName());
       }
     }
   }
@@ -596,5 +621,67 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
       }
     }
     return null;
+  }
+
+  /**
+   * Generates a compact JsonObject representation of this job for token-efficient LLM/API
+   * responses.
+   */
+  public com.google.gson.JsonObject toCompactJsonObject() {
+    com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+    json.addProperty("id", id.toString());
+    if (sessionId != null) {
+      json.addProperty("session_id", sessionId.toString());
+    }
+    json.addProperty("short_name", shortName);
+    if (name != null) {
+      json.addProperty("name", name);
+    }
+    json.addProperty("state", state != null ? state.name() : "UNKNOWN");
+    json.addProperty("stage", stage != null ? stage.name() : "IDLE");
+    json.addProperty("current_pass", currentPass);
+
+    if (startedAt != null) {
+      json.addProperty("started_at", startedAt.toString());
+    }
+    if (finishedAt != null) {
+      json.addProperty("finished_at", finishedAt.toString());
+    }
+    var duration = getDuration();
+    if (duration != null) {
+      json.addProperty("duration_seconds", duration.toMillis() / 1000.0);
+    }
+
+    if (board != null) {
+      var stats = board.getStatistics();
+      if (stats != null) {
+        com.google.gson.JsonObject statsObj = new com.google.gson.JsonObject();
+        if (stats.nets != null) {
+          statsObj.addProperty("total_nets", stats.nets.totalCount);
+        }
+        if (stats.connections != null) {
+          statsObj.addProperty("unrouted_connections", stats.connections.incompleteCount);
+        }
+        if (stats.clearanceViolations != null) {
+          statsObj.addProperty("clearance_violations", stats.clearanceViolations.totalCount);
+        }
+        if (routerSettings != null && routerSettings.scoring != null) {
+          Float score = stats.getNormalizedScore(routerSettings.scoring);
+          if (score != null) {
+            statsObj.addProperty("normalized_score", score);
+          }
+        }
+        json.add("statistics", statsObj);
+      }
+    }
+
+    if (resourceUsage != null) {
+      com.google.gson.JsonObject resObj = new com.google.gson.JsonObject();
+      resObj.addProperty("cpu_time_seconds", resourceUsage.cpuTimeUsed);
+      resObj.addProperty("peak_memory_mb", resourceUsage.peakMemoryUsed);
+      json.add("resource_usage", resObj);
+    }
+
+    return json;
   }
 }

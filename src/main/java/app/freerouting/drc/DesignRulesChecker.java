@@ -6,9 +6,11 @@ import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.constants.Constants;
+import app.freerouting.core.library.Package;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.io.kicad.KiCadDrcPosition;
 import app.freerouting.io.kicad.KiCadDrcReport;
@@ -21,6 +23,7 @@ import app.freerouting.util.gson.GsonProvider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Design Rules Checker that centralizes DRC functionality. This class is responsible for detecting
@@ -817,5 +820,273 @@ public class DesignRulesChecker {
   public String generateReportJson(String sourceFile, String coordinateUnit) {
     KiCadDrcReport report = generateReport(sourceFile, coordinateUnit);
     return GsonProvider.GSON.toJson(report);
+  }
+
+  /**
+   * Generates a concise diagnostic summary of DRC violations with component context, spatial
+   * congestion clustering, and layout auto-correction hints.
+   *
+   * @return structured DrcSummaryResponse
+   */
+  public DrcSummaryResponse generateSummary() {
+    DrcSummaryResponse summary = new DrcSummaryResponse();
+
+    Collection<ClearanceViolation> violations = getAllClearanceViolations();
+    summary.clearanceViolationsCount = violations.size();
+
+    Collection<UnconnectedItems> unconnecteds = getAllUnconnectedItems();
+    summary.unconnectedNetsCount = unconnecteds.size();
+
+    // 1. Process clearance violations
+    for (ClearanceViolation v : violations) {
+      String layerName =
+          (v.layer >= 0 && v.layer < board.layerStructure.layers.length)
+              ? board.layerStructure.layers[v.layer].name
+              : ("Layer " + v.layer);
+
+      String item1Desc = formatItemWithContext(v.firstItem);
+      String item2Desc = formatItemWithContext(v.secondItem);
+
+      double expectedMm = v.expectedClearance / 10000.0;
+      double actualMm = v.actualClearance / 10000.0;
+      double shortfallMm = Math.max(0.0, (v.expectedClearance - v.actualClearance) / 10000.0);
+
+      String explanation =
+          String.format(
+              Locale.US,
+              "Clearance violation between %s and %s on %s: required %.3f mm, found %.3f mm (shortfall: %.3f mm).",
+              item1Desc,
+              item2Desc,
+              layerName,
+              expectedMm,
+              actualMm,
+              shortfallMm);
+
+      List<String> items = List.of(item1Desc, item2Desc);
+      summary.violations.add(
+          new DrcSummaryResponse.DiagnosticViolation(
+              "clearance",
+              "error",
+              layerName,
+              explanation,
+              expectedMm,
+              actualMm,
+              shortfallMm,
+              items));
+    }
+
+    // 2. Process unconnected items
+    for (UnconnectedItems u : unconnecteds) {
+      String item1Desc = formatItemWithContext(u.firstItem);
+      String item2Desc = u.secondItem != null ? formatItemWithContext(u.secondItem) : null;
+
+      String netName = "unknown";
+      if (u.firstItem != null && u.firstItem.netCount() > 0) {
+        Net net = board.rules.nets.get(u.firstItem.getNetNumber(0));
+        if (net != null) {
+          netName = net.name;
+        }
+      }
+
+      String explanation;
+      if ("track_dangling".equals(u.type)) {
+        explanation = "Dangling trace segment on net [" + netName + "] with unconnected endpoint.";
+      } else if ("via_dangling".equals(u.type)) {
+        explanation = "Dangling via on net [" + netName + "] connected on at most one layer.";
+      } else if (item2Desc != null) {
+        explanation =
+            String.format(
+                Locale.US,
+                "Unconnected net [%s]: break between %s and %s (%d elements).",
+                netName,
+                item1Desc,
+                item2Desc,
+                u.allItems.size());
+      } else {
+        explanation = "Unconnected item on net [" + netName + "]: " + item1Desc + ".";
+      }
+
+      List<String> items = new ArrayList<>();
+      if (u.firstItem != null) {
+        items.add(item1Desc);
+      }
+      if (item2Desc != null) {
+        items.add(item2Desc);
+      }
+
+      summary.violations.add(
+          new DrcSummaryResponse.DiagnosticViolation(
+              u.type, "warning", "all", explanation, null, null, null, items));
+    }
+
+    // 3. Detect spatial congestion zones
+    summary.congestionZones = detectCongestionZones(violations);
+
+    // 4. Generate actionable hints
+    summary.hints = generateActionableHints(violations, unconnecteds, summary.congestionZones);
+
+    return summary;
+  }
+
+  private String formatItemWithContext(Item item) {
+    if (item == null) {
+      return "none";
+    }
+    StringBuilder sb = new StringBuilder();
+    if (item instanceof Pin pin) {
+      sb.append("Pin ");
+      Component comp = board.components.get(pin.getComponentId());
+      if (comp != null) {
+        sb.append(comp.name).append(".");
+        Package pkg = comp.getPackage();
+        if (pkg != null && pin.pinIndex >= 0 && pin.pinIndex < pkg.pinCount()) {
+          sb.append(pkg.getPin(pin.pinIndex).name);
+        } else {
+          sb.append(pin.pinIndex + 1);
+        }
+      } else {
+        sb.append("#").append(pin.pinIndex + 1);
+      }
+    } else if (item instanceof Trace) {
+      sb.append("Trace");
+    } else if (item instanceof Via) {
+      sb.append("Via");
+    } else if (item instanceof ConductionArea) {
+      sb.append("ConductionArea");
+    } else {
+      sb.append(item.getClass().getSimpleName());
+    }
+
+    if (item.netCount() > 0) {
+      Net net = board.rules.nets.get(item.getNetNumber(0));
+      if (net != null) {
+        sb.append(" (net ").append(net.name).append(")");
+      }
+    }
+    return sb.toString();
+  }
+
+  private List<DrcSummaryResponse.CongestionZone> detectCongestionZones(
+      Collection<ClearanceViolation> violations) {
+    List<DrcSummaryResponse.CongestionZone> zones = new ArrayList<>();
+    if (violations.isEmpty()) {
+      return zones;
+    }
+
+    // Simple centroid clustering with a 5.0 mm neighborhood threshold
+    final double clusterRadiusMm = 5.0;
+    List<Point> points = new ArrayList<>();
+    for (ClearanceViolation v : violations) {
+      if (v.shape != null) {
+        points.add(v.shape.centreOfGravity().round());
+      }
+    }
+
+    boolean[] visited = new boolean[points.size()];
+    for (int i = 0; i < points.size(); i++) {
+      if (visited[i]) {
+        continue;
+      }
+      visited[i] = true;
+      Point p1 = points.get(i);
+      double p1Xmm = p1.toFloat().x / 10000.0;
+      double p1Ymm = p1.toFloat().y / 10000.0;
+
+      int clusterCount = 1;
+      double sumX = p1Xmm;
+      double sumY = p1Ymm;
+
+      for (int j = i + 1; j < points.size(); j++) {
+        if (visited[j]) {
+          continue;
+        }
+        Point p2 = points.get(j);
+        double p2Xmm = p2.toFloat().x / 10000.0;
+        double p2Ymm = p2.toFloat().y / 10000.0;
+        double dx = p1Xmm - p2Xmm;
+        double dy = p1Ymm - p2Ymm;
+        if (Math.hypot(dx, dy) <= clusterRadiusMm) {
+          visited[j] = true;
+          clusterCount++;
+          sumX += p2Xmm;
+          sumY += p2Ymm;
+        }
+      }
+
+      if (clusterCount >= 2) {
+        double avgX = sumX / clusterCount;
+        double avgY = sumY / clusterCount;
+        zones.add(
+            new DrcSummaryResponse.CongestionZone(
+                avgX,
+                avgY,
+                clusterRadiusMm,
+                clusterCount,
+                String.format(
+                    Locale.US,
+                    "High bottleneck concentration: %d violations within %.1f mm of (%.2f, %.2f) mm.",
+                    clusterCount,
+                    clusterRadiusMm,
+                    avgX,
+                    avgY)));
+      }
+    }
+    return zones;
+  }
+
+  private List<String> generateActionableHints(
+      Collection<ClearanceViolation> violations,
+      Collection<UnconnectedItems> unconnecteds,
+      List<DrcSummaryResponse.CongestionZone> zones) {
+    List<String> hints = new ArrayList<>();
+
+    if (!violations.isEmpty()) {
+      double maxShortfall = 0.0;
+      for (ClearanceViolation v : violations) {
+        double shortfall = (v.expectedClearance - v.actualClearance) / 10000.0;
+        if (shortfall > maxShortfall) {
+          maxShortfall = shortfall;
+        }
+      }
+      if (maxShortfall > 0.0) {
+        hints.add(
+            String.format(
+                Locale.US,
+                "Maximum clearance shortfall is %.3f mm. Consider reducing trace width or clearance class threshold if manufacturing constraints permit.",
+                maxShortfall));
+      }
+    }
+
+    if (!zones.isEmpty()) {
+      hints.add(
+          String.format(
+              Locale.US,
+              "Detected %d congested hotspot zone(s). Increasing pin escape distance or spreading component pads in these areas may resolve routing conflicts.",
+              zones.size()));
+    }
+
+    if (!unconnecteds.isEmpty()) {
+      long danglingCount =
+          unconnecteds.stream()
+              .filter(u -> "track_dangling".equals(u.type) || "via_dangling".equals(u.type))
+              .count();
+      if (danglingCount > 0) {
+        hints.add(
+            danglingCount
+                + " dangling stub(s) detected. Running an optimizer cleanup pass will prune unneeded stubs.");
+      }
+      long incompleteNetCount = unconnecteds.size() - danglingCount;
+      if (incompleteNetCount > 0) {
+        hints.add(
+            incompleteNetCount
+                + " unrouted net connection(s) remain. Verify layer count or allow additional routing passes (-mp / maxPasses).");
+      }
+    }
+
+    if (hints.isEmpty()) {
+      hints.add("All design rules satisfied. Board is DRC clean.");
+    }
+
+    return hints;
   }
 }

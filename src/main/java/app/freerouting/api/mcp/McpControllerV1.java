@@ -379,7 +379,12 @@ public class McpControllerV1 extends BaseController {
       OpenApiMcpToolRegistry.ToolOperation tool, JsonObject arguments, String correlationId)
       throws IOException, InterruptedException {
     String resolvedPath = resolvePath(tool.path(), getObject(arguments, "path"));
-    URI uri = buildUriWithQuery(resolvedPath, getObject(arguments, "query"));
+    JsonObject query = getObject(arguments, "query");
+    if (("get_job_details".equals(tool.toolName()) || "get_job_drc_report".equals(tool.toolName()))
+        && !query.has("compact")) {
+      query.addProperty("compact", "true");
+    }
+    URI uri = buildUriWithQuery(resolvedPath, query);
 
     HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
     forwardHeaders(builder, correlationId);

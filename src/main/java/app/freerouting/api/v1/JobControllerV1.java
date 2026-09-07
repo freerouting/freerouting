@@ -147,7 +147,12 @@ public class JobControllerV1 extends BaseController {
               example = "550e8400-e29b-41d4-a716-446655440000")
           @PathParam("jobId")
           String jobId) {
-    return new JobProgressResource().getJob(jobId);
+    return new JobProgressResource().getJob(jobId, false);
+  }
+
+  /** Overload of getJob accepting the compact flag. */
+  public Response getJob(String jobId, Boolean compact) {
+    return new JobProgressResource().getJob(jobId, compact);
   }
 
   /**
@@ -654,6 +659,22 @@ public class JobControllerV1 extends BaseController {
               example = "550e8400-e29b-41d4-a716-446655440000")
           @PathParam("jobId")
           String jobId) {
-    return new JobOutputResource().getDrcReport(jobId);
+    return new JobOutputResource().getDrcReport(jobId, false);
+  }
+
+  /** Overload of getDrcReport accepting compact flag. */
+  public Response getDrcReport(String jobId, Boolean compact) {
+    return new JobOutputResource().getDrcReport(jobId, compact);
+  }
+
+  /** Retrieves a structured DRC diagnostic summary. */
+  @Path("/{jobId}/drc/summary")
+  public Response getDrcSummary(
+      @Parameter(
+              description = "Unique identifier of the job",
+              example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathParam("jobId")
+          String jobId) {
+    return new JobOutputResource().getDrcSummary(jobId);
   }
 }
