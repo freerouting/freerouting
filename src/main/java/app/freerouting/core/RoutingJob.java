@@ -96,6 +96,16 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @Schema(description = "Details of the uploaded design rules (.rules) file")
   public BoardFileDetails rules;
 
+  @SerializedName("host_cad")
+  @Schema(name = "host_cad", description = "The CAD system that generated the board")
+  public String hostCad;
+
+  @SerializedName("host_version")
+  @Schema(
+      name = "host_version",
+      description = "The version of the CAD system that generated the board")
+  public String hostVersion;
+
   @SerializedName("drc")
   @Schema(description = "Details of the design rules check output")
   public BoardFileDetails drc;
@@ -565,5 +575,26 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   public void logDebug(String message) {
     LogEntry logEntry = FRLogger.debug("[" + this.shortName + "] " + message, this.id);
     fireLogEntryAddedEvent(logEntry);
+  }
+
+  /**
+   * Resolves the detected host CAD name and version from parsed board communication if available.
+   */
+  public String getDetectedHost() {
+    if (hostCad != null && !hostCad.isBlank()) {
+      return (hostVersion != null && !hostVersion.isBlank())
+          ? hostCad + "/" + hostVersion
+          : hostCad;
+    }
+    if (board != null
+        && board.communication != null
+        && board.communication.specctraParserInfo != null) {
+      String cad = board.communication.specctraParserInfo.hostCad;
+      String ver = board.communication.specctraParserInfo.hostVersion;
+      if (cad != null && !cad.isBlank()) {
+        return (ver != null && !ver.isBlank()) ? cad + "/" + ver : cad;
+      }
+    }
+    return null;
   }
 }

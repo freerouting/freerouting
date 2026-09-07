@@ -2,6 +2,7 @@ package app.freerouting.management.sessions;
 
 import static app.freerouting.Freerouting.globalSettings;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.core.Session;
 import java.util.Arrays;
 import java.util.Map;
@@ -91,6 +92,13 @@ public final class SessionManager {
     }
     sessions.put(session.id.toString(), session);
     globalSettings.statistics.incrementSessionsTotal();
+    FRAnalytics.recordSessionLifecycle(
+        session.id.toString(),
+        "SESSION_CREATED",
+        FRAnalytics.getCurrentPipeline(),
+        FRAnalytics.getCurrentActorType(),
+        host,
+        userId);
     return session;
   }
 
@@ -101,6 +109,13 @@ public final class SessionManager {
    */
   public void removeSession(String sessionId) {
     sessions.remove(sessionId);
+    FRAnalytics.recordSessionLifecycle(
+        sessionId,
+        "SESSION_CLOSED",
+        FRAnalytics.getCurrentPipeline(),
+        FRAnalytics.getCurrentActorType(),
+        null,
+        null);
   }
 
   /** Returns the number of currently registered sessions. */

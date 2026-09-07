@@ -2,6 +2,10 @@ package app.freerouting;
 
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.analytics.NetworkProxyConfig;
+import app.freerouting.analytics.ProcessEnvironmentDetector;
+import app.freerouting.analytics.model.ActorType;
+import app.freerouting.analytics.model.JobLifecycleStatus;
+import app.freerouting.analytics.model.PipelineType;
 import app.freerouting.api.AppContextListener;
 import app.freerouting.api.mcp.McpApplication;
 import app.freerouting.api.mcp.McpContextListener;
@@ -181,6 +185,66 @@ public class Freerouting {
               + "║  Every contribution helps keep this project open and active!     ║"
               + nl
               + "╚══════════════════════════════════════════════════════════════════╝");
+    }
+
+    // Emit consolidated batch job summary telemetry for CLI batch execution
+    try {
+      JobLifecycleStatus status =
+          switch (routingJob.state) {
+            case COMPLETED ->
+                (cliExitCode == 0 ? JobLifecycleStatus.SUCCEEDED : JobLifecycleStatus.FAILED);
+            case TIMED_OUT -> JobLifecycleStatus.TIMED_OUT;
+            case CANCELLED -> JobLifecycleStatus.CANCELLED;
+            default -> JobLifecycleStatus.FAILED;
+          };
+      String failureReason =
+          cliExitCode != 0 ? "CLI exit code " + cliExitCode + " (" + routingJob.state + ")" : null;
+      var stats = routingJob.board != null ? routingJob.board.getStatistics() : null;
+      Integer netsTotal = stats != null && stats.nets != null ? stats.nets.totalCount : null;
+      Integer netsIncomplete =
+          stats != null && stats.connections != null ? stats.connections.incompleteCount : null;
+      Integer clearanceViolations =
+          stats != null && stats.clearanceViolations != null
+              ? stats.clearanceViolations.totalCount
+              : null;
+      Float normalizedScore =
+          stats != null && routingJob.routerSettings != null
+              ? stats.getNormalizedScore(routingJob.routerSettings.scoring)
+              : null;
+      int totalPasses =
+          routingJob.routerSettings != null && routingJob.routerSettings.maxPasses != null
+              ? routingJob.routerSettings.maxPasses
+              : 0;
+      double runtimeSeconds =
+          routingJob.startedAt != null
+              ? java.time.Duration.between(routingJob.startedAt, java.time.Instant.now()).toMillis()
+                  / 1000.0
+              : 0.0;
+      String inputBasename =
+          globalSettings.initialInputFile != null
+              ? java.nio.file.Path.of(globalSettings.initialInputFile).getFileName().toString()
+              : "unknown.dsn";
+
+      FRAnalytics.recordBatchJobSummary(
+          routingJob.id.toString(),
+          cliSession.id.toString(),
+          inputBasename,
+          cliExitCode,
+          status,
+          failureReason,
+          netsTotal,
+          netsIncomplete,
+          clearanceViolations,
+          normalizedScore,
+          totalPasses,
+          runtimeSeconds,
+          routingJob.resourceUsage.cpuTimeUsed,
+          routingJob.resourceUsage.peakMemoryUsed,
+          routingJob.getDetectedHost(),
+          null);
+      FRAnalytics.flush(1500);
+    } catch (Throwable ex) {
+      FRLogger.warn("Failed to record batch job summary: " + ex.getMessage());
     }
 
     globalSettings.cliExitCode = cliExitCode;
@@ -1381,6 +1445,33 @@ public class Freerouting {
     FRAnalytics.setEnabled(allowAnalytics);
     FRAnalytics.setUserId(
         globalSettings.userProfileSettings.userId, globalSettings.userProfileSettings.userEmail);
+
+    boolean isMcpEnabled = globalSettings.mcpServerSettings.isEnabled;
+    boolean isMcpStdio = Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode);
+    boolean isApiEnabled = globalSettings.apiServerSettings.isEnabled;
+    boolean isGuiEnabled = globalSettings.guiSettings.isEnabled;
+    boolean hasInitialInput = globalSettings.initialInputFile != null;
+
+    PipelineType detectedPipeline =
+        ProcessEnvironmentDetector.detectPipelineType(
+            isMcpEnabled, isMcpStdio, isApiEnabled, isGuiEnabled, hasInitialInput);
+
+    ActorType detectedActor =
+        ProcessEnvironmentDetector.detectActorType(
+            detectedPipeline, isGuiEnabled, width == 0 && height == 0, String.join(" ", args));
+
+    String detectedHost =
+        (globalSettings.runtimeEnvironment.host != null
+                && !globalSettings.runtimeEnvironment.host.isBlank()
+                && !"N/A".equals(globalSettings.runtimeEnvironment.host))
+            ? globalSettings.runtimeEnvironment.host
+            : "Freerouting";
+
+    globalSettings.runtimeEnvironment.pipelineType = detectedPipeline.name();
+    globalSettings.runtimeEnvironment.actorType = detectedActor.name();
+
+    FRAnalytics.setExecutionContext(detectedPipeline, detectedActor, detectedHost, "");
+
     FRAnalytics.identify();
     if (!globalSettings.userProfileSettings.userEmail.isBlank()) {
       FRAnalytics.refreshIdentity();

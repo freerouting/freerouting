@@ -2,6 +2,7 @@ package app.freerouting.management.jobs;
 
 import app.freerouting.Freerouting;
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.analytics.model.JobLifecycleStatus;
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
 import app.freerouting.autoroute.pipeline.BatchOptimizer;
 import app.freerouting.autoroute.pipeline.RoutingPipeline;
@@ -95,6 +96,24 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
     if (routerEnabled) {
       FRAnalytics.autorouterStarted();
     }
+
+    FRAnalytics.recordJobLifecycle(
+        job.id.toString(),
+        job.sessionId != null ? job.sessionId.toString() : null,
+        JobLifecycleStatus.STARTED,
+        FRAnalytics.getCurrentPipeline(),
+        FRAnalytics.getCurrentActorType(),
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        job.getDetectedHost(),
+        null,
+        null);
 
     RoutingPipeline pipeline = RoutingPipeline.createForHeadless(job);
     pipeline.addBoardUpdatedEventListener(event -> setJobOutput(job));
@@ -203,6 +222,50 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
             + ", finished at UTC: "
             + job.finishedAt.toString()
             + ").");
+
+    JobLifecycleStatus lifecycleStatus =
+        switch (job.state) {
+          case COMPLETED -> JobLifecycleStatus.SUCCEEDED;
+          case TIMED_OUT -> JobLifecycleStatus.TIMED_OUT;
+          case CANCELLED -> JobLifecycleStatus.CANCELLED;
+          default -> JobLifecycleStatus.FAILED;
+        };
+
+    var finalBoardStats = job.board != null ? job.board.getStatistics() : null;
+    Integer netsTotal =
+        finalBoardStats != null && finalBoardStats.nets != null
+            ? finalBoardStats.nets.totalCount
+            : null;
+    Integer netsIncomplete =
+        finalBoardStats != null && finalBoardStats.connections != null
+            ? finalBoardStats.connections.incompleteCount
+            : null;
+    Integer clearanceViolations =
+        finalBoardStats != null && finalBoardStats.clearanceViolations != null
+            ? finalBoardStats.clearanceViolations.totalCount
+            : null;
+    Float normalizedScore =
+        finalBoardStats != null && job.routerSettings != null
+            ? finalBoardStats.getNormalizedScore(job.routerSettings.scoring)
+            : null;
+
+    FRAnalytics.recordJobLifecycle(
+        job.id.toString(),
+        job.sessionId != null ? job.sessionId.toString() : null,
+        lifecycleStatus,
+        FRAnalytics.getCurrentPipeline(),
+        FRAnalytics.getCurrentActorType(),
+        details.length() > 0 ? details.toString().trim() : null,
+        netsTotal,
+        netsIncomplete,
+        clearanceViolations,
+        normalizedScore,
+        durationSec,
+        (double) job.resourceUsage.cpuTimeUsed,
+        (double) job.resourceUsage.peakMemoryUsed,
+        job.getDetectedHost(),
+        null,
+        null);
   }
 
   private void monitorCpuAndMemoryUsage(RoutingJob job) {

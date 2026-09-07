@@ -2,6 +2,8 @@ package app.freerouting.api.mcp;
 
 import app.freerouting.Freerouting;
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.analytics.model.ActorType;
+import app.freerouting.analytics.model.PipelineType;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.CorrelationIdFilter;
 import app.freerouting.constants.Constants;
@@ -201,6 +203,8 @@ public class McpControllerV1 extends BaseController {
       FRLogger.error("MCP RPC execution failed", e);
       response = error(id, -32603, "Internal error");
       FRLogger.info("[mcp][cid=" + correlationId + "] response (error)=" + response.toString());
+      FRAnalytics.recordStructuredError(
+          "MCP", "INTERNAL_RPC_ERROR", e.getMessage(), e, correlationId);
     }
 
     String envHost = headers.getHeaderString("Freerouting-Environment-Host");
@@ -269,6 +273,7 @@ public class McpControllerV1 extends BaseController {
         String version =
             clientInfo.has("version") ? clientInfo.get("version").getAsString() : "1.0";
         detectedClientInfo = name + "/" + version;
+        FRAnalytics.setExecutionContext(PipelineType.MCP, ActorType.AGENT, name, version);
       } catch (Exception e) {
         FRLogger.warn("Failed to parse clientInfo from initialize params: " + e.getMessage());
       }
@@ -316,6 +321,8 @@ public class McpControllerV1 extends BaseController {
     OpenApiMcpToolRegistry.ToolOperation tool = registry.get(toolName);
 
     if (tool == null) {
+      FRAnalytics.recordStructuredError(
+          "MCP", "UNKNOWN_TOOL", "Unknown tool: " + toolName, null, correlationId);
       return error(id, -32601, "Unknown tool: " + toolName);
     }
 
@@ -327,6 +334,8 @@ public class McpControllerV1 extends BaseController {
     try {
       response = invokeTool(tool, arguments, correlationId);
     } catch (IllegalArgumentException ex) {
+      FRAnalytics.recordStructuredError(
+          "MCP", "INVALID_TOOL_ARGUMENTS", ex.getMessage(), ex, correlationId);
       return error(id, -32602, ex.getMessage());
     }
 
@@ -349,9 +358,19 @@ public class McpControllerV1 extends BaseController {
     text.addProperty("text", GsonProvider.GSON.toJson(payload));
     content.add(text);
 
+    boolean isError = response.statusCode() >= 400;
     JsonObject result = new JsonObject();
     result.add("content", content);
-    result.addProperty("isError", response.statusCode() >= 400);
+    result.addProperty("isError", isError);
+
+    if (isError) {
+      FRAnalytics.recordStructuredError(
+          "MCP",
+          "TOOL_EXECUTION_FAILED",
+          "Tool '" + toolName + "' returned HTTP " + response.statusCode(),
+          null,
+          correlationId);
+    }
 
     return success(id, result);
   }
