@@ -4,6 +4,10 @@ import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.analytics.dto.Properties;
 import app.freerouting.analytics.dto.Traits;
+import app.freerouting.analytics.model.ActorType;
+import app.freerouting.analytics.model.JobLifecycleStatus;
+import app.freerouting.analytics.model.PipelineType;
+import app.freerouting.constants.Constants;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.gson.GsonProvider;
 import java.time.Instant;
@@ -31,6 +35,11 @@ public final class FRAnalytics {
   private static long autorouterStartedAt;
   private static long routeOptimizerStartedAt;
   private static String sessionId;
+
+  private static PipelineType currentPipeline = PipelineType.CLI;
+  private static ActorType currentActorType = ActorType.AUTOMATED_BATCH;
+  private static String currentIntegrationTool = "Freerouting";
+  private static String currentIntegrationVersion = "";
 
   static {
     appLocationTable = new HashMap<String, String>();
@@ -204,6 +213,54 @@ public final class FRAnalytics {
     }
   }
 
+  /**
+   * Configures the execution context (pipeline, actor classification, and host integration tool)
+   * used to annotate all outgoing analytics events.
+   *
+   * @param pipeline the active execution pipeline
+   * @param actorType the active actor classification
+   * @param integrationTool the EDA or AI host tool name
+   * @param integrationVersion the EDA or AI host tool version
+   */
+  public static void setExecutionContext(
+      PipelineType pipeline,
+      ActorType actorType,
+      String integrationTool,
+      String integrationVersion) {
+    if (pipeline != null) {
+      currentPipeline = pipeline;
+    }
+    if (actorType != null) {
+      currentActorType = actorType;
+    }
+    if (integrationTool != null && !integrationTool.isBlank()) {
+      currentIntegrationTool = integrationTool;
+    }
+    if (integrationVersion != null) {
+      currentIntegrationVersion = integrationVersion;
+    }
+  }
+
+  /** Gets the active pipeline type. */
+  public static PipelineType getCurrentPipeline() {
+    return currentPipeline;
+  }
+
+  /** Gets the active actor type. */
+  public static ActorType getCurrentActorType() {
+    return currentActorType;
+  }
+
+  /** Gets the active integration tool name. */
+  public static String getCurrentIntegrationTool() {
+    return currentIntegrationTool;
+  }
+
+  /** Gets the active integration tool version. */
+  public static String getCurrentIntegrationVersion() {
+    return currentIntegrationVersion;
+  }
+
   private static void identifyAnonymous(String anonymousId, Map<String, String> traits) {
     if (analytics == null) {
       return;
@@ -237,6 +294,12 @@ public final class FRAnalytics {
       p.put("app_current_location", appCurrentLocation);
       p.put("app_previous_location", appPreviousLocation);
       p.put("app_window_title", appWindowTitle);
+      p.put("pipeline", currentPipeline.name());
+      p.put("actor_type", currentActorType.name());
+      p.put("integration_tool", currentIntegrationTool);
+      if (currentIntegrationVersion != null && !currentIntegrationVersion.isBlank()) {
+        p.put("integration_version", currentIntegrationVersion);
+      }
       if (sessionId != null) {
         p.put("session_id", sessionId);
       }
@@ -286,6 +349,9 @@ public final class FRAnalytics {
     traits.put("os_version", System.getProperty("os.version"));
     traits.put("system_language", Locale.getDefault().toString());
     traits.put("gui_language", globalSettings.currentLocale.toString());
+    traits.put("pipeline", currentPipeline.name());
+    traits.put("actor_type", currentActorType.name());
+    traits.put("integration_tool", currentIntegrationTool);
     traits.put(
         "allow_telemetry", Boolean.toString(globalSettings.userProfileSettings.isTelemetryAllowed));
     traits.put(
@@ -713,5 +779,235 @@ public final class FRAnalytics {
     }
 
     trackAnonymousAction(effectiveUserId, "API Usage", properties);
+  }
+
+  /**
+   * Records a consolidated batch routing job summary upon CLI termination.
+   *
+   * @param jobId the routing job identifier
+   * @param sessionId the routing session identifier
+   * @param inputFileName the basename of the design file
+   * @param exitCode the process exit code
+   * @param status the terminal job status
+   * @param failureReason explanation when failed, or {@code null}
+   * @param netsTotal total net count, or {@code null}
+   * @param netsIncomplete incomplete net count, or {@code null}
+   * @param clearanceViolations clearance violations count, or {@code null}
+   * @param normalizedScore normalized score, or {@code null}
+   * @param totalPasses total autoroute passes completed
+   * @param runtimeSeconds elapsed wall clock runtime in seconds
+   * @param cpuSeconds CPU time consumed in seconds
+   * @param peakHeapMb peak JVM heap memory allocated in MB
+   * @param integrationTool originating EDA tool name, or {@code null}
+   * @param integrationVersion originating EDA tool version, or {@code null}
+   */
+  public static void recordBatchJobSummary(
+      String jobId,
+      String sessionId,
+      String inputFileName,
+      int exitCode,
+      JobLifecycleStatus status,
+      String failureReason,
+      Integer netsTotal,
+      Integer netsIncomplete,
+      Integer clearanceViolations,
+      Float normalizedScore,
+      int totalPasses,
+      double runtimeSeconds,
+      double cpuSeconds,
+      double peakHeapMb,
+      String integrationTool,
+      String integrationVersion) {
+    Map<String, String> properties = new HashMap<>();
+    if (jobId != null) {
+      properties.put("job_id", jobId);
+    }
+    if (sessionId != null) {
+      properties.put("session_id", sessionId);
+    }
+    if (inputFileName != null) {
+      properties.put("input_file_name", inputFileName);
+    }
+    properties.put("exit_code", Integer.toString(exitCode));
+    properties.put("status", status != null ? status.name() : "UNKNOWN");
+    if (failureReason != null && !failureReason.isBlank()) {
+      properties.put("failure_reason", failureReason);
+    }
+    if (netsTotal != null) {
+      properties.put("nets_total", Integer.toString(netsTotal));
+    }
+    if (netsIncomplete != null) {
+      properties.put("nets_incomplete", Integer.toString(netsIncomplete));
+    }
+    if (clearanceViolations != null) {
+      properties.put("clearance_violations", Integer.toString(clearanceViolations));
+    }
+    if (normalizedScore != null) {
+      properties.put("normalized_score", Float.toString(normalizedScore));
+    }
+    properties.put("total_passes", Integer.toString(totalPasses));
+    properties.put("runtime_seconds", String.format(Locale.US, "%.2f", runtimeSeconds));
+    properties.put("cpu_seconds", String.format(Locale.US, "%.2f", cpuSeconds));
+    properties.put("peak_heap_mb", String.format(Locale.US, "%.1f", peakHeapMb));
+    properties.put("pipeline", currentPipeline.name());
+    properties.put("actor_type", currentActorType.name());
+    properties.put(
+        "integration_tool", integrationTool != null ? integrationTool : currentIntegrationTool);
+    if (integrationVersion != null && !integrationVersion.isBlank()) {
+      properties.put("integration_version", integrationVersion);
+    }
+    properties.put("app_version", Constants.FREEROUTING_VERSION);
+
+    trackAnonymousAction(permanentUserId, "Batch Job Summary", properties);
+  }
+
+  /**
+   * Emits a normalized job lifecycle event across GUI, CLI, API, and MCP pipelines.
+   *
+   * @param jobId the routing job identifier
+   * @param sessionId the routing session identifier
+   * @param status current lifecycle status
+   * @param pipeline execution pipeline, or {@code null} to use default
+   * @param actorType actor classification, or {@code null} to use default
+   * @param failureReason failure explanation if failed, or {@code null}
+   * @param netsTotal total net count, or {@code null}
+   * @param netsIncomplete incomplete net count, or {@code null}
+   * @param clearanceViolations clearance violations count, or {@code null}
+   * @param normalizedScore normalized score, or {@code null}
+   * @param runtimeSeconds runtime duration in seconds, or {@code null}
+   * @param cpuSeconds CPU seconds used, or {@code null}
+   * @param peakHeapMb peak heap memory in MB, or {@code null}
+   * @param integrationTool originating EDA tool, or {@code null}
+   * @param integrationVersion originating EDA tool version, or {@code null}
+   * @param userId caller user identifier, or {@code null}
+   */
+  public static void recordJobLifecycle(
+      String jobId,
+      String sessionId,
+      JobLifecycleStatus status,
+      PipelineType pipeline,
+      ActorType actorType,
+      String failureReason,
+      Integer netsTotal,
+      Integer netsIncomplete,
+      Integer clearanceViolations,
+      Float normalizedScore,
+      Double runtimeSeconds,
+      Double cpuSeconds,
+      Double peakHeapMb,
+      String integrationTool,
+      String integrationVersion,
+      UUID userId) {
+    Map<String, String> properties = new HashMap<>();
+    if (jobId != null) {
+      properties.put("job_id", jobId);
+    }
+    if (sessionId != null) {
+      properties.put("session_id", sessionId);
+    }
+    properties.put("status", status != null ? status.name() : "UNKNOWN");
+    properties.put("pipeline", pipeline != null ? pipeline.name() : currentPipeline.name());
+    properties.put("actor_type", actorType != null ? actorType.name() : currentActorType.name());
+    if (failureReason != null && !failureReason.isBlank()) {
+      properties.put("failure_reason", failureReason);
+    }
+    if (netsTotal != null) {
+      properties.put("nets_total", Integer.toString(netsTotal));
+    }
+    if (netsIncomplete != null) {
+      properties.put("nets_incomplete", Integer.toString(netsIncomplete));
+    }
+    if (clearanceViolations != null) {
+      properties.put("clearance_violations", Integer.toString(clearanceViolations));
+    }
+    if (normalizedScore != null) {
+      properties.put("normalized_score", Float.toString(normalizedScore));
+    }
+    if (runtimeSeconds != null) {
+      properties.put("runtime_seconds", String.format(Locale.US, "%.2f", runtimeSeconds));
+    }
+    if (cpuSeconds != null) {
+      properties.put("cpu_seconds", String.format(Locale.US, "%.2f", cpuSeconds));
+    }
+    if (peakHeapMb != null) {
+      properties.put("peak_heap_mb", String.format(Locale.US, "%.1f", peakHeapMb));
+    }
+    properties.put(
+        "integration_tool", integrationTool != null ? integrationTool : currentIntegrationTool);
+    if (integrationVersion != null && !integrationVersion.isBlank()) {
+      properties.put("integration_version", integrationVersion);
+    }
+    properties.put("app_version", Constants.FREEROUTING_VERSION);
+
+    String effectiveUserId = userId != null ? userId.toString() : permanentUserId;
+    trackAnonymousAction(effectiveUserId, "Job Lifecycle", properties);
+  }
+
+  /**
+   * Emits a session lifecycle event across GUI, CLI, API, and MCP pipelines.
+   *
+   * @param sessionId the session identifier
+   * @param eventType the lifecycle action (e.g. {@code "SESSION_CREATED"}, {@code
+   *     "SESSION_CLOSED"})
+   * @param pipeline execution pipeline, or {@code null} to use default
+   * @param actorType actor classification, or {@code null} to use default
+   * @param integrationTool originating EDA tool or client
+   * @param userId caller user identifier, or {@code null}
+   */
+  public static void recordSessionLifecycle(
+      String sessionId,
+      String eventType,
+      PipelineType pipeline,
+      ActorType actorType,
+      String integrationTool,
+      UUID userId) {
+    Map<String, String> properties = new HashMap<>();
+    if (sessionId != null) {
+      properties.put("session_id", sessionId);
+    }
+    properties.put("event_type", eventType != null ? eventType : "SESSION_CREATED");
+    properties.put("pipeline", pipeline != null ? pipeline.name() : currentPipeline.name());
+    properties.put("actor_type", actorType != null ? actorType.name() : currentActorType.name());
+    properties.put(
+        "integration_tool", integrationTool != null ? integrationTool : currentIntegrationTool);
+    properties.put("app_version", Constants.FREEROUTING_VERSION);
+
+    String effectiveUserId = userId != null ? userId.toString() : permanentUserId;
+    trackAnonymousAction(effectiveUserId, "Session Lifecycle", properties);
+  }
+
+  /**
+   * Emits a categorized, structured error event for automated alerting and diagnostics.
+   *
+   * @param category high-level category (e.g. {@code "PARSER"}, {@code "ROUTING"}, {@code "MCP"})
+   * @param errorCode machine-readable error code (e.g. {@code "SPECCTRA_SYNTAX_ERROR"})
+   * @param message concise error summary
+   * @param ex the associated exception, or {@code null}
+   * @param correlationId correlation ID if available, or {@code null}
+   */
+  public static void recordStructuredError(
+      String category, String errorCode, String message, Throwable ex, String correlationId) {
+    Map<String, String> properties = new HashMap<>();
+    properties.put("error_category", category != null ? category : "SYSTEM");
+    properties.put("error_code", errorCode != null ? errorCode : "UNKNOWN_ERROR");
+    properties.put(
+        "error_message", message != null ? message : (ex != null ? ex.getMessage() : ""));
+    if (ex != null) {
+      properties.put("exception_class", ex.getClass().getName());
+      StringBuilder sb = new StringBuilder();
+      for (StackTraceElement ste : ex.getStackTrace()) {
+        sb.append(ste.toString()).append("\n");
+      }
+      properties.put("exception_stacktrace", sb.toString());
+    }
+    if (correlationId != null && !correlationId.isBlank()) {
+      properties.put("correlation_id", correlationId);
+    }
+    properties.put("pipeline", currentPipeline.name());
+    properties.put("actor_type", currentActorType.name());
+    properties.put("integration_tool", currentIntegrationTool);
+    properties.put("app_version", Constants.FREEROUTING_VERSION);
+
+    trackAnonymousAction(permanentUserId, "Error Event", properties);
   }
 }

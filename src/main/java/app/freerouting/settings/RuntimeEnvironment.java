@@ -46,6 +46,12 @@ public class RuntimeEnvironment implements Serializable {
   @SerializedName("host")
   public transient String host = "N/A";
 
+  @SerializedName("pipeline_type")
+  public String pipelineType;
+
+  @SerializedName("actor_type")
+  public String actorType;
+
   /**
    * Measures a single-threaded CPU throughput score by running a lightweight synthetic
    * micro-benchmark (~15 ms) exercising EDA geometric operations (2D bounding-box overlap, 2D
