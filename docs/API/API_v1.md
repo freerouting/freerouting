@@ -459,6 +459,69 @@ If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<V
   }
   ```
 
+  *Note: Pass `?compact=true` to retrieve a token-saving concise summary including `unconnected_count`, `clearance_violation_count`, and top violation samples.*
+
+- **Get DRC Diagnostic Summary (`GET /jobs/{jobId}/drc/summary`)**
+
+  ```http
+  GET /jobs/{jobId}/drc/summary
+  ```
+
+  **Parameters:**
+    - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Generates a structured root-cause diagnostic summary designed for AI agents and developer dashboards, clustering violations into spatial congestion hotspots and offering layout auto-correction hints.
+
+---
+
+### Single-Turn Composite Autorouting (`POST /v1/autoroute`)
+
+```http
+POST /v1/autoroute
+```
+
+**Description:** Performs end-to-end autorouting in a single synchronous HTTP turn. Accepts multi-file inputs (primary `.dsn` or `.json`, optional `.rules`, and optional initial `.ses`), executes routing within the requested `timeout_seconds` budget, and returns all requested output representations (`SES`, `KICAD_JSON`, `SCR`, `DRC_JSON`, `DRC_SUMMARY`) along with board statistics in a single turn.
+
+**Request body:**
+
+```json
+{
+  "file_content": "(pcb ...)",
+  "rules_content": "(rules ...)",
+  "session_content": "(session ...)",
+  "output_formats": ["SES", "DRC_SUMMARY"],
+  "timeout_seconds": 120,
+  "router_settings": {
+    "max_passes": 10
+  }
+}
+```
+
+**Response body:**
+
+```json
+{
+  "job_id": "a4155510-4db2-412d-ad58-70b7c58c031d",
+  "session_id": "2703e30e-e891-422d-ad4e-efefd6d4a3ce",
+  "status": "COMPLETED",
+  "duration_seconds": 12.34,
+  "unrouted_connections": 0,
+  "clearance_violations": 0,
+  "normalized_score": 980.5,
+  "outputs": {
+    "SES": "(session ...)"
+  },
+  "drc_summary": {
+    "clearance_violations_count": 0,
+    "unconnected_nets_count": 0,
+    "violations": [],
+    "congestion_zones": [],
+    "hints": ["Routing completed with 0 violations and 0 unconnected nets."]
+  },
+  "message": "Routing completed successfully in 12.34s."
+}
+```
+
 ---
 
 ### Developer Tools

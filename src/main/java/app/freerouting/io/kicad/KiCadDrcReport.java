@@ -82,4 +82,44 @@ public class KiCadDrcReport {
   public void addUnconnectedItem(KiCadDrcViolation item) {
     this.unconnectedItems.add(item);
   }
+
+  /** Generates a compact summary representation of this DRC report. */
+  public com.google.gson.JsonObject toCompactJsonObject() {
+    com.google.gson.JsonObject json = new com.google.gson.JsonObject();
+    json.addProperty("source", source);
+    json.addProperty("date", date);
+    json.addProperty("coordinateUnits", coordinateUnits);
+    json.addProperty("total_violations", violations.size());
+    json.addProperty("total_unconnected", unconnectedItems.size());
+    if (qualityScore != null) {
+      json.addProperty("qualityScore", qualityScore);
+    }
+
+    // Top violations sample
+    com.google.gson.JsonArray violsSample = new com.google.gson.JsonArray();
+    int limit = Math.min(10, violations.size());
+    for (int i = 0; i < limit; i++) {
+      KiCadDrcViolation v = violations.get(i);
+      com.google.gson.JsonObject violationObj = new com.google.gson.JsonObject();
+      violationObj.addProperty("type", v.type);
+      violationObj.addProperty("severity", v.severity);
+      violationObj.addProperty("description", v.description);
+      violsSample.add(violationObj);
+    }
+    json.add("violations_sample", violsSample);
+
+    com.google.gson.JsonArray unconnSample = new com.google.gson.JsonArray();
+    int unconnectedLimit = Math.min(10, unconnectedItems.size());
+    for (int i = 0; i < unconnectedLimit; i++) {
+      KiCadDrcViolation u = unconnectedItems.get(i);
+      com.google.gson.JsonObject unconnectedObj = new com.google.gson.JsonObject();
+      unconnectedObj.addProperty("type", u.type);
+      unconnectedObj.addProperty("severity", u.severity);
+      unconnectedObj.addProperty("description", u.description);
+      unconnSample.add(unconnectedObj);
+    }
+    json.add("unconnected_sample", unconnSample);
+
+    return json;
+  }
 }

@@ -594,7 +594,10 @@ public class JobOutputResource extends BaseController {
               description = "Unique identifier of the job",
               example = "550e8400-e29b-41d4-a716-446655440000")
           @PathParam("jobId")
-          String jobId) {
+          String jobId,
+      @Parameter(description = "When true, returns a compact token-saving DRC report summary")
+          @jakarta.ws.rs.QueryParam("compact")
+          Boolean compact) {
     // Authenticate the user
     UUID userId = authenticateUser();
 
@@ -650,13 +653,99 @@ public class JobOutputResource extends BaseController {
     // Get source file name
     String sourceFileName = job.input != null ? job.input.getFilename() : "unknown";
 
-    // Generate DRC report
-    String drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
+    String drcReportJson;
+    if (Boolean.TRUE.equals(compact)) {
+      KiCadDrcReport report = drcChecker.generateReport(sourceFileName, coordinateUnit);
+      drcReportJson = report.toCompactJsonObject().toString();
+    } else {
+      drcReportJson = drcChecker.generateReportJson(sourceFileName, coordinateUnit);
+    }
 
     // Log the API call
     FRAnalytics.apiEndpointCalled(
         "GET v1/jobs/" + jobId + "/drc", "", "drc-report-generated", userId);
 
     return Response.ok(drcReportJson).build();
+  }
+
+  /**
+   * Generates and returns a natural-language diagnostic summary of DRC violations, congestion
+   * clusters, and layout auto-correction hints.
+   */
+  @Operation(
+      summary = "Get DRC diagnostic summary",
+      description =
+          "Retrieves a structured diagnostic summary of design rule violations including"
+              + " component context, spatial congestion zones, and actionable layout auto-correction hints.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "DRC diagnostic summary generated successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema =
+                        @Schema(implementation = app.freerouting.drc.DrcSummaryResponse.class))),
+        @ApiResponse(responseCode = "404", description = "Job not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid session or failed to load board"),
+        @ApiResponse(responseCode = "500", description = "Failed to load board for DRC summary")
+      })
+  @GET
+  @Path("/{jobId}/drc/summary")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getDrcSummary(
+      @Parameter(
+              description = "Unique identifier of the job",
+              example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathParam("jobId")
+          String jobId) {
+    UUID userId = authenticateUser();
+
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+    if (job == null) {
+      return Response.status(Response.Status.NOT_FOUND)
+          .entity("{\"error\":\"Job not found.\"}")
+          .build();
+    }
+
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
+    if (session == null) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
+          .build();
+    }
+
+    if (!BoardLoader.loadBoardIfNeeded(job)) {
+      if (job.input != null) {
+        try {
+          HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+          if (job.input.format == FileFormat.KICAD_DESIGN_JSON) {
+            boardManager.loadFromKiCadJson(job.input.getData(), null, new ItemIdGenerator());
+          } else {
+            boardManager.loadFromSpecctraDsn(job.input.getData(), null, new ItemIdGenerator());
+          }
+          job.board = boardManager.getRoutingBoard();
+        } catch (Exception e) {
+          FRLogger.error("Couldn't load the board for DRC summary", e);
+          return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+              .entity("{\"error\":\"Failed to load board: " + e.getMessage() + "\"}")
+              .build();
+        }
+      } else {
+        return Response.status(Response.Status.BAD_REQUEST)
+            .entity("{\"error\":\"Failed to load board for DRC summary.\"}")
+            .build();
+      }
+    }
+
+    DesignRulesChecker drcChecker = new DesignRulesChecker(job.board, job.drcSettings);
+    var summary = drcChecker.generateSummary();
+    String summaryJson = GSON.toJson(summary);
+
+    FRAnalytics.apiEndpointCalled(
+        "GET v1/jobs/" + jobId + "/drc/summary", "", "drc-summary-generated", userId);
+
+    return Response.ok(summaryJson).build();
   }
 }

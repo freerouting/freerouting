@@ -17,6 +17,7 @@ import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.gui.board.GuiManager;
 import app.freerouting.gui.support.DefaultExceptionHandler;
+import app.freerouting.io.FileFormat;
 import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
@@ -267,6 +268,8 @@ public class Freerouting {
         && routingJob.state != RoutingJobState.TIMED_OUT) {
       return false;
     }
+
+    boolean anyWritten = false;
     try {
       Path outputFilePath = Path.of(globalSettings.initialOutputFile);
       FRLogger.info(
@@ -276,20 +279,63 @@ public class Freerouting {
               + routingJob.output.format
               + ")...");
       Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
-      boolean success = Files.exists(outputFilePath) && Files.size(outputFilePath) > 0;
-      if (success) {
+      if (Files.exists(outputFilePath) && Files.size(outputFilePath) > 0) {
         FRLogger.info(
             "Successfully saved output file '"
                 + outputFilePath.toAbsolutePath()
                 + "' ("
                 + Files.size(outputFilePath)
                 + " bytes).");
+        anyWritten = true;
       }
-      return success;
     } catch (IOException e) {
       FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
-      return false;
     }
+
+    // Write any additional output files specified via -do (multi-format support)
+    if (globalSettings.additionalOutputFiles != null
+        && !globalSettings.additionalOutputFiles.isEmpty()
+        && routingJob.board != null) {
+      for (String addPathStr : globalSettings.additionalOutputFiles) {
+        try {
+          Path addPath = Path.of(addPathStr);
+          FileFormat fmt = RoutingJob.getFileFormat(addPath);
+          if (fmt == FileFormat.UNKNOWN) {
+            String lower = addPathStr.toLowerCase(Locale.ROOT);
+            if (lower.endsWith(".drc.json") || lower.endsWith(".drc")) {
+              fmt = FileFormat.DRC_JSON;
+            }
+          }
+          if (fmt != FileFormat.UNKNOWN) {
+            var outResult =
+                app.freerouting.io.MultiOutputGenerator.generateOutputs(
+                    routingJob.board,
+                    routingJob.name,
+                    java.util.Set.of(fmt),
+                    routingJob.drcSettings,
+                    false);
+            byte[] bytes = outResult.getFile(fmt);
+            if (bytes != null) {
+              if (addPath.getParent() != null) {
+                Files.createDirectories(addPath.getParent());
+              }
+              Files.write(addPath, bytes);
+              FRLogger.info(
+                  "Successfully saved additional output file '"
+                      + addPath.toAbsolutePath()
+                      + "' ("
+                      + Files.size(addPath)
+                      + " bytes).");
+              anyWritten = true;
+            }
+          }
+        } catch (Exception ex) {
+          FRLogger.error("Failed to write additional output file '" + addPathStr + "'", ex);
+        }
+      }
+    }
+
+    return anyWritten;
   }
 
   private static int computeCliExitCode(RoutingJob routingJob, boolean outputWritten) {

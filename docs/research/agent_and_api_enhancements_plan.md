@@ -75,37 +75,37 @@ graph TD
 - [x] Verify GUI lifecycle events conform to the BigQuery analytics schema.
 
 ### 2. Core Engine: Multi-File Input & Multi-Output Generator
-- [ ] Create `CompositeBoardInput` model supporting primary design (`dsn`/`json`) plus optional rules (`rules`) and session state (`ses`/`json`).
-- [ ] Implement `MultiOutputGenerator` to produce Specctra SES, KiCad JSON, and Fusion SCR from a routed `RoutingBoard`.
-- [ ] Enhance `DesignRulesChecker` with diagnostic summary generator (`DrcSummaryResponse`):
+- [x] Create `CompositeBoardInput` model supporting primary design (`dsn`/`json`) plus optional rules (`rules`) and session state (`ses`/`json`).
+- [x] Implement `MultiOutputGenerator` to produce Specctra SES, KiCad JSON, and Fusion SCR from a routed `RoutingBoard`.
+- [x] Enhance `DesignRulesChecker` with diagnostic summary generator (`DrcSummaryResponse`):
   - Natural-language violation explanations with component/pin context.
   - Congestion clustering and suggested parameter auto-correction hints.
 
 ### 3. REST API: Composite Endpoint & Token Optimization
-- [ ] Create DTOs: `AutorouteRequest`, `AutorouteResponse`, `DrcSummaryResponse`.
-- [ ] Implement `POST /v1/autoroute` in `AutorouteControllerV1`:
+- [x] Create DTOs: `AutorouteRequest`, `AutorouteResponse`, `DrcSummaryResponse`.
+- [x] Implement `POST /v1/autoroute` in `AutorouteControllerV1`:
   - Accepts multi-file inputs (content or sandboxed paths).
   - Accepts router settings, requested output formats, and execution timeout.
   - Routes synchronously and returns all requested outputs and summary metrics in 1 HTTP turn.
-- [ ] Implement `GET /v1/jobs/{jobId}/drc/summary` in `JobOutputResource`.
-- [ ] Add `compact=true` query parameter support to `GET /v1/jobs/{jobId}` and `GET /v1/jobs/{jobId}/drc`.
+- [x] Implement `GET /v1/jobs/{jobId}/drc/summary` in `JobOutputResource`.
+- [x] Add `compact=true` query parameter support to `GET /v1/jobs/{jobId}` and `GET /v1/jobs/{jobId}/drc`.
 
 ### 4. MCP Server: 1-Turn Agent Tools & Compact Defaults
-- [ ] Implement composite `autoroute_board` tool in `McpControllerV1`:
+- [x] Implement composite `autoroute_board` tool in `McpControllerV1`:
   - Direct parameter mapping to `POST /v1/autoroute`.
   - Supports string `fileContent` and sanitized `filePath`.
-- [ ] Implement `get_job_drc_summary` MCP tool.
-- [ ] Default all MCP status and DRC queries to `compact=true` (reducing token burn by > 70%).
+- [x] Implement `get_job_drc_summary` MCP tool.
+- [x] Default all MCP status and DRC queries to `compact=true` (reducing token burn by > 70%).
 
 ### 5. CLI & GUI Integration Alignment
-- [ ] Extend CLI `-do` to support multi-format exports (e.g. writing both `.ses` and `.drc.json`).
-- [ ] Verify that multi-file input parsing in CLI correctly populates all merged settings.
+- [x] Extend CLI `-do` to support multi-format exports (e.g. writing both `.ses` and `.drc.json`).
+- [x] Verify that multi-file input parsing in CLI correctly populates all merged settings.
 
 ### 6. Documentation & OpenAPI Specifications
-- [ ] Update Swagger/OpenAPI annotations across all controllers (`@Operation`, `@ApiResponse`, `@Schema`).
-- [ ] Update `docs/api/rest-api.md` with complete reference documentation for `POST /v1/autoroute` and `/drc/summary`.
-- [ ] Update `docs/mcp/mcp-tools.md` documenting the new 1-turn workflow, security sandbox rules, and token-saving tips.
-- [ ] Update `docs/architecture.md` diagram and package glossary.
+- [x] Update Swagger/OpenAPI annotations across all controllers (`@Operation`, `@ApiResponse`, `@Schema`).
+- [x] Update `docs/API/API_v1.md` with complete reference documentation for `POST /v1/autoroute` and `/drc/summary`.
+- [x] Update `docs/API/MCP.md` documenting the new 1-turn workflow, security sandbox rules, and token-saving tips.
+- [x] Update `docs/architecture.md` diagram and package glossary.
 
 ---
 

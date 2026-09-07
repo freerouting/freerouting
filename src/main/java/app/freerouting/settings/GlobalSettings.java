@@ -108,6 +108,12 @@ public class GlobalSettings implements Serializable {
   public transient String initialOutputFile;
 
   /**
+   * Additional output file paths provided via command line arguments (-do file1+file2 or -do file1
+   * -do file2).
+   */
+  public transient java.util.List<String> additionalOutputFiles = new java.util.ArrayList<>();
+
+  /**
    * The initial rules file path provided via command line arguments. This is used for
    * initialization.
    */
@@ -649,8 +655,33 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-do")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            initialOutputFile = args[i + 1];
-            i++;
+            java.util.List<String> outFiles = new java.util.ArrayList<>();
+            int j = i + 1;
+            while (j < args.length && !args[j].startsWith("-")) {
+              String rawArg = args[j].trim();
+              if (rawArg.contains("+")) {
+                String[] parts = rawArg.split("\\+");
+                for (String part : parts) {
+                  if (!part.trim().isEmpty()) {
+                    outFiles.add(part.trim());
+                  }
+                }
+              } else if (!rawArg.isEmpty()) {
+                outFiles.add(rawArg);
+              }
+              j++;
+            }
+            if (!outFiles.isEmpty()) {
+              if (initialOutputFile == null) {
+                initialOutputFile = outFiles.get(0);
+                for (int k = 1; k < outFiles.size(); k++) {
+                  additionalOutputFiles.add(outFiles.get(k));
+                }
+              } else {
+                additionalOutputFiles.addAll(outFiles);
+              }
+            }
+            i = j - 1;
           }
         } else if (args[i].startsWith("-drc")) {
           // DRC-only mode (must be checked before -dr)

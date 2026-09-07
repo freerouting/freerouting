@@ -197,7 +197,8 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
    * <p><strong>Warning:</strong> Multi-threaded optimization is known to potentially generate
    * clearance violations. Single-threaded mode is recommended for production.
    *
-   * @param boardHandling the GUI board manager for display updates
+   * @param sessionPort workspace port for GUI interactions and display updates
+   * @param generation execution generation
    * @param routingJob the routing job containing configuration and board data
    * @see BatchAutorouter
    * @see BatchOptimizer

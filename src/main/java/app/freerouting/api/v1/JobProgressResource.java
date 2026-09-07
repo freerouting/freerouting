@@ -137,7 +137,12 @@ public class JobProgressResource extends BaseController {
               description = "Unique identifier of the job",
               example = "550e8400-e29b-41d4-a716-446655440000")
           @PathParam("jobId")
-          String jobId) {
+          String jobId,
+      @Parameter(
+              description =
+                  "When true, returns a compact, token-efficient summary instead of the full job details")
+          @jakarta.ws.rs.QueryParam("compact")
+          Boolean compact) {
     // Authenticate the user
     UUID userId = authenticateUser();
 
@@ -157,7 +162,8 @@ public class JobProgressResource extends BaseController {
           .build();
     }
 
-    var response = GSON.toJson(job);
+    String response =
+        Boolean.TRUE.equals(compact) ? job.toCompactJsonObject().toString() : GSON.toJson(job);
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId, "", response, userId);
     return Response.ok(response).build();
   }

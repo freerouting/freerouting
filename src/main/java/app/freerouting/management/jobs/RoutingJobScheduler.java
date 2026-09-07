@@ -185,51 +185,73 @@ public final class RoutingJobScheduler {
 
                               job.routerSettings.applyBoardSpecificOptimizations(job.board);
 
-                              // Load session file if specified
-                              if (globalSettings.designSessionFilename != null) {
+                              // Load session file if specified in job or globally
+                              byte[] sessionBytesToLoad = null;
+                              String sessionFilenameToLoad = null;
+
+                              if (job.initialSession != null
+                                  && job.initialSession.getData() != null) {
+                                sessionBytesToLoad = job.initialSession.getData().readAllBytes();
+                                sessionFilenameToLoad = job.initialSession.getFilename();
+                              } else if (globalSettings.designSessionFilename != null) {
+                                java.io.File sessionFile =
+                                    new java.io.File(globalSettings.designSessionFilename);
+                                if (sessionFile.exists()) {
+                                  try {
+                                    sessionBytesToLoad = Files.readAllBytes(sessionFile.toPath());
+                                    sessionFilenameToLoad = sessionFile.getName();
+                                  } catch (IOException e) {
+                                    FRLogger.warn(
+                                        "Failed to read session file: " + sessionFile.getPath());
+                                  }
+                                } else {
+                                  FRLogger.warn(
+                                      "Session file not found: "
+                                          + globalSettings.designSessionFilename);
+                                }
+                              }
+
+                              if (sessionBytesToLoad != null && job.board != null) {
                                 try {
-                                  java.io.File sessionFile =
-                                      new java.io.File(globalSettings.designSessionFilename);
-                                  if (sessionFile.exists()) {
-                                    if (globalSettings
-                                        .designSessionFilename
-                                        .toLowerCase()
-                                        .endsWith(".json")) {
-                                      FRLogger.info(
-                                          "Loading KiCad JSON session file: "
-                                              + globalSettings.designSessionFilename);
-                                      try (java.io.FileReader jsonReader =
-                                          new java.io.FileReader(sessionFile)) {
-                                        app.freerouting.io.kicad.KiCadJsonReader.importSession(
-                                            jsonReader, job.board);
-                                        FRLogger.info(
-                                            "KiCad JSON session file loaded successfully");
-                                      }
-                                    } else {
-                                      FRLogger.info(
-                                          "Loading SES file: "
-                                              + globalSettings.designSessionFilename);
-                                      java.io.FileInputStream sesStream =
-                                          new java.io.FileInputStream(sessionFile);
-                                      SesImportSummary summary =
-                                          SesReader.read(sesStream, job.board);
-                                      FRLogger.info(
-                                          "SES file loaded: "
-                                              + summary.wiresImported()
-                                              + " wires, "
-                                              + summary.viasImported()
-                                              + " vias imported"
-                                              + (summary.errorsEncountered() > 0
-                                                  ? " (" + summary.errorsEncountered() + " errors)"
-                                                  : ""));
+                                  boolean isJsonSession =
+                                      (sessionFilenameToLoad != null
+                                              && sessionFilenameToLoad
+                                                  .toLowerCase()
+                                                  .endsWith(".json"))
+                                          || RoutingJob.getFileFormat(sessionBytesToLoad)
+                                              == FileFormat.KICAD_DESIGN_JSON;
+
+                                  if (isJsonSession) {
+                                    FRLogger.info(
+                                        "Loading KiCad JSON session data: "
+                                            + sessionFilenameToLoad);
+                                    try (java.io.Reader jsonReader =
+                                        new java.io.InputStreamReader(
+                                            new ByteArrayInputStream(sessionBytesToLoad),
+                                            StandardCharsets.UTF_8)) {
+                                      app.freerouting.io.kicad.KiCadJsonReader.importSession(
+                                          jsonReader, job.board);
+                                      FRLogger.info("KiCad JSON session loaded successfully");
                                     }
                                   } else {
-                                    FRLogger.warn(
-                                        "Session file not found: "
-                                            + globalSettings.designSessionFilename);
+                                    FRLogger.info(
+                                        "Loading SES session data: " + sessionFilenameToLoad);
+                                    SesImportSummary summary =
+                                        SesReader.read(
+                                            new ByteArrayInputStream(sessionBytesToLoad),
+                                            job.board);
+                                    FRLogger.info(
+                                        "SES session loaded: "
+                                            + summary.wiresImported()
+                                            + " wires, "
+                                            + summary.viasImported()
+                                            + " vias imported"
+                                            + (summary.errorsEncountered() > 0
+                                                ? " (" + summary.errorsEncountered() + " errors)"
+                                                : ""));
                                   }
                                 } catch (Exception e) {
-                                  FRLogger.error("Failed to load session file", e);
+                                  FRLogger.error("Failed to load session data", e);
                                 }
                               }
 

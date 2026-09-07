@@ -234,9 +234,13 @@ HTTP API controllers, filters, and server-facing request handling. The concrete 
 
 Analytics telemetry and metrics dispatch (`FRAnalytics`, `BigQueryClient`, `SegmentClient`, and event DTOs).
 
+### `app.freerouting.io`
+
+Board and design file input/output serialization, parsing, and multi-format generation. Specific formats include Specctra (`io.specctra`), KiCad JSON (`io.kicad`), and multi-output synthesis (`MultiOutputGenerator`).
+
 ### `app.freerouting.management`
 
-Headless board management (using `BoardManager` and `HeadlessBoardManager`), board loading (`BoardLoader`), job scheduling (`management.jobs`), and session lifecycle management (`management.sessions`).
+Headless board management (using `BoardManager` and `HeadlessBoardManager`), composite board input assembly (`CompositeBoardInput`), board loading (`BoardLoader`), job scheduling (`management.jobs`), and session lifecycle management (`management.sessions`).
 
 ### `app.freerouting.core`
 
