@@ -133,9 +133,8 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.maxItems = Integer.MAX_VALUE;
     settings.optimizer.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.optimizer.optimizationImprovementThreshold = 0.01f;
-    settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
-    settings.optimizer.hybridRatio = "1:1";
-    settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
+    settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
+    settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;
     settings.optimizer.additionalRipupCostFactorAtStart = 10;
     settings.optimizer.traceRipupCostFactor = 0.6f;
     settings.optimizer.maxAutoroutePasses = 6;

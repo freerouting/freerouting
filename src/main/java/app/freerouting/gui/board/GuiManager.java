@@ -145,8 +145,6 @@ public class GuiManager {
       newFrame.boardPanel.boardHandling.setNumThreads(routingJob.routerSettings.maxThreads);
       newFrame.boardPanel.boardHandling.setBoardUpdateStrategy(
           routingJob.routerSettings.optimizer.boardUpdateStrategy);
-      newFrame.boardPanel.boardHandling.setHybridRatio(
-          routingJob.routerSettings.optimizer.hybridRatio);
       newFrame.boardPanel.boardHandling.setItemSelectionStrategy(
           routingJob.routerSettings.optimizer.itemSelectionStrategy);
 

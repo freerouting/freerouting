@@ -1004,16 +1004,6 @@ public class GuiBoardManager extends HeadlessBoardManager implements WorkspaceCo
   }
 
   /** GUI workspace member. */
-  public String getHybridRatio() {
-    return sessionState.getHybridRatio();
-  }
-
-  /** GUI workspace member. */
-  public void setHybridRatio(String hybridRatio) {
-    sessionState.setHybridRatio(hybridRatio);
-  }
-
-  /** GUI workspace member. */
   public ItemSelectionStrategy getItemSelectionStrategy() {
     return sessionState.getItemSelectionStrategy();
   }

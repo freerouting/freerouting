@@ -223,8 +223,7 @@ class EnvironmentVariablesSourceTest {
     Map<String, String> env =
         new HashMap<>(
             Map.of(
-                "FREEROUTING__ROUTER__OPTIMIZER__BOARD_UPDATE_STRATEGY", "GREEDY",
-                "FREEROUTING__ROUTER__OPTIMIZER__HYBRID_RATIO", "1:1",
+                "FREEROUTING__ROUTER__OPTIMIZER__BOARD_UPDATE_STRATEGY", "GLOBAL_OPTIMAL",
                 "FREEROUTING__ROUTER__OPTIMIZER__ITEM_SELECTION_STRATEGY", "SEQUENTIAL"));
 
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
@@ -232,13 +231,12 @@ class EnvironmentVariablesSourceTest {
 
     assertNotNull(settings);
     assertEquals(
-        app.freerouting.autoroute.BoardUpdateStrategy.GREEDY,
+        app.freerouting.autoroute.BoardUpdateStrategy.GLOBAL_OPTIMAL,
         settings.optimizer.boardUpdateStrategy);
-    assertEquals("1:1", settings.optimizer.hybridRatio);
     assertEquals(
         app.freerouting.autoroute.ItemSelectionStrategy.SEQUENTIAL,
         settings.optimizer.itemSelectionStrategy);
-    assertEquals(3, source.getParsedCount());
+    assertEquals(2, source.getParsedCount());
   }
 
   @Test

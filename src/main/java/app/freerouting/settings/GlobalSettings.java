@@ -736,29 +736,16 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-us")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            String op = args[i + 1].toLowerCase().trim();
-            routerSettings.optimizer.boardUpdateStrategy =
-                "global".equals(op)
-                    ? BoardUpdateStrategy.GLOBAL_OPTIMAL
-                    : ("hybrid".equals(op)
-                        ? BoardUpdateStrategy.HYBRID
-                        : BoardUpdateStrategy.GREEDY);
+            routerSettings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
             i++;
           }
         } else if (args[i].startsWith("-is")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             String op = args[i + 1].toLowerCase().trim();
             routerSettings.optimizer.itemSelectionStrategy =
-                op.indexOf("seq") == 0
-                    ? ItemSelectionStrategy.SEQUENTIAL
-                    : (op.indexOf("rand") == 0
-                        ? ItemSelectionStrategy.RANDOM
-                        : ItemSelectionStrategy.PRIORITIZED);
-            i++;
-          }
-        } else if (args[i].startsWith("-hr")) { // hybrid ratio
-          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.hybridRatio = args[i + 1].trim();
+                op.startsWith("prio")
+                    ? ItemSelectionStrategy.PRIORITIZED
+                    : ItemSelectionStrategy.SEQUENTIAL;
             i++;
           }
         } else if ("-l".equals(args[i])) {
@@ -898,11 +885,6 @@ public class GlobalSettings implements Serializable {
   /** Returns the configured optimizer thread count. */
   public int getNumThreads() {
     return routerSettings.optimizer.maxThreads;
-  }
-
-  /** Returns the configured optimizer hybrid ratio. */
-  public String getHybridRatio() {
-    return routerSettings.optimizer.hybridRatio;
   }
 
   /** Returns the configured optimizer board-update strategy. */

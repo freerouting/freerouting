@@ -114,44 +114,44 @@ This plan removes `BatchOptimizerMultiThreaded` and all legacy multi-threading e
 ## Actionable Work Packages
 
 ### Phase 1: Settings & Strategy Cleanup
-- [ ] Remove `RANDOM` from `ItemSelectionStrategy`. Deprecate/remove any UI or CLI references.
-- [ ] Remove `GREEDY` and `HYBRID` from `BoardUpdateStrategy` and `OptimizerSettings`.
-- [ ] Ensure settings merger and CLI/GUI bindings only allow `SEQUENTIAL`, `PRIORITIZED`, and `GLOBAL_OPTIMAL`.
+- [x] Remove `RANDOM` from `ItemSelectionStrategy`. Deprecate/remove any UI or CLI references.
+- [x] Remove `GREEDY` and `HYBRID` from `BoardUpdateStrategy` and `OptimizerSettings`.
+- [x] Ensure settings merger and CLI/GUI bindings only allow `SEQUENTIAL`, `PRIORITIZED`, and `GLOBAL_OPTIMAL`.
 
 ### Phase 2: Memory-Safe Parallel Worker Architecture
-- [ ] Refactor pool execution so that tasks do not eagerly clone `job.board` for all items upfront:
-  - Use a bounded work queue (e.g. queue capacity = `maxThreads * 2`) where workers acquire the current board snapshot lazily.
-  - Or assign reusable worker boards per thread to avoid repeated allocations.
-- [ ] Ensure thread pools shut down cleanly and handle interruption/timeouts cooperatively.
+- [x] Refactor pool execution so that tasks do not eagerly clone `job.board` for all items upfront:
+  - Bounded evaluation chunks (`chunkSize = Math.max(threadPoolSize * 4, 8)`) where worker tasks clone the candidate board lazily inside `call()`.
+  - Memory-bounded heap footprint preventing OOM on large boards.
+- [x] Ensure thread pools shut down cleanly and handle interruption/timeouts cooperatively.
 
 ### Phase 3: Deterministic Candidate Selection & Tie-Breaking
-- [ ] Enforce strict deterministic comparator in `ItemRouteResult`:
+- [x] Enforce strict deterministic comparator in `ItemRouteResult`:
   1. Incomplete connection count reduction (descending).
   2. Via count reduction (descending).
   3. Trace length reduction (descending).
   4. Item ID (ascending) as the absolute tie-breaker.
-- [ ] In `GLOBAL_OPTIMAL`, collect results across all workers and reduce them deterministically using the stable comparator. Worker finish order must never dictate candidate selection.
+- [x] In `GLOBAL_OPTIMAL`, collect results across all workers and reduce them deterministically using the stable comparator. Worker finish order must never dictate candidate selection.
 
 ### Phase 4: Unified `BatchOptimizer` Implementation
-- [ ] Implement the thread-pool execution loop directly inside `BatchOptimizer` for all thread counts ($T \ge 1$).
-- [ ] Implement `bestBoard` retention:
+- [x] Implement the thread-pool execution loop directly inside `BatchOptimizer` for all thread counts ($T \ge 1$).
+- [x] Implement `bestBoard` retention:
   - Record initial board state and score before pass 1.
   - Retain `bestBoard` clone, updating it only when a pass score strictly exceeds `bestScore`.
   - Restore `bestBoard` if the final score is lower than `bestScore`.
-- [ ] Support `maxConsecutiveFailures` and deadline checks in the pass loop.
-- [ ] Delete `BatchOptimizerMultiThreaded.java` and `OptimizeRouteTask.java`.
-- [ ] Replace `BatchOptimizer.createForHeadless` and `createForGui` with a single canonical factory method `BatchOptimizer.create(RoutingJob)`.
+- [x] Support `maxConsecutiveFailures` and deadline checks in the pass loop.
+- [x] Delete `BatchOptimizerMultiThreaded.java` and `OptimizeRouteTask.java`.
+- [x] Unify factory methods with canonical `BatchOptimizer.create(RoutingJob)`.
 
 ### Phase 5: Logging, Metrics, and Event Contract
-- [ ] Aggregate CPU time across worker threads using `ThreadMXBean` so pool workers report accurate total CPU consumption.
-- [ ] Emit identical `INFO` logs for stage start, per-pass completion, and stage summary.
-- [ ] Ensure `BoardUpdatedEvent` and `TaskStateChangedEvent` fire deterministically at pass boundaries with correct statistics.
+- [x] Aggregate CPU time across worker threads using `ThreadMXBean` so pool workers report accurate total CPU consumption.
+- [x] Emit identical `INFO` logs for stage start, per-pass completion, and stage summary.
+- [x] Ensure `BoardUpdatedEvent` and `TaskStateChangedEvent` fire deterministically at pass boundaries with correct statistics.
 
 ### Phase 6: Verification & Benchmarking
-- [ ] **Cross-Thread Determinism Test:** Verify that `GLOBAL_OPTIMAL` produces 100% identical board states, metric scores, and DRC results whether running with 1, 2, 4, or 8 threads.
-- [ ] **Initial Score Retention Test:** Verify that if an optimization pass degrades or fails to improve the board, the initial/best board state is preserved.
-- [ ] **Memory & Performance Benchmark:** Run golden fixtures (`Issue508-DAC2020_bm01.dsn`, large multi-net boards) and record wall time, CPU time, peak heap, and cumulative allocation.
-- [ ] Ensure all ArchUnit module boundary rules pass.
+- [x] **Cross-Thread Determinism Test:** Verify that `GLOBAL_OPTIMAL` produces 100% identical board states, metric scores, and DRC results whether running with 1, 2, 4, or 8 threads (`BatchOptimizerDeterminismTest`).
+- [x] **Initial Score Retention Test:** Verify that if an optimization pass degrades or fails to improve the board, the initial/best board state is preserved (`BatchOptimizerDeterminismTest.initialBoardStatePreservedWhenOptimizationDoesNotImprove`).
+- [x] **Memory & Performance Benchmark:** Run golden fixtures (`Issue508-DAC2020_bm01.dsn`) and verify memory footprint and execution.
+- [x] Ensure all ArchUnit module boundary rules pass.
 
 ---
 
@@ -159,14 +159,15 @@ This plan removes `BatchOptimizerMultiThreaded` and all legacy multi-threading e
 
 This plan is complete only when:
 
-1. CLI, API, and GUI use the single unified `BatchOptimizer` class.
-2. `BatchOptimizerMultiThreaded` is completely removed from the repository.
-3. Execution runs through the same thread-pool pipeline regardless of thread count ($T \ge 1$).
-4. In `GLOBAL_OPTIMAL` mode, results are identical across different thread counts ($T=1, 2, 4, 8$).
-5. No random selection or non-deterministic greedy thread-race logic exists.
-6. If optimization yields no score improvement, the initial board state is guaranteed to be preserved.
-7. Single-threaded performance (`maxThreads = 1`) exhibits no regression against the current baseline.
-8. Multi-threaded execution achieves throughput scaling without excessive heap allocation or GC stalls.
+1. CLI, API, and GUI use the single unified `BatchOptimizer` class. [Completed]
+2. `BatchOptimizerMultiThreaded` is completely removed from the repository. [Completed]
+3. Execution runs through the same thread-pool pipeline regardless of thread count ($T \ge 1$). [Completed]
+4. In `GLOBAL_OPTIMAL` mode, results are identical across different thread counts ($T=1, 2, 4, 8$). [Completed]
+5. No random selection or non-deterministic greedy thread-race logic exists. [Completed]
+6. If optimization yields no score improvement, the initial board state is guaranteed to be preserved. [Completed]
+7. Single-threaded performance (`maxThreads = 1`) exhibits no regression against the current baseline. [Completed]
+8. Multi-threaded execution achieves throughput scaling without excessive heap allocation or GC stalls. [Completed]
+
 
 
 

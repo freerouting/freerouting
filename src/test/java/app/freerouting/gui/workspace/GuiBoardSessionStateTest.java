@@ -14,13 +14,11 @@ class GuiBoardSessionStateTest {
   void storesBatchOptionsWithoutOwningBoardState() {
     GuiBoardSessionState state = new GuiBoardSessionState(null, null);
 
-    state.setBoardUpdateStrategy(BoardUpdateStrategy.HYBRID);
-    state.setHybridRatio("3:1");
+    state.setBoardUpdateStrategy(BoardUpdateStrategy.GLOBAL_OPTIMAL);
     state.setItemSelectionStrategy(ItemSelectionStrategy.PRIORITIZED);
     state.setNumThreads(4);
 
-    assertEquals(BoardUpdateStrategy.HYBRID, state.getBoardUpdateStrategy());
-    assertEquals("3:1", state.getHybridRatio());
+    assertEquals(BoardUpdateStrategy.GLOBAL_OPTIMAL, state.getBoardUpdateStrategy());
     assertEquals(ItemSelectionStrategy.PRIORITIZED, state.getItemSelectionStrategy());
   }
 }
