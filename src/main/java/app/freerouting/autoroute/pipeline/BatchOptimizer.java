@@ -429,6 +429,11 @@ public final class BatchOptimizer extends NamedAlgorithm {
     CandidateResult winningCandidate = null;
     int chunkSize = Math.max(threadPoolSize * 4, 8);
     boolean stoppedOrTimedOut = false;
+    int consecutiveFailures = 0;
+    int maxConsecutiveFailures =
+        this.settings.optimizer.maxConsecutiveFailures != null
+            ? this.settings.optimizer.maxConsecutiveFailures
+            : 50;
 
     try {
       for (int i = 0; i < candidateItemIds.size(); i += chunkSize) {
@@ -475,8 +480,22 @@ public final class BatchOptimizer extends NamedAlgorithm {
               }
 
               if (res.result.improved()) {
+                consecutiveFailures = 0;
                 if (winningCandidate == null || res.result.improvedOver(winningCandidate.result)) {
                   winningCandidate = res;
+                }
+              } else {
+                consecutiveFailures++;
+                if (consecutiveFailures >= maxConsecutiveFailures) {
+                  job.logInfo(
+                      String.format(
+                          Locale.US,
+                          "Stopping optimization pass #%d early after %d consecutive items could "
+                              + "not be improved.",
+                          passNo,
+                          consecutiveFailures));
+                  stoppedOrTimedOut = true;
+                  break;
                 }
               }
             }
@@ -536,10 +555,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
    *
    * @param item the item to be re-routed
    * @param withPreferredDirections if true, the preferred directions are used for the traces
-   * @param disableSnapshots if true, snapshots are not used
    */
-  protected ItemRouteResult optRouteItem(
-      Item item, boolean withPreferredDirections, boolean disableSnapshots) {
+  protected ItemRouteResult optRouteItem(Item item, boolean withPreferredDirections) {
     if (!(item.board instanceof RoutingBoard routingBoard)) {
       job.logWarning("The item to be optimized is not on a RoutingBoard.");
       return new ItemRouteResult(item.getId());
