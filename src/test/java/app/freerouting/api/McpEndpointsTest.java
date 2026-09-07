@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import app.freerouting.Freerouting;
 import app.freerouting.api.mcp.McpApiKeyValidationService;
@@ -475,6 +476,10 @@ class McpEndpointsTest {
     HttpResponse<String> response =
         httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
     JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
+    if (payload.has("error")) {
+      fail("create_session MCP tool call failed: " + payload.get("error"));
+    }
+    assertTrue(payload.has("result"), "Expected 'result' in response: " + payload);
     String text =
         payload
             .getAsJsonObject("result")
@@ -505,6 +510,10 @@ class McpEndpointsTest {
     HttpResponse<String> response =
         httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
     JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
+    if (payload.has("error")) {
+      fail("enqueue_job MCP tool call failed: " + payload.get("error"));
+    }
+    assertTrue(payload.has("result"), "Expected 'result' in response: " + payload);
     String text =
         payload
             .getAsJsonObject("result")
