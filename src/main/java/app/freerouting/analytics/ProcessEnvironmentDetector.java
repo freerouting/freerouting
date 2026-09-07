@@ -107,8 +107,28 @@ public final class ProcessEnvironmentDetector {
       boolean isGuiEnabled,
       boolean hasHeadlessDisplay,
       String commandLineArgs) {
+    return detectActorType(
+        pipeline, isGuiEnabled, hasHeadlessDisplay, commandLineArgs, isCiEnvironment());
+  }
+
+  /**
+   * Resolves the {@link ActorType} driving this Freerouting process with explicit CI determination.
+   *
+   * @param pipeline the resolved pipeline type
+   * @param isGuiEnabled whether GUI is enabled
+   * @param hasHeadlessDisplay whether display is headless or has zero dimension
+   * @param commandLineArgs the raw command-line argument string
+   * @param isCi whether executing within a CI environment
+   * @return the resolved {@link ActorType}
+   */
+  public static ActorType detectActorType(
+      PipelineType pipeline,
+      boolean isGuiEnabled,
+      boolean hasHeadlessDisplay,
+      String commandLineArgs,
+      boolean isCi) {
     // 1. CI/CD environment takes priority when detected
-    if (isCiEnvironment()) {
+    if (isCi) {
       return ActorType.CI_CD;
     }
 

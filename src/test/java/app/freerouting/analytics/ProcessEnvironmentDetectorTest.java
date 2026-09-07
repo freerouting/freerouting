@@ -34,7 +34,7 @@ class ProcessEnvironmentDetectorTest {
   void testDetectActorTypeForMcp() {
     assertEquals(
         ActorType.AGENT,
-        ProcessEnvironmentDetector.detectActorType(PipelineType.MCP, false, true, ""));
+        ProcessEnvironmentDetector.detectActorType(PipelineType.MCP, false, true, "", false));
   }
 
   @Test
@@ -42,12 +42,20 @@ class ProcessEnvironmentDetectorTest {
     assertEquals(
         ActorType.AUTOMATED_BATCH,
         ProcessEnvironmentDetector.detectActorType(
-            PipelineType.CLI, false, true, "-de board.dsn -do board.ses -mp 100 -dct 0"));
+            PipelineType.CLI, false, true, "-de board.dsn -do board.ses -mp 100 -dct 0", false));
 
     assertEquals(
         ActorType.AUTOMATED_BATCH,
         ProcessEnvironmentDetector.detectActorType(
-            PipelineType.CLI, false, true, "--gui.enabled=false -de /data/board.dsn"));
+            PipelineType.CLI, false, true, "--gui.enabled=false -de /data/board.dsn", false));
+  }
+
+  @Test
+  void testDetectActorTypeForCi() {
+    assertEquals(
+        ActorType.CI_CD,
+        ProcessEnvironmentDetector.detectActorType(
+            PipelineType.CLI, false, true, "-de board.dsn", true));
   }
 
   @Test
