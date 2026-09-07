@@ -3,6 +3,7 @@ package app.freerouting.gui.workspace.progress;
 import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.analytics.model.JobLifecycleStatus;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
@@ -615,6 +616,24 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
       globalSettings.statistics.incrementJobsCompleted();
       FRAnalytics.autorouterStarted();
 
+      FRAnalytics.recordJobLifecycle(
+          routingJob.id.toString(),
+          routingJob.sessionId != null ? routingJob.sessionId.toString() : null,
+          JobLifecycleStatus.STARTED,
+          FRAnalytics.getCurrentPipeline(),
+          FRAnalytics.getCurrentActorType(),
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          routingJob.getDetectedHost(),
+          null,
+          null);
+
       TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
       String startMessage = tm.getText("batch_autorouter_start_message");
       sessionPort.publishProgress(RouteProgress.status(generation, startMessage));
@@ -695,6 +714,57 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         hl.autorouterFinished();
       }
     }
+
+    // Record job lifecycle event for GUI execution
+    JobLifecycleStatus lifecycleStatus =
+        switch (routingJob.state) {
+          case COMPLETED -> JobLifecycleStatus.SUCCEEDED;
+          case TIMED_OUT -> JobLifecycleStatus.TIMED_OUT;
+          case CANCELLED -> JobLifecycleStatus.CANCELLED;
+          default -> JobLifecycleStatus.FAILED;
+        };
+
+    long durationMs =
+        routingJob.startedAt != null && routingJob.finishedAt != null
+            ? java.time.Duration.between(routingJob.startedAt, routingJob.finishedAt).toMillis()
+            : 0;
+    double durationSec = durationMs / 1000.0;
+
+    var finalBoardStats = routingJob.board != null ? routingJob.board.getStatistics() : null;
+    Integer netsTotal =
+        finalBoardStats != null && finalBoardStats.nets != null
+            ? finalBoardStats.nets.totalCount
+            : null;
+    Integer netsIncomplete =
+        finalBoardStats != null && finalBoardStats.connections != null
+            ? finalBoardStats.connections.incompleteCount
+            : null;
+    Integer clearanceViolations =
+        finalBoardStats != null && finalBoardStats.clearanceViolations != null
+            ? finalBoardStats.clearanceViolations.totalCount
+            : null;
+    Float normalizedScore =
+        finalBoardStats != null && routingJob.routerSettings != null
+            ? finalBoardStats.getNormalizedScore(routingJob.routerSettings.scoring)
+            : null;
+
+    FRAnalytics.recordJobLifecycle(
+        routingJob.id.toString(),
+        routingJob.sessionId != null ? routingJob.sessionId.toString() : null,
+        lifecycleStatus,
+        FRAnalytics.getCurrentPipeline(),
+        FRAnalytics.getCurrentActorType(),
+        this.isStopRequested() ? "User interrupted autorouter in GUI" : null,
+        netsTotal,
+        netsIncomplete,
+        clearanceViolations,
+        normalizedScore,
+        durationSec,
+        (double) routingJob.resourceUsage.cpuTimeUsed,
+        (double) routingJob.resourceUsage.peakMemoryUsed,
+        routingJob.getDetectedHost(),
+        null,
+        null);
 
     FRLogger.traceExit("BatchAutorouterThread.thread_action()");
   }

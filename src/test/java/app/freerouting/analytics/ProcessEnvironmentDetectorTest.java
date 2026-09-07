@@ -125,5 +125,46 @@ class ProcessEnvironmentDetectorTest {
         "Tool invocation error",
         new RuntimeException("Test exception"),
         "corr-12345");
+
+    // Verify GUI pipeline job lifecycle events can be recorded cleanly
+    FRAnalytics.setExecutionContext(PipelineType.GUI, ActorType.HUMAN, "Freerouting", "2.3.0");
+    assertEquals(PipelineType.GUI, FRAnalytics.getCurrentPipeline());
+    assertEquals(ActorType.HUMAN, FRAnalytics.getCurrentActorType());
+
+    FRAnalytics.recordJobLifecycle(
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        JobLifecycleStatus.STARTED,
+        PipelineType.GUI,
+        ActorType.HUMAN,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "KiCad",
+        null,
+        null);
+
+    FRAnalytics.recordJobLifecycle(
+        UUID.randomUUID().toString(),
+        UUID.randomUUID().toString(),
+        JobLifecycleStatus.SUCCEEDED,
+        PipelineType.GUI,
+        ActorType.HUMAN,
+        null,
+        150,
+        0,
+        0,
+        98.5f,
+        15.4,
+        14.2,
+        256.0,
+        "KiCad",
+        null,
+        null);
   }
 }
