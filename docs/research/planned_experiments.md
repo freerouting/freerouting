@@ -1,9 +1,18 @@
-# Research & Evaluation Plan: Evaluating `-oit` as Potential Router Default on PCBench
+# Freerouting Planned Experiments
 
-**Document Status:** Draft / Proposed Investigation  
+**Document Status:** Living Document — Continuously Updated  
 **Date:** September 2026  
 **Author:** Freerouting AI Assistant & Core Engineering Team  
-**Corpus Target:** PCBench KiCad Ground-Truth Corpus (`C:\Work\PCBench` / `scripts/pcbench/`) + 24 Internal DSN Fixtures  
+
+> This file collects all planned research experiments for the Freerouting project. Each
+> experiment is a self-contained section with a hypothesis, methodology, metrics, and acceptance
+> criteria. Add new experiments at the end.
+
+---
+
+## Experiment 1: Evaluating `-oit` as Potential Router Default on PCBench
+
+**Corpus Target:** PCBench KiCad Ground-Truth Corpus (`C:\Work\PCBench` / `scripts/pcbench/`) + 24 Internal DSN Fixtures
 
 ---
 
@@ -138,3 +147,118 @@ pwsh -File scripts/pcbench/Run-PCBenchComparisonSuite.ps1 `
 4. **Phase 4 (Decision):** Present empirical findings to maintainers to approve either:
    - Keeping `1.0%` as default and adding a `--fast` CLI flag / profile.
    - Adjusting default to a balanced value (e.g. `3.0%`).
+
+---
+
+## Experiment 2: Optimizer Mode & Settings Validation Against Fully-Routed Boards
+
+**Date Added:** September 2026  
+**Motivation:** The `BatchOptimizer` was recently unified into a single deterministic, thread-pool-based engine (see `docs/research/optimizer_unification_plan.md`). While unit tests cover correctness and cross-thread determinism on partially-routed boards, we need a broader empirical validation that the optimizer does not introduce clearance violations or regressions on designs the router already solved completely.
+
+---
+
+### 2.1 Objective
+
+For every combination of optimizer configuration, verify that:
+
+1. **No new clearance violations** are introduced after optimization.
+2. **No new unrouted connections** are introduced (the routing completion stays at 100%).
+3. **Optimization terminates in reasonable time** — especially when there is no substantial improvement (the improvement-threshold early-exit guard fires correctly).
+4. **The end score is at least as good** as the post-routing score (the `bestBoard` restore guarantee holds).
+5. **Measurable improvement is made** by the optimizer when the board is not already at score 1000 (i.e. the optimizer is not a no-op on boards with routing room for improvement).
+
+---
+
+### 2.2 Board Corpus
+
+Collect boards that the current Freerouting router can complete to **100% routing with 0 clearance violations**. Candidates from existing fixtures:
+
+| Board | Nets | Pins | Notes |
+|---|---|---|---|
+| `Issue508-DAC2020_bm07.dsn` | ~86 | ~87 SMD | Fully routed in 3 passes |
+| `Issue508-DAC2020_bm08.dsn` | ~25 | ~36 SMD | Fully routed in 1 pass, score 1000.00 |
+| `Issue508-DAC2020_bm09.dsn` | TBD | TBD | To verify |
+| `Issue508-DAC2020_bm10.dsn` | TBD | TBD | To verify |
+
+The experiment should be **re-run after every significant optimizer change** using the same board set to catch regressions.
+
+Boards are routed by Freerouting and their SES output is saved to `fixtures/` as a golden baseline alongside the DSN. The SES + DSN pair is used as the starting point for optimizer evaluation, bypassing the routing stage entirely for focused and fast test execution.
+
+---
+
+### 2.3 Configuration Matrix
+
+Test the following parameter combinations (not exhaustive — chosen to expose boundary conditions):
+
+| `itemSelectionStrategy` | `boardUpdateStrategy` | `maxThreads` | Rationale |
+|---|---|---|---|
+| `SEQUENTIAL` | `GLOBAL_OPTIMAL` | 1 | Deterministic single-threaded baseline |
+| `SEQUENTIAL` | `GLOBAL_OPTIMAL` | 2 | Asymmetric thread count (off-by-one chunk edge) |
+| `SEQUENTIAL` | `GLOBAL_OPTIMAL` | 4 | Standard multi-threaded path |
+| `SEQUENTIAL` | `GLOBAL_OPTIMAL` | 8 | High-concurrency path (if available CPUs permit) |
+| `PRIORITIZED` | `GLOBAL_OPTIMAL` | 1 | Priority ordering single-threaded |
+| `PRIORITIZED` | `GLOBAL_OPTIMAL` | 4 | Priority ordering + parallel — most likely to diverge |
+
+For each combination, also sweep the improvement threshold:
+
+| `optimizationImprovementThreshold` | Expected behaviour |
+|---|---|
+| `0.01` (1% — default) | Should terminate quickly on nearly-optimal boards |
+| `0.001` (0.1% — aggressive) | More passes, deeper optimization |
+| `0.10` (10% — loose) | Terminates after first pass for any partially-improved board |
+
+---
+
+### 2.4 Metrics to Collect
+
+Per board, per configuration:
+
+1. **Clearance violation count** before and after optimization (delta must be ≤ 0).
+2. **Incomplete connection count** before and after (must remain 0).
+3. **Normalized board score** before and after (delta must be ≥ 0).
+4. **Via count** before and after (delta should be ≤ 0 for optimization to be useful).
+5. **Total trace length (mm)** before and after (delta should be ≤ 0).
+6. **Optimizer wall-clock time (seconds)** and CPU time.
+7. **Number of optimizer passes** executed before early exit.
+
+---
+
+### 2.5 Acceptance Criteria
+
+| Criterion | Gate |
+|---|---|
+| No new clearance violations | **Hard gate** — any violation introduced = FAIL |
+| No new unrouted connections | **Hard gate** — any regression = FAIL |
+| Score ≥ pre-optimization score | **Hard gate** — bestBoard restore must hold |
+| Optimizer terminates within 2× the routing time on the same board | **Soft gate** — warn if exceeded |
+| At least 1 pass with measurable improvement (score delta > 0) on non-perfect boards | **Soft gate** — log and investigate if optimizer is a no-op |
+
+---
+
+### 2.6 Execution Plan
+
+```powershell
+# 1. Build the executable JAR
+./gradlew.bat executableJar
+
+# 2. For each board in the corpus, run full routing + optimizer at each config:
+#    (Script TBD in scripts/tests/run_optimizer_matrix.ps1)
+pwsh -File scripts/tests/run_optimizer_matrix.ps1 `
+    -Fixtures @("Issue508-DAC2020_bm07.dsn", "Issue508-DAC2020_bm08.dsn") `
+    -Threads @(1, 2, 4, 8) `
+    -Thresholds @(0.001, 0.01, 0.10) `
+    -OutputDir "scripts/benchmark/results/optimizer_matrix"
+
+# 3. Parse and summarize results
+#    (Script TBD in scripts/tests/summarize_optimizer_matrix.ps1)
+```
+
+---
+
+### 2.7 Status
+
+- [ ] Verify fully-routed status for bm09 and bm10 candidates.
+- [ ] Save golden SES files for all corpus boards to `fixtures/`.
+- [ ] Write `scripts/tests/run_optimizer_matrix.ps1` following the `run_test_Issue420_oom.ps1` reference pattern.
+- [ ] Execute matrix run and collect results.
+- [ ] Summarize and present findings.
