@@ -66,13 +66,13 @@ graph TD
 ## Tasks & Progress Tracking
 
 ### 1. GUI Pipeline: Job Lifecycle Telemetry Alignment
-- [ ] Connect `GuiRoutingJobWorker` to emit standard `job_lifecycle` (`STARTED`) when autorouting begins.
-- [ ] Connect `GuiRoutingJobWorker` to emit standard `job_lifecycle` (`SUCCEEDED`, `CANCELLED`, `FAILED`) when autorouting finishes or is aborted, recording:
+- [x] Connect `GuiRoutingJobWorker` to emit standard `job_lifecycle` (`STARTED`) when autorouting begins.
+- [x] Connect `GuiRoutingJobWorker` to emit standard `job_lifecycle` (`SUCCEEDED`, `CANCELLED`, `FAILED`) when autorouting finishes or is aborted, recording:
   - Total nets, unrouted/incomplete connections, clearance violations count.
   - Normalized board score.
   - Elapsed routing time (seconds), total CPU time, peak heap usage (MB).
   - Detected host CAD tool and user ID.
-- [ ] Verify GUI lifecycle events conform to the BigQuery analytics schema.
+- [x] Verify GUI lifecycle events conform to the BigQuery analytics schema.
 
 ### 2. Core Engine: Multi-File Input & Multi-Output Generator
 - [ ] Create `CompositeBoardInput` model supporting primary design (`dsn`/`json`) plus optional rules (`rules`) and session state (`ses`/`json`).
