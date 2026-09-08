@@ -8,7 +8,10 @@ function Get-OptionalManifestProperty {
         return $null
     }
     $property = $Object.PSObject.Properties[$Name]
-    return if ($property) { $property.Value } else { $null }
+    if ($property) {
+        return $property.Value
+    }
+    return $null
 }
 
 function Import-ResultManifestMetrics {

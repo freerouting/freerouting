@@ -79,9 +79,12 @@ function New-BenchmarkPhaseSnapshot {
     )
 
     return [PSCustomObject]@{
-        board_statistics = $BoardStatistics
-        score = $Score
-        score_source = $ScoreSource
+        board_statistics       = $BoardStatistics
+        score                  = $Score
+        score_source           = $ScoreSource
+        current_router_score   = $null
+        current_optimizer_score = $null
+        current_score_source   = $null
     }
 }
 
@@ -423,9 +426,25 @@ foreach ($binary in $binaries) {
         $currentRouterScore = $drcResult.final_quality_score
         $currentOptimizerScore = $drcResult.final_optimizer_score
         if ($logMetrics.optimizer.after) {
-            $logMetrics.optimizer.after.current_router_score = $currentRouterScore
-            $logMetrics.optimizer.after.current_optimizer_score = $currentOptimizerScore
-            $logMetrics.optimizer.after.current_score_source = "current_drc_replay"
+            $snapshot = $logMetrics.optimizer.after
+            if ($snapshot.PSObject.Properties["current_router_score"]) {
+                $snapshot.current_router_score = $currentRouterScore
+            } else {
+                Add-Member -InputObject $snapshot -NotePropertyName "current_router_score" `
+                    -NotePropertyValue $currentRouterScore
+            }
+            if ($snapshot.PSObject.Properties["current_optimizer_score"]) {
+                $snapshot.current_optimizer_score = $currentOptimizerScore
+            } else {
+                Add-Member -InputObject $snapshot -NotePropertyName "current_optimizer_score" `
+                    -NotePropertyValue $currentOptimizerScore
+            }
+            if ($snapshot.PSObject.Properties["current_score_source"]) {
+                $snapshot.current_score_source = "current_drc_replay"
+            } else {
+                Add-Member -InputObject $snapshot -NotePropertyName "current_score_source" `
+                    -NotePropertyValue "current_drc_replay"
+            }
         }
 
         # Build run record
