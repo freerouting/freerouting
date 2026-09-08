@@ -64,6 +64,9 @@ public final class RoutingResultManifest {
   @SerializedName("output_written")
   public boolean outputWritten;
 
+  @SerializedName("cpu_score")
+  public Integer cpuScore;
+
   /** Input fixture identity for the run. */
   public static class FixtureInfo {
     @SerializedName("filename")
@@ -94,9 +97,20 @@ public final class RoutingResultManifest {
     public Integer passesCompleted;
   }
 
-  /** Builds a manifest from a completed routing job. */
+  /** Builds a manifest from a completed routing job without a CPU score. */
   public static RoutingResultManifest fromJob(
       RoutingJob job, String inputFilePath, boolean outputWritten, int exitCode) {
+    return fromJob(job, inputFilePath, outputWritten, exitCode, null);
+  }
+
+  /**
+   * Builds a manifest from a completed routing job.
+   *
+   * @param cpuScore single-thread {@code RuntimeEnvironment.cpuScore} for this process, or {@code
+   *     null} if not measured
+   */
+  public static RoutingResultManifest fromJob(
+      RoutingJob job, String inputFilePath, boolean outputWritten, int exitCode, Integer cpuScore) {
     RoutingResultManifest manifest = new RoutingResultManifest();
     manifest.generatedAt = Instant.now().toString();
     manifest.appVersion = Constants.FREEROUTING_VERSION;
@@ -112,6 +126,7 @@ public final class RoutingResultManifest {
     manifest.exitCode = exitCode;
     manifest.outputWritten = outputWritten;
     manifest.resourceUsage = job.resourceUsage;
+    manifest.cpuScore = cpuScore;
 
     if (job.board != null) {
       manifest.boardStatistics = new BoardStatistics(job.board);

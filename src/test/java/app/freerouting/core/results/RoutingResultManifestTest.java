@@ -58,13 +58,15 @@ class RoutingResultManifestTest {
     job.resourceUsage.cpuTimeUsed = 1.5f;
     job.resourceUsage.peakMemoryUsed = 128.0f;
 
+    Freerouting.globalSettings.runtimeEnvironment.cpuScore = 31000;
+
     Path inputPath = tempDir.resolve("input.dsn");
     try (var in = DsnTestFixtures.openResource("Issue143-rpi_splitter.dsn")) {
       Files.copy(in, inputPath);
     }
 
     RoutingResultManifest manifest =
-        RoutingResultManifest.fromJob(job, inputPath.toString(), true, 0);
+        RoutingResultManifest.fromJob(job, inputPath.toString(), true, 0, 31000);
     Path outPath = tempDir.resolve("result.json");
     RoutingResultManifest.write(outPath, manifest);
 
@@ -79,6 +81,7 @@ class RoutingResultManifestTest {
     assertEquals("COMPLETED", root.get("final_state").getAsString());
     assertEquals(0, root.get("exit_code").getAsInt());
     assertTrue(root.get("output_written").getAsBoolean());
+    assertEquals(31000, root.get("cpu_score").getAsInt());
 
     RoutingResultManifest roundTrip = GsonProvider.GSON.fromJson(json, RoutingResultManifest.class);
     assertNotNull(roundTrip.boardStatistics);

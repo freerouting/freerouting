@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,18 +53,51 @@ public class RuntimeEnvironment implements Serializable {
   @SerializedName("actor_type")
   public String actorType;
 
+  /** Discarded JIT / turbo warmup before scoring samples. */
+  private static final long CPU_SCORE_WARMUP_NS = 20_000_000L;
+
+  /** Timed window per sample. */
+  private static final long CPU_SCORE_SAMPLE_NS = 40_000_000L;
+
+  /** Odd sample count so the median is a measured value. */
+  private static final int CPU_SCORE_SAMPLE_COUNT = 5;
+
   /**
-   * Measures a single-threaded CPU throughput score by running a lightweight synthetic
-   * micro-benchmark (~15 ms) exercising EDA geometric operations (2D bounding-box overlap, 2D
-   * cross-product orientation, and distance step accumulators).
+   * Measures a single-threaded CPU throughput score by running a synthetic micro-benchmark of EDA
+   * geometric operations (2D bounding-box overlap, 2D cross-product orientation, and Manhattan
+   * distance steps).
    *
-   * @return throughput score normalized to iterations per millisecond
+   * <p>A short warmup is discarded, then several samples are taken and the <em>median</em>
+   * iterations/ms is returned so turbo boost, GC, and other processes do not dominate one
+   * measurement window.
+   *
+   * @return throughput score in iterations per millisecond (at least 1)
    */
   public static int measureCpuScore() {
-    long start = System.nanoTime();
-    long targetDurationNs = 15_000_000L; // 15 ms budget
-    long iterations = 0;
+    runCpuScoreKernel(CPU_SCORE_WARMUP_NS);
+    int[] samples = new int[CPU_SCORE_SAMPLE_COUNT];
+    for (int i = 0; i < CPU_SCORE_SAMPLE_COUNT; i++) {
+      samples[i] = measureCpuScoreSample(CPU_SCORE_SAMPLE_NS);
+    }
+    Arrays.sort(samples);
+    return Math.max(1, samples[CPU_SCORE_SAMPLE_COUNT / 2]);
+  }
 
+  private static int measureCpuScoreSample(long targetDurationNs) {
+    long start = System.nanoTime();
+    long iterations = runCpuScoreKernel(targetDurationNs);
+    long elapsedNs = Math.max(1L, System.nanoTime() - start);
+    return (int) Math.max(1L, (iterations * 1_000_000L) / elapsedNs);
+  }
+
+  /**
+   * Consumed by {@link #runCpuScoreKernel} so the geometric loop cannot be deleted as dead code.
+   */
+  private static int cpuScoreSink;
+
+  private static long runCpuScoreKernel(long targetDurationNs) {
+    long start = System.nanoTime();
+    long iterations = 0;
     int x1 = 120;
     int y1 = 250;
     int x2 = 800;
@@ -78,28 +112,19 @@ public class RuntimeEnvironment implements Serializable {
 
     while (System.nanoTime() - start < targetDurationNs) {
       for (int i = 0; i < 500; i++) {
-        // 1. 2D Bounding-Box overlap check (ShapeSearchTree primitive)
         boolean overlap = (x1 <= a2 && x2 >= a1 && y1 <= b2 && y2 >= b1);
         acc += overlap ? 1 : 0;
-
-        // 2. 2D Cross-product orientation (Polygon expansion primitive)
         int cross = (x2 - x1) * (py - y1) - (y2 - y1) * (px - x1);
         acc += (cross > 0) ? 1 : -1;
-
-        // 3. Manhattan distance step (MazeSearchEngine primitive)
         int dist = Math.abs(x2 - a1) + Math.abs(y2 - b1);
         acc += (dist & 1);
-
-        // Perturb coordinates to prevent loop unrolling / dead-code elimination
         a1 = (a1 + acc) & 0x3FF;
         b1 = (b1 + dist) & 0x3FF;
       }
       iterations += 500;
     }
-
-    long elapsedNs = System.nanoTime() - start;
-    long elapsedMs = Math.max(1, elapsedNs / 1_000_000L);
-    return (int) Math.max(1, iterations / elapsedMs);
+    cpuScoreSink += acc;
+    return iterations;
   }
 
   /**

@@ -358,7 +358,11 @@ public class Freerouting {
     try {
       RoutingResultManifest manifest =
           RoutingResultManifest.fromJob(
-              routingJob, globalSettings.initialInputFile, outputWritten, exitCode);
+              routingJob,
+              globalSettings.initialInputFile,
+              outputWritten,
+              exitCode,
+              globalSettings.runtimeEnvironment.cpuScore);
       RoutingResultManifest.write(Path.of(routingJob.routerSettings.resultJsonPath), manifest);
     } catch (IOException e) {
       FRLogger.error(
@@ -1415,7 +1419,7 @@ public class Freerouting {
     FRLogger.debug("Architecture: " + globalSettings.runtimeEnvironment.architecture);
     FRLogger.debug("Java: " + globalSettings.runtimeEnvironment.java);
     FRLogger.debug("System Language: " + globalSettings.runtimeEnvironment.systemLanguage);
-    FRLogger.debug(
+    FRLogger.info(
         "Hardware: "
             + globalSettings.runtimeEnvironment.cpuCores
             + " CPU cores, "

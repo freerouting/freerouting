@@ -120,6 +120,7 @@ function Get-PhaseMetrics {
             timed_out = $ProcessTimedOut
             metric_source = "none"
             last_checkpoint = $null
+            cpu_score = $null
         }
     }
 
@@ -135,7 +136,11 @@ function Get-PhaseMetrics {
 
     # 1. Warn / Error count
     $logTimedOut = $false
+    $cpuScore = $null
     foreach ($line in $lines) {
+        if ($line -match 'Hardware:\s+\d+\s+CPU cores,\s+(\d+)\s+CPU score') {
+            $cpuScore = [int]$matches[1]
+        }
         if ($line -match '\[WARN\]|WARN |\[warning\]') {
             $warnCount++
         }
@@ -395,5 +400,6 @@ function Get-PhaseMetrics {
         timed_out = ($logTimedOut -or $ProcessTimedOut)
         metric_source = $metricSource
         last_checkpoint = $lastCheckpoint
+        cpu_score = $cpuScore
     }
 }

@@ -53,7 +53,17 @@ class RuntimeEnvironmentTest {
 
     org.junit.jupiter.api.Assertions.assertTrue(score > 0, "CPU score must be strictly positive");
     org.junit.jupiter.api.Assertions.assertTrue(
-        elapsed < 1000, "CPU benchmark should complete well within a bounded startup window");
+        elapsed < 2000, "CPU benchmark should complete well within a bounded startup window");
+  }
+
+  @Test
+  void measureCpuScoreMedianIsStableAcrossTwoCalls() {
+    int first = RuntimeEnvironment.measureCpuScore();
+    int second = RuntimeEnvironment.measureCpuScore();
+    org.junit.jupiter.api.Assertions.assertTrue(first > 0 && second > 0);
+    double ratio = first > second ? (double) first / second : (double) second / first;
+    org.junit.jupiter.api.Assertions.assertTrue(
+        ratio < 3.0, "Median CPU score should not swing by more than 3x between adjacent calls");
   }
 
   @Test

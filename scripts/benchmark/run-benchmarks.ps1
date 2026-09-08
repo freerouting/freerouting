@@ -352,7 +352,13 @@ foreach ($binary in $binaries) {
             cache_key = $cacheKey
             run_at    = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
             run_mode  = $runResult.RunMode
-            system    = $sysInfo
+            system    = [PSCustomObject]@{
+                cpu_name           = $sysInfo.cpu_name
+                cpu_physical_cores = $sysInfo.cpu_physical_cores
+                cpu_logical_cores  = $sysInfo.cpu_logical_cores
+                total_ram_gb       = $sysInfo.total_ram_gb
+                cpu_score          = $logMetrics.cpu_score
+            }
             binary    = [PSCustomObject]@{
                 filename      = $binary.Name
                 version_label = $verLabel

@@ -22,23 +22,19 @@ selector, or an implicit set of weights:
 Both board scores remain on a `0.0 .. 1000.0` display scale. The numbers are not
 interchangeable.
 
-**Complexity \(C\), difficulty \(D\), and work \(W\) share one board kernel**
-(§3.0 / §3.5). \(C\) is computed from the board only (first cut: \(P \times L\)).
-\(D\) is that kernel used as a score denominator. Single-thread ETA is an affine
-function of the same kernel, converted with measured `cpu_score` \(S\). Using
-the same *integer* for via-penalty and for CPU-seconds is the naive part (units
-and host speed). Putting \(S\) into \(D\) would make quality scores depend on the
-machine.
+**Complexity \(C\), difficulty \(D\), and internal ETA share one polynomial**
+(§3.0 / §3.5). \(D = \max(1,\ \widehat{t}_{\text{cal}})\), i.e. proportional to
+estimated single-thread time after removing host speed. Live `cpu_score` \(S\)
+is used only to convert that to seconds on this machine. ETA is **internal**
+(logs / research / future job sizing), not shown in the GUI or API yet.
 
 The **current** tree defaults to V2 for both router and optimizer scores, with a
 settings / CLI override to run V1 legacy. **`src_v19` keeps its existing scoring
 algorithm unchanged.** v1.9 only gains raw-metric telemetry so `benchmarks.json` can
 store the same physical fields.
 
-Live GUI/API ETA from this formula is **not** part of scoring Phases 1–4.
-Phase 0 only persists the inputs (`cpu_score`, pin count, layers, area,
-\(N_{\text{conn}}\)). Do not ship the n=36 fit as a user-facing progress bar until
-\(S\) is on every run and the fit is refit after length/via fields exist.
+Live GUI/API ETA is out of scope. Phase 0 persists `cpu_score` and board
+inputs so internal ETA / \(D\) can be computed. Do not display an ETA in the UI.
 
 ### 1.1 Router scoring requirements
 
@@ -109,7 +105,7 @@ fields explicitly — `ReflectionUtil.copyFields` is same-class only):
   - excess via weight
   - excess bend weight
   - length floor and difficulty-scale floor
-  - density coefficient \(\alpha\) for \(D\) (placeholder, tunable)
+  - (no \(\alpha\) until a density residual is proven necessary)
 
 Every scoring field stays nullable in source objects. Effective defaults are assigned
 only in `DefaultSettings.getSettings()` via named `DEFAULT_*` constants. Formula code
@@ -235,20 +231,26 @@ One extra via on a 10-connection board must not be treated like one extra via on
 an 800-connection dense board. **Board area alone is the wrong axis.** A large
 sparse board is easy; a small dense one is hard.
 
-**One kernel, two uses (not two independent fits):**
+**One polynomial, two uses:**
 
-| Symbol | Role | Units | May include `cpu_score`? |
+| Symbol | Role | Units | Live \(S\)? |
 |---|---|---|---|
-| \(C\) | Board complexity from geometry/netlist | pin-layers (first cut) | No |
-| \(D\) | Score denominator = \(C\) times optional density | same as \(C\) | **No** |
-| \(\widehat{t}\) | Single-thread ETA | seconds | Yes: \(\times S_{\text{cal}}/S\) |
-| \(W\) | Machine-independent work \(= \widehat{t}_{\text{cal}} \cdot S_{\text{cal}}\) | score-iterations | Yes |
+| \(C\) | \(P \times L\) (decided) | pin-layers | No |
+| \(\widehat{t}_{\text{cal}}\) | Estimated CPU seconds on the calibration host | seconds | No |
+| \(D\) | Score denominator \(= \max(1,\ \widehat{t}_{\text{cal}})\) | cal-host seconds | **No** |
+| \(\widehat{t}(S)\) | Internal ETA \(= D \cdot S_{\text{cal}} / S\) | seconds | Yes |
+| \(W\) | \(D \cdot S_{\text{cal}}\) | iterations | Constant \(S_{\text{cal}}\) only |
 
-This is not naive if \(D\) and ETA share \(C\). It *is* naive to plug measured
-CPU seconds (or \(W\)) into the via/bend/DRC denominator: scores would move when
-\(S\) jitters (typically 28 000–34 000, sometimes higher).
+**“\(D \propto\) estimated time / CPU score.”** \(S\) is *throughput* (higher =
+faster). Host-independent work is \(\widehat{t} \cdot S\), not \(\widehat{t}/S\)
+(the latter would make a board look easier on a faster CPU). That work in
+calibration-host seconds is \(\widehat{t}_{\text{cal}}\), which we use as \(D\).
 
-#### First-cut kernel (until \(N_{\text{conn}}\) and length/vias exist)
+**\(\alpha\):** unused while \(D\) is this time polynomial. It was a leftover
+density factor in the older form \(C(1+\alpha L_{\min}/\sqrt{A})\). Revisit only
+if via-excess\(/D\) still trends with density after length/via fields exist.
+
+#### Kernel (decided)
 
 $$
 C = \max(1,\ P \times L)
@@ -256,23 +258,16 @@ $$
 
 \(P\) = pin count from `BoardStatistics.items.pin_count` (not DSN regex).
 \(L\) = signal layer count. Fixture `net_count` from `\ (net ` is unreliable
-(often 0) and is **not** \(C\).
-
-When `connections.maximumCount` is persisted, decide whether to switch \(C\) to
-\(N_{\text{conn}}\) (still open). Until then \(C = P L\).
+(often 0) and is **not** \(C\). \(N_{\text{conn}}\) stays the unrouted-fraction
+denominator only; it is not used inside \(D\).
 
 $$
-D = \max(1,\ C) \times \bigl(1 + \alpha \cdot \delta\bigr), \qquad
-\delta = \frac{L_{\min}}{\sqrt{\max(A_{\text{mm2}}, 1)}}
+D = \max\bigl(1,\ 19.64 + 0.0810 \cdot C - 0.131 \cdot A\bigr)
 $$
 
-\(\alpha = 0\) until length/via fields exist \(\Rightarrow D = C\).
-\(D_{\text{floor}} = 1\). Fit \(\alpha\) later so \((V - V_{\min}) / D\) is
-roughly flat across density quartiles on clean boards — **not** by regressing
-\(D\) on CPU.
-
-Unrouted remains \(N_{\text{unrouted}} / N_{\text{conn}}\). \(\Delta L\) uses
-\(L_{\min}\), not \(D\). Only vias, bends, and DRC divide by \(D\).
+\(A\) is `board_area_cm2`. \(D_{\text{floor}} = 1\). Unrouted remains
+\(N_{\text{unrouted}} / N_{\text{conn}}\). \(\Delta L\) uses \(L_{\min}\), not
+\(D\). Only vias, bends, and DRC divide by \(D\).
 
 Persist \(C\), \(D\), \(P\), \(L\), \(N_{\text{conn}}\), \(L_{\min}\), \(A\), and
 \(S\) on the run JSON.
@@ -406,20 +401,43 @@ Keep / use `optimizer.optimizationImprovementThreshold` (default `0.01`). After
 V2 changes the meaning of a 1% score move, **recalibrate this default**. Maze-search
 costs stay independent of V2 board-score weights.
 
-### 3.5 Single-thread ETA from the same kernel
+### 3.5 Internal single-thread ETA (same polynomial as \(D\))
 
-**Goal:** single-thread ETA and score normalization both start from \(C\).
-Measured \(S =\) `RuntimeEnvironment.cpuScore` (iterations/ms). Observed range on
-the calibration workstation: about **28 000–34 000**, occasionally higher. Always
-use the **measured** \(S\) for that process; do not hard-code 31 000.
+**Internal only** — logs, research, job sizing. Not shown in GUI or API.
+
+Measured \(S =\) `RuntimeEnvironment.cpuScore` (iterations/ms). Always use the
+**measured** \(S\) at runtime.
+
+**Calibration host** (same machine as the optimizer-unification benchmarks), new
+median method, four runs: 415743, 416586, 417002, 419664.
 
 $$
-\widehat{t}_{\text{seconds}} = \frac{W}{S}, \qquad
-W = \widehat{t}_{\text{cal}} \cdot S_{\text{cal}}
+S_{\text{cal}} = 416794
 $$
 
-\(W\) and \(D\) must **not** enter maze costs. Scoring uses \(D\) only as in
-§2.1 / §3.2. ETA code, if added later, reads \(C\), \(A\), and \(S\) only.
+(median of those four). Spread is ~1%. Do **not** mix with the old 15 ms scores
+(~28 000–34 000); the kernel and timing changed.
+
+$$
+\widehat{t}(S) = D \cdot \frac{S_{\text{cal}}}{S}
+$$
+
+Scoring uses \(D\) only as in §2.1 / §3.2. Maze costs never see \(D\) or \(S\).
+
+#### CPU micro-benchmark robustness
+
+`measureCpuScore()` is a geometric kernel (bbox overlap, orientation, Manhattan
+steps), not SPEC. To reduce the 15 ms turbo/GC noise:
+
+- discard a ~20 ms warmup
+- take 5 samples of ~40 ms
+- return the **median** iterations/ms
+- persist that value on each result manifest and on `system.cpu_score` in
+  `benchmarks.json`
+
+It still will not match a Cinebench-class bench. If later samples disagree with
+routing time more than ~2× across hosts, replace the kernel — keep the median
+protocol.
 
 #### Experiment (36 boards, `cpu_seconds >= 30`)
 
@@ -427,22 +445,14 @@ Duration excluded. Nets and additive layer/component terms dropped.
 
 $$
 \widehat{t}_{\text{cal}} = \max\bigl(0,\ 19.64 + 0.0810 \cdot C - 0.131 \cdot A\bigr)
+= D \quad \text{(once floored at 1)}
 $$
 
-with \(C = P L\) and \(A\) = `board_area_cm2`. \(R^2 = 0.78\), MAE 17.5 s.
-The additive \(a + bP + cL + dC_{\text{comp}} + eA\) is worse (MAE 21.3 s).
-Two boards have \(A = 0\) (metadata bug); they get no spread discount. The
-\(\max(0,\cdot)\) floor stops a huge sparse board from going negative.
+\(R^2 = 0.78\), MAE 17.5 s. Predicts completed-job CPU seconds (autorouter +
+optimizer) on the calibration host, not wall clock or timeouts.
 
-This predicts **completed-job CPU seconds** (autorouter + optimizer) on the
-calibration host, not wall clock, not multi-thread optimizer, not timeouts.
-
-\(S_{\text{cal}}\) was not stored. Working stand-in until the next benchmark
-writes it: \(S_{\text{cal}} \approx 31000\). Then
-\(\widehat{t}(S) = \widehat{t}_{\text{cal}} \cdot S_{\text{cal}} / S\).
-
-Refit \(a,b,c\) (and whether \(C\) becomes \(N_{\text{conn}}\)) after Phase 0
-schema exists. Do not mix that refit with the \(\alpha\) fit.
+\(S_{\text{cal}} = 416794\) (median of four local runs of the new scorer).
+On that host \(\widehat{t}(S) \approx D\).
 
 ---
 
@@ -527,8 +537,7 @@ After the schema exists:
 6. Held-out fixtures; check saturation on Tier D, completion, and DRC count.
 7. Historical `quality_score` / v1.9 `normalized_score` are native baselines, not
    V2 fitting targets.
-8. Refit ETA coefficients on clean boards with persisted \(S\); fit \(\alpha\)
-   separately on via-excess vs density.
+8. Refit ETA/\(D\) coefficients on clean boards with persisted \(S\).
 
 Do **not** create the calibration script in the schema/settings phases.
 
@@ -539,11 +548,25 @@ Do **not** create the calibration script in the schema/settings phases.
 Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` or
 `BatchOptimizer`. Telemetry for \(C\)/\(S\) is Phase 0 only.
 
+### Implementation tracking
+
+| Item | Phase | Status | Acceptance evidence |
+|---|---:|---|---|
+| Persist robust median `cpu_score` at startup | 0 | ✅ done | `RuntimeEnvironmentTest`; startup hardware log |
+| Persist `cpu_score` in current result manifests | 0 | ✅ done | `RoutingResultManifestTest`; `cpu_score` JSON field |
+| Carry `cpu_score` into benchmark `system` records | 0 | ✅ done | `run-benchmarks.ps1` + manifest/log parser path |
+| Normalize board inputs from `BoardStatistics` | 0 | ☐ next | No DSN-regex `net_count`/pin fallback in benchmark records |
+| Persist raw current/v1.9 routing metrics | 0 | ☐ next | Manifest parity test and replay fixture |
+| Split router and optimizer scoring APIs/settings | 1–2 | ☐ pending | Independent version/settings tests |
+| Add lower bounds and V2 formulas | 3–4 | ☐ pending | Synthetic perfect-board and replay tests |
+| Calibrate weights and optimizer threshold | 5–6 | ☐ pending | Held-out current-v1.9 report |
+| Complete regression and parity verification | 7 | ☐ pending | Required Gradle gates and fixture results |
+
 ### Phase 0: Schema and v1.9 raw telemetry
 
 - [ ] Persist `totalViolationUm` in current and v1.9 `BoardStatistics`.
 - [ ] Persist lower bounds and difficulty inputs (\(C\), \(P\), \(L\),
-  \(N_{\text{conn}}\), \(L_{\min}\), \(A\), \(D\), \(\alpha\)) in current
+  \(N_{\text{conn}}\), \(L_{\min}\), \(A\), \(D\)) in current
   `RoutingResultManifest`; attach fixture-derived bounds in the harness for v1.9
   rows (needed for later V2 replay).
 - [ ] Export pin count, signal layer count, and net count from `BoardStatistics`,
@@ -578,7 +601,7 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   (recalibrate default later).
 - [ ] Explicit score fields: keep API `normalized_score` = router score; add
   `optimizer_score`. Deprecate `getNormalizedScore()` as a router-score alias.
-- [ ] V1 path must reproduce current fixture scores within a documented tolerance.
+- [ ] V1 path must reproduce current fixture scores within **±10** score points.
 
 ### Phase 3: Lower bounds (current tree only)
 
@@ -597,10 +620,9 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 ### Phase 5: Calibration design (no script yet)
 
 - [ ] Report shape, held-out set, noise floor, saturation checks.
-- [ ] Fit \(\alpha\) on clean fully-routed boards so via-excess\(/D\) is comparable
-  across density; then optionally lock `DEFAULT_*` after manual test-run edits.
-- [ ] Refit \(\widehat{t}_{\text{cal}}(C,A)\) with persisted \(S\); keep that
-  separate from \(\alpha\).
+- [ ] Optionally check whether via-excess\(/D\) is flat across density; only then
+  consider a residual density factor.
+- [ ] Refit \(\widehat{t}_{\text{cal}}(C,A)\) with persisted \(S\).
 
 ### Phase 6: Calibrated defaults
 
@@ -620,7 +642,7 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   optimizer score (more-complete uglier boards do not auto-win); equal scores
   keep the incumbent. Timeout rip-up that adds incompletes is rejected.
 - [ ] Optimizer stops on improvement threshold, not proximity to 1000.
-- [ ] V1 legacy reproduces historical current-tree scores within tolerance.
+- [ ] V1 legacy reproduces historical current-tree scores within ±10 points.
 - [ ] Raw-metric schema parity current vs v1.9 including pre/post optimizer snapshots;
   v1.9 score algorithm unchanged.
 - [ ] Later V2 replay from JSON does not require a reroute (all §4.2 fields present).
@@ -639,20 +661,13 @@ pre/post optimizer snapshots; D8 placeholder weights (set manually after test ru
 D9 deprecated alias + `optimizer_score`; CLI allows both settings-path keys and
 short flags; router and optimizer versions are independent; timeout/rip-up that
 increases incompletes is rejected; improvement threshold stays 0.01 until
-post-V2 recalibration; \(C\), \(D\), and ETA share kernel \(P L\) (first cut);
-\(S\) stays out of \(D\).
+post-V2 recalibration; \(D = \max(1,\ \widehat{t}_{\text{cal}})\) shares the ETA
+polynomial; live \(S\) is not in \(D\); ETA is internal-only; V1 reproduction
+tolerance is ±10 points; \(C = P \times L\) (not \(N_{\text{conn}}\));
+\(S_{\text{cal}} = 416794\).
 
 ### Still to decide
 
-1. **\(\alpha\).** Keep 0 until length/via/`N_{\text{conn}}\) exist; then fit so
-   via-excess\(/D\) is flat across density. Not a CPU fit.
-2. **Whether \(C\) switches from \(P L\) to \(N_{\text{conn}}\)** once
-   `maximumCount` is in JSON.
-3. **\(S_{\text{cal}}\).** Persist `cpu_score` on the next calibration run. Working
-   stand-in ~31 000 (typical 28 000–34 000). Always use measured \(S\) at runtime.
-4. **V1 reproduction tolerance** (numeric) for Phase 2.
-5. **When (if ever) to show ETA in GUI/API** — after \(S\) is persisted and the
-   coefficients are refit; not in scoring phases.
-
-Placeholder \(W_*\) / \(U_{\text{scale}}\) / \(L_{\text{floor}}\) are not blocking.
-Phase 0 can start.
+None for product behavior. Placeholder \(W_*\) / \(U_{\text{scale}}\) /
+\(L_{\text{floor}}\) stay uncalibrated until after test runs (D8). Phase 0 can
+start.

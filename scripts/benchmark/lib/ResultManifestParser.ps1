@@ -58,6 +58,10 @@ function Import-ResultManifestMetrics {
         }
     }
 
+    if ($null -ne $manifest.cpu_score) {
+        $LogMetrics.cpu_score = [int]$manifest.cpu_score
+    }
+
     $LogMetrics.metric_source = "result_json"
     return $LogMetrics
 }
