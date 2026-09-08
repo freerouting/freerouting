@@ -27,6 +27,9 @@ function Import-ResultManifestMetrics {
         if ($null -ne $manifest.normalized_score) {
             $LogMetrics.autorouter.final_score = [double]$manifest.normalized_score
         }
+        if ($null -ne $manifest.optimizer_score) {
+            $LogMetrics.optimizer.final_score = [double]$manifest.optimizer_score
+        }
         $LogMetrics.autorouter.log_found = $true
     }
 

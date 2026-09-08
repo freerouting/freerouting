@@ -428,6 +428,7 @@ foreach ($binary in $binaries) {
                 routing_completion_pct = $routingCompletionPct
                 clearance_violations   = $logMetrics.autorouter.final_violations
                 total_violation_um     = if ($clearanceStats) { $clearanceStats.total_violation_um } else { $null }
+                optimizer_score        = $logMetrics.optimizer.final_score
                 trace_length_mm        = if ($traceStats) { $traceStats.total_length_mm } else { $null }
                 via_count              = if ($viaStats) { $viaStats.total_count } else { $null }
                 bend_count             = if ($bendStats) { $bendStats.total_count } else { $null }

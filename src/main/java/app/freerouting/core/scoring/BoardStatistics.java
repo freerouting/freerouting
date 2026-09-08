@@ -20,6 +20,8 @@ import app.freerouting.gui.workspace.progress.RatsNest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.settings.RouterScoringSettings;
+import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.ScoringSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
@@ -73,6 +75,9 @@ public class BoardStatistics implements Serializable {
   @SerializedName("clearance_violations")
   public BoardStatisticsClearanceViolations clearanceViolations =
       new BoardStatisticsClearanceViolations();
+
+  @SerializedName("difficulty")
+  public BoardStatisticsDifficulty difficulty = new BoardStatisticsDifficulty();
 
   @SerializedName("fanout")
   public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
@@ -200,6 +205,25 @@ public class BoardStatistics implements Serializable {
     double boardUnitToUmFactor =
         Unit.scale(1.0, board.communication.unit, Unit.UM)
             / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    this.board.areaCm2 =
+        (float)
+            (this.board.size.width
+                * boardUnitToMmFactor
+                * this.board.size.height
+                * boardUnitToMmFactor
+                / 100.0);
+    this.difficulty.pinCount = this.items.pinCount;
+    this.difficulty.signalLayerCount = this.layers.signalCount;
+    this.difficulty.complexityC =
+        Math.max(1, this.difficulty.pinCount * this.difficulty.signalLayerCount);
+    this.difficulty.boardAreaCm2 = this.board.areaCm2;
+    this.difficulty.difficultyD =
+        Math.max(
+            1.0f,
+            (float)
+                (19.64
+                    + 0.0810 * this.difficulty.complexityC
+                    - 0.131 * this.difficulty.boardAreaCm2));
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
@@ -642,6 +666,55 @@ public class BoardStatistics implements Serializable {
     return getLegacyNormalizedScore(scoringSettings);
   }
 
+  /** Returns the configured router score normalized to a range from zero to one thousand. */
+  public float getRouterScore(RouterSettings routerSettings) {
+    if (routerSettings == null
+        || routerSettings.routerScoring == null
+        || routerSettings.routerScoring.version
+            != app.freerouting.settings.RouterScoringVersion.V2_CONTINUOUS) {
+      return getLegacyNormalizedScore(
+          routerSettings != null ? routerSettings.scoring : new ScoringSettings());
+    }
+    return getV2RouterScore(routerSettings.routerScoring);
+  }
+
+  private float getV2RouterScore(RouterScoringSettings settings) {
+    double difficulty =
+        this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
+    double connections =
+        this.connections.maximumCount != null ? Math.max(0, this.connections.maximumCount) : 0;
+    double incomplete =
+        this.connections.incompleteCount != null
+            ? Math.max(0, this.connections.incompleteCount)
+            : 0;
+    double violationCount =
+        this.clearanceViolations.totalCount != null
+            ? Math.max(0, this.clearanceViolations.totalCount)
+            : 0;
+    double violationDepth =
+        this.clearanceViolations.totalViolationUm != null
+            ? Math.max(0.0, this.clearanceViolations.totalViolationUm)
+            : 0.0;
+    double unroutedPenalty =
+        connections > 0
+            ? valueOrDefault(settings.unroutedConnectionWeight, 1000.0f) * incomplete / connections
+            : 0.0;
+    double drcPenalty =
+        valueOrDefault(settings.clearanceViolationCountWeight, 25.0f) * violationCount / difficulty;
+    double depthScale =
+        Math.max(1.0, valueOrDefault(settings.clearanceViolationDepthScale, 1000.0f));
+    drcPenalty +=
+        valueOrDefault(settings.clearanceViolationDepthWeight, 1.0f)
+            * violationDepth
+            / depthScale
+            / difficulty;
+    return (float) Math.max(0.0, 1000.0 - unroutedPenalty - drcPenalty);
+  }
+
+  private static float valueOrDefault(Float value, float defaultValue) {
+    return value != null ? value : defaultValue;
+  }
+
   /**
    * Returns the optimizer score normalized to a range from zero to one thousand.
    *
@@ -650,6 +723,12 @@ public class BoardStatistics implements Serializable {
    */
   public float getOptimizerScore(ScoringSettings scoringSettings) {
     return getLegacyNormalizedScore(scoringSettings);
+  }
+
+  /** Returns the configured optimizer score normalized to a range from zero to one thousand. */
+  public float getOptimizerScore(RouterSettings routerSettings) {
+    return getLegacyNormalizedScore(
+        routerSettings != null ? routerSettings.scoring : new ScoringSettings());
   }
 
   /**

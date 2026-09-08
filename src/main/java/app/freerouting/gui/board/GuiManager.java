@@ -139,7 +139,7 @@ public class GuiManager {
       var bs =
           new BoardStatistics(newFrame.boardPanel.boardHandling.getRoutingBoard(), null, false);
       newFrame.boardPanel.boardHandling.screenMessages.setBoardScore(
-          bs.getNormalizedScore(routingJob.routerSettings.scoring),
+          bs.getRouterScore(routingJob.routerSettings),
           bs.connections.incompleteCount,
           bs.clearanceViolations.totalCount);
       newFrame.boardPanel.boardHandling.setNumThreads(routingJob.routerSettings.maxThreads);

@@ -52,6 +52,9 @@ public final class RoutingResultManifest {
   @SerializedName("normalized_score")
   public Float normalizedScore;
 
+  @SerializedName("optimizer_score")
+  public Float optimizerScore;
+
   @SerializedName("resource_usage")
   public RouterJobResourceUsage resourceUsage;
 
@@ -131,8 +134,8 @@ public final class RoutingResultManifest {
     if (job.board != null) {
       manifest.boardStatistics = new BoardStatistics(job.board);
       if (job.routerSettings != null && job.routerSettings.scoring != null) {
-        manifest.normalizedScore =
-            manifest.boardStatistics.getNormalizedScore(job.routerSettings.scoring);
+        manifest.normalizedScore = manifest.boardStatistics.getRouterScore(job.routerSettings);
+        manifest.optimizerScore = manifest.boardStatistics.getOptimizerScore(job.routerSettings);
       }
     }
 

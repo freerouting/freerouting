@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import app.freerouting.io.FileFormat;
+import app.freerouting.settings.RouterScoringVersion;
+import app.freerouting.settings.RouterSettings;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
@@ -35,5 +37,24 @@ class BoardStatisticsTest {
     assertEquals(1, stats.traces.totalCount);
     assertEquals(1, stats.vias.totalCount);
     assertEquals("KiCad JSON,test-board", stats.host);
+  }
+
+  @Test
+  void v2RouterScoreUsesConnectionFractionAndClearanceDepth() {
+    BoardStatistics stats = new BoardStatistics();
+    stats.connections.maximumCount = 10;
+    stats.connections.incompleteCount = 2;
+    stats.clearanceViolations.totalCount = 2;
+    stats.clearanceViolations.totalViolationUm = 3000.0;
+    stats.difficulty.difficultyD = 10.0f;
+
+    RouterSettings settings = new RouterSettings();
+    settings.routerScoring.version = RouterScoringVersion.V2_CONTINUOUS;
+    settings.routerScoring.unroutedConnectionWeight = 1000.0f;
+    settings.routerScoring.clearanceViolationCountWeight = 25.0f;
+    settings.routerScoring.clearanceViolationDepthWeight = 1.0f;
+    settings.routerScoring.clearanceViolationDepthScale = 1000.0f;
+
+    assertEquals(794.7f, stats.getRouterScore(settings), 0.001f);
   }
 }

@@ -210,7 +210,7 @@ public class Freerouting {
               : null;
       Float normalizedScore =
           stats != null && routingJob.routerSettings != null
-              ? stats.getNormalizedScore(routingJob.routerSettings.scoring)
+              ? stats.getRouterScore(routingJob.routerSettings)
               : null;
       int totalPasses =
           routingJob.routerSettings != null && routingJob.routerSettings.maxPasses != null
@@ -476,7 +476,7 @@ public class Freerouting {
           new DsnFileSettings(drcJob.input.getData(), drcJob.input.getFilename()));
       var routerSettings = settingsMerger.merge();
       var finalStats = drcJob.board.getStatistics();
-      report.qualityScore = (double) finalStats.getNormalizedScore(routerSettings.scoring);
+      report.qualityScore = (double) finalStats.getRouterScore(routerSettings);
     } catch (Exception e) {
       FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
     }

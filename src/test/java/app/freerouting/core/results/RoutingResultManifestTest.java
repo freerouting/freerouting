@@ -82,9 +82,11 @@ class RoutingResultManifestTest {
     assertEquals(0, root.get("exit_code").getAsInt());
     assertTrue(root.get("output_written").getAsBoolean());
     assertEquals(31000, root.get("cpu_score").getAsInt());
+    assertTrue(root.has("optimizer_score"));
 
     RoutingResultManifest roundTrip = GsonProvider.GSON.fromJson(json, RoutingResultManifest.class);
     assertNotNull(roundTrip.boardStatistics);
+    assertNotNull(roundTrip.boardStatistics.difficulty);
     assertNotNull(roundTrip.boardStatistics.clearanceViolations.totalViolationUm);
     assertEquals(board.getLayerCount(), roundTrip.boardStatistics.layers.totalCount);
   }

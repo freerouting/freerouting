@@ -106,8 +106,7 @@ final class AutoroutePassRunner {
 
         boardHistory.add(autorouterThread.getBoard());
         BoardStatistics clonedBoardStatistics = autorouterThread.getBoard().getStatistics();
-        float clonedBoardScore =
-            clonedBoardStatistics.getNormalizedScore(router.job.routerSettings.scoring);
+        float clonedBoardScore = clonedBoardStatistics.getRouterScore(router.job.routerSettings);
 
         router.job.logDebug(
             "Router thread #"
@@ -128,7 +127,7 @@ final class AutoroutePassRunner {
       float bestScore = -Float.MAX_VALUE;
       for (BatchAutorouterThread autorouterThread : autorouterThreads) {
         BoardStatistics stats = autorouterThread.getBoard().getStatistics();
-        float score = stats.getNormalizedScore(router.job.routerSettings.scoring);
+        float score = stats.getRouterScore(router.job.routerSettings);
         if (score > bestScore) {
           bestScore = score;
           bestThread = autorouterThread;

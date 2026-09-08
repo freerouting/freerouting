@@ -47,6 +47,10 @@ public class AutorouteResponse {
   @Schema(description = "Normalized routing score (0.0 to 1.0, or higher with penalties)")
   public Float normalizedScore;
 
+  @SerializedName("optimizer_score")
+  @Schema(description = "Normalized optimizer score (0.0 to 1000.0)")
+  public Float optimizerScore;
+
   @SerializedName("outputs")
   @Schema(description = "Map of generated output format names to their text or Base64 content")
   public Map<String, String> outputs = new LinkedHashMap<>();

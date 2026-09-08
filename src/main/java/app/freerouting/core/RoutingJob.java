@@ -666,7 +666,7 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
           statsObj.addProperty("clearance_violations", stats.clearanceViolations.totalCount);
         }
         if (routerSettings != null && routerSettings.scoring != null) {
-          Float score = stats.getNormalizedScore(routerSettings.scoring);
+          Float score = stats.getRouterScore(routerSettings);
           if (score != null) {
             statsObj.addProperty("normalized_score", score);
           }

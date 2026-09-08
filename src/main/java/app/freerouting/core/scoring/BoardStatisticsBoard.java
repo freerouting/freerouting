@@ -12,4 +12,7 @@ public class BoardStatisticsBoard implements Serializable {
 
   @SerializedName("size")
   public Rectangle2D.Float size;
+
+  @SerializedName("area_cm2")
+  public Float areaCm2;
 }

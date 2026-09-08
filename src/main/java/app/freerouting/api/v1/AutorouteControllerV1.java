@@ -263,7 +263,8 @@ public class AutorouteControllerV1 extends BaseController {
         responsePayload.clearanceViolations =
             stats.clearanceViolations != null ? stats.clearanceViolations.totalCount : 0;
         if (job.routerSettings != null && job.routerSettings.scoring != null) {
-          responsePayload.normalizedScore = stats.getNormalizedScore(job.routerSettings.scoring);
+          responsePayload.normalizedScore = stats.getRouterScore(job.routerSettings);
+          responsePayload.optimizerScore = stats.getOptimizerScore(job.routerSettings);
         }
       }
     }
