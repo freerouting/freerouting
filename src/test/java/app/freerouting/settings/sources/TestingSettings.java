@@ -2,7 +2,7 @@ package app.freerouting.settings.sources;
 
 import app.freerouting.settings.OptimizerSettings;
 import app.freerouting.settings.RouterSettings;
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.RoutingCostSettings;
 import app.freerouting.settings.SettingsSource;
 
 /**
@@ -38,7 +38,7 @@ public class TestingSettings implements SettingsSource {
   /** Sets the default bend cost in the scoring settings block. */
   public void setDefaultBendCost(double defaultBendCost) {
     if (this.settings.scoring == null) {
-      this.settings.scoring = new ScoringSettings();
+      this.settings.scoring = new RoutingCostSettings();
     }
     this.settings.scoring.defaultBendCost = defaultBendCost;
   }

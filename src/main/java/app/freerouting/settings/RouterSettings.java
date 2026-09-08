@@ -91,13 +91,13 @@ public class RouterSettings implements Serializable, Cloneable {
   public OptimizerSettings optimizer;
 
   @SerializedName("scoring")
-  public ScoringSettings scoring;
+  public RoutingCostSettings scoring;
 
   @SerializedName("router_scoring")
-  public RouterScoringSettings routerScoring;
+  public RouterScoreSettings routerScoring;
 
   @SerializedName("optimizer_scoring")
-  public OptimizerScoringSettings optimizerScoring;
+  public OptimizerScoreSettings optimizerScoring;
 
   @SerializedName("max_threads")
   public Integer maxThreads;
@@ -125,9 +125,9 @@ public class RouterSettings implements Serializable, Cloneable {
    */
   public RouterSettings() {
     this.optimizer = new OptimizerSettings();
-    this.scoring = new ScoringSettings();
-    this.routerScoring = new RouterScoringSettings();
-    this.optimizerScoring = new OptimizerScoringSettings();
+    this.scoring = new RoutingCostSettings();
+    this.routerScoring = new RouterScoreSettings();
+    this.optimizerScoring = new OptimizerScoreSettings();
     this.fanout = new FanoutSettings();
   }
 
@@ -291,7 +291,7 @@ public class RouterSettings implements Serializable, Cloneable {
       }
     }
     if (scoring == null) {
-      scoring = new ScoringSettings();
+      scoring = new RoutingCostSettings();
     }
     final double[] originalPrefCost =
         scoring.preferredDirectionTraceCost != null
@@ -469,7 +469,7 @@ public class RouterSettings implements Serializable, Cloneable {
       }
     }
     if (scoring == null) {
-      scoring = new ScoringSettings();
+      scoring = new RoutingCostSettings();
     }
     // Initialize per-layer cost arrays with a neutral default so callers can
     // write individual entries without waiting for applyBoardSpecificOptimizations.
@@ -524,13 +524,13 @@ public class RouterSettings implements Serializable, Cloneable {
 
     // Use proper clone() methods for nested objects
     result.optimizer = this.optimizer != null ? this.optimizer.clone() : new OptimizerSettings();
-    result.scoring = this.scoring != null ? this.scoring.clone() : new ScoringSettings();
+    result.scoring = this.scoring != null ? this.scoring.clone() : new RoutingCostSettings();
     result.routerScoring =
-        this.routerScoring != null ? this.routerScoring.clone() : new RouterScoringSettings();
+        this.routerScoring != null ? this.routerScoring.clone() : new RouterScoreSettings();
     result.optimizerScoring =
         this.optimizerScoring != null
             ? this.optimizerScoring.clone()
-            : new OptimizerScoringSettings();
+            : new OptimizerScoreSettings();
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
     result.boardSpecificTraceCostsApplied = this.boardSpecificTraceCostsApplied;
 
@@ -555,7 +555,7 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Sets the minimum ripup cost used by the router. */
   public void setStartRipupCosts(int value) {
     if (scoring == null) {
-      scoring = new ScoringSettings();
+      scoring = new RoutingCostSettings();
     }
     scoring.startRipupCosts = Math.max(value, 1);
   }
@@ -618,7 +618,7 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Sets the cost assigned to regular vias. */
   public void setViaCosts(int value) {
     if (scoring == null) {
-      scoring = new ScoringSettings();
+      scoring = new RoutingCostSettings();
     }
     scoring.viaCosts = Math.max(value, 1);
   }
@@ -631,7 +631,7 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Sets the cost assigned to vias connecting to a plane. */
   public void setPlaneViaCosts(int value) {
     if (scoring == null) {
-      scoring = new ScoringSettings();
+      scoring = new RoutingCostSettings();
     }
     scoring.planeViaCosts = Math.max(value, 1);
   }
@@ -774,7 +774,7 @@ public class RouterSettings implements Serializable, Cloneable {
       return;
     }
     if (scoring == null) {
-      scoring = new ScoringSettings();
+      scoring = new RoutingCostSettings();
     }
     if (scoring.preferredDirectionTraceCost == null
         || scoring.preferredDirectionTraceCost.length != this.getLayerCount()) {
@@ -856,7 +856,7 @@ public class RouterSettings implements Serializable, Cloneable {
       return;
     }
     if (scoring == null) {
-      scoring = new ScoringSettings();
+      scoring = new RoutingCostSettings();
     }
     if (scoring.undesiredDirectionTraceCost == null
         || scoring.undesiredDirectionTraceCost.length != this.getLayerCount()) {

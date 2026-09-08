@@ -52,7 +52,8 @@ public enum RouterScoringVersion {
 }
 ```
 
-Default in `DefaultSettings`: `V2_CONTINUOUS`. Independently overridable via
+Target default in `DefaultSettings`: `V2_CONTINUOUS`. The implementation currently
+retains `V1_LEGACY` until the V2 formula and calibration gates pass. Independently overridable via
 settings path (`router.scoring.version`) and a short CLI flag
 (`--router-scoring-version v1`). Router and optimizer version enums are **not**
 forced to stay in sync.
@@ -80,26 +81,27 @@ public enum OptimizerScoringVersion {
 }
 ```
 
-Default in `DefaultSettings`: `V2_LOWER_BOUND`. Independently overridable via
+Target default in `DefaultSettings`: `V2_LOWER_BOUND`. The implementation currently
+retains `V1_LEGACY` until lower bounds and replay calibration are complete. Independently overridable via
 settings path (`optimizer.scoring.version`) and a short CLI flag
 (`--optimizer-scoring-version v1`). A convenience `--scoring-version v1` may set
 **both** to V1 without coupling the two enums in code.
 
 ### 1.3 Independent configurable settings
 
-Keep maze-search cost fields on the existing scoring/router settings object so maze
+Keep maze-search cost fields on the existing routing-cost settings object so maze
 behavior does not change when V2 board-score weights are calibrated.
 
 Add two independent nullable settings sections (names may wrap today’s
-`ScoringSettings` for serialization compatibility, but merge must copy nested
+`RoutingCostSettings` for serialization compatibility, but merge must copy nested
 fields explicitly — `ReflectionUtil.copyFields` is same-class only):
 
-- `RouterScoringSettings`
+- `RouterScoreSettings`
   - `version` (`RouterScoringVersion`)
   - unrouted-connection weight
   - clearance-violation-count weight
   - clearance-violation-depth weight and depth scale
-- `OptimizerScoringSettings`
+- `OptimizerScoreSettings`
   - `version` (`OptimizerScoringVersion`)
   - excess wire-length weight
   - excess via weight
@@ -559,49 +561,54 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 | Normalize board inputs from `BoardStatistics` | 0 | ✅ done | Benchmark records use manifest statistics, not DSN counts |
 | Persist board-only difficulty inputs \(P,L,C,D,A\) | 0–3 | ◐ scaffolded | Manifest `difficulty` and board area fields |
 | Persist remaining raw current/v1.9 routing metrics | 0 | ☐ next | Manifest parity test and replay fixture |
+| Rename search-cost settings to `RoutingCostSettings` | 1 | ✅ done | Type rename and focused settings tests |
 | Split router and optimizer scoring APIs/settings | 1–2 | ◐ scaffolded | Independent version settings and legacy score aliases |
+| Add optimizer baseline/pass score telemetry | 1–2 | ✅ done | `BatchOptimizer` logs and determinism fixture |
 | Add lower bounds and V2 formulas | 3–4 | ☐ pending | Synthetic perfect-board and replay tests |
 | Calibrate weights and optimizer threshold | 5–6 | ☐ pending | Held-out current-v1.9 report |
 | Complete regression and parity verification | 7 | ☐ pending | Required Gradle gates and fixture results |
 
 ### Phase 0: Schema and v1.9 raw telemetry
 
-- [ ] Persist `totalViolationUm` in current and v1.9 `BoardStatistics`.
+- [x] Persist `totalViolationUm` in current and v1.9 `BoardStatistics`.
 - [ ] Persist lower bounds and difficulty inputs (\(C\), \(P\), \(L\),
   \(N_{\text{conn}}\), \(L_{\min}\), \(A\), \(D\)) in current
   `RoutingResultManifest`; attach fixture-derived bounds in the harness for v1.9
   rows (needed for later V2 replay).
-- [ ] Export pin count, signal layer count, and net count from `BoardStatistics`,
+- [x] Export pin count, signal layer count, and net count from `BoardStatistics`,
   not DSN regex. Fix area from the board outline bounding box.
 - [ ] Export router-final actuals; optimizer-initial and optimizer-final snapshots
   on **current and v1.9** when the optimizer runs.
-- [ ] Flatten the same raw fields into `benchmarks.json`; preserve nulls.
-- [ ] Persist `system.cpu_score` on each benchmark run (same value as
+- [ ] Flatten the same raw fields into `benchmarks.json`; preserve nulls (partial
+  current-board-statistics flattening is implemented).
+- [x] Persist `system.cpu_score` on each benchmark run (same value as
   `RuntimeEnvironment.cpuScore`).
 - [ ] Manifest schema parity test (field names, types, units, missingness) for
   current vs v1.9. Values need not match.
-- [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land.
+- [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
+  (settings documentation is updated; architecture documentation remains).
 
 ### Phase 1: Settings split and versions
 
-- [ ] `RouterScoringVersion` / `OptimizerScoringVersion`.
-- [ ] Independent nullable router and optimizer scoring settings; maze costs stay
+- [x] `RouterScoringVersion` / `OptimizerScoringVersion`.
+- [x] Independent nullable router and optimizer scoring settings; maze costs stay
   search-only.
-- [ ] `DEFAULT_*` in `DefaultSettings`; default versions V2 with uncalibrated
-  placeholder weights.
-- [ ] Independent CLI/settings: `router.scoring.version`,
+- [ ] `DEFAULT_*` in `DefaultSettings`; target default versions are V2, but the
+  implementation remains V1 until formula and calibration gates pass.
+- [x] Independent CLI/settings: `router.scoring.version`,
   `optimizer.scoring.version`, short `--router-scoring-version` /
   `--optimizer-scoring-version`, and convenience `--scoring-version` for both.
-- [ ] Nested merge that does not break `SettingsMerger`.
+- [x] Nested merge that does not break `SettingsMerger`.
 
 ### Phase 2: V1-preserving API split
 
-- [ ] `getRouterScore` / `getOptimizerScore`.
-- [ ] Point `BatchAutorouter` / history at router score; `BatchOptimizer` at optimizer
+- [x] `getRouterScore` / `getOptimizerScore` (optimizer formula still uses the
+  legacy implementation).
+- [ ] Point all router/history paths at router score; `BatchOptimizer` at optimizer
   score + the decided score-ranking gate (connectivity/DRC vetoes only).
 - [ ] Remove optimizer “close to 1000” stop; keep improvement-threshold stop
   (recalibrate default later).
-- [ ] Explicit score fields: keep API `normalized_score` = router score; add
+- [x] Explicit score fields: keep API `normalized_score` = router score; add
   `optimizer_score`. Deprecate `getNormalizedScore()` as a router-score alias.
 - [ ] V1 path must reproduce current fixture scores within **±10** score points.
 
@@ -614,7 +621,8 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 
 ### Phase 4: V2 formulas on current tree
 
-- [ ] Implement §2 / §3 V2 using settings weights (placeholders OK).
+- [ ] Implement §2 / §3 V2 using settings weights (router path is implemented;
+  optimizer lower-bound path remains).
 - [ ] Default V2 on; V1 via setting/CLI.
 - [ ] Offline replay of current V2 onto stored current and v1.9 JSON (harness /
   later tool, not the v1.9 binary).
@@ -643,7 +651,9 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 - [ ] Gate: more incompletes or higher DRC count reject; ranking is by
   optimizer score (more-complete uglier boards do not auto-win); equal scores
   keep the incumbent. Timeout rip-up that adds incompletes is rejected.
-- [ ] Optimizer stops on improvement threshold, not proximity to 1000.
+- [ ] Optimizer stops on improvement threshold, not proximity to 1000. The
+  proximity stop is still present and must be removed after the optimizer score
+  is implemented.
 - [ ] V1 legacy reproduces historical current-tree scores within ±10 points.
 - [ ] Raw-metric schema parity current vs v1.9 including pre/post optimizer snapshots;
   v1.9 score algorithm unchanged.
@@ -670,6 +680,12 @@ tolerance is ±10 points; \(C = P \times L\) (not \(N_{\text{conn}}\));
 
 ### Still to decide
 
-None for product behavior. Placeholder \(W_*\) / \(U_{\text{scale}}\) /
-\(L_{\text{floor}}\) stay uncalibrated until after test runs (D8). Phase 0 can
-start.
+- **D10 — scoring settings hierarchy:** decide whether to expose a common
+  `scoring` branch containing `common`, `router`, and `optimizer` score settings,
+  or keep score settings owned by the router and optimizer branches. The
+  recommended implementation is composition rather than subclassing because
+  `ReflectionUtil.copyFields` currently does not copy inherited fields.
+
+Placeholder \(W_*\) / \(U_{\text{scale}}\) /
+\(L_{\text{floor}}\) stay uncalibrated until after test runs (D8). Phase 0
+continues with the remaining raw-metric and schema-parity work.

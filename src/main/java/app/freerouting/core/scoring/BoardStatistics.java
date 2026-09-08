@@ -20,9 +20,9 @@ import app.freerouting.gui.workspace.progress.RatsNest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
-import app.freerouting.settings.RouterScoringSettings;
+import app.freerouting.settings.RouterScoreSettings;
 import app.freerouting.settings.RouterSettings;
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.RoutingCostSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
@@ -621,7 +621,7 @@ public class BoardStatistics implements Serializable {
    * Calculates the score/cost of the board based on the given scoring settings. Higher score means
    * better board.
    */
-  public float calculateScore(ScoringSettings scoringSettings) {
+  public float calculateScore(RoutingCostSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     float penalties =
         this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
@@ -643,12 +643,12 @@ public class BoardStatistics implements Serializable {
   }
 
   /** Returns the maximum score for the supplied scoring settings. */
-  public float getMaximumScore(ScoringSettings scoringSettings) {
+  public float getMaximumScore(RoutingCostSettings scoringSettings) {
     return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
   /** Returns the legacy score normalized to a range from zero to one thousand. */
-  private float getLegacyNormalizedScore(ScoringSettings scoringSettings) {
+  private float getLegacyNormalizedScore(RoutingCostSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     if (maximumScore <= 0f) {
       // Guard against division by zero and negative maximum scores (e.g. boards with no
@@ -662,7 +662,7 @@ public class BoardStatistics implements Serializable {
   }
 
   /** Returns the router score normalized to a range from zero to one thousand. */
-  public float getRouterScore(ScoringSettings scoringSettings) {
+  public float getRouterScore(RoutingCostSettings scoringSettings) {
     return getLegacyNormalizedScore(scoringSettings);
   }
 
@@ -673,12 +673,12 @@ public class BoardStatistics implements Serializable {
         || routerSettings.routerScoring.version
             != app.freerouting.settings.RouterScoringVersion.V2_CONTINUOUS) {
       return getLegacyNormalizedScore(
-          routerSettings != null ? routerSettings.scoring : new ScoringSettings());
+          routerSettings != null ? routerSettings.scoring : new RoutingCostSettings());
     }
     return getV2RouterScore(routerSettings.routerScoring);
   }
 
-  private float getV2RouterScore(RouterScoringSettings settings) {
+  private float getV2RouterScore(RouterScoreSettings settings) {
     double difficulty =
         this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
     double connections =
@@ -721,21 +721,21 @@ public class BoardStatistics implements Serializable {
    * <p>V2 lower-bound scoring is introduced in a later phase. Until its bounds are available, the
    * V1-compatible score is returned so callers can migrate independently without changing behavior.
    */
-  public float getOptimizerScore(ScoringSettings scoringSettings) {
+  public float getOptimizerScore(RoutingCostSettings scoringSettings) {
     return getLegacyNormalizedScore(scoringSettings);
   }
 
   /** Returns the configured optimizer score normalized to a range from zero to one thousand. */
   public float getOptimizerScore(RouterSettings routerSettings) {
     return getLegacyNormalizedScore(
-        routerSettings != null ? routerSettings.scoring : new ScoringSettings());
+        routerSettings != null ? routerSettings.scoring : new RoutingCostSettings());
   }
 
   /**
-   * @deprecated Use {@link #getRouterScore(ScoringSettings)}.
+   * @deprecated Use {@link #getRouterScore(RoutingCostSettings)}.
    */
   @Deprecated
-  public float getNormalizedScore(ScoringSettings scoringSettings) {
+  public float getNormalizedScore(RoutingCostSettings scoringSettings) {
     return getRouterScore(scoringSettings);
   }
 

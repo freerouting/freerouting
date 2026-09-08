@@ -1,17 +1,17 @@
 package app.freerouting.core.scoring;
 
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.RoutingCostSettings;
 
 /**
- * Evaluates and compares two {@link ScoringSettings} configurations against the same {@link
+ * Evaluates and compares two {@link RoutingCostSettings} configurations against the same {@link
  * BoardStatistics}, producing a human-readable report and a structured {@link Result}.
  *
  * <h2>Typical usage</h2>
  *
  * <pre>{@code
- * RouterScoringSettings current = settingsMerger.merge().scoring;
+ * RoutingCostSettings current = settingsMerger.merge().scoring;
  *
- * RouterScoringSettings candidate = current.clone();
+ * RoutingCostSettings candidate = current.clone();
  * candidate.unroutedNetPenalty = 10_000f;   // proposed change
  * candidate.viaCosts           = 30;         // proposed change
  *
@@ -39,7 +39,7 @@ public final class ScoringWeightComparison {
    * @return a populated {@link Result}
    */
   public static Result compare(
-      BoardStatistics stats, ScoringSettings weightsA, ScoringSettings weightsB) {
+      BoardStatistics stats, RoutingCostSettings weightsA, RoutingCostSettings weightsB) {
 
     BoardScoreBreakdown breakdownA = BoardScoreBreakdown.of(stats, weightsA);
     BoardScoreBreakdown breakdownB = BoardScoreBreakdown.of(stats, weightsB);

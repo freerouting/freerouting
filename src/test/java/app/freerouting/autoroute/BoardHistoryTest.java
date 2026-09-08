@@ -12,7 +12,7 @@ import app.freerouting.board.state.BoardObserverAdaptor;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.RoutingCostSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ class BoardHistoryTest {
 
   private RoutingBoard board1;
   private RoutingBoard board2;
-  private ScoringSettings scoringSettings;
+  private RoutingCostSettings scoringSettings;
 
   @BeforeEach
   void setUp() throws Exception {

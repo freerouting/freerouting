@@ -2,7 +2,7 @@ package app.freerouting.autoroute;
 
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.scoring.BoardStatistics;
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.RoutingCostSettings;
 import java.time.Instant;
 
 /**
@@ -18,7 +18,7 @@ public class BoardHistoryEntry implements Comparable<BoardHistoryEntry> {
   public int restoreCount;
 
   /** Constructs a BoardHistoryEntry for the given board and scoring settings. */
-  public BoardHistoryEntry(RoutingBoard board, ScoringSettings scoringSettings) {
+  public BoardHistoryEntry(RoutingBoard board, RoutingCostSettings scoringSettings) {
     this.board = board;
     this.statistics = board.getStatistics();
     this.score = this.statistics.getNormalizedScore(scoringSettings);
