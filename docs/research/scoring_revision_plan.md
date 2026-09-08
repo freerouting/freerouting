@@ -460,9 +460,11 @@ On that host \(\widehat{t}(S) \approx D\).
 
 ## 4. Empirical Calibration Using `benchmarks.json`
 
-Today’s file (~5,851 runs) is useful for routability / DRC regression. It does not
-yet persist length, vias, bends, total violation depth, or lower bounds. Both trees
-already **compute** most actuals; the gap is persisting them.
+Today’s file (~5,851 runs) is useful for routability / DRC regression. Historical
+v1/v2 rows may not contain length, vias, bends, total violation depth, or lower
+bounds, but schema-v3 records now persist the available actuals and lower bounds.
+Both trees already **compute** most actuals; the remaining gap is collecting
+schema-v3 current/v1.9 pairs.
 
 ### 4.1 v1.9 telemetry (no scoring port)
 
@@ -602,6 +604,9 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 - [x] Version the enriched benchmark record shape as `schema_version: 3`;
   schema v1/v2 records are historical and may omit newer fields such as
   `settings`, `bounds`, and `drc`.
+- [x] Populate schema-v3 fields for newly executed current and v1.9 runs;
+  after both stages complete, backfill every available bounds field from the
+  matching current-tree run into the v1.9 row.
 - [ ] Verify current/v1.9 schema parity with at least one paired schema-v3
   fixture; the existing dataset validates per-run but contains no such pairs.
 - [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land

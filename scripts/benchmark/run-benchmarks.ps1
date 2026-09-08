@@ -490,20 +490,43 @@ foreach ($binary in $binaries) {
 # current-tree run exists, copy its board-only bounds into the v1.9 benchmark record so replay
 # consumers receive the same schema without changing v1.9 routing behavior.
 $currentBoundsByFixture = @{}
+$currentBoundsCompletenessByFixture = @{}
 $currentBinaryName = if ($binaryCurrent) { $binaryCurrent.Name } else { $null }
 $currentMachineCpuScore = $null
 if ($currentBinaryName) {
-    foreach ($run in @($cache.Values)) {
-        if ($run.binary -and $run.binary.filename -eq $currentBinaryName -and
-            $run.system -and $null -ne $run.system.cpu_score) {
-            $currentMachineCpuScore = [int]$run.system.cpu_score
-        }
-        if ($run.binary -and $run.binary.filename -eq $currentBinaryName -and
-            $run.fixture -and $run.fixture.relative_path -and $run.bounds) {
-            if ($null -ne $run.bounds.min_trace_length_mm -or
+    $currentRuns = @($cache.Values | Where-Object {
+            $_.binary -and $_.binary.filename -eq $currentBinaryName
+        })
+    $currentCpuRun = $currentRuns |
+        Where-Object { $_.system -and $null -ne $_.system.cpu_score } |
+        Sort-Object run_at -Descending |
+        Select-Object -First 1
+    if ($currentCpuRun) {
+        $currentMachineCpuScore = [int]$currentCpuRun.system.cpu_score
+    }
+
+    foreach ($run in $currentRuns) {
+        if ($run.fixture -and $run.fixture.relative_path -and $run.bounds) {
+            $fixturePath = [string]$run.fixture.relative_path
+            $hasBounds =
+                $null -ne $run.bounds.board_area_mm2 -or
+                $null -ne $run.bounds.complexity_c -or
+                $null -ne $run.bounds.min_trace_length_mm -or
                 $null -ne $run.bounds.min_via_count -or
-                $null -ne $run.bounds.min_bend_count) {
-                $currentBoundsByFixture[$run.fixture.relative_path] = $run.bounds
+                $null -ne $run.bounds.min_bend_count
+            if ($hasBounds) {
+                $boundCount = @(
+                    "board_area_mm2",
+                    "complexity_c",
+                    "min_trace_length_mm",
+                    "min_via_count",
+                    "min_bend_count"
+                ) | Where-Object { $null -ne $run.bounds.$_ } | Measure-Object | Select-Object -ExpandProperty Count
+                if (-not $currentBoundsCompletenessByFixture.ContainsKey($fixturePath) -or
+                    $boundCount -gt $currentBoundsCompletenessByFixture[$fixturePath]) {
+                    $currentBoundsByFixture[$fixturePath] = $run.bounds
+                    $currentBoundsCompletenessByFixture[$fixturePath] = $boundCount
+                }
             }
         }
     }
@@ -528,20 +551,28 @@ foreach ($key in @($cache.Keys)) {
         }
     }
     $fixturePath = if ($run.fixture) { $run.fixture.relative_path } else { $null }
-    if ($fixturePath -and $currentBoundsByFixture.ContainsKey($fixturePath) -and
-        ($null -eq $run.bounds -or
-        ($null -eq $run.bounds.min_trace_length_mm -and
-         $null -eq $run.bounds.min_via_count -and
-         $null -eq $run.bounds.min_bend_count))) {
+    if ($fixturePath -and $currentBoundsByFixture.ContainsKey($fixturePath)) {
         $sourceBounds = $currentBoundsByFixture[$fixturePath]
         if ($null -eq $run.bounds) {
             $run.bounds = [PSCustomObject]@{}
         }
-        $run.bounds.min_trace_length_mm = $sourceBounds.min_trace_length_mm
-        $run.bounds.min_via_count = $sourceBounds.min_via_count
-        $run.bounds.min_bend_count = $sourceBounds.min_bend_count
-        $cache[$key] = $run
-        $boundsPatched = $true
+        $runBoundsChanged = $false
+        foreach ($field in @(
+                "board_area_mm2",
+                "complexity_c",
+                "min_trace_length_mm",
+                "min_via_count",
+                "min_bend_count"
+            )) {
+            if ($null -eq $run.bounds.$field -and $null -ne $sourceBounds.$field) {
+                $run.bounds.$field = $sourceBounds.$field
+                $runBoundsChanged = $true
+            }
+        }
+        if ($runBoundsChanged) {
+            $cache[$key] = $run
+            $boundsPatched = $true
+        }
     }
 }
 if ($boundsPatched -or $effectiveCpuScorePatched) {
