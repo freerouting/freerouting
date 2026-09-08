@@ -576,6 +576,10 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   \(N_{\text{conn}}\), \(L_{\min}\), \(A\), \(D\)) in current
   `RoutingResultManifest`; attach fixture-derived bounds in the harness for v1.9
   rows (needed for later V2 replay).
+- [x] Compute current-tree \(L_{\min}\), \(V_{\min}\), and \(B_{\min}\) from
+  board terminals and serialize them under `board_statistics.bounds`.
+- [ ] Add the same lower-bound fields to v1.9 harness records and verify schema
+  parity before replay.
 - [x] Export pin count, signal layer count, and net count from `BoardStatistics`,
   not DSN regex. Fix area from the board outline bounding box.
 - [ ] Export router-final actuals; optimizer-initial and optimizer-final snapshots
@@ -615,15 +619,18 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 
 ### Phase 3: Lower bounds (current tree only)
 
-- [ ] Wire, via, and bend lower bounds (§3.1); cache on load; write to JSON.
+- [x] Wire, via, and bend lower bounds (§3.1) for current-tree statistics and
+  write them to JSON. Cache-on-load and v1.9 harness support remain.
 - [ ] Zero-length / empty-net / mixed-layer definitions.
 - [ ] No conduction-area conditional (pours count as layer terminals).
 - [ ] 45° corners included in \(B_{\text{actual}}\).
 
 ### Phase 4: V2 formulas on current tree
 
-- [ ] Implement §2 / §3 V2 using settings weights (router path is implemented;
-  optimizer lower-bound path remains).
+- [x] Implement §2 / §3 V2 using settings weights (router and optimizer paths
+  are implemented).
+- [ ] Calibrate V2 weights and validate current/v1.9 replay before enabling V2
+  as the default.
 - [ ] Default V2 on; V1 via setting/CLI.
 - [ ] Offline replay of current V2 onto stored current and v1.9 JSON (harness /
   later tool, not the v1.9 binary).

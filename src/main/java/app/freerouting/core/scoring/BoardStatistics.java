@@ -20,6 +20,7 @@ import app.freerouting.gui.workspace.progress.RatsNest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
+import app.freerouting.settings.OptimizerScoreSettings;
 import app.freerouting.settings.RouterScoreSettings;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.RoutingCostSettings;
@@ -78,6 +79,9 @@ public class BoardStatistics implements Serializable {
 
   @SerializedName("difficulty")
   public BoardStatisticsDifficulty difficulty = new BoardStatisticsDifficulty();
+
+  @SerializedName("bounds")
+  public BoardStatisticsBounds bounds = new BoardStatisticsBounds();
 
   @SerializedName("fanout")
   public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
@@ -224,6 +228,7 @@ public class BoardStatistics implements Serializable {
                 (19.64
                     + 0.0810 * this.difficulty.complexityC
                     - 0.131 * this.difficulty.boardAreaCm2));
+    this.bounds = BoardStatisticsBoundsCalculator.calculate(board);
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
@@ -715,20 +720,51 @@ public class BoardStatistics implements Serializable {
     return value != null ? value : defaultValue;
   }
 
-  /**
-   * Returns the optimizer score normalized to a range from zero to one thousand.
-   *
-   * <p>V2 lower-bound scoring is introduced in a later phase. Until its bounds are available, the
-   * V1-compatible score is returned so callers can migrate independently without changing behavior.
-   */
+  /** Returns the legacy optimizer score normalized to a range from zero to one thousand. */
   public float getOptimizerScore(RoutingCostSettings scoringSettings) {
     return getLegacyNormalizedScore(scoringSettings);
   }
 
   /** Returns the configured optimizer score normalized to a range from zero to one thousand. */
   public float getOptimizerScore(RouterSettings routerSettings) {
+    if (routerSettings != null
+        && routerSettings.optimizerScoring != null
+        && routerSettings.optimizerScoring.version
+            == app.freerouting.settings.OptimizerScoringVersion.V2_LOWER_BOUND) {
+      return getV2OptimizerScore(routerSettings.optimizerScoring);
+    }
     return getLegacyNormalizedScore(
         routerSettings != null ? routerSettings.scoring : new RoutingCostSettings());
+  }
+
+  /** Calculates the V2 optimizer score from board-only lower bounds and actual route metrics. */
+  private float getV2OptimizerScore(OptimizerScoreSettings settings) {
+    double difficulty =
+        this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
+    double minTraceLength =
+        this.bounds.minTraceLengthMm != null ? Math.max(0.0, this.bounds.minTraceLengthMm) : 0.0;
+    double minViaCount = this.bounds.minViaCount != null ? Math.max(0, this.bounds.minViaCount) : 0;
+    double minBendCount =
+        this.bounds.minBendCount != null ? Math.max(0, this.bounds.minBendCount) : 0;
+    double actualTraceLength =
+        this.traces.totalLengthMm != null ? Math.max(0.0, this.traces.totalLengthMm) : 0.0;
+    double actualViaCount = this.vias.totalCount != null ? Math.max(0, this.vias.totalCount) : 0;
+    double actualBendCount = this.bends.totalCount != null ? Math.max(0, this.bends.totalCount) : 0;
+    double lengthFloor = Math.max(0.0, valueOrDefault(settings.lengthFloor, 1.0f));
+    double difficultyFloor = Math.max(1.0, valueOrDefault(settings.difficultyScaleFloor, 1.0f));
+    double lengthPenalty =
+        valueOrDefault(settings.excessWireLengthWeight, 1.0f)
+            * Math.max(0.0, actualTraceLength - minTraceLength)
+            / Math.max(minTraceLength, lengthFloor);
+    double viaPenalty =
+        valueOrDefault(settings.excessViaWeight, 1.0f)
+            * Math.max(0.0, actualViaCount - minViaCount)
+            / Math.max(difficulty, difficultyFloor);
+    double bendPenalty =
+        valueOrDefault(settings.excessBendWeight, 1.0f)
+            * Math.max(0.0, actualBendCount - minBendCount)
+            / Math.max(difficulty, difficultyFloor);
+    return (float) Math.max(0.0, 1000.0 - lengthPenalty - viaPenalty - bendPenalty);
   }
 
   /**

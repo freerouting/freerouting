@@ -352,6 +352,7 @@ foreach ($binary in $binaries) {
         $traceStats = if ($boardStats) { $boardStats.traces } else { $null }
         $viaStats = if ($boardStats) { $boardStats.vias } else { $null }
         $bendStats = if ($boardStats) { $boardStats.bends } else { $null }
+        $boundsStats = if ($boardStats) { $boardStats.bounds } else { $null }
         $boardSize = if ($boardStats) { $boardStats.board.size } else { $null }
         $boardAreaMm2 = $null
         if ($boardSize -and $boardSize.width -ne $null -and $boardSize.height -ne $null) {
@@ -443,6 +444,9 @@ foreach ($binary in $binaries) {
             bounds    = [PSCustomObject]@{
                 board_area_mm2 = $boardAreaMm2
                 complexity_c   = $complexityC
+                min_trace_length_mm = if ($boundsStats) { $boundsStats.min_trace_length_mm } else { $null }
+                min_via_count       = if ($boundsStats) { $boundsStats.min_via_count } else { $null }
+                min_bend_count      = if ($boundsStats) { $boundsStats.min_bend_count } else { $null }
             }
             drc       = $drcResult
             log_analysis = [PSCustomObject]@{

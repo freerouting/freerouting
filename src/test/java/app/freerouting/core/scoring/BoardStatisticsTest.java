@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import app.freerouting.io.FileFormat;
+import app.freerouting.settings.OptimizerScoringVersion;
 import app.freerouting.settings.RouterScoringVersion;
 import app.freerouting.settings.RouterSettings;
 import java.nio.charset.StandardCharsets;
@@ -56,5 +57,22 @@ class BoardStatisticsTest {
     settings.routerScoring.clearanceViolationDepthScale = 1000.0f;
 
     assertEquals(794.7f, stats.getRouterScore(settings), 0.001f);
+  }
+
+  @Test
+  void v2OptimizerScoreUsesLowerBoundsAndDifficulty() {
+    BoardStatistics stats = new BoardStatistics();
+    stats.bounds.minTraceLengthMm = 10.0f;
+    stats.bounds.minViaCount = 1;
+    stats.bounds.minBendCount = 1;
+    stats.traces.totalLengthMm = 15.0f;
+    stats.vias.totalCount = 2;
+    stats.bends.totalCount = 3;
+    stats.difficulty.difficultyD = 10.0f;
+
+    RouterSettings settings = new RouterSettings();
+    settings.optimizerScoring.version = OptimizerScoringVersion.V2_LOWER_BOUND;
+
+    assertEquals(999.2f, stats.getOptimizerScore(settings), 0.001f);
   }
 }
