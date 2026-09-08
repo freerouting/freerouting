@@ -137,9 +137,12 @@ function Save-BenchmarksJson {
     $RawData.total_runs = $runsList.Count
     $RawData.generated_at = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
 
-    $jsonDirectory = Split-Path -Parent $JsonPath
-    $jsonName = [System.IO.Path]::GetFileName($JsonPath)
-    $tempPath = Join-Path $jsonDirectory (".{0}.{1}.tmp" -f $jsonName, [guid]::NewGuid().ToString("N"))
+    $jsonFullPath = [System.IO.Path]::GetFullPath($JsonPath)
+    $jsonDirectory = [System.IO.Path]::GetDirectoryName($jsonFullPath)
+    $jsonName = [System.IO.Path]::GetFileName($jsonFullPath)
+    $saveId = [guid]::NewGuid().ToString("N")
+    $tempPath = Join-Path $jsonDirectory (".{0}.{1}.tmp" -f $jsonName, $saveId)
+    $backupPath = Join-Path $jsonDirectory (".{0}.{1}.bak" -f $jsonName, $saveId)
     try {
         $json = ConvertTo-Json $RawData -Depth 100 -Compress
         $utf8NoBom = New-Object System.Text.UTF8Encoding $false
@@ -201,16 +204,19 @@ with open(p, 'w', encoding='utf-8', newline='\n') as f:
     f.write(render(data) + '\n')
 "@
         python -c $pyFormatScript $tempPath
-        if (Test-Path -LiteralPath $JsonPath) {
-            [System.IO.File]::Replace($tempPath, $JsonPath, $null, $true)
+        if (Test-Path -LiteralPath $jsonFullPath) {
+            [System.IO.File]::Replace($tempPath, $jsonFullPath, $backupPath, $true)
         } else {
-            [System.IO.File]::Move($tempPath, $JsonPath)
+            [System.IO.File]::Move($tempPath, $jsonFullPath)
         }
     } catch {
         Write-Error "Failed to write benchmarks.json atomically: $_"
     } finally {
         if (Test-Path $tempPath) {
             Remove-Item $tempPath -Force -ErrorAction SilentlyContinue
+        }
+        if (Test-Path $backupPath) {
+            Remove-Item $backupPath -Force -ErrorAction SilentlyContinue
         }
     }
 }
