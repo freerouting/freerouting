@@ -676,15 +676,17 @@ increases incompletes is rejected; improvement threshold stays 0.01 until
 post-V2 recalibration; \(D = \max(1,\ \widehat{t}_{\text{cal}})\) shares the ETA
 polynomial; live \(S\) is not in \(D\); ETA is internal-only; V1 reproduction
 tolerance is ±10 points; \(C = P \times L\) (not \(N_{\text{conn}}\));
-\(S_{\text{cal}} = 416794\).
+\(S_{\text{cal}} = 416794\). D10: do not use inheritance for score settings;
+do not add `CommonScoreSettings` yet; keep router and optimizer score settings
+independent. D11: keep DRC settings separate from router settings because DRC
+report configuration and board design rules have different ownership and
+lifecycle.
 
 ### Still to decide
 
-- **D10 — scoring settings hierarchy:** decide whether to expose a common
-  `scoring` branch containing `common`, `router`, and `optimizer` score settings,
-  or keep score settings owned by the router and optimizer branches. The
-  recommended implementation is composition rather than subclassing because
-  `ReflectionUtil.copyFields` currently does not copy inherited fields.
+No structural scoring decision remains open for the current phase. If common
+score values emerge later, add them by composition after a concrete use case is
+identified.
 
 Placeholder \(W_*\) / \(U_{\text{scale}}\) /
 \(L_{\text{floor}}\) stay uncalibrated until after test runs (D8). Phase 0
