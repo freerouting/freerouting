@@ -24,7 +24,9 @@ param(
     [switch]  $ReportOnly,
     [switch]  $SkipWebsiteUpdate,
     [string]  $FilterFixture  = "*",
-    [string]  $FilterBinary   = "*"
+    [string]  $FilterBinary   = "*",
+    [ValidateSet("A", "B", "C", "D")]
+    [string]  $FilterTier     = ""
 )
 
 if ($Cm5FirstPass) {
@@ -79,8 +81,28 @@ if ($ReportOnly) {
 # Discover files
 $allBinaries = @(Get-ChildItem $BinariesDir -Filter "*.jar")
 $binaries = @($allBinaries | Where-Object { $_.Name -like $FilterBinary })
+$tierByBoardId = @{}
+$catalogPath = Join-Path $FixturesDir "PCBench\catalog.json"
+if ($FilterTier -and (Test-Path $catalogPath)) {
+    try {
+        $catalog = Get-Content $catalogPath -Raw | ConvertFrom-Json
+        foreach ($board in @($catalog.boards)) {
+            $tierByBoardId[[string]$board.board_id] = [string]$board.tier
+        }
+    } catch {
+        Write-Error "Failed to read PCBench catalog: $catalogPath"
+        exit 1
+    }
+}
 $fixtures = @(Get-ChildItem $FixturesDir -Recurse -Filter "*.dsn" | Where-Object {
-    ($_.Name -like $FilterFixture -or ($_.FullName -replace '\\', '/') -like "*$($FilterFixture -replace '\\', '/')*") -and (Test-IsActiveBenchmarkFixtureFile $_)
+    $fixtureMatchesName =
+        $_.Name -like $FilterFixture -or
+        ($_.FullName -replace '\\', '/') -like "*$($FilterFixture -replace '\\', '/')*"
+    $fixtureGroup = Split-Path (Split-Path $_.FullName -Parent) -Leaf
+    $fixtureMatchesTier =
+        (-not $FilterTier) -or
+        ($tierByBoardId.ContainsKey($fixtureGroup) -and $tierByBoardId[$fixtureGroup] -eq $FilterTier)
+    $fixtureMatchesName -and $fixtureMatchesTier -and (Test-IsActiveBenchmarkFixtureFile $_)
 })
 
 if ($binaries.Count -eq 0) {
