@@ -61,6 +61,10 @@ function Invoke-BenchmarkRun {
     if ($Settings.retain_autoroute_database) {
         $jvmArgs += "-Dfreerouting.benchmark.retain_autoroute_database=true"
     }
+    $envGitSha = $Settings.git_sha
+    if ($envGitSha -and $SupportsCliMode -and ($Binary.Name -notmatch 'freerouting-1\.9\.0\.jar')) {
+        $jvmArgs += "-Dfreerouting.git.sha=$envGitSha"
+    }
     $jvmArgs += @(
         "-jar", ('"{0}"' -f $Binary.FullName),
         "-de", ('"{0}"' -f $Fixture.FullName)
@@ -91,11 +95,6 @@ function Invoke-BenchmarkRun {
     $jvmArgs += "--logging.file.level=$($Settings.log_level)"
     $jvmArgs += ('--logging.file.location="{0}"' -f $logFile)
     $jvmArgs += "--logging.console.level=INFO"
-
-    $envGitSha = $Settings.git_sha
-    if ($envGitSha -and $SupportsCliMode -and ($Binary.Name -notmatch 'freerouting-1.9.0.jar')) {
-        $jvmArgs += "-Dfreerouting.git.sha=$envGitSha"
-    }
 
     if ($Binary.Name -notmatch 'freerouting-1.9.0.jar') {
         $jvmArgs += "--api_server.enabled=false"

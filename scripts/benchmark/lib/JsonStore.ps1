@@ -137,7 +137,9 @@ function Save-BenchmarksJson {
     $RawData.total_runs = $runsList.Count
     $RawData.generated_at = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
 
-    $tempPath = "$JsonPath.tmp"
+    $jsonDirectory = Split-Path -Parent $JsonPath
+    $jsonName = [System.IO.Path]::GetFileName($JsonPath)
+    $tempPath = Join-Path $jsonDirectory (".{0}.{1}.tmp" -f $jsonName, [guid]::NewGuid().ToString("N"))
     try {
         $json = ConvertTo-Json $RawData -Depth 100 -Compress
         $utf8NoBom = New-Object System.Text.UTF8Encoding $false
@@ -199,8 +201,16 @@ with open(p, 'w', encoding='utf-8', newline='\n') as f:
     f.write(render(data) + '\n')
 "@
         python -c $pyFormatScript $tempPath
-        Move-Item -Path $tempPath -Destination $JsonPath -Force
+        if (Test-Path -LiteralPath $JsonPath) {
+            [System.IO.File]::Replace($tempPath, $JsonPath, $null, $true)
+        } else {
+            [System.IO.File]::Move($tempPath, $JsonPath)
+        }
     } catch {
         Write-Error "Failed to write benchmarks.json atomically: $_"
+    } finally {
+        if (Test-Path $tempPath) {
+            Remove-Item $tempPath -Force -ErrorAction SilentlyContinue
+        }
     }
 }

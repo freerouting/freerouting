@@ -310,12 +310,12 @@ foreach ($binary in $binaries) {
                     $OutputsDir `
                     $cachedBaseName `
                     $DrcTimeoutSeconds
-                Convert-BenchmarkObjectPaths $cachedDrc
+                [void](Convert-BenchmarkObjectPaths $cachedDrc)
                 $cachedRun.drc = $cachedDrc
                 $cachedRun.output_file =
                     ConvertTo-BenchmarkRelativePath $cachedSesFile.FullName
                 $cachedRun.drc_refresh_at = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
-                Convert-BenchmarkObjectPaths $cachedRun
+                [void](Convert-BenchmarkObjectPaths $cachedRun)
                 $cache[$cacheKey] = $cachedRun
                 Save-BenchmarksJson $rawJson $cache $JsonPath
                 continue
@@ -578,7 +578,7 @@ foreach ($binary in $binaries) {
             samples     = $sampleRecords
             schema_version = 5
         }
-        Convert-BenchmarkObjectPaths $runObj
+        [void](Convert-BenchmarkObjectPaths $runObj)
 
         # Update cache
         $cache[$cacheKey] = $runObj

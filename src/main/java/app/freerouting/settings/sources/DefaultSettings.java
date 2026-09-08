@@ -82,13 +82,13 @@ public class DefaultSettings implements SettingsSource {
   /** Default drill-hole-to-copper clearance in micrometres. Zero preserves legacy DSN behaviour. */
   public static final double DEFAULT_HOLE_CLEARANCE_UM = 0.0;
 
-  /** Compatibility default until V2 score formulas are enabled at all call sites. */
+  /** Current default router score formula. */
   public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
-      RouterScoringVersion.V1_LEGACY;
+      RouterScoringVersion.V2_CONTINUOUS;
 
-  /** Compatibility default until V2 optimizer scoring is enabled. */
+  /** Current default optimizer score formula. */
   public static final OptimizerScoringVersion DEFAULT_OPTIMIZER_SCORING_VERSION =
-      OptimizerScoringVersion.V1_LEGACY;
+      OptimizerScoringVersion.V2_LOWER_BOUND;
 
   public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
   public static final float DEFAULT_ROUTER_CLEARANCE_COUNT_WEIGHT = 25.0F;

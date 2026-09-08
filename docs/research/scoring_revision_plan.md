@@ -52,11 +52,10 @@ public enum RouterScoringVersion {
 }
 ```
 
-Target default in `DefaultSettings`: `V2_CONTINUOUS`. The implementation currently
-retains `V1_LEGACY` until the V2 formula and calibration gates pass. Independently overridable via
-settings path (`router.scoring.version`) and a short CLI flag
-(`--router-scoring-version v1`). Router and optimizer version enums are **not**
-forced to stay in sync.
+Default in `DefaultSettings`: `V2_CONTINUOUS`. `V1_LEGACY` remains independently
+overridable for compatibility via the settings path (`router.scoring.version`) and the short CLI
+flag (`--router-scoring-version v1`). Router and optimizer version enums are **not** forced to stay
+in sync.
 
 ### 1.2 Optimizer scoring requirements
 
@@ -81,11 +80,10 @@ public enum OptimizerScoringVersion {
 }
 ```
 
-Target default in `DefaultSettings`: `V2_LOWER_BOUND`. The implementation currently
-retains `V1_LEGACY` until lower bounds and replay calibration are complete. Independently overridable via
-settings path (`optimizer.scoring.version`) and a short CLI flag
-(`--optimizer-scoring-version v1`). A convenience `--scoring-version v1` may set
-**both** to V1 without coupling the two enums in code.
+Default in `DefaultSettings`: `V2_LOWER_BOUND`. `V1_LEGACY` remains independently
+overridable for compatibility via the settings path (`optimizer.scoring.version`) and the short CLI
+flag (`--optimizer-scoring-version v1`). A convenience `--scoring-version v1` may set **both** to
+V1 without coupling the two enums in code.
 
 ### 1.3 Independent configurable settings
 
@@ -113,9 +111,9 @@ Every scoring field stays nullable in source objects. Effective defaults are ass
 only in `DefaultSettings.getSettings()` via named `DEFAULT_*` constants. Formula code
 must not hide magic numbers.
 
-V1 defaults remain the current `DefaultSettings` values. V2 weights ship first as
-named uncalibrated `DEFAULT_*` placeholders; they will be set manually after test
-runs, then optionally refined from current-vs-v1.9 JSON replay.
+V2 is now the current `DefaultSettings` selection. Its named `DEFAULT_*` weights
+remain the initial values and can be refined after test runs and current-vs-v1.9
+JSON replay. V1 remains available as an explicit compatibility override.
 
 ### 1.4 Decided product rules
 
@@ -652,8 +650,8 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 - [x] `RouterScoringVersion` / `OptimizerScoringVersion`.
 - [x] Independent nullable router and optimizer scoring settings; maze costs stay
   search-only.
-- [ ] `DEFAULT_*` in `DefaultSettings`; target default versions are V2, but the
-  implementation remains V1 until formula and calibration gates pass.
+- [x] `DEFAULT_*` in `DefaultSettings`; V2 is the default for both score formulas,
+  with V1 available through explicit settings/CLI overrides.
 - [x] Independent CLI/settings: `router.scoring.version`,
   `optimizer.scoring.version`, short `--router-scoring-version` /
   `--optimizer-scoring-version`, and convenience `--scoring-version` for both.
@@ -683,9 +681,8 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 
 - [x] Implement §2 / §3 V2 using settings weights (router and optimizer paths
   are implemented).
-- [ ] Calibrate V2 weights and validate current/v1.9 replay before enabling V2
-  as the default.
-- [ ] Default V2 on; V1 via setting/CLI.
+- [ ] Calibrate V2 weights and validate current/v1.9 replay.
+- [x] Default V2 on; V1 via setting/CLI.
 - [ ] Offline replay of current V2 onto stored current and v1.9 JSON (harness /
   later tool, not the v1.9 binary).
 
@@ -698,7 +695,7 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 
 ### Phase 6: Calibrated defaults
 
-- [ ] Set V2 `DEFAULT_*` from current-vs-v1.9 analysis.
+- [x] Activate V2 `DEFAULT_*` values; refine them from current-vs-v1.9 analysis.
 - [ ] Recalibrate `optimizer.optimizationImprovementThreshold`.
 - [ ] Verify settings precedence and V1 CLI fallback.
 

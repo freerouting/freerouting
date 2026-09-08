@@ -3,9 +3,18 @@ package app.freerouting.settings;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import app.freerouting.settings.sources.CliSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import org.junit.jupiter.api.Test;
 
 class ScoringVersionSettingsTest {
+
+  @Test
+  void defaultSettingsUseCurrentRouterAndOptimizerVersions() {
+    RouterSettings settings = new DefaultSettings().getSettings();
+
+    assertEquals(RouterScoringVersion.V2_CONTINUOUS, settings.routerScoring.version);
+    assertEquals(OptimizerScoringVersion.V2_LOWER_BOUND, settings.optimizerScoring.version);
+  }
 
   @Test
   void routerAndOptimizerVersionsCanBeSelectedIndependently() {
