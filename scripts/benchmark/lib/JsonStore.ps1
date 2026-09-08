@@ -37,6 +37,91 @@ function Load-BenchmarksJson {
     }
 }
 
+function ConvertTo-BenchmarkRelativePath {
+    param([string]$Path)
+
+    if ([string]::IsNullOrWhiteSpace($Path)) {
+        return $Path
+    }
+
+    $scriptRoot = [System.IO.Path]::GetFullPath($PSScriptRoot).TrimEnd('\')
+    $normalizedPath = $Path.Replace('/', '\')
+    $benchmarkMarker = 'scripts\benchmark\'
+    $markerIndex = $normalizedPath.IndexOf($benchmarkMarker, [System.StringComparison]::OrdinalIgnoreCase)
+    if ($markerIndex -ge 0) {
+        $relativePath = $normalizedPath.Substring($markerIndex + $benchmarkMarker.Length)
+        return $relativePath.Replace('\', '/')
+    }
+    if ($normalizedPath.StartsWith('benchmark\', [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $normalizedPath.Substring('benchmark\'.Length).Replace('\', '/')
+    }
+
+    if ([System.IO.Path]::IsPathRooted($normalizedPath)) {
+        $fullPath = [System.IO.Path]::GetFullPath($normalizedPath)
+    } elseif ($normalizedPath -match '^(?:\.[\\/])?(?:logs|outputs|results|fixtures)[\\/]') {
+        $relativePath = $normalizedPath -replace '^\.?[\\/]+', ''
+        return $relativePath.Replace('\', '/')
+    } else {
+        $fullPath = [System.IO.Path]::GetFullPath($normalizedPath)
+    }
+
+    $rootWithSeparator = "$scriptRoot\"
+    if ($fullPath.StartsWith($rootWithSeparator, [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $fullPath.Substring($rootWithSeparator.Length).Replace('\', '/')
+    }
+    return $Path.Replace('\', '/')
+}
+
+function Resolve-BenchmarkStoredPath {
+    param([string]$Path)
+
+    if ([string]::IsNullOrWhiteSpace($Path)) {
+        return $Path
+    }
+    if ([System.IO.Path]::IsPathRooted($Path)) {
+        return $Path
+    }
+
+    $normalizedPath = $Path.Replace('/', '\') -replace '^\.?[\\/]+', ''
+    if ($normalizedPath.StartsWith('scripts\benchmark\', [System.StringComparison]::OrdinalIgnoreCase)) {
+        return Join-Path $PSScriptRoot ($normalizedPath.Substring('scripts\benchmark\'.Length))
+    }
+    if ($normalizedPath.StartsWith('benchmark\', [System.StringComparison]::OrdinalIgnoreCase)) {
+        return Join-Path $PSScriptRoot ($normalizedPath.Substring('benchmark\'.Length))
+    }
+    return Join-Path $PSScriptRoot $normalizedPath
+}
+
+function Convert-BenchmarkObjectPaths {
+    param($Object)
+
+    if ($null -eq $Object) {
+        return 0
+    }
+    if ($Object -is [string] -or $Object.GetType().IsValueType) {
+        return 0
+    }
+    $changed = 0
+    $pathPropertyNames = @('log_file', 'result_json', 'output_file', 'report_file')
+    foreach ($property in @($Object.PSObject.Properties)) {
+        if ($property.Name -in $pathPropertyNames -and $property.Value -is [string]) {
+            $relativePath = ConvertTo-BenchmarkRelativePath $property.Value
+            if ($property.Value -ne $relativePath) {
+                $property.Value = $relativePath
+                $changed++
+            }
+        } elseif ($property.Value -is [System.Collections.IEnumerable] -and
+            $property.Value -isnot [string]) {
+            foreach ($item in $property.Value) {
+                $changed += Convert-BenchmarkObjectPaths $item
+            }
+        } elseif ($property.Value -is [PSObject]) {
+            $changed += Convert-BenchmarkObjectPaths $property.Value
+        }
+    }
+    return $changed
+}
+
 function Save-BenchmarksJson {
     param(
         $RawData,

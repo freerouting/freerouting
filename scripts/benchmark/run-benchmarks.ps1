@@ -62,6 +62,14 @@ $ChartDataPath = Join-Path $ResultsDir "benchmarks-chart-data.json"
 $store = Load-BenchmarksJson $JsonPath
 $rawJson = $store.RawData
 $cache = $store.Cache
+$storedPathsPatched = $false
+foreach ($key in @($cache.Keys)) {
+    $run = $cache[$key]
+    if ((Convert-BenchmarkObjectPaths $run) -gt 0) {
+        $cache[$key] = $run
+        $storedPathsPatched = $true
+    }
+}
 
 function Update-BenchmarkReports {
     param([Hashtable]$Cache)
@@ -90,6 +98,9 @@ function New-BenchmarkPhaseSnapshot {
 
 if ($ReportOnly) {
     Write-Output "Report-only mode. Generating reports from cached data..."
+    if ($storedPathsPatched) {
+        Save-BenchmarksJson $rawJson $cache $JsonPath
+    }
     Update-BenchmarkReports $cache
     Write-Output "Done!"
     exit 0
@@ -282,10 +293,7 @@ foreach ($binary in $binaries) {
             $cachedRun = $cache[$cacheKey]
             $cachedOutputPath = $null
             if ($cachedRun.output_file) {
-                $cachedOutputPath = [string]$cachedRun.output_file
-                if (-not [System.IO.Path]::IsPathRooted($cachedOutputPath)) {
-                    $cachedOutputPath = Join-Path $OutputsDir $cachedOutputPath
-                }
+                $cachedOutputPath = Resolve-BenchmarkStoredPath ([string]$cachedRun.output_file)
             } elseif ($cachedRun.log_file) {
                 $cachedLogName = [System.IO.Path]::GetFileName([string]$cachedRun.log_file)
                 $cachedOutputPath = Join-Path $OutputsDir ($cachedLogName -replace '\.log$', '.ses')
@@ -302,9 +310,12 @@ foreach ($binary in $binaries) {
                     $OutputsDir `
                     $cachedBaseName `
                     $DrcTimeoutSeconds
+                Convert-BenchmarkObjectPaths $cachedDrc
                 $cachedRun.drc = $cachedDrc
-                $cachedRun.output_file = $cachedSesFile.FullName
+                $cachedRun.output_file =
+                    ConvertTo-BenchmarkRelativePath $cachedSesFile.FullName
                 $cachedRun.drc_refresh_at = (Get-Date -UFormat "%Y-%m-%dT%H:%M:%SZ")
+                Convert-BenchmarkObjectPaths $cachedRun
                 $cache[$cacheKey] = $cachedRun
                 Save-BenchmarksJson $rawJson $cache $JsonPath
                 continue
@@ -468,10 +479,7 @@ foreach ($binary in $binaries) {
         }
 
         # Build run record
-        $relativeLogFile = $runResult.LogFile
-        try {
-            $relativeLogFile = (Resolve-Path $runResult.LogFile -Relative)
-        } catch {}
+        $relativeLogFile = ConvertTo-BenchmarkRelativePath $runResult.LogFile
 
         $runObj = [PSCustomObject]@{
             cache_key = $cacheKey
@@ -570,6 +578,7 @@ foreach ($binary in $binaries) {
             samples     = $sampleRecords
             schema_version = 5
         }
+        Convert-BenchmarkObjectPaths $runObj
 
         # Update cache
         $cache[$cacheKey] = $runObj
