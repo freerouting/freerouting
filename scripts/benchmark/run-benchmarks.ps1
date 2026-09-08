@@ -491,8 +491,13 @@ foreach ($binary in $binaries) {
 # consumers receive the same schema without changing v1.9 routing behavior.
 $currentBoundsByFixture = @{}
 $currentBinaryName = if ($binaryCurrent) { $binaryCurrent.Name } else { $null }
+$currentMachineCpuScore = $null
 if ($currentBinaryName) {
     foreach ($run in @($cache.Values)) {
+        if ($run.binary -and $run.binary.filename -eq $currentBinaryName -and
+            $run.system -and $null -ne $run.system.cpu_score) {
+            $currentMachineCpuScore = [int]$run.system.cpu_score
+        }
         if ($run.binary -and $run.binary.filename -eq $currentBinaryName -and
             $run.fixture -and $run.fixture.relative_path -and $run.bounds) {
             if ($null -ne $run.bounds.min_trace_length_mm -or
@@ -505,8 +510,23 @@ if ($currentBinaryName) {
 }
 
 $boundsPatched = $false
+$effectiveCpuScorePatched = $false
 foreach ($key in @($cache.Keys)) {
     $run = $cache[$key]
+    if ($run.system) {
+        $effectiveCpuScore =
+            if ($null -ne $run.system.cpu_score) {
+                [int]$run.system.cpu_score
+            } else {
+                $currentMachineCpuScore
+            }
+        if ($null -ne $effectiveCpuScore -and
+            $run.system.cpu_score_effective -ne $effectiveCpuScore) {
+            $run.system.cpu_score_effective = $effectiveCpuScore
+            $cache[$key] = $run
+            $effectiveCpuScorePatched = $true
+        }
+    }
     $fixturePath = if ($run.fixture) { $run.fixture.relative_path } else { $null }
     if ($fixturePath -and $currentBoundsByFixture.ContainsKey($fixturePath) -and
         ($null -eq $run.bounds -or
@@ -524,7 +544,7 @@ foreach ($key in @($cache.Keys)) {
         $boundsPatched = $true
     }
 }
-if ($boundsPatched) {
+if ($boundsPatched -or $effectiveCpuScorePatched) {
     Save-BenchmarksJson $rawJson $cache $JsonPath
 }
 

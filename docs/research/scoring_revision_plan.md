@@ -557,7 +557,7 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 | Persist robust median `cpu_score` at startup | 0 | ✅ done | `RuntimeEnvironmentTest`; startup hardware log |
 | Persist `cpu_score` in current result manifests | 0 | ✅ done | `RoutingResultManifestTest`; `cpu_score` JSON field |
 | Carry `cpu_score` into new benchmark `system` records | 0 | ✅ done | `run-benchmarks.ps1` + manifest/log parser path |
-| Backfill or explicitly classify historical rows missing `system.cpu_score` | 0 | ☐ pending | Validator passes with documented legacy missingness policy |
+| Allow legacy null `system.cpu_score` and derive `cpu_score_effective` for calculations | 0 | ✅ done | Validator permits legacy nulls; harness derives current-machine fallback |
 | Persist total DRC shortfall in current/v1.9 statistics | 0 | ✅ done | `total_violation_um` in both statistics models |
 | Normalize board inputs from `BoardStatistics` | 0 | ✅ done | Benchmark records use manifest statistics, not DSN counts |
 | Persist board-only difficulty inputs \(P,L,C,D,A\) | 0–3 | ◐ scaffolded | Manifest `difficulty` and board area fields |
@@ -594,10 +594,14 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   current-board-statistics flattening is implemented).
 - [x] Persist `system.cpu_score` on each **new** benchmark run (same value as
   `RuntimeEnvironment.cpuScore`).
+- [x] Allow legacy rows to retain a null or missing `system.cpu_score`; do not
+  zero-fill historical telemetry.
+- [x] Derive `system.cpu_score_effective` from the current machine's score when
+  a legacy row needs a CPU value for calculation.
 - [ ] Complete the explicit benchmark schema parity check for field names and
-  missingness; the validator exists, but historical rows such as
-  `PCBench/1-Wire-Wing-pcb_1-Wire_Wing/unrouted.dsn` still lack
-  `system.cpu_score`.
+  missingness; legacy CPU-score absence is an allowed exception. The current
+  historical dataset now passes the CPU-score rule but still has rows missing
+  other fields such as `settings`.
 - [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
   (settings documentation is updated; architecture documentation remains).
 

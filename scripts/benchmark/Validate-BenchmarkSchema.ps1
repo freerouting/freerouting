@@ -22,6 +22,21 @@ function Test-PropertyPath {
     return $true
 }
 
+function Test-IsLegacyRun {
+    param($Run)
+
+    if (-not (Test-PropertyPath $Run "binary")) {
+        return $false
+    }
+    return (
+        (Test-PropertyPath $Run "binary.filename") -and
+        ([string]$Run.binary.filename -match "(?i)(1[._-]?9|v190)")
+    ) -or (
+        (Test-PropertyPath $Run "binary.version_label") -and
+        ([string]$Run.binary.version_label -match "(?i)(1[._-]?9|v190)")
+    )
+}
+
 if (-not (Test-Path $JsonPath)) {
     throw "Benchmark JSON was not found: $JsonPath"
 }
@@ -37,7 +52,6 @@ $requiredPaths = @(
     "cache_key",
     "run_at",
     "system",
-    "system.cpu_score",
     "binary",
     "binary.version_label",
     "fixture",
@@ -69,6 +83,11 @@ foreach ($run in $runs) {
             [void]$errors.Add("$identity is missing '$path'")
         }
     }
+    if ((-not (Test-IsLegacyRun $run)) -and
+        (-not (Test-PropertyPath $run "system.cpu_score") -or
+        $null -eq $run.system.cpu_score)) {
+        [void]$errors.Add("$identity is missing non-legacy 'system.cpu_score'")
+    }
 }
 
 $currentRuns = @($runs | Where-Object {
@@ -80,12 +99,7 @@ $currentRuns = @($runs | Where-Object {
         )
     })
 $v19Runs = @($runs | Where-Object {
-        (Test-PropertyPath $_ "binary") -and (
-            ((Test-PropertyPath $_ "binary.filename") -and
-                ([string]$_.binary.filename -match "(?i)(1[._-]?9|v190)")) -or
-            ((Test-PropertyPath $_ "binary.version_label") -and
-                ([string]$_.binary.version_label -match "(?i)(1[._-]?9|v190)"))
-        )
+        Test-IsLegacyRun $_
     })
 
 $currentByFixture = @{}
@@ -96,7 +110,6 @@ foreach ($run in $currentRuns) {
 }
 
 $parityPaths = @(
-    "system.cpu_score",
     "binary.version_label",
     "fixture.relative_path",
     "bounds.board_area_mm2",
