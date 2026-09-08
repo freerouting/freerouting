@@ -38,6 +38,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -50,6 +51,8 @@ import java.util.UUID;
 public class McpControllerV1 extends BaseController {
 
   private static final String JSONRPC_VERSION = "2.0";
+  private static final HttpClient HTTP_CLIENT =
+      HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
   private static volatile String detectedClientInfo = "MCP-Client/1.0";
 
   @Context private Application application;
@@ -402,7 +405,7 @@ public class McpControllerV1 extends BaseController {
       builder.method(method, HttpRequest.BodyPublishers.noBody());
     }
 
-    return HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+    return HTTP_CLIENT.send(builder.build(), HttpResponse.BodyHandlers.ofString());
   }
 
   private void forwardHeaders(HttpRequest.Builder builder, String correlationId) {
@@ -601,7 +604,7 @@ public class McpControllerV1 extends BaseController {
             HttpRequest.BodyPublishers.ofString(requestBodyObj.toString(), StandardCharsets.UTF_8));
 
         HttpResponse<String> response =
-            HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+            HTTP_CLIENT.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         payload.addProperty("status", response.statusCode());
         payload.addProperty("contentType", "application/json");
         isError = response.statusCode() >= 400;
@@ -632,7 +635,7 @@ public class McpControllerV1 extends BaseController {
         builder.GET();
 
         HttpResponse<String> response =
-            HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+            HTTP_CLIENT.send(builder.build(), HttpResponse.BodyHandlers.ofString());
         payload.addProperty("status", response.statusCode());
         payload.addProperty("contentType", "application/json");
         isError = response.statusCode() >= 400;

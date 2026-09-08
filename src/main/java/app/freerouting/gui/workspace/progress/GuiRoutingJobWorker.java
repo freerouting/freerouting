@@ -10,7 +10,6 @@ import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.autoroute.events.TaskStateChangedEventListener;
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
 import app.freerouting.autoroute.pipeline.BatchOptimizer;
-import app.freerouting.autoroute.pipeline.BatchOptimizerMultiThreaded;
 import app.freerouting.autoroute.pipeline.RoutingPipeline;
 import app.freerouting.autoroute.pipeline.TaskState;
 import app.freerouting.board.model.structure.AngleRestriction;
@@ -66,7 +65,7 @@ import java.time.Instant;
  * <pre>
  * 1. Initialize the BatchAutorouter
  * 2. Set up event listeners for GUI updates
- * 3. Initialize optimizer if enabled (BatchOptimizer or BatchOptimizerMultiThreaded)
+ * 3. Initialize optimizer if enabled (BatchOptimizer)
  * 4. Run autorouting passes until completion or interruption
  * 5. Run optimization passes if enabled and not interrupted
  * 6. Update job output with SES file data
@@ -89,12 +88,10 @@ import java.time.Instant;
  *   <li><strong>Current Algorithm:</strong> Modern routing algorithm with the latest improvements
  * </ul>
  *
- * <p><strong>Optimization Modes:</strong>
+ * <p><strong>Optimization:</strong>
  *
  * <ul>
- *   <li><strong>Single-threaded:</strong> Safe, reliable optimization using {@link BatchOptimizer}
- *   <li><strong>Multi-threaded:</strong> Faster but may generate violations ({@link
- *       BatchOptimizerMultiThreaded})
+ *   <li>Unified deterministic optimization using {@link BatchOptimizer}
  * </ul>
  *
  * <p><strong>Event Handling:</strong> The thread registers listeners for:
@@ -121,20 +118,12 @@ import java.time.Instant;
  *   <li>Logs detailed session summaries
  * </ul>
  *
- * <p><strong>Known Issues:</strong>
- *
- * <ul>
- *   <li>Multi-threaded optimization may generate clearance violations
- *   <li>Single-threaded optimization recommended for production use
- * </ul>
- *
  * <p><strong>TODO:</strong> This class should be deprecated in favor of a more modern job scheduler
  * architecture for better job management.
  *
  * @see InteractiveActionThread
  * @see BatchAutorouter
  * @see BatchOptimizer
- * @see BatchOptimizerMultiThreaded
  * @see RoutingJob
  */
 public class GuiRoutingJobWorker extends InteractiveActionThread {
@@ -150,13 +139,6 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
 
   /**
    * The batch optimizer instance for post-routing optimization, or null if disabled.
-   *
-   * <p>Can be either:
-   *
-   * <ul>
-   *   <li>{@link BatchOptimizer}: Single-threaded, safe optimization
-   *   <li>{@link BatchOptimizerMultiThreaded}: Multi-threaded, faster but may create violations
-   * </ul>
    *
    * <p>Set to null if optimization is disabled in router settings.
    */
@@ -176,7 +158,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
    *   <li>Configures board references in routing job
    *   <li>Registers event listeners for GUI updates
    *   <li>Sets up SES file generation on routing updates
-   *   <li>Initializes optimizer if enabled (single or multi-threaded)
+   *   <li>Initializes optimizer if enabled
    * </ol>
    *
    * <p><strong>Event Listeners:</strong> Sets up listeners for:
@@ -187,22 +169,11 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
    *   <li>Task state changes: Updates status messages for stage transitions
    * </ul>
    *
-   * <p><strong>Optimizer Setup:</strong> If optimization is enabled:
-   *
-   * <ul>
-   *   <li>Single thread or multi-threading disabled: Uses {@link BatchOptimizer}
-   *   <li>Multiple threads enabled: Uses {@link BatchOptimizerMultiThreaded}
-   * </ul>
-   *
-   * <p><strong>Warning:</strong> Multi-threaded optimization is known to potentially generate
-   * clearance violations. Single-threaded mode is recommended for production.
-   *
    * @param sessionPort workspace port for GUI interactions and display updates
    * @param generation execution generation
    * @param routingJob the routing job containing configuration and board data
    * @see BatchAutorouter
    * @see BatchOptimizer
-   * @see BatchOptimizerMultiThreaded
    */
   public GuiRoutingJobWorker(
       WorkspacePort sessionPort, RunGeneration generation, RoutingJob routingJob) {
@@ -304,7 +275,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
             @Override
             public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
               BoardStatistics boardStatistics = event.getBoardStatistics();
-              if (batchOptimizer instanceof BatchOptimizerMultiThreaded) {
+              if (event.getBoard() != null && event.getBoard() != routingJob.board) {
                 routingJob.board = event.getBoard();
                 sessionPort.replaceBoard(new BoardReplacement(generation, event.getBoard()));
               }
@@ -420,13 +391,6 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         "Starting optimization on "
             + (numThreads == 1 ? "1 thread" : numThreads + " threads")
             + "...");
-    if (numThreads > 1) {
-      routingJob.logWarning(
-          "Multi-threaded route optimization is broken and it is known to generate clearance "
-              + "violations. It is highly recommended to use the single-threaded route "
-              + "optimization instead by setting the number of threads to 1 with the '-mt 1' "
-              + "command line argument.");
-    }
 
     FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
     FRAnalytics.routeOptimizerStarted();

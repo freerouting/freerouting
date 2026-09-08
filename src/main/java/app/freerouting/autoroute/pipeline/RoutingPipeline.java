@@ -36,14 +36,19 @@ public final class RoutingPipeline {
     this.optimizer = job.routerSettings.getRunOptimizer() ? optimizerFactory.apply(job) : null;
   }
 
-  /** Creates a pipeline using the GUI optimizer policy, including optional multithreading. */
-  public static RoutingPipeline createForGui(RoutingJob job) {
-    return new RoutingPipeline(job, BatchOptimizer::createForGui);
+  /** Creates the canonical routing pipeline for a routing job. */
+  public static RoutingPipeline create(RoutingJob job) {
+    return new RoutingPipeline(job, BatchOptimizer::create);
   }
 
-  /** Creates a pipeline using the headless single-threaded optimizer policy. */
+  /** Creates a pipeline using the GUI optimizer policy. */
+  public static RoutingPipeline createForGui(RoutingJob job) {
+    return create(job);
+  }
+
+  /** Creates a pipeline using the headless optimizer policy. */
   public static RoutingPipeline createForHeadless(RoutingJob job) {
-    return new RoutingPipeline(job, BatchOptimizer::createForHeadless);
+    return create(job);
   }
 
   /** Returns the shared autorouter stage. */

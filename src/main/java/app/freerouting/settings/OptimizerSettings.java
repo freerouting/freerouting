@@ -72,19 +72,14 @@ public class OptimizerSettings implements Serializable, Cloneable {
   // -------------------------------
 
   /**
-   * The strategy to update the board: GREEDY (update immediately on any improvement),
-   * GLOBAL_OPTIMAL (calculate updates in parallel and apply the single best improvement), or HYBRID
-   * (combine GREEDY and GLOBAL_OPTIMAL).
+   * The strategy to update the board: GLOBAL_OPTIMAL (calculate updates and apply the single best
+   * improvement).
    */
   @SerializedName("board_update_strategy")
   public transient BoardUpdateStrategy boardUpdateStrategy;
 
-  /** The ratio of GLOBAL_OPTIMAL to GREEDY updates when using the HYBRID strategy (e.g., "1:1"). */
-  @SerializedName("hybrid_ratio")
-  public transient String hybridRatio;
-
   /**
-   * The strategy for selecting and ordering the items to be optimized (e.g., SEQUENTIAL, RANDOM, or
+   * The strategy for selecting and ordering the items to be optimized (e.g., SEQUENTIAL or
    * PRIORITIZED).
    */
   @SerializedName("item_selection_strategy")
@@ -110,7 +105,6 @@ public class OptimizerSettings implements Serializable, Cloneable {
       // Primitive wrappers and Strings are immutable, so no need to clone them
       // But we need to ensure transient fields are copied
       result.boardUpdateStrategy = this.boardUpdateStrategy;
-      result.hybridRatio = this.hybridRatio;
       result.itemSelectionStrategy = this.itemSelectionStrategy;
       return result;
     } catch (CloneNotSupportedException e) {

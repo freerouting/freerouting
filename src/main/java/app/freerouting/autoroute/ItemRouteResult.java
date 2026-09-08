@@ -82,7 +82,7 @@ public class ItemRouteResult implements Comparable<ItemRouteResult> {
         } else if (traceLengthAfter > r.traceLengthAfter) {
           return 1;
         } else {
-          return 0;
+          return Integer.compare(this.itemId, r.itemId);
         }
       }
     }
