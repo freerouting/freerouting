@@ -645,15 +645,23 @@ foreach ($key in @($cache.Keys)) {
             $cache[$key] = $run
             $cpuScoreScaledPatched = $true
         }
+        $cpuScoreProperty = $run.system.PSObject.Properties["cpu_score"]
         $effectiveCpuScore =
-            if ($null -ne $run.system.cpu_score) {
-                [int]$run.system.cpu_score
+            if ($cpuScoreProperty -and $null -ne $cpuScoreProperty.Value) {
+                [int]$cpuScoreProperty.Value
             } else {
                 $currentMachineCpuScore
             }
+        $effectiveProperty = $run.system.PSObject.Properties["cpu_score_effective"]
         if ($null -ne $effectiveCpuScore -and
-            $run.system.cpu_score_effective -ne $effectiveCpuScore) {
-            $run.system.cpu_score_effective = $effectiveCpuScore
+            ($null -eq $effectiveProperty -or
+                $effectiveProperty.Value -ne $effectiveCpuScore)) {
+            if ($effectiveProperty) {
+                $effectiveProperty.Value = $effectiveCpuScore
+            } else {
+                Add-Member -InputObject $run.system -NotePropertyName "cpu_score_effective" `
+                    -NotePropertyValue $effectiveCpuScore
+            }
             $cache[$key] = $run
             $effectiveCpuScorePatched = $true
         }
