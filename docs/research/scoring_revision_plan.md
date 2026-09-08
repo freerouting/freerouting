@@ -556,7 +556,8 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 |---|---:|---|---|
 | Persist robust median `cpu_score` at startup | 0 | ✅ done | `RuntimeEnvironmentTest`; startup hardware log |
 | Persist `cpu_score` in current result manifests | 0 | ✅ done | `RoutingResultManifestTest`; `cpu_score` JSON field |
-| Carry `cpu_score` into benchmark `system` records | 0 | ✅ done | `run-benchmarks.ps1` + manifest/log parser path |
+| Carry `cpu_score` into new benchmark `system` records | 0 | ✅ done | `run-benchmarks.ps1` + manifest/log parser path |
+| Backfill or explicitly classify historical rows missing `system.cpu_score` | 0 | ☐ pending | Validator passes with documented legacy missingness policy |
 | Persist total DRC shortfall in current/v1.9 statistics | 0 | ✅ done | `total_violation_um` in both statistics models |
 | Normalize board inputs from `BoardStatistics` | 0 | ✅ done | Benchmark records use manifest statistics, not DSN counts |
 | Persist board-only difficulty inputs \(P,L,C,D,A\) | 0–3 | ◐ scaffolded | Manifest `difficulty` and board area fields |
@@ -564,7 +565,7 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 | Rename search-cost settings to `RoutingCostSettings` | 1 | ✅ done | Type rename and focused settings tests |
 | Split router and optimizer scoring APIs/settings | 1–2 | ◐ scaffolded | Independent version settings and legacy score aliases |
 | Add optimizer baseline/pass score telemetry | 1–2 | ✅ done | `BatchOptimizer` logs and determinism fixture |
-| Add lower bounds and V2 formulas | 3–4 | ☐ pending | Synthetic perfect-board and replay tests |
+| Add lower bounds and V2 formulas | 3–4 | ◐ scaffolded | Current-tree bounds/V2 path; replay calibration pending |
 | Calibrate weights and optimizer threshold | 5–6 | ☐ pending | Held-out current-v1.9 report |
 | Complete regression and parity verification | 7 | ☐ pending | Required Gradle gates and fixture results |
 | Optional settings-hierarchy refactor | 8 | ☐ confirmation required | Explicit approval, compatibility tests, and migration review |
@@ -581,18 +582,22 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   no matching current-tree run is available.
 - [x] Compute current-tree \(L_{\min}\), \(V_{\min}\), and \(B_{\min}\) from
   board terminals and serialize them under `board_statistics.bounds`.
-- [ ] Add the same lower-bound fields to v1.9 harness records and verify schema
-  parity before replay.
+- [x] Add the same lower-bound fields to v1.9 harness records through the
+  benchmark harness; values remain unavailable if no matching current run exists.
+- [ ] Verify lower-bound schema parity before replay, including explicit handling
+  of unavailable values.
 - [x] Export pin count, signal layer count, and net count from `BoardStatistics`,
   not DSN regex. Fix area from the board outline bounding box.
 - [ ] Export router-final actuals; optimizer-initial and optimizer-final snapshots
   on **current and v1.9** when the optimizer runs.
 - [ ] Flatten the same raw fields into `benchmarks.json`; preserve nulls (partial
   current-board-statistics flattening is implemented).
-- [x] Persist `system.cpu_score` on each benchmark run (same value as
+- [x] Persist `system.cpu_score` on each **new** benchmark run (same value as
   `RuntimeEnvironment.cpuScore`).
-- [x] Add an explicit benchmark schema parity validator for field names and
-  missingness; values need not match between current and v1.9.
+- [ ] Complete the explicit benchmark schema parity check for field names and
+  missingness; the validator exists, but historical rows such as
+  `PCBench/1-Wire-Wing-pcb_1-Wire_Wing/unrouted.dsn` still lack
+  `system.cpu_score`.
 - [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
   (settings documentation is updated; architecture documentation remains).
 
