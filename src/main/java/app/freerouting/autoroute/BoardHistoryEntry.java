@@ -21,7 +21,7 @@ public class BoardHistoryEntry implements Comparable<BoardHistoryEntry> {
   public BoardHistoryEntry(RoutingBoard board, RoutingCostSettings scoringSettings) {
     this.board = board;
     this.statistics = board.getStatistics();
-    this.score = this.statistics.getNormalizedScore(scoringSettings);
+    this.score = this.statistics.getRouterScore(scoringSettings);
     this.hash = board.getHash();
     this.timestamp = Instant.now();
   }

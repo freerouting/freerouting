@@ -53,6 +53,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
   protected boolean isTimedOut;
   protected RoutingBoard bestBoard;
   protected float bestScore;
+  protected int bestIncompleteCount;
+  protected int bestClearanceViolationCount;
   protected final Map<Integer, ItemRouteResult> resultMap = new HashMap<>();
   protected final AtomicLong workerCpuNanos = new AtomicLong(0);
   protected final AtomicLong workerAllocBytes = new AtomicLong(0);
@@ -160,6 +162,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     this.bestBoard = this.board.deepCopy();
     this.bestScore = initialOptimizerScore;
+    this.bestIncompleteCount = initialIncomplete;
+    this.bestClearanceViolationCount = initialViolations;
 
     job.logInfo(
         String.format(
@@ -209,20 +213,6 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
       float scoreBeforePass = board.getStatistics().getOptimizerScore(job.routerSettings);
 
-      // Stop if potential improvement is less than threshold
-      if (scoreBeforePass * (1 + this.settings.optimizer.optimizationImprovementThreshold)
-          >= 1000.0f) {
-        job.logInfo(
-            String.format(
-                Locale.US,
-                "Stopping optimizer because the current board score (%.2f) is already close to the "
-                    + "maximum score (1000). Remaining potential improvement is less than the "
-                    + "threshold (%.2f%%).",
-                scoreBeforePass,
-                this.settings.optimizer.optimizationImprovementThreshold * 100));
-        break;
-      }
-
       String currentBoardHash = this.board.getHash();
       job.setCurrentPass(currentPass);
       this.fireTaskStateChangedEvent(
@@ -238,9 +228,32 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
       BoardStatistics passStats = board.getStatistics();
       float scoreAfterPass = passStats.getOptimizerScore(job.routerSettings);
-      if (scoreAfterPass > this.bestScore) {
+      String rejectionReason =
+          optimizerCandidateRejectionReason(
+              this.bestIncompleteCount,
+              this.bestClearanceViolationCount,
+              this.bestScore,
+              passStats,
+              scoreAfterPass);
+      if (rejectionReason == null) {
         this.bestScore = scoreAfterPass;
+        this.bestIncompleteCount = passStats.connections.incompleteCount;
+        this.bestClearanceViolationCount = passStats.clearanceViolations.totalCount;
         this.bestBoard = this.board.deepCopy();
+      } else {
+        job.logInfo(
+            String.format(
+                Locale.US,
+                "Optimizer pass #%d candidate rejected: %s. Restoring incumbent "
+                    + "(optimizer score %.2f, incomplete connections: %d, clearance violations: %d).",
+                currentPass,
+                rejectionReason,
+                this.bestScore,
+                this.bestIncompleteCount,
+                this.bestClearanceViolationCount));
+        this.board = this.bestBoard;
+        this.job.board = this.bestBoard;
+        this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
       }
 
       double passImprovement =
@@ -347,6 +360,30 @@ public final class BatchOptimizer extends NamedAlgorithm {
             cpuSecondsUsed,
             allocMbUsed / 1024.0f,
             peakHeapMb));
+  }
+
+  /**
+   * Returns the explicit reason a candidate must be rejected, or {@code null} when it is accepted.
+   *
+   * <p>Completeness and DRC count are vetoes; optimizer score ranks candidates that pass both
+   * vetoes. In particular, a more-complete but uglier candidate is not an automatic win.
+   */
+  static String optimizerCandidateRejectionReason(
+      int incumbentIncompleteCount,
+      int incumbentClearanceViolationCount,
+      float incumbentOptimizerScore,
+      BoardStatistics candidate,
+      float candidateOptimizerScore) {
+    if (candidate.connections.incompleteCount > incumbentIncompleteCount) {
+      return "CONNECTIVITY_REGRESSION";
+    }
+    if (candidate.clearanceViolations.totalCount > incumbentClearanceViolationCount) {
+      return "DRC_COUNT_REGRESSION";
+    }
+    if (!(candidateOptimizerScore > incumbentOptimizerScore)) {
+      return "OPTIMIZER_SCORE_NOT_IMPROVED";
+    }
+    return null;
   }
 
   private List<Integer> prepareCandidateItems() {

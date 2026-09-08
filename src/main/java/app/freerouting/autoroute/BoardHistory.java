@@ -53,7 +53,7 @@ public class BoardHistory {
     if (boards.size() >= maxHistorySize) {
       // Compute the new board's score before the expensive serialisation so we can
       // skip adding boards that would not improve the history.
-      float newScore = new BoardStatistics(board).getNormalizedScore(scoringSettings);
+      float newScore = new BoardStatistics(board).getRouterScore(scoringSettings);
 
       // Find the worst-scoring entry via a linear scan (O(n), n ≤ MAX_HISTORY_SIZE).
       // Thread safety: this method is `synchronized`, so no other thread can modify
@@ -195,7 +195,7 @@ public class BoardHistory {
     public BoardHistoryEntry(RoutingBoard board, RoutingCostSettings scoringSettings) {
       this.board = board.serialize(false);
       this.hash = board.getHash();
-      this.score = new BoardStatistics(board).getNormalizedScore(scoringSettings);
+      this.score = new BoardStatistics(board).getRouterScore(scoringSettings);
       this.restoreCount = 0;
     }
   }

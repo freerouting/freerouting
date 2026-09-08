@@ -605,9 +605,9 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 
 - [x] `getRouterScore` / `getOptimizerScore` (optimizer formula still uses the
   legacy implementation).
-- [ ] Point all router/history paths at router score; `BatchOptimizer` at optimizer
+- [x] Point all router/history paths at router score; `BatchOptimizer` at optimizer
   score + the decided score-ranking gate (connectivity/DRC vetoes only).
-- [ ] Remove optimizer “close to 1000” stop; keep improvement-threshold stop
+- [x] Remove optimizer “close to 1000” stop; keep improvement-threshold stop
   (recalibrate default later).
 - [x] Explicit score fields: keep API `normalized_score` = router score; add
   `optimizer_score`. Deprecate `getNormalizedScore()` as a router-score alias.
@@ -649,12 +649,11 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 - [ ] `SyntheticPerfectTwoPin` scores 1000 on both V2 scores; pour boards are not
   required to.
 - [ ] Zero-connection boards are defined.
-- [ ] Gate: more incompletes or higher DRC count reject; ranking is by
+- [x] Gate: more incompletes or higher DRC count reject; ranking is by
   optimizer score (more-complete uglier boards do not auto-win); equal scores
   keep the incumbent. Timeout rip-up that adds incompletes is rejected.
-- [ ] Optimizer stops on improvement threshold, not proximity to 1000. The
-  proximity stop is still present and must be removed after the optimizer score
-  is implemented.
+- [x] Optimizer stops on improvement threshold, not proximity to 1000. The
+  improvement threshold remains subject to later recalibration.
 - [ ] V1 legacy reproduces historical current-tree scores within ±10 points.
 - [ ] Raw-metric schema parity current vs v1.9 including pre/post optimizer snapshots;
   v1.9 score algorithm unchanged.
