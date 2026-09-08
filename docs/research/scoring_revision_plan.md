@@ -567,6 +567,7 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 | Add lower bounds and V2 formulas | 3–4 | ☐ pending | Synthetic perfect-board and replay tests |
 | Calibrate weights and optimizer threshold | 5–6 | ☐ pending | Held-out current-v1.9 report |
 | Complete regression and parity verification | 7 | ☐ pending | Required Gradle gates and fixture results |
+| Optional settings-hierarchy refactor | 8 | ☐ confirmation required | Explicit approval, compatibility tests, and migration review |
 
 ### Phase 0: Schema and v1.9 raw telemetry
 
@@ -661,6 +662,35 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 - [ ] Full DRC uses `getAllClearanceViolations()`.
 - [ ] No completion / DRC-count regression vs the previous current default.
 
+### Phase 8: Optional settings-hierarchy refactor (confirmation required)
+
+This is a **final, optional step** after Phases 0–7 are complete. Do not begin
+this phase without explicit confirmation. Its purpose is to make stage ownership
+clearer without changing routing behavior or scoring semantics.
+
+- [ ] Confirm that the refactor should proceed after the scoring implementation
+  and verification gates pass.
+- [ ] Introduce an `AutorouterSettings` object by composition, not inheritance.
+- [ ] Move the autorouter-stage execution fields from `RouterSettings` into
+  `AutorouterSettings`: `enabled`, `algorithm`, `maxPasses`, `maxItems`,
+  `maxThreads`, `saveIntermediateStages`, and `ignoreNetClasses`.
+- [ ] Keep `fanout` and `optimizer` as separate stage settings. Keep shared
+  route-engine policy (`viasAllowed`, `automaticNeckdown`, `strictDrc`,
+  `neckWidthUm`, `tracePullTightAccuracy`, and related layer/cost settings)
+  outside `AutorouterSettings`.
+- [ ] Decide and document the final top-level name (`routing` versus the current
+  `router`) before changing serialized structure.
+- [ ] Preserve compatible field aliases with Gson
+  `@SerializedName(value = "...", alternate = {"..."})` wherever the old and new
+  names refer to the same serialized field.
+- [ ] Do not assume `alternate` alone handles the old flat-to-new nested shape:
+  `router.max_passes` and `routing.autorouter.max_passes` require an explicit
+  migration/normalization path or a compatibility bridge.
+- [ ] Add round-trip, legacy-read, precedence, CLI, GUI, API, and settings-merge
+  tests before removing the legacy serialization bridge.
+- [ ] Update `docs/settings.md`, `docs/architecture.md`, and all affected
+  settings-path consumers only after compatibility tests pass.
+
 ---
 
 ## 6. Remaining decisions
@@ -684,9 +714,10 @@ lifecycle.
 
 ### Still to decide
 
-No structural scoring decision remains open for the current phase. If common
-score values emerge later, add them by composition after a concrete use case is
-identified.
+No structural scoring decision remains open for the current scoring phase. The
+optional Phase 8 settings-hierarchy refactor still requires explicit confirmation
+after the scoring work is complete. If common score values emerge later, add them
+by composition after a concrete use case is identified.
 
 Placeholder \(W_*\) / \(U_{\text{scale}}\) /
 \(L_{\text{floor}}\) stay uncalibrated until after test runs (D8). Phase 0
