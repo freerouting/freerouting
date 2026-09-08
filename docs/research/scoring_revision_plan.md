@@ -591,9 +591,8 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   current-board-statistics flattening is implemented).
 - [x] Persist `system.cpu_score` on each benchmark run (same value as
   `RuntimeEnvironment.cpuScore`).
-- [ ] Manifest schema parity test (field names, types, units, missingness) for
-  current vs v1.9. The benchmark harness now supplies matching lower-bound
-  fields; an explicit parity validator remains.
+- [x] Add an explicit benchmark schema parity validator for field names and
+  missingness; values need not match between current and v1.9.
 - [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
   (settings documentation is updated; architecture documentation remains).
 
