@@ -37,6 +37,15 @@ function Test-IsLegacyRun {
     )
 }
 
+function Test-IsHistoricalRun {
+    param($Run)
+
+    if (-not (Test-PropertyPath $Run "schema_version")) {
+        return $true
+    }
+    return [int]$Run.schema_version -lt 3
+}
+
 if (-not (Test-Path $JsonPath)) {
     throw "Benchmark JSON was not found: $JsonPath"
 }
@@ -70,8 +79,22 @@ $requiredPaths = @(
     "schema_version"
 )
 
+$historicalOptionalPaths = @(
+    "system.cpu_score",
+    "settings",
+    "bounds",
+    "bounds.board_area_mm2",
+    "bounds.complexity_c",
+    "bounds.min_trace_length_mm",
+    "bounds.min_via_count",
+    "bounds.min_bend_count",
+    "drc",
+    "schema_version"
+)
+
 $errors = [System.Collections.Generic.List[string]]::new()
 foreach ($run in $runs) {
+    $historical = Test-IsHistoricalRun $run
     $identity =
         if (Test-PropertyPath $run "fixture.relative_path") {
             [string]$run.fixture.relative_path
@@ -79,11 +102,12 @@ foreach ($run in $runs) {
             "<unknown fixture>"
         }
     foreach ($path in $requiredPaths) {
-        if (-not (Test-PropertyPath $run $path)) {
+        if (-not (Test-PropertyPath $run $path) -and
+            (-not $historical -or $path -notin $historicalOptionalPaths)) {
             [void]$errors.Add("$identity is missing '$path'")
         }
     }
-    if ((-not (Test-IsLegacyRun $run)) -and
+    if ((-not $historical) -and (-not (Test-IsLegacyRun $run)) -and
         (-not (Test-PropertyPath $run "system.cpu_score") -or
         $null -eq $run.system.cpu_score)) {
         [void]$errors.Add("$identity is missing non-legacy 'system.cpu_score'")
@@ -120,6 +144,9 @@ $parityPaths = @(
 )
 $pairedCount = 0
 foreach ($run in $v19Runs) {
+    if (Test-IsHistoricalRun $run) {
+        continue
+    }
     if (-not (Test-PropertyPath $run "fixture.relative_path")) {
         continue
     }

@@ -557,7 +557,8 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 | Persist robust median `cpu_score` at startup | 0 | ✅ done | `RuntimeEnvironmentTest`; startup hardware log |
 | Persist `cpu_score` in current result manifests | 0 | ✅ done | `RoutingResultManifestTest`; `cpu_score` JSON field |
 | Carry `cpu_score` into new benchmark `system` records | 0 | ✅ done | `run-benchmarks.ps1` + manifest/log parser path |
-| Allow legacy null `system.cpu_score` and derive `cpu_score_effective` for calculations | 0 | ✅ done | Validator permits legacy nulls; harness derives current-machine fallback |
+| Allow historical null/missing `system.cpu_score` and derive `cpu_score_effective` | 0 | ✅ done | Validator permits legacy gaps; harness derives current-machine fallback |
+| Version enriched benchmark records as schema v3 | 0 | ✅ done | New records require v3 fields; v1/v2 records remain historical |
 | Persist total DRC shortfall in current/v1.9 statistics | 0 | ✅ done | `total_violation_um` in both statistics models |
 | Normalize board inputs from `BoardStatistics` | 0 | ✅ done | Benchmark records use manifest statistics, not DSN counts |
 | Persist board-only difficulty inputs \(P,L,C,D,A\) | 0–3 | ◐ scaffolded | Manifest `difficulty` and board area fields |
@@ -598,10 +599,11 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   zero-fill historical telemetry.
 - [x] Derive `system.cpu_score_effective` from the current machine's score when
   a legacy row needs a CPU value for calculation.
-- [ ] Complete the explicit benchmark schema parity check for field names and
-  missingness; legacy CPU-score absence is an allowed exception. The current
-  historical dataset now passes the CPU-score rule but still has rows missing
-  other fields such as `settings`.
+- [x] Version the enriched benchmark record shape as `schema_version: 3`;
+  schema v1/v2 records are historical and may omit newer fields such as
+  `settings`, `bounds`, and `drc`.
+- [ ] Verify current/v1.9 schema parity with at least one paired schema-v3
+  fixture; the existing dataset validates per-run but contains no such pairs.
 - [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
   (settings documentation is updated; architecture documentation remains).
 

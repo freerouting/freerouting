@@ -468,7 +468,7 @@ foreach ($binary in $binaries) {
             result_json = $runResult.ResultJsonFile
             output_file = $runResult.OutputFile
             samples     = $sampleRecords
-            schema_version = 2
+            schema_version = 3
         }
 
         # Update cache
