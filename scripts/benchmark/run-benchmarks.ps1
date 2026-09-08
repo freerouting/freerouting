@@ -679,7 +679,13 @@ foreach ($key in @($cache.Keys)) {
             }
             $detectedHostVersion = $fixtureMetadataCache[$dsnPath].host_version
             if (-not [string]::IsNullOrWhiteSpace([string]$detectedHostVersion)) {
-                $run.fixture.host_version = $detectedHostVersion
+                $hostVersionProperty = $run.fixture.PSObject.Properties["host_version"]
+                if ($hostVersionProperty) {
+                    $hostVersionProperty.Value = $detectedHostVersion
+                } else {
+                    Add-Member -InputObject $run.fixture -NotePropertyName "host_version" `
+                        -NotePropertyValue $detectedHostVersion
+                }
                 $cache[$key] = $run
                 $hostVersionPatched = $true
             }
@@ -687,8 +693,14 @@ foreach ($key in @($cache.Keys)) {
     }
     if ($fixturePath -and $currentBoundsByFixture.ContainsKey($fixturePath)) {
         $sourceBounds = $currentBoundsByFixture[$fixturePath]
-        if ($null -eq $run.bounds) {
-            $run.bounds = [PSCustomObject]@{}
+        $boundsProperty = $run.PSObject.Properties["bounds"]
+        if ($null -eq $boundsProperty -or $null -eq $boundsProperty.Value) {
+            $newBounds = [PSCustomObject]@{}
+            if ($boundsProperty) {
+                $boundsProperty.Value = $newBounds
+            } else {
+                Add-Member -InputObject $run -NotePropertyName "bounds" -NotePropertyValue $newBounds
+            }
         }
         $runBoundsChanged = $false
         foreach ($field in @(
@@ -699,7 +711,13 @@ foreach ($key in @($cache.Keys)) {
                 "min_bend_count"
             )) {
             if ($null -eq $run.bounds.$field -and $null -ne $sourceBounds.$field) {
-                $run.bounds.$field = $sourceBounds.$field
+                $boundProperty = $run.bounds.PSObject.Properties[$field]
+                if ($boundProperty) {
+                    $boundProperty.Value = $sourceBounds.$field
+                } else {
+                    Add-Member -InputObject $run.bounds -NotePropertyName $field `
+                        -NotePropertyValue $sourceBounds.$field
+                }
                 $runBoundsChanged = $true
             }
         }
@@ -713,7 +731,13 @@ foreach ($key in @($cache.Keys)) {
         (-not $run.PSObject.Properties["settings_snapshot"] -or
             $null -eq $run.settings_snapshot) -and
         [string]$run.binary.version_label -match "(?i)(1[._-]?9|v190)") {
-        $run.settings_snapshot = $currentSettingsByFixture[$fixturePath]
+        $settingsProperty = $run.PSObject.Properties["settings_snapshot"]
+        if ($settingsProperty) {
+            $settingsProperty.Value = $currentSettingsByFixture[$fixturePath]
+        } else {
+            Add-Member -InputObject $run -NotePropertyName "settings_snapshot" `
+                -NotePropertyValue $currentSettingsByFixture[$fixturePath]
+        }
         $cache[$key] = $run
         $settingsPatched = $true
     }
