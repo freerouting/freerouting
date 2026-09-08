@@ -576,8 +576,9 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   \(N_{\text{conn}}\), \(L_{\min}\), \(A\), \(D\)) in the current
   `RoutingResultManifest`; expose bounds both at manifest level and under
   `board_statistics`.
-- [ ] Attach fixture-derived bounds in the harness for v1.9 rows (needed for
-  later V2 replay).
+- [x] Attach current-tree fixture bounds to matching v1.9 benchmark rows in
+  the harness (without changing the frozen v1.9 engine); rows remain null when
+  no matching current-tree run is available.
 - [x] Compute current-tree \(L_{\min}\), \(V_{\min}\), and \(B_{\min}\) from
   board terminals and serialize them under `board_statistics.bounds`.
 - [ ] Add the same lower-bound fields to v1.9 harness records and verify schema
@@ -591,7 +592,8 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 - [x] Persist `system.cpu_score` on each benchmark run (same value as
   `RuntimeEnvironment.cpuScore`).
 - [ ] Manifest schema parity test (field names, types, units, missingness) for
-  current vs v1.9. Values need not match.
+  current vs v1.9. The benchmark harness now supplies matching lower-bound
+  fields; an explicit parity validator remains.
 - [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
   (settings documentation is updated; architecture documentation remains).
 

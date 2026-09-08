@@ -352,7 +352,7 @@ foreach ($binary in $binaries) {
         $traceStats = if ($boardStats) { $boardStats.traces } else { $null }
         $viaStats = if ($boardStats) { $boardStats.vias } else { $null }
         $bendStats = if ($boardStats) { $boardStats.bends } else { $null }
-        $boundsStats = if ($boardStats) { $boardStats.bounds } else { $null }
+        $boundsStats = if ($logMetrics.bounds) { $logMetrics.bounds } else { $null }
         $boardSize = if ($boardStats) { $boardStats.board.size } else { $null }
         $boardAreaMm2 = $null
         if ($boardSize -and $boardSize.width -ne $null -and $boardSize.height -ne $null) {
@@ -484,6 +484,48 @@ foreach ($binary in $binaries) {
 
         Write-Output "  -> Done! [Unrouted: $($runObj.quality.final_unrouted) (DRC: $($runObj.drc.final_unrouted)), Clearance: $($runObj.drc.clearance_violations), Dangling: $($runObj.drc.dangling_tracks) tracks/$($runObj.drc.dangling_vias) vias, Score: $($runObj.quality.quality_score) (DRC: $($runObj.drc.final_quality_score))]"
     }
+}
+
+# v1.9 does not calculate V2 lower bounds in the frozen compatibility tree. When a matching
+# current-tree run exists, copy its board-only bounds into the v1.9 benchmark record so replay
+# consumers receive the same schema without changing v1.9 routing behavior.
+$currentBoundsByFixture = @{}
+$currentBinaryName = if ($binaryCurrent) { $binaryCurrent.Name } else { $null }
+if ($currentBinaryName) {
+    foreach ($run in @($cache.Values)) {
+        if ($run.binary -and $run.binary.filename -eq $currentBinaryName -and
+            $run.fixture -and $run.fixture.relative_path -and $run.bounds) {
+            if ($null -ne $run.bounds.min_trace_length_mm -or
+                $null -ne $run.bounds.min_via_count -or
+                $null -ne $run.bounds.min_bend_count) {
+                $currentBoundsByFixture[$run.fixture.relative_path] = $run.bounds
+            }
+        }
+    }
+}
+
+$boundsPatched = $false
+foreach ($key in @($cache.Keys)) {
+    $run = $cache[$key]
+    $fixturePath = if ($run.fixture) { $run.fixture.relative_path } else { $null }
+    if ($fixturePath -and $currentBoundsByFixture.ContainsKey($fixturePath) -and
+        ($null -eq $run.bounds -or
+        ($null -eq $run.bounds.min_trace_length_mm -and
+         $null -eq $run.bounds.min_via_count -and
+         $null -eq $run.bounds.min_bend_count))) {
+        $sourceBounds = $currentBoundsByFixture[$fixturePath]
+        if ($null -eq $run.bounds) {
+            $run.bounds = [PSCustomObject]@{}
+        }
+        $run.bounds.min_trace_length_mm = $sourceBounds.min_trace_length_mm
+        $run.bounds.min_via_count = $sourceBounds.min_via_count
+        $run.bounds.min_bend_count = $sourceBounds.min_bend_count
+        $cache[$key] = $run
+        $boundsPatched = $true
+    }
+}
+if ($boundsPatched) {
+    Save-BenchmarksJson $rawJson $cache $JsonPath
 }
 
 # 6. Generate final reports
