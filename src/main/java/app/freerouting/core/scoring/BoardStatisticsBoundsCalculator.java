@@ -6,7 +6,6 @@ import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.rules.Net;
 import app.freerouting.rules.ViaInfo;
 import app.freerouting.rules.ViaRule;
@@ -89,24 +88,21 @@ final class BoardStatisticsBoundsCalculator {
       FloatPoint center = pin.getCenter().toFloat();
       x = center.x;
       y = center.y;
-      addSignalLayers(board, pin.firstLayer(), pin.lastLayer(), signalLayers);
+      for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+        if (pin.getShape(layer - pin.firstLayer()) != null) {
+          addSignalLayer(board, layer, signalLayers);
+        }
+      }
     } else if (item instanceof ConductionArea area) {
-      IntBox box = area.boundingBox();
-      x = (box.ll.x + box.ur.x) / 2.0;
-      y = (box.ll.y + box.ur.y) / 2.0;
+      FloatPoint center = area.getArea().getBorder().centreOfGravity();
+      x = center.x;
+      y = center.y;
       addSignalLayer(board, area.getLayer(), signalLayers);
     } else {
       return null;
     }
 
     return new Terminal(x, y, signalLayers);
-  }
-
-  private static void addSignalLayers(
-      BasicBoard board, int firstLayer, int lastLayer, Set<Integer> signalLayers) {
-    for (int layer = firstLayer; layer <= lastLayer; layer++) {
-      addSignalLayer(board, layer, signalLayers);
-    }
   }
 
   private static void addSignalLayer(BasicBoard board, int layer, Set<Integer> signalLayers) {

@@ -77,6 +77,7 @@ class RoutingResultManifestTest {
     assertNotNull(root.get("git_sha"));
     assertNotNull(root.get("fixture"));
     assertNotNull(root.get("board_statistics"));
+    assertNotNull(root.get("bounds"));
     assertNotNull(root.get("resource_usage"));
     assertEquals("COMPLETED", root.get("final_state").getAsString());
     assertEquals(0, root.get("exit_code").getAsInt());
@@ -86,6 +87,7 @@ class RoutingResultManifestTest {
 
     RoutingResultManifest roundTrip = GsonProvider.GSON.fromJson(json, RoutingResultManifest.class);
     assertNotNull(roundTrip.boardStatistics);
+    assertNotNull(roundTrip.bounds);
     assertNotNull(roundTrip.boardStatistics.difficulty);
     assertNotNull(roundTrip.boardStatistics.bounds);
     assertNotNull(roundTrip.boardStatistics.bounds.minTraceLengthMm);

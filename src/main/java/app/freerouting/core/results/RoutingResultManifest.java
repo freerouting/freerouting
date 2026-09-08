@@ -5,6 +5,7 @@ import app.freerouting.core.RouterJobResourceUsage;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.core.scoring.BoardStatisticsBounds;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
@@ -48,6 +49,9 @@ public final class RoutingResultManifest {
 
   @SerializedName("board_statistics")
   public BoardStatistics boardStatistics;
+
+  @SerializedName("bounds")
+  public BoardStatisticsBounds bounds;
 
   @SerializedName("normalized_score")
   public Float normalizedScore;
@@ -133,6 +137,7 @@ public final class RoutingResultManifest {
 
     if (job.board != null) {
       manifest.boardStatistics = new BoardStatistics(job.board);
+      manifest.bounds = manifest.boardStatistics.bounds;
       if (job.routerSettings != null && job.routerSettings.scoring != null) {
         manifest.normalizedScore = manifest.boardStatistics.getRouterScore(job.routerSettings);
         manifest.optimizerScore = manifest.boardStatistics.getOptimizerScore(job.routerSettings);

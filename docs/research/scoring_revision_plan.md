@@ -572,10 +572,12 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 ### Phase 0: Schema and v1.9 raw telemetry
 
 - [x] Persist `totalViolationUm` in current and v1.9 `BoardStatistics`.
-- [ ] Persist lower bounds and difficulty inputs (\(C\), \(P\), \(L\),
-  \(N_{\text{conn}}\), \(L_{\min}\), \(A\), \(D\)) in current
-  `RoutingResultManifest`; attach fixture-derived bounds in the harness for v1.9
-  rows (needed for later V2 replay).
+- [x] Persist lower bounds and difficulty inputs (\(C\), \(P\), \(L\),
+  \(N_{\text{conn}}\), \(L_{\min}\), \(A\), \(D\)) in the current
+  `RoutingResultManifest`; expose bounds both at manifest level and under
+  `board_statistics`.
+- [ ] Attach fixture-derived bounds in the harness for v1.9 rows (needed for
+  later V2 replay).
 - [x] Compute current-tree \(L_{\min}\), \(V_{\min}\), and \(B_{\min}\) from
   board terminals and serialize them under `board_statistics.bounds`.
 - [ ] Add the same lower-bound fields to v1.9 harness records and verify schema
