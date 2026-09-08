@@ -136,6 +136,18 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`layers`**: An array of layer-specific settings (transient, typically set via CLI or loaded from board files). Each element contains:
     - **`routable`**: Boolean indicating if the layer is active/routable by the autorouter.
     - **`preferred_direction_horizontal`**: Boolean indicating if the preferred direction on this layer is horizontal.
+- **`router_scoring`**: Versioned router-board score settings. The current default is
+  `V1_LEGACY`; `V2_CONTINUOUS` is available for staged rollout. Its nullable weight fields are
+  `unrouted_connection_weight`, `clearance_violation_count_weight`,
+  `clearance_violation_depth_weight`, and `clearance_violation_depth_scale`.
+- **`optimizer_scoring`**: Versioned optimizer-board score settings. The current default is
+  `V1_LEGACY`; `V2_LOWER_BOUND` is available for staged rollout. Its fields are
+  `excess_wire_length_weight`, `excess_via_weight`, `excess_bend_weight`, `length_floor`, and
+  `difficulty_scale_floor`.
+
+The router and optimizer versions are independent. CLI aliases are
+`--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and
+`--scoring-version=v1|v2` to select both.
 
 ##### **`optimizer` Sub-section**
 

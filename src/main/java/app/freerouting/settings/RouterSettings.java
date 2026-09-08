@@ -93,6 +93,12 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("scoring")
   public ScoringSettings scoring;
 
+  @SerializedName("router_scoring")
+  public RouterScoringSettings routerScoring;
+
+  @SerializedName("optimizer_scoring")
+  public OptimizerScoringSettings optimizerScoring;
+
   @SerializedName("max_threads")
   public Integer maxThreads;
 
@@ -120,6 +126,8 @@ public class RouterSettings implements Serializable, Cloneable {
   public RouterSettings() {
     this.optimizer = new OptimizerSettings();
     this.scoring = new ScoringSettings();
+    this.routerScoring = new RouterScoringSettings();
+    this.optimizerScoring = new OptimizerScoringSettings();
     this.fanout = new FanoutSettings();
   }
 
@@ -517,6 +525,12 @@ public class RouterSettings implements Serializable, Cloneable {
     // Use proper clone() methods for nested objects
     result.optimizer = this.optimizer != null ? this.optimizer.clone() : new OptimizerSettings();
     result.scoring = this.scoring != null ? this.scoring.clone() : new ScoringSettings();
+    result.routerScoring =
+        this.routerScoring != null ? this.routerScoring.clone() : new RouterScoringSettings();
+    result.optimizerScoring =
+        this.optimizerScoring != null
+            ? this.optimizerScoring.clone()
+            : new OptimizerScoringSettings();
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
     result.boardSpecificTraceCostsApplied = this.boardSpecificTraceCostsApplied;
 

@@ -2,6 +2,8 @@ package app.freerouting.settings.sources;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.settings.OptimizerScoringVersion;
+import app.freerouting.settings.RouterScoringVersion;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
 
@@ -80,6 +82,24 @@ public class DefaultSettings implements SettingsSource {
   /** Default drill-hole-to-copper clearance in micrometres. Zero preserves legacy DSN behaviour. */
   public static final double DEFAULT_HOLE_CLEARANCE_UM = 0.0;
 
+  /** Compatibility default until V2 score formulas are enabled at all call sites. */
+  public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
+      RouterScoringVersion.V1_LEGACY;
+
+  /** Compatibility default until V2 optimizer scoring is enabled. */
+  public static final OptimizerScoringVersion DEFAULT_OPTIMIZER_SCORING_VERSION =
+      OptimizerScoringVersion.V1_LEGACY;
+
+  public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
+  public static final float DEFAULT_ROUTER_CLEARANCE_COUNT_WEIGHT = 25.0F;
+  public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_WEIGHT = 1.0F;
+  public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_SCALE_UM = 1000.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_LENGTH_WEIGHT = 1.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_VIA_WEIGHT = 1.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_BEND_WEIGHT = 1.0F;
+  public static final float DEFAULT_OPTIMIZER_LENGTH_FLOOR = 1.0F;
+  public static final float DEFAULT_OPTIMIZER_DIFFICULTY_SCALE_FLOOR = 1.0F;
+
   private static final int PRIORITY = 0;
 
   @Override
@@ -152,6 +172,19 @@ public class DefaultSettings implements SettingsSource {
     settings.scoring.clearanceViolationPenalty = DEFAULT_CLEARANCE_VIOLATION_PENALTY;
     settings.scoring.bendPenalty = DEFAULT_BEND_PENALTY;
     settings.scoring.defaultBendCost = 0.0;
+
+    settings.routerScoring.version = DEFAULT_ROUTER_SCORING_VERSION;
+    settings.routerScoring.unroutedConnectionWeight = DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT;
+    settings.routerScoring.clearanceViolationCountWeight = DEFAULT_ROUTER_CLEARANCE_COUNT_WEIGHT;
+    settings.routerScoring.clearanceViolationDepthWeight = DEFAULT_ROUTER_CLEARANCE_DEPTH_WEIGHT;
+    settings.routerScoring.clearanceViolationDepthScale = DEFAULT_ROUTER_CLEARANCE_DEPTH_SCALE_UM;
+
+    settings.optimizerScoring.version = DEFAULT_OPTIMIZER_SCORING_VERSION;
+    settings.optimizerScoring.excessWireLengthWeight = DEFAULT_OPTIMIZER_EXCESS_LENGTH_WEIGHT;
+    settings.optimizerScoring.excessViaWeight = DEFAULT_OPTIMIZER_EXCESS_VIA_WEIGHT;
+    settings.optimizerScoring.excessBendWeight = DEFAULT_OPTIMIZER_EXCESS_BEND_WEIGHT;
+    settings.optimizerScoring.lengthFloor = DEFAULT_OPTIMIZER_LENGTH_FLOOR;
+    settings.optimizerScoring.difficultyScaleFloor = DEFAULT_OPTIMIZER_DIFFICULTY_SCALE_FLOOR;
 
     return settings;
   }

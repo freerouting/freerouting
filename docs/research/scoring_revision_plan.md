@@ -558,7 +558,7 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 | Persist total DRC shortfall in current/v1.9 statistics | 0 | ✅ done | `total_violation_um` in both statistics models |
 | Normalize board inputs from `BoardStatistics` | 0 | ✅ done | Benchmark records use manifest statistics, not DSN counts |
 | Persist remaining raw current/v1.9 routing metrics | 0 | ☐ next | Manifest parity test and replay fixture |
-| Split router and optimizer scoring APIs/settings | 1–2 | ☐ pending | Independent version/settings tests |
+| Split router and optimizer scoring APIs/settings | 1–2 | ◐ scaffolded | Independent version settings and legacy score aliases |
 | Add lower bounds and V2 formulas | 3–4 | ☐ pending | Synthetic perfect-board and replay tests |
 | Calibrate weights and optimizer threshold | 5–6 | ☐ pending | Held-out current-v1.9 report |
 | Complete regression and parity verification | 7 | ☐ pending | Required Gradle gates and fixture results |

@@ -623,8 +623,8 @@ public class BoardStatistics implements Serializable {
     return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
-  /** Returns the score normalized to a range from zero to one thousand. */
-  public float getNormalizedScore(ScoringSettings scoringSettings) {
+  /** Returns the legacy score normalized to a range from zero to one thousand. */
+  private float getLegacyNormalizedScore(ScoringSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     if (maximumScore <= 0f) {
       // Guard against division by zero and negative maximum scores (e.g. boards with no
@@ -635,6 +635,29 @@ public class BoardStatistics implements Serializable {
       return 0f;
     }
     return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
+  }
+
+  /** Returns the router score normalized to a range from zero to one thousand. */
+  public float getRouterScore(ScoringSettings scoringSettings) {
+    return getLegacyNormalizedScore(scoringSettings);
+  }
+
+  /**
+   * Returns the optimizer score normalized to a range from zero to one thousand.
+   *
+   * <p>V2 lower-bound scoring is introduced in a later phase. Until its bounds are available, the
+   * V1-compatible score is returned so callers can migrate independently without changing behavior.
+   */
+  public float getOptimizerScore(ScoringSettings scoringSettings) {
+    return getLegacyNormalizedScore(scoringSettings);
+  }
+
+  /**
+   * @deprecated Use {@link #getRouterScore(ScoringSettings)}.
+   */
+  @Deprecated
+  public float getNormalizedScore(ScoringSettings scoringSettings) {
+    return getRouterScore(scoringSettings);
   }
 
   /** Statistics for surface-mount pin fanout. */

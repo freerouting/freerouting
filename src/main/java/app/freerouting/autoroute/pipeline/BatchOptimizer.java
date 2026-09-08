@@ -153,7 +153,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     // Capture initial board state for baseline and session summary
     BoardStatistics initialStats = board.getStatistics();
-    float initialScore = initialStats.getNormalizedScore(job.routerSettings.scoring);
+    float initialScore = initialStats.getOptimizerScore(job.routerSettings.scoring);
     int initialIncomplete = initialStats.connections.incompleteCount;
     int initialViolations = initialStats.clearanceViolations.totalCount;
 
@@ -201,7 +201,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
       ++currentPass;
 
-      float scoreBeforePass = board.getStatistics().getNormalizedScore(job.routerSettings.scoring);
+      float scoreBeforePass = board.getStatistics().getOptimizerScore(job.routerSettings.scoring);
 
       // Stop if potential improvement is less than threshold
       if (scoreBeforePass * (1 + this.settings.optimizer.optimizationImprovementThreshold)
@@ -230,7 +230,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
         break;
       }
 
-      float scoreAfterPass = board.getStatistics().getNormalizedScore(job.routerSettings.scoring);
+      float scoreAfterPass = board.getStatistics().getOptimizerScore(job.routerSettings.scoring);
       if (scoreAfterPass > this.bestScore) {
         this.bestScore = scoreAfterPass;
         this.bestBoard = this.board.deepCopy();
@@ -264,7 +264,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     // Restore best board achieved if final state regressed below best score
     float finalBoardScore =
-        this.board.getStatistics().getNormalizedScore(job.routerSettings.scoring);
+        this.board.getStatistics().getOptimizerScore(job.routerSettings.scoring);
     if (finalBoardScore < this.bestScore && this.bestBoard != null) {
       job.logInfo(
           String.format(
@@ -298,7 +298,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
 
     BoardStatistics finalStats = new BoardStatistics(this.board);
-    float finalScore = finalStats.getNormalizedScore(job.routerSettings.scoring);
+    float finalScore = finalStats.getOptimizerScore(job.routerSettings.scoring);
     String completionStatus =
         this.isTimedOut
             ? "completed with timeout:"
@@ -544,7 +544,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
             this.board.getHash(),
             routeoptimizerPassDuration,
             FRLogger.formatScore(
-                boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring),
+                boardStatisticsAfter.getOptimizerScore(job.routerSettings.scoring),
                 boardStatisticsAfter.connections.incompleteCount,
                 boardStatisticsAfter.clearanceViolations.totalCount)));
     return routeImproved;
