@@ -17,6 +17,7 @@ function Import-ResultManifestMetrics {
 
     $stats = $manifest.board_statistics
     if ($stats) {
+        $LogMetrics.board_statistics = $stats
         if ($stats.connections -and $null -ne $stats.connections.incomplete_count) {
             $LogMetrics.autorouter.final_unrouted = [int]$stats.connections.incomplete_count
         }

@@ -121,6 +121,7 @@ function Get-PhaseMetrics {
             metric_source = "none"
             last_checkpoint = $null
             cpu_score = $null
+            board_statistics = $null
         }
     }
 
@@ -401,5 +402,6 @@ function Get-PhaseMetrics {
         metric_source = $metricSource
         last_checkpoint = $lastCheckpoint
         cpu_score = $cpuScore
+        board_statistics = $null
     }
 }

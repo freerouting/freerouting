@@ -359,11 +359,13 @@ public class BoardStatistics implements Serializable {
 
         int uniqueCount = processedPairs.size();
         this.clearanceViolations.totalCount = uniqueCount;
+        this.clearanceViolations.totalViolationUm = sumViolation;
         this.clearanceViolations.minViolationUm = uniqueCount > 0 ? minViolation : 0.0;
         this.clearanceViolations.maxViolationUm = maxViolation;
         this.clearanceViolations.avgViolationUm = uniqueCount > 0 ? sumViolation / uniqueCount : 0.0;
       } else {
         this.clearanceViolations.totalCount = 0;
+        this.clearanceViolations.totalViolationUm = 0.0;
         this.clearanceViolations.minViolationUm = 0.0;
         this.clearanceViolations.maxViolationUm = 0.0;
         this.clearanceViolations.avgViolationUm = 0.0;

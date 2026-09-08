@@ -351,16 +351,19 @@ public class BoardStatistics implements Serializable {
           maxViolation = Math.max(maxViolation, shortfallUm);
           sumViolation += shortfallUm;
         }
+        this.clearanceViolations.totalViolationUm = sumViolation;
         this.clearanceViolations.minViolationUm = minViolation;
         this.clearanceViolations.maxViolationUm = maxViolation;
         this.clearanceViolations.avgViolationUm = sumViolation / violationsList.size();
       } else {
+        this.clearanceViolations.totalViolationUm = 0.0;
         this.clearanceViolations.minViolationUm = 0.0;
         this.clearanceViolations.maxViolationUm = 0.0;
         this.clearanceViolations.avgViolationUm = 0.0;
       }
     } else {
       this.clearanceViolations.totalCount = 0;
+      this.clearanceViolations.totalViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;
       this.clearanceViolations.maxViolationUm = 0.0;
       this.clearanceViolations.avgViolationUm = 0.0;

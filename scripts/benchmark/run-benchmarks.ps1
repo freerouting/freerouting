@@ -342,6 +342,37 @@ foreach ($binary in $binaries) {
             $logMetrics.autorouter.final_score = Get-MedianValue ($sampleRecords.quality_score)
         }
 
+        $boardStats = $logMetrics.board_statistics
+        $connectionStats = if ($boardStats) { $boardStats.connections } else { $null }
+        $clearanceStats = if ($boardStats) { $boardStats.clearance_violations } else { $null }
+        $itemStats = if ($boardStats) { $boardStats.items } else { $null }
+        $layerStats = if ($boardStats) { $boardStats.layers } else { $null }
+        $netStats = if ($boardStats) { $boardStats.nets } else { $null }
+        $componentStats = if ($boardStats) { $boardStats.components } else { $null }
+        $traceStats = if ($boardStats) { $boardStats.traces } else { $null }
+        $viaStats = if ($boardStats) { $boardStats.vias } else { $null }
+        $bendStats = if ($boardStats) { $boardStats.bends } else { $null }
+        $boardSize = if ($boardStats) { $boardStats.board.size } else { $null }
+        $boardAreaMm2 = $null
+        if ($boardSize -and $boardSize.width -ne $null -and $boardSize.height -ne $null) {
+            $boardAreaMm2 = [math]::Abs([double]$boardSize.width * [double]$boardSize.height)
+        }
+        $pinCount = if ($itemStats -and $itemStats.pin_count -ne $null) {
+            [int]$itemStats.pin_count
+        } else {
+            $null
+        }
+        $signalLayerCount = if ($layerStats -and $layerStats.signal_count -ne $null) {
+            [int]$layerStats.signal_count
+        } else {
+            $null
+        }
+        $complexityC = if ($pinCount -ne $null -and $signalLayerCount -ne $null) {
+            [math]::Max(1, $pinCount * $signalLayerCount)
+        } else {
+            $null
+        }
+
         # Build run record
         $relativeLogFile = $runResult.LogFile
         try {
@@ -374,9 +405,9 @@ foreach ($binary in $binaries) {
                 sha256              = (Get-FileHash $fixture.FullName -Algorithm SHA256).Hash
                 host_cad            = $fixtureMeta.host_cad
                 host_version        = $fixtureMeta.host_version
-                layer_count         = $fixtureMeta.layer_count
-                net_count           = $fixtureMeta.net_count
-                component_count     = $fixtureMeta.component_count
+                layer_count         = if ($layerStats) { $layerStats.total_count } else { $null }
+                net_count           = if ($netStats) { $netStats.total_count } else { $null }
+                component_count     = if ($componentStats) { $componentStats.total_count } else { $null }
                 smd_pin_count       = if ($logMetrics.fanout.smd_pin_count -ne $null) { $logMetrics.fanout.smd_pin_count } else { 0 }
                 board_width_mm      = $fixtureMeta.board_width_mm
                 board_height_mm     = $fixtureMeta.board_height_mm
@@ -389,16 +420,28 @@ foreach ($binary in $binaries) {
                 optimizer  = $logMetrics.optimizer
             }
             quality   = [PSCustomObject]@{
-                total_nets             = $fixtureMeta.net_count
+                total_nets             = if ($netStats) { $netStats.total_count } else { $null }
+                max_connections       = if ($connectionStats) { $connectionStats.maximum_count } else { $null }
+                unrouted_connections  = if ($connectionStats) { $connectionStats.incomplete_count } else { $null }
                 initial_unrouted       = $logMetrics.autorouter.initial_unrouted_count
                 final_unrouted         = $logMetrics.autorouter.final_unrouted
                 routing_completion_pct = $routingCompletionPct
                 clearance_violations   = $logMetrics.autorouter.final_violations
+                total_violation_um     = if ($clearanceStats) { $clearanceStats.total_violation_um } else { $null }
+                trace_length_mm        = if ($traceStats) { $traceStats.total_length_mm } else { $null }
+                via_count              = if ($viaStats) { $viaStats.total_count } else { $null }
+                bend_count             = if ($bendStats) { $bendStats.total_count } else { $null }
+                pin_count              = $pinCount
+                signal_layer_count     = $signalLayerCount
                 quality_score          = $logMetrics.autorouter.final_score
                 total_cpu_seconds      = [double]$logMetrics.autorouter.cpu_seconds + [double]$logMetrics.fanout.cpu_seconds + [double]$logMetrics.optimizer.cpu_seconds
                 total_allocated_gb     = [double]$logMetrics.autorouter.total_allocated_gb + [double]$logMetrics.fanout.total_allocated_gb + [double]$logMetrics.optimizer.total_allocated_gb
                 peak_heap_mb           = [math]::Max([double]$logMetrics.autorouter.peak_heap_mb, [math]::Max([double]$logMetrics.fanout.peak_heap_mb, [double]$logMetrics.optimizer.peak_heap_mb))
                 wall_clock_seconds     = $runResult.WallClockSeconds
+            }
+            bounds    = [PSCustomObject]@{
+                board_area_mm2 = $boardAreaMm2
+                complexity_c   = $complexityC
             }
             drc       = $drcResult
             log_analysis = [PSCustomObject]@{

@@ -85,6 +85,7 @@ class RoutingResultManifestTest {
 
     RoutingResultManifest roundTrip = GsonProvider.GSON.fromJson(json, RoutingResultManifest.class);
     assertNotNull(roundTrip.boardStatistics);
+    assertNotNull(roundTrip.boardStatistics.clearanceViolations.totalViolationUm);
     assertEquals(board.getLayerCount(), roundTrip.boardStatistics.layers.totalCount);
   }
 }
