@@ -153,19 +153,25 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     // Capture initial board state for baseline and session summary
     BoardStatistics initialStats = board.getStatistics();
-    float initialScore = initialStats.getOptimizerScore(job.routerSettings);
+    float initialRouterScore = initialStats.getRouterScore(job.routerSettings);
+    float initialOptimizerScore = initialStats.getOptimizerScore(job.routerSettings);
     int initialIncomplete = initialStats.connections.incompleteCount;
     int initialViolations = initialStats.clearanceViolations.totalCount;
 
     this.bestBoard = this.board.deepCopy();
-    this.bestScore = initialScore;
+    this.bestScore = initialOptimizerScore;
 
     job.logInfo(
-        "Optimization stage started on board '"
-            + this.board.getHash()
-            + "' with score "
-            + FRLogger.formatScore(initialScore, initialIncomplete, initialViolations)
-            + ".");
+        String.format(
+            Locale.US,
+            "Optimization stage started on board '%s'. Baseline router score: %.2f, "
+                + "optimizer score: %.2f, incomplete connections: %d, "
+                + "clearance violations: %d.",
+            this.board.getHash(),
+            initialRouterScore,
+            initialOptimizerScore,
+            initialIncomplete,
+            initialViolations));
 
     // Capture start-of-session resource usage baselines
     long sessionStartMs = System.currentTimeMillis();
@@ -230,7 +236,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
         break;
       }
 
-      float scoreAfterPass = board.getStatistics().getOptimizerScore(job.routerSettings);
+      BoardStatistics passStats = board.getStatistics();
+      float scoreAfterPass = passStats.getOptimizerScore(job.routerSettings);
       if (scoreAfterPass > this.bestScore) {
         this.bestScore = scoreAfterPass;
         this.bestBoard = this.board.deepCopy();
@@ -238,6 +245,27 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
       double passImprovement =
           scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
+      String passOutcome =
+          scoreAfterPass > scoreBeforePass
+              ? "IMPROVED"
+              : (scoreAfterPass < scoreBeforePass ? "REGRESSED" : "UNCHANGED");
+      String passImprovementPercent =
+          scoreBeforePass > 0
+              ? String.format(Locale.US, "%.4f%%", passImprovement * 100)
+              : "n/a (baseline was 0.00)";
+      job.logInfo(
+          String.format(
+              Locale.US,
+              "Optimizer pass #%d: optimizer score %.2f -> %.2f (%s, %s), router score: %.2f, "
+                  + "incomplete connections: %d, clearance violations: %d.",
+              currentPass,
+              scoreBeforePass,
+              scoreAfterPass,
+              passOutcome,
+              passImprovementPercent,
+              passStats.getRouterScore(job.routerSettings),
+              passStats.connections.incompleteCount,
+              passStats.clearanceViolations.totalCount));
 
       if (this.useIncreasedRipupCosts && scoreAfterPass <= scoreBeforePass) {
         this.useIncreasedRipupCosts = false;
@@ -297,7 +325,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
     peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
 
     BoardStatistics finalStats = new BoardStatistics(this.board);
-    float finalScore = finalStats.getOptimizerScore(job.routerSettings);
+    float finalRouterScore = finalStats.getRouterScore(job.routerSettings);
+    float finalOptimizerScore = finalStats.getOptimizerScore(job.routerSettings);
     String completionStatus =
         this.isTimedOut
             ? "completed with timeout:"
@@ -305,16 +334,16 @@ public final class BatchOptimizer extends NamedAlgorithm {
     job.logInfo(
         String.format(
             Locale.US,
-            "Optimization stage %s started with score %s, completed in %.2f seconds, "
-                + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
-                + "and %.1f MB peak heap usage.",
+            "Optimization stage %s. Baseline router score: %.2f, baseline optimizer score: %.2f, "
+                + "final router score: %.2f, final optimizer score: %.2f, completed in %.2f "
+                + "seconds, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB "
+                + "peak heap usage.",
             completionStatus,
-            FRLogger.formatScore(initialScore, initialIncomplete, initialViolations),
+            initialRouterScore,
+            initialOptimizerScore,
+            finalRouterScore,
+            finalOptimizerScore,
             sessionDurationSeconds,
-            FRLogger.formatScore(
-                finalScore,
-                finalStats.connections.incompleteCount,
-                finalStats.clearanceViolations.totalCount),
             cpuSecondsUsed,
             allocMbUsed / 1024.0f,
             peakHeapMb));
