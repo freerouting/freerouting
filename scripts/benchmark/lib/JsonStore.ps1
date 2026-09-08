@@ -61,13 +61,30 @@ function Save-BenchmarksJson {
         $pyFormatScript = @"
 import json, math, sys
 
-def render(value, level=0):
+FLOAT_KEYS = {
+    'score',
+    'score_before',
+    'score_after',
+    'final_score',
+    'quality_score',
+    'optimizer_score',
+    'router_score',
+    'current_router_score',
+    'current_optimizer_score',
+    'final_quality_score',
+    'final_optimizer_score',
+    'normalized_score',
+}
+
+def render(value, level=0, key=None):
     indent = '  ' * level
     child_indent = '  ' * (level + 1)
     if value is None:
         return 'null'
     if isinstance(value, bool):
         return 'true' if value else 'false'
+    if key in FLOAT_KEYS and isinstance(value, (int, float)):
+        return 'null' if not math.isfinite(float(value)) else format(float(value), '.2f')
     if isinstance(value, int):
         return str(value)
     if isinstance(value, float):
@@ -85,7 +102,7 @@ def render(value, level=0):
             return '{}'
         return '{\n' + ',\n'.join(
             child_indent + json.dumps(str(key), ensure_ascii=False) + ': ' +
-            render(item, level + 1)
+            render(item, level + 1, key)
             for key, item in value.items()
         ) + '\n' + indent + '}'
     raise TypeError(type(value).__name__)

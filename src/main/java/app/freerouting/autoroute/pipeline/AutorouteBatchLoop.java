@@ -230,14 +230,12 @@ final class AutorouteBatchLoop {
     if (fanoutBeforeStats != null) {
       BoardStatistics fanoutAfterStats = new BoardStatistics(router.board);
       RoutingResultManifest.PhaseDetail phase = job.resultPhaseMetrics.fanout;
-      phase.before =
-          RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
-              fanoutBeforeStats, job.routerSettings, "current");
-      phase.before.score = phase.before.routerScore;
-      phase.after =
-          RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
-              fanoutAfterStats, job.routerSettings, "current");
-      phase.after.score = phase.after.routerScore;
+      phase.before = new RoutingResultManifest.PhaseSnapshot();
+      phase.before.boardStatistics = fanoutBeforeStats;
+      phase.before.scoreSource = "not_applicable";
+      phase.after = new RoutingResultManifest.PhaseSnapshot();
+      phase.after.boardStatistics = fanoutAfterStats;
+      phase.after.scoreSource = "not_applicable";
       phase.durationSeconds =
           (float) (Duration.between(fanoutStageStart, Instant.now()).toMillis() / 1000.0);
       float fanoutStageCpuEnd = AutorouteRuntimeMetrics.currentThreadCpuSeconds();

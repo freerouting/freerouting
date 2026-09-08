@@ -391,6 +391,26 @@ foreach ($binary in $binaries) {
             if ($null -eq $phaseMetrics.after) {
                 $phaseMetrics.after = New-BenchmarkPhaseSnapshot $boardStats $phaseMetrics.score_after $nativeScoreSource
             }
+            if ($phaseName -eq "fanout") {
+                $phaseMetrics.score_before = $null
+                $phaseMetrics.score_after = $null
+                foreach ($snapshot in @($phaseMetrics.before, $phaseMetrics.after)) {
+                    foreach ($scorePropertyName in @(
+                            "score",
+                            "router_score",
+                            "optimizer_score"
+                        )) {
+                        $scoreProperty = $snapshot.PSObject.Properties[$scorePropertyName]
+                        if ($scoreProperty) {
+                            $scoreProperty.Value = $null
+                        }
+                    }
+                    $sourceProperty = $snapshot.PSObject.Properties["score_source"]
+                    if ($sourceProperty) {
+                        $sourceProperty.Value = "not_applicable"
+                    }
+                }
+            }
         }
         $connectionStats = if ($boardStats) { $boardStats.connections } else { $null }
         $clearanceStats = if ($boardStats) { $boardStats.clearance_violations } else { $null }

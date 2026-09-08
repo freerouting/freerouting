@@ -70,13 +70,29 @@ function Import-ResultManifestMetrics {
                 $phaseBefore = Get-OptionalManifestProperty $phase "before"
                 $phaseAfter = Get-OptionalManifestProperty $phase "after"
                 if ($phaseBefore) {
+                    $beforeScore = Get-OptionalManifestProperty $phaseBefore "score"
+                    if ($phaseName -eq "optimizer") {
+                        $optimizerBeforeScore =
+                            Get-OptionalManifestProperty $phaseBefore "optimizer_score"
+                        if ($null -ne $optimizerBeforeScore) {
+                            $beforeScore = $optimizerBeforeScore
+                        }
+                    }
                     $LogMetrics.$phaseName.score_before =
-                        Get-OptionalManifestProperty $phaseBefore "score"
+                        $beforeScore
                     $LogMetrics.$phaseName.before = $phaseBefore
                 }
                 if ($phaseAfter) {
+                    $afterScore = Get-OptionalManifestProperty $phaseAfter "score"
+                    if ($phaseName -eq "optimizer") {
+                        $optimizerAfterScore =
+                            Get-OptionalManifestProperty $phaseAfter "optimizer_score"
+                        if ($null -ne $optimizerAfterScore) {
+                            $afterScore = $optimizerAfterScore
+                        }
+                    }
                     $LogMetrics.$phaseName.score_after =
-                        Get-OptionalManifestProperty $phaseAfter "score"
+                        $afterScore
                     $LogMetrics.$phaseName.after = $phaseAfter
                 }
                 $phaseCpuSeconds = Get-OptionalManifestProperty $phase "cpu_seconds"
