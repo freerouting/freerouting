@@ -71,6 +71,20 @@ function Update-BenchmarkReports {
     }
 }
 
+function New-BenchmarkPhaseSnapshot {
+    param(
+        $BoardStatistics,
+        $Score,
+        [string]$ScoreSource
+    )
+
+    return [PSCustomObject]@{
+        board_statistics = $BoardStatistics
+        score = $Score
+        score_source = $ScoreSource
+    }
+}
+
 if ($ReportOnly) {
     Write-Output "Report-only mode. Generating reports from cached data..."
     Update-BenchmarkReports $cache
@@ -365,6 +379,16 @@ foreach ($binary in $binaries) {
         }
 
         $boardStats = $logMetrics.board_statistics
+        $nativeScoreSource = if ($binary.Name -match "freerouting-1\.9\.0\.jar") { "v19_native" } else { "current_native" }
+        foreach ($phaseName in @("fanout", "autorouter", "optimizer")) {
+            $phaseMetrics = $logMetrics.$phaseName
+            if ($null -eq $phaseMetrics.before) {
+                $phaseMetrics.before = New-BenchmarkPhaseSnapshot $null $phaseMetrics.score_before $nativeScoreSource
+            }
+            if ($null -eq $phaseMetrics.after) {
+                $phaseMetrics.after = New-BenchmarkPhaseSnapshot $boardStats $phaseMetrics.score_after $nativeScoreSource
+            }
+        }
         $connectionStats = if ($boardStats) { $boardStats.connections } else { $null }
         $clearanceStats = if ($boardStats) { $boardStats.clearance_violations } else { $null }
         $itemStats = if ($boardStats) { $boardStats.items } else { $null }
@@ -394,6 +418,14 @@ foreach ($binary in $binaries) {
             [math]::Max(1, $pinCount * $signalLayerCount)
         } else {
             $null
+        }
+
+        $currentRouterScore = $drcResult.final_quality_score
+        $currentOptimizerScore = $drcResult.final_optimizer_score
+        if ($logMetrics.optimizer.after) {
+            $logMetrics.optimizer.after.current_router_score = $currentRouterScore
+            $logMetrics.optimizer.after.current_optimizer_score = $currentOptimizerScore
+            $logMetrics.optimizer.after.current_score_source = "current_drc_replay"
         }
 
         # Build run record
@@ -437,6 +469,7 @@ foreach ($binary in $binaries) {
                 board_area_cm2      = $fixtureMeta.board_area_cm2
             }
             settings  = $settingsObj
+            settings_snapshot = $logMetrics.settings_snapshot
             phases    = [PSCustomObject]@{
                 fanout     = $logMetrics.fanout
                 autorouter = $logMetrics.autorouter
@@ -451,13 +484,19 @@ foreach ($binary in $binaries) {
                 routing_completion_pct = $routingCompletionPct
                 clearance_violations   = $logMetrics.autorouter.final_violations
                 total_violation_um     = if ($clearanceStats) { $clearanceStats.total_violation_um } else { $null }
-                optimizer_score        = $logMetrics.optimizer.final_score
+                optimizer_score        = if ($null -ne $logMetrics.optimizer.score_after) {
+                    $logMetrics.optimizer.score_after
+                } else {
+                    $logMetrics.optimizer.final_score
+                }
                 trace_length_mm        = if ($traceStats) { $traceStats.total_length_mm } else { $null }
                 via_count              = if ($viaStats) { $viaStats.total_count } else { $null }
                 bend_count             = if ($bendStats) { $bendStats.total_count } else { $null }
                 pin_count              = $pinCount
                 signal_layer_count     = $signalLayerCount
                 quality_score          = $logMetrics.autorouter.final_score
+                current_router_score   = $currentRouterScore
+                current_optimizer_score = $currentOptimizerScore
                 total_cpu_seconds      = [double]$logMetrics.autorouter.cpu_seconds + [double]$logMetrics.fanout.cpu_seconds + [double]$logMetrics.optimizer.cpu_seconds
                 total_allocated_gb     = [double]$logMetrics.autorouter.total_allocated_gb + [double]$logMetrics.fanout.total_allocated_gb + [double]$logMetrics.optimizer.total_allocated_gb
                 peak_heap_mb           = [math]::Max([double]$logMetrics.autorouter.peak_heap_mb, [math]::Max([double]$logMetrics.fanout.peak_heap_mb, [double]$logMetrics.optimizer.peak_heap_mb))
@@ -490,7 +529,7 @@ foreach ($binary in $binaries) {
             result_json = $runResult.ResultJsonFile
             output_file = $runResult.OutputFile
             samples     = $sampleRecords
-            schema_version = 3
+            schema_version = 5
         }
 
         # Update cache
@@ -513,6 +552,7 @@ foreach ($binary in $binaries) {
 # consumers receive the same schema without changing v1.9 routing behavior.
 $currentBoundsByFixture = @{}
 $currentBoundsCompletenessByFixture = @{}
+$currentSettingsByFixture = @{}
 $currentBinaryName = if ($binaryCurrent) { $binaryCurrent.Name } else { $null }
 $currentMachineCpuScore = $null
 if ($currentBinaryName) {
@@ -524,12 +564,20 @@ if ($currentBinaryName) {
         Sort-Object run_at -Descending |
         Select-Object -First 1
     if ($currentCpuRun) {
-        $currentMachineCpuScore = [int]$currentCpuRun.system.cpu_score
+        $currentMachineCpuScore =
+            if ([int]$currentCpuRun.system.cpu_score -gt 10000) {
+                [int][math]::Round([double]$currentCpuRun.system.cpu_score / 1000.0)
+            } else {
+                [int]$currentCpuRun.system.cpu_score
+            }
     }
 
     foreach ($run in $currentRuns) {
         if ($run.fixture -and $run.fixture.relative_path -and $run.bounds) {
             $fixturePath = [string]$run.fixture.relative_path
+            if ($run.PSObject.Properties["settings_snapshot"] -and $run.settings_snapshot) {
+                $currentSettingsByFixture[$fixturePath] = $run.settings_snapshot
+            }
             $hasBounds =
                 $null -ne $run.bounds.board_area_mm2 -or
                 $null -ne $run.bounds.complexity_c -or
@@ -556,9 +604,28 @@ if ($currentBinaryName) {
 
 $boundsPatched = $false
 $effectiveCpuScorePatched = $false
+$cpuScoreScaledPatched = $false
+$hostVersionPatched = $false
+$settingsPatched = $false
+$fixtureMetadataCache = @{}
 foreach ($key in @($cache.Keys)) {
     $run = $cache[$key]
     if ($run.system) {
+        if ($run.system.PSObject.Properties["cpu_score"] -and
+            $null -ne $run.system.cpu_score -and
+            [int]$run.system.cpu_score -gt 10000) {
+            $run.system.cpu_score = [int][math]::Round([double]$run.system.cpu_score / 1000.0)
+            $cache[$key] = $run
+            $cpuScoreScaledPatched = $true
+        }
+        if ($run.system.PSObject.Properties["cpu_score_effective"] -and
+            $null -ne $run.system.cpu_score_effective -and
+            [int]$run.system.cpu_score_effective -gt 10000) {
+            $run.system.cpu_score_effective =
+                [int][math]::Round([double]$run.system.cpu_score_effective / 1000.0)
+            $cache[$key] = $run
+            $cpuScoreScaledPatched = $true
+        }
         $effectiveCpuScore =
             if ($null -ne $run.system.cpu_score) {
                 [int]$run.system.cpu_score
@@ -573,6 +640,24 @@ foreach ($key in @($cache.Keys)) {
         }
     }
     $fixturePath = if ($run.fixture) { $run.fixture.relative_path } else { $null }
+    if ($fixturePath -and $run.fixture -and
+        [string]::IsNullOrWhiteSpace([string]$run.fixture.host_version)) {
+        $dsnPath = Join-Path $FixturesDir $fixturePath
+        if (-not (Test-Path $dsnPath)) {
+            $dsnPath = Join-Path $FixturesDir "PCBench\$fixturePath"
+        }
+        if (Test-Path $dsnPath) {
+            if (-not $fixtureMetadataCache.ContainsKey($dsnPath)) {
+                $fixtureMetadataCache[$dsnPath] = Get-DsnMetadata $dsnPath
+            }
+            $detectedHostVersion = $fixtureMetadataCache[$dsnPath].host_version
+            if (-not [string]::IsNullOrWhiteSpace([string]$detectedHostVersion)) {
+                $run.fixture.host_version = $detectedHostVersion
+                $cache[$key] = $run
+                $hostVersionPatched = $true
+            }
+        }
+    }
     if ($fixturePath -and $currentBoundsByFixture.ContainsKey($fixturePath)) {
         $sourceBounds = $currentBoundsByFixture[$fixturePath]
         if ($null -eq $run.bounds) {
@@ -596,8 +681,18 @@ foreach ($key in @($cache.Keys)) {
             $boundsPatched = $true
         }
     }
+    if ($fixturePath -and
+        $currentSettingsByFixture.ContainsKey($fixturePath) -and
+        (-not $run.PSObject.Properties["settings_snapshot"] -or
+            $null -eq $run.settings_snapshot) -and
+        [string]$run.binary.version_label -match "(?i)(1[._-]?9|v190)") {
+        $run.settings_snapshot = $currentSettingsByFixture[$fixturePath]
+        $cache[$key] = $run
+        $settingsPatched = $true
+    }
 }
-if ($boundsPatched -or $effectiveCpuScorePatched) {
+if ($boundsPatched -or $effectiveCpuScorePatched -or $cpuScoreScaledPatched -or
+    $hostVersionPatched -or $settingsPatched) {
     Save-BenchmarksJson $rawJson $cache $JsonPath
 }
 

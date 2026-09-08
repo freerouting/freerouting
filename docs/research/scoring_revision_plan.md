@@ -411,10 +411,10 @@ Measured \(S =\) `RuntimeEnvironment.cpuScore` (iterations/ms). Always use the
 **measured** \(S\) at runtime.
 
 **Calibration host** (same machine as the optimizer-unification benchmarks), new
-median method, four runs: 415743, 416586, 417002, 419664.
+median method, four raw runs: 415743, 416586, 417002, 419664.
 
 $$
-S_{\text{cal}} = 416794
+S_{\text{cal}} = 417
 $$
 
 (median of those four). Spread is ~1%. Do **not** mix with the old 15 ms scores
@@ -433,7 +433,7 @@ steps), not SPEC. To reduce the 15 ms turbo/GC noise:
 
 - discard a ~20 ms warmup
 - take 5 samples of ~40 ms
-- return the **median** iterations/ms
+- return the **median** scaled iterations/ms (raw score divided by 1000)
 - persist that value on each result manifest and on `system.cpu_score` in
   `benchmarks.json`
 
@@ -453,7 +453,8 @@ $$
 \(R^2 = 0.78\), MAE 17.5 s. Predicts completed-job CPU seconds (autorouter +
 optimizer) on the calibration host, not wall clock or timeouts.
 
-\(S_{\text{cal}} = 416794\) (median of four local runs of the new scorer).
+\(S_{\text{cal}} = 417\) (rounded median of the four local runs after the
+1000x scale reduction).
 On that host \(\widehat{t}(S) \approx D\).
 
 ---
@@ -462,11 +463,29 @@ On that host \(\widehat{t}(S) \approx D\).
 
 Today’s file (~5,851 runs) is useful for routability / DRC regression. Historical
 v1/v2 rows may not contain length, vias, bends, total violation depth, or lower
-bounds, but schema-v3 records now persist the available actuals and lower bounds.
+bounds, but schema-v5 records now persist the available actuals, lower bounds,
+and phase before/after snapshots with score/CPU telemetry.
 Both trees already **compute** most actuals; the remaining gap is collecting
-schema-v3 current/v1.9 pairs.
+schema-v5 current/v1.9 pairs.
 
-### 4.1 v1.9 telemetry (no scoring port)
+### 4.1 Scoring inputs and phase snapshots
+
+The current router score requires connection completeness, clearance-violation
+count and depth, and (for the legacy formula) bends, trace length, and vias,
+plus the `RoutingCostSettings` weights. V2 router scoring additionally requires
+board difficulty (`P`, signal layers, area, `C`, and `D`) and the
+`RouterScoreSettings` weights. The optimizer score requires the physical
+actuals, lower bounds (`L_min`, `V_min`, `B_min`), difficulty, and
+`OptimizerScoreSettings`; its candidate gate separately vetoes connectivity and
+DRC-count regressions.
+
+Each phase now has `before` and `after` objects. Each object contains the
+captured board statistics, the phase score, the score source, and (when a
+current replay is available) separate current router/optimizer score fields.
+Native v1.9 scores remain labelled `v19_native`; current DRC replay scores are
+labelled `current_drc_replay` and never replace the native score.
+
+### 4.2 v1.9 telemetry (native algorithm unchanged)
 
 Allowed `src_v19` edits: statistics/manifest fields **and** a pre-optimizer snapshot
 write (control flow around the existing optimize stage only). Do not reformat or
@@ -492,7 +511,7 @@ v1.9 `maximum_count` is still the legacy `pins - nets` formula. Treat it as
 `maximumCount`. Router V2 ratios for **current** runs must use current
 `maximumCount`.
 
-### 4.2 Benchmark record contract
+### 4.3 Benchmark record contract
 
 Flatten into `quality` / `bounds` (names illustrative):
 
@@ -528,7 +547,7 @@ Recompute without a board only if all of these are present (else skip / null):
 - `boardUnitToUmFactor` (or unit + resolution)
 - scoring version + weight snapshot (`DEFAULT_*` or settings used)
 
-### 4.3 Calibration workflow (script still deferred)
+### 4.4 Calibration workflow (script still deferred)
 
 After the schema exists:
 
@@ -560,7 +579,9 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 | Persist `cpu_score` in current result manifests | 0 | ✅ done | `RoutingResultManifestTest`; `cpu_score` JSON field |
 | Carry `cpu_score` into new benchmark `system` records | 0 | ✅ done | `run-benchmarks.ps1` + manifest/log parser path |
 | Allow historical null/missing `system.cpu_score` and derive `cpu_score_effective` | 0 | ✅ done | Validator permits legacy gaps; harness derives current-machine fallback |
-| Version enriched benchmark records as schema v3 | 0 | ✅ done | New records require v3 fields; v1/v2 records remain historical |
+| Persist and backfill DSN `fixture.host_version` | 0 | ✅ done | Parser reads `(host_version ...)`; harness migrates historical blanks |
+| Version enriched benchmark records as schema v5 | 0 | ✅ done | New records require v5 phase snapshot fields; v1–v4 records remain historical |
+| Persist phase before/after snapshots, scores, and CPU seconds | 0 | ✅ done | Current and v1.9 manifests expose native snapshots; benchmark records add replay scores |
 | Persist total DRC shortfall in current/v1.9 statistics | 0 | ✅ done | `total_violation_um` in both statistics models |
 | Normalize board inputs from `BoardStatistics` | 0 | ✅ done | Benchmark records use manifest statistics, not DSN counts |
 | Persist board-only difficulty inputs \(P,L,C,D,A\) | 0–3 | ◐ scaffolded | Manifest `difficulty` and board area fields |
@@ -591,23 +612,37 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   of unavailable values.
 - [x] Export pin count, signal layer count, and net count from `BoardStatistics`,
   not DSN regex. Fix area from the board outline bounding box.
-- [ ] Export router-final actuals; optimizer-initial and optimizer-final snapshots
+- [x] Export router-final actuals; optimizer-initial and optimizer-final snapshots
   on **current and v1.9** when the optimizer runs.
 - [ ] Flatten the same raw fields into `benchmarks.json`; preserve nulls (partial
   current-board-statistics flattening is implemented).
 - [x] Persist `system.cpu_score` on each **new** benchmark run (same value as
   `RuntimeEnvironment.cpuScore`).
+- [x] Persist `fixture.host_version` from the DSN `(host_version ...)` field and
+  backfill historical blank values when the source fixture is available.
 - [x] Allow legacy rows to retain a null or missing `system.cpu_score`; do not
   zero-fill historical telemetry.
 - [x] Derive `system.cpu_score_effective` from the current machine's score when
   a legacy row needs a CPU value for calculation.
-- [x] Version the enriched benchmark record shape as `schema_version: 3`;
-  schema v1/v2 records are historical and may omit newer fields such as
-  `settings`, `bounds`, and `drc`.
-- [x] Populate schema-v3 fields for newly executed current and v1.9 runs;
+- [x] Version the enriched benchmark record shape as `schema_version: 5`;
+  schema v1–v4 records are historical and may omit newer fields such as
+  `settings`, `bounds`, `drc`, and phase score/CPU telemetry.
+- [x] Persist `phases.*.before` and `phases.*.after` snapshots, their calculated
+  phase scores, and `cpu_seconds`; current and v1.9 native scores are retained.
+- [x] Include full BoardStatistics snapshots at current fanout/autorouter/
+  optimizer boundaries and v1.9 autorouter/optimizer boundaries.
+- [x] Record current-version router and optimizer replay scores from the DRC
+  pass as separate fields on benchmark rows; never overwrite native v1.9 scores.
+- [x] Normalize persisted CPU scores to the scaled unit (raw throughput divided
+  by 1000), including historical values used by the benchmark harness.
+- [x] Emit benchmark and result-manifest floating-point values with exactly two
+  decimal places while retaining integer fields as integers.
+- [x] Populate schema-v5 fields for newly executed current and v1.9 runs;
   after both stages complete, backfill every available bounds field from the
   matching current-tree run into the v1.9 row.
-- [ ] Verify current/v1.9 schema parity with at least one paired schema-v3
+- [x] Add current-version DRC replay router and optimizer scores to v1.9
+  benchmark rows without overwriting `v19_native` scores.
+- [ ] Verify current/v1.9 schema parity with at least one paired schema-v5
   fixture; the existing dataset validates per-run but contains no such pairs.
 - [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
   (settings documentation is updated; architecture documentation remains).
@@ -731,7 +766,8 @@ increases incompletes is rejected; improvement threshold stays 0.01 until
 post-V2 recalibration; \(D = \max(1,\ \widehat{t}_{\text{cal}})\) shares the ETA
 polynomial; live \(S\) is not in \(D\); ETA is internal-only; V1 reproduction
 tolerance is ±10 points; \(C = P \times L\) (not \(N_{\text{conn}}\));
-\(S_{\text{cal}} = 416794\). D10: do not use inheritance for score settings;
+\(S_{\text{cal}} = 417\) after the 1000x CPU-score scale reduction. D10: do
+not use inheritance for score settings;
 do not add `CommonScoreSettings` yet; keep router and optimizer score settings
 independent. D11: keep DRC settings separate from router settings because DRC
 report configuration and board design rules have different ownership and

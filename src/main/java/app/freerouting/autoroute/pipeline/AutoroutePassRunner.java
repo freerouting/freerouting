@@ -48,7 +48,7 @@ final class AutoroutePassRunner {
 
       BatchAutorouterThread[] autorouterThreads =
           new BatchAutorouterThread[router.job.routerSettings.maxThreads];
-      final BoardHistory boardHistory = new BoardHistory(router.job.routerSettings.scoring);
+      final BoardHistory boardHistory = new BoardHistory(router.job.routerSettings);
 
       for (int threadIndex = 0; threadIndex < router.job.routerSettings.maxThreads; threadIndex++) {
         PerformanceProfiler.start("board.deepCopy");

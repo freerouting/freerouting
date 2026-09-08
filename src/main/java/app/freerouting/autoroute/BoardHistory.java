@@ -3,6 +3,7 @@ package app.freerouting.autoroute;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.RoutingCostSettings;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,18 +31,30 @@ public class BoardHistory {
 
   private final int maxHistorySize;
   private final List<BoardHistoryEntry> boards = Collections.synchronizedList(new ArrayList<>());
-  private final RoutingCostSettings scoringSettings;
+  private final RouterSettings routerSettings;
   private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
 
   /** Constructs a BoardHistory with default maximum history size. */
-  public BoardHistory(RoutingCostSettings scoringSettings) {
-    this(scoringSettings, MAX_HISTORY_SIZE);
+  public BoardHistory(RouterSettings routerSettings) {
+    this(routerSettings, MAX_HISTORY_SIZE);
   }
 
   /** Package-private constructor that allows a custom cap. Intended for unit tests only. */
-  BoardHistory(RoutingCostSettings scoringSettings, int maxHistorySize) {
-    this.scoringSettings = scoringSettings;
+  BoardHistory(RouterSettings routerSettings, int maxHistorySize) {
+    this.routerSettings = routerSettings;
     this.maxHistorySize = maxHistorySize;
+  }
+
+  /** Compatibility constructor for tests and callers that explicitly select legacy scoring. */
+  @Deprecated
+  public BoardHistory(RoutingCostSettings scoringSettings) {
+    this(createLegacyRouterSettings(scoringSettings), MAX_HISTORY_SIZE);
+  }
+
+  /** Compatibility constructor for tests and callers that explicitly select legacy scoring. */
+  @Deprecated
+  BoardHistory(RoutingCostSettings scoringSettings, int maxHistorySize) {
+    this(createLegacyRouterSettings(scoringSettings), maxHistorySize);
   }
 
   /** Adds a routing board to history if it improves overall score or space permits. */
@@ -53,7 +66,7 @@ public class BoardHistory {
     if (boards.size() >= maxHistorySize) {
       // Compute the new board's score before the expensive serialisation so we can
       // skip adding boards that would not improve the history.
-      float newScore = new BoardStatistics(board).getRouterScore(scoringSettings);
+      float newScore = new BoardStatistics(board).getRouterScore(routerSettings);
 
       // Find the worst-scoring entry via a linear scan (O(n), n ≤ MAX_HISTORY_SIZE).
       // Thread safety: this method is `synchronized`, so no other thread can modify
@@ -76,7 +89,13 @@ public class BoardHistory {
       boards.remove(worstIndex);
     }
 
-    boards.add(new BoardHistoryEntry(board, scoringSettings));
+    boards.add(new BoardHistoryEntry(board, routerSettings));
+  }
+
+  private static RouterSettings createLegacyRouterSettings(RoutingCostSettings scoringSettings) {
+    RouterSettings settings = new RouterSettings();
+    settings.scoring = scoringSettings;
+    return settings;
   }
 
   /** Clears all boards from history. */
@@ -192,10 +211,10 @@ public class BoardHistory {
     public final float score;
     public int restoreCount;
 
-    public BoardHistoryEntry(RoutingBoard board, RoutingCostSettings scoringSettings) {
+    public BoardHistoryEntry(RoutingBoard board, RouterSettings routerSettings) {
       this.board = board.serialize(false);
       this.hash = board.getHash();
-      this.score = new BoardStatistics(board).getRouterScore(scoringSettings);
+      this.score = new BoardStatistics(board).getRouterScore(routerSettings);
       this.restoreCount = 0;
     }
   }

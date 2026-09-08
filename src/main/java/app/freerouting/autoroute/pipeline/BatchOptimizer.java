@@ -11,6 +11,7 @@ import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.DesignRulesChecker;
@@ -157,6 +158,11 @@ public final class BatchOptimizer extends NamedAlgorithm {
     BoardStatistics initialStats = board.getStatistics();
     float initialRouterScore = initialStats.getRouterScore(job.routerSettings);
     float initialOptimizerScore = initialStats.getOptimizerScore(job.routerSettings);
+    RoutingResultManifest.PhaseDetail phase = job.resultPhaseMetrics.optimizer;
+    phase.before =
+        RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
+            initialStats, job.routerSettings, "current");
+    phase.before.score = phase.before.optimizerScore;
     int initialIncomplete = initialStats.connections.incompleteCount;
     int initialViolations = initialStats.clearanceViolations.totalCount;
 
@@ -336,10 +342,19 @@ public final class BatchOptimizer extends NamedAlgorithm {
     float cpuSecondsUsed = cpuSecondsMain + (workerCpuNanos.get() / 1_000_000_000.0f);
     float allocMbUsed = allocMbMain + (workerAllocBytes.get() / (1024.0f * 1024.0f));
     peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
+    phase.durationSeconds = (float) sessionDurationSeconds;
+    phase.cpuSeconds = cpuSecondsUsed;
+    phase.totalAllocatedGb = allocMbUsed / 1024.0f;
+    phase.peakHeapMb = peakHeapMb;
 
     BoardStatistics finalStats = new BoardStatistics(this.board);
     float finalRouterScore = finalStats.getRouterScore(job.routerSettings);
     float finalOptimizerScore = finalStats.getOptimizerScore(job.routerSettings);
+    phase.after =
+        RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
+            finalStats, job.routerSettings, "current");
+    phase.after.score = phase.after.optimizerScore;
+    phase.passesCompleted = currentPass;
     String completionStatus =
         this.isTimedOut
             ? "completed with timeout:"

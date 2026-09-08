@@ -97,11 +97,65 @@ public final class RoutingResultManifest {
 
   /** Duration and pass count for one routing stage. */
   public static class PhaseDetail {
+    @SerializedName("before")
+    public PhaseSnapshot before;
+
+    @SerializedName("after")
+    public PhaseSnapshot after;
+
     @SerializedName("duration_seconds")
     public Float durationSeconds;
 
+    @SerializedName("cpu_seconds")
+    public Float cpuSeconds;
+
     @SerializedName("passes_completed")
     public Integer passesCompleted;
+
+    @SerializedName("total_allocated_gb")
+    public Float totalAllocatedGb;
+
+    @SerializedName("peak_heap_mb")
+    public Float peakHeapMb;
+  }
+
+  /** Board metrics and calculated scores at a phase boundary. */
+  public static class PhaseSnapshot {
+    @SerializedName("board_statistics")
+    public BoardStatistics boardStatistics;
+
+    @SerializedName("score")
+    public Float score;
+
+    @SerializedName("router_score")
+    public Float routerScore;
+
+    @SerializedName("optimizer_score")
+    public Float optimizerScore;
+
+    @SerializedName("score_source")
+    public String scoreSource;
+
+    @SerializedName("current_router_score")
+    public Float currentRouterScore;
+
+    @SerializedName("current_optimizer_score")
+    public Float currentOptimizerScore;
+
+    @SerializedName("current_score_source")
+    public String currentScoreSource;
+
+    public static PhaseSnapshot fromBoardStatistics(
+        BoardStatistics statistics, RouterSettings settings, String scoreSource) {
+      PhaseSnapshot snapshot = new PhaseSnapshot();
+      snapshot.boardStatistics = statistics;
+      snapshot.scoreSource = scoreSource;
+      if (statistics != null && settings != null) {
+        snapshot.routerScore = statistics.getRouterScore(settings);
+        snapshot.optimizerScore = statistics.getOptimizerScore(settings);
+      }
+      return snapshot;
+    }
   }
 
   /** Builds a manifest from a completed routing job without a CPU score. */
@@ -129,6 +183,9 @@ public final class RoutingResultManifest {
       manifest.fixture.sha256 = sha256Hex(inputPath);
     }
     manifest.settingsSnapshot = job.routerSettings;
+    if (job.resultPhaseMetrics != null) {
+      manifest.phases = job.resultPhaseMetrics;
+    }
     manifest.finalState = job.state != null ? job.state.name() : RoutingJobState.INVALID.name();
     manifest.exitCode = exitCode;
     manifest.outputWritten = outputWritten;
@@ -140,15 +197,19 @@ public final class RoutingResultManifest {
       manifest.bounds = manifest.boardStatistics.bounds;
       if (job.routerSettings != null && job.routerSettings.scoring != null) {
         manifest.normalizedScore = manifest.boardStatistics.getRouterScore(job.routerSettings);
-        manifest.optimizerScore = manifest.boardStatistics.getOptimizerScore(job.routerSettings);
+        if (manifest.phases.optimizer.before != null || manifest.phases.optimizer.after != null) {
+          manifest.optimizerScore = manifest.boardStatistics.getOptimizerScore(job.routerSettings);
+        }
       }
     }
 
-    if (job.getCurrentPass() > 0) {
+    if (job.getCurrentPass() > 0 && manifest.phases.autorouter.passesCompleted == null) {
       manifest.phases.autorouter.passesCompleted = job.getCurrentPass();
     }
 
-    if (job.startedAt != null && job.finishedAt != null) {
+    if (manifest.phases.autorouter.durationSeconds == null
+        && job.startedAt != null
+        && job.finishedAt != null) {
       float totalSeconds =
           (float) (java.time.Duration.between(job.startedAt, job.finishedAt).toMillis() / 1000.0);
       manifest.phases.autorouter.durationSeconds = totalSeconds;

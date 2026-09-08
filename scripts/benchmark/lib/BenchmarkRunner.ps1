@@ -103,6 +103,10 @@ function Invoke-BenchmarkRun {
             $jvmArgs += "--gui.enabled=false"
             $jvmArgs += ('--router.result_json="{0}"' -f $resultJsonFile)
         }
+    } else {
+        # The frozen v1.9 startup path supports result manifests even though it does not
+        # support the current CLI/headless flags.
+        $jvmArgs += ('--router.result_json="{0}"' -f $resultJsonFile)
     }
 
     $startTime = Get-Date

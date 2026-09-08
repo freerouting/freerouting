@@ -13,11 +13,14 @@ function Test-PropertyPath {
 
     $current = $Object
     foreach ($segment in ($Path -split "\.")) {
-        if ($null -eq $current -or
-            -not ($current.PSObject.Properties.Name -contains $segment)) {
+        if ($null -eq $current) {
             return $false
         }
-        $current = $current.$segment
+        $property = $current.PSObject.Properties[$segment]
+        if ($null -eq $property) {
+            return $false
+        }
+        $current = $property.Value
     }
     return $true
 }
@@ -43,7 +46,7 @@ function Test-IsHistoricalRun {
     if (-not (Test-PropertyPath $Run "schema_version")) {
         return $true
     }
-    return [int]$Run.schema_version -lt 3
+    return [int]$Run.schema_version -lt 5
 }
 
 if (-not (Test-Path $JsonPath)) {
@@ -65,9 +68,24 @@ $requiredPaths = @(
     "binary.version_label",
     "fixture",
     "fixture.relative_path",
+    "fixture.host_version",
     "settings",
     "phases",
+    "phases.fanout.before",
+    "phases.fanout.after",
+    "phases.autorouter.before",
+    "phases.autorouter.after",
+    "phases.autorouter.score_before",
+    "phases.autorouter.score_after",
+    "phases.autorouter.cpu_seconds",
+    "phases.optimizer.before",
+    "phases.optimizer.after",
+    "phases.optimizer.score_before",
+    "phases.optimizer.score_after",
+    "phases.optimizer.cpu_seconds",
     "quality",
+    "quality.current_router_score",
+    "quality.current_optimizer_score",
     "bounds",
     "bounds.board_area_mm2",
     "bounds.complexity_c",
@@ -82,6 +100,21 @@ $requiredPaths = @(
 $historicalOptionalPaths = @(
     "system.cpu_score",
     "settings",
+    "fixture.host_version",
+    "phases.fanout.before",
+    "phases.fanout.after",
+    "phases.autorouter.before",
+    "phases.autorouter.after",
+    "phases.autorouter.score_before",
+    "phases.autorouter.score_after",
+    "phases.autorouter.cpu_seconds",
+    "phases.optimizer.before",
+    "phases.optimizer.after",
+    "phases.optimizer.score_before",
+    "phases.optimizer.score_after",
+    "phases.optimizer.cpu_seconds",
+    "quality.current_router_score",
+    "quality.current_optimizer_score",
     "bounds",
     "bounds.board_area_mm2",
     "bounds.complexity_c",
@@ -112,6 +145,10 @@ foreach ($run in $runs) {
         $null -eq $run.system.cpu_score)) {
         [void]$errors.Add("$identity is missing non-legacy 'system.cpu_score'")
     }
+    if ((-not $historical) -and (Test-PropertyPath $run "fixture.host_version") -and
+        [string]::IsNullOrWhiteSpace([string]$run.fixture.host_version)) {
+        [void]$errors.Add("$identity has an empty non-historical 'fixture.host_version'")
+    }
 }
 
 $currentRuns = @($runs | Where-Object {
@@ -136,6 +173,18 @@ foreach ($run in $currentRuns) {
 $parityPaths = @(
     "binary.version_label",
     "fixture.relative_path",
+    "phases.fanout.before",
+    "phases.fanout.after",
+    "phases.autorouter.before",
+    "phases.autorouter.after",
+    "phases.autorouter.score_before",
+    "phases.autorouter.score_after",
+    "phases.autorouter.cpu_seconds",
+    "phases.optimizer.before",
+    "phases.optimizer.after",
+    "phases.optimizer.score_before",
+    "phases.optimizer.score_after",
+    "phases.optimizer.cpu_seconds",
     "bounds.board_area_mm2",
     "bounds.complexity_c",
     "bounds.min_trace_length_mm",

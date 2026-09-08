@@ -59,12 +59,42 @@ function Save-BenchmarksJson {
         [System.IO.File]::WriteAllText($tempPath, $json, $utf8NoBom)
 
         $pyFormatScript = @"
-import json, sys
+import json, math, sys
+
+def render(value, level=0):
+    indent = '  ' * level
+    child_indent = '  ' * (level + 1)
+    if value is None:
+        return 'null'
+    if isinstance(value, bool):
+        return 'true' if value else 'false'
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, float):
+        return 'null' if not math.isfinite(value) else format(value, '.2f')
+    if isinstance(value, str):
+        return json.dumps(value, ensure_ascii=False)
+    if isinstance(value, list):
+        if not value:
+            return '[]'
+        return '[\n' + ',\n'.join(
+            child_indent + render(item, level + 1) for item in value
+        ) + '\n' + indent + ']'
+    if isinstance(value, dict):
+        if not value:
+            return '{}'
+        return '{\n' + ',\n'.join(
+            child_indent + json.dumps(str(key), ensure_ascii=False) + ': ' +
+            render(item, level + 1)
+            for key, item in value.items()
+        ) + '\n' + indent + '}'
+    raise TypeError(type(value).__name__)
+
 p = sys.argv[1]
 with open(p, 'r', encoding='utf-8') as f:
     data = json.load(f)
-with open(p, 'w', encoding='utf-8') as f:
-    json.dump(data, f, indent=2)
+with open(p, 'w', encoding='utf-8', newline='\n') as f:
+    f.write(render(data) + '\n')
 "@
         python -c $pyFormatScript $tempPath
         Move-Item -Path $tempPath -Destination $JsonPath -Force

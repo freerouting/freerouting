@@ -62,16 +62,19 @@ public class RuntimeEnvironment implements Serializable {
   /** Odd sample count so the median is a measured value. */
   private static final int CPU_SCORE_SAMPLE_COUNT = 5;
 
+  /** Keep the persisted score in a compact range while retaining relative host performance. */
+  private static final int CPU_SCORE_SCALE = 1_000;
+
   /**
    * Measures a single-threaded CPU throughput score by running a synthetic micro-benchmark of EDA
    * geometric operations (2D bounding-box overlap, 2D cross-product orientation, and Manhattan
    * distance steps).
    *
-   * <p>A short warmup is discarded, then several samples are taken and the <em>median</em>
+   * <p>A short warmup is discarded, then several samples are taken and the <em>median</em> scaled
    * iterations/ms is returned so turbo boost, GC, and other processes do not dominate one
-   * measurement window.
+   * measurement window. The raw throughput is divided by {@value #CPU_SCORE_SCALE}.
    *
-   * @return throughput score in iterations per millisecond (at least 1)
+   * @return scaled throughput score in iterations per millisecond (at least 1)
    */
   public static int measureCpuScore() {
     runCpuScoreKernel(CPU_SCORE_WARMUP_NS);
@@ -80,7 +83,7 @@ public class RuntimeEnvironment implements Serializable {
       samples[i] = measureCpuScoreSample(CPU_SCORE_SAMPLE_NS);
     }
     Arrays.sort(samples);
-    return Math.max(1, samples[CPU_SCORE_SAMPLE_COUNT / 2]);
+    return Math.max(1, Math.round(samples[CPU_SCORE_SAMPLE_COUNT / 2] / (float) CPU_SCORE_SCALE));
   }
 
   private static int measureCpuScoreSample(long targetDurationNs) {

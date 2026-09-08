@@ -477,6 +477,7 @@ public class Freerouting {
       var routerSettings = settingsMerger.merge();
       var finalStats = drcJob.board.getStatistics();
       report.qualityScore = (double) finalStats.getRouterScore(routerSettings);
+      report.optimizerScore = (double) finalStats.getOptimizerScore(routerSettings);
     } catch (Exception e) {
       FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
     }

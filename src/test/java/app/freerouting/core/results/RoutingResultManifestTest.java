@@ -1,6 +1,7 @@
 package app.freerouting.core.results;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,6 +9,7 @@ import app.freerouting.Freerouting;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
 import app.freerouting.io.specctra.DsnTestFixtures;
@@ -57,8 +59,17 @@ class RoutingResultManifestTest {
     job.state = RoutingJobState.COMPLETED;
     job.resourceUsage.cpuTimeUsed = 1.5f;
     job.resourceUsage.peakMemoryUsed = 128.0f;
+    BoardStatistics stats = new BoardStatistics(board);
+    job.resultPhaseMetrics.autorouter.before =
+        RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
+            stats, job.routerSettings, "current");
+    job.resultPhaseMetrics.autorouter.after = job.resultPhaseMetrics.autorouter.before;
+    job.resultPhaseMetrics.autorouter.before.score =
+        job.resultPhaseMetrics.autorouter.before.routerScore;
+    job.resultPhaseMetrics.autorouter.after.score =
+        job.resultPhaseMetrics.autorouter.after.routerScore;
 
-    Freerouting.globalSettings.runtimeEnvironment.cpuScore = 31000;
+    Freerouting.globalSettings.runtimeEnvironment.cpuScore = 310;
 
     Path inputPath = tempDir.resolve("input.dsn");
     try (var in = DsnTestFixtures.openResource("Issue143-rpi_splitter.dsn")) {
@@ -66,7 +77,7 @@ class RoutingResultManifestTest {
     }
 
     RoutingResultManifest manifest =
-        RoutingResultManifest.fromJob(job, inputPath.toString(), true, 0, 31000);
+        RoutingResultManifest.fromJob(job, inputPath.toString(), true, 0, 310);
     Path outPath = tempDir.resolve("result.json");
     RoutingResultManifest.write(outPath, manifest);
 
@@ -82,8 +93,11 @@ class RoutingResultManifestTest {
     assertEquals("COMPLETED", root.get("final_state").getAsString());
     assertEquals(0, root.get("exit_code").getAsInt());
     assertTrue(root.get("output_written").getAsBoolean());
-    assertEquals(31000, root.get("cpu_score").getAsInt());
-    assertTrue(root.has("optimizer_score"));
+    assertEquals(310, root.get("cpu_score").getAsInt());
+    assertFalse(root.has("optimizer_score"));
+    assertTrue(json.contains("\"cpu_time\": 1.50"));
+    assertNotNull(root.getAsJsonObject("phases").getAsJsonObject("autorouter").get("before"));
+    assertNotNull(root.getAsJsonObject("phases").getAsJsonObject("autorouter").get("after"));
 
     RoutingResultManifest roundTrip = GsonProvider.GSON.fromJson(json, RoutingResultManifest.class);
     assertNotNull(roundTrip.boardStatistics);
