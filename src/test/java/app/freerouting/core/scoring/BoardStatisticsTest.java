@@ -75,4 +75,26 @@ class BoardStatisticsTest {
 
     assertEquals(999.2f, stats.getOptimizerScore(settings), 0.001f);
   }
+
+  @Test
+  void v2RouterScoreIsDefinedForZeroConnectionBoards() {
+    BoardStatistics stats = new BoardStatistics();
+    stats.connections.maximumCount = 0;
+    stats.connections.incompleteCount = 0;
+    stats.clearanceViolations.totalCount = 0;
+    stats.clearanceViolations.totalViolationUm = 0.0;
+    stats.difficulty.difficultyD = 1.0f;
+
+    RouterSettings settings = new RouterSettings();
+    settings.routerScoring.version = RouterScoringVersion.V2_CONTINUOUS;
+    settings.routerScoring.unroutedConnectionWeight = 1000.0f;
+    settings.routerScoring.clearanceViolationCountWeight = 25.0f;
+    settings.routerScoring.clearanceViolationDepthWeight = 1.0f;
+    settings.routerScoring.clearanceViolationDepthScale = 1000.0f;
+
+    assertEquals(1000.0f, stats.getRouterScore(settings), 0.001f);
+
+    stats.clearanceViolations.totalCount = 2;
+    assertEquals(950.0f, stats.getRouterScore(settings), 0.001f);
+  }
 }

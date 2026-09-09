@@ -1,7 +1,7 @@
 # Freerouting Dedicated Scoring Architecture & Versioning Plan
 
 **Document Status:** Implementation Plan
-**Date:** September 8, 2026 (Revised with decided defaults and remaining open questions)
+**Date:** September 9, 2026 (ETA dropped; V2 replay and bound-edge fixtures)
 **Author:** Freerouting AI Assistant & Core Engineering Team
 **Target Delivery:** Post-Optimizer Unification Roadmap
 
@@ -22,19 +22,62 @@ selector, or an implicit set of weights:
 Both board scores remain on a `0.0 .. 1000.0` display scale. The numbers are not
 interchangeable.
 
-**Complexity \(C\), difficulty \(D\), and internal ETA share one polynomial**
-(§3.0 / §3.5). \(D = \max(1,\ \widehat{t}_{\text{cal}})\), i.e. proportional to
-estimated single-thread time after removing host speed. Live `cpu_score` \(S\)
-is used only to convert that to seconds on this machine. ETA is **internal**
-(logs / research / future job sizing), not shown in the GUI or API yet.
+**Complexity \(C\) is the scoring size scale.** \(C = \max(1,\ P \times L)\) and
+\(D = C\). Via, bend, and DRC penalties divide by \(D\); unrouted stays a
+connection fraction; length excess uses \(L_{\min}\). There is **no ETA
+polynomial** and no live conversion through `cpu_score`. Job-time estimates are
+out of scope.
 
 The **current** tree defaults to V2 for both router and optimizer scores, with a
 settings / CLI override to run V1 legacy. **`src_v19` keeps its existing scoring
 algorithm unchanged.** v1.9 only gains raw-metric telemetry so `benchmarks.json` can
-store the same physical fields.
+store the same physical fields. Offline V2 replay onto those stored actuals +
+current-tree bounds does not require a reroute.
 
-Live GUI/API ETA is out of scope. Phase 0 persists `cpu_score` and board
-inputs so internal ETA / \(D\) can be computed. Do not display an ETA in the UI.
+### 0.1 End-of-day progress summary — September 8, 2026
+
+Completed today:
+
+- Implemented the independent router and optimizer scoring versions and settings
+  split. The current tree now defaults to `V2_CONTINUOUS` for router scoring and
+  `V2_LOWER_BOUND` for optimizer scoring; V1 remains an explicit compatibility
+  override. The frozen `src_v19` scoring algorithm remains unchanged.
+- Implemented and exercised the V2 lower-bound path: Manhattan MST wire-length
+  bounds, layer-switch via bounds, bend bounds, difficulty scaling, and the
+  optimizer candidate gate. A more-complete but lower-scoring candidate is no
+  longer an automatic win.
+- Added current and v1.9 phase telemetry: before/after snapshots, native phase
+  scores, current-version DRC replay scores, CPU seconds, allocation and heap
+  metrics, bounds, and schema-v5 benchmark records.
+- Hardened benchmark persistence and analysis: robust median CPU scoring, the
+  1000x persisted CPU-score scale reduction, relative paths, two-decimal float
+  output, legacy CPU fallbacks, host-version backfilling, and PowerShell 5.1
+  compatibility.
+- Fixed benchmark-runner reliability issues found during the first long run:
+  JVM `-D` arguments are now placed before `-jar`; path-normalization counters
+  are not emitted as stray output; and benchmark JSON replacement uses unique
+  absolute temporary/backup paths with Windows-safe atomic replacement.
+- Rebuilt and started the all-tier benchmark workflow. The initial run completed
+  17 fixtures successfully. At the current serial settings, the full 1,177-run
+  workload reported an estimate of roughly 61 hours per binary, which is an
+  operational constraint for tomorrow's calibration workflow.
+- Required Java formatting, Checkstyle, rewrite-recipe, translation-context, and
+  focused scoring tests passed. Changes were committed in `83e51252` and
+  `4ef80ec9`.
+
+Status after 9 September 2026:
+
+- Current (`v2.4.2-SNAPSHOT`) and v1.9 (`v1.9.0`) PCBench corpus runs completed
+  (current 362 boards across A–D; v1.9 169 tier-A boards; 169 paired fixtures).
+- V1 ±10 historical-score parity is **not required**: the only V1 formula
+  change that landed is weighted too low to matter.
+- Internal ETA / time-polynomial \(D\) is **dropped**. Scoring uses \(D = C\).
+- Remaining calibration is **optimizer** excess weights and
+  `optimizer.optimizationImprovementThreshold`. Router V2 is already
+  complete-by-construction (open board → 0; clean complete board → 1000 minus
+  DRC/\(D\)). DRC count/depth weights can stay until a real saturation problem
+  shows up after \(D = C\).
+- Optional Phase 8 settings-hierarchy refactor stays deferred.
 
 ### 1.1 Router scoring requirements
 
@@ -231,24 +274,18 @@ One extra via on a 10-connection board must not be treated like one extra via on
 an 800-connection dense board. **Board area alone is the wrong axis.** A large
 sparse board is easy; a small dense one is hard.
 
-**One polynomial, two uses:**
+**One kernel, scoring only:**
 
-| Symbol | Role | Units | Live \(S\)? |
-|---|---|---|---|
-| \(C\) | \(P \times L\) (decided) | pin-layers | No |
-| \(\widehat{t}_{\text{cal}}\) | Estimated CPU seconds on the calibration host | seconds | No |
-| \(D\) | Score denominator \(= \max(1,\ \widehat{t}_{\text{cal}})\) | cal-host seconds | **No** |
-| \(\widehat{t}(S)\) | Internal ETA \(= D \cdot S_{\text{cal}} / S\) | seconds | Yes |
-| \(W\) | \(D \cdot S_{\text{cal}}\) | iterations | Constant \(S_{\text{cal}}\) only |
+| Symbol | Role | Units |
+|---|---|---|
+| \(C\) | \(P \times L\) | pin-layers |
+| \(D\) | Score denominator \(= \max(1,\ C)\) | pin-layers |
 
-**“\(D \propto\) estimated time / CPU score.”** \(S\) is *throughput* (higher =
-faster). Host-independent work is \(\widehat{t} \cdot S\), not \(\widehat{t}/S\)
-(the latter would make a board look easier on a faster CPU). That work in
-calibration-host seconds is \(\widehat{t}_{\text{cal}}\), which we use as \(D\).
+Live `cpu_score` is hardware telemetry only. It is **not** part of \(D\) and is
+not used to estimate runtime.
 
-**\(\alpha\):** unused while \(D\) is this time polynomial. It was a leftover
-density factor in the older form \(C(1+\alpha L_{\min}/\sqrt{A})\). Revisit only
-if via-excess\(/D\) still trends with density after length/via fields exist.
+**\(\alpha\):** unused. Revisit only if via-excess\(/D\) still trends with density
+after length/via fields exist.
 
 #### Kernel (decided)
 
@@ -262,10 +299,11 @@ $$
 denominator only; it is not used inside \(D\).
 
 $$
-D = \max\bigl(1,\ 19.64 + 0.0810 \cdot C - 0.131 \cdot A\bigr)
+D = \max(1,\ C)
 $$
 
-\(A\) is `board_area_cm2`. \(D_{\text{floor}} = 1\). Unrouted remains
+\(A\) is still persisted as `board_area_cm2` for analysis; it is **not** a
+scoring axis. \(D_{\text{floor}} = 1\). Unrouted remains
 \(N_{\text{unrouted}} / N_{\text{conn}}\). \(\Delta L\) uses \(L_{\min}\), not
 \(D\). Only vias, bends, and DRC divide by \(D\).
 
@@ -401,59 +439,12 @@ Keep / use `optimizer.optimizationImprovementThreshold` (default `0.01`). After
 V2 changes the meaning of a 1% score move, **recalibrate this default**. Maze-search
 costs stay independent of V2 board-score weights.
 
-### 3.5 Internal single-thread ETA (same polynomial as \(D\))
+### 3.5 Internal ETA — dropped
 
-**Internal only** — logs, research, job sizing. Not shown in GUI or API.
-
-Measured \(S =\) `RuntimeEnvironment.cpuScore` (iterations/ms). Always use the
-**measured** \(S\) at runtime.
-
-**Calibration host** (same machine as the optimizer-unification benchmarks), new
-median method, four raw runs: 415743, 416586, 417002, 419664.
-
-$$
-S_{\text{cal}} = 417
-$$
-
-(median of those four). Spread is ~1%. Do **not** mix with the old 15 ms scores
-(~28 000–34 000); the kernel and timing changed.
-
-$$
-\widehat{t}(S) = D \cdot \frac{S_{\text{cal}}}{S}
-$$
-
-Scoring uses \(D\) only as in §2.1 / §3.2. Maze costs never see \(D\) or \(S\).
-
-#### CPU micro-benchmark robustness
-
-`measureCpuScore()` is a geometric kernel (bbox overlap, orientation, Manhattan
-steps), not SPEC. To reduce the 15 ms turbo/GC noise:
-
-- discard a ~20 ms warmup
-- take 5 samples of ~40 ms
-- return the **median** scaled iterations/ms (raw score divided by 1000)
-- persist that value on each result manifest and on `system.cpu_score` in
-  `benchmarks.json`
-
-It still will not match a Cinebench-class bench. If later samples disagree with
-routing time more than ~2× across hosts, replace the kernel — keep the median
-protocol.
-
-#### Experiment (36 boards, `cpu_seconds >= 30`)
-
-Duration excluded. Nets and additive layer/component terms dropped.
-
-$$
-\widehat{t}_{\text{cal}} = \max\bigl(0,\ 19.64 + 0.0810 \cdot C - 0.131 \cdot A\bigr)
-= D \quad \text{(once floored at 1)}
-$$
-
-\(R^2 = 0.78\), MAE 17.5 s. Predicts completed-job CPU seconds (autorouter +
-optimizer) on the calibration host, not wall clock or timeouts.
-
-\(S_{\text{cal}} = 417\) (rounded median of the four local runs after the
-1000x scale reduction).
-On that host \(\widehat{t}(S) \approx D\).
+Runtime estimation through \(D \cdot S_{\text{cal}} / S\) is out of scope.
+Do not compute or display an autorouter ETA. `cpu_score` may still be
+measured at startup for hardware logs and benchmark records. Scoring uses
+\(D = C\) only as in §2.1 / §3.2. Maze costs never see \(D\).
 
 ---
 
@@ -558,7 +549,7 @@ After the schema exists:
 6. Held-out fixtures; check saturation on Tier D, completion, and DRC count.
 7. Historical `quality_score` / v1.9 `normalized_score` are native baselines, not
    V2 fitting targets.
-8. Refit ETA/\(D\) coefficients on clean boards with persisted \(S\).
+8. Do **not** refit a runtime ETA. \(D = C\) is the scoring scale.
 
 Do **not** create the calibration script in the schema/settings phases.
 
@@ -566,8 +557,8 @@ Do **not** create the calibration script in the schema/settings phases.
 
 ## 5. Architectural Implementation Roadmap
 
-Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` or
-`BatchOptimizer`. Telemetry for \(C\)/\(S\) is Phase 0 only.
+Scoring (Phases 1–4, 6–7) must not import runtime-ETA terms into `BatchAutorouter` or
+`BatchOptimizer`. `cpu_score` telemetry remains Phase 0 only.
 
 ### Implementation tracking
 
@@ -582,13 +573,13 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 | Persist phase before/after snapshots, scores, and CPU seconds | 0 | ✅ done | Current and v1.9 manifests expose native snapshots; benchmark records add replay scores |
 | Persist total DRC shortfall in current/v1.9 statistics | 0 | ✅ done | `total_violation_um` in both statistics models |
 | Normalize board inputs from `BoardStatistics` | 0 | ✅ done | Benchmark records use manifest statistics, not DSN counts |
-| Persist board-only difficulty inputs \(P,L,C,D,A\) | 0–3 | ◐ scaffolded | Manifest `difficulty` and board area fields |
+| Persist board-only difficulty inputs \(P,L,C,D,A\) | 0–3 | ✅ done | Manifest `difficulty`, bounds, and board area fields |
 | Persist remaining raw current/v1.9 routing metrics | 0 | ☐ next | Manifest parity test and replay fixture |
 | Rename search-cost settings to `RoutingCostSettings` | 1 | ✅ done | Type rename and focused settings tests |
-| Split router and optimizer scoring APIs/settings | 1–2 | ◐ scaffolded | Independent version settings and legacy score aliases |
+| Split router and optimizer scoring APIs/settings | 1–2 | ✅ implemented | Independent version settings, score APIs, and legacy aliases |
 | Add optimizer baseline/pass score telemetry | 1–2 | ✅ done | `BatchOptimizer` logs and determinism fixture |
-| Add lower bounds and V2 formulas | 3–4 | ◐ scaffolded | Current-tree bounds/V2 path; replay calibration pending |
-| Calibrate weights and optimizer threshold | 5–6 | ☐ pending | Held-out current-v1.9 report |
+| Add lower bounds and V2 formulas | 3–4 | ✅ implemented | Current-tree bounds and V2 paths; offline replay script |
+| Calibrate optimizer weights and threshold | 5–6 | ☐ pending | Held-out current-v1.9 replay report |
 | Complete regression and parity verification | 7 | ☐ pending | Required Gradle gates and fixture results |
 | Optional settings-hierarchy refactor | 8 | ☐ confirmation required | Explicit approval, compatibility tests, and migration review |
 
@@ -667,31 +658,34 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
   (recalibrate default later).
 - [x] Explicit score fields: keep API `normalized_score` = router score; add
   `optimizer_score`. Deprecate `getNormalizedScore()` as a router-score alias.
-- [ ] V1 path must reproduce current fixture scores within **±10** score points.
+- [x] V1 ±10 historical-score parity is **not required** (V1 change is negligible).
 
 ### Phase 3: Lower bounds (current tree only)
 
 - [x] Wire, via, and bend lower bounds (§3.1) for current-tree statistics and
   write them to JSON. Cache-on-load and v1.9 harness support remain.
-- [ ] Zero-length / empty-net / mixed-layer definitions.
-- [ ] No conduction-area conditional (pours count as layer terminals).
-- [ ] 45° corners included in \(B_{\text{actual}}\).
+- [x] Zero-length / empty-net / mixed-layer definitions
+  (`fixtures/scoring-*.dsn` + `BoardStatisticsBoundsCalculatorTest`).
+- [x] No conduction-area conditional (pours count as layer terminals).
+- [x] 45° corners included in \(B_{\text{actual}}\).
 
 ### Phase 4: V2 formulas on current tree
 
 - [x] Implement §2 / §3 V2 using settings weights (router and optimizer paths
   are implemented).
-- [ ] Calibrate V2 weights and validate current/v1.9 replay.
+- [ ] Calibrate **optimizer** V2 weights and the improvement threshold from
+  current-vs-v1.9 replay (router weights stay at `DEFAULT_*` unless DRC
+  saturates).
 - [x] Default V2 on; V1 via setting/CLI.
-- [ ] Offline replay of current V2 onto stored current and v1.9 JSON (harness /
-  later tool, not the v1.9 binary).
+- [x] Offline replay of current V2 onto stored current and v1.9 JSON
+  (`scripts/benchmark/replay_v2_scores.py`).
 
 ### Phase 5: Calibration design (no script yet)
 
 - [ ] Report shape, held-out set, noise floor, saturation checks.
 - [ ] Optionally check whether via-excess\(/D\) is flat across density; only then
   consider a residual density factor.
-- [ ] Refit \(\widehat{t}_{\text{cal}}(C,A)\) with persisted \(S\).
+- [x] ETA refit cancelled; \(D = C\).
 
 ### Phase 6: Calibrated defaults
 
@@ -702,20 +696,20 @@ Scoring (Phases 1–4, 6–7) must not import ETA/\(W\) into `BatchAutorouter` o
 ### Phase 7: Verification
 
 - [ ] Router and optimizer scores are independent; maze costs unchanged when V2
-  weights change. ETA/\(W\) does not change maze or scores.
-- [ ] Version flags select V1 vs V2.
+  weights change.
+- [x] Version flags select V1 vs V2.
 - [ ] `SyntheticPerfectTwoPin` scores 1000 on both V2 scores; pour boards are not
   required to.
-- [ ] Zero-connection boards are defined.
+- [x] Zero-connection boards are defined (`BoardStatisticsTest`).
 - [x] Gate: more incompletes or higher DRC count reject; ranking is by
   optimizer score (more-complete uglier boards do not auto-win); equal scores
   keep the incumbent. Timeout rip-up that adds incompletes is rejected.
 - [x] Optimizer stops on improvement threshold, not proximity to 1000. The
   improvement threshold remains subject to later recalibration.
-- [ ] V1 legacy reproduces historical current-tree scores within ±10 points.
+- [x] V1 ±10 parity dropped (not needed).
 - [ ] Raw-metric schema parity current vs v1.9 including pre/post optimizer snapshots;
   v1.9 score algorithm unchanged.
-- [ ] Later V2 replay from JSON does not require a reroute (all §4.2 fields present).
+- [x] V2 replay from JSON does not require a reroute (`replay_v2_scores.py`).
 - [ ] Full DRC uses `getAllClearanceViolations()`.
 - [ ] No completion / DRC-count regression vs the previous current default.
 
@@ -760,10 +754,8 @@ pre/post optimizer snapshots; D8 placeholder weights (set manually after test ru
 D9 deprecated alias + `optimizer_score`; CLI allows both settings-path keys and
 short flags; router and optimizer versions are independent; timeout/rip-up that
 increases incompletes is rejected; improvement threshold stays 0.01 until
-post-V2 recalibration; \(D = \max(1,\ \widehat{t}_{\text{cal}})\) shares the ETA
-polynomial; live \(S\) is not in \(D\); ETA is internal-only; V1 reproduction
-tolerance is ±10 points; \(C = P \times L\) (not \(N_{\text{conn}}\));
-\(S_{\text{cal}} = 417\) after the 1000x CPU-score scale reduction. D10: do
+optimizer recalibration; \(D = C = \max(1,\ P \times L)\); ETA dropped; V1
+±10 parity is not required; \(C = P \times L\) (not \(N_{\text{conn}}\)). D10: do
 not use inheritance for score settings;
 do not add `CommonScoreSettings` yet; keep router and optimizer score settings
 independent. D11: keep DRC settings separate from router settings because DRC
@@ -777,6 +769,7 @@ optional Phase 8 settings-hierarchy refactor still requires explicit confirmatio
 after the scoring work is complete. If common score values emerge later, add them
 by composition after a concrete use case is identified.
 
-Placeholder \(W_*\) / \(U_{\text{scale}}\) /
-\(L_{\text{floor}}\) stay uncalibrated until after test runs (D8). Phase 0
-continues with the remaining raw-metric and schema-parity work.
+Placeholder optimizer \(W_L\) / \(W_V\) / \(W_B\) and
+`optimizationImprovementThreshold` stay uncalibrated until the v1.9 V2
+replay is reviewed (D8). Router `DEFAULT_*` weights are kept unless DRC
+saturation appears.

@@ -3,7 +3,7 @@ package app.freerouting.core.scoring;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
-/** Board-only complexity and difficulty values used by V2 scoring and internal ETA. */
+/** Board-only complexity and difficulty values used by V2 scoring. */
 public class BoardStatisticsDifficulty implements Serializable {
 
   @SerializedName("pin_count")

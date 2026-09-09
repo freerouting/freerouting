@@ -221,13 +221,9 @@ public class BoardStatistics implements Serializable {
     this.difficulty.complexityC =
         Math.max(1, this.difficulty.pinCount * this.difficulty.signalLayerCount);
     this.difficulty.boardAreaCm2 = this.board.areaCm2;
-    this.difficulty.difficultyD =
-        Math.max(
-            1.0f,
-            (float)
-                (19.64
-                    + 0.0810 * this.difficulty.complexityC
-                    - 0.131 * this.difficulty.boardAreaCm2));
+    // D is the scoring size scale, not an ETA. It equals C so via/bend/DRC
+    // penalties stay comparable across small and large boards.
+    this.difficulty.difficultyD = (float) this.difficulty.complexityC;
     this.bounds = BoardStatisticsBoundsCalculator.calculate(board);
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
