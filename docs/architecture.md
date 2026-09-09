@@ -377,6 +377,10 @@ Defaults live in `DefaultSettings`. Formula details and current weights are in [
 | Router | `BatchAutorouter`, `BoardHistory`, API `normalized_score` | `V2_CONTINUOUS` | Incomplete connections (first half of nets cheaper than the last half) plus DRC count and stacked violation depth |
 | Optimizer | `BatchOptimizer` candidate keep/undo, API `optimizer_score` | `V2_LOWER_BOUND` | Excess wire length, vias, and bends versus placement-derived lower bounds. Completeness and DRC count are gates, not score terms |
 
+The optimizer stops a pass series when relative score gain falls below
+`optimizer.improvement_threshold` (default 0.01 of the incumbent optimizer score), not when
+the score is merely close to 1000.
+
 Difficulty \(D = \max(1,\ P \times L)\) (pins × signal layers) scales DRC, via, and bend penalties. Unrouted fraction and length excess do **not** divide by \(D\).
 
 ### GUI and Interaction Path

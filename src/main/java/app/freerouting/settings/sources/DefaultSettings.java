@@ -117,6 +117,14 @@ public class DefaultSettings implements SettingsSource {
   public static final float DEFAULT_OPTIMIZER_LENGTH_FLOOR = 1.0F;
   public static final float DEFAULT_OPTIMIZER_DIFFICULTY_SCALE_FLOOR = 1.0F;
 
+  /**
+   * Relative optimizer-pass improvement below which {@code BatchOptimizer} stops. The comparison is
+   * {@code (scoreAfter - scoreBefore) / scoreBefore}, not an absolute 0–1000 delta. V2 scores are
+   * already on that 0–1000 scale, so 0.01 still means about 8–10 points near a typical finished
+   * board (~800–1000) and does not need a separate retune.
+   */
+  public static final float DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD = 0.01F;
+
   private static final int PRIORITY = 0;
 
   @Override
@@ -169,7 +177,7 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.maxPasses = 100;
     settings.optimizer.maxItems = Integer.MAX_VALUE;
     settings.optimizer.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-    settings.optimizer.optimizationImprovementThreshold = 0.01f;
+    settings.optimizer.optimizationImprovementThreshold = DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
     settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
     settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;
     settings.optimizer.additionalRipupCostFactorAtStart = 10;

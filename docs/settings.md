@@ -168,8 +168,11 @@ Configures the optional route-optimization stage that runs after autorouting.
   `feature_flags.multi_threading` flag is enabled. It also controls autorouter pass parallelism
   in `BatchAutorouterThread`. Headless and API jobs always use the single-threaded
   `BatchOptimizer`; this setting does not enable parallel optimizer workers there.
-- **`improvement_threshold`**: Minimum relative optimizer-score gain required to keep
-  a candidate (default `0.01`, about 10 points on the 0–1000 V2 optimizer scale).
+- **`improvement_threshold`**: Minimum **relative** optimizer-score gain required to
+  continue after a pass (default `0.01`). `BatchOptimizer` compares
+  `(scoreAfter - scoreBefore) / scoreBefore`, not an absolute 0–1000 delta. V2 scores
+  are already 0–1000, so 1% is about 8–10 points on a typical finished board (~800–1000)
+  and was kept after V2 calibration.
 
 ##### **`fanout` Sub-section**
 

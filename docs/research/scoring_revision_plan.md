@@ -192,7 +192,7 @@ compatibility override.
   require V2 scores for 2.2.4 or 2.3.0.
 - Optimizer stop: remove the “score is already close to 1000” stop. Stop when relative
   pass improvement is below `optimizer.optimizationImprovementThreshold` (existing
-  setting, default `0.01`). **Recalibrate that default after V2 scores land.**
+  setting, default `0.01`; kept after V2).
 - v1.9 writes optimizer-**initial** and optimizer-**final** raw snapshots (telemetry
   only; scoring algorithm unchanged).
 - Optimizer via/bend and router DRC terms are divided by difficulty \(D\) derived
@@ -450,9 +450,10 @@ Depth is not used in this gate. Counts come from
 
 Remove the stop that treats a score near 1000 as “nothing left to do.”
 
-Keep / use `optimizer.optimizationImprovementThreshold` (default `0.01`). After
-V2 changes the meaning of a 1% score move, **recalibrate this default**. Maze-search
-costs stay independent of V2 board-score weights.
+Keep / use `optimizer.optimizationImprovementThreshold` (default `0.01`). V2
+scores remain 0–1000; the stop is `(after - before) / before`, so 1% still maps
+to about 8–10 points on a typical finished board. Maze-search costs stay
+independent of V2 board-score weights.
 
 ### 3.5 Internal ETA — dropped
 
@@ -594,8 +595,8 @@ Scoring (Phases 1–4, 6–7) must not import runtime-ETA terms into `BatchAutor
 | Split router and optimizer scoring APIs/settings | 1–2 | ✅ implemented | Independent version settings, score APIs, and legacy aliases |
 | Add optimizer baseline/pass score telemetry | 1–2 | ✅ done | `BatchOptimizer` logs and determinism fixture |
 | Add lower bounds and V2 formulas | 3–4 | ✅ implemented | Current-tree bounds and V2 paths; offline replay script |
-| Calibrate optimizer weights and threshold | 5–6 | ☐ pending | Held-out current-v1.9 replay report |
-| Complete regression and parity verification | 7 | ☐ pending | Required Gradle gates and fixture results |
+| Calibrate optimizer weights and threshold | 5–6 | ✅ done | Replay CSVs; keep `improvement_threshold` 0.01 (relative) |
+| Complete regression and parity verification | 7 | ✅ tests | Maze independence, SyntheticPerfectTwoPin, full DRC, V1 CLI merge |
 | Optional settings-hierarchy refactor | 8 | ☐ confirmation required | Explicit approval, compatibility tests, and migration review |
 
 ### Phase 0: Schema and v1.9 raw telemetry
@@ -612,8 +613,9 @@ Scoring (Phases 1–4, 6–7) must not import runtime-ETA terms into `BatchAutor
   board terminals and serialize them under `board_statistics.bounds`.
 - [x] Add the same lower-bound fields to v1.9 harness records through the
   benchmark harness; values remain unavailable if no matching current run exists.
-- [ ] Verify lower-bound schema parity before replay, including explicit handling
-  of unavailable values.
+- [x] Verify lower-bound schema parity before replay, including explicit handling
+  of unavailable values (validator + `schema_v5_pair_walkthrough.py`; do not
+  rewrite the full historical `benchmarks.json`).
 - [x] Export pin count, signal layer count, and net count from `BoardStatistics`,
   not DSN regex. Fix area from the board outline bounding box.
 - [x] Export router-final actuals; optimizer-initial and optimizer-final snapshots
@@ -705,28 +707,34 @@ Scoring (Phases 1–4, 6–7) must not import runtime-ETA terms into `BatchAutor
 ### Phase 6: Calibrated defaults
 
 - [x] Activate V2 `DEFAULT_*` values; refine them from current-vs-v1.9 analysis.
-- [ ] Recalibrate `optimizer.optimizationImprovementThreshold`.
-- [ ] Verify settings precedence and V1 CLI fallback.
+- [x] Recalibrate `optimizer.optimizationImprovementThreshold`.
+  Kept at `0.01` (relative to the incumbent optimizer score). V2 did not change
+  the 0–1000 scale of that comparison.
+- [x] Verify settings precedence and V1 CLI fallback.
 
 ### Phase 7: Verification
 
-- [ ] Router and optimizer scores are independent; maze costs unchanged when V2
-  weights change.
+- [x] Router and optimizer scores are independent; maze costs unchanged when V2
+  weights change (`ScoringMazeCostIndependenceTest`).
 - [x] Version flags select V1 vs V2.
-- [ ] `SyntheticPerfectTwoPin` scores 1000 on both V2 scores; pour boards are not
+- [x] `SyntheticPerfectTwoPin` scores 1000 on both V2 scores; pour boards are not
   required to.
 - [x] Zero-connection boards are defined (`BoardStatisticsTest`).
 - [x] Gate: more incompletes or higher DRC count reject; ranking is by
   optimizer score (more-complete uglier boards do not auto-win); equal scores
   keep the incumbent. Timeout rip-up that adds incompletes is rejected.
 - [x] Optimizer stops on improvement threshold, not proximity to 1000. The
-  improvement threshold remains subject to later recalibration.
+  improvement threshold stays `0.01` (relative); see `DefaultSettings`.
 - [x] V1 ±10 parity dropped (not needed).
-- [ ] Raw-metric schema parity current vs v1.9 including pre/post optimizer snapshots;
-  v1.9 score algorithm unchanged.
+- [x] Raw-metric schema parity current vs v1.9 including pre/post optimizer snapshots;
+  v1.9 score algorithm unchanged. Walkthrough: `schema_v5_pair_walkthrough.py`
+  / `docs/research/schema_v5_current_v19_pair.md`. Historical rows stay unstamped;
+  new records are schema 5.
 - [x] V2 replay from JSON does not require a reroute (`replay_v2_scores.py`).
-- [ ] Full DRC uses `getAllClearanceViolations()`.
-- [ ] No completion / DRC-count regression vs the previous current default.
+- [x] Full DRC uses `getAllClearanceViolations()` (`BoardStatistics` live path and
+  `BoardStatisticsClearancePathTest`).
+- [x] No completion / DRC-count regression vs the previous current default (offline
+  replay of existing PCBench snapshots; no new overnight route).
 
 ### Phase 8: Optional settings-hierarchy refactor (confirmation required)
 

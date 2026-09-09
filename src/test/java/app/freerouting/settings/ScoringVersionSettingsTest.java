@@ -46,4 +46,33 @@ class ScoringVersionSettingsTest {
     assertEquals(RouterScoringVersion.V2_CONTINUOUS, clone.routerScoring.version);
     assertEquals(OptimizerScoringVersion.V1_LEGACY, clone.optimizerScoring.version);
   }
+
+  @Test
+  void scoringVersionCliOverridesDefaultV2AndKeepsV2Weights() {
+    RouterSettings merged =
+        new SettingsMerger(
+                new DefaultSettings(), new CliSettings(new String[] {"--scoring-version=v1"}))
+            .merge();
+
+    assertEquals(RouterScoringVersion.V1_LEGACY, merged.routerScoring.version);
+    assertEquals(OptimizerScoringVersion.V1_LEGACY, merged.optimizerScoring.version);
+    assertEquals(
+        DefaultSettings.DEFAULT_ROUTER_UNROUTED_FIRST_HALF_WEIGHT,
+        merged.routerScoring.unroutedFirstHalfWeight,
+        0.001f);
+    assertEquals(
+        DefaultSettings.DEFAULT_OPTIMIZER_EXCESS_LENGTH_WEIGHT,
+        merged.optimizerScoring.excessWireLengthWeight,
+        0.001f);
+    assertEquals(DefaultSettings.DEFAULT_VIA_COSTS, merged.scoring.viaCosts);
+  }
+
+  @Test
+  void defaultOptimizerImprovementThresholdStaysOnePercentRelative() {
+    RouterSettings settings = new DefaultSettings().getSettings();
+    assertEquals(
+        DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD,
+        settings.optimizer.optimizationImprovementThreshold,
+        0.0f);
+  }
 }

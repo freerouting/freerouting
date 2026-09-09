@@ -34,9 +34,10 @@ public class OptimizerSettings implements Serializable, Cloneable {
   public Integer maxThreads;
 
   /**
-   * The improvement threshold (as a fraction, e.g., 0.01 for 1%) below which the optimizer
-   * terminates. If a pass improves the board by less than this fraction, the optimization process
-   * stops.
+   * Relative pass-improvement threshold (0.01 = 1% of the incumbent optimizer score). {@code
+   * BatchOptimizer} stops when {@code (scoreAfter - scoreBefore) / scoreBefore} is below this
+   * value. Keep 0.01 after V2: scores remain 0–1000, so one percent is still about 8–10 points on a
+   * typical finished board.
    */
   @SerializedName("improvement_threshold")
   public Float optimizationImprovementThreshold;
