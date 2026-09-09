@@ -54,8 +54,8 @@ class AutorouteControllerV1Test extends RoutingFixtureTest {
     req.outputFormats = List.of("SES", "DRC_SUMMARY");
     req.timeoutSeconds = 60;
     req.routerSettings = new RouterSettings();
-    req.routerSettings.maxPasses = 1;
-    req.routerSettings.maxItems = 10;
+    req.routerSettings.autorouter.maxPasses = 1;
+    req.routerSettings.autorouter.maxItems = 10;
 
     Response response = controller.autoroute(req);
     assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());

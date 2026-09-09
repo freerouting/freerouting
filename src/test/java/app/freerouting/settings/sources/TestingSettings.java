@@ -45,13 +45,13 @@ public class TestingSettings implements SettingsSource {
 
   /** Sets the maximum number of routing items per pass. */
   public void setMaxItems(int maxItems) {
-    this.settings.maxItems = maxItems;
+    this.settings.autorouter.maxItems = maxItems;
   }
 
   /** Sets the maximum routing pass count when not already configured. */
   public void setMaxPasses(int maxPasses) {
-    if (this.settings.maxPasses == null) {
-      this.settings.maxPasses = maxPasses;
+    if (this.settings.autorouter.maxPasses == null) {
+      this.settings.autorouter.maxPasses = maxPasses;
     }
   }
 
@@ -72,7 +72,7 @@ public class TestingSettings implements SettingsSource {
 
   /** Enables or disables the autorouter. */
   public void setRouterEnabled(boolean enabled) {
-    this.settings.enabled = enabled;
+    this.settings.autorouter.enabled = enabled;
   }
 
   /** Sets the copper-to-edge clearance override used by tests. */
@@ -113,8 +113,8 @@ public class TestingSettings implements SettingsSource {
 
   /** Sets the router enabled flag when not already configured. */
   public void setEnabled(boolean enabled) {
-    if (this.settings.enabled == null) {
-      this.settings.enabled = enabled;
+    if (this.settings.autorouter.enabled == null) {
+      this.settings.autorouter.enabled = enabled;
     }
   }
 

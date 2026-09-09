@@ -499,6 +499,15 @@ public class GlobalSettings implements Serializable {
    */
   public Boolean setValue(String propertyName, String newValue) {
     try {
+      if (propertyName.startsWith("router.")) {
+        String relative = propertyName.substring("router.".length());
+        String canonical = LegacyRouterSettingsBridge.canonicalCliPath(relative);
+        if (LegacyRouterSettingsBridge.isDeprecatedFlatAutorouterPath(relative)) {
+          LegacyRouterSettingsBridge.warnDeprecatedPath(
+              "router." + relative, "router." + canonical);
+        }
+        propertyName = "router." + canonical;
+      }
       ReflectionUtil.setFieldValue(this, propertyName, newValue);
       return true;
     } catch (NoSuchFieldException e) {
@@ -686,7 +695,7 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-drc")) {
           // DRC-only mode (must be checked before -dr)
-          routerSettings.enabled = false;
+          routerSettings.autorouter.enabled = false;
           drcSettings.enabled = true;
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             drcReportFile = new BoardFileDetails();
@@ -701,13 +710,15 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-mp")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.maxPasses = Integer.decode(args[i + 1]);
+            LegacyRouterSettingsBridge.warnDeprecatedPath(
+                "-mp / --router.max_passes", "--router.autorouter.max_passes");
+            routerSettings.autorouter.maxPasses = Integer.decode(args[i + 1]);
 
-            if (routerSettings.maxPasses < 0) {
-              routerSettings.maxPasses = 0;
+            if (routerSettings.autorouter.maxPasses < 0) {
+              routerSettings.autorouter.maxPasses = 0;
             }
-            if (routerSettings.maxPasses > 9999) {
-              routerSettings.maxPasses = 9999;
+            if (routerSettings.autorouter.maxPasses > 9999) {
+              routerSettings.autorouter.maxPasses = 9999;
             }
             // Note: 0 is allowed and means no limit
             i++;
@@ -844,7 +855,9 @@ public class GlobalSettings implements Serializable {
         } else if (args[i].startsWith("-inc")) {
           // ignore net class(es)
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.ignoreNetClasses = args[i + 1].split(",");
+            LegacyRouterSettingsBridge.warnDeprecatedPath(
+                "-inc / --router.ignore_net_classes", "--router.autorouter.ignore_net_classes");
+            routerSettings.autorouter.ignoreNetClasses = args[i + 1].split(",");
             i++;
           }
         } else if (args[i].startsWith("-dct")) {
@@ -879,7 +892,9 @@ public class GlobalSettings implements Serializable {
 
   /** Returns the configured maximum router passes. */
   public int getMaxPasses() {
-    return routerSettings.maxPasses;
+    Integer maxPasses =
+        routerSettings.autorouter != null ? routerSettings.autorouter.maxPasses : null;
+    return maxPasses != null ? maxPasses : 0;
   }
 
   /** Returns the configured optimizer thread count. */

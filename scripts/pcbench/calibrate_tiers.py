@@ -33,7 +33,7 @@ def route_board(jar_path: Path, dsn_path: Path, output_dir: Path, timeout_second
         "-do",
         str(ses_path),
         f"--router.result_json={manifest_path}",
-        "--router.max_passes=20",
+        "--router.autorouter.max_passes=20",
         f"--router.job_timeout=00:00:{timeout_seconds:02d}",
         f"--logging.file.location={log_path}",
     ]

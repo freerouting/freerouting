@@ -26,15 +26,15 @@ class WorkspacePortTest {
   @Test
   void settingsSnapshotIsDetachedAndDeep() {
     RouterSettings settings = new RouterSettings();
-    settings.maxPasses = 7;
+    settings.autorouter.maxPasses = 7;
     settings.optimizer.enabled = true;
     RouterSettingsSnapshot snapshot = new RouterSettingsSnapshot(settings);
 
-    settings.maxPasses = 11;
+    settings.autorouter.maxPasses = 11;
     settings.optimizer.enabled = false;
 
     RouterSettings copy = snapshot.copy();
-    assertEquals(7, copy.maxPasses);
+    assertEquals(7, copy.autorouter.maxPasses);
     assertTrue(copy.optimizer.enabled);
     assertNotSame(settings.optimizer, copy.optimizer);
   }

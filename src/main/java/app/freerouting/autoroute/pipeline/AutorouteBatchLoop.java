@@ -247,7 +247,8 @@ final class AutorouteBatchLoop {
     int currentUnrouted = calculateIncompleteCount(router.board);
     boolean isRouterEnabled =
         router.settings.getRunRouter()
-            && (router.settings.maxPasses == null || router.settings.maxPasses >= 0);
+            && (router.settings.autorouter.maxPasses == null
+                || router.settings.autorouter.maxPasses >= 0);
     Instant autorouterStageStart = null;
     float autorouterCpuStart = -1f;
     float autorouterAllocatedStart = -1f;
@@ -303,9 +304,9 @@ final class AutorouteBatchLoop {
       // }
       // alreadyRoutedBoardHashes.add(currentBoardHash);
 
-      if (router.settings.maxPasses != null
-          && router.settings.maxPasses > 0
-          && currentPass > router.settings.maxPasses) {
+      if (router.settings.autorouter.maxPasses != null
+          && router.settings.autorouter.maxPasses > 0
+          && currentPass > router.settings.autorouter.maxPasses) {
         thread.requestStopAutoRouter();
         break;
       }
@@ -442,7 +443,7 @@ final class AutorouteBatchLoop {
           "",
           new Point[0]);
 
-      if (Boolean.TRUE.equals(router.settings.saveIntermediateStages)) {
+      if (Boolean.TRUE.equals(router.settings.autorouter.saveIntermediateStages)) {
         fireBoardSnapshotEvent(router.board);
       }
 
@@ -589,7 +590,8 @@ final class AutorouteBatchLoop {
 
     boolean wasRouterRun =
         router.settings.getRunRouter()
-            && (router.settings.maxPasses == null || router.settings.maxPasses >= 0);
+            && (router.settings.autorouter.maxPasses == null
+                || router.settings.autorouter.maxPasses >= 0);
     if (wasRouterRun
         && !(router.removeUnconnectedVias
             || continueAutorouting

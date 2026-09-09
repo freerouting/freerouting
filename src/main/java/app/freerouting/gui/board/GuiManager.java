@@ -451,8 +451,8 @@ public class GuiManager {
       }
 
       // ignore net classes if they were defined by a command line argument
-      if (routingJob.routerSettings.ignoreNetClasses != null) {
-        for (String netClassName : routingJob.routerSettings.ignoreNetClasses) {
+      if (routingJob.routerSettings.autorouter.ignoreNetClasses != null) {
+        for (String netClassName : routingJob.routerSettings.autorouter.ignoreNetClasses) {
           NetClasses netClasses =
               newFrame.boardPanel.boardHandling.getRoutingBoard().rules.netClasses;
 

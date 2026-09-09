@@ -17,11 +17,8 @@ public class RouterSettings implements Serializable, Cloneable {
   public static final double MIN_BEND_COST = 0.0;
   public static final double MAX_BEND_COST = 9.9;
 
-  @SerializedName("enabled")
-  public Boolean enabled;
-
-  @SerializedName("algorithm")
-  public String algorithm;
+  @SerializedName("autorouter")
+  public AutorouterSettings autorouter;
 
   /** Configuration for the SMD-pin fanout pre-pass. */
   @SerializedName("fanout")
@@ -54,20 +51,8 @@ public class RouterSettings implements Serializable, Cloneable {
   @SerializedName("job_timeout")
   public String jobTimeoutString;
 
-  @SerializedName("max_passes")
-  public Integer maxPasses;
-
-  @SerializedName("max_items")
-  public transient Integer maxItems;
-
   @SerializedName("layers")
   public transient LayerSettings[] layers;
-
-  @SerializedName("save_intermediate_stages")
-  public transient Boolean saveIntermediateStages;
-
-  @SerializedName("ignore_net_classes")
-  public transient String[] ignoreNetClasses;
 
   /** The accuracy of the pull tight algorithm. */
   @SerializedName(
@@ -129,6 +114,7 @@ public class RouterSettings implements Serializable, Cloneable {
     this.routerScoring = new RouterScoreSettings();
     this.optimizerScoring = new OptimizerScoreSettings();
     this.fanout = new FanoutSettings();
+    this.autorouter = new AutorouterSettings();
   }
 
   /** Creates router settings sized and tuned for the supplied board. */
@@ -171,10 +157,17 @@ public class RouterSettings implements Serializable, Cloneable {
     }
   }
 
-  /** Sets the maximum number of routing passes and notifies listeners. */
+  private AutorouterSettings autorouter() {
+    if (this.autorouter == null) {
+      this.autorouter = new AutorouterSettings();
+    }
+    return this.autorouter;
+  }
+
+  /** Sets the maximum number of autorouter passes and notifies listeners. */
   public void setMaxPasses(Integer value) {
-    Integer oldValue = this.maxPasses;
-    this.maxPasses = value;
+    Integer oldValue = autorouter().maxPasses;
+    autorouter().maxPasses = value;
     if (pcs != null) {
       pcs.firePropertyChange("maxPasses", oldValue, value);
     }
@@ -204,8 +197,8 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /** Enables or disables the autorouter. */
   public void setEnabled(Boolean value) {
-    Boolean oldValue = this.enabled;
-    this.enabled = value;
+    Boolean oldValue = autorouter().enabled;
+    autorouter().enabled = value;
     if (pcs != null) {
       pcs.firePropertyChange("enabled", oldValue, value);
     }
@@ -227,8 +220,8 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /** Selects the routing algorithm implementation. */
   public void setAlgorithm(String value) {
-    String oldValue = this.algorithm;
-    this.algorithm = value;
+    String oldValue = autorouter().algorithm;
+    autorouter().algorithm = value;
     if (pcs != null) {
       pcs.firePropertyChange("algorithm", oldValue, value);
     }
@@ -498,7 +491,6 @@ public class RouterSettings implements Serializable, Cloneable {
     if (layerCount > 0) {
       result.setLayerCount(layerCount);
     }
-    result.algorithm = this.algorithm;
     result.jobTimeoutString = this.jobTimeoutString;
     if (this.layers != null) {
       result.layers = new LayerSettings[this.layers.length];
@@ -508,16 +500,11 @@ public class RouterSettings implements Serializable, Cloneable {
         }
       }
     }
-    result.maxPasses = this.maxPasses;
-    result.maxItems = this.maxItems;
-    result.saveIntermediateStages = this.saveIntermediateStages;
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
     result.neckWidthUm = this.neckWidthUm;
     result.strictDrc = this.strictDrc;
-    result.ignoreNetClasses = this.ignoreNetClasses != null ? this.ignoreNetClasses.clone() : null;
     result.tracePullTightAccuracy = this.tracePullTightAccuracy;
-    result.enabled = this.enabled;
     result.viasAllowed = this.viasAllowed;
     result.automaticNeckdown = this.automaticNeckdown;
     result.maxThreads = this.maxThreads;
@@ -532,6 +519,8 @@ public class RouterSettings implements Serializable, Cloneable {
             ? this.optimizerScoring.clone()
             : new OptimizerScoreSettings();
     result.fanout = this.fanout != null ? this.fanout.clone() : new FanoutSettings();
+    result.autorouter =
+        this.autorouter != null ? this.autorouter.clone() : new AutorouterSettings();
     result.boardSpecificTraceCostsApplied = this.boardSpecificTraceCostsApplied;
 
     return result;
@@ -562,12 +551,13 @@ public class RouterSettings implements Serializable, Cloneable {
 
   /** Returns whether the autorouter should run. */
   public boolean getRunRouter() {
+    Boolean enabled = autorouter().enabled;
     return enabled != null ? enabled : true;
   }
 
   /** Sets whether the autorouter should run. */
   public void setRunRouter(boolean value) {
-    enabled = value;
+    autorouter().enabled = value;
   }
 
   /** Returns whether the post-routing optimizer should run. */
@@ -929,10 +919,12 @@ public class RouterSettings implements Serializable, Cloneable {
     // Fire property change events for key properties to update GUI
     // Note: We fire events even if values didn't change to ensure GUI is in sync
     if (pcs != null) {
-      pcs.firePropertyChange("maxPasses", null, this.maxPasses);
+      pcs.firePropertyChange(
+          "maxPasses", null, this.autorouter != null ? this.autorouter.maxPasses : null);
       pcs.firePropertyChange("maxThreads", null, this.maxThreads);
       pcs.firePropertyChange("jobTimeoutString", null, this.jobTimeoutString);
-      pcs.firePropertyChange("enabled", null, this.enabled);
+      pcs.firePropertyChange(
+          "enabled", null, this.autorouter != null ? this.autorouter.enabled : null);
       pcs.firePropertyChange(
           "optimizer.enabled", null, this.optimizer != null ? this.optimizer.enabled : null);
       pcs.firePropertyChange(
@@ -945,11 +937,14 @@ public class RouterSettings implements Serializable, Cloneable {
   /** Validates and normalizes values that affect routing execution. */
   public void validate() {
     // Validate maxPasses (0 means no limit)
-    if (this.maxPasses != null) {
-      if (this.maxPasses < 0 || (this.maxPasses > 9999 && this.maxPasses != Integer.MAX_VALUE)) {
+    if (this.autorouter != null && this.autorouter.maxPasses != null) {
+      if (this.autorouter.maxPasses < 0
+          || (this.autorouter.maxPasses > 9999 && this.autorouter.maxPasses != Integer.MAX_VALUE)) {
         FRLogger.warn(
-            "Invalid maxPasses value: " + this.maxPasses + ", using default 0 (no limit)");
-        this.maxPasses = 0;
+            "Invalid maxPasses value: "
+                + this.autorouter.maxPasses
+                + ", using default 0 (no limit)");
+        this.autorouter.maxPasses = 0;
       }
     }
 

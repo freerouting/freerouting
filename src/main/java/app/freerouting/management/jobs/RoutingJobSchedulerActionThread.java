@@ -92,7 +92,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
     boolean routerEnabled =
         job.routerSettings.getRunRouter()
-            && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0);
+            && (job.routerSettings.autorouter.maxPasses == null
+                || job.routerSettings.autorouter.maxPasses >= 0);
     if (routerEnabled) {
       FRAnalytics.autorouterStarted();
     }

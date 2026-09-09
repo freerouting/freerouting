@@ -92,8 +92,8 @@ public final class RoutingPipeline {
   private void runRoutingStage() {
     boolean routerEnabled =
         this.job.routerSettings.getRunRouter()
-            && (this.job.routerSettings.maxPasses == null
-                || this.job.routerSettings.maxPasses >= 0);
+            && (this.job.routerSettings.autorouter.maxPasses == null
+                || this.job.routerSettings.autorouter.maxPasses >= 0);
 
     if (routerEnabled || this.job.routerSettings.isFanoutEnabled()) {
       this.job.stage = RoutingStage.ROUTING;
@@ -103,12 +103,12 @@ public final class RoutingPipeline {
       this.autorouter.runBatchLoop();
     } else if (this.job.routerSettings.isFanoutEnabled()
         && !this.job.thread.isStopAutoRouterRequested()) {
-      Integer originalMaxPasses = this.job.routerSettings.maxPasses;
+      Integer originalMaxPasses = this.job.routerSettings.autorouter.maxPasses;
       try {
-        this.job.routerSettings.maxPasses = 0;
+        this.job.routerSettings.autorouter.maxPasses = 0;
         this.autorouter.runBatchLoop();
       } finally {
-        this.job.routerSettings.maxPasses = originalMaxPasses;
+        this.job.routerSettings.autorouter.maxPasses = originalMaxPasses;
       }
     }
 
@@ -134,7 +134,7 @@ public final class RoutingPipeline {
   }
 
   private static void normalizeRouterAlgorithm(RoutingJob job) {
-    String algorithm = job.routerSettings.algorithm;
+    String algorithm = job.routerSettings.autorouter.algorithm;
     if (!RouterSettings.ALGORITHM_CURRENT.equals(algorithm)) {
       job.logWarning(
           "The algorithm '"
@@ -142,7 +142,7 @@ public final class RoutingPipeline {
               + "' is not supported. The default algorithm '"
               + RouterSettings.ALGORITHM_CURRENT
               + "' will be used instead.");
-      job.routerSettings.algorithm = RouterSettings.ALGORITHM_CURRENT;
+      job.routerSettings.autorouter.algorithm = RouterSettings.ALGORITHM_CURRENT;
     }
   }
 }

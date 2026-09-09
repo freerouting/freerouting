@@ -218,8 +218,12 @@ If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<V
 
   ```json
   {
-    "max_passes": 5,
-    "via_costs": 42
+    "autorouter": {
+      "max_passes": 5
+    },
+    "scoring": {
+      "via_costs": 42
+    }
   }
   ```
 
@@ -418,8 +422,12 @@ If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<V
     "router_settings": {
         "default_preferred_direction_trace_cost": 1.0,
         "default_undesired_direction_trace_cost": 1.0,
-        "max_passes": 100,
-        "fanout_max_passes": 20,
+        "autorouter": {
+            "max_passes": 100
+        },
+        "fanout": {
+            "max_passes": 20
+        },
         "max_threads": 1,
         "improvement_threshold": 0.01,
         "trace_pull_tight_accuracy": 500,
@@ -492,7 +500,9 @@ POST /v1/autoroute
   "output_formats": ["SES", "DRC_SUMMARY"],
   "timeout_seconds": 120,
   "router_settings": {
-    "max_passes": 10
+    "autorouter": {
+      "max_passes": 10
+    }
   }
 }
 ```

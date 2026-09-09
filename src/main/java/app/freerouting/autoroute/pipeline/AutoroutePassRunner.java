@@ -208,12 +208,12 @@ final class AutoroutePassRunner {
             break;
           }
 
-          if (router.settings.maxItems != null
-              && router.settings.maxItems > 0
-              && router.totalItemsRouted >= router.settings.maxItems) {
+          if (router.settings.autorouter.maxItems != null
+              && router.settings.autorouter.maxItems > 0
+              && router.totalItemsRouted >= router.settings.autorouter.maxItems) {
             router.job.logInfo(
                 "Max items limit reached ("
-                    + router.settings.maxItems
+                    + router.settings.autorouter.maxItems
                     + "). Stopping auto-router.");
             router.thread.requestStop();
             break;

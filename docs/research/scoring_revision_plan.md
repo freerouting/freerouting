@@ -774,6 +774,8 @@ Compatibility: Gson `alternate` cannot map `router.max_passes` →
 apply, and **warn** that those paths will be removed soon. Nested keys
 (`--router.autorouter.max_passes`, `FREEROUTING__ROUTER__AUTOROUTER__MAX_PASSES`)
 are the supported form. Canonical JSON **writes** the nested shape only.
+The v1.9 `StartupOptions` parser also accepts `--router.autorouter.*` and maps
+those keys onto its flat knobs so one benchmark command line works for both jars.
 
 Surfaces in the same change: GUI autoroute-parameter widgets, OpenAPI /
 `docs/API/API_v1.md`, in-repo scripts (benchmark runner, PCBench calibrate,
@@ -786,17 +788,17 @@ Cache keys include git/jar SHA, so a new commit can cache-miss `scoring-revision
 without invalidating historical 2.2.4 / 2.3.0 / 2.4.0-RC1 rows.
 
 - [x] Confirm that the refactor should proceed after scoring Phases 0–7.
-- [ ] Introduce `AutorouterSettings` by composition.
-- [ ] Move autorouter-stage execution fields (not `max_threads`).
-- [ ] Keep `fanout` and `optimizer` as separate stage settings; keep engine
+- [x] Introduce `AutorouterSettings` by composition.
+- [x] Move autorouter-stage execution fields (not `max_threads`).
+- [x] Keep `fanout` and `optimizer` as separate stage settings; keep engine
   policy and `max_threads` on the parent.
 - [x] Keep the serialized root name `router`.
-- [ ] Read-side bridge for flat `router.max_passes` / `enabled` / `algorithm` /
+- [x] Read-side bridge for flat `router.max_passes` / `enabled` / `algorithm` /
   `max_items` / `save_intermediate_stages` / `ignore_net_classes`; warn on CLI
   and env use of those keys.
-- [ ] Round-trip, legacy-read, precedence, CLI, GUI, API, merge, and script
+- [x] Round-trip, legacy-read, precedence, CLI, GUI, API, merge, and script
   tests before removing the bridge.
-- [ ] Update docs and all settings-path consumers after compatibility tests
+- [x] Update docs and all settings-path consumers after compatibility tests
   pass.
 
 ---

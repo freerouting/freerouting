@@ -32,8 +32,10 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   "router": {
     "default_preferred_direction_trace_cost": 1.0,
     "default_undesired_direction_trace_cost": 2.5,
-    "max_passes": 100,
-    "fanout_max_passes": 20,
+    "autorouter": {
+      "enabled": true,
+      "max_passes": 100
+    },
     "max_threads": 11,
     "improvement_threshold": 0.01,
     "trace_pull_tight_accuracy": 500,
@@ -120,12 +122,22 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 - **`default_preferred_direction_trace_cost`**: Cost factor for routing traces in the preferred direction.
 - **`default_undesired_direction_trace_cost`**: Cost factor for routing traces in undesired directions.
-- **`max_passes`**: Maximum number of routing passes.
+- **`autorouter`**: Batch autorouter stage knobs. Canonical CLI is
+  `--router.autorouter.max_passes`. Flat keys (`--router.max_passes`, `-mp`,
+  `FREEROUTING__ROUTER__MAX_PASSES`) still apply and warn until they are removed.
+  The v1.9 compatibility build also accepts the nested `--router.autorouter.*`
+  flags (it maps them onto the same flat knobs), so shared benchmark commands can
+  use one flag set for both jars.
+    - **`enabled`**: Whether the autorouter stage runs after fanout.
+    - **`algorithm`**: Algorithm identifier (`freerouting-router` by default).
+    - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
+    - **`max_items`**: Maximum items attempted in the autorouter stage.
+    - **`save_intermediate_stages`**: Save board snapshots between passes.
+    - **`ignore_net_classes`**: Net class names the autorouter should skip.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
-- **`fanout_max_passes`**: Maximum number of passes for fanout routing.
-- **`max_threads`**: Maximum number of threads to use for routing.
+- **`max_threads`**: Shared worker-thread cap for autorouter pass parallelism and optimizer GUI workers.
 - **`improvement_threshold`**: Minimum improvement required to continue routing.
 - **`trace_pull_tight_accuracy`**: Accuracy for pulling traces tight.
 - **`allowed_via_types`**: Enables or disables the use of different via types.
@@ -259,7 +271,7 @@ Freerouting can also be configured using command-line arguments. These arguments
 **Scalar example:**
 
 ```bash
-java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
+java -jar freerouting.jar --gui.enabled=false --router.autorouter.max_passes=200
 ```
 
 **List-valued settings** (e.g. `api_server.endpoints`, `mcp_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
@@ -280,7 +292,7 @@ Environment variables provide another way to override settings. The environment 
 
 ```bash
 FREEROUTING__GUI__ENABLED=false
-FREEROUTING__ROUTER__MAX_PASSES=200
+FREEROUTING__ROUTER__AUTOROUTER__MAX_PASSES=200
 java -jar freerouting.jar
 ```
 

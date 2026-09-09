@@ -213,8 +213,9 @@ public class Freerouting {
               ? stats.getRouterScore(routingJob.routerSettings)
               : null;
       int totalPasses =
-          routingJob.routerSettings != null && routingJob.routerSettings.maxPasses != null
-              ? routingJob.routerSettings.maxPasses
+          routingJob.routerSettings != null
+                  && routingJob.routerSettings.autorouter.maxPasses != null
+              ? routingJob.routerSettings.autorouter.maxPasses
               : 0;
       double runtimeSeconds =
           routingJob.startedAt != null

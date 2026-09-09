@@ -250,7 +250,7 @@ manifests (`core.results`), and board library definitions (`core.library`).
 
 ### `app.freerouting.settings`
 
-Application configuration, defaults, and the priority-based `SettingsMerger`.
+Application configuration, defaults, and the priority-based `SettingsMerger`. Stage knobs live under `router.fanout`, `router.autorouter`, and `router.optimizer`; `max_threads` stays on the parent `router` object.
 
 ### `app.freerouting.datastructures`
 
@@ -320,7 +320,7 @@ Freerouting has two related routing stages:
 | Autorouter | Attempts to make every required connection | Adds missing traces and vias so unfinished nets become complete |
 | Optimizer | Improve route quality | Reroutes parts of existing connections to reduce length, vias, and awkward shapes |
 
-In settings, autorouter and optimizer options are part of the same routing configuration, so both can be reviewed before you run a job. During execution, Freerouting runs autorouter passes first and then continues to optimizer passes (if optimizer is enabled and the run is not interrupted).
+In settings, fanout, autorouter, and optimizer options are nested under the same `router` object so they can be reviewed before you run a job. During execution, Freerouting runs fanout, then autorouter passes, then optimizer passes (if each stage is enabled and the run is not interrupted).
 
 #### Autorouter
 

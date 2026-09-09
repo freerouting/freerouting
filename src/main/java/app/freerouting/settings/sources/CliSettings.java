@@ -1,6 +1,7 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.LegacyRouterSettingsBridge;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
 import app.freerouting.util.ReflectionUtil;
@@ -47,7 +48,8 @@ public class CliSettings implements SettingsSource {
           String propertyName = parts[0];
           String value = parts.length > 1 ? parts[1] : "";
 
-          if ("router.enabled".equals(propertyName)) {
+          if ("router.enabled".equals(propertyName)
+              || "router.autorouter.enabled".equals(propertyName)) {
             hasExplicitRouterEnabledArgument = true;
           }
 
@@ -92,9 +94,10 @@ public class CliSettings implements SettingsSource {
     // Legacy batch invocation (`-de ... -do ...`) is expected to route immediately.
     // Force router enabled unless the caller explicitly set --router.enabled=... .
     if (hasDesignInputArgument && hasDesignOutputArgument && !hasExplicitRouterEnabledArgument) {
-      settings.enabled = true;
+      settings.autorouter.enabled = true;
       FRLogger.debug(
-          "Applied CLI router setting: router.enabled = true (implicit from -de/-do batch mode)");
+          "Applied CLI router setting: router.autorouter.enabled = true"
+              + " (implicit from -de/-do batch mode)");
     }
 
     return settings;
@@ -114,6 +117,14 @@ public class CliSettings implements SettingsSource {
         fieldPath = "routerScoring.version";
       } else if ("optimizer.scoring.version".equals(propertyName)) {
         fieldPath = "optimizerScoring.version";
+      } else if (propertyName.startsWith("router.")) {
+        String relative = propertyName.substring("router.".length());
+        String canonical = LegacyRouterSettingsBridge.canonicalCliPath(relative);
+        if (LegacyRouterSettingsBridge.isDeprecatedFlatAutorouterPath(relative)) {
+          LegacyRouterSettingsBridge.warnDeprecatedPath(
+              "router." + relative, "router." + canonical);
+        }
+        fieldPath = canonical;
       }
       if (fieldPath.endsWith(".version")) {
         value =

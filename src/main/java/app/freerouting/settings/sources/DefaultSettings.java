@@ -138,16 +138,16 @@ public class DefaultSettings implements SettingsSource {
     // 2-layer design.
     RouterSettings settings = new RouterSettings();
 
-    settings.enabled = true;
-    settings.algorithm = RouterSettings.ALGORITHM_CURRENT;
+    settings.autorouter.enabled = true;
+    settings.autorouter.algorithm = RouterSettings.ALGORITHM_CURRENT;
     settings.jobTimeoutString = "12:00:00";
-    settings.maxPasses = 0;
-    settings.maxItems = Integer.MAX_VALUE;
+    settings.autorouter.maxPasses = 0;
+    settings.autorouter.maxItems = Integer.MAX_VALUE;
     settings.tracePullTightAccuracy = 500;
     settings.viasAllowed = true;
     settings.automaticNeckdown = true;
-    settings.saveIntermediateStages = false;
-    settings.ignoreNetClasses = new String[0];
+    settings.autorouter.saveIntermediateStages = false;
+    settings.autorouter.ignoreNetClasses = new String[0];
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;

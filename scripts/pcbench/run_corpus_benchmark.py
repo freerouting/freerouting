@@ -251,7 +251,7 @@ def route_single_board(
         "-dct",
         "0",
         f"--router.result_json={manifest_path}",
-        "--router.max_passes=20",
+        "--router.autorouter.max_passes=20",
         f"--router.job_timeout={timeout_budget}",
         f"--logging.file.location={log_path}",
     ]

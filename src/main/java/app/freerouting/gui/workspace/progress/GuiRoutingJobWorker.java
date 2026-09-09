@@ -334,9 +334,9 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     if (this.routerEnabledForRun) {
       if (sessionStartTime != null) {
         String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
-        if (routingJob.routerSettings.maxPasses != null
-            && routingJob.routerSettings.maxPasses > 0
-            && routingJob.getCurrentPass() > routingJob.routerSettings.maxPasses) {
+        if (routingJob.routerSettings.autorouter.maxPasses != null
+            && routingJob.routerSettings.autorouter.maxPasses > 0
+            && routingJob.getCurrentPass() > routingJob.routerSettings.autorouter.maxPasses) {
           completionStatus = "completed with pass number limit hit:";
         }
 
@@ -560,8 +560,8 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     try {
       this.routerEnabledForRun =
           routingJob.routerSettings.getRunRouter()
-              && (routingJob.routerSettings.maxPasses == null
-                  || routingJob.routerSettings.maxPasses >= 0);
+              && (routingJob.routerSettings.autorouter.maxPasses == null
+                  || routingJob.routerSettings.autorouter.maxPasses >= 0);
       if (this.routerEnabledForRun) {
         int threadCount = routingJob.routerSettings.maxThreads;
         routingJob.logInfo(

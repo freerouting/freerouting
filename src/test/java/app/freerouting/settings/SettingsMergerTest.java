@@ -24,8 +24,8 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Verify default values
-    assertEquals(0, merged.maxPasses);
-    assertTrue(merged.enabled);
+    assertEquals(0, merged.autorouter.maxPasses);
+    assertTrue(merged.autorouter.enabled);
     assertTrue(merged.viasAllowed);
     assertTrue(merged.getRunOptimizer());
   }
@@ -37,7 +37,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Should have null values
-    assertNull(merged.maxPasses);
+    assertNull(merged.autorouter.maxPasses);
   }
 
   @Test
@@ -63,9 +63,9 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Environment variable should override default
-    assertEquals(50, merged.maxPasses);
+    assertEquals(50, merged.autorouter.maxPasses);
     // Other defaults should remain
-    assertTrue(merged.enabled);
+    assertTrue(merged.autorouter.enabled);
   }
 
   @Test
@@ -85,7 +85,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Environment variables (priority 55) should override JSON (priority 10)
-    assertEquals(100, merged.maxPasses);
+    assertEquals(100, merged.autorouter.maxPasses);
     assertEquals(8, merged.optimizer.maxThreads);
   }
 
@@ -117,7 +117,7 @@ class SettingsMergerTest {
 
     assertNotNull(merged);
     // Should still have default values
-    assertEquals(0, merged.maxPasses);
+    assertEquals(0, merged.autorouter.maxPasses);
   }
 
   @Test
@@ -133,9 +133,9 @@ class SettingsMergerTest {
     RouterSettings merged = new SettingsMerger(defaults, envSource).merge();
 
     assertNotNull(merged);
-    assertEquals(200, merged.maxPasses); // Overridden
+    assertEquals(200, merged.autorouter.maxPasses); // Overridden
     assertTrue(merged.viasAllowed); // Default
-    assertTrue(merged.enabled); // Default
+    assertTrue(merged.autorouter.enabled); // Default
   }
 
   @Test
@@ -166,12 +166,12 @@ class SettingsMergerTest {
     RouterSettings merged = new SettingsMerger(defaults, envSource).merge();
 
     assertNotNull(merged);
-    assertEquals(150, merged.maxPasses);
+    assertEquals(150, merged.autorouter.maxPasses);
     assertEquals(6, merged.optimizer.maxThreads);
     // Note: viasAllowed might not be set correctly due to field name vs
     // serialization name mismatch
     // assertFalse(merged.viasAllowed);
-    assertEquals("freerouting-router-v19", merged.algorithm);
+    assertEquals("freerouting-router-v19", merged.autorouter.algorithm);
   }
 
   @Test
@@ -192,7 +192,7 @@ class SettingsMergerTest {
   void legacyBatchModeEnablesRouterWhenJsonDisablesIt() {
     DefaultSettings defaults = new DefaultSettings();
     RouterSettings jsonSettings = new RouterSettings();
-    jsonSettings.enabled = false;
+    jsonSettings.autorouter.enabled = false;
     SettingsSource json =
         new SettingsSource() {
           @Override
