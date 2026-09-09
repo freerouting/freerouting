@@ -73,7 +73,7 @@ class BoardStatisticsTest {
     RouterSettings settings = new RouterSettings();
     settings.optimizerScoring.version = OptimizerScoringVersion.V2_LOWER_BOUND;
 
-    assertEquals(999.2f, stats.getOptimizerScore(settings), 0.001f);
+    assertEquals(200.0f, stats.getOptimizerScore(settings), 0.001f);
   }
 
   @Test

@@ -749,15 +749,15 @@ public class BoardStatistics implements Serializable {
     double lengthFloor = Math.max(0.0, valueOrDefault(settings.lengthFloor, 1.0f));
     double difficultyFloor = Math.max(1.0, valueOrDefault(settings.difficultyScaleFloor, 1.0f));
     double lengthPenalty =
-        valueOrDefault(settings.excessWireLengthWeight, 1.0f)
+        valueOrDefault(settings.excessWireLengthWeight, 1000.0f)
             * Math.max(0.0, actualTraceLength - minTraceLength)
             / Math.max(minTraceLength, lengthFloor);
     double viaPenalty =
-        valueOrDefault(settings.excessViaWeight, 1.0f)
+        valueOrDefault(settings.excessViaWeight, 2000.0f)
             * Math.max(0.0, actualViaCount - minViaCount)
             / Math.max(difficulty, difficultyFloor);
     double bendPenalty =
-        valueOrDefault(settings.excessBendWeight, 1.0f)
+        valueOrDefault(settings.excessBendWeight, 500.0f)
             * Math.max(0.0, actualBendCount - minBendCount)
             / Math.max(difficulty, difficultyFloor);
     return (float) Math.max(0.0, 1000.0 - lengthPenalty - viaPenalty - bendPenalty);

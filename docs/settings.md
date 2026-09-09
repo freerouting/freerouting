@@ -137,13 +137,13 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`routable`**: Boolean indicating if the layer is active/routable by the autorouter.
     - **`preferred_direction_horizontal`**: Boolean indicating if the preferred direction on this layer is horizontal.
 - **`router_scoring`**: Versioned router-board score settings. The current default is
-  `V2_CONTINUOUS`; `V1_LEGACY` remains available for compatibility. Its nullable weight fields are
-  `unrouted_connection_weight`, `clearance_violation_count_weight`,
-  `clearance_violation_depth_weight`, and `clearance_violation_depth_scale`.
+  `V2_CONTINUOUS`; `V1_LEGACY` remains available for compatibility. Its nullable weight fields and
+  defaults are `unrouted_connection_weight` (1000), `clearance_violation_count_weight` (25),
+  `clearance_violation_depth_weight` (1), and `clearance_violation_depth_scale` (1000 µm).
 - **`optimizer_scoring`**: Versioned optimizer-board score settings. The current default is
-  `V2_LOWER_BOUND`; `V1_LEGACY` remains available for compatibility. Its fields are
-  `excess_wire_length_weight`, `excess_via_weight`, `excess_bend_weight`, `length_floor`, and
-  `difficulty_scale_floor`.
+  `V2_LOWER_BOUND`; `V1_LEGACY` remains available for compatibility. Its fields and defaults are
+  `excess_wire_length_weight` (1000), `excess_via_weight` (2000), `excess_bend_weight` (500),
+  `length_floor` (1), and `difficulty_scale_floor` (1).
 
 The router and optimizer versions are independent. CLI aliases are
 `--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and

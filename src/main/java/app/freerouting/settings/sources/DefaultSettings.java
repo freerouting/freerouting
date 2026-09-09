@@ -94,9 +94,9 @@ public class DefaultSettings implements SettingsSource {
   public static final float DEFAULT_ROUTER_CLEARANCE_COUNT_WEIGHT = 25.0F;
   public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_WEIGHT = 1.0F;
   public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_SCALE_UM = 1000.0F;
-  public static final float DEFAULT_OPTIMIZER_EXCESS_LENGTH_WEIGHT = 1.0F;
-  public static final float DEFAULT_OPTIMIZER_EXCESS_VIA_WEIGHT = 1.0F;
-  public static final float DEFAULT_OPTIMIZER_EXCESS_BEND_WEIGHT = 1.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_LENGTH_WEIGHT = 1000.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_VIA_WEIGHT = 2000.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_BEND_WEIGHT = 500.0F;
   public static final float DEFAULT_OPTIMIZER_LENGTH_FLOOR = 1.0F;
   public static final float DEFAULT_OPTIMIZER_DIFFICULTY_SCALE_FLOOR = 1.0F;
 

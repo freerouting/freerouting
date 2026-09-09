@@ -154,9 +154,9 @@ Every scoring field stays nullable in source objects. Effective defaults are ass
 only in `DefaultSettings.getSettings()` via named `DEFAULT_*` constants. Formula code
 must not hide magic numbers.
 
-V2 is now the current `DefaultSettings` selection. Its named `DEFAULT_*` weights
-remain the initial values and can be refined after test runs and current-vs-v1.9
-JSON replay. V1 remains available as an explicit compatibility override.
+V2 is now the current `DefaultSettings` selection. Optimizer excess weights are
+\(W_L=1000\), \(W_V=2000\), \(W_B=500\). Router `DEFAULT_*` weights stay until DRC
+saturation is reviewed. V1 remains available as an explicit compatibility override.
 
 ### 1.4 Decided product rules
 
@@ -750,7 +750,7 @@ Closed: D2 no DRC cap; completeness is not an automatic win over a worse
 optimizer score (veto only if completeness or DRC count regresses); D3 keep
 incumbent on score ties; D4 later V2 replay; D5 Manhattan MST; D6 layer-switch
 \(V_{\min}\) + Manhattan one-bend \(B_{\min}\) with 45° counted in actuals; D7 v1.9
-pre/post optimizer snapshots; D8 placeholder weights (set manually after test runs);
+pre/post optimizer snapshots; D8 optimizer weights \(W_L=1000\), \(W_V=2000\), \(W_B=500\);
 D9 deprecated alias + `optimizer_score`; CLI allows both settings-path keys and
 short flags; router and optimizer versions are independent; timeout/rip-up that
 increases incompletes is rejected; improvement threshold stays 0.01 until
@@ -769,7 +769,7 @@ optional Phase 8 settings-hierarchy refactor still requires explicit confirmatio
 after the scoring work is complete. If common score values emerge later, add them
 by composition after a concrete use case is identified.
 
-Placeholder optimizer \(W_L\) / \(W_V\) / \(W_B\) and
-`optimizationImprovementThreshold` stay uncalibrated until the v1.9 V2
-replay is reviewed (D8). Router `DEFAULT_*` weights are kept unless DRC
-saturation appears.
+Optimizer \(W_L=1000\), \(W_V=2000\), \(W_B=500\) (D8).
+`optimizationImprovementThreshold` is still 0.01 (~10 points on the 0–1000
+scale). Router `DEFAULT_*` weights are kept unless DRC saturation appears;
+violation-depth weight is the next calibration candidate.
