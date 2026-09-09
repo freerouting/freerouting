@@ -88,6 +88,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
+| Router or optimizer board scores | `app.freerouting.core.scoring` (`BoardStatistics.getRouterScore` / `getOptimizerScore`) |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 
 ## Module Boundaries (ArchUnit)
@@ -364,6 +365,19 @@ The optimizer is the "make it better" stage. It runs after routing is already co
     If the new version is better, it stays on the board. If not, the optimizer restores the previous state so the design does not get worse.
 
 The optimizer changes the board more conservatively than the autorouter. Its job is to shorten routes, reduce vias, and polish the final layout.
+
+#### Board scores (router vs optimizer)
+
+Autorouter and optimizer **do not share a score**. Maze-search costs (`via_costs`, preferred-direction trace costs, rip-up costs) stay on `RoutingCostSettings` and are independent of these board scores. Both V2 scores are on a 0–1000 scale (higher is better). `getNormalizedScore()` is a deprecated alias of the **router** score.
+
+Defaults live in `DefaultSettings`. Formula details and current weights are in [docs/settings.md](settings.md) and [docs/research/scoring_revision_plan.md](research/scoring_revision_plan.md).
+
+| Score | Used by | V2 default | What it measures |
+| --- | --- | --- | --- |
+| Router | `BatchAutorouter`, `BoardHistory`, API `normalized_score` | `V2_CONTINUOUS` | Incomplete connections (first half of nets cheaper than the last half) plus DRC count and stacked violation depth |
+| Optimizer | `BatchOptimizer` candidate keep/undo, API `optimizer_score` | `V2_LOWER_BOUND` | Excess wire length, vias, and bends versus placement-derived lower bounds. Completeness and DRC count are gates, not score terms |
+
+Difficulty \(D = \max(1,\ P \times L)\) (pins × signal layers) scales DRC, via, and bend penalties. Unrouted fraction and length excess do **not** divide by \(D\).
 
 ### GUI and Interaction Path
 

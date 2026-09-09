@@ -12,6 +12,15 @@ public class RouterScoreSettings implements Serializable, Cloneable {
   @SerializedName("unrouted_connection_weight")
   public Float unroutedConnectionWeight;
 
+  @SerializedName("unrouted_free_fraction")
+  public Float unroutedFreeFraction;
+
+  @SerializedName("unrouted_first_half_weight")
+  public Float unroutedFirstHalfWeight;
+
+  @SerializedName("unrouted_second_half_weight")
+  public Float unroutedSecondHalfWeight;
+
   @SerializedName("clearance_violation_count_weight")
   public Float clearanceViolationCountWeight;
 

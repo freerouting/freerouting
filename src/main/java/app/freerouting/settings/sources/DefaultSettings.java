@@ -91,8 +91,25 @@ public class DefaultSettings implements SettingsSource {
       OptimizerScoringVersion.V2_LOWER_BOUND;
 
   public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
+
+  /** Split between first-half and second-half unrouted weights. Default 0.5. */
+  public static final float DEFAULT_ROUTER_UNROUTED_FREE_FRACTION = 0.5F;
+
+  /**
+   * Penalty for having the first half of connections still open. Half of {@link
+   * #DEFAULT_ROUTER_UNROUTED_SECOND_HALF_WEIGHT} so early progress still moves the score, but less
+   * than finishing the remaining nets. Together with the second-half weight this sums to 1000.
+   */
+  public static final float DEFAULT_ROUTER_UNROUTED_FIRST_HALF_WEIGHT = 1000.0F / 3.0F;
+
+  /**
+   * Penalty for having the last half of connections still open. Twice the first-half weight so a
+   * fully open board scores 0 and a half-done board scores about 333.
+   */
+  public static final float DEFAULT_ROUTER_UNROUTED_SECOND_HALF_WEIGHT = 2000.0F / 3.0F;
+
   public static final float DEFAULT_ROUTER_CLEARANCE_COUNT_WEIGHT = 25.0F;
-  public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_WEIGHT = 1.0F;
+  public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_WEIGHT = 300.0F;
   public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_SCALE_UM = 1000.0F;
   public static final float DEFAULT_OPTIMIZER_EXCESS_LENGTH_WEIGHT = 1000.0F;
   public static final float DEFAULT_OPTIMIZER_EXCESS_VIA_WEIGHT = 2000.0F;
@@ -175,6 +192,9 @@ public class DefaultSettings implements SettingsSource {
 
     settings.routerScoring.version = DEFAULT_ROUTER_SCORING_VERSION;
     settings.routerScoring.unroutedConnectionWeight = DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT;
+    settings.routerScoring.unroutedFreeFraction = DEFAULT_ROUTER_UNROUTED_FREE_FRACTION;
+    settings.routerScoring.unroutedFirstHalfWeight = DEFAULT_ROUTER_UNROUTED_FIRST_HALF_WEIGHT;
+    settings.routerScoring.unroutedSecondHalfWeight = DEFAULT_ROUTER_UNROUTED_SECOND_HALF_WEIGHT;
     settings.routerScoring.clearanceViolationCountWeight = DEFAULT_ROUTER_CLEARANCE_COUNT_WEIGHT;
     settings.routerScoring.clearanceViolationDepthWeight = DEFAULT_ROUTER_CLEARANCE_DEPTH_WEIGHT;
     settings.routerScoring.clearanceViolationDepthScale = DEFAULT_ROUTER_CLEARANCE_DEPTH_SCALE_UM;

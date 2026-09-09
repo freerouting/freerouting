@@ -136,14 +136,22 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`layers`**: An array of layer-specific settings (transient, typically set via CLI or loaded from board files). Each element contains:
     - **`routable`**: Boolean indicating if the layer is active/routable by the autorouter.
     - **`preferred_direction_horizontal`**: Boolean indicating if the preferred direction on this layer is horizontal.
-- **`router_scoring`**: Versioned router-board score settings. The current default is
-  `V2_CONTINUOUS`; `V1_LEGACY` remains available for compatibility. Its nullable weight fields and
-  defaults are `unrouted_connection_weight` (1000), `clearance_violation_count_weight` (25),
-  `clearance_violation_depth_weight` (1), and `clearance_violation_depth_scale` (1000 µm).
-- **`optimizer_scoring`**: Versioned optimizer-board score settings. The current default is
-  `V2_LOWER_BOUND`; `V1_LEGACY` remains available for compatibility. Its fields and defaults are
-  `excess_wire_length_weight` (1000), `excess_via_weight` (2000), `excess_bend_weight` (500),
-  `length_floor` (1), and `difficulty_scale_floor` (1).
+- **`router_scoring`**: Autorouter board score (`V2_CONTINUOUS` by default; `V1_LEGACY`
+  remains available). Used by the autorouter, board history, and API `normalized_score`.
+  Incomplete connections are split at `unrouted_free_fraction` (0.5): the first half
+  uses `unrouted_first_half_weight` (1000/3) and the last half uses
+  `unrouted_second_half_weight` (2000/3), so a fully open board scores 0, a half-done
+  board scores about 333, and a finished board scores 1000 before DRC. DRC adds
+  `clearance_violation_count_weight` (25) times violation count / D plus
+  `clearance_violation_depth_weight` (300) times stacked shortfall µm /
+  `clearance_violation_depth_scale` (1000 µm) / D. D is max(1, pins × signal layers).
+  `unrouted_connection_weight` is unused by V2.
+- **`optimizer_scoring`**: Optimizer board score (`V2_LOWER_BOUND` by default; `V1_LEGACY`
+  remains available). Completeness and DRC count are keep/undo gates, not score terms.
+  The score is 1000 minus excess wire length, vias, and bends versus placement lower
+  bounds. Defaults: `excess_wire_length_weight` (1000), `excess_via_weight` (2000),
+  `excess_bend_weight` (500), `length_floor` (1), `difficulty_scale_floor` (1). Via and
+  bend excess divide by D; length excess divides by Lmin.
 
 The router and optimizer versions are independent. CLI aliases are
 `--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and
@@ -160,6 +168,8 @@ Configures the optional route-optimization stage that runs after autorouting.
   `feature_flags.multi_threading` flag is enabled. It also controls autorouter pass parallelism
   in `BatchAutorouterThread`. Headless and API jobs always use the single-threaded
   `BatchOptimizer`; this setting does not enable parallel optimizer workers there.
+- **`improvement_threshold`**: Minimum relative optimizer-score gain required to keep
+  a candidate (default `0.01`, about 10 points on the 0–1000 V2 optimizer scale).
 
 ##### **`fanout` Sub-section**
 

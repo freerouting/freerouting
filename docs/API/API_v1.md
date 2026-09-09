@@ -480,7 +480,7 @@ If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<V
 POST /v1/autoroute
 ```
 
-**Description:** Performs end-to-end autorouting in a single synchronous HTTP turn. Accepts multi-file inputs (primary `.dsn` or `.json`, optional `.rules`, and optional initial `.ses`), executes routing within the requested `timeout_seconds` budget, and returns all requested output representations (`SES`, `KICAD_JSON`, `SCR`, `DRC_JSON`, `DRC_SUMMARY`) along with board statistics in a single turn.
+**Description:** Performs end-to-end autorouting in a single synchronous HTTP turn. Accepts multi-file inputs (primary `.dsn` or `.json`, optional `.rules`, and optional initial `.ses`), executes routing within the requested `timeout_seconds` budget, and returns all requested output representations (`SES`, `KICAD_JSON`, `SCR`, `DRC_JSON`, `DRC_SUMMARY`) along with board statistics in a single turn. `normalized_score` is the V2 router score (completion and DRC). `optimizer_score` is the V2 optimizer score (excess length, vias, and bends versus lower bounds).
 
 **Request body:**
 
@@ -508,6 +508,7 @@ POST /v1/autoroute
   "unrouted_connections": 0,
   "clearance_violations": 0,
   "normalized_score": 980.5,
+  "optimizer_score": 779.2,
   "outputs": {
     "SES": "(session ...)"
   },

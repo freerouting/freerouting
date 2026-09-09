@@ -696,16 +696,33 @@ public class BoardStatistics implements Serializable {
         this.clearanceViolations.totalViolationUm != null
             ? Math.max(0.0, this.clearanceViolations.totalViolationUm)
             : 0.0;
-    double unroutedPenalty =
-        connections > 0
-            ? valueOrDefault(settings.unroutedConnectionWeight, 1000.0f) * incomplete / connections
-            : 0.0;
+    double split =
+        Math.min(1.0, Math.max(0.0, valueOrDefault(settings.unroutedFreeFraction, 0.5f)));
+    double firstHalfWeight = valueOrDefault(settings.unroutedFirstHalfWeight, 1000.0f / 3.0f);
+    double secondHalfWeight = valueOrDefault(settings.unroutedSecondHalfWeight, 2000.0f / 3.0f);
+    double openFraction = connections > 0 ? incomplete / connections : 0.0;
+    double firstHalfOpen;
+    double secondHalfOpen;
+    if (connections <= 0) {
+      firstHalfOpen = 0.0;
+      secondHalfOpen = 0.0;
+    } else if (split <= 0.0) {
+      firstHalfOpen = 0.0;
+      secondHalfOpen = openFraction;
+    } else if (split >= 1.0) {
+      firstHalfOpen = openFraction;
+      secondHalfOpen = 0.0;
+    } else {
+      firstHalfOpen = Math.min(1.0, Math.max(0.0, (openFraction - split) / (1.0 - split)));
+      secondHalfOpen = Math.min(1.0, openFraction / split);
+    }
+    double unroutedPenalty = firstHalfWeight * firstHalfOpen + secondHalfWeight * secondHalfOpen;
     double drcPenalty =
         valueOrDefault(settings.clearanceViolationCountWeight, 25.0f) * violationCount / difficulty;
     double depthScale =
         Math.max(1.0, valueOrDefault(settings.clearanceViolationDepthScale, 1000.0f));
     drcPenalty +=
-        valueOrDefault(settings.clearanceViolationDepthWeight, 1.0f)
+        valueOrDefault(settings.clearanceViolationDepthWeight, 300.0f)
             * violationDepth
             / depthScale
             / difficulty;

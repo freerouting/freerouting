@@ -155,8 +155,10 @@ only in `DefaultSettings.getSettings()` via named `DEFAULT_*` constants. Formula
 must not hide magic numbers.
 
 V2 is now the current `DefaultSettings` selection. Optimizer excess weights are
-\(W_L=1000\), \(W_V=2000\), \(W_B=500\). Router `DEFAULT_*` weights stay until DRC
-saturation is reviewed. V1 remains available as an explicit compatibility override.
+\(W_L=1000\), \(W_V=2000\), \(W_B=500\). Router defaults are \(W_1=1000/3\),
+\(W_2=2000/3\) (split \(F=0.5\)), \(W_C=25\), \(W_D=300\),
+\(U_{\text{scale}}=1000\,\mu\text{m}\). V1 remains available as an explicit
+compatibility override.
 
 ### 1.4 Decided product rules
 
@@ -216,15 +218,28 @@ $$\boxed{\text{score}_{\text{router}} = \max\left(0.0,\ 1000.0 - \text{penalty}_
 
 #### Unrouted penalty
 
-$$\text{penalty}_{\text{unrouted}} = W_{\text{unrouted}} \times \left(\frac{N_{\text{unrouted}}}{N_{\text{conn}}}\right)$$
+$$\text{penalty}_{\text{unrouted}} = W_1 \times o_1 + W_2 \times o_2$$
+
+with split \(F = 0.5\) (`unrouted_free_fraction`) and open fraction
+\(f = N_{\text{unrouted}} / N_{\text{conn}}\):
+
+$$
+o_1 = \min\left(1,\ \max\left(0,\ \frac{f - F}{1 - F}\right)\right)
+\qquad
+o_2 = \min\left(1,\ \frac{f}{F}\right)
+$$
 
 - \(N_{\text{conn}}\) is `connections.maximumCount`, never fixture `net_count`.
+- \(o_1\) is how much of the first half is still open; \(o_2\) is how much of the
+  last half is still open. At \(f=1\): both 1. At \(f=0.5\): \(o_1=0\), \(o_2=1\).
+  At \(f=0\): both 0.
+- Defaults \(W_1 = 1000/3\), \(W_2 = 2000/3\) so the last half is worth twice the
+  first half, a fully open board scores 0, and a half-done board scores
+  \(1000 - W_2 \approx 333\).
 - If \(N_{\text{unrouted}} = 0\): penalty \(= 0\).
 - If \(N_{\text{conn}} = 0\) and there are no violations: score \(= 1000\) (defined;
   not `NaN` / 0).
 - If \(N_{\text{conn}} = 0\) and there are violations: apply only the DRC penalty.
-- Default \(W_{\text{unrouted}} = 1000\) so a fully open board with no DRC scores 0.
-  The field remains configurable.
 
 #### Clearance penalty
 
@@ -771,5 +786,5 @@ by composition after a concrete use case is identified.
 
 Optimizer \(W_L=1000\), \(W_V=2000\), \(W_B=500\) (D8).
 `optimizationImprovementThreshold` is still 0.01 (~10 points on the 0–1000
-scale). Router `DEFAULT_*` weights are kept unless DRC saturation appears;
-violation-depth weight is the next calibration candidate.
+scale). Chosen router defaults are \(W_1=1000/3\), \(W_2=2000/3\) (last half twice the
+first), \(W_C=25\), \(W_D=300\).

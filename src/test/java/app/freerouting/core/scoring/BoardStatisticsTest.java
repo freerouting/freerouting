@@ -41,7 +41,7 @@ class BoardStatisticsTest {
   }
 
   @Test
-  void v2RouterScoreUsesConnectionFractionAndClearanceDepth() {
+  void v2RouterScoreUsesTwoHalfUnroutedWeights() {
     BoardStatistics stats = new BoardStatistics();
     stats.connections.maximumCount = 10;
     stats.connections.incompleteCount = 2;
@@ -51,12 +51,29 @@ class BoardStatisticsTest {
 
     RouterSettings settings = new RouterSettings();
     settings.routerScoring.version = RouterScoringVersion.V2_CONTINUOUS;
-    settings.routerScoring.unroutedConnectionWeight = 1000.0f;
+    settings.routerScoring.unroutedFreeFraction = 0.5f;
+    settings.routerScoring.unroutedFirstHalfWeight = 1000.0f / 3.0f;
+    settings.routerScoring.unroutedSecondHalfWeight = 2000.0f / 3.0f;
     settings.routerScoring.clearanceViolationCountWeight = 25.0f;
-    settings.routerScoring.clearanceViolationDepthWeight = 1.0f;
+    settings.routerScoring.clearanceViolationDepthWeight = 300.0f;
     settings.routerScoring.clearanceViolationDepthScale = 1000.0f;
 
-    assertEquals(794.7f, stats.getRouterScore(settings), 0.001f);
+    // 20% open is in the last half: unrouted = (2000/3)*0.4, plus DRC 95.
+    assertEquals(638.333f, stats.getRouterScore(settings), 0.01f);
+
+    stats.clearanceViolations.totalCount = 0;
+    stats.clearanceViolations.totalViolationUm = 0.0;
+    stats.connections.incompleteCount = 5;
+    assertEquals(333.333f, stats.getRouterScore(settings), 0.01f);
+
+    stats.connections.incompleteCount = 8;
+    assertEquals(133.333f, stats.getRouterScore(settings), 0.01f);
+
+    stats.connections.incompleteCount = 10;
+    assertEquals(0.0f, stats.getRouterScore(settings), 0.001f);
+
+    stats.connections.incompleteCount = 0;
+    assertEquals(1000.0f, stats.getRouterScore(settings), 0.001f);
   }
 
   @Test
@@ -87,9 +104,11 @@ class BoardStatisticsTest {
 
     RouterSettings settings = new RouterSettings();
     settings.routerScoring.version = RouterScoringVersion.V2_CONTINUOUS;
-    settings.routerScoring.unroutedConnectionWeight = 1000.0f;
+    settings.routerScoring.unroutedFreeFraction = 0.5f;
+    settings.routerScoring.unroutedFirstHalfWeight = 1000.0f / 3.0f;
+    settings.routerScoring.unroutedSecondHalfWeight = 2000.0f / 3.0f;
     settings.routerScoring.clearanceViolationCountWeight = 25.0f;
-    settings.routerScoring.clearanceViolationDepthWeight = 1.0f;
+    settings.routerScoring.clearanceViolationDepthWeight = 300.0f;
     settings.routerScoring.clearanceViolationDepthScale = 1000.0f;
 
     assertEquals(1000.0f, stats.getRouterScore(settings), 0.001f);
