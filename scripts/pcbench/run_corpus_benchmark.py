@@ -678,9 +678,24 @@ def main() -> int:
         bench_data["runs"] = list(existing_runs.values())
         bench_data["total_runs"] = len(bench_data["runs"])
         bench_data["generated_at"] = datetime.now(timezone.utc).isoformat()
-        tmp_file = benchmarks_json.with_suffix(".tmp")
-        tmp_file.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
-        tmp_file.replace(benchmarks_json)
+        tmp_file = benchmarks_json.with_name(
+            f".{benchmarks_json.name}.{os.getpid()}.{time.time_ns()}.tmp"
+        )
+        try:
+            tmp_file.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
+            for attempt in range(8):
+                try:
+                    tmp_file.replace(benchmarks_json)
+                    return
+                except PermissionError:
+                    if attempt == 7:
+                        raise
+                    time.sleep(0.5 * (attempt + 1))
+        finally:
+            try:
+                tmp_file.unlink(missing_ok=True)
+            except OSError:
+                pass
 
     # Worker tracking structures
     worker_slots: queue.Queue[int] = queue.Queue()
@@ -819,17 +834,6 @@ def main() -> int:
                         version_label=args.version_label,
                         in_place=True,
                     )
-
-                    # Trigger report regeneration every 50 boards in background
-                    if completed % 50 == 0:
-                        try:
-                            subprocess.Popen(
-                                ["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"],
-                                stdout=subprocess.DEVNULL,
-                                stderr=subprocess.DEVNULL,
-                            )
-                        except Exception:
-                            pass
 
                 except Exception as e:
                     error_count += 1
