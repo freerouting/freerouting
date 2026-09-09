@@ -597,7 +597,7 @@ Scoring (Phases 1–4, 6–7) must not import runtime-ETA terms into `BatchAutor
 | Add lower bounds and V2 formulas | 3–4 | ✅ implemented | Current-tree bounds and V2 paths; offline replay script |
 | Calibrate optimizer weights and threshold | 5–6 | ✅ done | Replay CSVs; keep `improvement_threshold` 0.01 (relative) |
 | Complete regression and parity verification | 7 | ✅ tests | Maze independence, SyntheticPerfectTwoPin, full DRC, V1 CLI merge |
-| Optional settings-hierarchy refactor | 8 | ☐ confirmation required | Explicit approval, compatibility tests, and migration review |
+| Optional settings-hierarchy refactor | 8 | ✅ confirmed | Keep JSON root `router`; nest `autorouter`; `max_threads` stays parent |
 
 ### Phase 0: Schema and v1.9 raw telemetry
 
@@ -736,34 +736,68 @@ Scoring (Phases 1–4, 6–7) must not import runtime-ETA terms into `BatchAutor
 - [x] No completion / DRC-count regression vs the previous current default (offline
   replay of existing PCBench snapshots; no new overnight route).
 
-### Phase 8: Optional settings-hierarchy refactor (confirmation required)
+### Phase 8: Settings-hierarchy refactor (confirmed)
 
-This is a **final, optional step** after Phases 0–7 are complete. Do not begin
-this phase without explicit confirmation. Its purpose is to make stage ownership
-clearer without changing routing behavior or scoring semantics.
+Purpose: make stage ownership clearer without changing routing behavior or scoring
+semantics. JSON root stays **`router`**. Do not rename it to `routing` in this
+phase.
 
-- [ ] Confirm that the refactor should proceed after the scoring implementation
-  and verification gates pass.
-- [ ] Introduce an `AutorouterSettings` object by composition, not inheritance.
-- [ ] Move the autorouter-stage execution fields from `RouterSettings` into
-  `AutorouterSettings`: `enabled`, `algorithm`, `maxPasses`, `maxItems`,
-  `maxThreads`, `saveIntermediateStages`, and `ignoreNetClasses`.
-- [ ] Keep `fanout` and `optimizer` as separate stage settings. Keep shared
-  route-engine policy (`viasAllowed`, `automaticNeckdown`, `strictDrc`,
-  `neckWidthUm`, `tracePullTightAccuracy`, and related layer/cost settings)
-  outside `AutorouterSettings`.
-- [ ] Decide and document the final top-level name (`routing` versus the current
-  `router`) before changing serialized structure.
-- [ ] Preserve compatible field aliases with Gson
-  `@SerializedName(value = "...", alternate = {"..."})` wherever the old and new
-  names refer to the same serialized field.
-- [ ] Do not assume `alternate` alone handles the old flat-to-new nested shape:
-  `router.max_passes` and `routing.autorouter.max_passes` require an explicit
-  migration/normalization path or a compatibility bridge.
-- [ ] Add round-trip, legacy-read, precedence, CLI, GUI, API, and settings-merge
-  tests before removing the legacy serialization bridge.
-- [ ] Update `docs/settings.md`, `docs/architecture.md`, and all affected
-  settings-path consumers only after compatibility tests pass.
+Canonical nest:
+
+```
+router.fanout.*
+router.autorouter.*     // new AutorouterSettings, composition not inheritance
+router.optimizer.*
+router.scoring          // maze / search costs
+router.router_scoring
+router.optimizer_scoring
+```
+
+`AutorouterSettings` holds stage execution only: `enabled`, `algorithm`,
+`max_passes`, `max_items`, `save_intermediate_stages`, `ignore_net_classes`.
+Java callers use `routerSettings.autorouter.maxPasses` (no parent field).
+
+Stay on the **parent** `RouterSettings`:
+
+- `max_threads` (shared by autorouter pass parallelism and optimizer GUI workers)
+- engine policy: `viasAllowed`, `automaticNeckdown`, `strictDrc`, `neckWidthUm`,
+  `tracePullTightAccuracy`, copper/hole clearances, layers
+- job extras: `job_timeout`, `result_json`
+- maze costs and both V2 score objects
+
+Do **not** add a `policy`/`engine` nest in this phase. Do not fold scores into
+`autorouter`.
+
+Compatibility: Gson `alternate` cannot map `router.max_passes` →
+`router.autorouter.max_passes`. Use an explicit read-side bridge. Flat CLI
+(`--router.max_passes`, `-mp`) and env (`FREEROUTING__ROUTER__MAX_PASSES`) still
+apply, and **warn** that those paths will be removed soon. Nested keys
+(`--router.autorouter.max_passes`, `FREEROUTING__ROUTER__AUTOROUTER__MAX_PASSES`)
+are the supported form. Canonical JSON **writes** the nested shape only.
+
+Surfaces in the same change: GUI autoroute-parameter widgets, OpenAPI /
+`docs/API/API_v1.md`, in-repo scripts (benchmark runner, PCBench calibrate,
+compare-versions, fanout benchmarks, autopilot spikes), `docs/settings.md`,
+`docs/architecture.md`.
+
+PCBench **quality corpus does not need a rerun or JSON migration**. Outcomes
+are independent of the settings path. Update harness CLI flags in the same PR.
+Cache keys include git/jar SHA, so a new commit can cache-miss `scoring-revision`
+without invalidating historical 2.2.4 / 2.3.0 / 2.4.0-RC1 rows.
+
+- [x] Confirm that the refactor should proceed after scoring Phases 0–7.
+- [ ] Introduce `AutorouterSettings` by composition.
+- [ ] Move autorouter-stage execution fields (not `max_threads`).
+- [ ] Keep `fanout` and `optimizer` as separate stage settings; keep engine
+  policy and `max_threads` on the parent.
+- [x] Keep the serialized root name `router`.
+- [ ] Read-side bridge for flat `router.max_passes` / `enabled` / `algorithm` /
+  `max_items` / `save_intermediate_stages` / `ignore_net_classes`; warn on CLI
+  and env use of those keys.
+- [ ] Round-trip, legacy-read, precedence, CLI, GUI, API, merge, and script
+  tests before removing the bridge.
+- [ ] Update docs and all settings-path consumers after compatibility tests
+  pass.
 
 ---
 
@@ -776,8 +810,7 @@ incumbent on score ties; D4 later V2 replay; D5 Manhattan MST; D6 layer-switch
 pre/post optimizer snapshots; D8 optimizer weights \(W_L=1000\), \(W_V=2000\), \(W_B=500\);
 D9 deprecated alias + `optimizer_score`; CLI allows both settings-path keys and
 short flags; router and optimizer versions are independent; timeout/rip-up that
-increases incompletes is rejected; improvement threshold stays 0.01 until
-optimizer recalibration; \(D = C = \max(1,\ P \times L)\); ETA dropped; V1
+increases incompletes is rejected; improvement threshold stays 0.01 (relative); \(D = C = \max(1,\ P \times L)\); ETA dropped; V1
 ±10 parity is not required; \(C = P \times L\) (not \(N_{\text{conn}}\)). D10: do
 not use inheritance for score settings;
 do not add `CommonScoreSettings` yet; keep router and optimizer score settings
@@ -787,12 +820,12 @@ lifecycle.
 
 ### Still to decide
 
-No structural scoring decision remains open for the current scoring phase. The
-optional Phase 8 settings-hierarchy refactor still requires explicit confirmation
-after the scoring work is complete. If common score values emerge later, add them
-by composition after a concrete use case is identified.
+No structural scoring decision remains open. Phase 8 is confirmed: keep
+`router`, nest `autorouter`, leave `max_threads` on the parent, require
+`routerSettings.autorouter.maxPasses` in Java, warn on deprecated flat CLI/env
+keys, retarget GUI / OpenAPI / scripts. A later `policy`/`engine` nest is optional
+and out of scope here.
 
 Optimizer \(W_L=1000\), \(W_V=2000\), \(W_B=500\) (D8).
-`optimizationImprovementThreshold` is still 0.01 (~10 points on the 0–1000
-scale). Chosen router defaults are \(W_1=1000/3\), \(W_2=2000/3\) (last half twice the
-first), \(W_C=25\), \(W_D=300\).
+`optimizationImprovementThreshold` is still 0.01 (relative). Chosen router
+defaults are \(W_1=1000/3\), \(W_2=2000/3\), \(W_C=25\), \(W_D=300\).
