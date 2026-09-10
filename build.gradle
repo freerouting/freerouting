@@ -188,8 +188,8 @@ dependencies {
     implementation 'org.eclipse.jetty:jetty-security:12.1.12'
 
     // Add SLF4J API and binding dependencies for Jersey logging
-    implementation 'org.slf4j:slf4j-api:2.0.18'
-    implementation 'org.slf4j:slf4j-nop:2.0.18'
+    implementation 'org.slf4j:slf4j-api:2.0.19'
+    implementation 'org.slf4j:slf4j-nop:2.0.19'
 
     // Add Google Cloud BigQuery dependencies for telemetry
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.51.0'
