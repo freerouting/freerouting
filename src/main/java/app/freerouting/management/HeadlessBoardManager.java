@@ -1089,8 +1089,8 @@ public class HeadlessBoardManager implements BoardManager {
 
   /**
    * Collects the net name(s) and a human-readable descriptor for {@code item} into the supplied
-   * sets. For {@link app.freerouting.board.model.items.Pin} items the descriptor is
-   * {@code "<CompName>.<PinName>"}; for all other items it falls back to the item type name and ID.
+   * sets. For {@link app.freerouting.board.model.items.Pin} items the descriptor is {@code
+   * "<CompName>.<PinName>"}; for all other items it falls back to the item type name and ID.
    */
   private static void collectViolationParticipant(
       RoutingBoard board,
@@ -1109,12 +1109,11 @@ public class HeadlessBoardManager implements BoardManager {
     }
     // Build a human-readable item descriptor
     if (item instanceof app.freerouting.board.model.items.Pin pin) {
-      app.freerouting.board.model.structure.Component comp = board.components.get(pin.getComponentId());
+      app.freerouting.board.model.structure.Component comp =
+          board.components.get(pin.getComponentId());
       String compName = comp != null ? comp.name : "?";
       String pinName =
-          (comp != null
-                  && comp.getPackage() != null
-                  && pin.pinIndex < comp.getPackage().pinCount())
+          (comp != null && comp.getPackage() != null && pin.pinIndex < comp.getPackage().pinCount())
               ? comp.getPackage().getPin(pin.pinIndex).name
               : String.valueOf(pin.pinIndex);
       itemDescriptors.add(compName + "." + pinName);
