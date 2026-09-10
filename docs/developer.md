@@ -190,7 +190,7 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
     * Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to compute SHA-256 and file sizes.
     * Update `integrations/KiCad/metadata.json` with the new version entry, SHA-256, download size, and install size.
     * Run a full routing session from KiCad after manually installing the plugin ZIP, to make sure that the router executes properly in CLI mode and the resulting SES file imports without corruption or parser errors.
-* Update documentation version references (`README.md`, `integrations.md`, `self-hosting.md`, and `settings.md`).
+* Update documentation version references (`README.md`, `integrations.md`, `self-hosting.md`, `settings.md`, and `scoring.md` if the score formulas or defaults changed).
 * Run verification quality checks:
   ```bash
   ./gradlew spotlessCheck checkstyleMain checkstyleTest

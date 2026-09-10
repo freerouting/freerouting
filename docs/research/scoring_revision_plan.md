@@ -650,8 +650,8 @@ Scoring (Phases 1–4, 6–7) must not import runtime-ETA terms into `BatchAutor
   benchmark rows without overwriting `v19_native` scores.
 - [ ] Verify current/v1.9 schema parity with at least one paired schema-v5
   fixture; the existing dataset validates per-run but contains no such pairs.
-- [ ] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
-  (settings documentation is updated; architecture documentation remains).
+- [x] Update `docs/settings.md` and `docs/architecture.md` when settings/APIs land
+  (canonical equations and symbol glossary: `docs/scoring.md`).
 
 ### Phase 1: Settings split and versions
 

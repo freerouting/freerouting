@@ -158,12 +158,14 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   `clearance_violation_depth_weight` (300) times stacked shortfall µm /
   `clearance_violation_depth_scale` (1000 µm) / D. D is max(1, pins × signal layers).
   `unrouted_connection_weight` is unused by V2.
+  Equations and a glossary for every symbol are in [docs/scoring.md](scoring.md).
 - **`optimizer_scoring`**: Optimizer board score (`V2_LOWER_BOUND` by default; `V1_LEGACY`
   remains available). Completeness and DRC count are keep/undo gates, not score terms.
   The score is 1000 minus excess wire length, vias, and bends versus placement lower
   bounds. Defaults: `excess_wire_length_weight` (1000), `excess_via_weight` (2000),
   `excess_bend_weight` (500), `length_floor` (1), `difficulty_scale_floor` (1). Via and
   bend excess divide by D; length excess divides by Lmin.
+  Equations and a glossary for every symbol are in [docs/scoring.md](scoring.md).
 
 The router and optimizer versions are independent. CLI aliases are
 `--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and
