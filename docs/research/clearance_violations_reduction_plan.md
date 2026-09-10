@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary & Problem Context
 
-In our overnight benchmark suite ([`scripts/benchmark/results/benchmarks.md`](file:///c:/Work/freerouting/scripts/benchmark/results/benchmarks.md)), Tier B clean (0 DRC) completion dropped significantly between historical v1.9 and current v2.5.0-RC1:
+In our overnight benchmark suite ([`scripts/benchmark/results/benchmarks.md`](../../scripts/benchmark/results/benchmarks.md)), Tier B clean (0 DRC) completion dropped significantly between historical v1.9 and current v2.5.0-RC1:
 
 * **v1.9.0 Baseline:** 259 / 844 Clean (0 DRC) = **30.7%** (Average Score: 962.7)
 * **v2.5.0-RC1 (Current):** 167 / 844 Clean (0 DRC) = **19.8%** (Average Score: 924.0)
@@ -20,12 +20,12 @@ In our overnight benchmark suite ([`scripts/benchmark/results/benchmarks.md`](fi
 Our investigations identified two distinct drivers of clearance violations:
 
 1. **Pre-Existing Board Pad Violations (Edge Clearance Inflation):**
-   In Freerouting, [`RouterSettings.copperToEdgeClearanceUm`](file:///c:/Work/freerouting/src/main/java/app/freerouting/settings/RouterSettings.java) was defaulted to **500.0 µm (0.5 mm)** in [`DefaultSettings.java`](file:///c:/Work/freerouting/src/main/java/app/freerouting/settings/sources/DefaultSettings.java). When [`DesignRulesChecker.getAllClearanceViolations()`](file:///c:/Work/freerouting/src/main/java/app/freerouting/drc/DesignRulesChecker.java) runs, it checks **all** board copper items against the `BoardOutline`.
+   In Freerouting, [`RouterSettings.copperToEdgeClearanceUm`](../../src/main/java/app/freerouting/settings/RouterSettings.java) was defaulted to **500.0 µm (0.5 mm)** in [`DefaultSettings.java`](../../src/main/java/app/freerouting/settings/sources/DefaultSettings.java). When [`DesignRulesChecker.getAllClearanceViolations()`](../../src/main/java/app/freerouting/drc/DesignRulesChecker.java) runs, it checks **all** board copper items against the `BoardOutline`.
    Consequently, pre-existing SMD connector pads, header pins, and edge-mount components placed by the board designer within 0.5 mm of the board edge are flagged as clearance violations **before routing even begins**.
    v1.9.0 never applied this 500 µm override (it respected DSN conductor clearance), creating an artificial regression in the benchmark scorecards.
 
 2. **Algorithmic Routing & Fanout Violations:**
-   True routing-introduced clearance violations occur when [`strictDrc`](file:///c:/Work/freerouting/src/main/java/app/freerouting/autoroute/pipeline/AutorouteConnectionRouter.java) is disabled (`false` by default). When maze ripup limits are reached in dense corridors, routes are accepted with violations. Furthermore, [`BatchFanout.java`](file:///c:/Work/freerouting/src/main/java/app/freerouting/autoroute/pipeline/BatchFanout.java) drops escape vias without a post-placement DRC check.
+   True routing-introduced clearance violations occur when [`strictDrc`](../../src/main/java/app/freerouting/autoroute/pipeline/AutorouteConnectionRouter.java) is disabled (`false` by default). When maze ripup limits are reached in dense corridors, routes are accepted with violations. Furthermore, [`BatchFanout.java`](../../src/main/java/app/freerouting/autoroute/pipeline/BatchFanout.java) drops escape vias without a post-placement DRC check.
 
 ---
 
@@ -266,8 +266,8 @@ python -c "
 import json
 d = json.load(open('test_fmcw_ar.json'))
 ar = d['phases']['autorouter']['after']['board_statistics']
-dur = d['phases']['autorouter']['duration_seconds']
-print(f'Duration: {dur:.2f}s | Incompletes: {ar[\"connections\"][\"incomplete_count\"]} | Violations: {ar[\"clearance_violations\"][\"total_count\"]}')
+duration_sec = d['phases']['autorouter']['duration_seconds']
+print(f'Duration: {duration_sec:.2f}s | Incompletes: {ar[\"connections\"][\"incomplete_count\"]} | Violations: {ar[\"clearance_violations\"][\"total_count\"]}')
 "
 ```
 
