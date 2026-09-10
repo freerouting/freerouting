@@ -4,7 +4,7 @@
 **Date:** September 10, 2026  
 **Primary Test Fixture:** `PCBench/FMCW_RADAR_Radar MCU/unrouted.dsn`  
 **Secondary Test Fixtures:** `PCBench/1Bitsy_1bitsy/unrouted.dsn`, `PCBench/vhf-radio_exp-1/unrouted.dsn`, `PCBench/Vento_Vento/unrouted.dsn`  
-**Target:** Eliminate the -10.9% clean-rate regression in Tier B, align copper-to-edge clearance with industry EDA/manufacturing standards, and deploy a Nudge-Before-Ripup local repair engine.
+**Target:** Eliminate the -10.9% clean-rate regression in Tier B, align copper-to-edge clearance with industry standards, detect user design errors (missing boundary / out-of-bounds parts), and deploy a high-observability Nudge-Before-Ripup local repair engine.
 
 ---
 
@@ -77,15 +77,59 @@ Using our fast headless DRC inspector on unrouted DSN fixtures, we determined th
 
 ---
 
-## 4. Architectural Analysis: Strict DRC vs. Nudge-Before-Ripup
+## 4. User Design Error Detection & Boundary Validation
 
-### 4.1 Why Not Always Use `strictDrc` from Pass 1?
+To assist users and prevent routing deadlocks caused by defective input designs, Freerouting must proactively validate and report board geometry errors upon load:
+
+### 4.1 Missing Board Outline Detection
+* **Trigger:** DSN file has no `(boundary ...)` scope, an empty shape, or `board.getOutline() == null`.
+* **Action:**
+  - Emit an unambiguous warning to log and UI:
+    `WARN: Design Error: Board outline is missing or empty. Without a defined boundary, copper-to-edge clearances cannot be enforced and routing bounds are unconstrained.`
+  - Generate an advisory entry in `BoardStatistics` and DRC report so the user is informed immediately.
+
+### 4.2 Components / Pads Outside Board Boundary
+* **Trigger:** A pre-placed `Component`, `Pin`, or SMD pad is located physically outside the polygon defined by `BoardOutline`.
+* **Validation Rule:** On board load, compute `outline.contains(padShape)`.
+* **Action:**
+  - If a pad or component center lies outside:
+    `WARN: Design Error: Component [COMP_ID] (pin [PIN_ID]) is placed OUTSIDE the board outline at (X, Y). Routing to external components may fail or create unmanufacturable boards.`
+  - **Boundary Exemption Safety Guard:** Fixed-pad outline clearance exemption (Phase 2) applies **only** to pads fully contained *inside* the board outline. Any pad protruding outside the board perimeter is **never** exempted and is flagged as an explicit `OUT_OF_BOUNDS_PLACEMENT` violation.
+
+---
+
+## 5. Observability, Telemetry & Multi-Level Logging
+
+All new algorithmic and DRC events must adhere strictly to the repository logging policy (`FRLogger`) to ensure deterministic debugging and trace parity:
+
+### Logging Level Hierarchy
+
+| Level | Intended Scope & Example Events |
+| :--- | :--- |
+| **`WARN`** | Actionable design defects: missing board outline, out-of-bounds components, unresolvable clearance pinches forcing net ripup. |
+| **`INFO`** | Phase transitions, pass completion summaries, initial vs. router DRC counts (`Initial DRC: X, Router DRC: Y`), job completion status. |
+| **`DEBUG`** | Clearance compensation values applied to search trees, adaptive edge clamping decisions, channel feasibility width evaluations. |
+| **`TRACE`** | Micro-algorithmic operations via `FRLogger.trace(method, operation, message, impactedItems, impactedPoints)`: |
+
+### Structured TRACE Event Schema
+New events must emit structured payloads:
+* **`[nudge_attempt]`**: Emits net ID, segment ID, shortfall vector $(\Delta x, \Delta y)$, obstacle type (`Trace`, `Via`, `Pin`), and coordinates.
+* **`[nudge_success]`**: Emits net ID, segment ID, resulting clearance margin, and updated corner coordinates.
+* **`[nudge_aborted]`**: Emits reason (`CHANNEL_TOO_NARROW`, `CASCADE_BLOCKED`, `ACUTE_CORNER_COLLAPSE`).
+* **`[strict_drc_rejection]`**: Emits pass number, net ID, count of ripped items, and violating obstacle IDs.
+* **`[fanout_via_reverted]`**: Emits pin ID, discarded via coordinates, and conflicting obstacle ID.
+
+---
+
+## 6. Architectural Analysis: Strict DRC vs. Nudge-Before-Ripup
+
+### 6.1 Why Not Always Use `strictDrc` from Pass 1?
 Enforcing `strictDrc` unconditionally from the start of routing creates severe failure modes:
 * **The "Pathfinder" / Negotiated Congestion Principle:** In Pass 1 (exploration), connections do not yet know the optimal global distribution of channels. If early connections strictly reject any clearance pinch and roll back, subsequent nets starve and fail to route.
 * **Loss of Topological Memory:** Destroying a newly placed route leaves no congestion gradient for subsequent passes to avoid or push against.
 * **The "Poisoned Footprint":** Connecting to an edge-mounted pin that carries pre-existing clearance tightness causes the wire to immediately fail strict DRC and be destroyed, making that net unroutable.
 
-### 4.2 The "Nudge-Before-Ripup" Paradigm
+### 6.2 The "Nudge-Before-Ripup" Paradigm
 Instead of treating strict DRC as an all-or-nothing guillotine that destroys entire 150 mm connections over a 5 µm clearance pinch, we introduce a **local repair hierarchy**:
 
 ```
@@ -101,7 +145,7 @@ Instead of treating strict DRC as an all-or-nothing guillotine that destroys ent
        - Calculate shortfall vector: d_shortfall = expected - actual.
        - Translate violating segment away by d_shortfall + epsilon.
        - Recompute 45-degree corner intersections.
-       - Verify no new DRC violations created.
+       - Fast-check candidate position using Spatial Search Tree (O(log N)).
                    │
                    ├──► SUCCESS: Keep Clean Route
                    │
@@ -123,7 +167,7 @@ Instead of treating strict DRC as an all-or-nothing guillotine that destroys ent
        - Rip up entire net and increment ripup costs for the next pass.
 ```
 
-### 4.3 Practical Impact and Engineering Trade-Offs
+### 6.3 Practical Impact and Engineering Trade-Offs
 
 #### Practical Wins:
 1. **Dramatic Completion Rate Boost:** Long, complex traces are preserved instead of being discarded over minor corner pinches.
@@ -138,44 +182,34 @@ Instead of treating strict DRC as an all-or-nothing guillotine that destroys ent
 
 ---
 
-## 5. Comprehensive Implementation Architecture
+## 7. Phased Implementation Roadmap
 
 ```
 +-----------------------------------------------------------------------------------+
-| Phase 1: Metric Separation & Telemetry Tracking                                   |
-| - Record pre_existing_clearance_violations on DSN load.                           |
-| - Track router_introduced_clearance_violations during and after routing.          |
+| Milestone 1: Pre-Existing DRC Metric Separation & Fixed-Pad Boundary Safety       |
+| - Phase 1: Separate pre-existing vs. router violations in BoardStatistics.       |
+| - Phase 2: Exempt fixed pads inside boundary from outline edge violations.        |
+| - Detection of missing outline and out-of-bounds component placements.            |
 +-----------------------------------------------------------------------------------+
                                           │
 +-----------------------------------------------------------------------------------+
-| Phase 2: Edge-Clearance Exemption for Fixed Items                                 |
-| - Dynamic routing (new traces & vias) strictly obeys copperToEdgeClearanceUm.    |
-| - Fixed DSN items (pads, pins) do not trigger outline DRC violations.             |
+| Milestone 2: Clearance Calibration & Adaptive Edge Handling                      |
+| - Phase 3: Recalibrate DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM from 500 to 250 um.    |
+| - Adaptive outline clearance fallback if pre-placed pads dictate tighter bounds.  |
 +-----------------------------------------------------------------------------------+
                                           │
 +-----------------------------------------------------------------------------------+
-| Phase 3: Default Edge-Clearance Calibration & Adaptive Fallback                   |
-| - Recalibrate DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM from 500 um to 250 um (or 200).|
-| - If pre-existing pads violate edge clearance, clamp outline clearance adaptively.|
-+-----------------------------------------------------------------------------------+
-                                          │
-+-----------------------------------------------------------------------------------+
-| Phase 4: Nudge-Before-Ripup Engine & 2-Tiered Strict DRC                          |
-| - Implement NudgeRepair: channel-check -> segment shift -> corner recompute.      |
-| - Implement ViaWiggle: local via repositioning.                                  |
-| - 2-Tiered Loop: Pass 1-2 soft DRC + nudge; Pass 3+ strict DRC + nudge-or-ripup.  |
-+-----------------------------------------------------------------------------------+
-                                          │
-+-----------------------------------------------------------------------------------+
-| Phase 5: Fanout DRC Verification & Full Benchmark Sign-Off                        |
-| - Post-placement DRC checks in BatchFanout to revert bad escape vias.             |
-| - Run full Tier B benchmarks (844 boards) to confirm clean rate >= 30.7%.         |
+| Milestone 3: Nudge-Before-Ripup Engine & Router DRC Integrity                     |
+| - Phase 4: Build NudgeRepair (channel-check -> segment shift -> 45 deg corners).  |
+| - Integrate NudgeRepair immediately after optChangedArea (pull-tight).            |
+| - Deploy 2-tiered pass strategy: soft DRC in Pass 1-2, strict DRC in Pass 3+.     |
+| - Phase 5: BatchFanout escape via validation & full 844-board benchmark gate.     |
 +-----------------------------------------------------------------------------------+
 ```
 
 ---
 
-## 6. Automated Fast Testing Procedure (Agent / LLM Guide)
+## 8. Automated Fast Testing Procedure (Agent / LLM Guide)
 
 To ensure maximum testing throughput, all test commands must explicitly:
 * **Turn ON:** `--router.fanout.enabled=true`, `--router.autorouter.enabled=true`
@@ -248,31 +282,24 @@ python scripts/pcbench/run_corpus_benchmark.py `
 
 ---
 
-## 7. Actionable Task List
+## 9. Actionable Task List
 
-- [ ] **Phase 1: Metric Separation & Telemetry Tracking**
-  - [ ] Update `HeadlessBoardManager` to record `initialClearanceViolations` immediately after DSN parsing.
-  - [ ] Add `preExistingViolations` and `routerIntroducedViolations` to `BoardStatisticsClearanceViolations.java`.
-  - [ ] Update `run_corpus_benchmark.py` and `benchmarks.json` to expose both metrics.
+- [ ] **Milestone 1: Metric Separation, Fixed-Pad Exemption & Design Error Reporting**
+  - [ ] **Task 1.1:** Add missing board outline check and out-of-bounds component detection in `HeadlessBoardManager.load_board()`. Log clear warnings with coordinates.
+  - [ ] **Task 1.2:** Update `BoardStatistics` to record `initialClearanceViolations` and expose `preExistingViolations` vs. `routerIntroducedViolations`.
+  - [ ] **Task 1.3:** Modify `Item.clearanceViolations()`: suppress outline violations for fixed pads/pins **only when contained inside the board boundary**. Flag out-of-bounds pads as placement errors.
+  - [ ] **Task 1.4:** Verify `FMCW_RADAR_Radar MCU` drops from 48 to 0 violations and `1Bitsy_1bitsy` drops from 45 to 0 at 500 µm.
 
-- [ ] **Phase 2: Edge Clearance Exemption for Fixed DSN Pads/Pins**
-  - [ ] Modify `Item.clearanceViolations()`: when one item is `BoardOutline` and the other is a pre-placed `Pin` or fixed copper pad, suppress the clearance violation if the pad is fully inside the board boundary.
-  - [ ] Verify on `FMCW_RADAR_Radar MCU` (must drop from 48 to 0 at 500 µm).
-  - [ ] Verify on `1Bitsy_1bitsy` (must drop from 45 to 0 at 500 µm).
-  - [ ] Ensure that autorouted traces and vias still strictly observe the 500 µm clearance to the board outline.
+- [ ] **Milestone 2: Edge Clearance Recalibration & Adaptive Fallback**
+  - [ ] **Task 2.1:** Update `DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM` from 500.0 µm to 250.0 µm (0.25 mm) to match CNC milling standards.
+  - [ ] **Task 2.2:** Update `docs/settings.md` and related settings unit tests.
+  - [ ] **Task 2.3:** Add adaptive outline clearance clamping in `HeadlessBoardManager.applyCopperToEdgeClearanceOverride()`.
 
-- [ ] **Phase 3: Default Edge Clearance Recalibration**
-  - [ ] Update `DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM` from 500.0 µm to 250.0 µm (0.25 mm) to align with standard PCB CNC milling capabilities.
-  - [ ] Update `docs/settings.md` and related tests to reflect the 250 µm default.
-
-- [ ] **Phase 4: Nudge-Before-Ripup Engine & 2-Tiered Strict DRC**
-  - [ ] Create `NudgeRepair` helper: early-abort width check, perpendicular shortfall translation, 45° corner adjustment.
-  - [ ] Connect `NudgeRepair` to `AutorouteConnectionRouter`: invoke after connection placement before full net ripup.
-  - [ ] Implement 2-tiered pass strategy in `AutorouteBatchLoop`: soft DRC + nudge in passes 1–2; strict DRC + nudge-or-ripup in passes 3+.
-
-- [ ] **Phase 5: Fanout DRC Validation & Benchmark Verification**
-  - [ ] Add post-placement DRC verification in `BatchFanout.java` to revert escape vias that create clearance violations.
-  - [ ] Run `./gradlew test` to verify unit test suite.
-  - [ ] Run `python scripts/pcbench/run_corpus_benchmark.py --tier B --workers 4` across all 844 Tier B boards.
-  - [ ] Verify Tier B Clean (0 DRC) completion rate restores to $\ge 30.7\%$ (surpassing v1.9 baseline).
-  - [ ] Run `./gradlew spotlessCheck checkstyleMain checkstyleTest` before final merge.
+- [ ] **Milestone 3: Nudge-Before-Ripup Engine, Strict DRC & Fanout Integrity**
+  - [ ] **Task 3.1:** Implement `NudgeRepair`: channel feasibility check $\to$ perpendicular shortfall shift $\to$ 45° corner adjustment $\to$ fast $O(\log N)$ spatial search verification.
+  - [ ] **Task 3.2:** Add `FRLogger.trace(...)` events for `[nudge_attempt]`, `[nudge_success]`, `[nudge_aborted]`, and `[strict_drc_rejection]`.
+  - [ ] **Task 3.3:** Integrate `NudgeRepair` into `AutorouteConnectionRouter` immediately following `router.board.optChangedArea()`.
+  - [ ] **Task 3.4:** Implement 2-tiered pass strategy: soft DRC + nudge in passes 1–2; strict DRC + nudge-or-ripup in passes 3+.
+  - [ ] **Task 3.5:** Add post-placement DRC verification in `BatchFanout.java` to revert violating escape vias.
+  - [ ] **Task 3.6:** Run `./gradlew test` and full Tier B benchmarks (844 boards) to confirm Tier B clean rate restores to $\ge 30.7\%$.
+  - [ ] **Task 3.7:** Run `./gradlew spotlessCheck checkstyleMain checkstyleTest` before PR merge.
