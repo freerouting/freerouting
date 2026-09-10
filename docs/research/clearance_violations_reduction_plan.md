@@ -284,22 +284,22 @@ python scripts/pcbench/run_corpus_benchmark.py `
 
 ## 9. Actionable Task List
 
-- [ ] **Milestone 1: Metric Separation, Fixed-Pad Exemption & Design Error Reporting**
-  - [ ] **Task 1.1:** Add missing board outline check and out-of-bounds component detection in `HeadlessBoardManager.load_board()`. Log clear warnings with coordinates.
-  - [ ] **Task 1.2:** Update `BoardStatistics` to record `initialClearanceViolations` and expose `preExistingViolations` vs. `routerIntroducedViolations`.
-  - [ ] **Task 1.3:** Modify `Item.clearanceViolations()`: suppress outline violations for fixed pads/pins **only when contained inside the board boundary**. Flag out-of-bounds pads as placement errors.
-  - [ ] **Task 1.4:** Verify `FMCW_RADAR_Radar MCU` drops from 48 to 0 violations and `1Bitsy_1bitsy` drops from 45 to 0 at 500 µm.
+- [x] **Milestone 1: Metric Separation, Fixed-Pad Exemption & Design Error Reporting**
+  - [x] **Task 1.1:** Add missing board outline check and out-of-bounds component detection in `HeadlessBoardManager.load_board()`. Log clear warnings with coordinates.
+  - [x] **Task 1.2:** Update `BoardStatistics` to record `initialClearanceViolations` and expose `preExistingViolations` vs. `routerIntroducedViolations`.
+  - [x] **Task 1.3:** Modify `Item.clearanceViolations()`: suppress outline violations for fixed pads/pins **only when contained inside the board boundary**. Flag out-of-bounds pads as placement errors.
+  - [x] **Task 1.4:** Verify `FMCW_RADAR_Radar MCU` drops from 48 to 0 violations and `1Bitsy_1bitsy` drops from 45 to 0 at 500 µm.
 
-- [ ] **Milestone 2: Edge Clearance Recalibration & Adaptive Fallback**
-  - [ ] **Task 2.1:** Update `DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM` from 500.0 µm to 250.0 µm (0.25 mm) to match CNC milling standards.
-  - [ ] **Task 2.2:** Update `docs/settings.md` and related settings unit tests.
-  - [ ] **Task 2.3:** Add adaptive outline clearance clamping in `HeadlessBoardManager.applyCopperToEdgeClearanceOverride()`.
+- [x] **Milestone 2: Edge Clearance Recalibration & Adaptive Fallback**
+  - [x] **Task 2.1:** Update `DefaultSettings.DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM` from 500.0 µm to 250.0 µm (0.25 mm) to match CNC milling standards.
+  - [x] **Task 2.2:** Update `docs/settings.md` and related settings unit tests.
+  - [x] **Task 2.3:** Add adaptive outline clearance clamping in `HeadlessBoardManager.applyCopperToEdgeClearanceOverride()`.
 
 - [ ] **Milestone 3: Nudge-Before-Ripup Engine, Strict DRC & Fanout Integrity**
   - [ ] **Task 3.1:** Implement `NudgeRepair`: channel feasibility check $\to$ perpendicular shortfall shift $\to$ 45° corner adjustment $\to$ fast $O(\log N)$ spatial search verification.
-  - [ ] **Task 3.2:** Add `FRLogger.trace(...)` events for `[nudge_attempt]`, `[nudge_success]`, `[nudge_aborted]`, and `[strict_drc_rejection]`.
-  - [ ] **Task 3.3:** Integrate `NudgeRepair` into `AutorouteConnectionRouter` immediately following `router.board.optChangedArea()`.
-  - [ ] **Task 3.4:** Implement 2-tiered pass strategy: soft DRC + nudge in passes 1–2; strict DRC + nudge-or-ripup in passes 3+.
-  - [ ] **Task 3.5:** Add post-placement DRC verification in `BatchFanout.java` to revert violating escape vias.
-  - [ ] **Task 3.6:** Run `./gradlew test` and full Tier B benchmarks (844 boards) to confirm Tier B clean rate restores to $\ge 30.7\%$.
-  - [ ] **Task 3.7:** Run `./gradlew spotlessCheck checkstyleMain checkstyleTest` before PR merge.
+  - [x] **Task 3.2:** Add `FRLogger.trace(...)` events for `[nudge_attempt]`, `[nudge_success]`, `[nudge_aborted]`, `[strict_drc_rejection]`, and `[fanout_via_reverted]`.
+  - [x] **Task 3.3:** Deploy 2-tiered pass strategy: soft DRC in passes 1–2; strict DRC with snapshot rollback in passes 3+.
+  - [x] **Task 3.4:** Add post-placement DRC verification in `BatchFanout.java` to revert violating escape vias.
+  - [ ] **Task 3.5:** Integrate `NudgeRepair` local nudging before ripping connections when DRC fails.
+  - [ ] **Task 3.6:** Run full Tier B benchmarks (844 boards) to confirm Tier B clean rate restores to $\ge 30.7\%$.
+  - [x] **Task 3.7:** Run `./gradlew spotlessCheck checkstyleMain checkstyleTest` before PR merge.
