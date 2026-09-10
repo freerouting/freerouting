@@ -387,8 +387,14 @@ public class BoardStatistics implements Serializable {
         this.clearanceViolations.maxViolationUm = 0.0;
         this.clearanceViolations.avgViolationUm = 0.0;
       }
+      this.clearanceViolations.preExistingCount = board.preExistingClearanceViolationsCount;
+      this.clearanceViolations.routerIntroducedCount =
+          Math.max(
+              0, this.clearanceViolations.totalCount - board.preExistingClearanceViolationsCount);
     } else {
       this.clearanceViolations.totalCount = 0;
+      this.clearanceViolations.preExistingCount = 0;
+      this.clearanceViolations.routerIntroducedCount = 0;
       this.clearanceViolations.totalViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;
       this.clearanceViolations.maxViolationUm = 0.0;

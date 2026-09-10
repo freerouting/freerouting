@@ -412,6 +412,18 @@ public abstract class Item
           }
         }
 
+        if (isObstacle
+            && (this instanceof BoardOutline && currentItem instanceof Pin
+                || this instanceof Pin && currentItem instanceof BoardOutline)) {
+          BoardOutline outline =
+              (this instanceof BoardOutline) ? (BoardOutline) this : (BoardOutline) currentItem;
+          Pin pin = (this instanceof Pin) ? (Pin) this : (Pin) currentItem;
+          Point pinCenter = pin.getCenter();
+          if (pinCenter != null && outline.contains(pinCenter)) {
+            isObstacle = false;
+          }
+        }
+
         if (isObstacle) {
           // Get the two shapes the clearance is calculated between
           TileShape shape1 = currentTileShape;

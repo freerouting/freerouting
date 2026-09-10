@@ -76,8 +76,11 @@ public class DefaultSettings implements SettingsSource {
    */
   public static final double DEFAULT_UNDESIRED_DIRECTION_TRACE_COST = 1.0;
 
-  /** Default copper-to-board-edge clearance in micrometres (0.5 mm). */
-  public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 500.0;
+  /**
+   * Default copper-to-board-edge clearance in micrometres (0.25 mm / 250 um, IPC-2221 precision /
+   * CNC routing standard).
+   */
+  public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 250.0;
 
   /** Default drill-hole-to-copper clearance in micrometres. Zero preserves legacy DSN behaviour. */
   public static final double DEFAULT_HOLE_CLEARANCE_UM = 0.0;

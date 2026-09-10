@@ -10,6 +10,7 @@ import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
@@ -259,5 +260,31 @@ public class BoardOutline extends Item implements Serializable {
   @Override
   protected TileShape[] calculateTreeShapes(ShapeSearchTree searchTree) {
     return searchTree.calculateTreeShapes(this);
+  }
+
+  /** Returns whether the given point is contained within the board outline shapes. */
+  public boolean contains(Point point) {
+    if (point == null) {
+      return false;
+    }
+    for (PolylineShape currentShape : this.shapes) {
+      if (currentShape.contains(point)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Returns whether the given float point is contained within the board outline shapes. */
+  public boolean contains(FloatPoint point) {
+    if (point == null) {
+      return false;
+    }
+    for (PolylineShape currentShape : this.shapes) {
+      if (currentShape.contains(point)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

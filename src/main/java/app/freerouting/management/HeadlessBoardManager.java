@@ -4,6 +4,9 @@ import static app.freerouting.util.gson.GsonProvider.GSON;
 
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.state.BoardObservers;
@@ -13,6 +16,7 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
@@ -754,6 +758,9 @@ public class HeadlessBoardManager implements BoardManager {
     }
     this.board.reduceNetsOfRouteItems();
     validatePowerPlanes();
+    validateBoardDesignErrors();
+    var drc = new app.freerouting.drc.DesignRulesChecker(this.board, null);
+    this.board.preExistingClearanceViolationsCount = drc.getAllClearanceViolations().size();
   }
 
   private void scheduleDeferredPostLoadProcessing(String inputFilename, String analyticsFormat) {
@@ -1029,6 +1036,37 @@ public class HeadlessBoardManager implements BoardManager {
                   + "and voltage drops.\n");
 
       FRLogger.warn(sb.toString());
+    }
+  }
+
+  void validateBoardDesignErrors() {
+    if (this.board == null) {
+      return;
+    }
+    BoardOutline outline = this.board.getOutline();
+    if (outline == null || outline.shapeCount() == 0) {
+      FRLogger.warn(
+          "Design Error: Board outline is missing. Routing without a defined board boundary may"
+              + " lead to unconstrained routing or DRC issues.");
+      return;
+    }
+
+    for (Pin pin : this.board.getPins()) {
+      Point center = pin.getCenter();
+      if (center != null && !outline.contains(center)) {
+        Component comp = this.board.components.get(pin.getComponentId());
+        String compName = comp != null ? comp.name : "Unknown";
+        String pinName =
+            (comp != null
+                    && comp.getPackage() != null
+                    && pin.pinIndex < comp.getPackage().pinCount())
+                ? comp.getPackage().getPin(pin.pinIndex).name
+                : String.valueOf(pin.pinIndex);
+        FRLogger.warn(
+            String.format(
+                "Design Error: Component '%s' pin '%s' (ID %d) is outside board outline at %s.",
+                compName, pinName, pin.getId(), center));
+      }
     }
   }
 }
