@@ -33,9 +33,11 @@ class GlobalSettingsTest {
 
     assertFalse(settings.logging.file.enabled);
 
-    // Should be no warnings
+    // -mp is still valid but deprecated in favour of --router.autorouter.max_passes
     assertEquals(
-        0, FRLogger.getLogEntries().getWarningCount(), "Should have no warnings for valid args");
+        1,
+        FRLogger.getLogEntries().getWarningCount(),
+        "Deprecated -mp / --router.max_passes should warn");
   }
 
   @Test
@@ -71,9 +73,11 @@ class GlobalSettingsTest {
 
     settings.applyCommandLineArguments(args);
 
-    // Expect a warning for "extraValue"
+    // Expect a deprecation warning for -mp plus a warning for "extraValue"
     assertEquals(
-        1, FRLogger.getLogEntries().getWarningCount(), "Should have 1 warning for extra value");
+        2,
+        FRLogger.getLogEntries().getWarningCount(),
+        "Should warn for deprecated -mp and the extra value");
     assertTrue(
         Arrays.stream(FRLogger.getLogEntries().get())
             .anyMatch(s -> s.contains("Unknown command line argument: extraValue")));
@@ -83,6 +87,20 @@ class GlobalSettingsTest {
   void applyCommandLineArgumentsValidDoubleHyphen() {
     GlobalSettings settings = new GlobalSettings();
     String[] args = new String[] {"--router.max_passes=20"};
+
+    settings.applyCommandLineArguments(args);
+
+    assertEquals(20, settings.getMaxPasses());
+    assertEquals(
+        1,
+        FRLogger.getLogEntries().getWarningCount(),
+        "Deprecated --router.max_passes should warn");
+  }
+
+  @Test
+  void applyCommandLineArgumentsNestedAutorouterMaxPasses() {
+    GlobalSettings settings = new GlobalSettings();
+    String[] args = new String[] {"--router.autorouter.max_passes=20"};
 
     settings.applyCommandLineArguments(args);
 

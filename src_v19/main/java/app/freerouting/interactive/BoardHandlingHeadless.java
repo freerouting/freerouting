@@ -4,6 +4,7 @@ import app.freerouting.board.Communication;
 import app.freerouting.board.LayerStructure;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.logger.FRLogger;
@@ -30,6 +31,9 @@ public class BoardHandlingHeadless implements IBoardHandling {
   private byte[] serializedBoard;
   /** The listener for the autorouter thread */
   public ThreadActionListener autorouter_listener;
+  /** Per-stage metrics retained for the optional result manifest. */
+  public transient RoutingResultManifest.PhaseMetrics resultPhaseMetrics =
+      new RoutingResultManifest.PhaseMetrics();
 
   public BoardHandlingHeadless(
       Locale p_locale,

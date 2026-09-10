@@ -56,6 +56,10 @@ public class KiCadDrcReport {
   @SerializedName("qualityScore")
   public Double qualityScore;
 
+  /** Optimizer score of the board. */
+  @SerializedName("optimizerScore")
+  public Double optimizerScore;
+
   /**
    * Creates an empty DRC report with the given metadata.
    *
@@ -93,6 +97,9 @@ public class KiCadDrcReport {
     json.addProperty("total_unconnected", unconnectedItems.size());
     if (qualityScore != null) {
       json.addProperty("qualityScore", qualityScore);
+    }
+    if (optimizerScore != null) {
+      json.addProperty("optimizerScore", optimizerScore);
     }
 
     // Top violations sample

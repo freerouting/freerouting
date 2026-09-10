@@ -48,7 +48,7 @@ final class AutoroutePassRunner {
 
       BatchAutorouterThread[] autorouterThreads =
           new BatchAutorouterThread[router.job.routerSettings.maxThreads];
-      final BoardHistory boardHistory = new BoardHistory(router.job.routerSettings.scoring);
+      final BoardHistory boardHistory = new BoardHistory(router.job.routerSettings);
 
       for (int threadIndex = 0; threadIndex < router.job.routerSettings.maxThreads; threadIndex++) {
         PerformanceProfiler.start("board.deepCopy");
@@ -106,8 +106,7 @@ final class AutoroutePassRunner {
 
         boardHistory.add(autorouterThread.getBoard());
         BoardStatistics clonedBoardStatistics = autorouterThread.getBoard().getStatistics();
-        float clonedBoardScore =
-            clonedBoardStatistics.getNormalizedScore(router.job.routerSettings.scoring);
+        float clonedBoardScore = clonedBoardStatistics.getRouterScore(router.job.routerSettings);
 
         router.job.logDebug(
             "Router thread #"
@@ -128,7 +127,7 @@ final class AutoroutePassRunner {
       float bestScore = -Float.MAX_VALUE;
       for (BatchAutorouterThread autorouterThread : autorouterThreads) {
         BoardStatistics stats = autorouterThread.getBoard().getStatistics();
-        float score = stats.getNormalizedScore(router.job.routerSettings.scoring);
+        float score = stats.getRouterScore(router.job.routerSettings);
         if (score > bestScore) {
           bestScore = score;
           bestThread = autorouterThread;
@@ -209,12 +208,12 @@ final class AutoroutePassRunner {
             break;
           }
 
-          if (router.settings.maxItems != null
-              && router.settings.maxItems > 0
-              && router.totalItemsRouted >= router.settings.maxItems) {
+          if (router.settings.autorouter.maxItems != null
+              && router.settings.autorouter.maxItems > 0
+              && router.totalItemsRouted >= router.settings.autorouter.maxItems) {
             router.job.logInfo(
                 "Max items limit reached ("
-                    + router.settings.maxItems
+                    + router.settings.autorouter.maxItems
                     + "). Stopping auto-router.");
             router.thread.requestStop();
             break;

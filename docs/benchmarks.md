@@ -32,7 +32,7 @@ The following command line arguments were used for the v2.2 tests:
 --gui.enabled=false \
 --api_server.enabled=false \
 --mcp_server.enabled=false \
---router.max_passes=500 \
+--router.autorouter.max_passes=500 \
 --router.job_timeout="00:05:00"
 
 ```

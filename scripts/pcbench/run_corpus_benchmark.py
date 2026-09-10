@@ -251,7 +251,7 @@ def route_single_board(
         "-dct",
         "0",
         f"--router.result_json={manifest_path}",
-        "--router.max_passes=20",
+        "--router.autorouter.max_passes=20",
         f"--router.job_timeout={timeout_budget}",
         f"--logging.file.location={log_path}",
     ]
@@ -359,6 +359,20 @@ def route_single_board(
     if not phases.get("autorouter", {}).get("duration_seconds") and stdout_text:
         phases = parse_phases_from_text(stdout_text)
     resources = manifest_data.get("resource_usage", {})
+    cpu_score = manifest_data.get("cpu_score")
+    if cpu_score is not None:
+        try:
+            cpu_score = int(cpu_score)
+            if cpu_score > 10_000:
+                cpu_score = int(round(cpu_score / 1000.0))
+        except (TypeError, ValueError):
+            cpu_score = None
+    if cpu_score is None:
+        m_hw = re.search(r"Hardware:\s+\d+\s+CPU cores,\s+(\d+)\s+CPU score", stdout_text)
+        if m_hw:
+            cpu_score = int(m_hw.group(1))
+            if cpu_score > 10_000:
+                cpu_score = int(round(cpu_score / 1000.0))
 
     if not manifest_data and stdout_text:
         # Fallback to parsing metrics from stdout for versions without result_json (e.g. 2.2.4, 2.3.0)
@@ -424,6 +438,8 @@ def route_single_board(
             "os": platform.platform(),
             "cpu_name": platform.processor(),
             "cpu_logical_cores": os.cpu_count() or 4,
+            "cpu_score": cpu_score,
+            "cpu_score_effective": cpu_score,
         },
         "binary": {
             "filename": jar_path.name,
@@ -678,9 +694,25 @@ def main() -> int:
         bench_data["runs"] = list(existing_runs.values())
         bench_data["total_runs"] = len(bench_data["runs"])
         bench_data["generated_at"] = datetime.now(timezone.utc).isoformat()
-        tmp_file = benchmarks_json.with_suffix(".tmp")
-        tmp_file.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
-        tmp_file.replace(benchmarks_json)
+        tmp_file = benchmarks_json.with_name(
+            f".{benchmarks_json.name}.{os.getpid()}.{time.time_ns()}.tmp"
+        )
+        try:
+            tmp_file.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
+            for attempt in range(8):
+                try:
+                    tmp_file.replace(benchmarks_json)
+                    return
+                except PermissionError:
+                    if attempt == 7:
+                        raise
+                    time.sleep(0.5 * (attempt + 1))
+        finally:
+            try:
+                tmp_file.unlink(missing_ok=True)
+            except OSError:
+                # Replace already consumed the temp file, or another worker removed it.
+                pass
 
     # Worker tracking structures
     worker_slots: queue.Queue[int] = queue.Queue()
@@ -819,17 +851,6 @@ def main() -> int:
                         version_label=args.version_label,
                         in_place=True,
                     )
-
-                    # Trigger report regeneration every 50 boards in background
-                    if completed % 50 == 0:
-                        try:
-                            subprocess.Popen(
-                                ["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"],
-                                stdout=subprocess.DEVNULL,
-                                stderr=subprocess.DEVNULL,
-                            )
-                        except Exception:
-                            pass
 
                 except Exception as e:
                     error_count += 1

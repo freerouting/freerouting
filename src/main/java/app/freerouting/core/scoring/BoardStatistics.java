@@ -20,7 +20,11 @@ import app.freerouting.gui.workspace.progress.RatsNest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.OptimizerScoreSettings;
+import app.freerouting.settings.RouterScoreSettings;
+import app.freerouting.settings.RouterSettings;
+import app.freerouting.settings.RoutingCostSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
@@ -73,6 +77,12 @@ public class BoardStatistics implements Serializable {
   @SerializedName("clearance_violations")
   public BoardStatisticsClearanceViolations clearanceViolations =
       new BoardStatisticsClearanceViolations();
+
+  @SerializedName("difficulty")
+  public BoardStatisticsDifficulty difficulty = new BoardStatisticsDifficulty();
+
+  @SerializedName("bounds")
+  public BoardStatisticsBounds bounds = new BoardStatisticsBounds();
 
   @SerializedName("fanout")
   public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
@@ -200,6 +210,22 @@ public class BoardStatistics implements Serializable {
     double boardUnitToUmFactor =
         Unit.scale(1.0, board.communication.unit, Unit.UM)
             / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    this.board.areaCm2 =
+        (float)
+            (this.board.size.width
+                * boardUnitToMmFactor
+                * this.board.size.height
+                * boardUnitToMmFactor
+                / 100.0);
+    this.difficulty.pinCount = this.items.pinCount;
+    this.difficulty.signalLayerCount = this.layers.signalCount;
+    this.difficulty.complexityC =
+        Math.max(1, this.difficulty.pinCount * this.difficulty.signalLayerCount);
+    this.difficulty.boardAreaCm2 = this.board.areaCm2;
+    // D is the scoring size scale, not an ETA. It equals C so via/bend/DRC
+    // penalties stay comparable across small and large boards.
+    this.difficulty.difficultyD = (float) this.difficulty.complexityC;
+    this.bounds = BoardStatisticsBoundsCalculator.calculate(board);
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
@@ -351,16 +377,19 @@ public class BoardStatistics implements Serializable {
           maxViolation = Math.max(maxViolation, shortfallUm);
           sumViolation += shortfallUm;
         }
+        this.clearanceViolations.totalViolationUm = sumViolation;
         this.clearanceViolations.minViolationUm = minViolation;
         this.clearanceViolations.maxViolationUm = maxViolation;
         this.clearanceViolations.avgViolationUm = sumViolation / violationsList.size();
       } else {
+        this.clearanceViolations.totalViolationUm = 0.0;
         this.clearanceViolations.minViolationUm = 0.0;
         this.clearanceViolations.maxViolationUm = 0.0;
         this.clearanceViolations.avgViolationUm = 0.0;
       }
     } else {
       this.clearanceViolations.totalCount = 0;
+      this.clearanceViolations.totalViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;
       this.clearanceViolations.maxViolationUm = 0.0;
       this.clearanceViolations.avgViolationUm = 0.0;
@@ -594,7 +623,7 @@ public class BoardStatistics implements Serializable {
    * Calculates the score/cost of the board based on the given scoring settings. Higher score means
    * better board.
    */
-  public float calculateScore(ScoringSettings scoringSettings) {
+  public float calculateScore(RoutingCostSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     float penalties =
         this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
@@ -616,12 +645,12 @@ public class BoardStatistics implements Serializable {
   }
 
   /** Returns the maximum score for the supplied scoring settings. */
-  public float getMaximumScore(ScoringSettings scoringSettings) {
+  public float getMaximumScore(RoutingCostSettings scoringSettings) {
     return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
-  /** Returns the score normalized to a range from zero to one thousand. */
-  public float getNormalizedScore(ScoringSettings scoringSettings) {
+  /** Returns the legacy score normalized to a range from zero to one thousand. */
+  private float getLegacyNormalizedScore(RoutingCostSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     if (maximumScore <= 0f) {
       // Guard against division by zero and negative maximum scores (e.g. boards with no
@@ -632,6 +661,137 @@ public class BoardStatistics implements Serializable {
       return 0f;
     }
     return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
+  }
+
+  /** Returns the router score normalized to a range from zero to one thousand. */
+  public float getRouterScore(RoutingCostSettings scoringSettings) {
+    return getLegacyNormalizedScore(scoringSettings);
+  }
+
+  /** Returns the configured router score normalized to a range from zero to one thousand. */
+  public float getRouterScore(RouterSettings routerSettings) {
+    if (routerSettings == null
+        || routerSettings.routerScoring == null
+        || routerSettings.routerScoring.version
+            != app.freerouting.settings.RouterScoringVersion.V2_CONTINUOUS) {
+      return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
+    }
+    return getV2RouterScore(routerSettings.routerScoring);
+  }
+
+  private float getV2RouterScore(RouterScoreSettings settings) {
+    double difficulty =
+        this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
+    double connections =
+        this.connections.maximumCount != null ? Math.max(0, this.connections.maximumCount) : 0;
+    double incomplete =
+        this.connections.incompleteCount != null
+            ? Math.max(0, this.connections.incompleteCount)
+            : 0;
+    double violationCount =
+        this.clearanceViolations.totalCount != null
+            ? Math.max(0, this.clearanceViolations.totalCount)
+            : 0;
+    double violationDepth =
+        this.clearanceViolations.totalViolationUm != null
+            ? Math.max(0.0, this.clearanceViolations.totalViolationUm)
+            : 0.0;
+    double split =
+        Math.min(1.0, Math.max(0.0, valueOrDefault(settings.unroutedFreeFraction, 0.5f)));
+    double firstHalfWeight = valueOrDefault(settings.unroutedFirstHalfWeight, 1000.0f / 3.0f);
+    double secondHalfWeight = valueOrDefault(settings.unroutedSecondHalfWeight, 2000.0f / 3.0f);
+    double openFraction = connections > 0 ? incomplete / connections : 0.0;
+    double firstHalfOpen;
+    double secondHalfOpen;
+    if (connections <= 0) {
+      firstHalfOpen = 0.0;
+      secondHalfOpen = 0.0;
+    } else if (split <= 0.0) {
+      firstHalfOpen = 0.0;
+      secondHalfOpen = openFraction;
+    } else if (split >= 1.0) {
+      firstHalfOpen = openFraction;
+      secondHalfOpen = 0.0;
+    } else {
+      firstHalfOpen = Math.min(1.0, Math.max(0.0, (openFraction - split) / (1.0 - split)));
+      secondHalfOpen = Math.min(1.0, openFraction / split);
+    }
+    double unroutedPenalty = firstHalfWeight * firstHalfOpen + secondHalfWeight * secondHalfOpen;
+    double drcPenalty =
+        valueOrDefault(settings.clearanceViolationCountWeight, 25.0f) * violationCount / difficulty;
+    double depthScale =
+        Math.max(1.0, valueOrDefault(settings.clearanceViolationDepthScale, 1000.0f));
+    drcPenalty +=
+        valueOrDefault(settings.clearanceViolationDepthWeight, 300.0f)
+            * violationDepth
+            / depthScale
+            / difficulty;
+    return (float) Math.max(0.0, 1000.0 - unroutedPenalty - drcPenalty);
+  }
+
+  private static RoutingCostSettings legacyScoringOrDefault(RouterSettings routerSettings) {
+    if (routerSettings != null && routerSettings.scoring != null) {
+      return routerSettings.scoring;
+    }
+    return new DefaultSettings().getSettings().scoring;
+  }
+
+  private static float valueOrDefault(Float value, float defaultValue) {
+    return value != null ? value : defaultValue;
+  }
+
+  /** Returns the legacy optimizer score normalized to a range from zero to one thousand. */
+  public float getOptimizerScore(RoutingCostSettings scoringSettings) {
+    return getLegacyNormalizedScore(scoringSettings);
+  }
+
+  /** Returns the configured optimizer score normalized to a range from zero to one thousand. */
+  public float getOptimizerScore(RouterSettings routerSettings) {
+    if (routerSettings != null
+        && routerSettings.optimizerScoring != null
+        && routerSettings.optimizerScoring.version
+            == app.freerouting.settings.OptimizerScoringVersion.V2_LOWER_BOUND) {
+      return getV2OptimizerScore(routerSettings.optimizerScoring);
+    }
+    return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
+  }
+
+  /** Calculates the V2 optimizer score from board-only lower bounds and actual route metrics. */
+  private float getV2OptimizerScore(OptimizerScoreSettings settings) {
+    double difficulty =
+        this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
+    double minTraceLength =
+        this.bounds.minTraceLengthMm != null ? Math.max(0.0, this.bounds.minTraceLengthMm) : 0.0;
+    double minViaCount = this.bounds.minViaCount != null ? Math.max(0, this.bounds.minViaCount) : 0;
+    double minBendCount =
+        this.bounds.minBendCount != null ? Math.max(0, this.bounds.minBendCount) : 0;
+    double actualTraceLength =
+        this.traces.totalLengthMm != null ? Math.max(0.0, this.traces.totalLengthMm) : 0.0;
+    double actualViaCount = this.vias.totalCount != null ? Math.max(0, this.vias.totalCount) : 0;
+    double actualBendCount = this.bends.totalCount != null ? Math.max(0, this.bends.totalCount) : 0;
+    double lengthFloor = Math.max(0.0, valueOrDefault(settings.lengthFloor, 1.0f));
+    double difficultyFloor = Math.max(1.0, valueOrDefault(settings.difficultyScaleFloor, 1.0f));
+    double lengthPenalty =
+        valueOrDefault(settings.excessWireLengthWeight, 1000.0f)
+            * Math.max(0.0, actualTraceLength - minTraceLength)
+            / Math.max(minTraceLength, lengthFloor);
+    double viaPenalty =
+        valueOrDefault(settings.excessViaWeight, 2000.0f)
+            * Math.max(0.0, actualViaCount - minViaCount)
+            / Math.max(difficulty, difficultyFloor);
+    double bendPenalty =
+        valueOrDefault(settings.excessBendWeight, 500.0f)
+            * Math.max(0.0, actualBendCount - minBendCount)
+            / Math.max(difficulty, difficultyFloor);
+    return (float) Math.max(0.0, 1000.0 - lengthPenalty - viaPenalty - bendPenalty);
+  }
+
+  /**
+   * @deprecated Use {@link #getRouterScore(RoutingCostSettings)}.
+   */
+  @Deprecated
+  public float getNormalizedScore(RoutingCostSettings scoringSettings) {
+    return getRouterScore(scoringSettings);
   }
 
   /** Statistics for surface-mount pin fanout. */

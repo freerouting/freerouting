@@ -11,6 +11,7 @@ import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.DesignRulesChecker;
@@ -53,6 +54,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
   protected boolean isTimedOut;
   protected RoutingBoard bestBoard;
   protected float bestScore;
+  protected int bestIncompleteCount;
+  protected int bestClearanceViolationCount;
   protected final Map<Integer, ItemRouteResult> resultMap = new HashMap<>();
   protected final AtomicLong workerCpuNanos = new AtomicLong(0);
   protected final AtomicLong workerAllocBytes = new AtomicLong(0);
@@ -153,19 +156,32 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
     // Capture initial board state for baseline and session summary
     BoardStatistics initialStats = board.getStatistics();
-    float initialScore = initialStats.getNormalizedScore(job.routerSettings.scoring);
+    float initialRouterScore = initialStats.getRouterScore(job.routerSettings);
+    float initialOptimizerScore = initialStats.getOptimizerScore(job.routerSettings);
+    RoutingResultManifest.PhaseDetail phase = job.resultPhaseMetrics.optimizer;
+    phase.before =
+        RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
+            initialStats, job.routerSettings, "current");
+    phase.before.score = phase.before.optimizerScore;
     int initialIncomplete = initialStats.connections.incompleteCount;
     int initialViolations = initialStats.clearanceViolations.totalCount;
 
     this.bestBoard = this.board.deepCopy();
-    this.bestScore = initialScore;
+    this.bestScore = initialOptimizerScore;
+    this.bestIncompleteCount = initialIncomplete;
+    this.bestClearanceViolationCount = initialViolations;
 
     job.logInfo(
-        "Optimization stage started on board '"
-            + this.board.getHash()
-            + "' with score "
-            + FRLogger.formatScore(initialScore, initialIncomplete, initialViolations)
-            + ".");
+        String.format(
+            Locale.US,
+            "Optimization stage started on board '%s'. Baseline router score: %.2f, "
+                + "optimizer score: %.2f, incomplete connections: %d, "
+                + "clearance violations: %d.",
+            this.board.getHash(),
+            initialRouterScore,
+            initialOptimizerScore,
+            initialIncomplete,
+            initialViolations));
 
     // Capture start-of-session resource usage baselines
     long sessionStartMs = System.currentTimeMillis();
@@ -201,21 +217,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
       ++currentPass;
 
-      float scoreBeforePass = board.getStatistics().getNormalizedScore(job.routerSettings.scoring);
-
-      // Stop if potential improvement is less than threshold
-      if (scoreBeforePass * (1 + this.settings.optimizer.optimizationImprovementThreshold)
-          >= 1000.0f) {
-        job.logInfo(
-            String.format(
-                Locale.US,
-                "Stopping optimizer because the current board score (%.2f) is already close to the "
-                    + "maximum score (1000). Remaining potential improvement is less than the "
-                    + "threshold (%.2f%%).",
-                scoreBeforePass,
-                this.settings.optimizer.optimizationImprovementThreshold * 100));
-        break;
-      }
+      float scoreBeforePass = board.getStatistics().getOptimizerScore(job.routerSettings);
 
       String currentBoardHash = this.board.getHash();
       job.setCurrentPass(currentPass);
@@ -230,14 +232,57 @@ public final class BatchOptimizer extends NamedAlgorithm {
         break;
       }
 
-      float scoreAfterPass = board.getStatistics().getNormalizedScore(job.routerSettings.scoring);
-      if (scoreAfterPass > this.bestScore) {
+      BoardStatistics passStats = board.getStatistics();
+      float scoreAfterPass = passStats.getOptimizerScore(job.routerSettings);
+      String rejectionReason =
+          optimizerCandidateRejectionReason(
+              this.bestIncompleteCount,
+              this.bestClearanceViolationCount,
+              this.bestScore,
+              passStats,
+              scoreAfterPass);
+      if (rejectionReason == null) {
         this.bestScore = scoreAfterPass;
+        this.bestIncompleteCount = passStats.connections.incompleteCount;
+        this.bestClearanceViolationCount = passStats.clearanceViolations.totalCount;
         this.bestBoard = this.board.deepCopy();
+      } else {
+        job.logInfo(
+            String.format(
+                Locale.US,
+                "Optimizer pass #%d candidate rejected: %s. Restoring incumbent "
+                    + "(optimizer score %.2f, incomplete connections: %d, clearance violations: %d).",
+                currentPass,
+                rejectionReason,
+                this.bestScore,
+                this.bestIncompleteCount,
+                this.bestClearanceViolationCount));
+        restoreIncumbentBoard();
       }
 
       double passImprovement =
           scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
+      String passOutcome =
+          scoreAfterPass > scoreBeforePass
+              ? "IMPROVED"
+              : (scoreAfterPass < scoreBeforePass ? "REGRESSED" : "UNCHANGED");
+      String passImprovementPercent =
+          scoreBeforePass > 0
+              ? String.format(Locale.US, "%.4f%%", passImprovement * 100)
+              : "n/a (baseline was 0.00)";
+      job.logInfo(
+          String.format(
+              Locale.US,
+              "Optimizer pass #%d: optimizer score %.2f -> %.2f (%s, %s), router score: %.2f, "
+                  + "incomplete connections: %d, clearance violations: %d.",
+              currentPass,
+              scoreBeforePass,
+              scoreAfterPass,
+              passOutcome,
+              passImprovementPercent,
+              passStats.getRouterScore(job.routerSettings),
+              passStats.connections.incompleteCount,
+              passStats.clearanceViolations.totalCount));
 
       if (this.useIncreasedRipupCosts && scoreAfterPass <= scoreBeforePass) {
         this.useIncreasedRipupCosts = false;
@@ -263,8 +308,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     this.currentPosition = null;
 
     // Restore best board achieved if final state regressed below best score
-    float finalBoardScore =
-        this.board.getStatistics().getNormalizedScore(job.routerSettings.scoring);
+    float finalBoardScore = this.board.getStatistics().getOptimizerScore(job.routerSettings);
     if (finalBoardScore < this.bestScore && this.bestBoard != null) {
       job.logInfo(
           String.format(
@@ -272,9 +316,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
               "Restoring best board achieved (score %.2f vs final %.2f).",
               this.bestScore,
               finalBoardScore));
-      this.board = this.bestBoard;
-      this.job.board = this.bestBoard;
-      this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
+      restoreIncumbentBoard();
     }
     this.bestBoard = null;
 
@@ -296,9 +338,19 @@ public final class BatchOptimizer extends NamedAlgorithm {
     float cpuSecondsUsed = cpuSecondsMain + (workerCpuNanos.get() / 1_000_000_000.0f);
     float allocMbUsed = allocMbMain + (workerAllocBytes.get() / (1024.0f * 1024.0f));
     peakHeapMb = Math.max(peakHeapMb, sampleHeapUsageMb());
+    phase.durationSeconds = (float) sessionDurationSeconds;
+    phase.cpuSeconds = cpuSecondsUsed;
+    phase.totalAllocatedGb = allocMbUsed / 1024.0f;
+    phase.peakHeapMb = peakHeapMb;
 
     BoardStatistics finalStats = new BoardStatistics(this.board);
-    float finalScore = finalStats.getNormalizedScore(job.routerSettings.scoring);
+    float finalRouterScore = finalStats.getRouterScore(job.routerSettings);
+    float finalOptimizerScore = finalStats.getOptimizerScore(job.routerSettings);
+    phase.after =
+        RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
+            finalStats, job.routerSettings, "current");
+    phase.after.score = phase.after.optimizerScore;
+    phase.passesCompleted = currentPass;
     String completionStatus =
         this.isTimedOut
             ? "completed with timeout:"
@@ -306,19 +358,53 @@ public final class BatchOptimizer extends NamedAlgorithm {
     job.logInfo(
         String.format(
             Locale.US,
-            "Optimization stage %s started with score %s, completed in %.2f seconds, "
-                + "final score: %s, using %.2f total CPU seconds, %.2f GB total allocated, "
-                + "and %.1f MB peak heap usage.",
+            "Optimization stage %s. Baseline router score: %.2f, baseline optimizer score: %.2f, "
+                + "final router score: %.2f, final optimizer score: %.2f, completed in %.2f "
+                + "seconds, using %.2f total CPU seconds, %.2f GB total allocated, and %.1f MB "
+                + "peak heap usage.",
             completionStatus,
-            FRLogger.formatScore(initialScore, initialIncomplete, initialViolations),
+            initialRouterScore,
+            initialOptimizerScore,
+            finalRouterScore,
+            finalOptimizerScore,
             sessionDurationSeconds,
-            FRLogger.formatScore(
-                finalScore,
-                finalStats.connections.incompleteCount,
-                finalStats.clearanceViolations.totalCount),
             cpuSecondsUsed,
             allocMbUsed / 1024.0f,
             peakHeapMb));
+  }
+
+  /**
+   * Restores a working copy of the incumbent snapshot. The live board is mutated in place by later
+   * passes, so assigning {@code this.board = this.bestBoard} would alias and destroy the snapshot.
+   */
+  private void restoreIncumbentBoard() {
+    this.board = this.bestBoard.deepCopy();
+    this.job.board = this.board;
+    this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
+  }
+
+  /**
+   * Returns the explicit reason a candidate must be rejected, or {@code null} when it is accepted.
+   *
+   * <p>Completeness and DRC count are vetoes; optimizer score ranks candidates that pass both
+   * vetoes. In particular, a more-complete but uglier candidate is not an automatic win.
+   */
+  static String optimizerCandidateRejectionReason(
+      int incumbentIncompleteCount,
+      int incumbentClearanceViolationCount,
+      float incumbentOptimizerScore,
+      BoardStatistics candidate,
+      float candidateOptimizerScore) {
+    if (candidate.connections.incompleteCount > incumbentIncompleteCount) {
+      return "CONNECTIVITY_REGRESSION";
+    }
+    if (candidate.clearanceViolations.totalCount > incumbentClearanceViolationCount) {
+      return "DRC_COUNT_REGRESSION";
+    }
+    if (!(candidateOptimizerScore > incumbentOptimizerScore)) {
+      return "OPTIMIZER_SCORE_NOT_IMPROVED";
+    }
+    return null;
   }
 
   private List<Integer> prepareCandidateItems() {
@@ -544,7 +630,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
             this.board.getHash(),
             routeoptimizerPassDuration,
             FRLogger.formatScore(
-                boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring),
+                boardStatisticsAfter.getOptimizerScore(job.routerSettings),
                 boardStatisticsAfter.connections.incompleteCount,
                 boardStatisticsAfter.clearanceViolations.totalCount)));
     return routeImproved;

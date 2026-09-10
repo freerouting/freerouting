@@ -210,11 +210,12 @@ public class Freerouting {
               : null;
       Float normalizedScore =
           stats != null && routingJob.routerSettings != null
-              ? stats.getNormalizedScore(routingJob.routerSettings.scoring)
+              ? stats.getRouterScore(routingJob.routerSettings)
               : null;
       int totalPasses =
-          routingJob.routerSettings != null && routingJob.routerSettings.maxPasses != null
-              ? routingJob.routerSettings.maxPasses
+          routingJob.routerSettings != null
+                  && routingJob.routerSettings.autorouter.maxPasses != null
+              ? routingJob.routerSettings.autorouter.maxPasses
               : 0;
       double runtimeSeconds =
           routingJob.startedAt != null
@@ -358,7 +359,11 @@ public class Freerouting {
     try {
       RoutingResultManifest manifest =
           RoutingResultManifest.fromJob(
-              routingJob, globalSettings.initialInputFile, outputWritten, exitCode);
+              routingJob,
+              globalSettings.initialInputFile,
+              outputWritten,
+              exitCode,
+              globalSettings.runtimeEnvironment.cpuScore);
       RoutingResultManifest.write(Path.of(routingJob.routerSettings.resultJsonPath), manifest);
     } catch (IOException e) {
       FRLogger.error(
@@ -472,7 +477,8 @@ public class Freerouting {
           new DsnFileSettings(drcJob.input.getData(), drcJob.input.getFilename()));
       var routerSettings = settingsMerger.merge();
       var finalStats = drcJob.board.getStatistics();
-      report.qualityScore = (double) finalStats.getNormalizedScore(routerSettings.scoring);
+      report.qualityScore = (double) finalStats.getRouterScore(routerSettings);
+      report.optimizerScore = (double) finalStats.getOptimizerScore(routerSettings);
     } catch (Exception e) {
       FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
     }
@@ -1415,7 +1421,7 @@ public class Freerouting {
     FRLogger.debug("Architecture: " + globalSettings.runtimeEnvironment.architecture);
     FRLogger.debug("Java: " + globalSettings.runtimeEnvironment.java);
     FRLogger.debug("System Language: " + globalSettings.runtimeEnvironment.systemLanguage);
-    FRLogger.debug(
+    FRLogger.info(
         "Hardware: "
             + globalSettings.runtimeEnvironment.cpuCores
             + " CPU cores, "

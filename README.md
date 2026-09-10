@@ -158,7 +158,7 @@ We ❤️ all our contributors; this project wouldn't be possible without you!
 
 - **Report Issues**: Help us by reporting [issues](https://github.com/freerouting/freerouting/issues).
 - **Contribute Code**: Submit fixes and improvements via [pull requests](https://github.com/freerouting/freerouting/pulls).
-- **Guidelines**: Check out our [Contribution Guide](docs/CONTRIBUTING.md) and [Developer Documentation](docs/developer.md).
+- **Guidelines**: Check out our [Contribution Guide](docs/CONTRIBUTING.md) and [Developer Documentation](docs/developer.md). Router and optimizer board scores are documented in [docs/scoring.md](docs/scoring.md).
 
 ## 🙏 Support the Project
 

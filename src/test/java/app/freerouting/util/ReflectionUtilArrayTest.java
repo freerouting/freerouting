@@ -13,11 +13,11 @@ class ReflectionUtilArrayTest {
   @Test
   void setSimpleProperty() throws Exception {
     RouterSettings settings = new RouterSettings();
-    ReflectionUtil.setFieldValue(settings, "enabled", "false");
-    assertFalse(settings.enabled);
+    ReflectionUtil.setFieldValue(settings, "autorouter.enabled", "false");
+    assertFalse(settings.autorouter.enabled);
 
-    ReflectionUtil.setFieldValue(settings, "enabled", "true");
-    assertTrue(settings.enabled);
+    ReflectionUtil.setFieldValue(settings, "autorouter.enabled", "true");
+    assertTrue(settings.autorouter.enabled);
   }
 
   @Test

@@ -640,9 +640,9 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     this.planeViaCostField.setValue(settings.getPlaneViaCosts());
     this.startRipupCosts.setValue(settings.getStartRipupCosts());
     this.maxPassesField.setValue(
-        settings.maxPasses == null || settings.maxPasses == Integer.MAX_VALUE
+        settings.autorouter.maxPasses == null || settings.autorouter.maxPasses == Integer.MAX_VALUE
             ? 0
-            : settings.maxPasses);
+            : settings.autorouter.maxPasses);
     setJobTimeoutFields(settings.jobTimeoutString);
     this.maxThreadsField.setValue(settings.maxThreads);
     for (int i = 0; i < preferredDirectionTraceCostArr.length; i++) {
@@ -1097,7 +1097,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     @Override
     public void keyTyped(KeyEvent evt) {
       if (evt.getKeyChar() == '\n') {
-        Integer currentVal = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
+        Integer currentVal =
+            boardHandling.getCurrentRoutingJob().routerSettings.autorouter.maxPasses;
         int oldValue = currentVal != null ? currentVal : 0;
         Object input = maxPassesField.getValue();
         int inputValue = normalizeIntInput(input, oldValue, 0, 9999);
@@ -1122,7 +1123,8 @@ public class WindowAutorouteParameter extends BoardSavableSubWindow {
     public void focusLost(FocusEvent evt) {
       if (!maxPassesInputCompleted) {
         // Save the value when focus is lost
-        Integer currentVal = boardHandling.getCurrentRoutingJob().routerSettings.maxPasses;
+        Integer currentVal =
+            boardHandling.getCurrentRoutingJob().routerSettings.autorouter.maxPasses;
         int oldValue = currentVal != null ? currentVal : 0;
 
         // Commit the edit to ensure getValue() returns the typed value

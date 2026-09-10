@@ -111,7 +111,7 @@ $jvmArgs = @(
     "-de", $Fixture,
     "-do", $Output,
     "--gui.enabled=false",
-    "--router.max_passes=$MaxPasses",
+    "--router.autorouter.max_passes=$MaxPasses",
     "--router.max_threads=$MaxThreads",
     "--router.optimizer.enabled=true",
     "--router.optimizer.max_passes=100",

@@ -191,8 +191,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         new BoardUpdatedEventListener() {
           @Override
           public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-            float boardScore =
-                event.getBoardStatistics().getNormalizedScore(routingJob.routerSettings.scoring);
+            float boardScore = event.getBoardStatistics().getRouterScore(routingJob.routerSettings);
 
             if (event.getRouterCounters() != null
                 && "fanout".equals(event.getRouterCounters().phase)) {
@@ -284,7 +283,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
                       generation,
                       null,
                       null,
-                      boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring),
+                      boardStatistics.getRouterScore(routingJob.routerSettings),
                       boardStatistics.connections.incompleteCount,
                       boardStatistics.clearanceViolations.totalCount,
                       boardStatistics.items.viaCount,
@@ -326,8 +325,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
 
   private void handleRoutingStageFinished(BatchAutorouter autorouter) {
     var boardStatistics = new BoardStatistics(routingJob.board);
-    this.scoreBeforeOptimization =
-        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring);
+    this.scoreBeforeOptimization = boardStatistics.getRouterScore(routingJob.routerSettings);
     this.autoroutingSecondsToComplete =
         FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
 
@@ -336,9 +334,9 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     if (this.routerEnabledForRun) {
       if (sessionStartTime != null) {
         String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
-        if (routingJob.routerSettings.maxPasses != null
-            && routingJob.routerSettings.maxPasses > 0
-            && routingJob.getCurrentPass() > routingJob.routerSettings.maxPasses) {
+        if (routingJob.routerSettings.autorouter.maxPasses != null
+            && routingJob.routerSettings.autorouter.maxPasses > 0
+            && routingJob.getCurrentPass() > routingJob.routerSettings.autorouter.maxPasses) {
           completionStatus = "completed with pass number limit hit:";
         }
 
@@ -401,8 +399,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
 
   private void handleOptimizationStageFinished() {
     var boardStatistics = new BoardStatistics(routingJob.board);
-    var scoreAfterOptimization =
-        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring);
+    var scoreAfterOptimization = boardStatistics.getRouterScore(routingJob.routerSettings);
     double percentageImprovement =
         ((scoreAfterOptimization / this.scoreBeforeOptimization) * 100.0) - 100.0;
     double routeOptimizationSecondsToComplete =
@@ -563,8 +560,8 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     try {
       this.routerEnabledForRun =
           routingJob.routerSettings.getRunRouter()
-              && (routingJob.routerSettings.maxPasses == null
-                  || routingJob.routerSettings.maxPasses >= 0);
+              && (routingJob.routerSettings.autorouter.maxPasses == null
+                  || routingJob.routerSettings.autorouter.maxPasses >= 0);
       if (this.routerEnabledForRun) {
         int threadCount = routingJob.routerSettings.maxThreads;
         routingJob.logInfo(
@@ -710,7 +707,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
             : null;
     Float normalizedScore =
         finalBoardStats != null && routingJob.routerSettings != null
-            ? finalBoardStats.getNormalizedScore(routingJob.routerSettings.scoring)
+            ? finalBoardStats.getRouterScore(routingJob.routerSettings)
             : null;
 
     FRAnalytics.recordJobLifecycle(
@@ -786,10 +783,10 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
                 stats.clearanceViolations.maxViolationUm, Unit.UM, sessionPort.displayUnit())
             : 0.0;
     float score =
-        stats.getNormalizedScore(
-            routingJob.routerSettings != null
-                ? routingJob.routerSettings.scoring
-                : new app.freerouting.settings.ScoringSettings());
+        routingJob.routerSettings != null
+            ? stats.getRouterScore(routingJob.routerSettings)
+            : stats.getRouterScore(
+                new app.freerouting.settings.sources.DefaultSettings().getSettings());
 
     return new RoutingSummaryData(
         stats.nets.totalCount,

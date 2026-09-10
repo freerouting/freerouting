@@ -1,6 +1,7 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.LegacyRouterSettingsBridge;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
 import app.freerouting.util.ReflectionUtil;
@@ -47,12 +48,25 @@ public class CliSettings implements SettingsSource {
           String propertyName = parts[0];
           String value = parts.length > 1 ? parts[1] : "";
 
-          if ("router.enabled".equals(propertyName)) {
+          if ("router.enabled".equals(propertyName)
+              || "router.autorouter.enabled".equals(propertyName)) {
             hasExplicitRouterEnabledArgument = true;
           }
 
-          if (propertyName.startsWith("router.")) {
-            applyRouterSetting(settings, propertyName, value);
+          if ("scoring-version".equals(propertyName)) {
+            applyRouterSetting(settings, "router.scoring.version", value);
+            applyRouterSetting(settings, "optimizer.scoring.version", value);
+          } else if (propertyName.startsWith("router.")
+              || propertyName.startsWith("optimizer.")
+              || "router-scoring-version".equals(propertyName)
+              || "optimizer-scoring-version".equals(propertyName)) {
+            String normalizedProperty =
+                switch (propertyName) {
+                  case "router-scoring-version" -> "router.scoring.version";
+                  case "optimizer-scoring-version" -> "optimizer.scoring.version";
+                  default -> propertyName;
+                };
+            applyRouterSetting(settings, normalizedProperty, value);
           }
         }
       } else if (arg.startsWith("-")) {
@@ -68,7 +82,10 @@ public class CliSettings implements SettingsSource {
 
         // Map short flags to router settings
         String propertyName = mapFlagToProperty(flag);
-        if (propertyName != null && propertyName.startsWith("router.")) {
+        if (propertyName != null
+            && (propertyName.startsWith("router.")
+                || propertyName.startsWith("optimizer.")
+                || "scoring-version".equals(propertyName))) {
           applyRouterSetting(settings, propertyName, value);
         }
       }
@@ -77,9 +94,10 @@ public class CliSettings implements SettingsSource {
     // Legacy batch invocation (`-de ... -do ...`) is expected to route immediately.
     // Force router enabled unless the caller explicitly set --router.enabled=... .
     if (hasDesignInputArgument && hasDesignOutputArgument && !hasExplicitRouterEnabledArgument) {
-      settings.enabled = true;
+      settings.autorouter.enabled = true;
       FRLogger.debug(
-          "Applied CLI router setting: router.enabled = true (implicit from -de/-do batch mode)");
+          "Applied CLI router setting: router.autorouter.enabled = true"
+              + " (implicit from -de/-do batch mode)");
     }
 
     return settings;
@@ -87,9 +105,37 @@ public class CliSettings implements SettingsSource {
 
   private void applyRouterSetting(RouterSettings settings, String propertyName, String value) {
     try {
+      if ("scoring-version".equals(propertyName)) {
+        applyRouterSetting(settings, "router.scoring.version", value);
+        applyRouterSetting(settings, "optimizer.scoring.version", value);
+        return;
+      }
       // Remove "router." prefix if present
       String fieldPath =
           propertyName.startsWith("router.") ? propertyName.substring(7) : propertyName;
+      if ("scoring.version".equals(fieldPath)) {
+        fieldPath = "routerScoring.version";
+      } else if ("optimizer.scoring.version".equals(propertyName)) {
+        fieldPath = "optimizerScoring.version";
+      } else if (propertyName.startsWith("router.")) {
+        String relative = propertyName.substring("router.".length());
+        String canonical = LegacyRouterSettingsBridge.canonicalCliPath(relative);
+        if (LegacyRouterSettingsBridge.isDeprecatedFlatAutorouterPath(relative)) {
+          LegacyRouterSettingsBridge.warnDeprecatedPath(
+              "router." + relative, "router." + canonical);
+        }
+        fieldPath = canonical;
+      }
+      if (fieldPath.endsWith(".version")) {
+        value =
+            switch (value.trim().toLowerCase()) {
+              case "v1", "legacy" -> "V1_LEGACY";
+              case "v2", "continuous" ->
+                  fieldPath.startsWith("optimizer") ? "V2_LOWER_BOUND" : "V2_CONTINUOUS";
+              case "lower_bound", "lower-bound" -> "V2_LOWER_BOUND";
+              default -> value;
+            };
+      }
 
       ReflectionUtil.setFieldValue(settings, fieldPath, value);
       parsedArguments.put(propertyName, value);
@@ -104,6 +150,9 @@ public class CliSettings implements SettingsSource {
     return switch (flag) {
       case "mp" -> "router.max_passes";
       case "mt" -> "router.max_threads";
+      case "router-scoring-version" -> "router.scoring.version";
+      case "optimizer-scoring-version" -> "optimizer.scoring.version";
+      case "scoring-version" -> "scoring-version";
       // Add more mappings as needed
       default -> null;
     };

@@ -1,6 +1,7 @@
 package app.freerouting.settings.sources;
 
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.LegacyRouterSettingsBridge;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
 import app.freerouting.util.ReflectionUtil;
@@ -13,9 +14,10 @@ import java.util.Map;
  * <p>Environment variables must start with "FREEROUTING__ROUTER__" prefix. Double underscores are
  * converted to dots for nested properties.
  *
- * <p>Examples: - FREEROUTING__ROUTER__MAX_PASSES=100 → router.max_passes = 100 -
- * FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS=4 → router.optimizer.max_threads = 4 -
- * FREEROUTING__ROUTER__VIAS_ALLOWED=false → router.viasAllowed = false
+ * <p>Examples: {@code FREEROUTING__ROUTER__AUTOROUTER__MAX_PASSES=100} maps to {@code
+ * router.autorouter.max_passes}. {@code FREEROUTING__ROUTER__OPTIMIZER__MAX_THREADS=4} maps to
+ * {@code router.optimizer.max_threads}. Flat keys such as {@code FREEROUTING__ROUTER__MAX_PASSES}
+ * still apply and warn until they are removed.
  *
  * <p>Priority: 55 (between GUI and CLI) - Higher than GUI (50): Environment variables override
  * interactive GUI settings - Lower than CLI (60): Command-line arguments override environment
@@ -63,20 +65,25 @@ public class EnvironmentVariablesSource implements SettingsSource {
       // Remove the FREEROUTING__ROUTER__ prefix and convert double underscores to property path
       String propertyPath =
           uppercaseKey.substring((ENV_PREFIX + ROUTER_PREFIX).length()).replace("__", ".");
+      String canonical = LegacyRouterSettingsBridge.canonicalCliPath(propertyPath);
+      if (LegacyRouterSettingsBridge.isDeprecatedFlatAutorouterPath(propertyPath)) {
+        LegacyRouterSettingsBridge.warnDeprecatedPath(
+            rawKey, ENV_PREFIX + ROUTER_PREFIX + canonical.replace(".", "__").toUpperCase());
+      }
 
       // Try to set the value using reflection
       try {
-        ReflectionUtil.setFieldValue(settings, propertyPath, value);
+        ReflectionUtil.setFieldValue(settings, canonical, value);
         parsedVariables.put(rawKey, value);
         parsedCount++;
         FRLogger.debug(
-            "Parsed environment variable: " + rawKey + " → " + propertyPath + " = " + value);
+            "Parsed environment variable: " + rawKey + " → " + canonical + " = " + value);
       } catch (NoSuchFieldException e) {
         FRLogger.warn(
             "Unknown router setting in environment variable: "
                 + rawKey
                 + " (property: "
-                + propertyPath
+                + canonical
                 + ")");
       } catch (Exception e) {
         FRLogger.warn(

@@ -44,8 +44,12 @@ public class AutorouteResponse {
   public int clearanceViolations;
 
   @SerializedName("normalized_score")
-  @Schema(description = "Normalized routing score (0.0 to 1.0, or higher with penalties)")
+  @Schema(description = "V2 router board score (0.0 to 1000.0, higher is better)")
   public Float normalizedScore;
+
+  @SerializedName("optimizer_score")
+  @Schema(description = "V2 optimizer board score (0.0 to 1000.0, higher is better)")
+  public Float optimizerScore;
 
   @SerializedName("outputs")
   @Schema(description = "Map of generated output format names to their text or Base64 content")

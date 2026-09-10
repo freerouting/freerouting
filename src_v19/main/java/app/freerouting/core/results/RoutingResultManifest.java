@@ -7,19 +7,32 @@ import app.freerouting.core.scoring.BoardStatistics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.time.Instant;
 import java.util.HexFormat;
+import java.util.Locale;
 
 /** Machine-readable summary of a headless routing run for v1.9 benchmark parity. */
 public final class RoutingResultManifest {
 
   public static final int SCHEMA_VERSION = 1;
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+  private static final Gson GSON =
+      new GsonBuilder()
+          .setPrettyPrinting()
+          .registerTypeAdapter(Float.class, new TwoDecimalFloatAdapter())
+          .registerTypeAdapter(float.class, new TwoDecimalFloatAdapter())
+          .registerTypeAdapter(Double.class, new TwoDecimalDoubleAdapter())
+          .registerTypeAdapter(double.class, new TwoDecimalDoubleAdapter())
+          .create();
 
   public RoutingResultManifest() {}
 
@@ -46,6 +59,9 @@ public final class RoutingResultManifest {
 
   @SerializedName("normalized_score")
   public Float normalizedScore;
+
+  @SerializedName("optimizer_score")
+  public Float optimizerScore;
 
   @SerializedName("resource_usage")
   public RouterJobResourceUsage resourceUsage;
@@ -79,11 +95,47 @@ public final class RoutingResultManifest {
   }
 
   public static class PhaseDetail {
+    @SerializedName("before")
+    public PhaseSnapshot before;
+
+    @SerializedName("after")
+    public PhaseSnapshot after;
+
     @SerializedName("duration_seconds")
     public Float durationSeconds;
 
+    @SerializedName("cpu_seconds")
+    public Float cpuSeconds;
+
     @SerializedName("passes_completed")
     public Integer passesCompleted;
+
+    @SerializedName("total_allocated_gb")
+    public Float totalAllocatedGb;
+
+    @SerializedName("peak_heap_mb")
+    public Float peakHeapMb;
+  }
+
+  /** Board metrics and the native score at a phase boundary. */
+  public static class PhaseSnapshot {
+    @SerializedName("board_statistics")
+    public BoardStatistics boardStatistics;
+
+    @SerializedName("score")
+    public Float score;
+
+    @SerializedName("score_source")
+    public String scoreSource;
+
+    @SerializedName("current_router_score")
+    public Float currentRouterScore;
+
+    @SerializedName("current_optimizer_score")
+    public Float currentOptimizerScore;
+
+    @SerializedName("current_score_source")
+    public String currentScoreSource;
   }
 
   public static RoutingResultManifest create(
@@ -117,6 +169,10 @@ public final class RoutingResultManifest {
     if (board != null) {
       manifest.boardStatistics = new BoardStatistics(board);
       manifest.normalizedScore = manifest.boardStatistics.calculateNormalizedScore();
+      manifest.optimizerScore =
+          manifest.phases.optimizer.after != null
+              ? manifest.phases.optimizer.after.score
+              : null;
     }
     return manifest;
   }
@@ -157,5 +213,45 @@ public final class RoutingResultManifest {
     } catch (Exception ignored) {
     }
     return "unknown";
+  }
+
+  private static final class TwoDecimalFloatAdapter extends TypeAdapter<Float> {
+    @Override
+    public void write(JsonWriter out, Float value) throws IOException {
+      if (value == null || !Float.isFinite(value)) {
+        out.nullValue();
+      } else {
+        out.value(new BigDecimal(String.format(Locale.ROOT, "%.2f", value)));
+      }
+    }
+
+    @Override
+    public Float read(JsonReader in) throws IOException {
+      if (in.peek() == JsonToken.NULL) {
+        in.nextNull();
+        return null;
+      }
+      return (float) in.nextDouble();
+    }
+  }
+
+  private static final class TwoDecimalDoubleAdapter extends TypeAdapter<Double> {
+    @Override
+    public void write(JsonWriter out, Double value) throws IOException {
+      if (value == null || !Double.isFinite(value)) {
+        out.nullValue();
+      } else {
+        out.value(new BigDecimal(String.format(Locale.ROOT, "%.2f", value)));
+      }
+    }
+
+    @Override
+    public Double read(JsonReader in) throws IOException {
+      if (in.peek() == JsonToken.NULL) {
+        in.nextNull();
+        return null;
+      }
+      return in.nextDouble();
+    }
   }
 }

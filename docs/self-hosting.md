@@ -272,7 +272,7 @@ nssm start Freerouting
 | CORS origins | `--api_server.cors_origins=*` | _(none)_ | Allows browser-based clients to call the API. Set to `*` or a specific origin. |
 | Data directory | `--user_data_path=/path/to/data` | OS standard user-data dir (`%APPDATA%\freerouting`, `~/Library/Application Support/freerouting`, or `~/.config/freerouting`) | Where logs and saved jobs are stored. |
 | Save jobs to disk | `--feature_flags.save_jobs=true` | `false` | Persists routing jobs (input/output files + metadata) under `user_data_path`. |
-| Max routing passes | `--router.max_passes=100` | `100` | Upper limit on autorouting passes per job. |
+| Max routing passes | `--router.autorouter.max_passes=100` | `0` (no limit) | Upper limit on autorouting passes per job. Flat `--router.max_passes` still works with a deprecation warning. |
 | Thread count | `-mt 4` or `--router.max_threads=4` | CPU count − 1 | Worker threads for route optimisation. |
 
 ### All configuration methods
@@ -418,7 +418,7 @@ java --enable-native-access=ALL-UNNAMED -jar /app/freerouting-executable.jar ...
 The `linux/arm/v7` image runs a 32-bit JVM, which has a 4 GB address-space ceiling. Large boards with hundreds of nets can approach this. Mitigation options:
 
 - Use a 64-bit OS and the `linux/arm64` image instead (Raspberry Pi OS 64-bit is available for Pi 3 and later).
-- Limit routing passes with `--router.max_passes=20` to reduce peak memory usage.
+- Limit routing passes with `--router.autorouter.max_passes=20` to reduce peak memory usage.
 - Add a JVM heap flag: `-Xmx1g` (adjust to your available RAM).
 
 ```bash

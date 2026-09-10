@@ -32,8 +32,10 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   "router": {
     "default_preferred_direction_trace_cost": 1.0,
     "default_undesired_direction_trace_cost": 2.5,
-    "max_passes": 100,
-    "fanout_max_passes": 20,
+    "autorouter": {
+      "enabled": true,
+      "max_passes": 100
+    },
     "max_threads": 11,
     "improvement_threshold": 0.01,
     "trace_pull_tight_accuracy": 500,
@@ -120,12 +122,22 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 - **`default_preferred_direction_trace_cost`**: Cost factor for routing traces in the preferred direction.
 - **`default_undesired_direction_trace_cost`**: Cost factor for routing traces in undesired directions.
-- **`max_passes`**: Maximum number of routing passes.
+- **`autorouter`**: Batch autorouter stage knobs. Canonical CLI is
+  `--router.autorouter.max_passes`. Flat keys (`--router.max_passes`, `-mp`,
+  `FREEROUTING__ROUTER__MAX_PASSES`) still apply and warn until they are removed.
+  The v1.9 compatibility build also accepts the nested `--router.autorouter.*`
+  flags (it maps them onto the same flat knobs), so shared benchmark commands can
+  use one flag set for both jars.
+    - **`enabled`**: Whether the autorouter stage runs after fanout.
+    - **`algorithm`**: Algorithm identifier (`freerouting-router` by default).
+    - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
+    - **`max_items`**: Maximum items attempted in the autorouter stage.
+    - **`save_intermediate_stages`**: Save board snapshots between passes.
+    - **`ignore_net_classes`**: Net class names the autorouter should skip.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
-- **`fanout_max_passes`**: Maximum number of passes for fanout routing.
-- **`max_threads`**: Maximum number of threads to use for routing.
+- **`max_threads`**: Shared worker-thread cap for autorouter pass parallelism and optimizer GUI workers.
 - **`improvement_threshold`**: Minimum improvement required to continue routing.
 - **`trace_pull_tight_accuracy`**: Accuracy for pulling traces tight.
 - **`allowed_via_types`**: Enables or disables the use of different via types.
@@ -136,6 +148,28 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`layers`**: An array of layer-specific settings (transient, typically set via CLI or loaded from board files). Each element contains:
     - **`routable`**: Boolean indicating if the layer is active/routable by the autorouter.
     - **`preferred_direction_horizontal`**: Boolean indicating if the preferred direction on this layer is horizontal.
+- **`router_scoring`**: Autorouter board score (`V2_CONTINUOUS` by default; `V1_LEGACY`
+  remains available). Used by the autorouter, board history, and API `normalized_score`.
+  Incomplete connections are split at `unrouted_free_fraction` (0.5): the first half
+  uses `unrouted_first_half_weight` (1000/3) and the last half uses
+  `unrouted_second_half_weight` (2000/3), so a fully open board scores 0, a half-done
+  board scores about 333, and a finished board scores 1000 before DRC. DRC adds
+  `clearance_violation_count_weight` (25) times violation count / D plus
+  `clearance_violation_depth_weight` (300) times stacked shortfall µm /
+  `clearance_violation_depth_scale` (1000 µm) / D. D is max(1, pins × signal layers).
+  `unrouted_connection_weight` is unused by V2.
+  Equations and a glossary for every symbol are in [docs/scoring.md](scoring.md).
+- **`optimizer_scoring`**: Optimizer board score (`V2_LOWER_BOUND` by default; `V1_LEGACY`
+  remains available). Completeness and DRC count are keep/undo gates, not score terms.
+  The score is 1000 minus excess wire length, vias, and bends versus placement lower
+  bounds. Defaults: `excess_wire_length_weight` (1000), `excess_via_weight` (2000),
+  `excess_bend_weight` (500), `length_floor` (1), `difficulty_scale_floor` (1). Via and
+  bend excess divide by D; length excess divides by Lmin.
+  Equations and a glossary for every symbol are in [docs/scoring.md](scoring.md).
+
+The router and optimizer versions are independent. CLI aliases are
+`--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and
+`--scoring-version=v1|v2` to select both.
 
 ##### **`optimizer` Sub-section**
 
@@ -148,6 +182,11 @@ Configures the optional route-optimization stage that runs after autorouting.
   `feature_flags.multi_threading` flag is enabled. It also controls autorouter pass parallelism
   in `BatchAutorouterThread`. Headless and API jobs always use the single-threaded
   `BatchOptimizer`; this setting does not enable parallel optimizer workers there.
+- **`improvement_threshold`**: Minimum **relative** optimizer-score gain required to
+  continue after a pass (default `0.01`). `BatchOptimizer` compares
+  `(scoreAfter - scoreBefore) / scoreBefore`, not an absolute 0–1000 delta. V2 scores
+  are already 0–1000, so 1% is about 8–10 points on a typical finished board (~800–1000)
+  and was kept after V2 calibration.
 
 ##### **`fanout` Sub-section**
 
@@ -234,7 +273,7 @@ Freerouting can also be configured using command-line arguments. These arguments
 **Scalar example:**
 
 ```bash
-java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
+java -jar freerouting.jar --gui.enabled=false --router.autorouter.max_passes=200
 ```
 
 **List-valued settings** (e.g. `api_server.endpoints`, `mcp_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
@@ -255,7 +294,7 @@ Environment variables provide another way to override settings. The environment 
 
 ```bash
 FREEROUTING__GUI__ENABLED=false
-FREEROUTING__ROUTER__MAX_PASSES=200
+FREEROUTING__ROUTER__AUTOROUTER__MAX_PASSES=200
 java -jar freerouting.jar
 ```
 

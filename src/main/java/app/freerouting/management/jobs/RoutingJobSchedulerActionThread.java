@@ -92,7 +92,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
 
     boolean routerEnabled =
         job.routerSettings.getRunRouter()
-            && (job.routerSettings.maxPasses == null || job.routerSettings.maxPasses >= 0);
+            && (job.routerSettings.autorouter.maxPasses == null
+                || job.routerSettings.autorouter.maxPasses >= 0);
     if (routerEnabled) {
       FRAnalytics.autorouterStarted();
     }
@@ -134,7 +135,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
             double totalTime =
                 java.time.Duration.between(sessionStartTime, sessionEndTime).toMillis() / 1000.0;
             var finalStats = job.board.getStatistics();
-            Float normalizedScore = finalStats.getNormalizedScore(job.routerSettings.scoring);
+            float normalizedScore = finalStats.getRouterScore(job.routerSettings);
             FRAnalytics.autorouterFinished(
                 finalStats.nets.totalCount,
                 finalStats.connections.incompleteCount,
@@ -246,7 +247,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
             : null;
     Float normalizedScore =
         finalBoardStats != null && job.routerSettings != null
-            ? finalBoardStats.getNormalizedScore(job.routerSettings.scoring)
+            ? finalBoardStats.getRouterScore(job.routerSettings)
             : null;
 
     FRAnalytics.recordJobLifecycle(

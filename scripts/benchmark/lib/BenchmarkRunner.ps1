@@ -61,6 +61,10 @@ function Invoke-BenchmarkRun {
     if ($Settings.retain_autoroute_database) {
         $jvmArgs += "-Dfreerouting.benchmark.retain_autoroute_database=true"
     }
+    $envGitSha = $Settings.git_sha
+    if ($envGitSha -and $SupportsCliMode -and ($Binary.Name -notmatch 'freerouting-1\.9\.0\.jar')) {
+        $jvmArgs += "-Dfreerouting.git.sha=$envGitSha"
+    }
     $jvmArgs += @(
         "-jar", ('"{0}"' -f $Binary.FullName),
         "-de", ('"{0}"' -f $Fixture.FullName)
@@ -70,13 +74,13 @@ function Invoke-BenchmarkRun {
     $jvmArgs += "-do"
     $jvmArgs += ('"{0}"' -f $outputFile)
 
-    # Router and logger options (supported by both v1.9 and current builds)
-    $jvmArgs += "--router.max_passes=$($Settings.max_passes)"
+    # Shared parent keys work on both v1.9 and current builds.
     $jvmArgs += "--router.max_threads=$($Settings.max_threads)"
     $jvmArgs += "--router.job_timeout=`"$($Settings.max_time)`""
     $jvmArgs += "--router.optimizer.enabled=$($Settings.optimizer_enabled.ToString().ToLower())"
     $jvmArgs += "--router.fanout.enabled=$($Settings.fanout_enabled.ToString().ToLower())"
-    $jvmArgs += "--router.enabled=$($Settings.router_enabled.ToString().ToLower())"
+    $jvmArgs += "--router.autorouter.max_passes=$($Settings.max_passes)"
+    $jvmArgs += "--router.autorouter.enabled=$($Settings.router_enabled.ToString().ToLower())"
     if ($Settings.fanout_timeout) {
         $jvmArgs += "--router.fanout.timeout=`"$($Settings.fanout_timeout)`""
     }
@@ -84,7 +88,7 @@ function Invoke-BenchmarkRun {
         $jvmArgs += "--router.optimizer.timeout=`"$($Settings.optimizer_timeout)`""
     }
     if ($Settings.max_items -and [int]$Settings.max_items -gt 0) {
-        $jvmArgs += "--router.max_items=$($Settings.max_items)"
+        $jvmArgs += "--router.autorouter.max_items=$($Settings.max_items)"
     }
 
     # Logging flags
@@ -92,17 +96,16 @@ function Invoke-BenchmarkRun {
     $jvmArgs += ('--logging.file.location="{0}"' -f $logFile)
     $jvmArgs += "--logging.console.level=INFO"
 
-    $envGitSha = $Settings.git_sha
-    if ($envGitSha -and $SupportsCliMode -and ($Binary.Name -notmatch 'freerouting-1.9.0.jar')) {
-        $jvmArgs += "-Dfreerouting.git.sha=$envGitSha"
-    }
-
     if ($Binary.Name -notmatch 'freerouting-1.9.0.jar') {
         $jvmArgs += "--api_server.enabled=false"
         if ($SupportsCliMode) {
             $jvmArgs += "--gui.enabled=false"
             $jvmArgs += ('--router.result_json="{0}"' -f $resultJsonFile)
         }
+    } else {
+        # The frozen v1.9 startup path supports result manifests even though it does not
+        # support the current CLI/headless flags.
+        $jvmArgs += ('--router.result_json="{0}"' -f $resultJsonFile)
     }
 
     $startTime = Get-Date

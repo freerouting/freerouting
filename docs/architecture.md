@@ -88,6 +88,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
+| Router or optimizer board scores | `app.freerouting.core.scoring` (`BoardStatistics.getRouterScore` / `getOptimizerScore`) |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 
 ## Module Boundaries (ArchUnit)
@@ -249,7 +250,7 @@ manifests (`core.results`), and board library definitions (`core.library`).
 
 ### `app.freerouting.settings`
 
-Application configuration, defaults, and the priority-based `SettingsMerger`.
+Application configuration, defaults, and the priority-based `SettingsMerger`. Stage knobs live under `router.fanout`, `router.autorouter`, and `router.optimizer`; `max_threads` stays on the parent `router` object.
 
 ### `app.freerouting.datastructures`
 
@@ -319,7 +320,7 @@ Freerouting has two related routing stages:
 | Autorouter | Attempts to make every required connection | Adds missing traces and vias so unfinished nets become complete |
 | Optimizer | Improve route quality | Reroutes parts of existing connections to reduce length, vias, and awkward shapes |
 
-In settings, autorouter and optimizer options are part of the same routing configuration, so both can be reviewed before you run a job. During execution, Freerouting runs autorouter passes first and then continues to optimizer passes (if optimizer is enabled and the run is not interrupted).
+In settings, fanout, autorouter, and optimizer options are nested under the same `router` object so they can be reviewed before you run a job. During execution, Freerouting runs fanout, then autorouter passes, then optimizer passes (if each stage is enabled and the run is not interrupted).
 
 #### Autorouter
 
@@ -364,6 +365,31 @@ The optimizer is the "make it better" stage. It runs after routing is already co
     If the new version is better, it stays on the board. If not, the optimizer restores the previous state so the design does not get worse.
 
 The optimizer changes the board more conservatively than the autorouter. Its job is to shorten routes, reduce vias, and polish the final layout.
+
+#### Board scores (router vs optimizer)
+
+Autorouter and optimizer **do not share a score**. Maze-search costs (`via_costs`, preferred-direction trace costs, rip-up costs) stay on `RoutingCostSettings` and are independent of these board scores. Both V2 scores are on a 0–1000 scale (higher is better). `getNormalizedScore()` is a deprecated alias of the **router** score.
+
+The equations, default weights, and a technical-plus-plain-language glossary for every symbol are in **[docs/scoring.md](scoring.md)**. Settings keys live in [docs/settings.md](settings.md). Design history is in [docs/research/scoring_revision_plan.md](research/scoring_revision_plan.md).
+
+| Score | Used by | V2 default | What it measures |
+| --- | --- | --- | --- |
+| Router | `BatchAutorouter`, `BoardHistory`, API `normalized_score` | `V2_CONTINUOUS` | Incomplete connections (first half cheaper than the last half) plus DRC count and stacked violation depth |
+| Optimizer | `BatchOptimizer` candidate keep/undo, API `optimizer_score` | `V2_LOWER_BOUND` | Excess wire length, vias, and bends versus placement-derived lower bounds. Completeness and DRC count are gates, not score terms |
+
+Router V2:
+
+$$\mathrm{score}_{\mathrm{router}} = \max\bigl(0,\ 1000 - W_1 o_1 - W_2 o_2 - W_C N_{\mathrm{viol}}/D - W_D (\sum L_{\mathrm{um}})/(U_{\mathrm{scale}} D)\bigr)$$
+
+Optimizer V2:
+
+$$\mathrm{score}_{\mathrm{opt}} = \max\bigl(0,\ 1000 - \Delta L - \Delta V - \Delta B\bigr)$$
+
+The optimizer stops a pass series when relative score gain falls below
+`optimizer.improvement_threshold` (default 0.01 of the incumbent optimizer score), not when
+the score is merely close to 1000.
+
+Difficulty \(D = \max(1,\ P \times N_L)\) (pins × signal layers) scales DRC, via, and bend penalties. Unrouted fraction and length excess do **not** divide by \(D\).
 
 ### GUI and Interaction Path
 
@@ -445,9 +471,10 @@ To maintain clarity and consistency across the codebase, user interfaces, logs, 
 1. [README.md](README.md) for the product overview.
 2. [docs/developer.md](docs/developer.md) for build, test, and release guidance.
 3. [docs/settings.md](docs/settings.md) for the settings merge model.
-4. [docs/research/code_structure_recommendations.md](research/code_structure_recommendations.md) for longer-term structure guidance.
-5. [docs/issues/soc-gui-separation-and-accessibility-plan.md](issues/soc-gui-separation-and-accessibility-plan.md) for the GUI/headless separation plan and live boundary-debt ledger.
-6. This document again, using the package glossary above to jump directly to the relevant area.
+4. [docs/scoring.md](docs/scoring.md) for V2 router and optimizer board-score equations.
+5. [docs/research/code_structure_recommendations.md](research/code_structure_recommendations.md) for longer-term structure guidance.
+6. [docs/issues/soc-gui-separation-and-accessibility-plan.md](issues/soc-gui-separation-and-accessibility-plan.md) for the GUI/headless separation plan and live boundary-debt ledger.
+7. This document again, using the package glossary above to jump directly to the relevant area.
 
 ## Practical Rules Of Thumb
 

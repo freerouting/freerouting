@@ -5,6 +5,7 @@ import app.freerouting.core.RouterJobResourceUsage;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.core.scoring.BoardStatisticsBounds;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
@@ -49,8 +50,14 @@ public final class RoutingResultManifest {
   @SerializedName("board_statistics")
   public BoardStatistics boardStatistics;
 
+  @SerializedName("bounds")
+  public BoardStatisticsBounds bounds;
+
   @SerializedName("normalized_score")
   public Float normalizedScore;
+
+  @SerializedName("optimizer_score")
+  public Float optimizerScore;
 
   @SerializedName("resource_usage")
   public RouterJobResourceUsage resourceUsage;
@@ -63,6 +70,9 @@ public final class RoutingResultManifest {
 
   @SerializedName("output_written")
   public boolean outputWritten;
+
+  @SerializedName("cpu_score")
+  public Integer cpuScore;
 
   /** Input fixture identity for the run. */
   public static class FixtureInfo {
@@ -87,16 +97,81 @@ public final class RoutingResultManifest {
 
   /** Duration and pass count for one routing stage. */
   public static class PhaseDetail {
+    @SerializedName("before")
+    public PhaseSnapshot before;
+
+    @SerializedName("after")
+    public PhaseSnapshot after;
+
     @SerializedName("duration_seconds")
     public Float durationSeconds;
 
+    @SerializedName("cpu_seconds")
+    public Float cpuSeconds;
+
     @SerializedName("passes_completed")
     public Integer passesCompleted;
+
+    @SerializedName("total_allocated_gb")
+    public Float totalAllocatedGb;
+
+    @SerializedName("peak_heap_mb")
+    public Float peakHeapMb;
   }
 
-  /** Builds a manifest from a completed routing job. */
+  /** Board metrics and calculated scores at a phase boundary. */
+  public static class PhaseSnapshot {
+    @SerializedName("board_statistics")
+    public BoardStatistics boardStatistics;
+
+    @SerializedName("score")
+    public Float score;
+
+    @SerializedName("router_score")
+    public Float routerScore;
+
+    @SerializedName("optimizer_score")
+    public Float optimizerScore;
+
+    @SerializedName("score_source")
+    public String scoreSource;
+
+    @SerializedName("current_router_score")
+    public Float currentRouterScore;
+
+    @SerializedName("current_optimizer_score")
+    public Float currentOptimizerScore;
+
+    @SerializedName("current_score_source")
+    public String currentScoreSource;
+
+    public static PhaseSnapshot fromBoardStatistics(
+        BoardStatistics statistics, RouterSettings settings, String scoreSource) {
+      PhaseSnapshot snapshot = new PhaseSnapshot();
+      snapshot.boardStatistics = statistics;
+      snapshot.scoreSource = scoreSource;
+      if (statistics != null && settings != null) {
+        snapshot.routerScore = statistics.getRouterScore(settings);
+        snapshot.optimizerScore = statistics.getOptimizerScore(settings);
+      }
+      return snapshot;
+    }
+  }
+
+  /** Builds a manifest from a completed routing job without a CPU score. */
   public static RoutingResultManifest fromJob(
       RoutingJob job, String inputFilePath, boolean outputWritten, int exitCode) {
+    return fromJob(job, inputFilePath, outputWritten, exitCode, null);
+  }
+
+  /**
+   * Builds a manifest from a completed routing job.
+   *
+   * @param cpuScore single-thread {@code RuntimeEnvironment.cpuScore} for this process, or {@code
+   *     null} if not measured
+   */
+  public static RoutingResultManifest fromJob(
+      RoutingJob job, String inputFilePath, boolean outputWritten, int exitCode, Integer cpuScore) {
     RoutingResultManifest manifest = new RoutingResultManifest();
     manifest.generatedAt = Instant.now().toString();
     manifest.appVersion = Constants.FREEROUTING_VERSION;
@@ -108,24 +183,33 @@ public final class RoutingResultManifest {
       manifest.fixture.sha256 = sha256Hex(inputPath);
     }
     manifest.settingsSnapshot = job.routerSettings;
+    if (job.resultPhaseMetrics != null) {
+      manifest.phases = job.resultPhaseMetrics;
+    }
     manifest.finalState = job.state != null ? job.state.name() : RoutingJobState.INVALID.name();
     manifest.exitCode = exitCode;
     manifest.outputWritten = outputWritten;
     manifest.resourceUsage = job.resourceUsage;
+    manifest.cpuScore = cpuScore;
 
     if (job.board != null) {
       manifest.boardStatistics = new BoardStatistics(job.board);
+      manifest.bounds = manifest.boardStatistics.bounds;
       if (job.routerSettings != null && job.routerSettings.scoring != null) {
-        manifest.normalizedScore =
-            manifest.boardStatistics.getNormalizedScore(job.routerSettings.scoring);
+        manifest.normalizedScore = manifest.boardStatistics.getRouterScore(job.routerSettings);
+        if (manifest.phases.optimizer.before != null || manifest.phases.optimizer.after != null) {
+          manifest.optimizerScore = manifest.boardStatistics.getOptimizerScore(job.routerSettings);
+        }
       }
     }
 
-    if (job.getCurrentPass() > 0) {
+    if (job.getCurrentPass() > 0 && manifest.phases.autorouter.passesCompleted == null) {
       manifest.phases.autorouter.passesCompleted = job.getCurrentPass();
     }
 
-    if (job.startedAt != null && job.finishedAt != null) {
+    if (manifest.phases.autorouter.durationSeconds == null
+        && job.startedAt != null
+        && job.finishedAt != null) {
       float totalSeconds =
           (float) (java.time.Duration.between(job.startedAt, job.finishedAt).toMillis() / 1000.0);
       manifest.phases.autorouter.durationSeconds = totalSeconds;

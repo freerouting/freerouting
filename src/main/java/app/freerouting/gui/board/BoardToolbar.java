@@ -279,7 +279,7 @@ public class BoardToolbar extends JPanel {
           // update the board frame
           BoardStatistics boardStatistics = board.getStatistics();
           boardFrame.screenMessages.setBoardScore(
-              boardStatistics.getNormalizedScore(boardFrame.routingJob.routerSettings.scoring),
+              boardStatistics.getRouterScore(boardFrame.routingJob.routerSettings),
               boardStatistics.connections.incompleteCount,
               boardStatistics.clearanceViolations.totalCount);
         });

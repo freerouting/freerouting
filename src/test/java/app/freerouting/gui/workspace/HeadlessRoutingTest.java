@@ -125,7 +125,7 @@ class HeadlessRoutingTest {
       if (testRouterSettings.jobTimeoutString == null) {
         testingSettings.setJobTimeoutString("00:01:00");
       }
-      if (testRouterSettings.maxPasses == null) {
+      if (testRouterSettings.autorouter.maxPasses == null) {
         testingSettings.setMaxPasses(100);
       }
 

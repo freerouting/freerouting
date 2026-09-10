@@ -17,12 +17,15 @@ import app.freerouting.core.RouterCounters;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.StoppableThread;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Set;
 
 /** Owns fanout, autoroute-pass, stagnation, and final-board lifecycle decisions. */
@@ -37,7 +40,7 @@ final class AutorouteBatchLoop {
   boolean run() {
     RoutingBoard board = router.board;
     final RouterSettings settings = router.settings;
-    final RoutingJob job = router.job;
+    final RoutingJob job = Objects.requireNonNull(router.job, "routing job");
     final StoppableThread thread = router.thread;
     final boolean isOptimizerAutorouter = router.isOptimizerAutorouter;
 
@@ -62,7 +65,7 @@ final class AutorouteBatchLoop {
     router.sessionStartTime = Instant.now();
     router.initialUnroutedCount = calculateIncompleteCount(router.board);
 
-    final BoardHistory bh = new BoardHistory(job.routerSettings.scoring);
+    final BoardHistory bh = new BoardHistory(job.routerSettings);
 
     // Record configuration for profiler
     if (router.settings.getLayerCount() > 0) {
@@ -85,6 +88,14 @@ final class AutorouteBatchLoop {
             + router.settings.isFanoutEnabled()
             + ", smdPins="
             + router.board.getSmdPins().size());
+    Instant fanoutStageStart = null;
+    float fanoutStageCpuStart = -1f;
+    BoardStatistics fanoutBeforeStats = null;
+    if (router.settings.isFanoutEnabled()) {
+      fanoutStageStart = Instant.now();
+      fanoutStageCpuStart = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      fanoutBeforeStats = new BoardStatistics(router.board);
+    }
     // Run SMD fanout pre-pass when the board has SMD pins and fanout is enabled
     if (router.settings.isFanoutEnabled()) {
       if (router.board.getSmdPins().isEmpty()) {
@@ -217,19 +228,48 @@ final class AutorouteBatchLoop {
       }
     }
 
+    if (fanoutBeforeStats != null) {
+      BoardStatistics fanoutAfterStats = new BoardStatistics(router.board);
+      RoutingResultManifest.PhaseDetail phase = job.resultPhaseMetrics.fanout;
+      phase.before = new RoutingResultManifest.PhaseSnapshot();
+      phase.before.boardStatistics = fanoutBeforeStats;
+      phase.before.scoreSource = "not_applicable";
+      phase.after = new RoutingResultManifest.PhaseSnapshot();
+      phase.after.boardStatistics = fanoutAfterStats;
+      phase.after.scoreSource = "not_applicable";
+      phase.durationSeconds =
+          (float) (Duration.between(fanoutStageStart, Instant.now()).toMillis() / 1000.0);
+      float fanoutStageCpuEnd = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      if (fanoutStageCpuStart >= 0f && fanoutStageCpuEnd >= fanoutStageCpuStart) {
+        phase.cpuSeconds = fanoutStageCpuEnd - fanoutStageCpuStart;
+      }
+    }
+
     int currentUnrouted = calculateIncompleteCount(router.board);
     boolean isRouterEnabled =
         router.settings.getRunRouter()
-            && (router.settings.maxPasses == null || router.settings.maxPasses >= 0);
+            && (router.settings.autorouter.maxPasses == null
+                || router.settings.autorouter.maxPasses >= 0);
+    Instant autorouterStageStart = null;
+    float autorouterCpuStart = -1f;
+    float autorouterAllocatedStart = -1f;
+    BoardStatistics autorouterBeforeStats = null;
     if (isRouterEnabled) {
+      autorouterStageStart = Instant.now();
+      autorouterCpuStart = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      autorouterAllocatedStart = AutorouteRuntimeMetrics.currentThreadAllocatedMb();
+      autorouterBeforeStats = new BoardStatistics(router.board);
+      float routerScoreBefore =
+          new BoardStatistics(router.board).getRouterScore(job.routerSettings);
       job.logInfo(
-          "Auto-routing stage started on board '"
-              + router.board.getHash()
-              + "' for "
-              + currentUnrouted
-              + " unrouted item"
-              + (currentUnrouted == 1 ? "" : "s")
-              + ".");
+          String.format(
+              java.util.Locale.US,
+              "Auto-routing stage started on board '%s' with baseline score %.2f for %d "
+                  + "unrouted item%s.",
+              router.board.getHash(),
+              routerScoreBefore,
+              currentUnrouted,
+              currentUnrouted == 1 ? "" : "s"));
     }
     boolean continueAutorouting = isRouterEnabled;
 
@@ -265,9 +305,9 @@ final class AutorouteBatchLoop {
       // }
       // alreadyRoutedBoardHashes.add(currentBoardHash);
 
-      if (router.settings.maxPasses != null
-          && router.settings.maxPasses > 0
-          && currentPass > router.settings.maxPasses) {
+      if (router.settings.autorouter.maxPasses != null
+          && router.settings.autorouter.maxPasses > 0
+          && currentPass > router.settings.autorouter.maxPasses) {
         thread.requestStopAutoRouter();
         break;
       }
@@ -279,8 +319,6 @@ final class AutorouteBatchLoop {
       router.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(router, TaskState.RUNNING, currentPass, currentBoardHash));
 
-      float boardScoreBefore =
-          new BoardStatistics(router.board).getNormalizedScore(job.routerSettings.scoring);
       bh.add(router.board);
 
       FRLogger.traceEntry(
@@ -293,7 +331,7 @@ final class AutorouteBatchLoop {
       continueAutorouting = autoroutePass(currentPass);
 
       BoardStatistics boardStatisticsAfter = new BoardStatistics(router.board);
-      float boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
+      float boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
 
       if ((bh.size() >= STOP_AT_PASS_MINIMUM) || (router.thread.isStopAutoRouterRequested())) {
         if (((currentPass % STOP_AT_PASS_MODULO == 0) && (currentPass >= STOP_AT_PASS_MINIMUM))
@@ -325,7 +363,7 @@ final class AutorouteBatchLoop {
             // Reset pass-local stagnation counter when restoring a previous board state
             consecutiveNoImprovementPasses = 0;
             boardStatisticsAfter = boardStatistics;
-            boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
+            boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
             lastBestScore = boardScoreAfter;
             currentBoardHash = router.board.getHash();
             // Reset the same-hash set after a board restore: the restored board will be
@@ -405,7 +443,7 @@ final class AutorouteBatchLoop {
           "",
           new Point[0]);
 
-      if (Boolean.TRUE.equals(router.settings.saveIntermediateStages)) {
+      if (Boolean.TRUE.equals(router.settings.autorouter.saveIntermediateStages)) {
         fireBoardSnapshotEvent(router.board);
       }
 
@@ -439,7 +477,7 @@ final class AutorouteBatchLoop {
             final int incompletesBeforeRecovery = boardStatisticsAfter.connections.incompleteCount;
             removeTails(Item.StopConnectionOption.NONE);
             boardStatisticsAfter = new BoardStatistics(router.board);
-            boardScoreAfter = boardStatisticsAfter.getNormalizedScore(job.routerSettings.scoring);
+            boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
             lastBestScore = boardScoreAfter;
             consecutiveNoImprovementPasses = 0;
             fanoutRecoveryApplied = true;
@@ -525,8 +563,7 @@ final class AutorouteBatchLoop {
     // Ensure we finish with the best board ever seen during this routing session.
     // When stagnation or the max-pass limit fires, the loop exits with the board from the last
     // completed pass, which may be worse than an earlier pass that was recorded in the history.
-    float currentFinalScore =
-        new BoardStatistics(router.board).getNormalizedScore(job.routerSettings.scoring);
+    float currentFinalScore = new BoardStatistics(router.board).getRouterScore(job.routerSettings);
     float bestHistoryScore = bh.getMaxScore();
     if (bestHistoryScore > currentFinalScore) {
       RoutingBoard bestBoard = bh.restoreBestBoard();
@@ -542,7 +579,7 @@ final class AutorouteBatchLoop {
                     currentStats.clearanceViolations.totalCount)
                 + ") is worse than the best board seen during routing (score "
                 + FRLogger.formatScore(
-                    bestStats.getNormalizedScore(job.routerSettings.scoring),
+                    bestStats.getRouterScore(job.routerSettings),
                     bestStats.connections.incompleteCount,
                     bestStats.clearanceViolations.totalCount)
                 + "). Restoring the best board as the final result.");
@@ -553,13 +590,39 @@ final class AutorouteBatchLoop {
 
     boolean wasRouterRun =
         router.settings.getRunRouter()
-            && (router.settings.maxPasses == null || router.settings.maxPasses >= 0);
+            && (router.settings.autorouter.maxPasses == null
+                || router.settings.autorouter.maxPasses >= 0);
     if (wasRouterRun
         && !(router.removeUnconnectedVias
             || continueAutorouting
             || router.thread.isStopAutoRouterRequested())) {
       // clean up the route if the board is completed and if fanout is used.
       removeTails(Item.StopConnectionOption.NONE);
+    }
+
+    if (isRouterEnabled && autorouterBeforeStats != null) {
+      BoardStatistics autorouterAfterStats = new BoardStatistics(router.board);
+      RoutingResultManifest.PhaseDetail phase = job.resultPhaseMetrics.autorouter;
+      phase.before =
+          RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
+              autorouterBeforeStats, job.routerSettings, "current");
+      phase.before.score = phase.before.routerScore;
+      phase.after =
+          RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
+              autorouterAfterStats, job.routerSettings, "current");
+      phase.after.score = phase.after.routerScore;
+      phase.passesCompleted = Math.max(0, currentPass);
+      phase.durationSeconds =
+          (float) (Duration.between(autorouterStageStart, Instant.now()).toMillis() / 1000.0);
+      float autorouterCpuEnd = AutorouteRuntimeMetrics.currentThreadCpuSeconds();
+      if (autorouterCpuStart >= 0f && autorouterCpuEnd >= autorouterCpuStart) {
+        phase.cpuSeconds = autorouterCpuEnd - autorouterCpuStart;
+      }
+      float autorouterAllocatedEnd = AutorouteRuntimeMetrics.currentThreadAllocatedMb();
+      if (autorouterAllocatedStart >= 0f && autorouterAllocatedEnd >= autorouterAllocatedStart) {
+        phase.totalAllocatedGb = (autorouterAllocatedEnd - autorouterAllocatedStart) / 1024.0f;
+      }
+      phase.peakHeapMb = AutorouteRuntimeMetrics.peakHeapMbSnapshot(job);
     }
 
     bh.clear();

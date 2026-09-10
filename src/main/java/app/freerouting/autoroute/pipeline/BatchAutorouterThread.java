@@ -343,11 +343,13 @@ public class BatchAutorouterThread extends StoppableThread {
           break;
         }
 
-        if (this.settings.maxItems != null
-            && this.settings.maxItems > 0
-            && (this.routedCount + this.failedCount) >= this.settings.maxItems) {
+        if (this.settings.autorouter.maxItems != null
+            && this.settings.autorouter.maxItems > 0
+            && (this.routedCount + this.failedCount) >= this.settings.autorouter.maxItems) {
           FRLogger.info(
-              "Max items limit reached (" + this.settings.maxItems + "). Stopping auto-router.");
+              "Max items limit reached ("
+                  + this.settings.autorouter.maxItems
+                  + "). Stopping auto-router.");
           this.requestStopAutoRouter();
           break;
         }

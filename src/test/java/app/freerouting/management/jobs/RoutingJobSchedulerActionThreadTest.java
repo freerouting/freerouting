@@ -84,7 +84,7 @@ class RoutingJobSchedulerActionThreadTest {
             .merge();
     job.routerSettings.setLayerCount(job.board.getLayerCount());
     job.routerSettings.applyBoardSpecificOptimizations(job.board);
-    job.routerSettings.maxPasses = 0; // Quick 0-pass test
+    job.routerSettings.autorouter.maxPasses = 0; // Quick 0-pass test
     job.state = RoutingJobState.RUNNING;
 
     RoutingJobSchedulerActionThread actionThread = new RoutingJobSchedulerActionThread(job);

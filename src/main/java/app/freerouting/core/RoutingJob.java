@@ -5,6 +5,7 @@ import app.freerouting.core.events.RoutingJobLogEntryAddedEvent;
 import app.freerouting.core.events.RoutingJobLogEntryAddedEventListener;
 import app.freerouting.core.events.RoutingJobUpdatedEvent;
 import app.freerouting.core.events.RoutingJobUpdatedEventListener;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.logger.LogEntry;
@@ -128,6 +129,11 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
 
   public transient StoppableThread thread;
   public transient RoutingBoard board;
+
+  /** Per-stage before/after metrics retained for the result manifest. */
+  public transient RoutingResultManifest.PhaseMetrics resultPhaseMetrics =
+      new RoutingResultManifest.PhaseMetrics();
+
   public transient Instant timeoutAt;
   private boolean isCancelledByUser;
 
@@ -666,10 +672,8 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
           statsObj.addProperty("clearance_violations", stats.clearanceViolations.totalCount);
         }
         if (routerSettings != null && routerSettings.scoring != null) {
-          Float score = stats.getNormalizedScore(routerSettings.scoring);
-          if (score != null) {
-            statsObj.addProperty("normalized_score", score);
-          }
+          float score = stats.getRouterScore(routerSettings);
+          statsObj.addProperty("normalized_score", score);
         }
         json.add("statistics", statsObj);
       }

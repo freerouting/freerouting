@@ -421,8 +421,14 @@ function Export-MarkdownReport {
                     $logTimedOut = $run.log_analysis.timed_out
                 }
 
-                if (($loadError -eq $null -or $exceptions -eq $null -or $logTimedOut -eq $null) -and $run.log_file -and (Test-Path $run.log_file)) {
-                    $logMetrics = Get-PhaseMetrics $run.log_file $run.binary.version_label
+                $storedLogPath = if ($run.log_file) {
+                    Resolve-BenchmarkStoredPath ([string]$run.log_file)
+                } else {
+                    $null
+                }
+                if (($loadError -eq $null -or $exceptions -eq $null -or $logTimedOut -eq $null) -and
+                    $storedLogPath -and (Test-Path $storedLogPath)) {
+                    $logMetrics = Get-PhaseMetrics $storedLogPath $run.binary.version_label
                     $loadError = $logMetrics.load_error
                     $exceptions = $logMetrics.exceptions
                     $logTimedOut = $logMetrics.timed_out
