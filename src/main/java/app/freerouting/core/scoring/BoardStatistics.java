@@ -24,6 +24,7 @@ import app.freerouting.settings.OptimizerScoreSettings;
 import app.freerouting.settings.RouterScoreSettings;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.RoutingCostSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
@@ -673,8 +674,7 @@ public class BoardStatistics implements Serializable {
         || routerSettings.routerScoring == null
         || routerSettings.routerScoring.version
             != app.freerouting.settings.RouterScoringVersion.V2_CONTINUOUS) {
-      return getLegacyNormalizedScore(
-          routerSettings != null ? routerSettings.scoring : new RoutingCostSettings());
+      return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
     }
     return getV2RouterScore(routerSettings.routerScoring);
   }
@@ -729,6 +729,13 @@ public class BoardStatistics implements Serializable {
     return (float) Math.max(0.0, 1000.0 - unroutedPenalty - drcPenalty);
   }
 
+  private static RoutingCostSettings legacyScoringOrDefault(RouterSettings routerSettings) {
+    if (routerSettings != null && routerSettings.scoring != null) {
+      return routerSettings.scoring;
+    }
+    return new DefaultSettings().getSettings().scoring;
+  }
+
   private static float valueOrDefault(Float value, float defaultValue) {
     return value != null ? value : defaultValue;
   }
@@ -746,8 +753,7 @@ public class BoardStatistics implements Serializable {
             == app.freerouting.settings.OptimizerScoringVersion.V2_LOWER_BOUND) {
       return getV2OptimizerScore(routerSettings.optimizerScoring);
     }
-    return getLegacyNormalizedScore(
-        routerSettings != null ? routerSettings.scoring : new RoutingCostSettings());
+    return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
   }
 
   /** Calculates the V2 optimizer score from board-only lower bounds and actual route metrics. */

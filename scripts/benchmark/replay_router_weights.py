@@ -258,6 +258,7 @@ def main() -> int:
         sum(1 for row in rows if row["open_frac_before"] >= args.split - 1e-9),
     )
     summarize("score_after two-half", after_scores)
+    summarize("score_after wd1", wd1_scores)
     summarize("score_after hinge", [row["score_after_hinge"] for row in rows])
     summarize("score_after linear", [row["score_after_linear"] for row in rows])
     print(

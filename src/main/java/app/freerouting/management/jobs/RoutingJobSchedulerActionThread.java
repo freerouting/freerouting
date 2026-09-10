@@ -135,7 +135,7 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
             double totalTime =
                 java.time.Duration.between(sessionStartTime, sessionEndTime).toMillis() / 1000.0;
             var finalStats = job.board.getStatistics();
-            Float normalizedScore = finalStats.getRouterScore(job.routerSettings);
+            float normalizedScore = finalStats.getRouterScore(job.routerSettings);
             FRAnalytics.autorouterFinished(
                 finalStats.nets.totalCount,
                 finalStats.connections.incompleteCount,

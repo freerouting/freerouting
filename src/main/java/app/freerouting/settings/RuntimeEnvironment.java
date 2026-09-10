@@ -53,7 +53,7 @@ public class RuntimeEnvironment implements Serializable {
   @SerializedName("actor_type")
   public String actorType;
 
-  /** Discarded JIT / turbo warmup before scoring samples. */
+  /** Discarded JIT / turbo warm-up before scoring samples. */
   private static final long CPU_SCORE_WARMUP_NS = 20_000_000L;
 
   /** Timed window per sample. */
@@ -70,7 +70,7 @@ public class RuntimeEnvironment implements Serializable {
    * geometric operations (2D bounding-box overlap, 2D cross-product orientation, and Manhattan
    * distance steps).
    *
-   * <p>A short warmup is discarded, then several samples are taken and the <em>median</em> scaled
+   * <p>A short warm-up is discarded, then several samples are taken and the <em>median</em> scaled
    * iterations/ms is returned so turbo boost, GC, and other processes do not dominate one
    * measurement window. The raw throughput is divided by {@value #CPU_SCORE_SCALE}.
    *

@@ -785,7 +785,8 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     float score =
         routingJob.routerSettings != null
             ? stats.getRouterScore(routingJob.routerSettings)
-            : stats.getRouterScore(new app.freerouting.settings.RoutingCostSettings());
+            : stats.getRouterScore(
+                new app.freerouting.settings.sources.DefaultSettings().getSettings());
 
     return new RoutingSummaryData(
         stats.nets.totalCount,

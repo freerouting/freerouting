@@ -257,9 +257,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
                 this.bestScore,
                 this.bestIncompleteCount,
                 this.bestClearanceViolationCount));
-        this.board = this.bestBoard;
-        this.job.board = this.bestBoard;
-        this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
+        restoreIncumbentBoard();
       }
 
       double passImprovement =
@@ -318,9 +316,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
               "Restoring best board achieved (score %.2f vs final %.2f).",
               this.bestScore,
               finalBoardScore));
-      this.board = this.bestBoard;
-      this.job.board = this.bestBoard;
-      this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
+      restoreIncumbentBoard();
     }
     this.bestBoard = null;
 
@@ -375,6 +371,16 @@ public final class BatchOptimizer extends NamedAlgorithm {
             cpuSecondsUsed,
             allocMbUsed / 1024.0f,
             peakHeapMb));
+  }
+
+  /**
+   * Restores a working copy of the incumbent snapshot. The live board is mutated in place by later
+   * passes, so assigning {@code this.board = this.bestBoard} would alias and destroy the snapshot.
+   */
+  private void restoreIncumbentBoard() {
+    this.board = this.bestBoard.deepCopy();
+    this.job.board = this.board;
+    this.fireBoardUpdatedEvent(new BoardStatistics(this.board), null, this.board);
   }
 
   /**

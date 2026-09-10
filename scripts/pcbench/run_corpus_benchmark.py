@@ -711,6 +711,7 @@ def main() -> int:
             try:
                 tmp_file.unlink(missing_ok=True)
             except OSError:
+                # Replace already consumed the temp file, or another worker removed it.
                 pass
 
     # Worker tracking structures

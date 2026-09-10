@@ -25,6 +25,7 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Set;
 
 /** Owns fanout, autoroute-pass, stagnation, and final-board lifecycle decisions. */
@@ -39,7 +40,7 @@ final class AutorouteBatchLoop {
   boolean run() {
     RoutingBoard board = router.board;
     final RouterSettings settings = router.settings;
-    final RoutingJob job = router.job;
+    final RoutingJob job = Objects.requireNonNull(router.job, "routing job");
     final StoppableThread thread = router.thread;
     final boolean isOptimizerAutorouter = router.isOptimizerAutorouter;
 
@@ -318,7 +319,6 @@ final class AutorouteBatchLoop {
       router.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(router, TaskState.RUNNING, currentPass, currentBoardHash));
 
-      float boardScoreBefore = new BoardStatistics(router.board).getRouterScore(job.routerSettings);
       bh.add(router.board);
 
       FRLogger.traceEntry(
