@@ -789,8 +789,11 @@ public class HeadlessBoardManager implements BoardManager {
                 // preExistingClearanceViolationsCount defaults to 0 and is safe to read before
                 // this completes (BoardStatistics treats 0 as "not yet measured").
                 var drc = new app.freerouting.drc.DesignRulesChecker(loadedBoard, null);
-                loadedBoard.preExistingClearanceViolationsCount =
-                    drc.getAllClearanceViolations().size();
+                var violations = drc.getAllClearanceViolations();
+                loadedBoard.preExistingClearanceViolationsCount = violations.size();
+                if (!violations.isEmpty()) {
+                  warnPreExistingClearanceViolations(loadedBoard, violations);
+                }
               } catch (Exception e) {
                 FRLogger.error("Deferred post-load processing failed", e);
               }
@@ -1043,6 +1046,80 @@ public class HeadlessBoardManager implements BoardManager {
                   + "and voltage drops.\n");
 
       FRLogger.warn(sb.toString());
+    }
+  }
+
+  /**
+   * Emits a WARNING that summarises all pre-existing clearance violations found in the loaded
+   * board. The message lists:
+   *
+   * <ul>
+   *   <li>the total number of violations,
+   *   <li>the distinct net names involved, and
+   *   <li>every component/pin pair that participates in at least one violation.
+   * </ul>
+   *
+   * <p>This is intentionally verbose at WARNING level so that users can identify and fix their
+   * design errors before routing begins.
+   */
+  private static void warnPreExistingClearanceViolations(
+      RoutingBoard board, java.util.Collection<app.freerouting.drc.ClearanceViolation> violations) {
+    // Collect distinct net names and component/pin descriptors from both items of every violation.
+    java.util.LinkedHashSet<String> netNames = new java.util.LinkedHashSet<>();
+    java.util.LinkedHashSet<String> itemDescriptors = new java.util.LinkedHashSet<>();
+
+    for (var v : violations) {
+      collectViolationParticipant(board, v.firstItem, netNames, itemDescriptors);
+      collectViolationParticipant(board, v.secondItem, netNames, itemDescriptors);
+    }
+
+    FRLogger.warn(
+        String.format(
+            "Design Warning: Board has %d pre-existing clearance violation(s) in the loaded"
+                + " design (before routing). These violations must be fixed in the EDA tool to"
+                + " ensure correct routing.%n"
+                + "  Nets involved (%d): %s%n"
+                + "  Items involved (%d): %s",
+            violations.size(),
+            netNames.size(),
+            netNames.isEmpty() ? "(none)" : String.join(", ", netNames),
+            itemDescriptors.size(),
+            itemDescriptors.isEmpty() ? "(none)" : String.join(", ", itemDescriptors)));
+  }
+
+  /**
+   * Collects the net name(s) and a human-readable descriptor for {@code item} into the supplied
+   * sets. For {@link app.freerouting.board.model.items.Pin} items the descriptor is
+   * {@code "<CompName>.<PinName>"}; for all other items it falls back to the item type name and ID.
+   */
+  private static void collectViolationParticipant(
+      RoutingBoard board,
+      app.freerouting.board.model.items.Item item,
+      java.util.Set<String> netNames,
+      java.util.Set<String> itemDescriptors) {
+    if (item == null) {
+      return;
+    }
+    // Collect net names
+    for (int netNo : item.netNumbers) {
+      app.freerouting.rules.Net net = board.rules.nets.get(netNo);
+      if (net != null && net.name != null && !net.name.isBlank()) {
+        netNames.add(net.name);
+      }
+    }
+    // Build a human-readable item descriptor
+    if (item instanceof app.freerouting.board.model.items.Pin pin) {
+      app.freerouting.board.model.structure.Component comp = board.components.get(pin.getComponentId());
+      String compName = comp != null ? comp.name : "?";
+      String pinName =
+          (comp != null
+                  && comp.getPackage() != null
+                  && pin.pinIndex < comp.getPackage().pinCount())
+              ? comp.getPackage().getPin(pin.pinIndex).name
+              : String.valueOf(pin.pinIndex);
+      itemDescriptors.add(compName + "." + pinName);
+    } else {
+      itemDescriptors.add(item.getClass().getSimpleName() + "#" + item.getId());
     }
   }
 
