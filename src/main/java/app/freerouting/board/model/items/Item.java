@@ -417,9 +417,14 @@ public abstract class Item
                 || this instanceof Pin && currentItem instanceof BoardOutline)) {
           BoardOutline outline =
               (this instanceof BoardOutline) ? (BoardOutline) this : (BoardOutline) currentItem;
-          Pin pin = (this instanceof Pin) ? (Pin) this : (Pin) currentItem;
-          Point pinCenter = pin.getCenter();
-          if (pinCenter != null && outline.contains(pinCenter)) {
+          // Use the actual pad tile-shape (not just its center) to determine containment.
+          // A pin whose center is inside but whose pad shape protrudes outside (e.g. edge
+          // connectors, castellated pads) must still be reported as an obstacle.
+          TileShape pinTileShape =
+              (this instanceof Pin)
+                  ? currentTileShape
+                  : currentItem.getTileShape(currentEntry.shapeIndexInObject);
+          if (pinTileShape != null && outlineContainsTileShape(outline, pinTileShape)) {
             isObstacle = false;
           }
         }
@@ -511,6 +516,24 @@ public abstract class Item
       }
     }
     return low;
+  }
+
+  /**
+   * Returns {@code true} if every corner of {@code tileShape} is contained within at least one of
+   * the {@link BoardOutline}'s polygon shapes. This is the correct containment check for pins: a
+   * pad whose geometric center lies inside the outline but whose pad shape protrudes outside (e.g.
+   * edge connectors, castellated pads) will correctly fail this check and be reported as a
+   * clearance obstacle.
+   */
+  private static boolean outlineContainsTileShape(BoardOutline outline, TileShape tileShape) {
+    int cornerCount = tileShape.borderLineCount();
+    for (int ci = 0; ci < cornerCount; ci++) {
+      Point corner = tileShape.corner(ci);
+      if (!outline.contains(corner)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**

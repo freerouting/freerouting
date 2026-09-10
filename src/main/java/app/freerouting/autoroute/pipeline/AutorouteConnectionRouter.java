@@ -81,7 +81,11 @@ final class AutorouteConnectionRouter {
               timeLimit,
               router.isRetainAutorouteDatabase());
       int maxItemIdBeforeRoute = router.board.communication.idGenerator.maxGeneratedId();
-      boolean isStrictPass = router.settings.isStrictDrc() || ripupPassNo >= 3;
+      // Snapshot the board state only when strict DRC is explicitly enabled; the implicit
+      // per-connection serialize that previously fired for every pass ≥ 3 caused significant
+      // allocation/GC pressure on large boards. The removeItems-based rollback in
+      // enforceStrictDrc() handles the common case without needing a full snapshot.
+      boolean isStrictPass = router.settings.isStrictDrc();
       byte[] strictDrcBoardSnapshot = isStrictPass ? router.board.serialize(false) : null;
 
       long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;

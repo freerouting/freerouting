@@ -759,8 +759,9 @@ public class HeadlessBoardManager implements BoardManager {
     this.board.reduceNetsOfRouteItems();
     validatePowerPlanes();
     validateBoardDesignErrors();
-    var drc = new app.freerouting.drc.DesignRulesChecker(this.board, null);
-    this.board.preExistingClearanceViolationsCount = drc.getAllClearanceViolations().size();
+    // NOTE: The full-board DRC (getAllClearanceViolations) is O(n²) and is deferred to the
+    // background thread in scheduleDeferredPostLoadProcessing() to avoid blocking every board
+    // load (including GUI loads) on large designs.
   }
 
   private void scheduleDeferredPostLoadProcessing(String inputFilename, String analyticsFormat) {
@@ -784,6 +785,12 @@ public class HeadlessBoardManager implements BoardManager {
                     loadedBoard.rules.nets.maxNetNumber());
                 manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
                 compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
+                // Run the full-board DRC here (O(n²)) so it does not block the load path.
+                // preExistingClearanceViolationsCount defaults to 0 and is safe to read before
+                // this completes (BoardStatistics treats 0 as "not yet measured").
+                var drc = new app.freerouting.drc.DesignRulesChecker(loadedBoard, null);
+                loadedBoard.preExistingClearanceViolationsCount =
+                    drc.getAllClearanceViolations().size();
               } catch (Exception e) {
                 FRLogger.error("Deferred post-load processing failed", e);
               }
