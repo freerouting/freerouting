@@ -260,15 +260,16 @@ public final class BatchOptimizer extends NamedAlgorithm {
         restoreIncumbentBoard();
       }
 
-      double passImprovement =
+      double passImprovementFraction =
           scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
+      double passImprovementPercent = passImprovementFraction * 100.0;
       String passOutcome =
           scoreAfterPass > scoreBeforePass
               ? "IMPROVED"
               : (scoreAfterPass < scoreBeforePass ? "REGRESSED" : "UNCHANGED");
-      String passImprovementPercent =
+      String passImprovementPercentStr =
           scoreBeforePass > 0
-              ? String.format(Locale.US, "%.4f%%", passImprovement * 100)
+              ? String.format(Locale.US, "%.4f%%", passImprovementPercent)
               : "n/a (baseline was 0.00)";
       job.logInfo(
           String.format(
@@ -279,7 +280,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
               scoreBeforePass,
               scoreAfterPass,
               passOutcome,
-              passImprovementPercent,
+              passImprovementPercentStr,
               passStats.getRouterScore(job.routerSettings),
               passStats.connections.incompleteCount,
               passStats.clearanceViolations.totalCount));
@@ -289,7 +290,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
         // Keep the optimizer going to try with normal ripup costs
         scoreImprovement = -1;
       } else {
-        scoreImprovement = passImprovement;
+        scoreImprovement = passImprovementPercent;
       }
 
       if (scoreImprovement != -1
@@ -299,8 +300,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
                 Locale.US,
                 "Stopping optimizer because the improvement in this pass (%.4f%%) is below "
                     + "the threshold (%.2f%%).",
-                scoreImprovement * 100,
-                this.settings.optimizer.optimizationImprovementThreshold * 100));
+                scoreImprovement,
+                this.settings.optimizer.optimizationImprovementThreshold));
         break;
       }
     }

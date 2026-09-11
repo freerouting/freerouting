@@ -121,12 +121,12 @@ public class DefaultSettings implements SettingsSource {
   public static final float DEFAULT_OPTIMIZER_DIFFICULTY_SCALE_FLOOR = 1.0F;
 
   /**
-   * Relative optimizer-pass improvement below which {@code BatchOptimizer} stops. The comparison is
-   * {@code (scoreAfter - scoreBefore) / scoreBefore}, not an absolute 0–1000 delta. V2 scores are
-   * already on that 0–1000 scale, so 0.01 still means about 8–10 points near a typical finished
-   * board (~800–1000) and does not need a separate retune.
+   * Relative optimizer-pass improvement percentage below which {@code BatchOptimizer} stops. The
+   * comparison is {@code (scoreAfter - scoreBefore) / scoreBefore * 100}, expressed directly as an
+   * actual percentage (e.g. 2.5 = 2.5%). Default is 2.5 (2.5%), providing optimal balance between
+   * via elimination and runtime.
    */
-  public static final float DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD = 0.01F;
+  public static final float DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD = 2.5F;
 
   private static final int PRIORITY = 0;
 

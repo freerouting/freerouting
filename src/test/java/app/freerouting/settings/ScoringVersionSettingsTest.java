@@ -68,7 +68,7 @@ class ScoringVersionSettingsTest {
   }
 
   @Test
-  void defaultOptimizerImprovementThresholdStaysOnePercentRelative() {
+  void defaultOptimizerImprovementThresholdIsDefaultPercentage() {
     RouterSettings settings = new DefaultSettings().getSettings();
     assertEquals(
         DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD,
