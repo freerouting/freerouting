@@ -769,13 +769,10 @@ public class GlobalSettings implements Serializable {
             i++;
           }
         } else if (args[i].startsWith("-oit")) {
+          FRLogger.warn(
+              "The '-oit' command-line flag is no longer valid; use"
+                  + " '--router.optimizer.improvement_threshold' instead.");
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.optimizationImprovementThreshold =
-                Float.parseFloat(args[i + 1]) / 100;
-
-            if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
-              routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
-            }
             i++;
           }
         } else if (args[i].startsWith("-us")) {

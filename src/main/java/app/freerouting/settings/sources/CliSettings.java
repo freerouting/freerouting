@@ -80,6 +80,12 @@ public class CliSettings implements SettingsSource {
           hasDesignOutputArgument = true;
         }
 
+        if ("oit".equals(flag)) {
+          FRLogger.warn(
+              "The '-oit' command-line flag is no longer valid; use"
+                  + " '--router.optimizer.improvement_threshold' instead.");
+        }
+
         // Map short flags to router settings
         String propertyName = mapFlagToProperty(flag);
         if (propertyName != null
