@@ -30,7 +30,8 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   The frozen `src_v19/` tree is compiled for compatibility but is not current code to
   refactor or Checkstyle.
 - **AI/contributor verification:** Before handoff, run
-  `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`
+  `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`,
+  `pre-commit run --all-files`,
   and `python scripts/i18n/extract-context.py --check` when applicable. On Windows use
   `gradlew.bat`. If formatting is intentionally changed, isolate it in a dedicated
   change and inspect `git diff --stat` plus `git diff --check`.

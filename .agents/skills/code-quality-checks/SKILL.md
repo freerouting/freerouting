@@ -221,7 +221,8 @@ Before committing code quality configuration changes:
 - [ ] `.github/workflows/pre-commit.yml` contains logToCheckStyle step
 - [ ] `RAW_LOG` environment variable is set in workflow
 - [ ] Pre-commit output is piped to the log file
-- [ ] All hooks can run successfully locally (`pre-commit run -a`)
+- [ ] All hooks can run successfully locally (`pre-commit run --all-files`)
+- [ ] Non-Java files (Python scripts, JSON, Markdown, YAML) pass whitespace and line ending checks
 - [ ] CI workflow passes with new configuration
 
 ## 8. Maintenance Notes
