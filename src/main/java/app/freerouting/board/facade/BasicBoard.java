@@ -98,6 +98,7 @@ public class BasicBoard implements Serializable {
   private transient BoardItemRepository itemRepository;
   private transient BoardConnectivityQueries connectivityQueries;
   private transient BoardSnapshotManager snapshotManager;
+  public int preExistingClearanceViolationsCount = 0;
 
   /** The rectangle, where the graphics may be not up-to-date. */
   private transient IntBox updateBox = IntBox.EMPTY;

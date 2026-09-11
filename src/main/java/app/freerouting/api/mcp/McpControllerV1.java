@@ -146,7 +146,7 @@ public class McpControllerV1 extends BaseController {
         CorrelationIdFilter.resolveOrCreate(
             headers.getHeaderString(CorrelationIdFilter.HEADER_NAME));
 
-    FRLogger.info("[mcp][cid=" + correlationId + "] request=" + requestBody);
+    FRLogger.trace("[mcp][cid=" + correlationId + "] request=" + requestBody);
 
     JsonObject request;
     try {
@@ -189,7 +189,7 @@ public class McpControllerV1 extends BaseController {
 
     JsonObject response;
     try {
-      FRLogger.info("[mcp][cid=" + correlationId + "] method=" + method);
+      FRLogger.trace("[mcp][cid=" + correlationId + "] method=" + method);
       response =
           switch (method == null ? "" : method) {
             case "initialize" -> handleInitialize(id, params);
@@ -201,11 +201,11 @@ public class McpControllerV1 extends BaseController {
             case "tools/call" -> handleToolsCall(id, params, correlationId);
             default -> error(id, -32601, "Unknown method: " + method);
           };
-      FRLogger.info("[mcp][cid=" + correlationId + "] response=" + response.toString());
+      FRLogger.trace("[mcp][cid=" + correlationId + "] response=" + response.toString());
     } catch (Exception e) {
       FRLogger.error("MCP RPC execution failed", e);
       response = error(id, -32603, "Internal error");
-      FRLogger.info("[mcp][cid=" + correlationId + "] response (error)=" + response.toString());
+      FRLogger.trace("[mcp][cid=" + correlationId + "] response (error)=" + response.toString());
       FRAnalytics.recordStructuredError(
           "MCP", "INTERNAL_RPC_ERROR", e.getMessage(), e, correlationId);
     }

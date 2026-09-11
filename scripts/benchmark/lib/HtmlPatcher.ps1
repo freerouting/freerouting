@@ -2,7 +2,8 @@ function Update-BenchmarksHtml {
     param(
         [Hashtable]$Cache,
         [string]$HtmlPath,
-        [string]$FixturesDir = (Get-BenchmarkFixturesDir)
+        [string]$FixturesDir = (Get-BenchmarkFixturesDir),
+        [hashtable]$NormalizedScores = $null
     )
 
     if (-not (Test-Path $HtmlPath)) {
@@ -73,7 +74,7 @@ function Update-BenchmarksHtml {
 
                 $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
                 $fixtureCount++
-                $failed = Test-RunIsFailed $latestRun
+                $failed = Test-RunIsFailed $latestRun $NormalizedScores
                 $isTimeout = $latestRun.exit.timed_out -eq $true
                 if ($isTimeout) { $timeouts++ }
                 if ($failed) { $failures++ }
@@ -88,7 +89,7 @@ function Update-BenchmarksHtml {
                     [int]$latestRun.quality.clearance_violations
                 } else { $null }
 
-                $score = Get-RunScoreValue $latestRun
+                $score = Get-RunScoreValue $latestRun $NormalizedScores
 
                 if (-not $failed -and $unrouted -ne $null -and $unrouted -eq 0) {
                     $allRouted++

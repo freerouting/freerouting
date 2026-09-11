@@ -81,8 +81,12 @@ final class AutorouteConnectionRouter {
               timeLimit,
               router.isRetainAutorouteDatabase());
       int maxItemIdBeforeRoute = router.board.communication.idGenerator.maxGeneratedId();
-      byte[] strictDrcBoardSnapshot =
-          router.settings.isStrictDrc() ? router.board.serialize(false) : null;
+      // Snapshot the board state only when strict DRC is explicitly enabled; the implicit
+      // per-connection serialize that previously fired for every pass ≥ 3 caused significant
+      // allocation/GC pressure on large boards. The removeItems-based rollback in
+      // enforceStrictDrc() handles the common case without needing a full snapshot.
+      boolean isStrictPass = router.settings.isStrictDrc();
+      byte[] strictDrcBoardSnapshot = isStrictPass ? router.board.serialize(false) : null;
 
       long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       AutorouteAttemptResult autorouteResult =
@@ -136,7 +140,8 @@ final class AutorouteConnectionRouter {
                 timeLimit);
         if (neckedResult != null) {
           AutorouteAttemptResult strictResult =
-              applyStrictDrcAfterRoute(routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+              applyStrictDrcAfterRoute(
+                  routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot, ripupPassNo);
           if (strictResult != null) {
             return strictResult;
           }
@@ -146,7 +151,8 @@ final class AutorouteConnectionRouter {
 
       if (autorouteResult.state == AutorouteAttemptState.ROUTED) {
         AutorouteAttemptResult strictResult =
-            applyStrictDrcAfterRoute(routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot);
+            applyStrictDrcAfterRoute(
+                routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot, ripupPassNo);
         if (strictResult != null) {
           return strictResult;
         }
@@ -241,14 +247,23 @@ final class AutorouteConnectionRouter {
   }
 
   private AutorouteAttemptResult applyStrictDrcAfterRoute(
-      int routeNetNo, int maxItemIdBefore, byte[] boardSnapshotBeforeRoute) {
-    if (!router.settings.isStrictDrc()) {
+      int routeNetNo, int maxItemIdBefore, byte[] boardSnapshotBeforeRoute, int ripupPassNo) {
+    boolean isStrictPass = router.settings.isStrictDrc() || ripupPassNo >= 3;
+    if (!isStrictPass) {
       return null;
     }
     AutorouteAttemptResult rejection =
         BatchAutorouter.enforceStrictDrc(router.board, routeNetNo, maxItemIdBefore);
-    if (rejection != null && boardSnapshotBeforeRoute != null) {
-      router.board = (RoutingBoard) BasicBoard.deserialize(boardSnapshotBeforeRoute);
+    if (rejection != null) {
+      FRLogger.trace(
+          "AutorouteConnectionRouter.apply_strict_drc",
+          "strict_drc_rejection",
+          "pass=" + ripupPassNo + ", net=" + routeNetNo + ", reason=" + rejection.details,
+          "",
+          null);
+      if (boardSnapshotBeforeRoute != null) {
+        router.board = (RoutingBoard) BasicBoard.deserialize(boardSnapshotBeforeRoute);
+      }
     }
     return rejection;
   }

@@ -73,9 +73,10 @@ foreach ($key in @($cache.Keys)) {
 
 function Update-BenchmarkReports {
     param([Hashtable]$Cache)
-    Export-MarkdownReport $Cache $MdPath $ChartDataPath
+    $normalizedScores = Invoke-BenchmarkScoreRecalculator -JsonPath $JsonPath -BinariesDir $BinariesDir
+    Export-MarkdownReport $Cache $MdPath $ChartDataPath -NormalizedScores $normalizedScores
     if (-not $SkipWebsiteUpdate) {
-        Update-BenchmarksHtml $Cache $WebsiteHtml
+        Update-BenchmarksHtml $Cache $WebsiteHtml -NormalizedScores $normalizedScores
     }
 }
 

@@ -276,12 +276,32 @@ public final class BatchFanout {
             fullPinName,
             new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
 
+        int maxItemIdBeforeFanout = this.routingBoard.communication.idGenerator.maxGeneratedId();
         this.routingBoard.startMarkingChangedArea();
         long pinStartNanos = System.nanoTime();
         AutorouteAttemptResult currentResult =
             this.routingBoard.fanout(
                 currentPin.boardPin, this.settings, effectiveRipupCosts, this.thread, timeLimit);
         long pinDurationMs = (System.nanoTime() - pinStartNanos) / 1_000_000L;
+
+        if (currentResult.state == app.freerouting.autoroute.AutorouteAttemptState.ROUTED) {
+          AutorouteAttemptResult fanoutDrcRejection =
+              BatchAutorouter.enforceStrictDrc(this.routingBoard, netNumber, maxItemIdBeforeFanout);
+          if (fanoutDrcRejection != null) {
+            FRLogger.trace(
+                "BatchFanout.fanout_pass",
+                "fanout_via_reverted",
+                "pin="
+                    + fullPinName
+                    + ", net="
+                    + netNumber
+                    + ", reason="
+                    + fanoutDrcRejection.details,
+                fullPinName,
+                new app.freerouting.geometry.planar.Point[] {currentPin.boardPin.getCenter()});
+            currentResult = fanoutDrcRejection;
+          }
+        }
 
         switch (currentResult.state) {
           case ROUTED -> {
