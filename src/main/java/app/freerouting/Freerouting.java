@@ -1439,6 +1439,22 @@ public class Freerouting {
       System.exit(success ? 0 : 1);
     }
 
+    if (globalSettings.calculateBenchmarkScores) {
+      if (globalSettings.benchmarkScoresInput == null
+          || globalSettings.benchmarkScoresOutput == null) {
+        FRLogger.error(
+            "Both --input=<path> and --output=<path> must be specified with"
+                + " --calculate-benchmark-scores",
+            null);
+        System.exit(1);
+      }
+      int exitCode =
+          app.freerouting.core.scoring.BenchmarkScoreCalculator.run(
+              Path.of(globalSettings.benchmarkScoresInput),
+              Path.of(globalSettings.benchmarkScoresOutput));
+      System.exit(exitCode);
+    }
+
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
 
     FRLogger.debug("Host: " + globalSettings.runtimeEnvironment.host);

@@ -128,6 +128,15 @@ public class GlobalSettings implements Serializable {
   /** Exit code from the most recent headless CLI routing run (for harness consumption). */
   public transient int cliExitCode = 0;
 
+  /** If true, recalculates benchmark scores from a benchmark JSON file and exits. */
+  public transient boolean calculateBenchmarkScores = false;
+
+  /** Input benchmark JSON file for score calculation. */
+  public transient String benchmarkScoresInput;
+
+  /** Output JSON file for recalculated benchmark scores. */
+  public transient String benchmarkScoresOutput;
+
   /**
    * The current locale for the application. It is initialized based on the system default locale,
    * but can be overridden via command line arguments.
@@ -536,6 +545,30 @@ public class GlobalSettings implements Serializable {
             || "--help".equalsIgnoreCase(args[i])
             || "-h".equalsIgnoreCase(args[i])) {
           showHelpOption = true;
+          continue;
+        }
+        if ("--calculate-benchmark-scores".equalsIgnoreCase(args[i])) {
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--calculate-benchmark-scores.input=")) {
+          benchmarkScoresInput =
+              args[i].substring("--calculate-benchmark-scores.input=".length()).trim();
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--calculate-benchmark-scores.output=")) {
+          benchmarkScoresOutput =
+              args[i].substring("--calculate-benchmark-scores.output=".length()).trim();
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--input=")) {
+          benchmarkScoresInput = args[i].substring("--input=".length()).trim();
+          continue;
+        }
+        if (args[i].startsWith("--output=")) {
+          benchmarkScoresOutput = args[i].substring("--output=".length()).trim();
           continue;
         }
         if (args[i].startsWith("--compare-boards=")) {

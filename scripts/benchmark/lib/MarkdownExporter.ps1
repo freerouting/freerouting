@@ -71,19 +71,31 @@ function Format-MarkdownTable {
 }
 
 function Get-RunScoreValue {
-    param($Run)
+    param($Run, [hashtable]$NormalizedScores = $null)
 
+    if ($NormalizedScores -and $Run.cache_key -and $NormalizedScores.ContainsKey($Run.cache_key)) {
+        $entry = $NormalizedScores[$Run.cache_key]
+        if ($entry -and $entry.router_score -ne $null) {
+            return [double]$entry.router_score
+        }
+    }
     if ($Run.quality.quality_score -ne $null) { return [double]$Run.quality.quality_score }
     return $null
 }
 
 function Test-RunIsFailed {
-    param($Run)
+    param($Run, [hashtable]$NormalizedScores = $null)
 
+    if ($NormalizedScores -and $Run.cache_key -and $NormalizedScores.ContainsKey($Run.cache_key)) {
+        $entry = $NormalizedScores[$Run.cache_key]
+        if ($entry -and $entry.is_failed -eq $true) {
+            return $true
+        }
+    }
     if ($Run.exit.crashed -eq $true) { return $true }
     if ($Run.exit.code -ne $null -and $Run.exit.code -ne 0) { return $true }
     if ($Run.exit.state -and $Run.exit.state -eq "FAILED") { return $true }
-    $score = Get-RunScoreValue $Run
+    $score = Get-RunScoreValue $Run $NormalizedScores
     if ($score -eq $null) { return $true }
     return $false
 }
@@ -93,7 +105,8 @@ function Export-MarkdownReport {
         [Hashtable]$Cache,
         [string]$MdPath,
         [string]$ChartDataPath,
-        [string]$FixturesDir = (Get-BenchmarkFixturesDir)
+        [string]$FixturesDir = (Get-BenchmarkFixturesDir),
+        [hashtable]$NormalizedScores = $null
     )
 
     $runs = Get-ActiveBenchmarkRuns $Cache $FixturesDir
@@ -166,7 +179,7 @@ function Export-MarkdownReport {
                 $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
                 $fixtureCount++
 
-                $failed = Test-RunIsFailed $latestRun
+                $failed = Test-RunIsFailed $latestRun $NormalizedScores
                 $isTimeout = $latestRun.exit.timed_out -eq $true
                 if ($isTimeout) { $timeouts++ }
                 if ($failed) { $failures++ }
@@ -181,7 +194,7 @@ function Export-MarkdownReport {
                     [int]$latestRun.quality.clearance_violations
                 } else { $null }
 
-                $score = Get-RunScoreValue $latestRun
+                $score = Get-RunScoreValue $latestRun $NormalizedScores
 
                 if (-not $failed -and $unrouted -ne $null -and $unrouted -eq 0) {
                     $allRouted++
@@ -389,7 +402,7 @@ function Export-MarkdownReport {
                 } else {
                     $null
                 }
-                $scoreVal = Get-RunScoreValue $run
+                $scoreVal = Get-RunScoreValue $run $NormalizedScores
 
                 # Compute unrouted cell string
                 $unroutedStr = if ($unroutedVal -ne $null) { "$unroutedVal" } else { "N/A" }
@@ -486,7 +499,8 @@ function Export-MarkdownReport {
     # --- 3. Chart Data JSON Export ---
     $chartData = @()
     foreach ($run in $runs) {
-        $chartScore = if ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { 0.0 }
+        $scoreNullable = Get-RunScoreValue $run $NormalizedScores
+        $chartScore = if ($scoreNullable -ne $null) { $scoreNullable } else { 0.0 }
         $chartUnrouted = if ($run.quality.unrouted_connections -ne $null) { $run.quality.unrouted_connections } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
 
         $chartData += @{

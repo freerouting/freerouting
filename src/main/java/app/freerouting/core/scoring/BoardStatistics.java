@@ -686,6 +686,7 @@ public class BoardStatistics implements Serializable {
   }
 
   private float getV2RouterScore(RouterScoreSettings settings) {
+    ensureDifficulty();
     double difficulty =
         this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
     double connections =
@@ -733,6 +734,42 @@ public class BoardStatistics implements Serializable {
             / depthScale
             / difficulty;
     return (float) Math.max(0.0, 1000.0 - unroutedPenalty - drcPenalty);
+  }
+
+  /**
+   * Ensures that difficulty metrics (pin count, signal layer count, complexity C, and difficulty D)
+   * are computed.
+   */
+  public void ensureDifficulty() {
+    if (this.difficulty == null) {
+      this.difficulty = new BoardStatisticsDifficulty();
+    }
+    if (this.difficulty.pinCount == null || this.difficulty.pinCount <= 0) {
+      if (this.items != null && this.items.pinCount > 0) {
+        this.difficulty.pinCount = this.items.pinCount;
+      } else if (this.pads != null && this.pads.totalCount > 0) {
+        this.difficulty.pinCount = this.pads.totalCount;
+      } else {
+        this.difficulty.pinCount = 0;
+      }
+    }
+    if (this.difficulty.signalLayerCount == null || this.difficulty.signalLayerCount <= 0) {
+      if (this.layers != null && this.layers.signalCount > 0) {
+        this.difficulty.signalLayerCount = this.layers.signalCount;
+      } else if (this.layers != null && this.layers.totalCount > 0) {
+        this.difficulty.signalLayerCount = this.layers.totalCount;
+      } else {
+        this.difficulty.signalLayerCount = 0;
+      }
+    }
+    if (this.difficulty.complexityC == null || this.difficulty.complexityC <= 0) {
+      int pins = this.difficulty.pinCount != null ? this.difficulty.pinCount : 0;
+      int layers = this.difficulty.signalLayerCount != null ? this.difficulty.signalLayerCount : 0;
+      this.difficulty.complexityC = Math.max(1, pins * layers);
+    }
+    if (this.difficulty.difficultyD == null) {
+      this.difficulty.difficultyD = (float) this.difficulty.complexityC;
+    }
   }
 
   private static RoutingCostSettings legacyScoringOrDefault(RouterSettings routerSettings) {
