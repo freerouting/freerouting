@@ -70,6 +70,7 @@ class ScoringVersionSettingsTest {
   @Test
   void defaultOptimizerImprovementThresholdIsDefaultPercentage() {
     RouterSettings settings = new DefaultSettings().getSettings();
+    assertEquals(2.5f, settings.optimizer.optimizationImprovementThreshold, 0.0f);
     assertEquals(
         DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD,
         settings.optimizer.optimizationImprovementThreshold,

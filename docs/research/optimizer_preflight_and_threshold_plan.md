@@ -167,7 +167,7 @@ To precisely map the Pareto curve between full preservation (1.0%) and fast conv
 
 ### Step 1: Baseline & Threshold Sweep Automation
 - Create a dedicated test harness script in `scripts/tests/run_optimizer_threshold_sweep.py`.
-- Headlessly invoke Freerouting on the 5 fixtures using `-oit <val>` / `--optimizer-improvement-threshold <val>`.
+- Headlessly invoke Freerouting on the 5 fixtures using `--router.optimizer.improvement_threshold=<val>`.
 - Capture per-fixture results into a structured CSV/JSON summary: `docs/research/optimizer_threshold_sweep_results.csv`.
 - Plot/tabulate the Pareto frontier.
 
@@ -188,7 +188,7 @@ To precisely map the Pareto curve between full preservation (1.0%) and fast conv
 
 ## 6. Acceptance Criteria
 
-- [x] **No DRC Regressions:** Clearance violation count remains 0 on all test fixtures.
+- [x] **No DRC Regressions:** Clearance violation count does not increase beyond baseline on any test fixture (4 on `newer-motor-controllers_design3`, 0 on all others).
 - [x] **Incomplete Route Protection:** No board with unrouted connections executes the optimizer loop.
 - [x] **Time Reduction:** Optimizer execution time across the 5 fixtures reduced by 24.3% under default 2.5% threshold (and up to 43.4% under 4.0%).
 - [x] **Via Preservation:** Final via count across the 5 golden fixtures retains 80.4% to 85% of baseline reductions.

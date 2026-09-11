@@ -60,12 +60,15 @@ def run_single(fixture, threshold):
         f"--logging.file.location={log_path}"
     ]
 
+    if manifest_path.exists():
+        manifest_path.unlink()
+
     t0 = time.perf_counter()
     res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace")
     elapsed = time.perf_counter() - t0
 
-    if not manifest_path.exists():
-        print(f"  FAILED: {fixture['name']} at {threshold}% - no result json")
+    if res.returncode != 0 or not manifest_path.exists():
+        print(f"  FAILED: {fixture['name']} at {threshold}% (returncode={res.returncode})")
         return None
 
     try:
@@ -124,7 +127,7 @@ def main():
 
     all_results = []
     for threshold in THRESHOLDS:
-        print(f"\n>>> Running Threshold: {threshold}% (threshold={threshold/100.0:.4f})")
+        print(f"\n>>> Running Threshold: {threshold}%")
         t_start = time.perf_counter()
         t_results = []
         for fixture in FIXTURES:

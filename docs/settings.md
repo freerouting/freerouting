@@ -191,6 +191,14 @@ Configures the optional route-optimization stage that runs after autorouting.
     - `2.0 – 2.5` (2.0% – 2.5%): Balanced default. Retains >80% via reductions while pruning low-yield late passes.
     - `3.5 – 5.0` (3.5% – 5.0%): Fast mode. Cuts optimizer time by ~45%, retaining ~65% via cuts.
     - `> 5.5` (> 5.5%): Rapid prototyping. Stops after 1–2 passes; not recommended for production boards.
+- **`enable_preflight_guards`**: Whether pre-flight optimization guards are evaluated before starting the
+  optimizer loop. If enabled, bypasses the optimizer stage when the board has unrouted connections, has no vias
+  to eliminate (with trace length already near optimal), has an initial score at or near theoretical maximum,
+  or all vias are mandatory layer transitions between SMD pins that cannot be eliminated. Default is `true`.
+- **`max_consecutive_failures`**: Maximum consecutive candidate failures allowed before concluding the
+  current pass. Default is `50`.
+- **`max_consecutive_failures_pass1`**: Maximum consecutive candidate failures allowed in pass 1 before
+  early-terminating the pass (canary probe). Default is `12`.
 
 ##### **`fanout` Sub-section**
 

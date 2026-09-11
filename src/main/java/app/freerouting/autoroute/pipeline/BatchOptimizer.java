@@ -18,6 +18,7 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.sources.DefaultSettings;
 import com.sun.management.ThreadMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -165,13 +166,30 @@ public final class BatchOptimizer extends NamedAlgorithm {
           stats.connections.incompleteCount);
     }
 
-    // Guard 2: Zero vias
+    float initialScore = stats.getOptimizerScore(this.job.routerSettings);
+
+    // Guard 2: Zero vias and optimal trace length
     if (stats.vias.totalCount == 0) {
-      return "the board has no vias to eliminate";
+      if (initialScore >= 950.0f) {
+        return String.format(
+            Locale.US,
+            "the board has no vias to eliminate and initial optimizer score (%.2f) is already >= 950.00",
+            initialScore);
+      }
+      if (stats.bounds != null
+          && stats.bounds.minTraceLengthMm != null
+          && stats.bounds.minTraceLengthMm > 0
+          && stats.traces.totalLengthMm != null
+          && stats.traces.totalLengthMm <= stats.bounds.minTraceLengthMm * 1.05f) {
+        return String.format(
+            Locale.US,
+            "the board has no vias to eliminate and trace length (%.2f mm) is within 5%% of theoretical minimum (%.2f mm)",
+            stats.traces.totalLengthMm,
+            stats.bounds.minTraceLengthMm);
+      }
     }
 
     // Guard 3: Score ceiling / theoretical optimum
-    float initialScore = stats.getOptimizerScore(this.job.routerSettings);
     if (initialScore >= 995.0f) {
       return String.format(
           Locale.US,
@@ -182,7 +200,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
         && stats.bounds.minTraceLengthMm != null
         && stats.bounds.minTraceLengthMm > 0
         && stats.traces.totalLengthMm != null
-        && stats.traces.totalLengthMm <= stats.bounds.minTraceLengthMm * 1.02f) {
+        && stats.traces.totalLengthMm <= stats.bounds.minTraceLengthMm * 1.02f
+        && (stats.bounds.minViaCount == null
+            || stats.vias.totalCount <= stats.bounds.minViaCount)) {
       return String.format(
           Locale.US,
           "total trace length (%.2f mm) is already within 2%% of the theoretical minimum (%.2f mm)",
@@ -202,17 +222,17 @@ public final class BatchOptimizer extends NamedAlgorithm {
    * Checks if all vias on the board are mandatory layer transitions between SMD pins on different
    * layers, with no alternative routing possible.
    */
-  static boolean areAllViasMandatoryLayerTransitions(RoutingBoard routingBoard) {
+  public static boolean areAllViasMandatoryLayerTransitions(RoutingBoard routingBoard) {
     Collection<Via> vias = routingBoard.getVias();
     if (vias.isEmpty()) {
-      return true;
+      return false;
     }
     for (Via via : vias) {
       if (via.isUserFixed()) {
         continue;
       }
       if (via.netCount() == 0) {
-        continue;
+        return false;
       }
       int netNo = via.getNetNumber(0);
       Set<Item> connected = via.getConnectedSet(netNo, true);
@@ -227,7 +247,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
             break;
           }
         } else if (item instanceof Via v) {
-          if (v != via && !v.isUserFixed()) {
+          if (v != via) {
             onlySmdPinsAndTraces = false;
             break;
           }
@@ -236,7 +256,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
           break;
         }
       }
-      if (!onlySmdPinsAndTraces || smdPins.isEmpty()) {
+      if (!onlySmdPinsAndTraces || smdPins.size() < 2) {
         return false;
       }
       int firstLayer = smdPins.get(0).firstLayer();
@@ -324,6 +344,31 @@ public final class BatchOptimizer extends NamedAlgorithm {
               this.settings.optimizer.timeoutString);
       if (timeoutSeconds != null) {
         this.deadlineMs = sessionStartMs + timeoutSeconds * 1000;
+      }
+    }
+
+    if (this.settings.optimizer != null
+        && this.settings.optimizer.optimizationImprovementThreshold != null) {
+      float threshold = this.settings.optimizer.optimizationImprovementThreshold;
+      if (Float.isNaN(threshold) || Float.isInfinite(threshold) || threshold < 0.0f) {
+        job.logWarning(
+            String.format(
+                Locale.US,
+                "Invalid optimizer improvement threshold: %.4f. Resetting to default %.2f%%.",
+                threshold,
+                DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD));
+        this.settings.optimizer.optimizationImprovementThreshold =
+            DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
+      } else if (threshold > 0.0f && threshold < 0.1f) {
+        float scaled = threshold * 100.0f;
+        job.logInfo(
+            String.format(
+                Locale.US,
+                "Optimizer improvement threshold appears to be specified as a fraction (%.4f). "
+                    + "Auto-scaling to percentage (%.2f%%).",
+                threshold,
+                scaled));
+        this.settings.optimizer.optimizationImprovementThreshold = scaled;
       }
     }
 
@@ -643,6 +688,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     CandidateResult winningCandidate = null;
     int chunkSize = Math.max(threadPoolSize * 4, 8);
     boolean stoppedOrTimedOut = false;
+    boolean earlyStopDueToFailures = false;
     int consecutiveFailures = 0;
     int maxConsecutiveFailures =
         passNo == 1
@@ -714,7 +760,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
                               + "not be improved.",
                           passNo,
                           consecutiveFailures));
-                  stoppedOrTimedOut = true;
+                  earlyStopDueToFailures = true;
                   break;
                 }
               }
@@ -728,7 +774,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
           }
         }
 
-        if (stoppedOrTimedOut) {
+        if (stoppedOrTimedOut || earlyStopDueToFailures) {
           break;
         }
       }

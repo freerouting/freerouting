@@ -275,4 +275,21 @@ class SettingsMergerTest {
     assertTrue(target.layers[1].routable);
     assertTrue(target.layers[2].routable);
   }
+
+  @Test
+  void cliOptimizerImprovementThresholdParsesAndScalesFraction() {
+    DefaultSettings defaults = new DefaultSettings();
+    CliSettings cli1 = new CliSettings(new String[] {"-oit", "0.035"});
+    RouterSettings merged1 = new SettingsMerger(defaults, cli1).merge();
+    assertEquals(3.5f, merged1.optimizer.optimizationImprovementThreshold, 0.001f);
+
+    CliSettings cli2 = new CliSettings(new String[] {"-oit", "4.0"});
+    RouterSettings merged2 = new SettingsMerger(defaults, cli2).merge();
+    assertEquals(4.0f, merged2.optimizer.optimizationImprovementThreshold, 0.001f);
+
+    CliSettings cli3 =
+        new CliSettings(new String[] {"--router.optimizer.improvement_threshold=0.015"});
+    RouterSettings merged3 = new SettingsMerger(defaults, cli3).merge();
+    assertEquals(1.5f, merged3.optimizer.optimizationImprovementThreshold, 0.001f);
+  }
 }
