@@ -744,19 +744,24 @@ public class BoardStatistics implements Serializable {
     if (this.difficulty == null) {
       this.difficulty = new BoardStatisticsDifficulty();
     }
+    if (this.difficulty.difficultyD != null) {
+      return;
+    }
     if (this.difficulty.pinCount == null || this.difficulty.pinCount <= 0) {
-      if (this.items != null && this.items.pinCount > 0) {
+      if (this.items != null && this.items.pinCount != null && this.items.pinCount > 0) {
         this.difficulty.pinCount = this.items.pinCount;
-      } else if (this.pads != null && this.pads.totalCount > 0) {
+      } else if (this.pads != null && this.pads.totalCount != null && this.pads.totalCount > 0) {
         this.difficulty.pinCount = this.pads.totalCount;
       } else {
         this.difficulty.pinCount = 0;
       }
     }
     if (this.difficulty.signalLayerCount == null || this.difficulty.signalLayerCount <= 0) {
-      if (this.layers != null && this.layers.signalCount > 0) {
+      if (this.layers != null && this.layers.signalCount != null && this.layers.signalCount > 0) {
         this.difficulty.signalLayerCount = this.layers.signalCount;
-      } else if (this.layers != null && this.layers.totalCount > 0) {
+      } else if (this.layers != null
+          && this.layers.totalCount != null
+          && this.layers.totalCount > 0) {
         this.difficulty.signalLayerCount = this.layers.totalCount;
       } else {
         this.difficulty.signalLayerCount = 0;
