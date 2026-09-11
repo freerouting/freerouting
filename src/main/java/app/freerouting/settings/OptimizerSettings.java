@@ -42,12 +42,23 @@ public class OptimizerSettings implements Serializable, Cloneable {
   @SerializedName("improvement_threshold")
   public Float optimizationImprovementThreshold;
 
+  /** Whether pre-flight optimization guards are enabled to skip un-improvable boards. */
+  @SerializedName("enable_preflight_guards")
+  public Boolean enablePreflightGuards;
+
   /**
    * The maximum number of consecutive item optimization failures allowed before aborting the
    * current pass.
    */
   @SerializedName("max_consecutive_failures")
   public Integer maxConsecutiveFailures;
+
+  /**
+   * The maximum number of consecutive item optimization failures allowed before aborting pass 1
+   * early (canary limit). Defaults to 12.
+   */
+  @SerializedName("max_consecutive_failures_pass1")
+  public Integer maxConsecutiveFailuresPass1;
 
   /**
    * A multiplier applied to the base ripup cost at the start of optimization. Higher values make
