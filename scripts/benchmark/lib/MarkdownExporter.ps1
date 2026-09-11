@@ -70,14 +70,23 @@ function Format-MarkdownTable {
     return $sb.ToString()
 }
 
+function Get-NormalizedScoreEntry {
+    param($Run, [hashtable]$NormalizedScores = $null)
+
+    if (-not $NormalizedScores -or -not $Run) { return $null }
+    $cacheKey = if ($Run.cache_key) { [string]$Run.cache_key } else { $null }
+    if ($cacheKey -and $NormalizedScores.ContainsKey($cacheKey)) {
+        return $NormalizedScores[$cacheKey]
+    }
+    return $null
+}
+
 function Get-RunScoreValue {
     param($Run, [hashtable]$NormalizedScores = $null)
 
-    if ($NormalizedScores -and $Run.cache_key -and $NormalizedScores.ContainsKey($Run.cache_key)) {
-        $entry = $NormalizedScores[$Run.cache_key]
-        if ($entry -and $entry.router_score -ne $null) {
-            return [double]$entry.router_score
-        }
+    $entry = Get-NormalizedScoreEntry $Run $NormalizedScores
+    if ($entry -and $entry.router_score -ne $null) {
+        return [double]$entry.router_score
     }
     if ($Run.quality.quality_score -ne $null) { return [double]$Run.quality.quality_score }
     return $null
@@ -86,11 +95,9 @@ function Get-RunScoreValue {
 function Test-RunIsFailed {
     param($Run, [hashtable]$NormalizedScores = $null)
 
-    if ($NormalizedScores -and $Run.cache_key -and $NormalizedScores.ContainsKey($Run.cache_key)) {
-        $entry = $NormalizedScores[$Run.cache_key]
-        if ($entry -and $entry.is_failed -eq $true) {
-            return $true
-        }
+    $entry = Get-NormalizedScoreEntry $Run $NormalizedScores
+    if ($entry -and $entry.is_failed -eq $true) {
+        return $true
     }
     if ($Run.exit.crashed -eq $true) { return $true }
     if ($Run.exit.code -ne $null -and $Run.exit.code -ne 0) { return $true }

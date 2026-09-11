@@ -3,6 +3,7 @@ function Invoke-BenchmarkScoreRecalculator {
         [string]$JsonPath,
         [string]$BinariesDir = (Join-Path $PSScriptRoot "..\binaries"),
         [string]$ScoresPath = $null,
+        [string]$JavaPath = $null,
         [switch]$Force
     )
 
@@ -35,8 +36,19 @@ function Invoke-BenchmarkScoreRecalculator {
     }
 
     if ($needsRecalculation) {
-        Write-Output "Recalculating normalized V2 scores in bulk via Freerouting app..."
-        $process = Start-Process -FilePath "java" -ArgumentList @(
+        Write-Host "Recalculating normalized V2 scores in bulk via Freerouting app..."
+
+        $resolvedJava = if ($JavaPath -and (Test-Path $JavaPath)) {
+            $JavaPath
+        } elseif ($env:JAVA_HOME -and (Test-Path (Join-Path $env:JAVA_HOME "bin\java.exe"))) {
+            Join-Path $env:JAVA_HOME "bin\java.exe"
+        } elseif ($env:JAVA_HOME -and (Test-Path (Join-Path $env:JAVA_HOME "bin\java"))) {
+            Join-Path $env:JAVA_HOME "bin\java"
+        } else {
+            "java"
+        }
+
+        $process = Start-Process -FilePath $resolvedJava -ArgumentList @(
             "-jar",
             $jarPath,
             "--calculate-benchmark-scores",
