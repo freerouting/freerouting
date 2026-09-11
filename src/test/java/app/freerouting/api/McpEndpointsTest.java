@@ -393,9 +393,8 @@ class McpEndpointsTest {
       assertFalse(uploadPayload.getAsJsonObject("result").get("isError").getAsBoolean());
 
       // 2. Call download_job_output_to_local_file (expecting 400 because job has not completed/run)
-      tempOutput =
-          java.nio.file.Path.of(System.getProperty("java.io.tmpdir"))
-              .resolve("freerouting-test-output-" + System.currentTimeMillis() + ".ses");
+      tempOutput = java.nio.file.Files.createTempFile("freerouting-test-output", ".ses");
+      java.nio.file.Files.deleteIfExists(tempOutput);
 
       JsonObject downloadRequest = new JsonObject();
       downloadRequest.addProperty("jsonrpc", "2.0");
