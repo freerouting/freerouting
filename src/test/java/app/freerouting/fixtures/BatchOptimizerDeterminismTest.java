@@ -21,6 +21,7 @@ class BatchOptimizerDeterminismTest extends RoutingFixtureTest {
     settings.setMaxPasses(1);
     settings.setMaxItems(2);
     settings.setJobTimeoutString("00:01:00");
+    settings.setOptimizerEnablePreflightGuards(false);
     return settings;
   }
 

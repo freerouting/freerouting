@@ -107,12 +107,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -284,12 +285,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -529,11 +531,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -587,13 +590,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
         "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.818018+00:00",
@@ -655,12 +659,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -1326,12 +1331,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -1382,13 +1388,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
         "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.821264+00:00",
@@ -1500,11 +1507,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -1925,11 +1933,12 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -2044,12 +2053,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -2158,11 +2168,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -2393,12 +2404,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.825256+00:00",
@@ -2457,12 +2470,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -2513,12 +2527,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -3028,12 +3043,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.827918+00:00",
@@ -3154,12 +3171,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -3333,11 +3351,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.829927+00:00",
@@ -3398,12 +3418,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -3706,12 +3727,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -4058,12 +4080,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -4114,11 +4137,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -4525,12 +4549,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -4645,12 +4670,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -4702,12 +4728,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -5002,12 +5029,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -5060,12 +5088,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -5479,11 +5508,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -6100,12 +6130,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -6160,12 +6191,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -6913,12 +6945,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -7093,12 +7126,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -7258,11 +7292,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -7311,11 +7346,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.847122+00:00",
@@ -7375,11 +7412,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -7490,11 +7528,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -7784,11 +7823,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.850121+00:00",
@@ -7978,12 +8019,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.852117+00:00",
@@ -8172,12 +8215,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -8722,12 +8766,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -9104,12 +9149,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -9285,12 +9331,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.859881+00:00",
@@ -9536,12 +9584,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -9655,12 +9704,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -10427,11 +10477,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -10790,12 +10841,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -11100,12 +11152,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -11157,12 +11210,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -11336,12 +11390,13 @@
       },
       "tags": [
         "4-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -11518,12 +11573,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -11698,12 +11754,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -11815,12 +11872,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -11999,11 +12057,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -12241,12 +12300,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -12357,12 +12417,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -12416,12 +12477,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.896242+00:00",
@@ -12544,12 +12607,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.897989+00:00",
@@ -12729,12 +12794,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.899052+00:00",
@@ -13547,12 +13614,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -13607,12 +13675,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -15412,11 +15481,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -15532,12 +15602,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -16157,12 +16228,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -16214,11 +16286,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.911044+00:00",
@@ -16279,12 +16353,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -16339,12 +16414,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -16786,12 +16862,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -17224,12 +17301,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -17480,12 +17558,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.921737+00:00",
@@ -17610,12 +17690,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -17667,11 +17748,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -18034,12 +18116,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -18206,12 +18289,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -18380,12 +18464,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -18873,12 +18958,13 @@
       },
       "tags": [
         "4-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -18994,11 +19080,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.926516+00:00",
@@ -19054,11 +19142,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.926516+00:00",
@@ -19495,12 +19585,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -19690,12 +19781,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.930516+00:00",
@@ -19820,12 +19913,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -19876,11 +19970,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.932192+00:00",
@@ -20001,11 +20097,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -20056,11 +20153,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -20242,12 +20340,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -20365,12 +20464,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -20725,12 +20825,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -21044,12 +21145,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -21165,12 +21267,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.941211+00:00",
@@ -21284,12 +21388,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.942282+00:00",
@@ -21896,11 +22002,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.947139+00:00",
@@ -22195,12 +22303,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -22560,12 +22669,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -22914,12 +23024,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -23283,12 +23394,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -23460,12 +23572,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -23762,12 +23875,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -24017,12 +24131,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -24204,12 +24319,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -24263,12 +24379,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.952382+00:00",
@@ -24395,12 +24513,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -24702,12 +24821,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -24957,12 +25077,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -25757,12 +25878,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -25999,12 +26121,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -26120,12 +26243,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -26299,12 +26423,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -26356,12 +26481,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.959897+00:00",
@@ -26662,11 +26789,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.961523+00:00",
@@ -27158,12 +27287,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -27657,12 +27787,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -28863,12 +28994,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -28985,11 +29117,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -29107,12 +29240,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -29409,12 +29543,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.979405+00:00",
@@ -29470,12 +29606,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -29716,12 +29853,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -29907,12 +30045,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -30836,12 +30975,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -31100,12 +31240,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -31222,12 +31363,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.985930+00:00",
@@ -31479,12 +31622,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -31793,12 +31937,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -31851,12 +31996,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -32095,12 +32241,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -32274,12 +32421,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:32.992147+00:00",
@@ -32957,12 +33106,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -33021,12 +33171,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -33086,12 +33237,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -33144,12 +33296,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -33375,11 +33528,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -33431,11 +33585,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -33487,12 +33642,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -33544,12 +33700,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
-        "routine",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -34113,12 +34270,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -34170,11 +34328,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -34226,12 +34385,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -34472,12 +34632,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -34530,12 +34691,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -34716,12 +34878,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -35085,12 +35248,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -35261,12 +35425,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
-        "routine",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -35320,12 +35485,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -35644,11 +35810,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -36248,12 +36415,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -36370,12 +36538,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -36615,12 +36784,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -36924,12 +37094,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -37156,12 +37327,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -37215,11 +37387,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -37331,12 +37504,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.014950+00:00",
@@ -37584,12 +37759,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -37643,12 +37819,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -38007,12 +38184,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -38512,12 +38690,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -38750,12 +38929,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -38805,12 +38985,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -39319,12 +39500,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -39374,12 +39556,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -39787,12 +39970,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -39845,12 +40029,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -40084,12 +40269,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -40145,12 +40331,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -40271,12 +40458,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -40761,12 +40949,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -41401,12 +41590,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -41517,12 +41707,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -41692,11 +41883,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.032099+00:00",
@@ -42129,12 +42322,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -42443,12 +42637,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.036223+00:00",
@@ -42508,12 +42704,13 @@
       },
       "tags": [
         "4-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -42688,12 +42885,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -42746,11 +42944,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -42862,12 +43061,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
-        "routine",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -42917,12 +43117,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -42974,11 +43175,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -43587,12 +43789,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
-        "routine",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -44456,11 +44659,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.041297+00:00",
@@ -44517,11 +44722,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.042299+00:00",
@@ -44948,11 +45155,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -45120,12 +45328,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -45174,12 +45383,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -45466,11 +45676,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -45703,12 +45914,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -45882,12 +46094,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -46003,12 +46216,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -46690,12 +46904,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.054321+00:00",
@@ -46879,12 +47095,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -46935,12 +47152,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -47117,12 +47335,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -47173,12 +47392,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -47409,12 +47629,13 @@
       },
       "tags": [
         "4-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -47944,12 +48165,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.059332+00:00",
@@ -48014,12 +48237,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -48072,12 +48296,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.060331+00:00",
@@ -49086,12 +49312,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -49879,12 +50106,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -49940,12 +50168,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -50123,12 +50352,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -50180,12 +50410,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -51062,12 +51293,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -51120,12 +51352,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -51299,12 +51532,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -51982,12 +52216,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -52108,12 +52343,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -52977,12 +53213,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -53102,12 +53339,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -53283,12 +53521,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -53341,11 +53580,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -53398,12 +53638,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -53761,12 +54002,13 @@
       },
       "tags": [
         "4-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -54012,12 +54254,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -54065,11 +54308,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.083458+00:00",
@@ -54123,11 +54368,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.084544+00:00",
@@ -54247,12 +54494,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -54303,11 +54551,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -54427,12 +54676,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.086542+00:00",
@@ -54491,12 +54742,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -54547,11 +54799,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -54844,12 +55097,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -55089,12 +55343,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.087543+00:00",
@@ -55151,12 +55407,13 @@
       },
       "tags": [
         "4-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -55208,12 +55465,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
-        "routine",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -55263,12 +55521,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -55577,12 +55836,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.091541+00:00",
@@ -55765,12 +56026,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -55950,12 +56212,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -56009,11 +56272,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.092542+00:00",
@@ -56139,12 +56404,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.093542+00:00",
@@ -57024,11 +57291,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.099618+00:00",
@@ -57398,12 +57667,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -57518,12 +57788,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -57757,12 +58028,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.105846+00:00",
@@ -58069,12 +58342,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.106848+00:00",
@@ -58508,12 +58783,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -58624,12 +58900,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -59012,12 +59289,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -59075,12 +59353,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -59134,12 +59413,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -59315,12 +59595,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.111848+00:00",
@@ -59440,12 +59722,13 @@
       },
       "tags": [
         "4-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -59628,12 +59911,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -59871,12 +60155,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -60060,12 +60345,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -60184,12 +60470,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -60672,12 +60959,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.118871+00:00",
@@ -60740,12 +61029,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -61052,12 +61342,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.121870+00:00",
@@ -61708,12 +62000,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -61821,12 +62114,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -61876,11 +62170,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.125381+00:00",
@@ -62064,12 +62360,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -62300,12 +62597,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.127387+00:00",
@@ -62563,12 +62862,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -62877,12 +63177,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -63241,12 +63542,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -63603,12 +63905,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
         "plane",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -63659,11 +63962,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -63715,11 +64019,12 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -63773,11 +64078,12 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "medium",
-        "routine",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -63832,11 +64138,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -63939,11 +64246,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -64123,12 +64431,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.136529+00:00",
@@ -64369,11 +64679,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -64492,12 +64803,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -64547,12 +64859,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -64864,12 +65177,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -66219,12 +66533,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "partial",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.147861+00:00",
@@ -66662,12 +66978,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -66951,12 +67268,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.152445+00:00",
@@ -67086,12 +67405,13 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -67143,12 +67463,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.154581+00:00",
@@ -67709,12 +68031,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -67960,12 +68283,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -68201,11 +68525,12 @@
       },
       "tags": [
         "2-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -68325,12 +68650,13 @@
       },
       "tags": [
         "4-layer",
-        "routine",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -68687,12 +69013,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -68815,12 +69142,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -68943,12 +69271,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -69246,12 +69575,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.161669+00:00",
@@ -69490,12 +69821,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -69550,12 +69882,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
-        "routine",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
+      "tier": "A",
       "expected_outcome": "complete",
       "timeout_budget": "00:05:00"
     },
@@ -69727,12 +70060,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.164178+00:00",
@@ -69968,12 +70303,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b",
+        "tier-a",
         "zone"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.165139+00:00",
@@ -70479,11 +70816,13 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.169829+00:00",
@@ -70859,12 +71198,14 @@
       },
       "tags": [
         "2-layer",
+        "canary",
+        "golden-canary",
         "plane",
         "small",
-        "tier-b"
+        "tier-a"
       ],
-      "tier": "B",
-      "expected_outcome": "baseline_violations",
+      "tier": "A",
+      "expected_outcome": "complete",
       "timeout_budget": "00:01:00",
       "baseline_routing": {
         "calibrated_at": "2026-08-18T20:56:33.172829+00:00",
@@ -71004,8 +71345,8 @@
     }
   ],
   "tier_summary": {
-    "tier_a_golden_canary": 169,
-    "tier_b_routine": 844,
+    "tier_a_golden_canary": 453,
+    "tier_b_routine": 560,
     "tier_c_complex": 122,
     "tier_d_diagnostic": 22,
     "tier_e_unsupported": 25,

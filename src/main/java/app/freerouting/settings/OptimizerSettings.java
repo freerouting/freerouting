@@ -34,13 +34,17 @@ public class OptimizerSettings implements Serializable, Cloneable {
   public Integer maxThreads;
 
   /**
-   * Relative pass-improvement threshold (0.01 = 1% of the incumbent optimizer score). {@code
-   * BatchOptimizer} stops when {@code (scoreAfter - scoreBefore) / scoreBefore} is below this
-   * value. Keep 0.01 after V2: scores remain 0–1000, so one percent is still about 8–10 points on a
-   * typical finished board.
+   * Relative pass-improvement threshold expressed directly as a percentage (e.g., 2.5 = 2.5% of the
+   * incumbent optimizer score). {@code BatchOptimizer} stops when the relative percentage
+   * improvement is below this value. Default is 2.5 (2.5%), providing optimal balance between via
+   * elimination and runtime.
    */
   @SerializedName("improvement_threshold")
   public Float optimizationImprovementThreshold;
+
+  /** Whether pre-flight optimization guards are enabled to skip un-improvable boards. */
+  @SerializedName("enable_preflight_guards")
+  public Boolean enablePreflightGuards;
 
   /**
    * The maximum number of consecutive item optimization failures allowed before aborting the
@@ -48,6 +52,13 @@ public class OptimizerSettings implements Serializable, Cloneable {
    */
   @SerializedName("max_consecutive_failures")
   public Integer maxConsecutiveFailures;
+
+  /**
+   * The maximum number of consecutive item optimization failures allowed before aborting pass 1
+   * early (canary limit). Defaults to 12.
+   */
+  @SerializedName("max_consecutive_failures_pass1")
+  public Integer maxConsecutiveFailuresPass1;
 
   /**
    * A multiplier applied to the base ripup cost at the start of optimization. Higher values make

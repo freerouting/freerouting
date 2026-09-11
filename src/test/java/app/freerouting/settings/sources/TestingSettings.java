@@ -157,4 +157,20 @@ public class TestingSettings implements SettingsSource {
     }
     this.settings.optimizer.maxItems = maxItems;
   }
+
+  /** Sets whether optimizer pre-flight guards are enabled. */
+  public void setOptimizerEnablePreflightGuards(boolean enable) {
+    if (this.settings.optimizer == null) {
+      this.settings.optimizer = new OptimizerSettings();
+    }
+    this.settings.optimizer.enablePreflightGuards = enable;
+  }
+
+  /** Sets the optimizer pass 1 canary max consecutive failures limit. */
+  public void setOptimizerMaxConsecutiveFailuresPass1(int maxFailures) {
+    if (this.settings.optimizer == null) {
+      this.settings.optimizer = new OptimizerSettings();
+    }
+    this.settings.optimizer.maxConsecutiveFailuresPass1 = maxFailures;
+  }
 }

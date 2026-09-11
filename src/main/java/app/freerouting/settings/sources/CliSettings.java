@@ -80,6 +80,12 @@ public class CliSettings implements SettingsSource {
           hasDesignOutputArgument = true;
         }
 
+        if ("oit".equals(flag)) {
+          FRLogger.warn(
+              "The '-oit' command-line flag is deprecated; use"
+                  + " '--router.optimizer.improvement_threshold' instead.");
+        }
+
         // Map short flags to router settings
         String propertyName = mapFlagToProperty(flag);
         if (propertyName != null
@@ -136,6 +142,18 @@ public class CliSettings implements SettingsSource {
               default -> value;
             };
       }
+      if ("router.optimizer.improvement_threshold".equals(propertyName)
+          || fieldPath.endsWith("improvement_threshold")
+          || fieldPath.endsWith("optimizationImprovementThreshold")) {
+        try {
+          float parsed = Float.parseFloat(value.trim());
+          if (parsed > 0.0f && parsed < 1.0f) {
+            value = String.valueOf(parsed * 100.0f);
+          }
+        } catch (NumberFormatException ignored) {
+          // Fall back to raw string value if parsing as float fails
+        }
+      }
 
       ReflectionUtil.setFieldValue(settings, fieldPath, value);
       parsedArguments.put(propertyName, value);
@@ -150,6 +168,7 @@ public class CliSettings implements SettingsSource {
     return switch (flag) {
       case "mp" -> "router.max_passes";
       case "mt" -> "router.max_threads";
+      case "oit" -> "router.optimizer.improvement_threshold";
       case "router-scoring-version" -> "router.scoring.version";
       case "optimizer-scoring-version" -> "optimizer.scoring.version";
       case "scoring-version" -> "scoring-version";

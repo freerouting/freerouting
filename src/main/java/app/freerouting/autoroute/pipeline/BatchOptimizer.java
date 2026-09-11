@@ -5,6 +5,7 @@ import app.freerouting.autoroute.ItemSelectionStrategy;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.core.ProgressThrottler;
@@ -17,6 +18,7 @@ import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
+import app.freerouting.settings.sources.DefaultSettings;
 import com.sun.management.ThreadMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -144,6 +146,134 @@ public final class BatchOptimizer extends NamedAlgorithm {
     }
   }
 
+  /**
+   * Evaluates whether optimization can be safely bypassed before starting the batch loop.
+   *
+   * @param stats current board statistics
+   * @return reason string explaining why optimization is bypassed, or {@code null} if guards pass
+   */
+  public String evaluatePreFlightGuards(BoardStatistics stats) {
+    if (this.settings.optimizer != null
+        && Boolean.FALSE.equals(this.settings.optimizer.enablePreflightGuards)) {
+      return null;
+    }
+
+    // Guard 1: Incomplete connections
+    if (stats.connections.incompleteCount > 0) {
+      return String.format(
+          Locale.US,
+          "the board has %d unrouted connection(s) (optimizer only runs on completely routed boards)",
+          stats.connections.incompleteCount);
+    }
+
+    float initialScore = stats.getOptimizerScore(this.job.routerSettings);
+
+    // Guard 2: Zero vias and optimal trace length
+    if (stats.vias.totalCount == 0) {
+      if (initialScore >= 950.0f) {
+        return String.format(
+            Locale.US,
+            "the board has no vias to eliminate and initial optimizer score (%.2f) is already >= 950.00",
+            initialScore);
+      }
+      if (stats.bounds != null
+          && stats.bounds.minTraceLengthMm != null
+          && stats.bounds.minTraceLengthMm > 0
+          && stats.traces.totalLengthMm != null
+          && stats.traces.totalLengthMm <= stats.bounds.minTraceLengthMm * 1.05f) {
+        return String.format(
+            Locale.US,
+            "the board has no vias to eliminate and trace length (%.2f mm) is within 5%% of theoretical minimum (%.2f mm)",
+            stats.traces.totalLengthMm,
+            stats.bounds.minTraceLengthMm);
+      }
+    }
+
+    // Guard 3: Score ceiling / theoretical optimum
+    if (initialScore >= 995.0f) {
+      return String.format(
+          Locale.US,
+          "the initial optimizer score (%.2f) is already at or near theoretical maximum (995.00)",
+          initialScore);
+    }
+    if (stats.bounds != null
+        && stats.bounds.minTraceLengthMm != null
+        && stats.bounds.minTraceLengthMm > 0
+        && stats.traces.totalLengthMm != null
+        && stats.traces.totalLengthMm <= stats.bounds.minTraceLengthMm * 1.02f
+        && (stats.bounds.minViaCount == null
+            || stats.vias.totalCount <= stats.bounds.minViaCount)) {
+      return String.format(
+          Locale.US,
+          "total trace length (%.2f mm) is already within 2%% of the theoretical minimum (%.2f mm)",
+          stats.traces.totalLengthMm,
+          stats.bounds.minTraceLengthMm);
+    }
+
+    // Guard 4: All vias mandatory layer transitions
+    if (this.board != null && areAllViasMandatoryLayerTransitions(this.board)) {
+      return "all vias on the board are mandatory layer transitions between SMD pins that cannot be eliminated";
+    }
+
+    return null;
+  }
+
+  /**
+   * Checks if all vias on the board are mandatory layer transitions between SMD pins on different
+   * layers, with no alternative routing possible.
+   */
+  public static boolean areAllViasMandatoryLayerTransitions(RoutingBoard routingBoard) {
+    Collection<Via> vias = routingBoard.getVias();
+    if (vias.isEmpty()) {
+      return false;
+    }
+    for (Via via : vias) {
+      if (via.isUserFixed()) {
+        continue;
+      }
+      if (via.netCount() == 0) {
+        return false;
+      }
+      int netNo = via.getNetNumber(0);
+      Set<Item> connected = via.getConnectedSet(netNo, true);
+      List<Pin> smdPins = new ArrayList<>();
+      boolean onlySmdPinsAndTraces = true;
+      for (Item item : connected) {
+        if (item instanceof Pin pin) {
+          if (pin.firstLayer() == pin.lastLayer()) {
+            smdPins.add(pin);
+          } else {
+            onlySmdPinsAndTraces = false;
+            break;
+          }
+        } else if (item instanceof Via v) {
+          if (v != via) {
+            onlySmdPinsAndTraces = false;
+            break;
+          }
+        } else if (!(item instanceof Trace)) {
+          onlySmdPinsAndTraces = false;
+          break;
+        }
+      }
+      if (!onlySmdPinsAndTraces || smdPins.size() < 2) {
+        return false;
+      }
+      int firstLayer = smdPins.get(0).firstLayer();
+      boolean crossesLayers = false;
+      for (Pin pin : smdPins) {
+        if (pin.firstLayer() != firstLayer) {
+          crossesLayers = true;
+          break;
+        }
+      }
+      if (!crossesLayers) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /** Optimize the route on the board. */
   public void runBatchLoop() {
     job.logDebug(
@@ -165,6 +295,23 @@ public final class BatchOptimizer extends NamedAlgorithm {
     phase.before.score = phase.before.optimizerScore;
     int initialIncomplete = initialStats.connections.incompleteCount;
     int initialViolations = initialStats.clearanceViolations.totalCount;
+
+    String bypassReason = evaluatePreFlightGuards(initialStats);
+    if (bypassReason != null) {
+      job.logInfo("Skipping optimization stage: " + bypassReason + ".");
+      phase.durationSeconds = 0.0f;
+      phase.cpuSeconds = 0.0f;
+      phase.totalAllocatedGb = 0.0f;
+      phase.peakHeapMb = sampleHeapUsageMb();
+      phase.after =
+          RoutingResultManifest.PhaseSnapshot.fromBoardStatistics(
+              initialStats, job.routerSettings, "current");
+      phase.after.score = phase.after.optimizerScore;
+      phase.passesCompleted = 0;
+      this.fireTaskStateChangedEvent(
+          new TaskStateChangedEvent(this, TaskState.FINISHED, 0, this.board.getHash()));
+      return;
+    }
 
     this.bestBoard = this.board.deepCopy();
     this.bestScore = initialOptimizerScore;
@@ -197,6 +344,31 @@ public final class BatchOptimizer extends NamedAlgorithm {
               this.settings.optimizer.timeoutString);
       if (timeoutSeconds != null) {
         this.deadlineMs = sessionStartMs + timeoutSeconds * 1000;
+      }
+    }
+
+    if (this.settings.optimizer != null
+        && this.settings.optimizer.optimizationImprovementThreshold != null) {
+      float threshold = this.settings.optimizer.optimizationImprovementThreshold;
+      if (Float.isNaN(threshold) || Float.isInfinite(threshold) || threshold < 0.0f) {
+        job.logWarning(
+            String.format(
+                Locale.US,
+                "Invalid optimizer improvement threshold: %.4f. Resetting to default %.2f%%.",
+                threshold,
+                DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD));
+        this.settings.optimizer.optimizationImprovementThreshold =
+            DefaultSettings.DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
+      } else if (threshold > 0.0f && threshold < 0.1f) {
+        float scaled = threshold * 100.0f;
+        job.logInfo(
+            String.format(
+                Locale.US,
+                "Optimizer improvement threshold appears to be specified as a fraction (%.4f). "
+                    + "Auto-scaling to percentage (%.2f%%).",
+                threshold,
+                scaled));
+        this.settings.optimizer.optimizationImprovementThreshold = scaled;
       }
     }
 
@@ -260,15 +432,16 @@ public final class BatchOptimizer extends NamedAlgorithm {
         restoreIncumbentBoard();
       }
 
-      double passImprovement =
+      double passImprovementFraction =
           scoreBeforePass > 0 ? (double) (scoreAfterPass - scoreBeforePass) / scoreBeforePass : 0;
+      double passImprovementPercent = passImprovementFraction * 100.0;
       String passOutcome =
           scoreAfterPass > scoreBeforePass
               ? "IMPROVED"
               : (scoreAfterPass < scoreBeforePass ? "REGRESSED" : "UNCHANGED");
-      String passImprovementPercent =
+      String passImprovementPercentStr =
           scoreBeforePass > 0
-              ? String.format(Locale.US, "%.4f%%", passImprovement * 100)
+              ? String.format(Locale.US, "%.4f%%", passImprovementPercent)
               : "n/a (baseline was 0.00)";
       job.logInfo(
           String.format(
@@ -279,7 +452,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
               scoreBeforePass,
               scoreAfterPass,
               passOutcome,
-              passImprovementPercent,
+              passImprovementPercentStr,
               passStats.getRouterScore(job.routerSettings),
               passStats.connections.incompleteCount,
               passStats.clearanceViolations.totalCount));
@@ -289,7 +462,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
         // Keep the optimizer going to try with normal ripup costs
         scoreImprovement = -1;
       } else {
-        scoreImprovement = passImprovement;
+        scoreImprovement = passImprovementPercent;
       }
 
       if (scoreImprovement != -1
@@ -299,8 +472,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
                 Locale.US,
                 "Stopping optimizer because the improvement in this pass (%.4f%%) is below "
                     + "the threshold (%.2f%%).",
-                scoreImprovement * 100,
-                this.settings.optimizer.optimizationImprovementThreshold * 100));
+                scoreImprovement,
+                this.settings.optimizer.optimizationImprovementThreshold));
         break;
       }
     }
@@ -515,11 +688,18 @@ public final class BatchOptimizer extends NamedAlgorithm {
     CandidateResult winningCandidate = null;
     int chunkSize = Math.max(threadPoolSize * 4, 8);
     boolean stoppedOrTimedOut = false;
+    boolean earlyStopDueToFailures = false;
     int consecutiveFailures = 0;
     int maxConsecutiveFailures =
-        this.settings.optimizer.maxConsecutiveFailures != null
-            ? this.settings.optimizer.maxConsecutiveFailures
-            : 50;
+        passNo == 1
+            ? (this.settings.optimizer != null
+                    && this.settings.optimizer.maxConsecutiveFailuresPass1 != null
+                ? this.settings.optimizer.maxConsecutiveFailuresPass1
+                : 12)
+            : (this.settings.optimizer != null
+                    && this.settings.optimizer.maxConsecutiveFailures != null
+                ? this.settings.optimizer.maxConsecutiveFailures
+                : 50);
 
     try {
       for (int i = 0; i < candidateItemIds.size(); i += chunkSize) {
@@ -580,7 +760,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
                               + "not be improved.",
                           passNo,
                           consecutiveFailures));
-                  stoppedOrTimedOut = true;
+                  earlyStopDueToFailures = true;
                   break;
                 }
               }
@@ -594,7 +774,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
           }
         }
 
-        if (stoppedOrTimedOut) {
+        if (stoppedOrTimedOut || earlyStopDueToFailures) {
           break;
         }
       }

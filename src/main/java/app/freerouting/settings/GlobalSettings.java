@@ -770,11 +770,12 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-oit")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.optimizationImprovementThreshold =
-                Float.parseFloat(args[i + 1]) / 100;
-
-            if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
-              routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
+            try {
+              float val = Float.parseFloat(args[i + 1]);
+              routerSettings.optimizer.optimizationImprovementThreshold =
+                  (val > 0.0f && val < 1.0f) ? val * 100.0f : val;
+            } catch (NumberFormatException ignored) {
+              // Fall back to existing settings if parsing fails
             }
             i++;
           }
