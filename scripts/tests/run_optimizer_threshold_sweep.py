@@ -78,7 +78,7 @@ def run_single(fixture, threshold):
     opt_phase = data.get("phases", {}).get("optimizer", {})
     b_before = opt_phase.get("before", {}).get("board_statistics", {})
     b_after = opt_phase.get("after", {}).get("board_statistics", {})
-    
+
     vias_before = b_before.get("vias", {}).get("total_count", 0)
     vias_after = b_after.get("vias", {}).get("total_count", 0)
     vias_cut = vias_before - vias_after
