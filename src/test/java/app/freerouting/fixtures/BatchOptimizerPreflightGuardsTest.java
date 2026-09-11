@@ -69,7 +69,7 @@ class BatchOptimizerPreflightGuardsTest extends RoutingFixtureTest {
 
     String bypassReason = optimizer.evaluatePreFlightGuards(stats);
     assertNotNull(bypassReason);
-    assertTrue(bypassReason.contains("incomplete connection(s)"));
+    assertTrue(bypassReason.contains("unrouted connection(s)"));
   }
 
   @Test
@@ -86,7 +86,7 @@ class BatchOptimizerPreflightGuardsTest extends RoutingFixtureTest {
 
     String bypassReason = optimizer.evaluatePreFlightGuards(stats);
     assertNotNull(bypassReason);
-    assertEquals("board has 0 vias", bypassReason);
+    assertEquals("the board has no vias to eliminate", bypassReason);
   }
 
   @Test

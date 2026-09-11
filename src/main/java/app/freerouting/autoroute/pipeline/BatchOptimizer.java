@@ -160,12 +160,14 @@ public final class BatchOptimizer extends NamedAlgorithm {
     // Guard 1: Incomplete connections
     if (stats.connections.incompleteCount > 0) {
       return String.format(
-          Locale.US, "board has %d incomplete connection(s)", stats.connections.incompleteCount);
+          Locale.US,
+          "the board has %d unrouted connection(s) (optimizer only runs on completely routed boards)",
+          stats.connections.incompleteCount);
     }
 
     // Guard 2: Zero vias
     if (stats.vias.totalCount == 0) {
-      return "board has 0 vias";
+      return "the board has no vias to eliminate";
     }
 
     // Guard 3: Score ceiling / theoretical optimum
@@ -173,7 +175,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
     if (initialScore >= 995.0f) {
       return String.format(
           Locale.US,
-          "initial optimizer score (%.2f) is at or above optimum ceiling (995.00)",
+          "the initial optimizer score (%.2f) is already at or near theoretical maximum (995.00)",
           initialScore);
     }
     if (stats.bounds != null
@@ -183,14 +185,14 @@ public final class BatchOptimizer extends NamedAlgorithm {
         && stats.traces.totalLengthMm <= stats.bounds.minTraceLengthMm * 1.02f) {
       return String.format(
           Locale.US,
-          "total trace length (%.2f mm) is within 2%% of theoretical minimum (%.2f mm)",
+          "total trace length (%.2f mm) is already within 2%% of the theoretical minimum (%.2f mm)",
           stats.traces.totalLengthMm,
           stats.bounds.minTraceLengthMm);
     }
 
     // Guard 4: All vias mandatory layer transitions
     if (this.board != null && areAllViasMandatoryLayerTransitions(this.board)) {
-      return "all vias on the board are mandatory layer transitions";
+      return "all vias on the board are mandatory layer transitions between SMD pins that cannot be eliminated";
     }
 
     return null;
