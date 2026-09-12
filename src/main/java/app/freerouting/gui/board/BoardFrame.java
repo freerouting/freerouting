@@ -55,6 +55,7 @@ import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DsnFileSettings;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -972,16 +973,43 @@ public class BoardFrame extends WindowBase {
 
   /** Sets the toolbar to the buttons of the selected item state. */
   public void setInspectToolbar() {
-    getContentPane().remove(toolbarPanel);
-    getContentPane().add(inspectToolbar, BorderLayout.NORTH);
-    repaint();
+    swapToolbar(toolbarPanel, inspectToolbar);
   }
 
   /** Sets the toolbar buttons to the select. route and drag menu buttons of the main menu. */
   public void setMenuToolbar() {
-    getContentPane().remove(inspectToolbar);
-    getContentPane().add(toolbarPanel, BorderLayout.NORTH);
+    swapToolbar(inspectToolbar, toolbarPanel);
+  }
+
+  /**
+   * Swaps the toolbar in the north slot while keeping the board content visually stable.
+   *
+   * <p>The two toolbars have different natural heights, so swapping them moves the canvas.
+   * Measuring the actual shift of the scroll pane and scrolling the viewport by the same amount
+   * keeps the board point under the cursor fixed. Uses the live layout position (not toolbar
+   * heights), so it stays correct when the main toolbar wraps or rescales.
+   *
+   * @param toRemove the toolbar currently shown, may be absent if already swapped
+   * @param toAdd the toolbar to show in the north slot
+   */
+  private void swapToolbar(Component toRemove, Component toAdd) {
+    Point viewPosition = null;
+    int scrollPaneYBefore = 0;
+    boolean canCompensate = boardPanel != null && scrollPane != null;
+    if (canCompensate) {
+      viewPosition = boardPanel.getViewportPosition();
+      scrollPaneYBefore = scrollPane.getY();
+    }
+    getContentPane().remove(toRemove);
+    getContentPane().add(toAdd, BorderLayout.NORTH);
+    getContentPane().validate();
     repaint();
+    if (canCompensate && viewPosition != null) {
+      int verticalShift = scrollPane.getY() - scrollPaneYBefore;
+      if (verticalShift != 0) {
+        boardPanel.setViewportPosition(new Point(viewPosition.x, viewPosition.y + verticalShift));
+      }
+    }
   }
 
   /** Calculates the absolute location of the board frame in his outmost parent frame. */
