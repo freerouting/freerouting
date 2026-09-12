@@ -8799,8 +8799,8 @@
     "related_keys": [],
     "java_class": "app.freerouting.gui.WindowLengthViolations"
   },
-  "gui.WindowManualRules.title": {
-    "bundle": "gui.WindowManualRules",
+  "gui.ManualRulesPanel.title": {
+    "bundle": "gui.ManualRulesPanel",
     "bundle_desc": "GUI (graphical user interface)",
     "key": "title",
     "english_value": "Manual Rules",
@@ -8812,10 +8812,10 @@
     "is_html": false,
     "max_length_hint": 30,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.WindowManualRules"
+    "java_class": "app.freerouting.gui.ManualRulesPanel"
   },
-  "gui.WindowManualRules.via_rule": {
-    "bundle": "gui.WindowManualRules",
+  "gui.ManualRulesPanel.via_rule": {
+    "bundle": "gui.ManualRulesPanel",
     "bundle_desc": "GUI (graphical user interface)",
     "key": "via_rule",
     "english_value": "via rule:",
@@ -8827,10 +8827,10 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.WindowManualRules"
+    "java_class": "app.freerouting.gui.ManualRulesPanel"
   },
-  "gui.WindowManualRules.trace_clearance_class": {
-    "bundle": "gui.WindowManualRules",
+  "gui.ManualRulesPanel.trace_clearance_class": {
+    "bundle": "gui.ManualRulesPanel",
     "bundle_desc": "GUI (graphical user interface)",
     "key": "trace_clearance_class",
     "english_value": "trace clearance class:",
@@ -8844,10 +8844,10 @@
     "related_keys": [
       "trace_width"
     ],
-    "java_class": "app.freerouting.gui.WindowManualRules"
+    "java_class": "app.freerouting.gui.ManualRulesPanel"
   },
-  "gui.WindowManualRules.trace_width": {
-    "bundle": "gui.WindowManualRules",
+  "gui.ManualRulesPanel.trace_width": {
+    "bundle": "gui.ManualRulesPanel",
     "bundle_desc": "GUI (graphical user interface)",
     "key": "trace_width",
     "english_value": "trace width:",
@@ -8861,10 +8861,10 @@
     "related_keys": [
       "trace_clearance_class"
     ],
-    "java_class": "app.freerouting.gui.WindowManualRules"
+    "java_class": "app.freerouting.gui.ManualRulesPanel"
   },
-  "gui.WindowManualRules.on_layer": {
-    "bundle": "gui.WindowManualRules",
+  "gui.ManualRulesPanel.on_layer": {
+    "bundle": "gui.ManualRulesPanel",
     "bundle_desc": "GUI (graphical user interface)",
     "key": "on_layer",
     "english_value": "on layer:",
@@ -8876,7 +8876,7 @@
     "is_html": false,
     "max_length_hint": null,
     "related_keys": [],
-    "java_class": "app.freerouting.gui.WindowManualRules"
+    "java_class": "app.freerouting.gui.ManualRulesPanel"
   },
   "gui.WindowMoveParameter.title": {
     "bundle": "gui.WindowMoveParameter",

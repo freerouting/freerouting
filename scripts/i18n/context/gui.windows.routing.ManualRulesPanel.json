@@ -2,13 +2,13 @@
   "on_layer": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.windows.routing.WindowManualRules"
+      "app.freerouting.gui.windows.routing.ManualRulesPanel"
     ],
     "english_hash": "22c7026fbfa1ad98527848b008cf6a218cfd37b776ef26de2e2fdaada299aa8c",
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
@@ -20,13 +20,13 @@
   "on_layer_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.windows.routing.WindowManualRules"
+      "app.freerouting.gui.windows.routing.ManualRulesPanel"
     ],
     "english_hash": "2128b385f6e5e68d9c48d4d2f05126974626454f37bd8d4456f8422e97696080",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
@@ -38,13 +38,13 @@
   "title": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.windows.routing.WindowManualRules"
+      "app.freerouting.gui.windows.routing.ManualRulesPanel"
     ],
     "english_hash": "dc2e4534815e7391b520b06183a15d3f6a85961da2b712ff5cf8d94d444fcbcf",
     "grammatical_role": "noun_phrase",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": 30,
     "needs_retranslation": false,
     "placeholders": [],
@@ -58,7 +58,7 @@
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
@@ -70,13 +70,13 @@
   "trace_clearance_class_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.windows.routing.WindowManualRules"
+      "app.freerouting.gui.windows.routing.ManualRulesPanel"
     ],
     "english_hash": "91e3e3722e13945187777641d24a38073d5d75359bdac2614fd19a76d2960457",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
@@ -92,7 +92,7 @@
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
@@ -106,13 +106,13 @@
   "trace_width_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.windows.routing.WindowManualRules"
+      "app.freerouting.gui.windows.routing.ManualRulesPanel"
     ],
     "english_hash": "fd5405c6e0752eae49e9aa9d8e2c60a6b14789674a2d12f5689adb4e659714df",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
@@ -128,7 +128,7 @@
     "grammatical_role": "fragment",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
@@ -140,13 +140,13 @@
   "via_rule_tooltip": {
     "bundle_desc": "GUI (graphical user interface)",
     "code_references": [
-      "app.freerouting.gui.windows.routing.WindowManualRules"
+      "app.freerouting.gui.windows.routing.ManualRulesPanel"
     ],
     "english_hash": "80c0022a31aa5b13363e4fe17c25fd78780060a7cf9fbaf4b34eae420d22ff0d",
     "grammatical_role": "full_sentence",
     "has_placeholders": false,
     "is_html": false,
-    "java_class": "app.freerouting.gui.windows.routing.WindowManualRules",
+    "java_class": "app.freerouting.gui.windows.routing.ManualRulesPanel",
     "max_length_hint": null,
     "needs_retranslation": false,
     "placeholders": [],
