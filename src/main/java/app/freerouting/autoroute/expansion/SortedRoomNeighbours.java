@@ -20,9 +20,9 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -52,7 +52,7 @@ public final class SortedRoomNeighbours {
     this.completedRoom = completedRoom;
     roomShape = completedRoom.getShape();
     sortedNeighbours = new TreeSet<>();
-    ownNetObjects = new LinkedList<>();
+    ownNetObjects = new ArrayList<>();
   }
 
   /**
@@ -197,20 +197,19 @@ public final class SortedRoomNeighbours {
       return null;
     }
     SortedRoomNeighbours result = new SortedRoomNeighbours(room, completedRoom);
-    Collection<ShapeTree.TreeEntry> overlappingObjects = new LinkedList<>();
+    ArrayList<ShapeTree.TreeEntry> overlappingObjects = new ArrayList<>();
     autorouteSearchTree.overlappingTreeEntries(roomShape, room.getLayer(), overlappingObjects);
 
     // Sort the overlapping objects deterministically to ensure parity with v1.9.
-    ((LinkedList<ShapeTree.TreeEntry>) overlappingObjects)
-        .sort(
-            (e1, e2) -> {
-              int idDiff =
-                  ((SearchTreeObject) e1.object).getId() - ((SearchTreeObject) e2.object).getId();
-              if (idDiff != 0) {
-                return idDiff;
-              }
-              return e1.shapeIndexInObject - e2.shapeIndexInObject;
-            });
+    overlappingObjects.sort(
+        (e1, e2) -> {
+          int idDiff =
+              ((SearchTreeObject) e1.object).getId() - ((SearchTreeObject) e2.object).getId();
+          if (idDiff != 0) {
+            return idDiff;
+          }
+          return e1.shapeIndexInObject - e2.shapeIndexInObject;
+        });
 
     // Calculate the touching neighbour objects and sort them in counterclock sense
     // around the border of the room shape.

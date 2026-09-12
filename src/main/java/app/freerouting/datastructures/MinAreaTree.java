@@ -3,8 +3,9 @@ package app.freerouting.datastructures;
 import app.freerouting.geometry.planar.RegularTileShape;
 import app.freerouting.geometry.planar.ShapeBoundingDirections;
 import app.freerouting.logger.FRLogger;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Binary search tree for shapes in the plane. The shapes are stored in the leaves of the tree. The
@@ -16,25 +17,27 @@ import java.util.TreeSet;
  */
 public class MinAreaTree extends ShapeTree {
 
-  /** Reusable traversal stack for overlap queries on this tree. */
-  protected final ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
+  /** Reusable traversal stack for overlap queries, isolated per caller thread. */
+  protected final ThreadLocal<ArrayStack<TreeNode>> nodeStack =
+      ThreadLocal.withInitial(() -> new ArrayStack<>(10000));
 
   /** Constructor with a fixed set of directions defining the keys and the surrounding shapes. */
   public MinAreaTree(ShapeBoundingDirections directions) {
     super(directions);
   }
 
-  /** Calculates the objects in this tree, which overlap with shape. */
-  public Set<Leaf> overlaps(RegularTileShape shape) {
-    Set<Leaf> foundOverlaps = new TreeSet<>();
+  /** Calculates the objects in this tree, which overlap with shape, in {@link Leaf} order. */
+  public List<Leaf> overlaps(RegularTileShape shape) {
+    List<Leaf> foundOverlaps = new ArrayList<>();
     if (this.root == null) {
       return foundOverlaps;
     }
-    nodeStack.reset();
-    nodeStack.push(this.root);
+    ArrayStack<TreeNode> stack = nodeStack.get();
+    stack.reset();
+    stack.push(this.root);
     TreeNode currentNode;
     for (; ; ) {
-      currentNode = nodeStack.pop();
+      currentNode = stack.pop();
       if (currentNode == null) {
         break;
       }
@@ -42,11 +45,12 @@ public class MinAreaTree extends ShapeTree {
         if (currentNode instanceof Leaf leaf) {
           foundOverlaps.add(leaf);
         } else {
-          nodeStack.push(((InnerNode) currentNode).firstChild);
-          nodeStack.push(((InnerNode) currentNode).secondChild);
+          stack.push(((InnerNode) currentNode).firstChild);
+          stack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
+    Collections.sort(foundOverlaps);
     return foundOverlaps;
   }
 

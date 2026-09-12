@@ -1,6 +1,6 @@
 # Freerouting Memory Allocation, Peak Heap, and Thread-Readiness Plan
 
-**Document status:** Working specification with a measured B0 / B0-maze / B0-optN=4 baseline
+**Document status:** Working specification with measured A1–A7 checkpoints
 **Date:** 12 September 2026
 **Target branch:** `research/peak-heap-allocation-optimization`
 **Primary tooling:** JDK Flight Recorder (JFR) + JDK 25 CLI (`jfr`)
@@ -31,9 +31,9 @@ Phase 0 is done: DiscoDongle B0, B0-maze, and B0-optN=4 are captured with JFR
 Re-run the **same** harness after every optimization. Do not invent a new command line per
 experiment.
 
-Work completed in this implementation pass: **A1+A2+A3**. The next work is JFR-gated Phase 2
-(`A4/A5/A6/B1`) plus the separate T1 optimizer worker-board reuse investigation. Re-run the same
-harness after every optimization.
+Work completed in this implementation pass: **A1–A7**. A4–A7 were measured sequentially with the
+same JFR harness; the artifacts are preserved under `logs/A4/` through `logs/A7/` (gitignored).
+The next candidates are B1 and the separate T1 optimizer worker-board reuse investigation.
 
 ---
 
@@ -53,12 +53,14 @@ need different fixes:
 
 `--router.autorouter.max_threads=1` is accepted (log: `Pipeline thread limits: autorouter.max_threads=1, optimizer.max_threads=1`). Production maze still uses `runSingleThread`; the nested flag is what a future multi-thread pass would read.
 
-The completed code is **A1+A2+A3** (null-out, restore the v1.9 per-tree `ArrayStack`, and return
-an immutable empty target-door collection). Judge future maze changes on B0-maze allocation GB and
-JFR, and judge optimizer changes on stage allocation and peak heap separately.
+The completed code is **A1–A7**: null-out, per-tree `ArrayStack` reuse, immutable empty target-door
+collections, `ArrayList` room-neighbour/complete-shape collections, TRACE guards, and ordered
+`ArrayList` overlap results. Judge future maze changes on B0-maze allocation GB and JFR, and judge
+optimizer changes on stage allocation and peak heap separately.
 
-Do **not** start LinkedList / TRACE / octagon / pooling work until a post-A2 **B0-maze** recording
-still lists those types. They are ≤0.6% of maze samples today.
+Post-A7 JFR still shows geometry (`IntOctagon`, `IntPoint`) and logging/string work among the leading
+maze samples; `LinkedList$Node` is no longer a leading sample. B1 is the next measured geometry
+candidate. Pooling remains out of scope.
 
 Canonical thread flags: `--router.autorouter.max_threads` and `--router.optimizer.max_threads`.
 Do not use `--router.max_threads` in the harness.
@@ -93,8 +95,8 @@ Do not use `--router.max_threads` in the harness.
   touched here must remain safe to run concurrently later (no static scratch, no shared trees,
   no returned-list reuse). Wiring production multi-thread autorouter/fanout is **out of scope**
   for merge until §12 decisions are resolved. See [Decision 7](#decision-7-b0-stays-single-thread-thread-readiness-is-a-parallel-track).
-- **JFR gates Phase 2.** A1+A2 are now measured v1.9 restorations; Phase 2+ items live or die by
-  the post-A3 recording (Decision 18).
+- **JFR gates Phase 2.** A1–A7 are measured; the post-A7 histogram and parity results control the
+  next candidate.
 - **SIMD / Vector API / WebGPU** are out of scope (see §13). Do not reopen them to “make A2 faster.”
 
 ---
@@ -310,17 +312,17 @@ maze-only type mix and for A2 deltas, not as a substitute for B0 quality.
 `IntPoint` 2%, `TreeMap$Entry` 0.7%, `LinkedList$Node` 0.6%. Same ranking, less optimizer
 `byte[]`/`Object[]` from clones.
 
-**Implication:** The baseline identified A1/A2 as the dominant allocation fix. After A2, the
-`Object[]` sample share disappeared from B0-maze and the measurable allocation shifted to
-`byte[]`, `IntOctagon`, `IntPoint`, `String`, and `TreeMap` entries. A4/A5, A6, and B1 are now
-evidence-backed follow-ups rather than baseline guesses; keep each gated by its post-A3 result and
-parity risk. A7 (`TreeSet`) stays optional and parity-sensitive. C1 pooling remains out of scope:
+**Implication:** A1/A2 were the dominant allocation fix. After A2, the `Object[]` sample share
+disappeared from B0-maze. A4–A7 were then measured with explicit parity-preserving ordering; A5
+reduced collection churn most clearly, while A4, A6, and A7 remained within single-run noise.
+`byte[]`, `IntOctagon`, `IntPoint`, `String`, and `TreeMap` entries remain the measured candidates
+for the next work. C1 pooling remains out of scope:
 `Leaf`/`InnerNode` are not in the top 15.
 
-### 4.3 Sequential A1/A2/A3 results
+### 4.3 Sequential A1–A7 results
 
 Each checkpoint used the same harness, JDK, JVM flags, fixture, nested thread flags, and JFR
-settings. The artifacts were preserved under `logs/A1/`, `logs/A2/`, and `logs/A3/` (gitignored).
+settings. The artifacts were preserved under `logs/A1/` through `logs/A7/` (gitignored).
 The job allocation column is the routing-thread counter; stage allocation is the comparable
 allocation metric.
 
@@ -330,20 +332,33 @@ allocation metric.
 | **A1** | B0 | 3 | 81.5 | 2.17 / 4.92 / 70.7 | 583.3 | ~23 | ~413 | 30.3 | 0 / 0 / 1000 |
 | **A2** | B0 | 3 | **38.3** | 1.59 / 2.88 / **29.7** | **243.1** | 1.76 | 26.94 | 2.46 | 0 / 0 / 1000 |
 | **A3** | B0 | 3 | 37.9 | 1.92 / 2.79 / 29.6 | 245.2 | 1.75 | 26.87 | 2.44 | 0 / 0 / 1000 |
+| **A4** | B0 | 3 | 38.21 | 1.85 / 3.13 / 28.64 | 233.66 | 1.75 | 26.93 | 2.44 | 0 / 0 / 1000 |
+| **A5** | B0 | 3 | **33.94** | 1.51 / 2.56 / 26.54 | **222.88** | 1.74 | 27.13 | 2.44 | 0 / 0 / 1000 |
+| **A6** | B0 | 3 | 33.85 | 1.41 / 2.32 / 26.27 | 238.99 | 1.76 | 27.21 | 2.46 | 0 / 0 / 1000 |
+| **A7** | B0 | 3 | 35.80 | 1.49 / 2.31 / 28.49 | 238.62 | 1.68 | 26.00 | 2.37 | 0 / 0 / 1000 |
 | Baseline | B0-maze | 1 | 5.8 | — / 2.59 / — | 137.9 | 6.30 | — | 3.88 | 17 / 0 / 588 |
 | **A1** | B0-maze | 1 | 6.3 | — / 2.69 / — | 204.0 | 6.30 | — | 3.61 | 17 / 0 / 588 |
 | **A2** | B0-maze | 1 | **5.5** | — / 1.99 / — | **160.5** | **0.87** | — | 0.86 | 17 / 0 / 588 |
 | **A3** | B0-maze | 1 | 5.3 | — / 2.06 / — | **84.3** | 0.86 | — | 0.79 | 17 / 0 / 588 |
+| **A4** | B0-maze | 1 | 5.32 | — / 1.97 / — | 142.06 | 0.85 | — | 0.85 | 17 / 0 / 588 |
+| **A5** | B0-maze | 1 | 5.34 | — / 1.87 / — | 35.78 | 0.87 | — | 0.32 | 17 / 0 / 588 |
+| **A6** | B0-maze | 1 | 5.24 | — / 1.67 / — | 83.64 | 0.86 | — | 0.37 | 17 / 0 / 588 |
+| **A7** | B0-maze | 1 | 5.32 | — / 1.86 / — | 21.86 | 0.85 | — | 0.30 | 17 / 0 / 588 |
 | Baseline | B0-optN | 1 | 50.3 | 2.10 / 5.36 / 39.4 | 963.3 | ~23 | ~415 | 31.0 | 0 / 0 / 1000 |
 | **A1** | B0-optN | 1 | 52.1 | 2.56 / 5.29 / 40.2 | 791.3 | ~23 | ~429 | 30.1 | 0 / 0 / 1000 |
 | **A2** | B0-optN | 1 | **22.8** | 1.54 / 2.74 / **15.0** | **444.0** | 1.75 | 27.07 | 2.44 | 0 / 0 / 1000 |
 | **A3** | B0-optN | 1 | 23.9 | 1.59 / 2.72 / 16.0 | 425.1 | 1.75 | 27.08 | 2.45 | 0 / 0 / 1000 |
+| **A4** | B0-optN | 1 | 20.93 | 1.50 / 2.36 / 13.39 | 403.10 | 1.75 | 27.08 | 2.45 | 0 / 0 / 1000 |
+| **A5** | B0-optN | 1 | 24.19 | 1.59 / 2.85 / 15.85 | 479.85 | 1.76 | 27.21 | 2.47 | 0 / 0 / 1000 |
+| **A6** | B0-optN | 1 | 19.82 | 1.38 / 2.24 / 12.85 | 503.26 | 1.74 | 27.21 | 2.45 | 0 / 0 / 1000 |
+| **A7** | B0-optN | 1 | 21.87 | 1.35 / 2.35 / 14.50 | 492.11 | 1.67 | 26.23 | 2.35 | 0 / 0 / 1000 |
 
 **A1:** Nulling released slots is a correctness prerequisite for reuse, but it does not reduce
 allocation by itself. The single A1 run set was noisy on peak heap and wall time; quality and
 allocation remained at baseline.
 
-**A2:** Restoring the two tree-scoped reusable stacks removed the repeated 10,000-slot
+**A2:** Restoring the reusable tree-walk stacks (with `overlaps()` isolated per caller thread)
+removed the repeated 10,000-slot
 `Object[]` allocations. Relative to baseline, B0 median wall fell **51%**, peak heap fell **53%**,
 maze-stage allocation fell from ~24 GB to **1.76 GB**, and optimizer-stage allocation fell from
 ~413 GB to **26.94 GB**. The latter confirms that optimizer `deepCopy()` rebuilds these trees and
@@ -352,6 +367,26 @@ benefits from the same reuse. Quality was unchanged.
 **A3:** Returning `Collections.emptyList()` is safe and allocation-free, but its incremental effect
 after A2 is small and within run noise. The B0-maze slice reached 0.79 GB job allocation and
 84 MB peak; B0 remained 0/0/1000. Keep A3 as a low-risk cleanup, not as the primary optimization.
+
+**A4:** Replacing the three sorted-room neighbour overlap lists with `ArrayList` preserved the
+explicit deterministic comparator and routing quality. The B0 and B0-maze changes were within
+normal run noise; retain it as a low-risk representation cleanup rather than a material win.
+
+**A5:** Replacing the internal `completeShape` working collections with fresh `ArrayList` instances
+removed linked-list node churn from the measured maze histogram and produced the strongest Phase 2
+result. B0 median wall improved to 33.94 s and peak to 222.88 MB; B0-maze job allocation was
+0.32 GB. The B0 quality triple remained 0/0/1000. No returned collection is reused or cleared.
+
+**A6:** Guarding eager TRACE-string concatenation preserved the trace payload when TRACE is enabled
+and avoids formatting work when it is disabled. The B0 median was effectively unchanged from A5
+(33.85 s versus 33.94 s); JFR remained noisy, so this is retained as a defensive low-risk guard,
+not credited with a measurable allocation reduction.
+
+**A7:** The two `overlaps()` callers were audited. `TreeSet` supplied `Leaf.compareTo` ordering, so
+the replacement collects into a fresh list and applies `Collections.sort` before either caller
+iterates it. The final thread-safe A7 checkpoint retained 0/0/1000 quality; B0 median peak was
+238.62 MB and optimizer allocation was 26.00 GB. The B0-maze slice was 5.32 s and 0.85 GB;
+retain A7 as an ordering-preserving cleanup, not as a claimed maze-stage win.
 
 Post-A2 B0-maze JFR no longer sampled `Object[]` as the dominant type: `byte[]` was 27–29%,
 `IntOctagon` 9.6–10.9%, `IntPoint` 7.7–8.8%, `String` 4.4–5.7%, `TreeMap$Entry` 4.0–4.1%,
@@ -542,10 +577,10 @@ Impact below is from the 12 September 2026 capture. “Do when” is no longer a
 | **A1** | Null slots in `ArrayStack.pop()` / `reset()` | Enables A2; not a peak win alone | Hours | Very low | A1 checkpoint: no allocation change | **Done**; retain unit tests |
 | **A2** | Restore per-tree `ArrayStack` field (v1.9) in `MinAreaTree` and the three `completeShape` walks | Maze and optimizer allocation | Hours | Low if A1 is in | B0-maze `Object[]` 70%; B0: 24→1.76 GB maze, ~413→26.94 GB optimizer | **Done**; primary measured win |
 | **A3** | `getTargetDoors()` → `Collections.emptyList()` | Allocation rate (tiny) | Minutes | Very low | A3 checkpoint; no quality change | **Done**; keep as low-risk cleanup |
-| **A4** | `LinkedList` → `ArrayList` in the three `Sorted*RoomNeighbours` | Maze allocation | Hours | Low (keep sort comparator) | `LinkedList$Node` 2.0–2.3% post-A2 maze | **Next candidate**, only with parity test |
-| **A5** | Same swap for `completeShape` **local** lists that are not returned | Maze allocation | Hours | Low | Same | Gate with post-A4 JFR |
-| **A6** | Guard hot `FRLogger.trace(String)` concatenations with `isTraceEnabled()` | Allocation when TRACE off | Hours | Very low | `String` 4.4–5.7% post-A2 maze | Candidate, but inspect call sites before editing |
-| **A7** | `MinAreaTree.overlaps()`: `TreeSet` → `ArrayList` (+ sort only if a caller needs order) | Maze allocation | Half day | Medium — callers may rely on `Leaf` ordering | `TreeMap$Entry` 4.0–4.1% post-A2 maze | Keep `TreeSet` until every caller is audited |
+| **A4** | `LinkedList` → `ArrayList` in the three `Sorted*RoomNeighbours` | Maze allocation | Hours | Low (keep sort comparator) | `LinkedList$Node` 2.0–2.3% post-A2 maze | **Done**; safe cleanup, no material delta |
+| **A5** | `ArrayList` for fresh `completeShape` working/result collections | Maze allocation | Hours | Low | Same | **Done**; strongest Phase 2 result |
+| **A6** | Guard hot `FRLogger.trace(String)` concatenations with `isTraceEnabled()` | Allocation when TRACE off | Hours | Very low | `String` 4.4–7.6% in sampled maze runs | **Done**; defensive guard, no measurable delta |
+| **A7** | `MinAreaTree.overlaps()`: `TreeSet` → ordered `ArrayList` | Maze allocation | Half day | Medium — callers may rely on `Leaf` ordering | `TreeMap$Entry` 3.2–4.0% post-A2 maze | **Done**; explicit `Collections.sort` preserves order |
 | **B1** | Avoid `boundingBox()` in the `newBoundingShape.union(...)` path; union octagons directly | Maze allocation | Hours | Low | `IntOctagon` 9.6–10.9% post-A2 maze | Candidate after A4/A5; parity gate |
 | **B2** | AABB reject on `leaf.boundingShape` **before** `getTreeShape()` | Maze CPU | Half day | Medium — must not change visit/clip order | Source | Only with room-partition parity evidence |
 | **B3** | Reusable scratch `ArrayList` for **internal** `newResult` only; allocate a fresh list at return | Maze allocation | Half–1 day | Medium — see Decision 2 | Lifetime analysis | After A4/B1; never reuse returned collection |
@@ -585,15 +620,15 @@ quadrantChart
 
 ## 8. Recommendations (practical order)
 
-1. **A1+A2+A3 are complete.** Re-run `profile_allocation_B0.ps1` after every subsequent
-   allocation change; preserve each checkpoint under a distinct ignored directory.
+1. **A1–A7 are complete.** Re-run `profile_allocation_B0.ps1` after every subsequent allocation
+   change; preserve each checkpoint under a distinct ignored directory.
 2. **A2 is the primary win.** It cut B0 maze allocation ~93%, optimizer allocation ~94%, B0 wall
    51%, and B0 peak heap 53%, with unchanged quality.
 3. **A3 is complete but incremental.** Keep it because it is safe and allocation-free, but do not
    attribute the large result to A3.
-4. **Phase 2 is now JFR-gated by measured post-A2 types:** prioritize A4/A5 (`LinkedList$Node`),
-   A6 (`String`), and B1 (`IntOctagon`) only after reviewing their call sites and adding the
-   required parity checks. A7 (`TreeSet`) remains optional and more sensitive.
+4. **Phase 2 result:** A5 is the only clear collection-allocation win. A4, A6, and A7 are retained
+   because they preserve behavior and reduce avoidable overhead, but their single-slice deltas are
+   within noise. B1 (`IntOctagon`) is the next measured candidate.
 5. **Peak heap and optimizer allocation remain T1.** After A2, B0-optN peak is 425–444 MB versus
    B0 243–245 MB, and optimizer allocation is ~27 GB. Keep `GLOBAL_OPTIMAL` in item-id order.
 6. **Do not pool `Leaf`/`InnerNode` or mutate `IntOctagon`.** The measured `IntOctagon` share is
@@ -616,14 +651,16 @@ How should reusable `ArrayStack` / internal lists be scoped?
 
 | Option | Idea | Pros | Cons |
 | :--- | :--- | :--- | :--- |
-| **A. Tree/engine field** | v1.9 `node_stack` on `MinAreaTree`; same for `completeShape` walks | Proven, no signature churn, thread-safe today because trees are not shared | Must null-out; must not share trees later |
-| B. `ThreadLocal` | Transparent, pool-safe | Unnecessary given `deepCopy`; leak risk on thread death | Extra mechanism |
+| **A. Tree/engine field** | v1.9 `node_stack` on `MinAreaTree`; same for `completeShape` walks | Proven, no signature churn, low overhead | Not safe when one tree is queried concurrently |
+| **B. `ThreadLocal`** | One reusable stack per tree and caller thread | Safe for shared-tree queries; preserves reuse | One retained stack per active caller thread |
 | C. `RoutingScratchpad` parameter | Explicit, testable | Touches every hot signature; large diff for no current gain | Save for a future concurrency model that shares trees |
 
-**Recommendation:** Option A is implemented. `overlaps()` and `completeShape()` use separate
-10,000-slot stacks because sharing would be unsafe under nested calls. The retained capacity is
-about 80 KB per shape-search tree and is acceptable. Revisit option C only if a future design
-shares one search tree across threads.
+**Recommendation:** Use tree-scoped stacks for `completeShape`, and a tree-scoped `ThreadLocal`
+stack for `MinAreaTree.overlaps()`. The latter is required by `MinAreaTreeConcurrencyTest`, which
+queries one tree concurrently; it prevents stack corruption while retaining the 10,000-slot
+reuse on the normal single-thread path. Keep the overlap and complete-shape stacks separate because
+sharing would be unsafe under nested calls. Revisit option C only if a future design shares all
+search-tree operations across threads.
 
 ### Decision 2: Scratch-list lifetime
 
@@ -761,12 +798,12 @@ passed after A2.
 ### Decision 18: JFR overrides §7 after Phase 1 — **measured**
 
 Phase 0 showed `Object[]` as #1 on both B0 (97%, mostly optimizer clones) and B0-maze (70%, maze
-walks). A1+A2 removed that dominant sample. Post-A2 B0-maze samples are now led by `byte[]`
-(27–29%), `IntOctagon` (9.6–10.9%), `IntPoint` (7.7–8.8%), `String` (4.4–5.7%),
-`TreeMap$Entry` (4.0–4.1%), and `LinkedList$Node` (2.0–2.3%).
+walks). A1+A2 removed that dominant sample. Post-A7 B0-maze samples are led by `byte`/`byte[]`
+(about 27–32%), `IntOctagon` (about 9.6–13.6%), `IntPoint` (about 6.3–8.8%), `String`
+(about 4.4–7.7%), and `TreeMap$Entry` (about 3.2–4.0%). `LinkedList$Node` fell to 1.3–2.2%.
 
-**Recommendation:** Keep A4/A5, A6, and B1 JFR-gated by those measured types and parity impact.
-Do not start C1 or mutable-octagon work: the type mix does not justify them.
+**Recommendation:** Keep A4–A7 as measured, parity-preserving cleanups. Measure B1 against the
+post-A7 geometry mix. Do not start C1 or mutable-octagon work: the type mix does not justify them.
 
 ### Decision 19: Promote optimizer board reuse (T1) when clones dominate peak heap — **yes, measured**
 
@@ -775,8 +812,9 @@ After A2/A3, B0-optN=4 peak is 425 MB versus B0 245 MB (about **180 MB**), while
 allocation is ~27 GB. A2 reduced both clone graph construction and the retained high-water mark,
 but per-candidate `deepCopy()` remains the largest full-pipeline allocation cost.
 
-**Recommendation:** Treat T1 as the next full-pipeline memory PR, but do not let it delay the
-measured maze follow-ups A4/A5/A6/B1. Keep `GLOBAL_OPTIMAL` and T-independent results.
+**Recommendation:** Treat T1 as the next full-pipeline memory PR after the B1 geometry experiment.
+Keep `GLOBAL_OPTIMAL` and T-independent results; A4–A7 did not materially change optimizer
+allocation, confirming that T1 remains the full-pipeline lever.
 
 ### Decision 20: Confirmation fixtures are merge gates for parity-sensitive items
 
@@ -832,14 +870,14 @@ a written reversal in §9.
 **Still open — group and close in this order**
 
 - **Measure first:** closed (Q1, Q7, Q8, Q11, Q22, Q26, Q27, Q32).
-- **Allocation (this branch, after A3):** Q3, Q6, Q9, Q23, Q31.
+- **Allocation (this branch, after A7):** Q3, Q6, Q9, Q23, Q31.
 - **Policy already decided:** Q4 keep TreeSet · Q5 B2 only with parity fixtures · Q10 no CI heap
   assert · Q12 tree field · Q13 no ping-pong · Q14 no pooling · Q15 TRACE guards in touched files ·
   Q21/Q29 stack cap · Q24/Q30 confirmation fixtures at `master` merge.
 - **Deterministic multi-threading (later):** Q16, Q17, Q18, Q19, Q20, Q28.
 
-**This week’s order:** A1+A2+A3 are complete → review post-A2 JFR → selectively prototype A4/A5/A6/B1
-with parity checks → T1 as a separate PR for default-CLI peak heap and optimizer allocation GB.
+**This week’s order:** A1–A7 are complete → measure B1 against the post-A7 geometry mix → T1 as
+a separate PR for default-CLI peak heap and optimizer allocation GB.
 
 Map: Q3/Q12 → D1 · Q13 → D2 · Q11 → D3 · Q14 → D5 · Q15 → D6 · Q7/Q18 → D11/D19 · Q16 → D12 ·
 Q17 → D13 · Q19 → D15 · Q20 → D16 · Q21/Q29 → D10/D21 · Q22 → D18 · Q24/Q30 → D20 · Q25 → D22 ·
@@ -850,7 +888,7 @@ Q32 → D15.
 | Q1 | On master B0 and B0-maze, what are the top 15 `jdk.ObjectAllocationSample` types and the peak heap MB? | Without this row, every later PR is a guess. We might “fix” `LinkedList` while `Object[]` or `byte[]` dominate. | **Closed.** §4 / §11.3. B0-maze 70% `Object[]`; full B0 97% is mostly optimizer clones. |
 | Q2 | Does restoring the v1.9 `ArrayStack` field (A2) cut peak heap, or only allocation GB? | Users feel RSS/OOM (peak). GC CPU is allocation rate. A2 could have won maze GB while missing B0 peak if optimizer clones dominated. | **Closed.** A2 cut B0 maze allocation ~93%, optimizer allocation ~94%, B0 peak 519→243 MB, and B0 wall 79→38 s; quality stayed 0/0/1000. |
 | Q3 | Is `completeShape` re-entrant with `overlaps()` on the same tree? | One shared stack: inner `overlaps()` `reset()` wipes the outer walk → missed obstacles or a crash → different rooms / DRC. | **Two stacks until a call-graph check says otherwise.** Source today: `completeShape` walks its own stack and does not call `overlaps()`; `restrainShape` / `getTreeShape` / observers might. 80 KB retained ≪ one corrupt pass. |
-| Q4 | Which `overlaps()` callers require `TreeSet` / `Leaf` ordering? | `Leaf.compareTo` is item id + shape index. Dropping `TreeSet` can change filter order in `overlappingTreeEntries` and, downstream, who gets ripped or reported first. | **Keep `TreeSet` until every caller is audited.** A7 is optional and parity-sensitive (Decision 20). |
+| Q4 | Which `overlaps()` callers require `TreeSet` / `Leaf` ordering? | `Leaf.compareTo` is item id + shape index. Dropping `TreeSet` can change filter order in `overlappingTreeEntries` and, downstream, who gets ripped or reported first. | **Closed.** The two callers were audited; A7 uses a fresh list followed by `Collections.sort`, preserving `Leaf.compareTo` order. |
 | Q5 | Can we skip `getTreeShape()` when `leaf.boundingShape` is AABB-disjoint (B2)? | Faster and fewer shapes — or a different clip order, different rooms, silent quality drift on 4-layer boards. | **Prototype only after A2**, DAC2020 + B0 + B0-4L. Any room-partition or quality change → drop B2. |
 | Q6 | How much of peak heap is the compensated autoroute tree vs young-gen noise? | If peak is retained rooms/tree, A2 will not move RSS. If peak is Eden sawtooth, allocation work is the right lever. | **One** B0-maze `OldObjectSample` / dump at pass end. No `System.gc()` in production. Feeds Q31. |
 | Q7 | How much of DiscoDongle’s nightly peak is optimizer clones (`CPU−1`) vs maze working set (1 thread)? | Nightly 772 MB is the wrong denominator for ArrayStack diffs. | **Closed.** B0 519 MB vs B0-optN=4 963 MB (Δ 444 MB). Decision 19: T1 next for peak; still ship A2 for maze GB. |
@@ -967,6 +1005,18 @@ Sequential implementation checkpoints:
 | 2026-09-12 | **A3** | B0 | 3 | 37.9 | 1.60 | 2.79 | 29.8 | 245.2 | 2.44† | 0 | 0 | 1000 | `Collections.emptyList()` |
 | 2026-09-12 | **A3** | B0-maze | 1 | 5.3 | — | 2.06 | — | **84.3** | 0.79† | 17 | 0 | 588 | no material change beyond A2 |
 | 2026-09-12 | **A3** | B0-optN | 1 | 23.9 | 1.59 | 2.72 | 16.0 | 425.1 | 2.45† | 0 | 0 | 1000 | optimizer T=4 |
+| 2026-09-12 | **A4** | B0 | 3 | 38.21 | 1.85 | 3.13 | 28.64 | 233.66 | 2.44† | 0 | 0 | 1000 | `ArrayList` room-neighbour lists |
+| 2026-09-12 | **A4** | B0-maze | 1 | 5.32 | — | 1.97 | — | 142.06 | 0.85† | 17 | 0 | 588 | no material change |
+| 2026-09-12 | **A4** | B0-optN | 1 | 20.93 | 1.50 | 2.36 | 13.39 | 403.1 | 2.45† | 0 | 0 | 1000 | optimizer T=4 |
+| 2026-09-12 | **A5** | B0 | 3 | **33.94** | 1.51 | 2.56 | 26.54 | **222.88** | 2.44† | 0 | 0 | 1000 | `ArrayList` complete-shape working lists |
+| 2026-09-12 | **A5** | B0-maze | 1 | 5.34 | — | 1.87 | — | 35.78 | 0.32† | 17 | 0 | 588 | fewer `LinkedList$Node` samples |
+| 2026-09-12 | **A5** | B0-optN | 1 | 24.19 | 1.59 | 2.85 | 15.85 | 479.85 | 2.47† | 0 | 0 | 1000 | optimizer T=4 |
+| 2026-09-12 | **A6** | B0 | 3 | 33.85 | 1.41 | 2.32 | 26.27 | 238.99 | 2.46† | 0 | 0 | 1000 | TRACE guards |
+| 2026-09-12 | **A6** | B0-maze | 1 | 5.24 | — | 1.67 | — | 83.64 | 0.37† | 17 | 0 | 588 | no measurable allocation delta |
+| 2026-09-12 | **A6** | B0-optN | 1 | 19.82 | 1.38 | 2.24 | 12.85 | 503.26 | 2.45† | 0 | 0 | 1000 | optimizer T=4 |
+| 2026-09-12 | **A7** | B0 | 3 | 35.80 | 1.49 | 2.31 | 28.49 | 238.62 | 2.37† | 0 | 0 | 1000 | ordered list overlaps; thread-safe stack |
+| 2026-09-12 | **A7** | B0-maze | 1 | 5.32 | — | 1.86 | — | 21.86 | 0.30† | 17 | 0 | 588 | no maze-stage win |
+| 2026-09-12 | **A7** | B0-optN | 1 | 21.87 | 1.35 | 2.35 | 14.50 | 492.11 | 2.35† | 0 | 0 | 1000 | optimizer T=4 |
 
 † Job-counter GB (routing thread). For A2/A3, stage allocation was approximately 1.75–1.76 GB
 for the full maze and 26.87–27.08 GB for the optimizer.
@@ -1207,40 +1257,42 @@ confirmed by the harness.
 **Exit:** B0 quality unchanged; A2 allocation and peak-heap gains recorded; A3 is a safe
 allocation-free cleanup. A1 alone is retained as the prerequisite for A2.
 
-### Phase 2 — Collection and TRACE hygiene, JFR-gated (A4–A6, B1)
+### Phase 2 — Collection and TRACE hygiene, JFR-gated (A4–A7, B1)
 
 Post-A2/A3 JFR still lists the corresponding types, so these are evidence-backed candidates.
 They are not automatically approved: preserve deterministic room ordering and run the parity gates.
 
-- [ ] `Sorted*RoomNeighbours`: `ArrayList` + `sort(comparator)` (all three classes); post-A2
-      `LinkedList$Node` is 2.0–2.3%.
-- [ ] `completeShape` local lists: `ArrayList` with an initial capacity; do not reuse returned lists.
-- [ ] `isTraceEnabled()` around 1-arg concatenations in `completeShape` / restrain (touched files
-      only; no repo-wide TRACE rewrite).
+- [x] `Sorted*RoomNeighbours`: `ArrayList` + `sort(comparator)` (all three classes); ordering
+      comparator preserved.
+- [x] `completeShape` working/result lists: fresh `ArrayList` instances; no returned list reuse.
+- [x] `isTraceEnabled()` around the hot 1-arg concatenation sites in touched search-tree files.
+- [x] `overlaps()` `TreeSet` → list with explicit `Collections.sort`; all callers were audited.
 - [ ] Replace `union(currentShape.boundingBox())` with octagon union (B1); post-A2 `IntOctagon` is
       9.6–10.9%.
 - [ ] Re-run **B0** (3×) and B0-maze JFR.
 
 **Exit:** same B0 quality gates; document which items were skipped because JFR did not justify them.
 
-### Phase 3 — Parity-sensitive follow-ups (optional)
+### Phase 3 — Geometry and parity-sensitive follow-ups (optional)
 
-Requires Decision 2 / 5 / A7 answers.
+Requires Decision 2 / 5 answers.
 
 - [ ] Internal scratch `newResult` with copy-out at return (B3), **or** skip.
 - [ ] Leaf AABB before `getTreeShape()` (B2) behind a careful before/after room-partition compare.
-- [ ] `overlaps()` `TreeSet` → list (A7) only after a caller audit.
 - [ ] Leaf pooling prototype on a **throwaway** branch (C1) only if Decision 5 is yes.
 
 **Exit:** either merge with a JFR note, or explicitly drop with the reason recorded here.
 
 ### Phase 4 — Verification
 
-- [ ] **B0** median vs master (completion, DRC, peak heap, allocation GB, wall time).
+- [x] **B0** checkpoint medians collected for A4–A7 (completion, DRC, peak heap, allocation GB,
+      wall time).
 - [ ] **B0-heap** once (PowerGlove) and **B0-4L** once (minisumo) — quality not worse, peak heap not
       worse outside noise.
-- [ ] `Dac2020Bm01RoutingTest` green.
-- [ ] `gradlew.bat spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`.
+- [x] `Dac2020Bm01RoutingTest` green.
+- [x] `MinAreaTreeConcurrencyTest`, `SmdPinFanoutRoutingTest.issue508Bm06`, and
+      `Display8DigitRoutingTest` green after the thread-isolation fix.
+- [x] `gradlew.bat spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`.
 - [ ] `python scripts/i18n/extract-context.py --check` only if Java user-visible strings changed
       (they should not).
 - [ ] Update this document: §11.3, decisions resolved, leftover questions.

@@ -16,6 +16,7 @@ import app.freerouting.geometry.planar.Side;
 import app.freerouting.geometry.planar.Simplex;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -142,7 +143,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int roomLayer = room.getLayer();
     boolean debugAnchor = isCompleteShapeDebugAnchor(netNumber, roomLayer, startShape);
     int debugStep = 0;
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(startShape, roomLayer, shapeToBeContained));
     completeShapeStack.reset();
     completeShapeStack.push(this.root);
@@ -182,7 +183,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
               traceCompleteShapeCandidate(
                   debugStep, netNumber, roomLayer, currentObject, currentObjectShape);
             }
-            Collection<IncompleteFreeSpaceExpansionRoom> newResult = new LinkedList<>();
+            Collection<IncompleteFreeSpaceExpansionRoom> newResult = new ArrayList<>();
             IntOctagon newBoundingShape = IntOctagon.EMPTY;
             boolean hadRoomsBeforeObstacle = !result.isEmpty();
             for (IncompleteFreeSpaceExpansionRoom currentRoom : result) {
@@ -245,19 +246,21 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
               }
             }
             if (hadRoomsBeforeObstacle && newResult.isEmpty()) {
-              FRLogger.trace(
-                  "COMPLETE_SHAPE_BLOCKED net="
-                      + netNumber
-                      + ", layer="
-                      + roomLayer
-                      + ", contained="
-                      + describeBounds(shapeToBeContained.boundingBox())
-                      + ", obstacle_type="
-                      + currentObject.getClass().getSimpleName()
-                      + ", obstacle_id="
-                      + obstacleId(currentObject)
-                      + ", obstacle_bounds="
-                      + describeBounds(currentObjectShape.boundingBox()));
+              if (FRLogger.isTraceEnabled()) {
+                FRLogger.trace(
+                    "COMPLETE_SHAPE_BLOCKED net="
+                        + netNumber
+                        + ", layer="
+                        + roomLayer
+                        + ", contained="
+                        + describeBounds(shapeToBeContained.boundingBox())
+                        + ", obstacle_type="
+                        + currentObject.getClass().getSimpleName()
+                        + ", obstacle_id="
+                        + obstacleId(currentObject)
+                        + ", obstacle_bounds="
+                        + describeBounds(currentObjectShape.boundingBox()));
+              }
             }
             result = newResult;
             boundingShape = newBoundingShape;
@@ -311,7 +314,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     // Then intersect shape with the halfplane defined by the
     // opposite of this line.
 
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
 
     TileShape containedShape = incompleteRoom.getContainedShape();
     if (containedShape == null || containedShape.isEmpty()) {
