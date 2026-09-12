@@ -1,6 +1,7 @@
 # Freerouting Memory Allocation, Peak Heap, and Thread-Readiness Plan
 
-**Document status:** Working specification with measured A1–A7, B1, and T1 checkpoints
+**Document status:** Measured implementation record through A1–A7, B1, T1, and Q9; remaining
+allocation candidates are explicitly closed or deferred
 **Date:** 12 September 2026
 **Target branch:** `research/peak-heap-allocation-optimization`
 **Primary tooling:** JDK Flight Recorder (JFR) + JDK 25 CLI (`jfr`)
@@ -31,7 +32,7 @@ Phase 0 is done: DiscoDongle B0, B0-maze, and B0-optN=4 are captured with JFR
 Re-run the **same** harness after every optimization. Do not invent a new command line per
 experiment.
 
-Work completed in this implementation pass: **A1–A7, B1, and T1**. A4–A7, B1, and T1 were measured
+Work completed in this implementation pass: **A1–A7, B1, T1, and Q9**. A4–A7, B1, T1, and Q9 were measured
 sequentially with the same JFR harness; the artifacts are preserved under `logs/A4/` through
 `logs/A7/` and the current profile directories under `logs/` (gitignored). T1 is retained as a
 peak-heap optimization; it did not materially reduce optimizer allocation GB.
@@ -54,15 +55,18 @@ need different fixes:
 
 `--router.autorouter.max_threads=1` is accepted (log: `Pipeline thread limits: autorouter.max_threads=1, optimizer.max_threads=1`). Production maze still uses `runSingleThread`; the nested flag is what a future multi-thread pass would read.
 
-The completed code is **A1–A7, B1, and T1**: null-out, per-tree `ArrayStack` reuse, immutable empty target-door
+The completed code is **A1–A7, B1, T1, and Q9**: null-out, per-tree `ArrayStack` reuse, immutable empty target-door
 collections, `ArrayList` room-neighbour/complete-shape collections, TRACE guards, and ordered
-`ArrayList` overlap results, direct 45° octagon unions, and worker-local optimizer boards restored
+`ArrayList` overlap results, direct 45° octagon unions, the `IntOctagon.normalize()` identity-return
+fast path, and worker-local optimizer boards restored
 through snapshots. Judge future maze changes on B0-maze allocation GB and JFR, and judge optimizer
 changes on stage allocation and peak heap separately.
 
 Post-A7/B1 JFR still shows geometry (`IntOctagon`, `IntPoint`) and logging/string work among the
-leading maze samples; `LinkedList$Node` is no longer a leading sample. B1 is retained as a
-low-risk allocation cleanup, but it produced no material KPI change. Pooling remains out of scope.
+leading maze samples; `LinkedList$Node` is no longer a leading sample. Q9 confirmed that
+`IntOctagon.normalize()` is a material subpath of the sampled `IntOctagon` allocations, so the
+identity-return fast path was implemented and validated. B1 and Q9 are retained as low-risk
+allocation cleanups; pooling remains out of scope.
 
 Canonical thread flags: `--router.autorouter.max_threads` and `--router.optimizer.max_threads`.
 Do not use `--router.max_threads` in the harness.
@@ -437,6 +441,44 @@ allocation-rate win. B0 and B0-optN SES outputs matched byte-for-byte; quality r
 
 ---
 
+## 4.5 Targeted Q6, Q9, and Q31 follow-up
+
+The post-B1 B0-maze recording was inspected before starting another optimization. Its JFR summary
+contained 27 `jdk.OldObjectSample` events. None named `IncompleteFreeSpaceExpansionRoom`,
+`FreeSpaceExpansionRoom`, `ShapeSearchTree` nodes, or other autoroute-tree room objects. The
+samples were short-lived runtime objects (`TreeMap$Entry`, JFR/runtime objects, small arrays, and
+strings), and the recording did not provide a routing-room retention path. No production
+`System.gc()` was added.
+
+Q9 was then measured with `jdk.ObjectAllocationSample` at stack depth 16. The pre-change capture
+contained 107 sampled `IntOctagon` allocations, including 36 through `IntOctagon.normalize()`;
+the latter represented approximately 32 MB of weighted samples. After the identity-return change,
+the three B0-maze runs contained 67–78 `IntOctagon` samples and 14–21 `normalize()` samples.
+Because allocation sampling is throttled, these counts are evidence for gating the change, not a
+precise allocation-rate percentage.
+
+The implementation returns `this` when normalization leaves all eight bounds unchanged, while
+preserving `EMPTY` for invalid or empty results. A focused `IntOctagonTest` covers both the
+identity and tightening paths. Validation results:
+
+| Profile | n | Median wall s | Peak heap MB | Maze alloc GB | Quality | Parity |
+| :--- | ---: | ---: | ---: | ---: | :--- | :--- |
+| Q9 B0-maze | 3 | 5.28 | 75.95 | 0.83 | 17 / 0 / 587.88 | canonical thread flags accepted |
+| Q9 B0 | 3 | 40.17 | 227.00 | 1.66 | 0 / 0 / 1000 | all three SES files matched A7 SHA-256 |
+| Q9 B0-4L | 1 | 29.94 | 201.96 | 17.08 | 3 / 0 / 972.79 | matches frozen 4-layer quality |
+| Q9 DAC2020 | 1 | — | — | — | regression test passed | 0 violations in test run |
+
+Q6 therefore does not justify a room-lifecycle rewrite. Q31 is closed for this branch: use
+`run_test_Issue420_oom.ps1` for a long soak if Issue 420 recurs, but do not expand this plan into
+pass-end room retention work based on the current evidence.
+
+Q5/B2 and B3 are also closed without implementation. B2 has no measured allocation evidence and
+can change room visitation/clip order; B3 has no stack-attributed `newResult` hotspot and risks
+invalidating caller-owned returned collections. Retain the existing parity rule and do not reopen
+either candidate without a new targeted profile.
+
+---
+
 ## 5. KPI definitions and how to measure them
 
 Use three numbers on every run, written into `logs/<fixture>/metrics.md`:
@@ -628,8 +670,8 @@ Impact below is from the 12 September 2026 capture. “Do when” is no longer a
 | **A6** | Guard hot `FRLogger.trace(String)` concatenations with `isTraceEnabled()` | Allocation when TRACE off | Hours | Very low | `String` 4.4–7.6% in sampled maze runs | **Done**; defensive guard, no measurable delta |
 | **A7** | `MinAreaTree.overlaps()`: `TreeSet` → ordered `ArrayList` | Maze allocation | Half day | Medium — callers may rely on `Leaf` ordering | `TreeMap$Entry` 3.2–4.0% post-A2 maze | **Done**; explicit `Collections.sort` preserves order |
 | **B1** | Avoid `boundingBox()` in the 45° `newBoundingShape.union(...)` path; union octagons directly | Maze allocation | Hours | Low | B1 JFR still led with `IntOctagon` 12.7%; no material KPI delta | **Done**; safe cleanup, retain without claiming a measured win |
-| **B2** | AABB reject on `leaf.boundingShape` **before** `getTreeShape()` | Maze CPU | Half day | Medium — must not change visit/clip order | Source | Only with room-partition parity evidence |
-| **B3** | Reusable scratch `ArrayList` for **internal** `newResult` only; allocate a fresh list at return | Maze allocation | Half–1 day | Medium — see Decision 2 | Lifetime analysis | After A4/B1; never reuse returned collection |
+| **B2** | AABB reject on `leaf.boundingShape` **before** `getTreeShape()` | Maze CPU | Half day | Medium — must not change visit/clip order | No measured allocation hotspot | **Drop**; no evidence and parity-sensitive |
+| **B3** | Reusable scratch `ArrayList` for **internal** `newResult` only; allocate a fresh list at return | Maze allocation | Half–1 day | Medium — see Decision 2 | No stack-attributed hotspot; returned-list lifetime risk | **Drop**; do not reuse returned collections |
 | **C1** | `Leaf`/`InnerNode` pooling | Allocation rate; may **hurt** peak | Days | High | Not in top 15 | **No** (Decision 5) |
 | **C2** | Mutable / pooled `IntOctagon` | Allocation rate; correctness landmine (`EMPTY`, `precalculatedToSimplex`, sharing) | Days | Very high | Source | **No** |
 | **C3** | Custom JFR events / NDJSON TRACE | Observability, not memory | Days | Low for JFR; high for log volume | — | Separate track |
@@ -639,7 +681,7 @@ Impact below is from the 12 September 2026 capture. “Do when” is no longer a
 
 ```mermaid
 quadrantChart
-    title After B0 JFR — A1–A7, B1, and T1 measured; B2/B3 remain gated
+    title After targeted follow-up — A1–A7, B1, T1, and Q9 measured
     x-axis Low Effort --> High Effort
     y-axis Skip / high risk --> Do now / high confidence
     quadrant-1 Later / gated
@@ -653,8 +695,6 @@ quadrantChart
     "A6 TRACE guards": [0.20, 0.40]
     "A4/A5 ArrayList swaps": [0.28, 0.35]
     "B1 union without IntBox": [0.30, 0.32]
-    "B3 internal scratch lists": [0.45, 0.30]
-    "B2 leaf AABB before getTreeShape": [0.48, 0.28]
     "A7 TreeSet to ArrayList": [0.42, 0.25]
     "C3 JFR events / NDJSON": [0.55, 0.20]
     "C1 Leaf pooling": [0.70, 0.12]
@@ -666,7 +706,7 @@ quadrantChart
 
 ## 8. Recommendations (practical order)
 
-1. **A1–A7, B1, and T1 are complete.** Re-run `profile_allocation_B0.ps1` after every subsequent allocation
+1. **A1–A7, B1, T1, and Q9 are complete.** Re-run `profile_allocation_B0.ps1` after every subsequent allocation
    change; preserve each checkpoint under a distinct ignored directory.
 2. **A2 is the primary win.** It cut B0 maze allocation ~93%, optimizer allocation ~94%, B0 wall
    51%, and B0 peak heap 53%, with unchanged quality.
@@ -683,6 +723,9 @@ quadrantChart
 7. **Keep maze/fanout MT unwired.** Quarantine `runMultiThread`. DiscoDongle maze is now about 7%
    of B0 wall.
 8. **KPI H** (peak heap) with stage allocation GB secondary. Noise: ±5% or ±10 MB, median of 3.
+9. **Do not implement B2 or B3** without new stack-attributed evidence and parity fixtures.
+10. **Keep Q31 in the existing soak workflow only.** No room-lifecycle rewrite is warranted by the
+    current `OldObjectSample` recording.
 
 ---
 
@@ -920,18 +963,19 @@ a written reversal in §9.
 - **CI workflow upgrades** are a separate PR.
 - **No BVH / mutable `IntOctagon` / TRACE-NDJSON / SIMD / Vector API / WebGPU** in this branch.
 
-**Still open — group and close in this order**
+**Status by question group**
 
 - **Measure first:** closed (Q1, Q7, Q8, Q11, Q22, Q26, Q27, Q32).
-- **Allocation (this branch, after A7):** Q3, Q6, Q9, Q23, Q31.
-- **Policy already decided:** Q4 keep TreeSet · Q5 B2 only with parity fixtures · Q10 no CI heap
+- **Allocation (this branch):** Q3, Q6, Q9, Q23, and Q31 are closed; Q31 remains covered only by
+  the existing Issue 420 soak script.
+- **Policy already decided:** Q4 keep TreeSet · Q5/B2 dropped for this branch · Q10 no CI heap
   assert · Q12 tree field · Q13 no ping-pong · Q14 no pooling · Q15 TRACE guards in touched files ·
   Q21/Q29 stack cap · Q24/Q30 confirmation fixtures at `master` merge.
 - **Deterministic multi-threading (later):** Q16, Q17, Q18, Q19, Q20, Q28.
 
-**Current order:** A1–A7, B1, and T1 are complete. T1 is retained for its measured peak-heap
-reduction; B2/B3, pooling, and multi-thread redesign remain deferred behind stronger JFR and
-parity evidence.
+**Current order:** A1–A7, B1, T1, and Q9 are complete. T1 is retained for its measured peak-heap
+reduction; B2/B3 are dropped, pooling remains out of scope, and production multi-thread redesign
+remains deferred.
 
 Map: Q3/Q12 → D1 · Q13 → D2 · Q11 → D3 · Q14 → D5 · Q15 → D6 · Q7/Q18 → D11/D19 · Q16 → D12 ·
 Q17 → D13 · Q19 → D15 · Q20 → D16 · Q21/Q29 → D10/D21 · Q22 → D18 · Q24/Q30 → D20 · Q25 → D22 ·
@@ -943,15 +987,15 @@ Q32 → D15.
 | Q2 | Does restoring the v1.9 `ArrayStack` field (A2) cut peak heap, or only allocation GB? | Users feel RSS/OOM (peak). GC CPU is allocation rate. A2 could have won maze GB while missing B0 peak if optimizer clones dominated. | **Closed.** A2 cut B0 maze allocation ~93%, optimizer allocation ~94%, B0 peak 519→243 MB, and B0 wall 79→38 s; quality stayed 0/0/1000. |
 | Q3 | Is `completeShape` re-entrant with `overlaps()` on the same tree? | One shared stack: inner `overlaps()` `reset()` wipes the outer walk → missed obstacles or a crash → different rooms / DRC. | **Closed.** The source audit found no re-entry: `completeShape` uses direct shape overlap checks, and its `restrainShape()` / tree-shape paths do not call the tree-level `overlaps()` query. Keep two stacks as future-proof isolation. |
 | Q4 | Which `overlaps()` callers require `TreeSet` / `Leaf` ordering? | `Leaf.compareTo` is item id + shape index. Dropping `TreeSet` can change filter order in `overlappingTreeEntries` and, downstream, who gets ripped or reported first. | **Closed.** The two callers were audited; A7 uses a fresh list followed by `Collections.sort`, preserving `Leaf.compareTo` order. |
-| Q5 | Can we skip `getTreeShape()` when `leaf.boundingShape` is AABB-disjoint (B2)? | Faster and fewer shapes — or a different clip order, different rooms, silent quality drift on 4-layer boards. | **Prototype only after A2**, DAC2020 + B0 + B0-4L. Any room-partition or quality change → drop B2. |
-| Q6 | How much of peak heap is the compensated autoroute tree vs young-gen noise? | If peak is retained rooms/tree, A2 will not move RSS. If peak is Eden sawtooth, allocation work is the right lever. | **One** B0-maze `OldObjectSample` / dump at pass end. No `System.gc()` in production. Feeds Q31. |
+| Q5 | Can we skip `getTreeShape()` when `leaf.boundingShape` is AABB-disjoint (B2)? | Faster and fewer shapes — or a different clip order, different rooms, silent quality drift on 4-layer boards. | **Drop for this branch.** No allocation hotspot was measured, and the shortcut remains parity-sensitive. |
+| Q6 | How much of peak heap is the compensated autoroute tree vs young-gen noise? | If peak is retained rooms/tree, A2 will not move RSS. If peak is Eden sawtooth, allocation work is the right lever. | **Closed.** One B0-maze recording contained 27 `OldObjectSample` events and no expansion-room or search-tree-node sample. No room-retention evidence. |
 | Q7 | How much of DiscoDongle’s nightly peak is optimizer clones (`CPU−1`) vs maze working set (1 thread)? | Nightly 772 MB is the wrong denominator for ArrayStack diffs. | **Closed.** B0 519 MB vs B0-optN=4 963 MB (Δ 444 MB). Decision 19: T1 next for peak; still ship A2 for maze GB. |
 | Q8 | After pinning optimizer to 1 thread, is DiscoDongle optimizer still ~20 s? | RC2 ~71 s wall used parallel optimizer. B0 will look “slower” even with no code change. | **Closed.** Optimizer at T=1 is **68 s** (86% of B0 wall); at T=4 **39 s**. Never compare B0 wall to nightly wall. |
-| Q9 | Does `IntOctagon.normalize()` allocate a second octagon on the restrain path? | Extra `IntOctagon` per restrain if it always `new`s. Returning `this` when already tight is safe; returning a shared `EMPTY` mutation is not. | **Only if it appears in B0-maze samples.** Then identity-return when unchanged; never mutate `EMPTY`. |
+| Q9 | Does `IntOctagon.normalize()` allocate a second octagon on the restrain path? | Extra `IntOctagon` per restrain if it always `new`s. Returning `this` when already tight is safe; returning a shared `EMPTY` mutation is not. | **Closed.** It appeared materially in the B0-maze samples; return `this` when unchanged and preserve `EMPTY` handling. |
 | Q10 | Should CI assert a peak-heap ceiling? | A 16 GB Windows runner vs a 32 GB desktop will flake and block unrelated PRs. | **Log B0 heap, do not assert** until three machines agree within Decision 3 noise. |
 | Q11 | KPI: peak heap (H) vs allocation rate (T)? | Pooling can cut allocation GB and **raise** old-gen. “Done” must pick which number wins. | **H primary, T secondary** (Decision 3). Noise ±5% or ±10 MB, whichever is larger, median of 3. |
 | Q12 | Scratch ownership: tree field vs `ThreadLocal` vs context parameter? | `static` / process-wide scratch corrupts the first maze MT attempt. `ThreadLocal` leaks after thread death. | **Tree field (v1.9).** Decision 1 option A. `ThreadLocal` only if trees are shared (they are not). Decision 17: do not serialize the stack. |
-| Q13 | Reuse `completeShape` result lists (ping-pong)? | Caller still holds the previous return. Clearing it for the next query deletes rooms already in the expansion engine → lost doors / loops / DRC. | **No ping-pong.** Internal `newResult` reuse only with copy-out at return, after A2 (Decision 2). |
+| Q13 | Reuse `completeShape` result lists (ping-pong)? | Caller still holds the previous return. Clearing it for the next query deletes rooms already in the expansion engine → lost doors / loops / DRC. | **No.** B3 is dropped; never reuse a returned collection. |
 | Q14 | Object-pool `Leaf`/`InnerNode`? | Pools keep objects in old-gen. Peak heap often **up**, allocation rate down — the opposite of KPI H. | **No** unless post-A2 JFR still shows them **and** peak heap is still the problem **and** a throwaway prototype does not raise peak (Decision 5). |
 | Q15 | TRACE as profiler vs waste? | Unguarded `"a" + b + c` allocates even at INFO. Replacing PatternLayout with NDJSON breaks `compare-versions.ps1`. | **`isTraceEnabled()` in touched files only.** No NDJSON, no custom JFR events (Decision 6). |
 | Q16 | Maze MT model? | Tournament+shuffle is N× work and a quality lottery. Wiring it “for speed” raises heap and changes the board. | **Deterministic wave (D), not A.** Sequential greedy stays B0. Not this branch (Decision 12). |
@@ -969,7 +1013,7 @@ Q32 → D15.
 | Q28 | What does “same board” mean for determinism? | Score-only can hide a via move. Full polyline dumps are expensive. T>1 optimizer was never bit-identical to T=1 if reduction races. | **This branch (T=1):** unrouted count, `DesignRulesChecker` size, score; optional board hash vs master B0. **Later T=N:** same triple **and** hash; reduction in item-id order. Geometry diffs without score/DRC movement still fail the hash gate. |
 | Q29 | Cap `ArrayStack.reallocate()` (4× growth)? | A stuck walk retains 160 KB then 640 KB `Object[]` on a long-lived tree. | **Closed.** Growth now logs at DEBUG, caps capacity at 40,000 entries, and throws when a traversal exceeds the cap; `ArrayStackTest` covers growth failure. |
 | Q30 | Are B0-heap and B0-4L required to merge? | Research iteration vs `master` safety. | **Closed by this pass:** both confirmation fixtures were run; B0-4L preserved the frozen 3-unrouted/0-violation result and B0-heap remained clean. |
-| Q31 | Is pass-end expansion-room retention in scope? | If rooms stay in the autoroute tree after `finishAutoroute`, A2 will not fix a rising staircase across passes (Issue 420). | Only if Q6 `OldObjectSample` names `*ExpansionRoom` / tree nodes as retained. Otherwise leave to the soak script; do not expand this plan into a room-lifecycle rewrite. |
+| Q31 | Is pass-end expansion-room retention in scope? | If rooms stay in the autoroute tree after `finishAutoroute`, A2 will not fix a rising staircase across passes (Issue 420). | **Closed for this branch.** Q6 named no expansion rooms or tree nodes; use the existing Issue 420 soak script if the symptom recurs. |
 | Q32 | Document optimizer threading vs `featureFlags.multiThreading` in `settings.md` now? | Code comments rot; users read settings docs. A behavior change here would confound B0. | **Closed.** Nested `autorouter.max_threads` / `optimizer.max_threads` documented; GUI flag does not gate the optimizer pool. No flag-unification code (Decision 15). |
 
 ### Closed answers (fill as work proceeds)
@@ -987,6 +1031,11 @@ Q32 → D15.
 | Q30 | 2026-09-12 | f741297c0+ | B0-heap completed at 0 unrouted/0 violations/1000; B0-4L completed at 3 unrouted/0 violations/973, matching the frozen minisumo baseline. Full DRC on all three confirmation SES outputs returned 0 violations. |
 | B1 | 2026-09-12 | f741297c0+ | Direct 45° octagon unions preserved B0, B0-heap, B0-4L, and DAC2020 quality; no material KPI change, so retain as a safe cleanup. |
 | T1 | 2026-09-12 | 50ee20b4d | Worker-local optimizer boards reduced B0-optN peak from 492.11 MB to 441.98 MB (10.2%). Optimizer allocation stayed approximately 26 GB; T=1/T=4 outputs matched byte-for-byte and quality remained 0/0/1000. |
+| Q6 | 2026-09-12 | a1f5ce1e1+ | B0-maze JFR contained 27 `OldObjectSample` events and no `ExpansionRoom`, `ShapeSearchTree` node, or comparable routing-room sample. No evidence justified a room-lifecycle rewrite. |
+| Q9 | 2026-09-12 | a1f5ce1e1+ | `IntOctagon.normalize()` appeared in 36 of 107 sampled `IntOctagon` allocations before the change. Returning `this` for unchanged bounds passed focused tests, B0 parity, DAC2020, and B0-4L quality gates. |
+| Q31 | 2026-09-12 | a1f5ce1e1+ | Closed for this branch because Q6 found no pass-end room/tree retention evidence; retain the existing Issue 420 soak script as the follow-up path. |
+| B2 | 2026-09-12 | a1f5ce1e1+ | Dropped: no measured allocation hotspot and the AABB shortcut is parity-sensitive. |
+| B3 | 2026-09-12 | a1f5ce1e1+ | Dropped: no stack-attributed `newResult` hotspot and returned-list ownership makes scratch reuse risky. |
 | Q22 | 2026-09-12 | 0c345755+ | B0-maze JFR **does** show `Object[]` as #1 (70%). Ship A1+A2. Skip Phase 2 until post-A2. |
 | Q25 | 2026-09-12 | — | DiscoDongle stays B0 (Decision 22). |
 | Q26 | 2026-09-12 | 0c345755+ | Run 1 wall is not an outlier (78.9 / 78.0 / 79.0 s). Keep n=3 median. |
@@ -1347,12 +1396,15 @@ They are not automatically approved: preserve deterministic room ordering and ru
 Requires Decision 2 / 5 answers.
 
 - [x] Skip internal scratch `newResult` (B3): returned-collection lifetime risk remains and JFR did not
-      justify the added complexity.
+      justify the added complexity; the post-B1 profile found no stack-attributed hotspot.
 - [x] Defer leaf AABB before `getTreeShape()` (B2): it remains parity-sensitive and has no measured
       allocation evidence.
+- [x] Q9 `IntOctagon.normalize()` identity return: B0-maze stack samples justified the narrow
+      fast path; `EMPTY` handling remains unchanged and focused geometry tests cover both paths.
 - [x] Skip leaf pooling (C1): post-A7/B1 JFR does not show `Leaf`/`InnerNode` in the leading types.
 
-**Exit:** either merge with a JFR note, or explicitly drop with the reason recorded here.
+**Exit:** Q9 is merged as a narrow geometry cleanup; B2/B3/C1 are explicitly dropped or deferred
+with the reasons recorded here.
 
 ### Phase 4 — Verification
 
@@ -1485,9 +1537,9 @@ Observed on PR workflows; **do not fold into the memory branch**.
 
 ## Appendix C — Phase timeline (relative, not calendar)
 
-Phases 0–2 low-risk work and the planned confirmation verification are done. Remaining relative
-effort is the separate T1 optimizer investigation; B2/B3, pooling, and production multi-thread
-redesign remain deferred.
+Phases 0–2, T1, and the targeted Q6/Q9/Q31 follow-up are complete. Remaining work is limited to
+the existing Issue 420 soak workflow if that symptom recurs; pooling and production multi-thread
+redesign remain out of scope.
 
 ```mermaid
 gantt
@@ -1498,9 +1550,11 @@ gantt
     Harness and B0 profiles            :done, a1, 2026-01-01, 1d
     A1-A7 allocation changes           :done, a2, after a1, 1d
     B1 and confirmation fixtures       :done, a3, after a2, 1d
-    section Deferred
-    T1 optimizer board reuse           :a4, after a3, 2d
+    T1 and Q9 measured follow-ups      :done, a4, after a3, 2d
+    section Out of scope
+    Pooling and production MT          :a5, after a4, 1d
 ```
 
-Post-B1: do not execute B2/B3 or C1 out of habit. Full-B0 `Object[]` share is not the A2 success
-metric, and T1 remains the appropriate lever for default-CLI peak heap.
+Post-Q9: do not execute B2/B3 or C1 out of habit. Full-B0 `Object[]` share is not the A2 success
+metric, T1 remains the appropriate lever for default-CLI peak heap, and Q31 belongs to the soak
+script rather than this implementation plan.
