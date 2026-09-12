@@ -98,6 +98,7 @@ class GlobalSettingsTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation") // CLI flags write into the JSON/CLI routerSettings bridge.
   void applyCommandLineArgumentsNestedAutorouterMaxThreads() {
     GlobalSettings settings = new GlobalSettings();
     String[] args =

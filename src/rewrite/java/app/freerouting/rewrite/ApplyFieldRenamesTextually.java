@@ -31,7 +31,7 @@ public class ApplyFieldRenamesTextually extends JavaIsoVisitor<ExecutionContext>
     if (!(tree instanceof JavaSourceFile cu)) {
       return (J) tree;
     }
-    String original = cu.print();
+    String original = cu.print(getCursor());
     String updated = FieldRenameTextReplacer.apply(original, renames);
     if (updated.equals(original)) {
       return cu;

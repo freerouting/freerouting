@@ -90,7 +90,7 @@ class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
       fail("Routing job failed.");
     } else {
       var bs = job.board.getStatistics();
-      var scoreBeforeOptimization = bs.getNormalizedScore(job.routerSettings.scoring);
+      var scoreBeforeOptimization = bs.getRouterScore(job.routerSettings.scoring);
       Duration routingDuration = Duration.between(job.startedAt, job.finishedAt);
 
       IO.println(
@@ -140,7 +140,7 @@ class BbdMars64PerformanceRoutingTest extends RoutingFixtureTest {
       fail("Routing job failed.");
     } else {
       var bs = job.board.getStatistics();
-      var scoreBeforeOptimization = bs.getNormalizedScore(job.routerSettings.scoring);
+      var scoreBeforeOptimization = bs.getRouterScore(job.routerSettings.scoring);
       Duration routingDuration = Duration.between(job.startedAt, job.finishedAt);
 
       IO.println(

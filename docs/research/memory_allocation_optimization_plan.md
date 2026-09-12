@@ -1526,7 +1526,8 @@ This appendix exists so the idea is not lost. It is **not** a Phase 0–2 task.
 Included in this PR. The workflows now use the Node 24-compatible action majors:
 `actions/checkout@v5`, `actions/setup-python@v6`, and `gradle/actions/setup-gradle@v5`.
 The PR build also uses the current Build Scan inputs
-`build-scan-terms-of-use-url` and `build-scan-terms-of-use-agree`. The pre-commit workflow
+`build-scan-terms-of-use-url` (`https://gradle.com/help/legal-terms-of-use`) and
+`build-scan-terms-of-use-agree`. The pre-commit workflow
 already used `actions/checkout@v7`.
 
 ---
