@@ -1521,17 +1521,13 @@ This appendix exists so the idea is not lost. It is **not** a Phase 0–2 task.
 
 ---
 
-## Appendix B — GitHub Actions warnings (separate PR)
+## Appendix B — GitHub Actions warning fixes
 
-Observed on PR workflows; **do not fold into the memory branch**.
-
-1. **Node 20 runtime deprecation** on `actions/checkout@v4`, `actions/setup-python@v5`,
-   `gradle/actions/setup-gradle@v4`. Bump in
-   [`gradle-build-on-pr.yml`](../../.github/workflows/gradle-build-on-pr.yml) and audit
-   `create-snapshot.yml`, `create-release.yml`, `gui-a11y.yml`, Docker workflows. `pre-commit.yml`
-   already uses `actions/checkout@v7`.
-2. **Build Scan inputs** still use `build-scan-terms-of-service-url` / `-agree`. Rename to
-   `build-scan-terms-of-use-url` / `build-scan-terms-of-use-agree` per `gradle/actions/setup-gradle@v4`.
+Included in this PR. The workflows now use the Node 24-compatible action majors:
+`actions/checkout@v5`, `actions/setup-python@v6`, and `gradle/actions/setup-gradle@v5`.
+The PR build also uses the current Build Scan inputs
+`build-scan-terms-of-use-url` and `build-scan-terms-of-use-agree`. The pre-commit workflow
+already used `actions/checkout@v7`.
 
 ---
 
