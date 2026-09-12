@@ -187,10 +187,12 @@ Configures the optional route-optimization stage that runs after autorouting.
 - **`max_passes`**: Maximum number of optimizer passes.
 - **`max_items`**: Maximum number of item optimization attempts.
 - **`max_threads`**: Optimizer worker-thread cap. Canonical CLI is
-  `--router.optimizer.max_threads`. Default is `CPU−1`. Headless, API, and GUI all use this
-  pool (`BatchOptimizer`). Independent of `feature_flags.multi_threading` (that GUI flag does
-  **not** disable optimizer workers) and of `--router.autorouter.max_threads`. Each in-flight
-  worker `deepCopy()`s the board, so peak heap scales with this value.
+  `--router.optimizer.max_threads`. The default is the JVM-visible processor count minus one
+  (`Runtime.getRuntime().availableProcessors() - 1`), with a minimum of one worker. Headless,
+  API, and GUI all use this pool (`BatchOptimizer`). Independent of
+  `feature_flags.multi_threading` (that GUI flag does **not** disable optimizer workers) and of
+  `--router.autorouter.max_threads`. Each in-flight worker `deepCopy()`s the board, so peak heap
+  scales with this value.
 - **`improvement_threshold`**: Minimum **relative** optimizer-score percentage gain required to
   continue after a pass (default `2.5`, representing 2.5%). `BatchOptimizer` compares
   `((scoreAfter - scoreBefore) / scoreBefore) * 100`. Benchmark calibration across golden fixtures
