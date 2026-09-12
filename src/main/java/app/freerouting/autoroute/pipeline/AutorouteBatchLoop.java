@@ -61,6 +61,17 @@ final class AutorouteBatchLoop {
     router.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(router, TaskState.STARTED, 0, router.board.getHash()));
 
+    int optimizerThreads =
+        (settings.optimizer != null && settings.optimizer.maxThreads != null)
+            ? Math.max(1, settings.optimizer.maxThreads)
+            : 1;
+    job.logInfo(
+        "Pipeline thread limits: autorouter.max_threads="
+            + settings.getAutorouterMaxThreads()
+            + ", optimizer.max_threads="
+            + optimizerThreads
+            + ".");
+
     // Capture initial state for session summary
     router.sessionStartTime = Instant.now();
     router.initialUnroutedCount = calculateIncompleteCount(router.board);

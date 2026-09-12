@@ -51,6 +51,9 @@ public class ShapeSearchTree extends MinAreaTree {
 
   private static final int DRILL_HOLE_CLEARANCE_MARGIN = 10;
 
+  /** Reusable traversal stack for complete-shape queries on this tree. */
+  protected final ArrayStack<TreeNode> completeShapeStack = new ArrayStack<>(10000);
+
   /** Used in objects of class EntrySortedByClearance. */
   private static int lastGeneratedEntryId;
 
@@ -606,18 +609,18 @@ public class ShapeSearchTree extends MinAreaTree {
     // in a deterministic order. The non-deterministic order of tree traversal
     // causes different room partitioning.
     List<Leaf> overlappingLeaves = new LinkedList<>();
-    ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
-    nodeStack.push(this.root);
+    completeShapeStack.reset();
+    completeShapeStack.push(this.root);
     TreeNode currentNode;
     int roomLayer = room.getLayer();
 
-    while ((currentNode = nodeStack.pop()) != null) {
+    while ((currentNode = completeShapeStack.pop()) != null) {
       if (currentNode.boundingShape.intersects(boundingShape)) {
         if (currentNode instanceof Leaf leaf) {
           overlappingLeaves.add(leaf);
         } else {
-          nodeStack.push(((InnerNode) currentNode).firstChild);
-          nodeStack.push(((InnerNode) currentNode).secondChild);
+          completeShapeStack.push(((InnerNode) currentNode).firstChild);
+          completeShapeStack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }

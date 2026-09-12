@@ -16,6 +16,9 @@ import java.util.TreeSet;
  */
 public class MinAreaTree extends ShapeTree {
 
+  /** Reusable traversal stack for overlap queries on this tree. */
+  protected final ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
+
   /** Constructor with a fixed set of directions defining the keys and the surrounding shapes. */
   public MinAreaTree(ShapeBoundingDirections directions) {
     super(directions);
@@ -27,7 +30,7 @@ public class MinAreaTree extends ShapeTree {
     if (this.root == null) {
       return foundOverlaps;
     }
-    ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
+    nodeStack.reset();
     nodeStack.push(this.root);
     TreeNode currentNode;
     for (; ; ) {

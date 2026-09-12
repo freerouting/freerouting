@@ -46,11 +46,11 @@ final class AutoroutePassRunner {
         return false;
       }
 
-      BatchAutorouterThread[] autorouterThreads =
-          new BatchAutorouterThread[router.job.routerSettings.maxThreads];
+      int threadCount = Math.max(1, router.job.routerSettings.getAutorouterMaxThreads());
+      BatchAutorouterThread[] autorouterThreads = new BatchAutorouterThread[threadCount];
       final BoardHistory boardHistory = new BoardHistory(router.job.routerSettings);
 
-      for (int threadIndex = 0; threadIndex < router.job.routerSettings.maxThreads; threadIndex++) {
+      for (int threadIndex = 0; threadIndex < threadCount; threadIndex++) {
         PerformanceProfiler.start("board.deepCopy");
         RoutingBoard clonedBoard = router.board.deepCopy();
         PerformanceProfiler.end("board.deepCopy");
@@ -88,7 +88,7 @@ final class AutoroutePassRunner {
         autorouterThread.start();
       }
 
-      for (int threadIndex = 0; threadIndex < router.job.routerSettings.maxThreads; threadIndex++) {
+      for (int threadIndex = 0; threadIndex < threadCount; threadIndex++) {
         BatchAutorouterThread autorouterThread = autorouterThreads[threadIndex];
         try {
           autorouterThread.join(TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);

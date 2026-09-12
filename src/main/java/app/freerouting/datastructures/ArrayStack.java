@@ -17,6 +17,9 @@ public class ArrayStack<T> {
 
   /** Sets the stack to empty. */
   public void reset() {
+    for (int i = 0; i <= level; i++) {
+      nodeArr[i] = null;
+    }
     level = -1;
   }
 
@@ -38,6 +41,7 @@ public class ArrayStack<T> {
       return null;
     }
     T result = nodeArr[level];
+    nodeArr[level] = null;
     --level;
     return result;
   }

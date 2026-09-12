@@ -180,10 +180,27 @@ public class RouterSettings implements Serializable, Cloneable {
     if (pcs != null) {
       pcs.firePropertyChange("maxThreads", oldValue, this.maxThreads);
     }
-    // Also update optimizer's maxThreads to keep them in sync
+    // Keep the legacy flat knob, the nested autorouter knob, and the optimizer
+    // pool in sync when the GUI / setMaxThreads path is used. Nested CLI flags
+    // (--router.autorouter.max_threads, --router.optimizer.max_threads) set those
+    // fields directly and stay independent.
+    if (this.autorouter != null) {
+      this.autorouter.maxThreads = this.maxThreads;
+    }
     if (this.optimizer != null) {
       this.optimizer.maxThreads = this.maxThreads;
     }
+  }
+
+  /**
+   * Worker-thread cap for a multi-thread autorouter pass. Prefers {@code autorouter.maxThreads}
+   * (canonical CLI {@code --router.autorouter.max_threads}) and falls back to the legacy flat
+   * {@code router.maxThreads}.
+   */
+  public int getAutorouterMaxThreads() {
+    Integer configured =
+        (autorouter != null && autorouter.maxThreads != null) ? autorouter.maxThreads : maxThreads;
+    return normalizeMaxThreads(configured);
   }
 
   /** Sets the maximum duration allowed for a routing job. */

@@ -134,10 +134,18 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`max_items`**: Maximum items attempted in the autorouter stage.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
+    - **`max_threads`**: Worker-thread cap for a multi-thread autorouter pass. Canonical CLI is
+      `--router.autorouter.max_threads`. Independent of `--router.optimizer.max_threads`. The
+      production batch loop still runs a single-thread pass; this value is what
+      `AutoroutePassRunner.runMultiThread` would use. The legacy flat `--router.max_threads`
+      remains as a fallback / GUI knob.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
-- **`max_threads`**: Shared worker-thread cap for autorouter pass parallelism and optimizer GUI workers.
+- **`max_threads`**: Legacy flat / GUI worker-thread cap. `setMaxThreads()` still copies this
+  value into both `autorouter.max_threads` and `optimizer.max_threads`. Prefer the nested CLI
+  flags (`--router.autorouter.max_threads`, `--router.optimizer.max_threads`) when the two pools
+  must differ. `-mt` sets **optimizer** threads only.
 - **`improvement_threshold`**: Minimum improvement required to continue routing.
 - **`trace_pull_tight_accuracy`**: Accuracy for pulling traces tight.
 - **`allowed_via_types`**: Enables or disables the use of different via types.
@@ -178,10 +186,11 @@ Configures the optional route-optimization stage that runs after autorouting.
 - **`enabled`**: Whether to run the optimizer. Default is `true`.
 - **`max_passes`**: Maximum number of optimizer passes.
 - **`max_items`**: Maximum number of item optimization attempts.
-- **`max_threads`**: Maximum optimizer worker count for the GUI path when the
-  `feature_flags.multi_threading` flag is enabled. It also controls autorouter pass parallelism
-  in `BatchAutorouterThread`. Headless and API jobs always use the single-threaded
-  `BatchOptimizer`; this setting does not enable parallel optimizer workers there.
+- **`max_threads`**: Optimizer worker-thread cap. Canonical CLI is
+  `--router.optimizer.max_threads`. Default is `CPU−1`. Headless, API, and GUI all use this
+  pool (`BatchOptimizer`). Independent of `feature_flags.multi_threading` (that GUI flag does
+  **not** disable optimizer workers) and of `--router.autorouter.max_threads`. Each in-flight
+  worker `deepCopy()`s the board, so peak heap scales with this value.
 - **`improvement_threshold`**: Minimum **relative** optimizer-score percentage gain required to
   continue after a pass (default `2.5`, representing 2.5%). `BatchOptimizer` compares
   `((scoreAfter - scoreBefore) / scoreBefore) * 100`. Benchmark calibration across golden fixtures
@@ -226,7 +235,9 @@ Configures the SMD-pin fanout pre-pass stage.
 
 #### **`feature_flags` Section**
 
-- **`multi_threading`**: Enables or disables multi-threaded routing.
+- **`multi_threading`**: GUI opt-in for experimental multi-thread **autorouter** UI. It does
+  **not** gate the optimizer worker pool (`optimizer.max_threads`) and does not change the
+  production maze path, which still runs a single-thread pass.
 - **`inspection_mode`**: Enables or disables inspection mode in the GUI.
 - **`other_menu`**: Enables or disables the "Other" menu in the GUI.
 - **`save_jobs`**: Enables or disables saving routing jobs to disk.

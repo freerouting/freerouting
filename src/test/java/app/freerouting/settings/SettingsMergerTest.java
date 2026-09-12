@@ -292,4 +292,18 @@ class SettingsMergerTest {
     RouterSettings merged3 = new SettingsMerger(defaults, cli3).merge();
     assertEquals(1.5f, merged3.optimizer.optimizationImprovementThreshold, 0.001f);
   }
+
+  @Test
+  void cliNestedAutorouterMaxThreadsIsIndependentOfOptimizer() {
+    DefaultSettings defaults = new DefaultSettings();
+    CliSettings cli =
+        new CliSettings(
+            new String[] {"--router.autorouter.max_threads=1", "--router.optimizer.max_threads=4"});
+
+    RouterSettings merged = new SettingsMerger(defaults, cli).merge();
+
+    assertEquals(1, merged.autorouter.maxThreads);
+    assertEquals(4, merged.optimizer.maxThreads);
+    assertEquals(1, merged.getAutorouterMaxThreads());
+  }
 }

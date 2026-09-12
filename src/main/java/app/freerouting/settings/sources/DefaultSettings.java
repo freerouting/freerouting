@@ -152,6 +152,7 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.saveIntermediateStages = false;
     settings.autorouter.ignoreNetClasses = new String[0];
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+    settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
     settings.neckWidthUm = 0.0;
