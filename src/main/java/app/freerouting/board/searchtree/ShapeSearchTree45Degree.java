@@ -208,7 +208,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                     // 2-dim overlap-door with the fromRoom.
                     if (!ignoreShape.contains(currentShape)) {
                       newResult.add(currentRoom);
-                      newBoundingShape = newBoundingShape.union(currentShape.boundingBox());
+                      newBoundingShape = newBoundingShape.union(currentShape);
                     }
                     continue;
                   }
@@ -228,7 +228,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                 newResult.addAll(newRestrainedShapes);
 
                 for (IncompleteFreeSpaceExpansionRoom tmpShape : newResult) {
-                  newBoundingShape = newBoundingShape.union(tmpShape.getShape().boundingBox());
+                  newBoundingShape = newBoundingShape.union((IntOctagon) tmpShape.getShape());
                 }
               } else {
                 if (debugAnchor) {
@@ -242,7 +242,7 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
                       currentObjectShape);
                 }
                 newResult.add(currentRoom);
-                newBoundingShape = newBoundingShape.union(currentShape.boundingBox());
+                newBoundingShape = newBoundingShape.union(currentShape);
               }
             }
             if (hadRoomsBeforeObstacle && newResult.isEmpty()) {

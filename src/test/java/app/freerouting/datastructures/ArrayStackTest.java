@@ -3,6 +3,7 @@ package app.freerouting.datastructures;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Field;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,16 @@ class ArrayStackTest {
     assertEquals(2, stack.pop());
     assertEquals(1, stack.pop());
     assertNull(stack.pop());
+  }
+
+  @Test
+  void growthStopsAtTheMaximumDepth() {
+    ArrayStack<Integer> stack = new ArrayStack<>(1);
+    for (int i = 0; i < 40_000; i++) {
+      stack.push(i);
+    }
+
+    assertThrows(IllegalStateException.class, () -> stack.push(40_000));
   }
 
   private static Object[] backingArray(ArrayStack<?> stack) throws ReflectiveOperationException {

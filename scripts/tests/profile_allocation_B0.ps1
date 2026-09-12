@@ -10,12 +10,14 @@
       B0        full pipeline, autorouter.max_threads=1, optimizer.max_threads=1
       B0-maze   maze only (fanout/optimizer off), 1 autorouter pass
       B0-optN   full pipeline, autorouter.max_threads=1, optimizer.max_threads=4
+      B0-heap   PowerGlove full pipeline confirmation fixture, 1+1 threads
+      B0-4L     minisumo 4-layer full pipeline confirmation fixture, 1+1 threads
 
     JFR (settings=profile, dumponexit, no duration cap) is enabled on every run.
     Logs, SES, result JSON, GC logs, and JFR land under logs/<profile>/ (gitignored).
 
 .PARAMETER Profile
-    B0 | B0-maze | B0-optN | All  (default All)
+    B0 | B0-maze | B0-optN | B0-heap | B0-4L | All  (default All)
 
 .PARAMETER Repeats
     Repeat count for B0 (default 3). B0-maze and B0-optN default to 1 unless
@@ -28,12 +30,12 @@
     Skip copying the JAR into scripts/benchmark/binaries.
 
 .EXAMPLE
-    .\scripts\tests\profile_allocation_B0.ps1
-    .\scripts\tests\profile_allocation_B0.ps1 -Profile B0-maze
-    .\scripts\tests\profile_allocation_B0.ps1 -SkipBuild
+    ./scripts/tests/profile_allocation_B0.ps1
+    ./scripts/tests/profile_allocation_B0.ps1 -Profile B0-maze
+    ./scripts/tests/profile_allocation_B0.ps1 -SkipBuild
 #>
 param(
-    [ValidateSet("B0", "B0-maze", "B0-optN", "All")]
+    [ValidateSet("B0", "B0-maze", "B0-optN", "B0-heap", "B0-4L", "All")]
     [string] $Profile = "All",
     [int]    $Repeats = 3,
     [switch] $SkipBuild,
@@ -44,7 +46,11 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = Resolve-Path "$PSScriptRoot\..\.."
-$FixtureRel = "scripts/benchmark/fixtures/PCBench/disco-dongle_DiscoDongle/unrouted.dsn"
+$FixtureRel = switch ($Profile) {
+    "B0-heap" { "scripts/benchmark/fixtures/PCBench/PowerGloveUHID_main_board/unrouted.dsn" }
+    "B0-4L" { "scripts/benchmark/fixtures/PCBench/kitspace_minisumo_v3/unrouted.dsn" }
+    default { "scripts/benchmark/fixtures/PCBench/disco-dongle_DiscoDongle/unrouted.dsn" }
+}
 $Fixture = Join-Path $RepoRoot ($FixtureRel -replace "/", "\")
 $JarBuild = Join-Path $RepoRoot "build\libs\freerouting-current-executable.jar"
 $JarCopy = Join-Path $RepoRoot "scripts\benchmark\binaries\freerouting-current.jar"
@@ -442,6 +448,7 @@ if (-not $SkipCopy) {
 $runB0 = $Profile -eq "All" -or $Profile -eq "B0"
 $runMaze = $Profile -eq "All" -or $Profile -eq "B0-maze"
 $runOptN = $Profile -eq "All" -or $Profile -eq "B0-optN"
+$runConfirmation = $Profile -eq "B0-heap" -or $Profile -eq "B0-4L"
 $mazeRepeats = if ($Profile -eq "B0-maze") { $Repeats } else { 1 }
 $optRepeats = if ($Profile -eq "B0-optN") { $Repeats } else { 1 }
 $b0Repeats = $Repeats
@@ -456,6 +463,10 @@ if ($runB0) {
 }
 if ($runOptN) {
     Invoke-B0Profile -Name "B0-optN" -RunCount $optRepeats -AutorouterThreads 1 -OptimizerThreads 4 `
+        -FanoutEnabled $true -OptimizerEnabled $true | Out-Null
+}
+if ($runConfirmation) {
+    Invoke-B0Profile -Name $Profile -RunCount $Repeats -AutorouterThreads 1 -OptimizerThreads 1 `
         -FanoutEnabled $true -OptimizerEnabled $true | Out-Null
 }
 
