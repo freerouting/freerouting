@@ -981,6 +981,9 @@ public final class BatchOptimizer extends NamedAlgorithm {
       }
       boolean restored =
           transferOwnership ? this.workerBoard.popSnapshot() : this.workerBoard.undo(null);
+      if (this.workerBoard != null) {
+        this.workerBoard.clearTransientAutorouteState();
+      }
       if (!restored) {
         FRLogger.warn("BatchOptimizer: failed to restore the worker-board snapshot");
         this.workerBoard = null;

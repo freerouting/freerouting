@@ -88,9 +88,9 @@ class BatchOptimizerDeterminismTest extends RoutingFixtureTest {
     new BatchAutorouter(job).runBatchLoop();
     job.board.finishAutoroute();
 
-    BoardStatistics statsBefore = job.board.getStatistics();
-    String initialHash = job.board.getHash();
-    float initialScore = statsBefore.getRouterScore(job.routerSettings.scoring);
+    final BoardStatistics statsBefore = job.board.getStatistics();
+    final String initialHash = job.board.getHash();
+    final float initialScore = statsBefore.getRouterScore(job.routerSettings.scoring);
 
     // Configure optimizer with 0 passes so no items can improve
     job.routerSettings.optimizer.maxPasses = 0;
