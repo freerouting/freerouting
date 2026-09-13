@@ -273,7 +273,7 @@ nssm start Freerouting
 | Data directory | `--user_data_path=/path/to/data` | OS standard user-data dir (`%APPDATA%\freerouting`, `~/Library/Application Support/freerouting`, or `~/.config/freerouting`) | Where logs and saved jobs are stored. |
 | Save jobs to disk | `--feature_flags.save_jobs=true` | `false` | Persists routing jobs (input/output files + metadata) under `user_data_path`. |
 | Max routing passes | `--router.autorouter.max_passes=100` | `0` (no limit) | Upper limit on autorouting passes per job. Flat `--router.max_passes` still works with a deprecation warning. |
-| Thread count | `-mt 4` or `--router.max_threads=4` | CPU count − 1 | Worker threads for route optimisation. |
+| Thread count | `-mt 4` or `--router.max_threads=4` | CPU count - 1 | Worker threads for route optimisation. |
 
 ### All configuration methods
 
