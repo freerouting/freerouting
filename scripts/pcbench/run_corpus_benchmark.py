@@ -358,6 +358,24 @@ def route_single_board(
     phases = manifest_data.get("phases", {})
     if not phases.get("autorouter", {}).get("duration_seconds") and stdout_text:
         phases = parse_phases_from_text(stdout_text)
+
+    # For versions like 2.4.1 where board_statistics is at the root of result manifest
+    # instead of nested in phases.autorouter.after, normalize phases structure
+    if stats and not phases.get("autorouter", {}).get("after", {}).get("board_statistics"):
+        if "autorouter" not in phases:
+            phases["autorouter"] = {}
+        phases["autorouter"]["after"] = {
+            "board_statistics": stats,
+            "score": score_val,
+            "router_score": score_val,
+            "score_source": "current",
+        }
+        if "before" not in phases["autorouter"]:
+            phases["autorouter"]["before"] = {
+                "board_statistics": None,
+                "score": None,
+                "score_source": "current",
+            }
     resources = manifest_data.get("resource_usage", {})
     cpu_score = manifest_data.get("cpu_score")
     if cpu_score is not None:
