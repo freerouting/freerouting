@@ -24,7 +24,7 @@ The issue reports that Freerouting's autorouter introduces **clearance violation
 | 152-D | `BoardStatistics.clearanceViolations.totalCount` uses incomplete DRC | ✅ Fixed (uses `getAllClearanceViolations()`) |
 | 152-E | `adjustPlaneAutorouteSettings` outer-layer guard skips outer-layer copper fills & $\le 2$-layer boards | ✅ Fixed |
 | 152-F | User-configurable tuning parameters (CLI/JSON exposure, `planeNets`, `planeAsObstacle`) | ✅ Fixed |
-| 152-G | Plane connectivity (void/island) validation is absent | ❌ Open (Future enhancement) |
+| 152-G | Plane connectivity (void/island) validation is absent | ✅ Fixed (Dedicated `getZoneIslandViolations()` DRC check) |
 | 152-H | Route power plane-nets first in each routing pass | ✅ Fixed |
 
 ---
@@ -106,9 +106,17 @@ When `Net.contains_plane() == true`, `autoroute_item()` uses a **plane-routing m
 - Wired through `HeadlessBoardManager.applyPlaneNetsOverride()` and `applyPlaneAsObstacleOverride()` on board load.
 - Renamed `RoutingBoard.changeConductionIsObstacle` to `changePlaneAsObstacle` (retaining deprecated alias).
 
-### 152-G: Plane Connectivity & Void/Island Validation (Open)
+### 152-G: Plane Connectivity & Void/Island Validation (Fixed)
 
-**Problem:** Foreign signal traces routed through a copper pour (`is_obstacle = false`) physically slice the pour into disjoint pieces. In KiCad, zone fills flow around traces, which can isolate pins into dead copper islands. Freerouting treats `ConductionArea` as monolithic and does not verify topological connectivity of the pour after signal routing.
+**Problem:** Foreign signal traces routed through a copper pour (`is_obstacle = false`) physically slice the pour into disjoint pieces. In KiCad, zone fills flow around traces, which can isolate pins into dead copper islands. Freerouting previously treated `ConductionArea` as monolithic and did not verify topological connectivity of the pour after signal routing.
+
+**Fix:**
+- Added `ConductionArea.getDetailedFillArea()` to calculate boolean 2D filled polygon geometries accounting for foreign item clearances and thermal spokes.
+- Added `DesignRulesChecker.getZoneIslandViolations()` to decompose pour geometries into discrete contiguous island areas, detecting:
+  - `isolated_island_unconnected`: Disconnected islands containing pins/vias that cannot reach the main net set.
+  - `isolated_island_dead_copper`: Disconnected floating copper islands exceeding 1.0 mm² with zero electrical connections.
+- Integrated zone island violations into both `DesignRulesChecker.generateReport()` (as KiCad DRC JSON entries) and `DesignRulesChecker.generateSummary()` (as diagnostic violations and unconnected net count increments).
+- Added unit tests in `ZoneIslandConnectivityTest.java`.
 
 ### 152-H: Route Power Plane-Nets First in Each Pass (Fixed)
 
@@ -132,7 +140,8 @@ When `Net.contains_plane() == true`, `autoroute_item()` uses a **plane-routing m
 - [x] Benchmarking `152-H` confirms improved or equal routing completion and via efficiency on candidate plane fixtures without regressions on standard benchmarks.
 - [x] Improved heuristic detection in `152-E` for 2-layer and outer-layer pour designs.
 - [x] Full configuration support in `RouterSettings`, CLI, and JSON for plane settings (via costs, plane net declarations, planeAsObstacle).
-- [ ] No clearance violations or routing regressions introduced across `./gradlew check`.
+- [x] Dedicated DRC check `getZoneIslandViolations()` for zone island connectivity and floating dead copper detection.
+- [x] No clearance violations or routing regressions introduced across `./gradlew check`.
 
 ---
 

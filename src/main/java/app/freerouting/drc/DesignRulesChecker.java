@@ -22,6 +22,7 @@ import app.freerouting.settings.DesignRulesCheckerSettings;
 import app.freerouting.util.gson.GsonProvider;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -181,6 +182,212 @@ public class DesignRulesChecker {
   }
 
   /**
+   * Checks for copper pour (conduction area) fragmentation, detecting isolated copper islands where
+   * pins or vias are severed from the net's primary connected set, or dead floating copper islands.
+   *
+   * @return Collection of detected zone island violations
+   */
+  public Collection<ZoneIslandViolation> getZoneIslandViolations() {
+    List<ZoneIslandViolation> violations = new ArrayList<>();
+    Collection<ConductionArea> conductionAreas = board.getConductionAreas();
+    if (conductionAreas == null || conductionAreas.isEmpty()) {
+      return violations;
+    }
+
+    double minDeadCopperArea =
+        1.0
+            * board.communication.getResolution(Unit.MM)
+            * board.communication.getResolution(Unit.MM);
+
+    for (ConductionArea ca : conductionAreas) {
+      java.awt.geom.Area detailedFill = ca.getDetailedFillArea();
+      if (detailedFill == null || detailedFill.isEmpty()) {
+        continue;
+      }
+
+      List<java.awt.geom.Area> islands = decomposeAreaIntoIslands(detailedFill);
+      if (islands.size() <= 1) {
+        continue; // Single continuous pour, no fragmentation
+      }
+
+      int netNumber = ca.netCount() > 0 ? ca.getNetNumber(0) : 0;
+      int layer = ca.getLayer();
+
+      // Find all connectable items belonging to this net on this layer
+      List<Item> sameNetItemsOnLayer = new ArrayList<>();
+      for (Item item : board.getItems()) {
+        if (item != ca
+            && item instanceof app.freerouting.board.model.items.Connectable
+            && item.sharesNet(ca)
+            && item.sharesLayer(ca)) {
+          sameNetItemsOnLayer.add(item);
+        }
+      }
+
+      // Map items to each island
+      List<List<Item>> islandItems = new ArrayList<>(islands.size());
+      for (java.awt.geom.Area island : islands) {
+        List<Item> contained = new ArrayList<>();
+        for (Item item : sameNetItemsOnLayer) {
+          Point center = null;
+          if (item instanceof app.freerouting.board.model.items.DrillItem drillItem) {
+            center = drillItem.getCenter();
+          } else if (item instanceof Trace trace) {
+            center = trace.firstCorner();
+          }
+          if (center != null) {
+            app.freerouting.geometry.planar.FloatPoint fp = center.toFloat();
+            if (island.contains(fp.x, fp.y)) {
+              contained.add(item);
+            }
+          }
+        }
+        islandItems.add(contained);
+      }
+
+      // Determine which island is the primary (has the most connected items or connects to the main
+      // set)
+      int primaryIndex = -1;
+      int maxConnectedItems = -1;
+      for (int i = 0; i < islands.size(); i++) {
+        int count = islandItems.get(i).size();
+        if (count > maxConnectedItems) {
+          maxConnectedItems = count;
+          primaryIndex = i;
+        }
+      }
+
+      // Check each island against the primary
+      for (int i = 0; i < islands.size(); i++) {
+        java.awt.geom.Area island = islands.get(i);
+        List<Item> items = islandItems.get(i);
+
+        if (!items.isEmpty()) {
+          if (i != primaryIndex) {
+            // Check if any item in this island can reach the items in the primary island through
+            // traces/vias elsewhere on the board
+            boolean connectedToPrimary = false;
+            if (primaryIndex >= 0 && !islandItems.get(primaryIndex).isEmpty()) {
+              Item repItemInPrimary = islandItems.get(primaryIndex).get(0);
+              Collection<Item> connectedSet = repItemInPrimary.getConnectedSet(netNumber, true);
+              for (Item item : items) {
+                if (connectedSet.contains(item)) {
+                  connectedToPrimary = true;
+                  break;
+                }
+              }
+            }
+
+            if (!connectedToPrimary) {
+              violations.add(
+                  new ZoneIslandViolation(
+                      ca, island, layer, netNumber, "isolated_island_unconnected", items));
+            }
+          }
+        } else {
+          // Island with zero contact items: check if it exceeds minimum dead copper threshold
+          java.awt.geom.Rectangle2D bounds = island.getBounds2D();
+          double approxArea = bounds.getWidth() * bounds.getHeight();
+          if (approxArea >= minDeadCopperArea) {
+            violations.add(
+                new ZoneIslandViolation(
+                    ca,
+                    island,
+                    layer,
+                    netNumber,
+                    "isolated_island_dead_copper",
+                    Collections.emptyList()));
+          }
+        }
+      }
+    }
+
+    return violations;
+  }
+
+  /** Decomposes a potentially disjoint java.awt.geom.Area into separate contiguous island Areas. */
+  private List<java.awt.geom.Area> decomposeAreaIntoIslands(java.awt.geom.Area area) {
+    List<java.awt.geom.Area> islands = new ArrayList<>();
+    if (area == null || area.isEmpty()) {
+      return islands;
+    }
+
+    java.awt.geom.PathIterator it = area.getPathIterator(null);
+    java.awt.geom.Path2D.Double currentPolygon = null;
+    double[] coords = new double[6];
+
+    while (!it.isDone()) {
+      int segType = it.currentSegment(coords);
+      switch (segType) {
+        case java.awt.geom.PathIterator.SEG_MOVETO -> {
+          if (currentPolygon != null) {
+            java.awt.geom.Area piece = new java.awt.geom.Area(currentPolygon);
+            if (!piece.isEmpty()) {
+              mergeOrAddIsland(islands, piece);
+            }
+          }
+          currentPolygon = new java.awt.geom.Path2D.Double();
+          currentPolygon.moveTo(coords[0], coords[1]);
+        }
+        case java.awt.geom.PathIterator.SEG_LINETO -> {
+          if (currentPolygon != null) {
+            currentPolygon.lineTo(coords[0], coords[1]);
+          }
+        }
+        case java.awt.geom.PathIterator.SEG_QUADTO -> {
+          if (currentPolygon != null) {
+            currentPolygon.quadTo(coords[0], coords[1], coords[2], coords[3]);
+          }
+        }
+        case java.awt.geom.PathIterator.SEG_CUBICTO -> {
+          if (currentPolygon != null) {
+            currentPolygon.curveTo(
+                coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
+          }
+        }
+        case java.awt.geom.PathIterator.SEG_CLOSE -> {
+          if (currentPolygon != null) {
+            currentPolygon.closePath();
+          }
+        }
+        default -> {}
+      }
+      it.next();
+    }
+
+    if (currentPolygon != null) {
+      java.awt.geom.Area piece = new java.awt.geom.Area(currentPolygon);
+      if (!piece.isEmpty()) {
+        mergeOrAddIsland(islands, piece);
+      }
+    }
+
+    return islands;
+  }
+
+  private void mergeOrAddIsland(List<java.awt.geom.Area> islands, java.awt.geom.Area piece) {
+    // If piece is a hole (subtractive), it will be enclosed by an existing island outer boundary.
+    // In java.awt.geom.Area path iteration, outer boundaries and inner holes are consecutive
+    // contours with winding rules. We test containment against existing island bounding boxes:
+    boolean incorporated = false;
+    for (int i = 0; i < islands.size(); i++) {
+      java.awt.geom.Area existing = islands.get(i);
+      java.awt.geom.Area intersection = new java.awt.geom.Area(existing);
+      intersection.intersect(piece);
+      if (!intersection.isEmpty()) {
+        // Intersects an existing component (e.g. hole or connected segment) -> subtract or add
+        // according to Area winding
+        existing.exclusiveOr(piece);
+        incorporated = true;
+        break;
+      }
+    }
+    if (!incorporated) {
+      islands.add(piece);
+    }
+  }
+
+  /**
    * Finds a representative item from a connected set, preferring Pins over other items.
    *
    * @param connectedSet The set of connected items
@@ -279,13 +486,26 @@ public class DesignRulesChecker {
       }
     }
 
+    // Get all zone island violations
+    Collection<ZoneIslandViolation> zoneViolations = getZoneIslandViolations();
+    for (ZoneIslandViolation zv : zoneViolations) {
+      KiCadDrcViolation kiCadDrcViolation = convertToDrcViolation(zv, coordinateUnit);
+      if ("isolated_island_unconnected".equals(zv.type)) {
+        report.addUnconnectedItem(kiCadDrcViolation);
+      } else {
+        report.addViolation(kiCadDrcViolation);
+      }
+    }
+
     FRLogger.trace(
         "DesignRulesChecker.generateReport",
         "drc_check_completed",
         "DRC check completed: total_violations="
             + report.violations.size()
             + ", total_unconnected="
-            + report.unconnectedItems.size(),
+            + report.unconnectedItems.size()
+            + ", total_zone_islands="
+            + zoneViolations.size(),
         "DRC Check",
         new Point[0]);
 
@@ -422,6 +642,62 @@ public class DesignRulesChecker {
     }
 
     return new KiCadDrcViolation(unconnectedItems.type, description, "warning", items);
+  }
+
+  private KiCadDrcViolation convertToDrcViolation(
+      ZoneIslandViolation zoneViolation, String coordinateUnit) {
+    List<KiCadDrcViolationItem> items = new ArrayList<>();
+
+    double[] center = zoneViolation.getCenter();
+    KiCadDrcPosition pos =
+        new KiCadDrcPosition(
+            convertCoordinate(center[0], coordinateUnit),
+            convertCoordinate(center[1], coordinateUnit));
+
+    String caDesc = getItemDescription(zoneViolation.conductionArea);
+    String caUuid = String.valueOf(zoneViolation.conductionArea.getId());
+    items.add(new KiCadDrcViolationItem(caDesc, pos, caUuid));
+
+    for (Item item : zoneViolation.itemsInIsland) {
+      String itemDesc = getItemDescription(item);
+      var itemCenter = item.boundingBox().centreOfGravity();
+      KiCadDrcPosition itemPos =
+          new KiCadDrcPosition(
+              convertCoordinate(itemCenter.x, coordinateUnit),
+              convertCoordinate(itemCenter.y, coordinateUnit));
+      String uuid = String.valueOf(item.getId());
+      items.add(new KiCadDrcViolationItem(itemDesc, itemPos, uuid));
+    }
+
+    String netName = "unknown";
+    if (zoneViolation.netNumber > 0) {
+      Net net = board.rules.nets.get(zoneViolation.netNumber);
+      if (net != null) {
+        netName = net.name;
+      }
+    }
+
+    String description;
+    if ("isolated_island_dead_copper".equals(zoneViolation.type)) {
+      description =
+          "Isolated copper island without electrical connection on net ["
+              + netName
+              + "] (Conduction Area #"
+              + zoneViolation.conductionArea.getId()
+              + ")";
+    } else {
+      description =
+          "Isolated copper island on net ["
+              + netName
+              + "] containing "
+              + zoneViolation.itemsInIsland.size()
+              + " disconnected item(s) from Conduction Area #"
+              + zoneViolation.conductionArea.getId();
+    }
+
+    String severity =
+        "isolated_island_unconnected".equals(zoneViolation.type) ? "error" : "warning";
+    return new KiCadDrcViolation(zoneViolation.type, description, severity, items);
   }
 
   private boolean isHole(Item item) {
@@ -919,10 +1195,58 @@ public class DesignRulesChecker {
               u.type, "warning", "all", explanation, null, null, null, items));
     }
 
-    // 3. Detect spatial congestion zones
+    // 3. Process zone island violations
+    Collection<ZoneIslandViolation> zoneViolations = getZoneIslandViolations();
+    for (ZoneIslandViolation zv : zoneViolations) {
+      String layerName =
+          (zv.layer >= 0 && zv.layer < board.layerStructure.layers.length)
+              ? board.layerStructure.layers[zv.layer].name
+              : ("Layer " + zv.layer);
+      Net net = board.rules.nets.get(zv.netNumber);
+      String netName = (net != null) ? net.name : ("Net " + zv.netNumber);
+
+      List<String> items = new ArrayList<>();
+      items.add("Zone on " + layerName + " [" + netName + "]");
+      for (Item it : zv.itemsInIsland) {
+        items.add(formatItemWithContext(it));
+      }
+
+      String explanation;
+      String severity;
+      if ("isolated_island_unconnected".equals(zv.type)) {
+        severity = "error";
+        summary.unconnectedNetsCount++;
+        explanation =
+            String.format(
+                Locale.US,
+                "Copper pour on %s [net %s] is fragmented: island contains %d pin(s)/via(s) disconnected from main pour.",
+                layerName,
+                netName,
+                zv.itemsInIsland.size());
+      } else {
+        severity = "warning";
+        double areaMm2 =
+            zv.getAreaInBoardUnits()
+                / (board.communication.getResolution(Unit.MM)
+                    * board.communication.getResolution(Unit.MM));
+        explanation =
+            String.format(
+                Locale.US,
+                "Dead copper island detected on %s [net %s]: area %.2f mm² with no electrical connections.",
+                layerName,
+                netName,
+                areaMm2);
+      }
+
+      summary.violations.add(
+          new DrcSummaryResponse.DiagnosticViolation(
+              zv.type, severity, layerName, explanation, null, null, null, items));
+    }
+
+    // 4. Detect spatial congestion zones
     summary.congestionZones = detectCongestionZones(violations);
 
-    // 4. Generate actionable hints
+    // 5. Generate actionable hints
     summary.hints = generateActionableHints(violations, unconnecteds, summary.congestionZones);
 
     return summary;
