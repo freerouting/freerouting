@@ -1193,6 +1193,17 @@ main {
     color: var(--gold-primary);
 }
 
+/* Third-party trademark disclaimer (nominative fair use notice) */
+.legal-disclaimer {
+    flex-basis: 100%;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    opacity: 0.7;
+    text-align: center;
+}
+
 /* ==========================================================================
    Responsive Media Queries
    ========================================================================== */

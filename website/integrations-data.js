@@ -66,7 +66,7 @@ function renderEdaCards() {
         <div class="eda-header">
           <img class="eda-logo eda-logo--${item.logoStyle}"
                src="assets/logos/eda/${item.id}.svg"
-               alt="${item.name} logo" width="26" height="26" loading="lazy">
+               alt="${item.name} compatibility icon" width="28" height="28" loading="lazy">
           <h3>${item.name}</h3>
         </div>
         <p>${item.description}</p>
