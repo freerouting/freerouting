@@ -192,7 +192,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:2.0.18'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.51.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.52.0'
     implementation 'com.google.api:gax:2.84.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.9.1'
     implementation 'com.google.cloud:google-cloud-core:2.74.0'
