@@ -541,7 +541,9 @@ main {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.2em;
     /* CLS reserve: holds two rows of cards open while integrations-data.js renders. */
-    min-height: 440px;
+    min-height: 330px;
+    /* Prevent auto rows from stretching to fill the reserved height. */
+    align-content: start;
 }
 
 .eda-card {
@@ -579,7 +581,7 @@ main {
 
 /* Full-color marks: subtle lift so dark strokes survive the dark surface. */
 .eda-logo--brand {
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
+    filter: saturate(1.18) drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
 }
 
 /* No-JS / crawler fallback list (replaced by JS-rendered cards when JS runs). */
