@@ -56,7 +56,22 @@ final class AutoroutePassRunner {
         PerformanceProfiler.end("board.deepCopy");
 
         List<Item> clonedAutorouteItemList = new ArrayList<>(router.getAutorouteItems(clonedBoard));
-        shuffle(clonedAutorouteItemList, router.random);
+        int planeItemCount = 0;
+        for (Item item : clonedAutorouteItemList) {
+          if (router.isPlaneItem(item, clonedBoard)) {
+            planeItemCount++;
+          } else {
+            break;
+          }
+        }
+        if (planeItemCount > 0 && planeItemCount < clonedAutorouteItemList.size()) {
+          shuffle(clonedAutorouteItemList.subList(0, planeItemCount), router.random);
+          shuffle(
+              clonedAutorouteItemList.subList(planeItemCount, clonedAutorouteItemList.size()),
+              router.random);
+        } else {
+          shuffle(clonedAutorouteItemList, router.random);
+        }
 
         autorouterThreads[threadIndex] =
             new BatchAutorouterThread(

@@ -71,6 +71,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
   // Reusable collections to reduce memory churn (thread-safe as each thread has
   // its own BatchAutorouter instance)
   private final List<Item> reusableAutorouteItemList = new ArrayList<>();
+  private final List<Item> reusablePlaneItemList = new ArrayList<>();
+  private final List<Item> reusableSignalItemList = new ArrayList<>();
   private final Set<Item> reusableHandledItems = new TreeSet<>();
   private final AutorouteConnectionRouter connectionRouter;
   private final AutoroutePassRunner passRunner;
@@ -345,6 +347,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
   List<Item> getAutorouteItems(RoutingBoard board) {
     // Reuse instance collections to reduce memory allocation
     reusableAutorouteItemList.clear();
+    reusablePlaneItemList.clear();
+    reusableSignalItemList.clear();
     reusableHandledItems.clear();
     List<Item> autorouteItemList = reusableAutorouteItemList;
     Set<Item> handledItems = reusableHandledItems;
@@ -380,14 +384,17 @@ public final class BatchAutorouter extends NamedAlgorithm {
                 // spurious normalizeTraces() failures on nearby stub geometry.
                 // Items not yet connected to the plane are still enqueued so they can
                 // be routed to the pour in this pass.
-                if (net != null && net.containsPlane()) {
+                boolean isPlane = net != null && net.containsPlane();
+                if (isPlane) {
                   boolean alreadyConnectedToPlane =
                       connectedSet.stream().anyMatch(ConductionArea.class::isInstance);
                   if (alreadyConnectedToPlane) {
                     continue;
                   }
+                  reusablePlaneItemList.add(currentItem);
+                } else {
+                  reusableSignalItemList.add(currentItem);
                 }
-                autorouteItemList.add(currentItem);
                 String netName = net != null ? net.name : "net#" + currentNetNumber;
                 FRLogger.debug(
                     "Queuing item for routing: "
@@ -398,6 +405,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
                         + connectedSet.size()
                         + "/"
                         + netItemCount
+                        + ", plane: "
+                        + isPlane
                         + ")");
               }
             }
@@ -405,7 +414,25 @@ public final class BatchAutorouter extends NamedAlgorithm {
         }
       }
     }
+    // Route power plane-nets first: placing short stubs and vias early leaves escape
+    // corridors open around pads and prevents signal traces from blocking via placement.
+    autorouteItemList.addAll(reusablePlaneItemList);
+    autorouteItemList.addAll(reusableSignalItemList);
     return autorouteItemList;
+  }
+
+  /** Returns true if the given item belongs to at least one net with containsPlane = true. */
+  boolean isPlaneItem(Item item, RoutingBoard board) {
+    if (item == null || board == null) {
+      return false;
+    }
+    for (int i = 0; i < item.netCount(); i++) {
+      Net net = board.rules.nets.get(item.getNetNumber(i));
+      if (net != null && net.containsPlane()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   boolean autoroutePassMultiThread(int passNo) {
