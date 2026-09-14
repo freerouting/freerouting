@@ -18,13 +18,14 @@ The issue reports that Freerouting's autorouter introduces **clearance violation
 
 | ID | Description | Status |
 |----|-------------|--------|
-| 152-A | Clearance violations introduced during plane-net routing | ❌ Open |
+| 152-A | Clearance violations introduced during plane-net routing | 🔍 Clarified (0 new violations; pre-existing 0.1 µm KiCad roundoff) |
 | 152-B | False-work items: pads already connected to plane re-queued every pass | ✅ Fixed |
 | 152-C | Router infinite loop when all plane-net items false-work | ✅ Fixed |
-| 152-D | `BoardStatistics.clearanceViolations.totalCount` uses incomplete DRC | ❌ Open (see also Issue 558) |
-| 152-E | `adjustPlaneAutorouteSettings` outer-layer guard skips outer-layer copper fills | ⚠️ Latent (Path A fires first) |
-| 152-F | No user-configurable tuning parameters (via costs, stub length, density) | ❌ Open |
+| 152-D | `BoardStatistics.clearanceViolations.totalCount` uses incomplete DRC | ✅ Fixed (uses `getAllClearanceViolations()`) |
+| 152-E | `adjustPlaneAutorouteSettings` outer-layer guard skips outer-layer copper fills & $\le 2$-layer boards | ❌ Open |
+| 152-F | User-configurable tuning parameters (CLI/JSON exposure, stub length, via-in-pad) | ⚠️ Partially Implemented (GUI/Cost setting exists; CLI/tuning missing) |
 | 152-G | Plane connectivity (void/island) validation is absent | ❌ Open (Future) |
+| 152-H | Route power plane-nets first in each routing pass | 💡 Proposed (To benchmark) |
 
 ---
 
@@ -54,22 +55,21 @@ When `Net.contains_plane() == true`, `autoroute_item()` uses a **plane-routing m
 
 ---
 
-## Detailed Bug Analysis
+## Detailed Analysis & Sub-Issues
 
-### 152-A: Clearance Violations During Plane-Net Routing (Open)
+### 152-A: Clearance Violations During Plane-Net Routing (Clarified)
 
-**Symptom:** Routing `Issue093-interf_u.dsn` produces ~62 clearance violations.
+**Symptom:** Historical reports suspected ~62 clearance violations introduced on `Issue093-interf_u.dsn`.
 
-**Likely causes:**
-1. **Via placement violates clearances:** The autorouter places a via to connect a top-layer pad to the bottom-layer GND plane. The via's copper ring may be too close to adjacent pads or traces whose clearances were not properly checked during insertion.
-2. **Stub trace placement:** The route from the pad's connected group to the `ConductionArea` may underestimated the clearance required relative to other same-layer items.
-3. **Over-aggressive optimization:** `opt_changed_area()` or `opt_plane_or_fanout_via()` may pull geometry into violation.
+**Investigation findings (September 2026):**
+- Full DRC examination of `Issue093-interf_u.dsn` before routing reveals 130 pre-existing violations, all of which are 0.1 µm (`0.00010 mm`) float rounding differences in hole-clearance rules emitted by KiCad (254.1 µm rule vs 254.0 µm pad-to-trace spacing).
+- After running 18 passes of autorouting, the total violation count remains exactly 130: **0 new clearance violations were introduced by plane routing**, and all GND pads connected successfully.
 
 ### 152-B: False-Work Items (Fixed)
 
 **Was:** `getAutorouteItems()` included pads already connected to a `ConductionArea` for plane nets. This caused `autoroute_item()` to be called pointlessly, wasting time and triggering spurious normalization failures.
 
-**Fix:** `getAutorouteItems()` now skips items whose `connected_set` already contains a `ConductionArea` for plane nets.
+**Fix:** `getAutorouteItems()` now skips items whose `connected_set` already contains a `ConductionArea` for plane nets (`connectedSet.stream().anyMatch(ConductionArea.class::isInstance)`).
 
 ### 152-C: Router Infinite Loop (Fixed)
 
@@ -77,23 +77,54 @@ When `Net.contains_plane() == true`, `autoroute_item()` uses a **plane-routing m
 
 **Fix:** `runBatchLoop()` now maintains `alreadyRoutedBoardHashes`. If the board hash at pass start was already seen, routing stops. The set is cleared on board restores.
 
-### 152-D: Missing Violation Detection in Statistics
+### 152-D: Missing Violation Detection in Statistics (Fixed)
 
-**Problem:** `BoardStatistics.clearanceViolations.totalCount` calls `board.get_outline().clearance_violation_count()`, which only checks violations from the outline's perspective. It does NOT call `DesignRulesChecker.getAllClearanceViolations()`.
+**Was:** `BoardStatistics.clearanceViolations.totalCount` called `board.get_outline().clearance_violation_count()`, which only checked violations from the outline's perspective and missed inter-trace/via violations.
 
-**Impact:** Inter-trace/inter-via violations from plane routing (like the 62 in Issue093) will **not** appear in the statistics, leading to incorrect "pass" signals in tests.
+**Fix:** `BoardStatistics.java` was updated to call `clearanceDrc.getAllClearanceViolations()` whenever clearance violations are included.
+
+### 152-E: Heuristic Plane Detection Fallback (Open)
+
+**Problem:** `DsnFile.adjustPlaneAutorouteSettings()` skips boards with $\le 2$ layers, skips outer layers (index 0 and $N-1$), skips layers with existing wires, and requires $\ge 50\%$ board area coverage. Non-KiCad DSN files or boards with outer-layer ground pours fail heuristic detection unless Path A (`(plane ...)` in structure) explicitly fired.
+
+**Improvement Idea:**
+- Allow outer layers with copper pours covering $\ge 30-40\%$ of the board to be recognized as plane nets, even on 2-layer boards.
+- Tolerate pre-existing escape wires when assessing plane candidate layers.
+
+### 152-F: User-Configurable Tuning Parameters (Open)
+
+**Problem:** While `planeViaCosts` is exposed in `RoutingCostSettings` and the GUI, other settings are missing:
+- No CLI or JSON config setting to explicitly designate nets as plane nets (overriding CAD exports).
+- No stub length penalty or via-to-pad distance preference.
+- No option to toggle `is_obstacle` on `ConductionArea` via settings.
+
+### 152-G: Plane Connectivity & Void/Island Validation (Open)
+
+**Problem:** Foreign signal traces routed through a copper pour (`is_obstacle = false`) physically slice the pour into disjoint pieces. In KiCad, zone fills flow around traces, which can isolate pins into dead copper islands. Freerouting treats `ConductionArea` as monolithic and does not verify topological connectivity of the pour after signal routing.
+
+### 152-H: Route Power Plane-Nets First in Each Pass (Proposed)
+
+**Concept:** In `BatchAutorouter.getAutorouteItems()`, prioritize items belonging to nets where `Net.containsPlane() == true` so they are routed at the very beginning of each pass.
+
+**Algorithmic Rationale:**
+1. **Escape Channel Preservation:** Plane connections require only short stubs and vias to reach the copper pour. If signal nets route first, they weave tight traces around IC pins, often blocking the small escape channels needed to drop a via to the plane.
+2. **Reduced Ripup Cascades:** Establishing fixed power vias early provides immovable anchors. Signal traces naturally pathfind around them. If power vias are placed last, they often force ripup of complex, completed signal nets.
+3. **Throughput:** Plane connections resolve in very few A* search steps. Routing them first quickly reduces the number of incomplete items.
+
+**Candidate Fixtures for Benchmarking:**
+- `fixtures/Issue163-pic_programmer.dsn`: 2-layer with bottom GND pour; fast smoke test (~1s/pass).
+- `fixtures/Issue093-interf_u.dsn`: 2-layer with bottom GND pour; canonical reproducer (~5s/pass).
+- `fixtures/Issue027-zMRETestFixture.dsn`: 2-layer dense board with F.Cu/B.Cu GND pours (~60s/pass).
+- `fixtures/Issue219-LogicBoard_smt.dsn`: 4-layer board with dedicated inner VCC and GND planes.
 
 ---
 
 ## Acceptance Criteria
 
-Once 152-A is resolved:
-
-- [ ] Routing `Issue093-interf_u.dsn` completes with **0 clearance violations** (measured by `DesignRulesChecker`).
-- [ ] All GND pads are successfully connected to the GND copper pour.
-- [ ] `BoardStatistics.clearanceViolations.totalCount` matches the global DRC count.
-- [ ] No routing regression on other fixture boards (`./gradlew check`).
-- [ ] User-controllable plane via costs and stub preferences added to `RouterSettings`.
+- [ ] Benchmarking `152-H` confirms improved or equal routing completion and via efficiency on candidate plane fixtures without regressions on standard benchmarks.
+- [ ] Improved heuristic detection in `152-E` for 2-layer and outer-layer pour designs.
+- [ ] Full configuration support in `RouterSettings`, CLI, and JSON for plane settings (via costs, plane net declarations).
+- [ ] No clearance violations or routing regressions introduced across `./gradlew check`.
 
 ---
 
