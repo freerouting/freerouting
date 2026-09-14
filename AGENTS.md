@@ -35,6 +35,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   and `python scripts/i18n/extract-context.py --check` when applicable. On Windows use
   `gradlew.bat`. If formatting is intentionally changed, isolate it in a dedicated
   change and inspect `git diff --stat` plus `git diff --check`.
+  **PR Push Rule:** If a Pull Request is already open and new commits are made locally, **do not push the commits to the remote branch without explicit confirmation from the user** (pushing triggers GitHub Actions workflows online, which may be unnecessary while iterating or reviewing).
 - **Legacy Reference Implementation:** The source code of the original v1.9 implementation is available in the `src_v19/` directory. It remains a **historical reference** for understanding original algorithmic decisions and for optional deep-dive investigations. Do not refactor or optimize the v1.9 code directly; modify it only when additional trace logging is needed for a specific comparison. **It is no longer the primary routing-parity baseline for current development.**
 - **Logging & Debugging:** Use the `FRLogger` class for logging. The method `trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints)` should be used for detailed algorithmic steps, especially in routing logic, to facilitate debugging and performance analysis. Logs should be structured and informative, including impacted nets and impacted points in the routing process. When comparing against a baseline build, keep diagnostic payloads synchronized between the WIP tree and that baseline before drawing conclusions from log diffs.
   - For parity investigations, keep diagnostic payloads synchronized between WIP and the baseline under comparison. If WIP emits a debug marker (for example `[assign_raw]` with section/door identity), add the same marker fields to the baseline instrumentation before drawing conclusions from log diffs.
@@ -108,12 +109,15 @@ Execute the following commands from the root directory using the Gradle Wrapper:
 - **Run Current Development Environment:** `./gradlew run`
 - **Run v1.9 Compatibility Build:** `./gradlew runV19`
 - **Apply Project-Wide Cleanup/Formatting Recipes:** `./gradlew rewriteRun`
+- **Gradle Build Scan:** Gradle Build Scan is activated and available after builds complete on GitHub Actions (inspect the Develocity link printed in CI summaries and build results).
 
 # Communication Style
 
 Your communication should be direct, professional, and technically precise. Acknowledge and respect the inherent complexity of PCB routing logic. Do not oversimplify geometric problems; instead, provide thorough, algorithmically-sound justifications for any proposed code changes. Output complete and correct code when finalizing solutions.
 
 - **Spelling:** The product name is always written **"Freerouting"** (capital F). Never write "freerouting" in prose, documentation, or user-facing messages.
+- **Command Line Arguments / Parameter Names:** Always use lowercase `snake_case`, with nested fields separated by the dot (`.`) character (e.g. `--router.plane_as_obstacle=true`, `--router.plane_via_costs=50`, `--router.copper_to_edge_clearance_um=500`). Do not encourage users to use deprecated parameters (such as `conduction_is_obstacle` or `conductionIsObstacle`) or `camelCase` parameters (such as `planeAsObstacle`). Sample parameter references in documentation, CLI help, and discussions must strictly follow the lowercase `snake_case` with dot `.` format.
+- **Release Notes:** Release notes must follow the structure and sections of the most recent releases (e.g. v2.4.1, v2.3.0). The style should be professional, direct, friendly, and grateful. Keep release notes as brief as possible without leaving anything important out. Include relevant sponsor callouts, highlights, detailed categorized sections, known limitations/guidance, and heartfelt contributor acknowledgments.
 
 # DRC & Clearance Architecture
 
