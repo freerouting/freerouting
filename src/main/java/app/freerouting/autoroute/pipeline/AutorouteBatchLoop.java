@@ -61,6 +61,17 @@ final class AutorouteBatchLoop {
     router.fireTaskStateChangedEvent(
         new TaskStateChangedEvent(router, TaskState.STARTED, 0, router.board.getHash()));
 
+    int optimizerThreads =
+        (settings.optimizer != null && settings.optimizer.maxThreads != null)
+            ? Math.max(1, settings.optimizer.maxThreads)
+            : 1;
+    job.logInfo(
+        "Pipeline thread limits: autorouter.max_threads="
+            + settings.getAutorouterMaxThreads()
+            + ", optimizer.max_threads="
+            + optimizerThreads
+            + ".");
+
     // Capture initial state for session summary
     router.sessionStartTime = Instant.now();
     router.initialUnroutedCount = calculateIncompleteCount(router.board);
@@ -288,7 +299,7 @@ final class AutorouteBatchLoop {
     // pass without updating the board state.
     Set<String> alreadyRoutedBoardHashes = new java.util.HashSet<>();
     while (continueAutorouting && !router.thread.isStopAutoRouterRequested()) {
-      if (job != null && job.state == RoutingJobState.TIMED_OUT) {
+      if (job.state == RoutingJobState.TIMED_OUT) {
         router.thread.requestStopAutoRouter();
       }
 
@@ -312,9 +323,7 @@ final class AutorouteBatchLoop {
         break;
       }
 
-      if (job != null) {
-        job.setCurrentPass(currentPass);
-      }
+      job.setCurrentPass(currentPass);
 
       router.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(router, TaskState.RUNNING, currentPass, currentBoardHash));
@@ -638,7 +647,7 @@ final class AutorouteBatchLoop {
     } else {
       // Distinguish between a user-requested cancellation and a job timeout so that
       // API consumers can tell the two apart via TaskStateChangedEvent.
-      boolean isTimedOut = (job != null) && (job.state == RoutingJobState.TIMED_OUT);
+      boolean isTimedOut = job.state == RoutingJobState.TIMED_OUT;
       router.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(
               router,

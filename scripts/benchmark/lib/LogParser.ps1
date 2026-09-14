@@ -362,7 +362,7 @@ function Get-PhaseMetrics {
     foreach ($line in $lines) {
         if ($line -match $RE_OPTIMIZER) {
             $optimizer.log_found = $true
-            $optimizer.score_before = [double]$matches[2].Replace(',', '.')
+            $optimizer.score_before = (ConvertFrom-FrScore $matches[2]).Score
             $optimizer.score_after = (ConvertFrom-FrScore $matches[4]).Score
             $optimizer.duration_seconds = ConvertFrom-FrDuration $matches[3]
             $optimizer.cpu_seconds = [double]($matches[5].Replace(',', '.'))

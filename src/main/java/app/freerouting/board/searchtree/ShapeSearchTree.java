@@ -34,6 +34,7 @@ import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,6 +51,9 @@ import java.util.TreeSet;
 public class ShapeSearchTree extends MinAreaTree {
 
   private static final int DRILL_HOLE_CLEARANCE_MARGIN = 10;
+
+  /** Reusable traversal stack for complete-shape queries on this tree. */
+  protected final ArrayStack<TreeNode> completeShapeStack = new ArrayStack<>(10000);
 
   /** Used in objects of class EntrySortedByClearance. */
   private static int lastGeneratedEntryId;
@@ -594,7 +598,7 @@ public class ShapeSearchTree extends MinAreaTree {
       startShape = startShape.intersection(room.getShape());
     }
     RegularTileShape boundingShape = startShape.boundingShape(this.boundingDirections);
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
     if (startShape.dimension() == 2) {
       IncompleteFreeSpaceExpansionRoom newRoom =
           new IncompleteFreeSpaceExpansionRoom(
@@ -605,19 +609,19 @@ public class ShapeSearchTree extends MinAreaTree {
     // To ensure exact algorithmic parity with v1.9, we need to visit obstacles
     // in a deterministic order. The non-deterministic order of tree traversal
     // causes different room partitioning.
-    List<Leaf> overlappingLeaves = new LinkedList<>();
-    ArrayStack<TreeNode> nodeStack = new ArrayStack<>(10000);
-    nodeStack.push(this.root);
+    List<Leaf> overlappingLeaves = new ArrayList<>();
+    completeShapeStack.reset();
+    completeShapeStack.push(this.root);
     TreeNode currentNode;
     int roomLayer = room.getLayer();
 
-    while ((currentNode = nodeStack.pop()) != null) {
+    while ((currentNode = completeShapeStack.pop()) != null) {
       if (currentNode.boundingShape.intersects(boundingShape)) {
         if (currentNode instanceof Leaf leaf) {
           overlappingLeaves.add(leaf);
         } else {
-          nodeStack.push(((InnerNode) currentNode).firstChild);
-          nodeStack.push(((InnerNode) currentNode).secondChild);
+          completeShapeStack.push(((InnerNode) currentNode).firstChild);
+          completeShapeStack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
@@ -636,7 +640,7 @@ public class ShapeSearchTree extends MinAreaTree {
           && currentObject != ignoreObject) {
 
         TileShape currentObjectShape = currentObject.getTreeShape(this, shapeIndex);
-        Collection<IncompleteFreeSpaceExpansionRoom> newResult = new LinkedList<>();
+        Collection<IncompleteFreeSpaceExpansionRoom> newResult = new ArrayList<>();
         RegularTileShape newBoundingShape = IntOctagon.EMPTY;
 
         for (IncompleteFreeSpaceExpansionRoom currentIncompleteRoom : result) {
@@ -648,22 +652,24 @@ public class ShapeSearchTree extends MinAreaTree {
                 currentObject instanceof CompleteFreeSpaceExpansionRoom
                     && ignoreShape != null
                     && ignoreShape.contains(intersection);
-            FRLogger.trace(
-                "COMPLETE_SHAPE_DECISION"
-                    + ", net="
-                    + netNumber
-                    + ", layer="
-                    + roomLayer
-                    + ", action="
-                    + (ignoreExpansionRoom ? "IGNORE" : "RESTRAIN")
-                    + ", obstacle_type="
-                    + currentObject.getClass().getSimpleName()
-                    + ", obstacle_bounds="
-                    + currentObjectShape.boundingBox()
-                    + ", overlap_bounds="
-                    + intersection.boundingBox()
-                    + ", ignore_bounds="
-                    + (ignoreShape == null ? "null" : ignoreShape.boundingBox()));
+            if (FRLogger.isTraceEnabled()) {
+              FRLogger.trace(
+                  "COMPLETE_SHAPE_DECISION"
+                      + ", net="
+                      + netNumber
+                      + ", layer="
+                      + roomLayer
+                      + ", action="
+                      + (ignoreExpansionRoom ? "IGNORE" : "RESTRAIN")
+                      + ", obstacle_type="
+                      + currentObject.getClass().getSimpleName()
+                      + ", obstacle_bounds="
+                      + currentObjectShape.boundingBox()
+                      + ", overlap_bounds="
+                      + intersection.boundingBox()
+                      + ", ignore_bounds="
+                      + (ignoreShape == null ? "null" : ignoreShape.boundingBox()));
+            }
 
             if (!ignoreExpansionRoom) {
               somethingChanged = true;
@@ -700,7 +706,7 @@ public class ShapeSearchTree extends MinAreaTree {
    */
   private Collection<IncompleteFreeSpaceExpansionRoom> restrainShape(
       IncompleteFreeSpaceExpansionRoom incompleteRoom, TileShape obstacleShape) {
-    Collection<IncompleteFreeSpaceExpansionRoom> result = new LinkedList<>();
+    Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
     // Search the edge line of obstacleShape, so that shapeToBeContained
     // are on the right side of this line, and that the line segment
     // intersects with the interior of shape.

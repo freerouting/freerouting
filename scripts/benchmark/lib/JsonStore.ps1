@@ -166,9 +166,8 @@ FLOAT_KEYS = {
     'normalized_score',
 }
 
-def render(value, level=0, key=None):
-    indent = '  ' * level
-    child_indent = '  ' * (level + 1)
+def render(value, key=None):
+    # Compact JSON: pretty-printed results exceeded GitHub's 100 MB blob limit.
     if value is None:
         return 'null'
     if isinstance(value, bool):
@@ -182,19 +181,12 @@ def render(value, level=0, key=None):
     if isinstance(value, str):
         return json.dumps(value, ensure_ascii=False)
     if isinstance(value, list):
-        if not value:
-            return '[]'
-        return '[\n' + ',\n'.join(
-            child_indent + render(item, level + 1) for item in value
-        ) + '\n' + indent + ']'
+        return '[' + ','.join(render(item) for item in value) + ']'
     if isinstance(value, dict):
-        if not value:
-            return '{}'
-        return '{\n' + ',\n'.join(
-            child_indent + json.dumps(str(key), ensure_ascii=False) + ': ' +
-            render(item, level + 1, key)
-            for key, item in value.items()
-        ) + '\n' + indent + '}'
+        return '{' + ','.join(
+            json.dumps(str(k), ensure_ascii=False) + ':' + render(item, k)
+            for k, item in value.items()
+        ) + '}'
     raise TypeError(type(value).__name__)
 
 p = sys.argv[1]

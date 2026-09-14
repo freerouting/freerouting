@@ -905,6 +905,18 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
+   * Drops maze/search scratch that snapshot undo does not restore. Optimizer worker-board reuse
+   * must call this after each candidate so later items are not evaluated against a leftover engine.
+   */
+  public void clearTransientAutorouteState() {
+    finishAutoroute();
+    clearAllItemTemporaryAutorouteData();
+    changedArea = null;
+    shoveFailingObstacle = null;
+    shoveFailingLayer = -1;
+  }
+
+  /**
    * Routes automatically item to another item of the same net, to which it is not yet electrically
    * connected. Returns an enum of type AutorouteAttemptState
    */

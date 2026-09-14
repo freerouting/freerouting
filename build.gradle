@@ -138,10 +138,10 @@ repositories {
     }
 
     mavenCentral()
-    // Adding mirror repositories
+    // Fallback mirror for runner/network environments that receive a transient Maven Central 403.
     maven {
-        name = 'MirrorRepo1'
-        url = 'https://repo1.maven.org/maven2' // Replace with actual mirror URL
+        name = 'MavenCentralGoogleMirror'
+        url = 'https://maven-central.storage-download.googleapis.com/maven2'
     }
 
     google()
