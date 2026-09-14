@@ -9,7 +9,6 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.LinkedList;
 
 /** Class for reading and writing dsn-files. */
 @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
