@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Single source of truth for the "Universal EDA Compatibility" grid on index.html.
  * To add an integration: drop <id>.svg into assets/logos/eda/ and append one entry here.
  * No other file needs to change.
@@ -11,7 +11,7 @@ const EDA_INTEGRATIONS = [
   {
     id: "kicad",
     name: "KiCad",
-    logoStyle: "mono",
+    logoStyle: "brand",
     description:
       "Full bidirectional workflow via KiCad's Specctra export/import and dedicated community KiCad plugins.",
     url: null,
@@ -19,7 +19,7 @@ const EDA_INTEGRATIONS = [
   {
     id: "autodesk-fusion",
     name: "Autodesk Fusion",
-    logoStyle: "mono",
+    logoStyle: "brand",
     description:
       "Native integration and automated routing workflows for Autodesk Fusion PCB design.",
     url: null,
@@ -27,7 +27,7 @@ const EDA_INTEGRATIONS = [
   {
     id: "easyeda",
     name: "EasyEDA",
-    logoStyle: "mono",
+    logoStyle: "brand",
     description:
       "Direct support for automated trace generation via Specctra DSN export from standard web and desktop clients.",
     url: null,

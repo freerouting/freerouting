@@ -560,19 +560,16 @@ main {
 .eda-header {
     display: flex;
     align-items: center;
-    gap: 0.8em;
+    gap: 0.65em;
     margin-bottom: 0.6em;
 }
 
 .eda-logo {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
     object-fit: contain;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.06);
-    padding: 3px;
-    box-sizing: content-box;
+    /* Ensure padding and background are completely removed */
 }
 
 /* White silhouette for marks lacking contrast on the dark card background. */
