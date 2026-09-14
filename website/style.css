@@ -540,6 +540,8 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.2em;
+    /* CLS reserve: holds two rows of cards open while integrations-data.js renders. */
+    min-height: 440px;
 }
 
 .eda-card {
@@ -562,14 +564,34 @@ main {
     margin-bottom: 0.6em;
 }
 
-.eda-badge {
-    background-color: var(--gold-subtle);
+.eda-logo {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 3px;
+    box-sizing: content-box;
+}
+
+/* White silhouette for marks lacking contrast on the dark card background. */
+.eda-logo--mono {
+    filter: brightness(0) invert(1);
+}
+
+/* Full-color marks: subtle lift so dark strokes survive the dark surface. */
+.eda-logo--brand {
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
+}
+
+/* No-JS / crawler fallback list (replaced by JS-rendered cards when JS runs). */
+.eda-noscript-list {
+    margin: 0;
+    padding: 0 0 0 1.2em;
     color: var(--gold-light);
-    border: 1px solid var(--border-subtle);
-    font-size: 0.76em;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: var(--radius-full);
+    font-size: 0.95em;
+    line-height: 1.9;
 }
 
 .eda-card h3 {
