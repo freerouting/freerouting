@@ -345,6 +345,8 @@ public class HeadlessBoardManager implements BoardManager {
             boardCommunication);
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
+    applyPlaneNetsOverride();
+    applyPlaneAsObstacleOverride();
   }
 
   private void applyHoleClearanceOverride() {
@@ -555,6 +557,45 @@ public class HeadlessBoardManager implements BoardManager {
             + " board units).");
   }
 
+  private void applyPlaneNetsOverride() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.board.rules.nets == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.planeNets == null) {
+      return;
+    }
+
+    for (String netName : this.routingJob.routerSettings.planeNets) {
+      if (netName == null || netName.isBlank()) {
+        continue;
+      }
+      java.util.Collection<app.freerouting.rules.Net> matchingNets =
+          this.board.rules.nets.get(netName.trim());
+      for (app.freerouting.rules.Net net : matchingNets) {
+        if (!net.containsPlane()) {
+          net.setContainsPlane(true);
+          FRLogger.info(
+              "Configured net '" + net.name + "' as a power plane net via router.plane_nets.");
+        }
+      }
+    }
+  }
+
+  private void applyPlaneAsObstacleOverride() {
+    if (this.board == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.planeAsObstacle == null) {
+      return;
+    }
+
+    boolean asObstacle = this.routingJob.routerSettings.planeAsObstacle;
+    this.board.changePlaneAsObstacle(asObstacle);
+    FRLogger.debug("Applied plane_as_obstacle override: " + asObstacle);
+  }
+
   /**
    * Returns the current routing job context associated with this board manager.
    *
@@ -740,7 +781,7 @@ public class HeadlessBoardManager implements BoardManager {
     return dsnResult;
   }
 
-  private void applyRouterSettingsForLoadedBoard() {
+  void applyRouterSettingsForLoadedBoard() {
     if (this.board != null && this.routingJob != null) {
       int boardLayerCount = this.board.getLayerCount();
       if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
@@ -749,6 +790,8 @@ public class HeadlessBoardManager implements BoardManager {
       this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
+      applyPlaneNetsOverride();
+      applyPlaneAsObstacleOverride();
     }
   }
 

@@ -31,6 +31,22 @@ public class RouterSettings implements Serializable, Cloneable {
   public Double holeClearanceUm;
 
   /**
+   * Explicit list of net names to treat as power-plane nets, enabling plane-routing mode and
+   * discounted plane via costs for these nets.
+   */
+  @SerializedName("plane_nets")
+  public String[] planeNets;
+
+  /**
+   * When true, conduction areas (copper pours) act as obstacles blocking foreign traces from
+   * passing through. When false, foreign traces may route through conduction areas.
+   */
+  @SerializedName(
+      value = "plane_as_obstacle",
+      alternate = {"conduction_is_obstacle", "planeAsObstacle", "conductionIsObstacle"})
+  public Boolean planeAsObstacle;
+
+  /**
    * Opt-in width necking: when a connection fails at its net-class trace width, retry it once with
    * all trace half-widths clamped to this width (in micrometers). Intended for fine-pitch regions
    * where the class width physically cannot exit the pads; supply a legal manufacturable width
@@ -519,6 +535,8 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
+    result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
+    result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;
     result.strictDrc = this.strictDrc;
     result.tracePullTightAccuracy = this.tracePullTightAccuracy;
@@ -641,6 +659,39 @@ public class RouterSettings implements Serializable, Cloneable {
       scoring = new RoutingCostSettings();
     }
     scoring.planeViaCosts = Math.max(value, 1);
+  }
+
+  /** Returns the explicit list of power-plane net names, or empty array if none configured. */
+  public String[] getPlaneNets() {
+    return planeNets != null ? planeNets.clone() : new String[0];
+  }
+
+  /** Sets the explicit list of power-plane net names. */
+  public void setPlaneNets(String[] value) {
+    String[] old = this.planeNets;
+    this.planeNets = value != null ? value.clone() : null;
+    if (pcs != null) {
+      pcs.firePropertyChange("planeNets", old, this.planeNets);
+    }
+  }
+
+  /** Returns whether conduction areas (copper pours) act as obstacles, or null if unconfigured. */
+  public Boolean getPlaneAsObstacle() {
+    return planeAsObstacle;
+  }
+
+  /** Returns whether conduction areas act as obstacles (false by default for copper pours). */
+  public boolean isPlaneAsObstacle() {
+    return Boolean.TRUE.equals(planeAsObstacle);
+  }
+
+  /** Sets whether conduction areas act as obstacles. */
+  public void setPlaneAsObstacle(Boolean value) {
+    Boolean old = this.planeAsObstacle;
+    this.planeAsObstacle = value;
+    if (pcs != null) {
+      pcs.firePropertyChange("planeAsObstacle", old, value);
+    }
   }
 
   /**

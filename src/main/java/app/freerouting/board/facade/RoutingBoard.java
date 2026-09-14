@@ -1261,8 +1261,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
   }
 
-  /** Sets, if all conduction areas on the board are obstacles for route of foreign nets. */
-  public void changeConductionIsObstacle(boolean value) {
+  /**
+   * Sets, if all conduction areas (power planes) on the board are obstacles for route of foreign
+   * nets.
+   */
+  public void changePlaneAsObstacle(boolean value) {
     if (this.rules.getIgnoreConduction() != value) {
       return; // no multiply
     }
@@ -1286,6 +1289,16 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (somethingChanged) {
       this.searchTreeManager.reinsertTreeItems();
     }
+  }
+
+  /**
+   * Sets, if all conduction areas on the board are obstacles for route of foreign nets.
+   *
+   * @deprecated Use {@link #changePlaneAsObstacle(boolean)} instead.
+   */
+  @Deprecated
+  public void changeConductionIsObstacle(boolean value) {
+    changePlaneAsObstacle(value);
   }
 
   /**

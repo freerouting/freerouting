@@ -196,4 +196,90 @@ public class PowerPlaneValidationTest {
             "is a dedicated power plane and cannot be routed. Forcing active state to false."),
         "Override guard should log a warning message. Logs:\n" + logs);
   }
+
+  @Test
+  void testPlaneNetsOverride() {
+    RoutingBoard board = createTestBoard(false); // 2 signal layers
+    Net vccNet = board.rules.nets.add("VCC", 1, false);
+    assertFalse(vccNet.containsPlane(), "Initially net should not contain plane.");
+
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new app.freerouting.settings.sources.DefaultSettings().getSettings();
+    job.routerSettings.planeNets = new String[] {"VCC"};
+
+    HeadlessBoardManager manager = new HeadlessBoardManager(job);
+    manager.board = board;
+
+    manager.applyRouterSettingsForLoadedBoard();
+
+    assertTrue(
+        vccNet.containsPlane(), "Net specified in planeNets should have containsPlane=true.");
+  }
+
+  @Test
+  void testPlaneAsObstacleOverride() {
+    RoutingBoard board = createTestBoard(false); // 2 signal layers
+    TileShape area = TileShape.getInstance(0, 0, 1000000, 1000000);
+    Net gnd = board.rules.nets.add("GND", 1, true);
+    board.insertConductionArea(area, 0, new int[] {gnd.netNumber}, 0, false, FixedState.UNFIXED);
+
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new app.freerouting.settings.sources.DefaultSettings().getSettings();
+    job.routerSettings.planeAsObstacle = true;
+
+    HeadlessBoardManager manager = new HeadlessBoardManager(job);
+    manager.board = board;
+
+    manager.applyRouterSettingsForLoadedBoard();
+
+    assertFalse(
+        board.rules.getIgnoreConduction(),
+        "planeAsObstacle=true should set rules.ignoreConduction=false.");
+    app.freerouting.board.model.items.ConductionArea ca =
+        (app.freerouting.board.model.items.ConductionArea)
+            board.getConductionAreas().iterator().next();
+    assertTrue(ca.getIsObstacle(), "ConductionArea should have isObstacle=true.");
+  }
+
+  @Test
+  void testHeuristicPlaneDetectionOn2LayerBoard() {
+    RoutingBoard board = createTestBoard(false); // 2 signal layers, 2000x2000
+    // Conduction area covering 40% of board (2,000,000 x 800,000 on layer 0)
+    TileShape pourShape = TileShape.getInstance(0, 0, 2000000, 800000);
+    Net gnd = board.rules.nets.add("GND", 1, false);
+    board.insertConductionArea(
+        pourShape, 0, new int[] {gnd.netNumber}, 0, false, FixedState.UNFIXED);
+
+    assertFalse(gnd.containsPlane(), "Initially net should not contain plane.");
+    boolean adjusted =
+        app.freerouting.io.specctra.parser.DsnFile.adjustPlaneAutorouteSettings(board);
+
+    assertTrue(adjusted, "Should adjust plane autoroute settings for >=30% outer pour.");
+    assertTrue(gnd.containsPlane(), "GND net should be recognized as power plane.");
+  }
+
+  @Test
+  void testHeuristicPlaneDetectionWithExistingTraces() {
+    RoutingBoard board = createTestBoard(false); // 2 signal layers, 2000x2000
+    // Insert an existing trace on layer 0
+    Net sigNet = board.rules.nets.add("SIG", 2, false);
+    Polyline traceLine =
+        new Polyline(new IntPoint[] {new IntPoint(100, 100), new IntPoint(500, 100)});
+    PolylineTrace trace =
+        new PolylineTrace(
+            traceLine, 0, 100, new int[] {sigNet.netNumber}, 0, 0, 0, FixedState.UNFIXED, board);
+    board.insertItem(trace);
+
+    // Conduction area covering 50% of board on layer 0
+    TileShape pourShape = TileShape.getInstance(0, 0, 2000000, 1000000);
+    Net gnd = board.rules.nets.add("GND", 1, false);
+    board.insertConductionArea(
+        pourShape, 0, new int[] {gnd.netNumber}, 0, false, FixedState.UNFIXED);
+
+    boolean adjusted =
+        app.freerouting.io.specctra.parser.DsnFile.adjustPlaneAutorouteSettings(board);
+
+    assertTrue(adjusted, "Should adjust plane autoroute settings even with existing traces.");
+    assertTrue(gnd.containsPlane(), "GND net should be recognized as power plane.");
+  }
 }

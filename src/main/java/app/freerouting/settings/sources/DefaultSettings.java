@@ -155,6 +155,8 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
+    settings.planeNets = new String[0];
+    settings.planeAsObstacle = false;
     settings.neckWidthUm = 0.0;
     settings.strictDrc = false;
 
