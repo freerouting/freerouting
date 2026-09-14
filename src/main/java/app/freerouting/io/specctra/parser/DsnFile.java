@@ -42,13 +42,7 @@ public final class DsnFile {
       }
     }
     boolean[] changedLayerArr = new boolean[boardLayerStructure.layers.length];
-    Collection<ConductionArea> conductionAreaList = new LinkedList<>();
-    Collection<Item> itemList = routingBoard.getItems();
-    for (Item currentItem : itemList) {
-      if (currentItem instanceof ConductionArea area) {
-        conductionAreaList.add(area);
-      }
-    }
+    Collection<ConductionArea> conductionAreaList = routingBoard.getConductionAreas();
     boolean nothingChanged = true;
 
     BoardOutline boardOutline = routingBoard.getOutline();
