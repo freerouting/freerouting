@@ -2,7 +2,8 @@
 
 This document provides a concise map of the current codebase for contributors and maintainers. It highlights the principal packages, the repository layout, and the fastest path to the code that owns a given behavior.
 
-For long-term structural recommendations, see [docs/research/code_structure_recommendations.md](research/code_structure_recommendations.md). For the active GUI/headless separation plan and boundary-debt ledger, see [docs/issues/soc-gui-separation-and-accessibility-plan.md](issues/soc-gui-separation-and-accessibility-plan.md).
+For the GUI/headless separation rules and boundary-debt ledger, see [Module Boundaries](#module-boundaries-archunit)
+below, which mirrors the strict ArchUnit rules in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.
 
 ## System Overview
 
@@ -19,8 +20,9 @@ flowchart TD
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["**gui windows/menus/board + workspace + interactive**\nSwing desktop"]
+        GUI["**gui windows/menus/board + workspace + interactive + a11y**\nSwing desktop"]
         RENDER["**gui.rendering**\nGUI-owned board renderer"]
+        A11Y["**gui.a11y**\nAccessibility locators"]
         API["**api.v1**\nREST / HTTP"]
         MCP["**api.mcp**\nMCP JSON-RPC + SSE + WS"]
     end
@@ -53,6 +55,7 @@ flowchart TD
     GUI --> MGMT
     GUI --> RENDER --> BOARD
     RENDER --> AR
+    A11Y -. helpers .-> GUI
     API --> MGMT
     MCP --> API
     MGMT <--> CORE
@@ -84,7 +87,7 @@ Use the table below to jump to the package most likely to own the behavior you a
 | Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute.pipeline`, `app.freerouting.autoroute.maze`, `app.freerouting.autoroute.expansion`, `app.freerouting.autoroute.drill`, `app.freerouting.autoroute.path`, and `app.freerouting.board.optimize` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui.windows.board`, `app.freerouting.gui.windows.routing`, `app.freerouting.gui.menus`, `app.freerouting.gui.board`, `app.freerouting.gui.controls`, `app.freerouting.gui.support`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
+| GUI windows, panels, menus, editor state, accessibility locators, or drawing | `app.freerouting.gui.windows.board`, `app.freerouting.gui.windows.routing`, `app.freerouting.gui.menus`, `app.freerouting.gui.board`, `app.freerouting.gui.controls`, `app.freerouting.gui.support`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, `app.freerouting.gui.a11y`, and `app.freerouting.gui.rendering` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
 | MCP server protocol bridge | `app.freerouting.api.mcp` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
@@ -96,16 +99,22 @@ Use the table below to jump to the package most likely to own the behavior you a
 Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.
 
 - **Strict boundaries (must pass):**
-  - Core routing/model packages (`autoroute`, `board`, `rules`, `drc`, `geometry`) must not depend on GUI/editor or API packages.
-  - API/management packages must not depend on `gui` or `gui.rendering`.
-  - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
+  - `rules`, `drc`, `geometry`, and `datastructures` must not depend on `gui`/`gui.interactive` or `api`.
+  - `settings`, `logger`, and `debug` must not depend on `gui`/`gui.interactive`, `api`, `management`, or `analytics`.
+  - `core`, `board`, and `autoroute` must not depend on `gui`/`gui.interactive`.
+  - `api`, `management`, and `analytics` must not depend on `GuiBoardManager` or `InteractiveState`, nor on `gui`/`gui.rendering` types.
 - **Strict boundaries (continued):**
-  - `gui.interactive` concrete state classes should not be used outside the GUI layer.
+  - `gui.interactive` concrete state classes must only be used from within the GUI layer.
   - `gui.workspace` owns the opaque editor-state handles, events, commands, manager, settings, messages,
     and action threads; it must not depend on `gui.interactive`.
   - `board` and `autoroute` must not depend on `gui.rendering`; rendering is GUI-owned.
-  - Pipeline/support packages must not depend on Swing or non-geometry AWT UI types.
-  - `io.specctra.parser` internals must not be depended on outside `io.specctra` public I/O entry points.
+  - Pipeline/support packages (`board`, `rules`, `autoroute`, `drc`, `geometry`, `datastructures`,
+    `settings`, `logger`, `debug`, `util`, `io`, `core`, `analytics`) must not depend on Swing or on
+    AWT types outside `java.awt.geom`.
+  - `io.specctra.parser` internals must not be used outside `io..` (the `io.kicad` importer is an allowed consumer).
+  - `gui.workspace`, `gui.interactive`, and `gui.rendering` must stay cycle-free (slices rule).
+  - Background workspace workers (`InteractiveActionThread`, `GuiRoutingJobWorker`) must reach
+    presentation only through workspace ports, never Swing or window owners.
 
 The only intentional GUI boundary exception is the documented D26 `gui.workspace` →
 `gui.rendering` dependency used by `GuiBoardManager` for its graphics context state. These
@@ -207,6 +216,7 @@ the `gui` root package.
 - `gui.board` — board shell and frame classes (`BoardFrame`, `BoardPanel`, `GuiManager`, toolbars).
 - `gui.controls` — reusable controls (`ColorManager`, combo boxes, progress controls).
 - `gui.support` — GUI defaults, text, and progress support (`GuiDefaultsFile`, `GuiTextManager`).
+- `gui.a11y` — accessibility helpers and stable component locators (`A11y`, `GuiLocators`) used by views and the component-only test harness.
 
 Accessibility coverage uses the frame-free component seams in `BoardMenuBar`, `BoardToolbar`, and
 `WindowVisibility`; these keep menu, toolbar, and settings workflows testable under forced
@@ -245,8 +255,8 @@ Headless board management (using `BoardManager` and `HeadlessBoardManager`), com
 
 ### `app.freerouting.core`
 
-Shared application data such as routing jobs, sessions, scoring (`core.scoring`), CLI result
-manifests (`core.results`), and board library definitions (`core.library`).
+Shared application data such as routing jobs, sessions, job/board-file events (`core.events`),
+scoring (`core.scoring`), CLI result manifests (`core.results`), and board library definitions (`core.library`).
 
 ### `app.freerouting.settings`
 
@@ -370,7 +380,7 @@ The optimizer changes the board more conservatively than the autorouter. Its job
 
 Autorouter and optimizer **do not share a score**. Maze-search costs (`via_costs`, preferred-direction trace costs, rip-up costs) stay on `RoutingCostSettings` and are independent of these board scores. Both V2 scores are on a 0–1000 scale (higher is better). `getNormalizedScore()` is a deprecated alias of the **router** score.
 
-The equations, default weights, and a technical-plus-plain-language glossary for every symbol are in **[docs/scoring.md](scoring.md)**. Settings keys live in [docs/settings.md](settings.md). Design history is in [docs/research/scoring_revision_plan.md](research/scoring_revision_plan.md).
+The equations, default weights, and a technical-plus-plain-language glossary for every symbol are in **[docs/scoring.md](scoring.md)**. Settings keys live in [docs/settings.md](settings.md).
 
 | Score | Used by | V2 default | What it measures |
 | --- | --- | --- | --- |
@@ -472,9 +482,7 @@ To maintain clarity and consistency across the codebase, user interfaces, logs, 
 2. [docs/developer.md](docs/developer.md) for build, test, and release guidance.
 3. [docs/settings.md](docs/settings.md) for the settings merge model.
 4. [docs/scoring.md](docs/scoring.md) for V2 router and optimizer board-score equations.
-5. [docs/research/code_structure_recommendations.md](research/code_structure_recommendations.md) for longer-term structure guidance.
-6. [docs/issues/soc-gui-separation-and-accessibility-plan.md](issues/soc-gui-separation-and-accessibility-plan.md) for the GUI/headless separation plan and live boundary-debt ledger.
-7. This document again, using the package glossary above to jump directly to the relevant area.
+5. This document again, using the package glossary above to jump directly to the relevant area.
 
 ## Practical Rules Of Thumb
 
