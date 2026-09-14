@@ -99,6 +99,15 @@ public class ConductionArea extends ObstacleArea implements Connectable {
   }
 
   /**
+   * Returns the detailed fill geometry for this conduction area, computing clearances against all
+   * overlapping items if needed.
+   */
+  public java.awt.geom.Area getDetailedFillArea() {
+    warmDetailedFillCache();
+    return cachedBoardFillArea;
+  }
+
+  /**
    * Returns the cached detailed fill geometry for renderer-owned painting.
    *
    * <p>The cache remains owned by the conduction-area model because it depends on board revision

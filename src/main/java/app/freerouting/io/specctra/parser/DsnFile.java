@@ -2,8 +2,6 @@ package app.freerouting.io.specctra.parser;
 
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.ConductionArea;
-import app.freerouting.board.model.items.Item;
-import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.TileShape;
@@ -11,7 +9,6 @@ import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.LinkedList;
 
 /** Class for reading and writing dsn-files. */
 @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:MissingJavadocType"})
@@ -23,7 +20,7 @@ public final class DsnFile {
 
   /**
    * Sets containsPlane to true for nets with a conductionArea covering a large part of a signal
-   * layer, if that layer does not contain any traces. This is useful in case the layer type was not
+   * layer (at least 50% of the board outline area). This is useful in case the layer type was not
    * set correctly to plane in the dsn-file. Returns true, if something was changed.
    *
    * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} when the DSN file
@@ -35,7 +32,7 @@ public final class DsnFile {
     }
     final app.freerouting.board.model.structure.LayerStructure boardLayerStructure =
         routingBoard.layerStructure;
-    if (boardLayerStructure.layers.length <= 2) {
+    if (boardLayerStructure.layers.length < 1) {
       return false;
     }
     for (app.freerouting.board.model.structure.Layer currentLayer : boardLayerStructure.layers) {
@@ -43,58 +40,54 @@ public final class DsnFile {
         return false;
       }
     }
-    boolean[] layerContainsWiresArr = new boolean[boardLayerStructure.layers.length];
     boolean[] changedLayerArr = new boolean[boardLayerStructure.layers.length];
-    for (int i = 0; i < layerContainsWiresArr.length; i++) {
-      layerContainsWiresArr[i] = false;
-      changedLayerArr[i] = false;
-    }
-    Collection<ConductionArea> conductionAreaList = new LinkedList<>();
-    Collection<Item> itemList = routingBoard.getItems();
-    for (Item currentItem : itemList) {
-      if (currentItem instanceof Trace trace) {
-        final int currentLayer = trace.getLayer();
-        layerContainsWiresArr[currentLayer] = true;
-      } else if (currentItem instanceof ConductionArea area) {
-        conductionAreaList.add(area);
-      }
-    }
+    Collection<ConductionArea> conductionAreaList = routingBoard.getConductionAreas();
     boolean nothingChanged = true;
 
     BoardOutline boardOutline = routingBoard.getOutline();
     double boardArea = 0;
-    for (int i = 0; i < boardOutline.shapeCount(); i++) {
-      TileShape[] currentPieceArr = boardOutline.getShape(i).splitToConvex();
-      if (currentPieceArr != null) {
-        for (TileShape currentPiece : currentPieceArr) {
-          boardArea += currentPiece.area();
+    if (boardOutline != null) {
+      for (int i = 0; i < boardOutline.shapeCount(); i++) {
+        TileShape[] currentPieceArr = boardOutline.getShape(i).splitToConvex();
+        if (currentPieceArr != null) {
+          for (TileShape currentPiece : currentPieceArr) {
+            boardArea += currentPiece.area();
+          }
         }
       }
     }
+    if (boardArea <= 0) {
+      return false;
+    }
+
     for (ConductionArea currentConductionArea : conductionAreaList) {
       int layerIndex = currentConductionArea.getLayer();
-      if (layerContainsWiresArr[layerIndex]) {
+      if (layerIndex < 0 || layerIndex >= boardLayerStructure.layers.length) {
         continue;
       }
       final app.freerouting.board.model.structure.Layer currentLayer =
           routingBoard.layerStructure.layers[layerIndex];
-      if (!currentLayer.isSignal
-          || layerIndex == 0
-          || layerIndex == boardLayerStructure.layers.length - 1) {
+      if (!currentLayer.isSignal) {
         continue;
       }
       TileShape[] convexPieces = currentConductionArea.getArea().splitToConvex();
+      if (convexPieces == null) {
+        continue;
+      }
       double currentArea = 0;
       for (TileShape currentPiece : convexPieces) {
         currentArea += currentPiece.area();
       }
-      if (currentArea < 0.5 * boardArea) {
+      // Relaxed area threshold: 30% of board area (supports outer-layer pours on 2-layer boards)
+      if (currentArea < 0.3 * boardArea) {
         continue;
       }
       for (int i = 0; i < currentConductionArea.netCount(); i++) {
         final Net currentNet = routingBoard.rules.nets.get(currentConductionArea.getNetNumber(i));
-        currentNet.setContainsPlane(true);
-        nothingChanged = false;
+        if (currentNet != null) {
+          currentNet.setContainsPlane(true);
+          nothingChanged = false;
+        }
       }
       changedLayerArr[layerIndex] = true;
       if (currentConductionArea.getFixedState().ordinal() < FixedState.USER_FIXED.ordinal()) {
@@ -106,8 +99,8 @@ public final class DsnFile {
         FRLogger.info(
             "Layer '"
                 + routingBoard.layerStructure.layers[i].name
-                + "' has been automatically configured as a dedicated power plane because it "
-                + "contains a large conduction area covering >50% of the board.");
+                + "' contains a power plane / large copper pour covering >=30% of the board; "
+                + "associated net(s) configured for plane routing.");
       }
     }
     return !nothingChanged;

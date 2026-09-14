@@ -11,6 +11,7 @@ import app.freerouting.api.mcp.McpApiKeyValidationService;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.McpServerSettings;
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -69,16 +70,33 @@ class McpRateLimitFilterTest {
     request.addProperty("id", 1);
     request.addProperty("method", "initialize");
 
-    HttpResponse<String> r1 =
-        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
-    HttpResponse<String> r2 =
-        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
-    HttpResponse<String> r3 =
-        httpClient.send(authenticatedRequest(request), HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> r1 = sendWithRetry(request);
+    HttpResponse<String> r2 = sendWithRetry(request);
+    HttpResponse<String> r3 = sendWithRetry(request);
 
-    assertEquals(200, r1.statusCode());
-    assertEquals(200, r2.statusCode());
-    assertEquals(429, r3.statusCode());
+    assertEquals(200, r1.statusCode(), () -> "first request must pass, got: " + describe(r1));
+    assertEquals(200, r2.statusCode(), () -> "second request must pass, got: " + describe(r2));
+    assertEquals(
+        429, r3.statusCode(), () -> "third request must be rate-limited, got: " + describe(r3));
+  }
+
+  /**
+   * Sends one MCP request, retrying once on a transport-level {@link IOException}. The rate-limited
+   * 429 is produced via {@code abortWith} before the request entity is consumed, which can reset
+   * the pooled keep-alive connection on Windows loopback. The retry dials a fresh connection (the
+   * failed pool entry is evicted). A persistent problem still fails the test via the rethrown
+   * exception or the status assertions below.
+   */
+  private HttpResponse<String> sendWithRetry(JsonObject body) throws Exception {
+    try {
+      return httpClient.send(authenticatedRequest(body), HttpResponse.BodyHandlers.ofString());
+    } catch (IOException e) {
+      return httpClient.send(authenticatedRequest(body), HttpResponse.BodyHandlers.ofString());
+    }
+  }
+
+  private static String describe(HttpResponse<String> response) {
+    return "HTTP " + response.statusCode() + " body=" + response.body();
   }
 
   private HttpRequest authenticatedRequest(JsonObject body) {

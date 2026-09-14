@@ -34,7 +34,7 @@ public final class GuiBoardRoutingSettings {
     if (manager.isBoardReadOnly()) {
       return;
     }
-    manager.getRoutingBoard().changeConductionIsObstacle(!value);
+    manager.getRoutingBoard().changePlaneAsObstacle(!value);
   }
 
   public void setPinEdgeToTurnDist(double value) {
