@@ -16,7 +16,7 @@ const EDA_INTEGRATIONS = [
   {
     id: "kicad",
     name: "KiCad",
-    logoStyle: "brand",
+    logoStyle: "mono",
     description:
       "Full bidirectional workflow via KiCad's Specctra export/import and dedicated community KiCad plugins.",
     url: "https://www.kicad.org/",
@@ -24,7 +24,7 @@ const EDA_INTEGRATIONS = [
   {
     id: "autodesk-fusion",
     name: "Autodesk Fusion",
-    logoStyle: "brand",
+    logoStyle: "mono",
     description:
       "Native integration and automated routing workflows for Autodesk Fusion PCB design.",
     url: "https://www.autodesk.com/products/fusion-360/overview",
@@ -32,7 +32,7 @@ const EDA_INTEGRATIONS = [
   {
     id: "easyeda",
     name: "EasyEDA",
-    logoStyle: "brand",
+    logoStyle: "mono",
     description:
       "Direct support for automated trace generation via Specctra DSN export from standard web and desktop clients.",
     url: "https://easyeda.com/",
@@ -55,7 +55,7 @@ const EDA_INTEGRATIONS = [
   {
     id: "specctra",
     name: "Specctra DSN & SES",
-    logoStyle: "brand",
+    logoStyle: "mono",
     description:
       "Full compliance with industry-standard .dsn design files and .ses routing session output.",
     url: null,

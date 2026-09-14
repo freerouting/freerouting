@@ -579,10 +579,6 @@ main {
     filter: brightness(0) invert(1);
 }
 
-/* Full-color marks: subtle lift so dark strokes survive the dark surface. */
-.eda-logo--brand {
-    filter: saturate(1.18) drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
-}
 
 /* No-JS / crawler fallback list (replaced by JS-rendered cards when JS runs). */
 .eda-noscript-list {
