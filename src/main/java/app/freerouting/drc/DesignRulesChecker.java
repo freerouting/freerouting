@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Design Rules Checker that centralizes DRC functionality. This class is responsible for detecting
@@ -366,18 +367,28 @@ public class DesignRulesChecker {
   }
 
   private void mergeOrAddIsland(List<java.awt.geom.Area> islands, java.awt.geom.Area piece) {
-    // If piece is a hole (subtractive), it will be enclosed by an existing island outer boundary.
-    // In java.awt.geom.Area path iteration, outer boundaries and inner holes are consecutive
-    // contours with winding rules. We test containment against existing island bounding boxes:
+    // In java.awt.geom.Area path iteration, an Area can consist of outer contours (additive)
+    // and inner hole contours (subtractive).
+    // If piece is entirely contained within the bounding box/area of an existing island, it
+    // represents
+    // a hole that should be subtracted from that island rather than added as a separate copper
+    // island.
     boolean incorporated = false;
     for (int i = 0; i < islands.size(); i++) {
       java.awt.geom.Area existing = islands.get(i);
       java.awt.geom.Area intersection = new java.awt.geom.Area(existing);
       intersection.intersect(piece);
       if (!intersection.isEmpty()) {
-        // Intersects an existing component (e.g. hole or connected segment) -> subtract or add
-        // according to Area winding
-        existing.exclusiveOr(piece);
+        // If the piece is contained within the existing island's outline, subtract the hole.
+        // Otherwise, xor or combine overlapping sub-paths belonging to the same component.
+        java.awt.geom.Area testSubtract = new java.awt.geom.Area(piece);
+        testSubtract.subtract(existing);
+        if (testSubtract.isEmpty()) {
+          // 'piece' is completely inside 'existing' -> hole contour, subtract it
+          existing.subtract(piece);
+        } else {
+          existing.exclusiveOr(piece);
+        }
         incorporated = true;
         break;
       }
@@ -1111,7 +1122,17 @@ public class DesignRulesChecker {
     summary.clearanceViolationsCount = violations.size();
 
     Collection<UnconnectedItems> unconnecteds = getAllUnconnectedItems();
-    summary.unconnectedNetsCount = unconnecteds.size();
+    Set<Integer> unconnectedNetNumbers = new java.util.HashSet<>();
+    int danglingStubsCount = 0;
+    for (UnconnectedItems u : unconnecteds) {
+      if ("track_dangling".equals(u.type) || "via_dangling".equals(u.type)) {
+        danglingStubsCount++;
+      } else if (u.firstItem != null && u.firstItem.netCount() > 0) {
+        unconnectedNetNumbers.add(u.firstItem.getNetNumber(0));
+      } else {
+        danglingStubsCount++;
+      }
+    }
 
     // 1. Process clearance violations
     for (ClearanceViolation v : violations) {
@@ -1215,7 +1236,11 @@ public class DesignRulesChecker {
       String severity;
       if ("isolated_island_unconnected".equals(zv.type)) {
         severity = "error";
-        summary.unconnectedNetsCount++;
+        if (zv.netNumber > 0) {
+          unconnectedNetNumbers.add(zv.netNumber);
+        } else {
+          danglingStubsCount++;
+        }
         explanation =
             String.format(
                 Locale.US,
@@ -1242,6 +1267,8 @@ public class DesignRulesChecker {
           new DrcSummaryResponse.DiagnosticViolation(
               zv.type, severity, layerName, explanation, null, null, null, items));
     }
+
+    summary.unconnectedNetsCount = unconnectedNetNumbers.size() + danglingStubsCount;
 
     // 4. Detect spatial congestion zones
     summary.congestionZones = detectCongestionZones(violations);

@@ -363,6 +363,12 @@ public final class BatchAutorouter extends NamedAlgorithm {
         if (!currentItem.isRoutable()) {
           if (!handledItems.contains(currentItem)) {
 
+            boolean needsRouting = false;
+            boolean hasPlaneNet = false;
+            String queuedNetName = null;
+            int queuedConnected = 0;
+            int queuedTotal = 0;
+
             // Let's go through all nets of this item
             for (int i = 0; i < currentItem.netCount(); i++) {
               int currentNetNumber = currentItem.getNetNumber(i);
@@ -378,12 +384,6 @@ public final class BatchAutorouter extends NamedAlgorithm {
               // auto-router's to-do list
               if ((connectedSet.size() < netItemCount) && (!currentItem.hasIgnoredNets())) {
                 Net net = board.rules.nets.get(currentNetNumber);
-                // For plane nets: skip items whose connected set already contains a
-                // ConductionArea (copper pour). These items would immediately return
-                // CONNECTED_TO_PLANE in autorouteItem(), wasting time and causing
-                // spurious normalizeTraces() failures on nearby stub geometry.
-                // Items not yet connected to the plane are still enqueued so they can
-                // be routed to the pour in this pass.
                 boolean isPlane = net != null && net.containsPlane();
                 if (isPlane) {
                   boolean alreadyConnectedToPlane =
@@ -391,24 +391,35 @@ public final class BatchAutorouter extends NamedAlgorithm {
                   if (alreadyConnectedToPlane) {
                     continue;
                   }
-                  reusablePlaneItemList.add(currentItem);
-                } else {
-                  reusableSignalItemList.add(currentItem);
+                  hasPlaneNet = true;
                 }
-                String netName = net != null ? net.name : "net#" + currentNetNumber;
-                FRLogger.debug(
-                    "Queuing item for routing: "
-                        + currentItem.getClass().getSimpleName()
-                        + " on net '"
-                        + netName
-                        + "' (connected: "
-                        + connectedSet.size()
-                        + "/"
-                        + netItemCount
-                        + ", plane: "
-                        + isPlane
-                        + ")");
+                needsRouting = true;
+                if (queuedNetName == null) {
+                  queuedNetName = net != null ? net.name : "net#" + currentNetNumber;
+                  queuedConnected = connectedSet.size();
+                  queuedTotal = netItemCount;
+                }
               }
+            }
+
+            if (needsRouting) {
+              if (hasPlaneNet) {
+                reusablePlaneItemList.add(currentItem);
+              } else {
+                reusableSignalItemList.add(currentItem);
+              }
+              FRLogger.debug(
+                  "Queuing item for routing: "
+                      + currentItem.getClass().getSimpleName()
+                      + " on net '"
+                      + queuedNetName
+                      + "' (connected: "
+                      + queuedConnected
+                      + "/"
+                      + queuedTotal
+                      + ", plane: "
+                      + hasPlaneNet
+                      + ")");
             }
           }
         }

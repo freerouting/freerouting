@@ -42,6 +42,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "allowed_via_types": true,
     "via_costs": 50,
     "plane_via_costs": 5,
+    "plane_nets": ["GND", "VCC"],
+    "plane_as_obstacle": false,
     "start_ripup_costs": 100,
     "automatic_neckdown": true
   },
@@ -151,6 +153,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`allowed_via_types`**: Enables or disables the use of different via types.
 - **`via_costs`**: Cost factor for using vias.
 - **`plane_via_costs`**: Cost factor for using vias on plane layers.
+- **`plane_nets`**: Explicit array of net names to treat as power-plane nets, enabling plane-routing mode and discounted plane via costs for these nets.
+- **`plane_as_obstacle`**: Boolean controlling whether conduction areas (copper pours) act as obstacles blocking foreign traces from passing through. Default is `false` (foreign traces may route through fills). Supported aliases: `conduction_is_obstacle`, `planeAsObstacle`, `conductionIsObstacle`.
 - **`start_ripup_costs`**: Cost factor for ripping up existing traces.
 - **`automatic_neckdown`**: Enables or disables automatic neckdown of traces.
 - **`layers`**: An array of layer-specific settings (transient, typically set via CLI or loaded from board files). Each element contains:

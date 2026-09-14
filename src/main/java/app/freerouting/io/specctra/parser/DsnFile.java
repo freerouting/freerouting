@@ -20,7 +20,7 @@ public final class DsnFile {
 
   /**
    * Sets containsPlane to true for nets with a conductionArea covering a large part of a signal
-   * layer, if that layer does not contain any traces. This is useful in case the layer type was not
+   * layer (at least 50% of the board outline area). This is useful in case the layer type was not
    * set correctly to plane in the dsn-file. Returns true, if something was changed.
    *
    * <p>Called from {@link app.freerouting.io.specctra.DsnReader#readBoard} when the DSN file

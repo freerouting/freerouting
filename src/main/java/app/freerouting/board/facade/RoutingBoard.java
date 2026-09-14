@@ -1266,9 +1266,7 @@ public class RoutingBoard extends BasicBoard implements Serializable {
    * nets.
    */
   public void changePlaneAsObstacle(boolean value) {
-    if (this.rules.getIgnoreConduction() != value) {
-      return; // no multiply
-    }
+    boolean targetIgnore = !value;
     boolean somethingChanged = false;
     // Change the isObstacle property of all conduction areas of the board.
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
@@ -1285,7 +1283,10 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         }
       }
     }
-    this.rules.setIgnoreConduction(!value);
+    if (this.rules.getIgnoreConduction() != targetIgnore) {
+      this.rules.setIgnoreConduction(targetIgnore);
+      somethingChanged = true;
+    }
     if (somethingChanged) {
       this.searchTreeManager.reinsertTreeItems();
     }

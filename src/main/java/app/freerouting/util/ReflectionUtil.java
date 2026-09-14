@@ -281,8 +281,8 @@ public final class ReflectionUtil {
                 sourceArrayLength = java.lang.reflect.Array.getLength(sourceValue);
               }
 
-              // Check if the target field is null or its length is 0
-              if ((targetValue == null) || ((targetArrayLength == 0) && (sourceArrayLength > 0))) {
+              // Check if the target field is null or source array has elements
+              if ((targetValue == null) || (sourceArrayLength > 0)) {
                 // The field is an array of primitive types or strings, so we can copy it
                 // directly
                 field.set(target, sourceValue);

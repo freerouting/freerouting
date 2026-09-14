@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /** Executes one single-threaded or multi-threaded autoroute pass. */
 final class AutoroutePassRunner {
@@ -56,22 +57,16 @@ final class AutoroutePassRunner {
         PerformanceProfiler.end("board.deepCopy");
 
         List<Item> clonedAutorouteItemList = new ArrayList<>(router.getAutorouteItems(clonedBoard));
-        int planeItemCount = 0;
-        for (Item item : clonedAutorouteItemList) {
-          if (router.isPlaneItem(item, clonedBoard)) {
-            planeItemCount++;
-          } else {
-            break;
-          }
-        }
-        if (planeItemCount > 0 && planeItemCount < clonedAutorouteItemList.size()) {
-          shuffle(clonedAutorouteItemList.subList(0, planeItemCount), router.random);
-          shuffle(
-              clonedAutorouteItemList.subList(planeItemCount, clonedAutorouteItemList.size()),
-              router.random);
-        } else {
-          shuffle(clonedAutorouteItemList, router.random);
-        }
+        Map<Boolean, List<Item>> partitioned =
+            clonedAutorouteItemList.stream()
+                .collect(Collectors.partitioningBy(item -> router.isPlaneItem(item, clonedBoard)));
+        List<Item> planeItems = partitioned.get(true);
+        List<Item> signalItems = partitioned.get(false);
+        shuffle(planeItems, router.random);
+        shuffle(signalItems, router.random);
+        clonedAutorouteItemList.clear();
+        clonedAutorouteItemList.addAll(planeItems);
+        clonedAutorouteItemList.addAll(signalItems);
 
         autorouterThreads[threadIndex] =
             new BatchAutorouterThread(

@@ -173,4 +173,43 @@ class ZoneIslandConnectivityTest {
     }
     assertTrue(foundDeadCopper, "Should find isolated_island_dead_copper violation");
   }
+
+  @Test
+  void testHoleInsidePourDoesNotTriggerDeadCopperIsland() {
+    // Large pour on layer 0 covering (0,0) to (4000000, 4000000)
+    Area pourArea = TileShape.getInstance(0, 0, 4000000, 4000000);
+    board.insertConductionArea(
+        pourArea, 0, new int[] {gndNet.netNumber}, 0, false, FixedState.UNFIXED);
+
+    // Anchor via at (500000, 2000000)
+    board.insertVia(
+        defaultPadstack,
+        new IntPoint(500000, 2000000),
+        new int[] {gndNet.netNumber},
+        0,
+        FixedState.UNFIXED,
+        true);
+
+    // Insert an isolated foreign trace (SIG net) forming a small loop/island hole in the middle
+    Point[] traceCorners =
+        new Point[] {
+          new IntPoint(2000000, 2000000),
+          new IntPoint(2500000, 2000000),
+          new IntPoint(2500000, 2500000),
+          new IntPoint(2000000, 2500000),
+          new IntPoint(2000000, 2000000)
+        };
+    board.insertTrace(traceCorners, 0, 100000, new int[] {sigNet.netNumber}, 0, FixedState.UNFIXED);
+
+    DesignRulesChecker drc = new DesignRulesChecker(board, new DesignRulesCheckerSettings());
+    Collection<ZoneIslandViolation> violations = drc.getZoneIslandViolations();
+
+    assertNotNull(violations);
+    // There should be no isolated dead copper or unconnected island because the pour still
+    // surrounds
+    // the hole as a single continuous piece
+    assertTrue(
+        violations.isEmpty(),
+        "A hole inside a pour should be subtracted from the continuous pour, not treated as an isolated island");
+  }
 }
