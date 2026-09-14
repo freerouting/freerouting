@@ -111,7 +111,7 @@ services:
       --api_server.enabled=true
       --gui.enabled=false
       --api_server.authentication.enabled=false
-      --api_server-endpoints=http://0.0.0.0:37864
+      --api_server.endpoints=http://0.0.0.0:37864
       --feature_flags.save_jobs=true
       --user_data_path=/mnt/freerouting
 
@@ -121,7 +121,7 @@ volumes:
 
 ### Custom endpoint / network exposure
 
-By default the Docker CMD already passes `--api_server-enabled=true` and binds to `0.0.0.0:37864` inside the container. To restrict which host interface is exposed, change the `-p` mapping:
+By default the Docker CMD already passes `--api_server.enabled=true` and binds to `0.0.0.0:37864` inside the container. To restrict which host interface is exposed, change the `-p` mapping:
 
 ```bash
 # Only accessible from the local machine (most secure)
@@ -165,7 +165,7 @@ java -jar freerouting.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
-  --api_server-endpoints=http://0.0.0.0:37864
+  --api_server.endpoints=http://0.0.0.0:37864
 ```
 
 > ⚠️ **Security note:** Binding to `0.0.0.0` exposes the API to every network interface on the host. Only do this on a trusted local network or behind a firewall / reverse proxy.
@@ -268,7 +268,7 @@ nssm start Freerouting
 | Disable GUI | `--gui.enabled=false` | `true` | Required for headless/server operation. |
 | Enable API server | `--api_server.enabled=true` | `false` | Starts the embedded REST API server. |
 | Disable authentication | `--api_server.authentication.enabled=false` | `true` | Allows requests without an API key. Recommended for local use. |
-| Bind address | `--api_server-endpoints=http://0.0.0.0:37864` | `http://127.0.0.1:37864` | Address and port the server listens on. |
+| Bind address | `--api_server.endpoints=http://0.0.0.0:37864` | `http://127.0.0.1:37864` | Address and port the server listens on. |
 | CORS origins | `--api_server.cors_origins=*` | _(none)_ | Allows browser-based clients to call the API. Set to `*` or a specific origin. |
 | Data directory | `--user_data_path=/path/to/data` | OS standard user-data dir (`%APPDATA%\freerouting`, `~/Library/Application Support/freerouting`, or `~/.config/freerouting`) | Where logs and saved jobs are stored. |
 | Save jobs to disk | `--feature_flags.save_jobs=true` | `false` | Persists routing jobs (input/output files + metadata) under `user_data_path`. |
@@ -369,7 +369,7 @@ Address already in use: bind
 Another process is using port 37864. Either stop the other process or change the port:
 
 ```bash
---api_server-endpoints=http://0.0.0.0:38000
+--api_server.endpoints=http://0.0.0.0:38000
 ```
 
 and update your `-p` mapping accordingly if using Docker.
@@ -451,13 +451,13 @@ services:
     command: >
       java --enable-native-access=ALL-UNNAMED
       -jar /app/freerouting-executable.jar
-      --gui-enabled=false
-      --feature_flags-save_jobs=1
+      --gui.enabled=false
+      --feature_flags.save_jobs=true
       --user_data_path=/mnt/freerouting
-      --api_server-enabled=true
-      --api_server-endpoints=http://0.0.0.0:37864
-      --mcp_server-enabled=true
-      --mcp_server-endpoints=http://0.0.0.0:37964
+      --api_server.enabled=true
+      --api_server.endpoints=http://0.0.0.0:37864
+      --mcp_server.enabled=true
+      --mcp_server.endpoints=http://0.0.0.0:37964
     volumes:
       - freerouting-userdata:/mnt/freerouting
     networks:

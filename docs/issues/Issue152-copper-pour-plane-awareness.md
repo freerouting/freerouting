@@ -23,7 +23,7 @@ The issue reports that Freerouting's autorouter introduces **clearance violation
 | 152-C | Router infinite loop when all plane-net items false-work | ✅ Fixed |
 | 152-D | `BoardStatistics.clearanceViolations.totalCount` uses incomplete DRC | ✅ Fixed (uses `getAllClearanceViolations()`) |
 | 152-E | `adjustPlaneAutorouteSettings` outer-layer guard skips outer-layer copper fills & $\le 2$-layer boards | ✅ Fixed |
-| 152-F | User-configurable tuning parameters (CLI/JSON exposure, `planeNets`, `planeAsObstacle`) | ✅ Fixed |
+| 152-F | User-configurable tuning parameters (CLI/JSON exposure, `plane_nets`, `plane_as_obstacle`) | ✅ Fixed |
 | 152-G | Plane connectivity (void/island) validation is absent | ✅ Fixed (Dedicated `getZoneIslandViolations()` DRC check) |
 | 152-H | Route power plane-nets first in each routing pass | ✅ Fixed |
 
@@ -95,13 +95,13 @@ When `Net.contains_plane() == true`, `autoroute_item()` uses a **plane-routing m
 
 ### 152-F: User-Configurable Tuning Parameters (Fixed)
 
-**Problem:** While `planeViaCosts` was exposed in `RoutingCostSettings` and the GUI, other settings were missing:
+**Problem:** While `plane_via_costs` was exposed in `RoutingCostSettings` and the GUI, other settings were missing:
 - No CLI or JSON config setting to explicitly designate nets as plane nets (overriding CAD exports).
-- No option to toggle `planeAsObstacle` on `ConductionArea` via settings.
+- No option to toggle `plane_as_obstacle` on `ConductionArea` via settings.
 
 **Fix:**
 - Added `planeNets` (`String[]`) to `RouterSettings`, serialized as `plane_nets`.
-- Added `planeAsObstacle` (`Boolean`) to `RouterSettings`, serialized as `plane_as_obstacle` (with backwards-compatible aliases `conduction_is_obstacle`, `planeAsObstacle`, `conductionIsObstacle`).
+- Added `planeAsObstacle` (`Boolean`) to `RouterSettings`, serialized as `plane_as_obstacle`.
 - Initialized in `DefaultSettings` with nullable/empty defaults to preserve merger precedence invariants.
 - Wired through `HeadlessBoardManager.applyPlaneNetsOverride()` and `applyPlaneAsObstacleOverride()` on board load.
 - Renamed `RoutingBoard.changeConductionIsObstacle` to `changePlaneAsObstacle` (retaining deprecated alias).
@@ -139,7 +139,7 @@ When `Net.contains_plane() == true`, `autoroute_item()` uses a **plane-routing m
 
 - [x] Benchmarking `152-H` confirms improved or equal routing completion and via efficiency on candidate plane fixtures without regressions on standard benchmarks.
 - [x] Improved heuristic detection in `152-E` for 2-layer and outer-layer pour designs.
-- [x] Full configuration support in `RouterSettings`, CLI, and JSON for plane settings (via costs, plane net declarations, planeAsObstacle).
+- [x] Full configuration support in `RouterSettings`, CLI, and JSON for plane settings (via costs, plane net declarations, `plane_as_obstacle`).
 - [x] Dedicated DRC check `getZoneIslandViolations()` for zone island connectivity and floating dead copper detection.
 - [x] No clearance violations or routing regressions introduced across `./gradlew check`.
 

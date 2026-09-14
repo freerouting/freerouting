@@ -213,10 +213,10 @@ Settings whose value is a list (e.g. `api_server.endpoints`) accept a **comma-se
 
 ```bash
 # Single endpoint
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864
 
 # Multiple endpoints (comma-separated)
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
 ```
 
 The equivalent environment-variable syntax is:
@@ -253,7 +253,7 @@ FREEROUTING__ROUTER__LAYERS__PREFERRED_DIRECTION_HORIZONTAL=true,false
 |---------|------|-------------|
 | `api_server.enabled` | Boolean | Enable or disable the built-in REST API server. |
 | `api_server.http_allowed` | Boolean | Allow plain HTTP connections (in addition to HTTPS). |
-| `api_server-endpoints` | String list | Comma-separated list of `protocol://host:port` endpoints the server will bind to. Default: `http://127.0.0.1:37864`. |
+| `api_server.endpoints` | String list | Comma-separated list of `protocol://host:port` endpoints the server will bind to. Default: `http://127.0.0.1:37864`. |
 | `api_server.authentication.enabled` | Boolean | Require API-key authentication. Default: `true`. |
 | `api_server.cors_origins` | String | Comma-separated CORS origin allowlist (use `*` for all origins). |
 
@@ -264,7 +264,7 @@ java -jar freerouting-executable.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
-  --api_server-endpoints=http://0.0.0.0:37864
+  --api_server.endpoints=http://0.0.0.0:37864
 ```
 
 For a complete self-hosting walkthrough — including Docker Compose, systemd, and platform-specific notes — see the [Self-Hosting Guide](self-hosting.md).
