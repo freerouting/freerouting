@@ -26,12 +26,16 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @Tag("serial")
 class McpEndpointsTest {
@@ -343,96 +347,74 @@ class McpEndpointsTest {
   }
 
   @Test
-  void customToolsFileUploadAndDownloadRunLocally() throws Exception {
+  void customToolsFileUploadAndDownloadRunLocally(@TempDir Path tempDir) throws Exception {
+    // The MCP local-file tools bridge to the REST API without an Authorization header, and the
+    // test servers are started with no API-key providers configured, so API-key validation must
+    // stay disabled for the bridged upload/download calls below. Restored in finally.
     boolean originalAuthEnabled =
         Freerouting.globalSettings.apiServerSettings.authentication.isEnabled;
     Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = false;
     app.freerouting.api.security.ApiKeyValidationService.resetForTesting();
 
-    java.nio.file.Path tempInput = null;
-    java.nio.file.Path tempOutput = null;
-
     try {
-      tempInput = java.nio.file.Files.createTempFile("freerouting-test-input", ".dsn");
-      try (java.io.InputStream in = getClass().getResourceAsStream("/empty_board.dsn")) {
-        if (in != null) {
-          java.nio.file.Files.copy(
-              in, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-        } else {
-          java.nio.file.Path sourceDsn =
-              app.freerouting.TestFixtures.resolvePath("empty_board.dsn");
-          java.nio.file.Files.copy(
-              sourceDsn, tempInput, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-        }
-      }
+      Path tempInput = copyEmptyBoardFixture(tempDir);
 
-      // We need a session and job first to upload input to
-
-      // Call upload_job_input_from_local_file
-      JsonObject uploadRequest = new JsonObject();
-      uploadRequest.addProperty("jsonrpc", "2.0");
-      uploadRequest.addProperty("id", 20);
-      uploadRequest.addProperty("method", "tools/call");
-
-      JsonObject uploadParams = new JsonObject();
-      uploadParams.addProperty("name", "upload_job_input_from_local_file");
-      JsonObject uploadArgs = new JsonObject();
       String sessionId = createTestSession();
       String jobId = enqueueTestJob(sessionId);
+
+      // 1. Upload the local DSN file into the job input.
+      JsonObject uploadArgs = new JsonObject();
       uploadArgs.addProperty("jobId", jobId);
       uploadArgs.addProperty("filePath", tempInput.toAbsolutePath().toString());
-      uploadParams.add("arguments", uploadArgs);
-      uploadRequest.add("params", uploadParams);
+      JsonObject uploadResult =
+          callLocalFileTool("upload_job_input_from_local_file", 20, uploadArgs);
+      JsonObject uploadBody =
+          extractToolResultBody(uploadResult, "upload_job_input_from_local_file");
+      assertEquals(
+          200,
+          uploadBody.get("status").getAsInt(),
+          () -> "upload_job_input_from_local_file returned unexpected status: " + uploadBody);
+      assertFalse(
+          uploadResult.get("isError").getAsBoolean(),
+          () -> "upload_job_input_from_local_file flagged isError: " + uploadBody);
 
-      HttpResponse<String> uploadResponse =
-          httpClient.send(
-              authenticatedMcpRequest(uploadRequest), HttpResponse.BodyHandlers.ofString());
-      assertEquals(200, uploadResponse.statusCode());
+      // 2. Download the output before the job started: no output bytes exist yet. A QUEUED job
+      // reports 400 ("hasn't started yet"); if the scheduler ever picks the job up concurrently
+      // it reports 204 instead. Both mean "no output available yet", so accept either.
+      // @TempDir guarantees a fresh directory, so the output path does not exist beforehand and
+      // no create-then-delete roundtrip (racy on Windows file locking) is needed.
+      Path tempOutput = tempDir.resolve("freerouting-test-output.ses");
 
-      JsonObject uploadPayload = JsonParser.parseString(uploadResponse.body()).getAsJsonObject();
-      assertFalse(uploadPayload.getAsJsonObject("result").get("isError").getAsBoolean());
-
-      // 2. Call download_job_output_to_local_file (expecting 400 because job has not completed/run)
-      tempOutput = java.nio.file.Files.createTempFile("freerouting-test-output", ".ses");
-      java.nio.file.Files.deleteIfExists(tempOutput);
-
-      JsonObject downloadRequest = new JsonObject();
-      downloadRequest.addProperty("jsonrpc", "2.0");
-      downloadRequest.addProperty("id", 21);
-      downloadRequest.addProperty("method", "tools/call");
-
-      JsonObject downloadParams = new JsonObject();
-      downloadParams.addProperty("name", "download_job_output_to_local_file");
       JsonObject downloadArgs = new JsonObject();
       downloadArgs.addProperty("jobId", jobId);
       downloadArgs.addProperty("filePath", tempOutput.toAbsolutePath().toString());
-      downloadParams.add("arguments", downloadArgs);
-      downloadRequest.add("params", downloadParams);
-
-      HttpResponse<String> downloadResponse =
-          httpClient.send(
-              authenticatedMcpRequest(downloadRequest), HttpResponse.BodyHandlers.ofString());
-      assertEquals(200, downloadResponse.statusCode());
-
-      JsonObject downloadPayload =
-          JsonParser.parseString(downloadResponse.body()).getAsJsonObject();
-      String downloadText =
-          downloadPayload
-              .getAsJsonObject("result")
-              .getAsJsonArray("content")
-              .get(0)
-              .getAsJsonObject()
-              .get("text")
-              .getAsString();
-      JsonObject downloadResultBody = JsonParser.parseString(downloadText).getAsJsonObject();
-      assertEquals(400, downloadResultBody.get("status").getAsInt());
+      JsonObject downloadResult =
+          callLocalFileTool("download_job_output_to_local_file", 21, downloadArgs);
+      JsonObject downloadBody =
+          extractToolResultBody(downloadResult, "download_job_output_to_local_file");
+      int downloadStatus = downloadBody.get("status").getAsInt();
+      assertTrue(
+          downloadStatus == 400 || downloadStatus == 204,
+          () ->
+              "download_job_output_to_local_file should report no-output-yet"
+                  + " (400 QUEUED or 204 RUNNING), but got: "
+                  + downloadBody);
+      if (downloadStatus == 400) {
+        assertTrue(
+            downloadResult.get("isError").getAsBoolean(),
+            () -> "expected isError=true for HTTP 400 download status: " + downloadBody);
+        assertTrue(
+            downloadBody.getAsJsonObject("body").toString().contains("hasn't started"),
+            () -> "expected 'hasn't started yet' error body, got: " + downloadBody);
+      } else {
+        assertFalse(
+            downloadResult.get("isError").getAsBoolean(),
+            () -> "expected isError=false for HTTP 204 download status: " + downloadBody);
+      }
+      assertFalse(
+          Files.exists(tempOutput),
+          () -> "no output file must be written when the job has no output: " + tempOutput);
     } finally {
-      if (tempInput != null) {
-        java.nio.file.Files.deleteIfExists(tempInput);
-      }
-      if (tempOutput != null) {
-        java.nio.file.Files.deleteIfExists(tempOutput);
-      }
       Freerouting.globalSettings.apiServerSettings.authentication.isEnabled = originalAuthEnabled;
       app.freerouting.api.security.ApiKeyValidationService.resetForTesting();
     }
@@ -459,6 +441,89 @@ class McpEndpointsTest {
     JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
     assertTrue(payload.has("error"), "Must return JSON-RPC error when accessing system path");
     assertEquals(-32603, payload.getAsJsonObject("error").get("code").getAsInt());
+  }
+
+  /**
+   * Copies the empty-board DSN fixture into the JUnit-managed temp directory and verifies it is
+   * non-empty, so a later upload failure can never be mistaken for a missing/empty fixture.
+   */
+  private Path copyEmptyBoardFixture(Path tempDir) throws Exception {
+    Path tempInput = tempDir.resolve("freerouting-test-input.dsn");
+    try (java.io.InputStream in = getClass().getResourceAsStream("/empty_board.dsn")) {
+      if (in != null) {
+        Files.copy(in, tempInput, StandardCopyOption.REPLACE_EXISTING);
+      } else {
+        Path sourceDsn = app.freerouting.TestFixtures.resolvePath("empty_board.dsn");
+        Files.copy(sourceDsn, tempInput, StandardCopyOption.REPLACE_EXISTING);
+      }
+    }
+    assertTrue(Files.exists(tempInput), () -> "fixture copy is missing after copy: " + tempInput);
+    assertTrue(Files.size(tempInput) > 0, () -> "fixture copy is empty: " + tempInput);
+    return tempInput;
+  }
+
+  /**
+   * Calls a custom local-file MCP tool via {@code tools/call} and returns the {@code result} node.
+   * Fails with the full transport/JSON-RPC payload when the HTTP status is unexpected or the tool
+   * reports a JSON-RPC {@code error} (e.g. sandbox rejection or unreadable file).
+   */
+  private JsonObject callLocalFileTool(String toolName, int rpcId, JsonObject args)
+      throws Exception {
+    JsonObject request = new JsonObject();
+    request.addProperty("jsonrpc", "2.0");
+    request.addProperty("id", rpcId);
+    request.addProperty("method", "tools/call");
+
+    JsonObject params = new JsonObject();
+    params.addProperty("name", toolName);
+    params.add("arguments", args);
+    request.add("params", params);
+
+    HttpResponse<String> response =
+        httpClient.send(authenticatedMcpRequest(request), HttpResponse.BodyHandlers.ofString());
+    assertEquals(
+        200,
+        response.statusCode(),
+        () ->
+            "MCP HTTP transport failed for tool '"
+                + toolName
+                + "': HTTP "
+                + response.statusCode()
+                + " body="
+                + response.body());
+
+    JsonObject payload = JsonParser.parseString(response.body()).getAsJsonObject();
+    if (payload.has("error")) {
+      fail(
+          "MCP tool '"
+              + toolName
+              + "' (rpc id "
+              + rpcId
+              + ") returned JSON-RPC error: "
+              + payload.getAsJsonObject("error"));
+    }
+    assertTrue(
+        payload.has("result"),
+        () -> "MCP tool '" + toolName + "' response has neither result nor error: " + payload);
+    return payload.getAsJsonObject("result");
+  }
+
+  /**
+   * Unwraps the inner {@code {status, contentType, body}} envelope carried in {@code
+   * result.content[0].text} for custom local-file tools.
+   */
+  private JsonObject extractToolResultBody(JsonObject result, String toolName) {
+    assertTrue(
+        result.has("content"),
+        () -> "MCP tool '" + toolName + "' result has no content: " + result);
+    JsonArray content = result.getAsJsonArray("content");
+    assertTrue(
+        content.size() > 0, () -> "MCP tool '" + toolName + "' result content is empty: " + result);
+    String text = content.get(0).getAsJsonObject().get("text").getAsString();
+    JsonObject body = JsonParser.parseString(text).getAsJsonObject();
+    assertTrue(
+        body.has("status"), () -> "MCP tool '" + toolName + "' result body has no status: " + body);
+    return body;
   }
 
   private String createTestSession() throws Exception {
