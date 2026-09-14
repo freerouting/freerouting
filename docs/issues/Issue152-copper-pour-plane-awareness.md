@@ -22,10 +22,10 @@ The issue reports that Freerouting's autorouter introduces **clearance violation
 | 152-B | False-work items: pads already connected to plane re-queued every pass | ✅ Fixed |
 | 152-C | Router infinite loop when all plane-net items false-work | ✅ Fixed |
 | 152-D | `BoardStatistics.clearanceViolations.totalCount` uses incomplete DRC | ✅ Fixed (uses `getAllClearanceViolations()`) |
-| 152-E | `adjustPlaneAutorouteSettings` outer-layer guard skips outer-layer copper fills & $\le 2$-layer boards | ❌ Open |
-| 152-F | User-configurable tuning parameters (CLI/JSON exposure, stub length, via-in-pad) | ⚠️ Partially Implemented (GUI/Cost setting exists; CLI/tuning missing) |
-| 152-G | Plane connectivity (void/island) validation is absent | ❌ Open (Future) |
-| 152-H | Route power plane-nets first in each routing pass | 💡 Proposed (To benchmark) |
+| 152-E | `adjustPlaneAutorouteSettings` outer-layer guard skips outer-layer copper fills & $\le 2$-layer boards | ✅ Fixed |
+| 152-F | User-configurable tuning parameters (CLI/JSON exposure, `planeNets`, `planeAsObstacle`) | ✅ Fixed |
+| 152-G | Plane connectivity (void/island) validation is absent | ❌ Open (Future enhancement) |
+| 152-H | Route power plane-nets first in each routing pass | ✅ Fixed |
 
 ---
 
