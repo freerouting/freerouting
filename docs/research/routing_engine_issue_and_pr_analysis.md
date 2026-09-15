@@ -100,8 +100,10 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 - **Resolution in Master:** Commit `b32877f93` cleanly separated `preExistingCount` vs `routerIntroducedCount` in `BoardStatistics`, exempted internal component pins from outline clearance, and calibrated edge clearance to 250 µm.
 - **Verification Command Line:**
   ```powershell
-  ./gradlew test --tests app.freerouting.tests.DevBoardClearanceRoutingTest
-  ./gradlew run --args="-de fixtures/Issue858-repro-kicad-export.dsn -do build/Issue858-out.ses -mp 50 -da -dct 0"
+  ./gradlew test --tests app.freerouting.fixtures.DevBoardClearanceRoutingTest
+  # To test against user's original export, download ReyNeill's reproduction gist:
+  # https://gist.github.com/ReyNeill/5f28499ea8a3962b9a74c760ec252ec0
+  # ./gradlew run --args="-de Issue858-repro-kicad-export.dsn -do build/Issue858-out.ses -mp 50 -da -dct 0"
   ```
 
 ---
@@ -110,8 +112,8 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 - **Status:** PR [#567](https://github.com/freerouting/freerouting/pull/567) fixed non-zero layer edge clearance. Parameter `--router.copper_to_edge_clearance_um` was added. Upstream KiCad issue [GitLab #24077](https://gitlab.com/kicad/code/kicad/-/work_items/24077).
 - **Test Command Line:**
   ```powershell
-  ./gradlew test --tests app.freerouting.tests.Issue558Test
-  ./gradlew run --args="-de tests/Issue558-dev-board.dsn -do build/Issue558-out.ses --router.copper_to_edge_clearance_um=500"
+  ./gradlew test --tests app.freerouting.fixtures.DevBoardClearanceRoutingTest
+  ./gradlew run --args="-de fixtures/Issue558-dev-board.dsn -do build/Issue558-out.ses --router.copper_to_edge_clearance_um=500"
   ```
 
 ---
@@ -120,8 +122,7 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 - **Status:** Commit `b32877f93` implemented `validateBoardDesignErrors()` in `HeadlessBoardManager.java`, emitting clear warnings for components outside the boundary.
 - **Test Command Line:**
   ```powershell
-  ./gradlew test --tests app.freerouting.tests.Issue632RoutingFailureTest
-  ./gradlew run --args="-de tests/Issue632-mini-auto-pilot.dsn -do build/Issue632-out.ses -mp 5"
+  ./gradlew run --args="-de \"fixtures/Issue632-MiniAutoPilot/Mini Auto Pilot.dsn\" -do build/Issue632-out.ses -mp 5"
   ```
 
 ---

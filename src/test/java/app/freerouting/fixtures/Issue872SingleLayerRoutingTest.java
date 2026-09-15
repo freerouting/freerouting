@@ -69,15 +69,39 @@ class Issue872SingleLayerRoutingTest extends RoutingFixtureTest {
     assertNotNull(job.resultPhaseMetrics, "Phase metrics must be recorded");
     assertNotNull(job.resultPhaseMetrics.autorouter, "Autorouter phase metrics must exist");
     assertNotNull(job.resultPhaseMetrics.optimizer, "Optimizer phase metrics must exist");
+    assertNotNull(
+        job.resultPhaseMetrics.autorouter.after,
+        "Autorouter 'after' phase snapshot must be recorded");
+    assertNotNull(
+        job.resultPhaseMetrics.optimizer.before,
+        "Optimizer 'before' phase snapshot must be recorded");
 
-    if (job.resultPhaseMetrics.optimizer.before != null
-        && job.resultPhaseMetrics.autorouter.after != null
-        && job.resultPhaseMetrics.optimizer.before.boardStatistics != null
-        && job.resultPhaseMetrics.autorouter.after.boardStatistics != null) {
-      assertEquals(
-          job.resultPhaseMetrics.autorouter.after.boardStatistics.connections.incompleteCount,
-          job.resultPhaseMetrics.optimizer.before.boardStatistics.connections.incompleteCount,
-          "Optimizer must start from the exact incomplete count produced by the autorouter");
-    }
+    BoardStatistics autorouterEndStats = job.resultPhaseMetrics.autorouter.after.boardStatistics;
+    BoardStatistics optimizerStartStats = job.resultPhaseMetrics.optimizer.before.boardStatistics;
+    assertNotNull(autorouterEndStats, "Autorouter after BoardStatistics must be present");
+    assertNotNull(optimizerStartStats, "Optimizer before BoardStatistics must be present");
+
+    assertEquals(
+        autorouterEndStats.connections.incompleteCount,
+        optimizerStartStats.connections.incompleteCount,
+        "Optimizer must start with the exact incomplete count produced by the autorouter");
+    assertEquals(
+        autorouterEndStats.clearanceViolations.totalCount,
+        optimizerStartStats.clearanceViolations.totalCount,
+        "Optimizer must start with the exact clearance violation count produced by the autorouter");
+    assertEquals(
+        autorouterEndStats.vias.totalCount,
+        optimizerStartStats.vias.totalCount,
+        "Optimizer must start with the exact via count produced by the autorouter");
+    assertEquals(
+        autorouterEndStats.traces.totalLength,
+        optimizerStartStats.traces.totalLength,
+        1e-3,
+        "Optimizer must start with the exact total trace length produced by the autorouter");
+    assertEquals(
+        job.resultPhaseMetrics.autorouter.after.routerScore,
+        job.resultPhaseMetrics.optimizer.before.routerScore,
+        1e-3,
+        "Optimizer must start with the exact router score produced by the autorouter");
   }
 }
