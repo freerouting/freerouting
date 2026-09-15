@@ -7,12 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.gui.board.BoardToolbar;
+import app.freerouting.gui.board.BoardToolbarInspectedItem;
 import app.freerouting.gui.menus.BoardMenuBar;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import javax.accessibility.AccessibleRole;
@@ -148,6 +150,40 @@ class BoardMenuToolbarA11yTest {
           GuiA11yHarness.requireDisabled(
               GuiA11yHarness.findByLocator(toolbar, GuiLocators.TOOLBAR_CANCEL),
               GuiLocators.TOOLBAR_CANCEL);
+          GuiA11yHarness.requireUniqueSiblingNames(toolbar);
+          GuiA11yHarness.requireNoLeakedGuiResources();
+        });
+  }
+
+  @Test
+  void inspectToolbarActionsAreGroupedSeparatorsAndAccessible() {
+    List<String> actions = new ArrayList<>();
+    JPanel toolbar =
+        GuiA11yHarness.onEdt(
+            () -> BoardToolbarInspectedItem.createComponentOnly(Locale.ENGLISH, actions::add));
+
+    GuiA11yHarness.onEdt(
+        () -> {
+          String[] locators = {
+            GuiLocators.INSPECT_CANCEL,
+            GuiLocators.INSPECT_INFO,
+            GuiLocators.INSPECT_EXTEND_NETS,
+            GuiLocators.INSPECT_EXTEND_CONNECTED_SETS,
+            GuiLocators.INSPECT_EXTEND_CONNECTIONS,
+            GuiLocators.INSPECT_EXTEND_COMPONENTS,
+            GuiLocators.INSPECT_VIOLATIONS,
+            GuiLocators.INSPECT_ZOOM_SELECTION,
+            GuiLocators.INSPECT_ZOOM_ALL,
+            GuiLocators.INSPECT_ZOOM_REGION
+          };
+          for (String locator : locators) {
+            Component button = GuiA11yHarness.findByLocator(toolbar, locator);
+            GuiA11yHarness.requireRole(button, locator, AccessibleRole.PUSH_BUTTON);
+            GuiA11yHarness.requireAccessibleName(button, locator);
+            GuiA11yHarness.invoke(button, locator);
+          }
+          assertEquals(Arrays.asList(locators), actions);
+
           GuiA11yHarness.requireUniqueSiblingNames(toolbar);
           GuiA11yHarness.requireNoLeakedGuiResources();
         });
