@@ -36,7 +36,7 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 | :--- | :--- | :--- | :--- | :--- |
 | **RE-01** | [#872](https://github.com/freerouting/freerouting/issues/872) | Single-sided regression: optimizer starts from worse board than autorouter | **RESOLVED IN PR #892**. `BatchOptimizer.board` instance handoff re-synchronized; regression tests and fixture added. | **MERGE PR #892 (P0)** |
 | **RE-02** | [#798](https://github.com/freerouting/freerouting/issues/798) | NPE in `PullTightAlgo` during interactive routing | **RESOLVED IN PR #901** (supersedes [#817](https://github.com/freerouting/freerouting/pull/817)). Read/write locks, thread-local traversal stack, query-local IDs. | **MERGE PR #901 (P0)** |
-| **RE-03** | [#811](https://github.com/freerouting/freerouting/issues/811) | Optimizer discarding accepted trace improvements | **PARTIALLY VALID**. Board reuse, hygiene & guards merged. Worker trace metric fix pending in PR #818. | **PORT PR #818 (P1)** |
+| **RE-03** | [#811](https://github.com/freerouting/freerouting/issues/811) | Optimizer discarding accepted trace improvements | **RESOLVED IN PR #902** (supersedes [#818](https://github.com/freerouting/freerouting/pull/818)). Weighted trace metric baseline ported to unified `BatchOptimizer`. | **MERGE PR #902 (P1)** |
 | **RE-04** | [#858](https://github.com/freerouting/freerouting/issues/858) | 2.3.0 regression: clearance violations on clean boards | **RESOLVED IN MASTER**. Commit `b32877f93` separated pre-existing DRC violations and added pin containment exemption. | **VERIFY & CLOSE (P1)** |
 | **RE-05** | [#558](https://github.com/freerouting/freerouting/issues/558) | Board-edge clearance class override | **HANDLED IN FREEROUTING**. PR #567 merged; `--router.copper_to_edge_clearance_um` added; upstream KiCad block. | **CLOSE / DOCUMENT (P2)** |
 | **RE-06** | [#632](https://github.com/freerouting/freerouting/issues/632) | Crash on multi-board panels with pins outside PCB boundary | **HANDLED IN MASTER**. `validateBoardDesignErrors()` logs structured warnings. PR #820 provides strict fail-fast. | **CLOSE #632 (P2)** |
@@ -89,7 +89,7 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
   - Board cloning overhead resolved via worker board reuse (`50ee20b4d`).
   - Leftover maze state cleared (`8dcd4cd68`).
   - Pre-flight guards and thresholding implemented (`b3f4ccc0f`, `e7f9bdf1a`).
-  - Remaining: worker trace baseline was starting at `0.0`. PR [#818](https://github.com/freerouting/freerouting/pull/818) fixes this, but needs rebasing into `app.freerouting.autoroute.pipeline.BatchOptimizer`.
+  - Worker trace baseline fix ported to unified `pipeline.BatchOptimizer` with weighted trace metric and unit tests in PR [#902](https://github.com/freerouting/freerouting/pull/902) (superseding [#818](https://github.com/freerouting/freerouting/pull/818)).
 - **Test Command Line:**
   ```powershell
   ./gradlew test --tests app.freerouting.autoroute.pipeline.BatchOptimizerTraceMetricTest
@@ -146,7 +146,7 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 | **#892** | Fix single-sided board regression by updating optimizer board reference | **OPEN** | `fix/v2.5-routing-engine-improvements` | `master` | **#872 (RE-01)** | **High**. Fixes stale board instance in `BatchOptimizer`. Fixture & regression test added. | **MERGE for v2.5** |
 | **#901** | Fix search-tree query/removal race (closes #798) | **OPEN** | `fix-issue-798-search-tree-npe` | `master` | **#798 (RE-02)** | **High**. Supersedes #817; resolves merge conflicts with master, adds thread-local traversal stack & query-local tie-breakers. | **MERGE for v2.5** |
 | **#817** | Fix search-tree query/removal race | **SUPERSEDED** | `fix-issue-798-search-tree-npe` | `master` | **#798 (RE-02)** | **High**. Merged and superseded by PR #901 after resolving conflicts with master. | **SUPERSEDED by #901** |
-| **#818** | Fix optimizer worker trace metric baseline | **OPEN** | `investigate-issue-811-optimizer` | `master` | **#811 (RE-03)** | **Medium (Conflict)**. Written against old `app.freerouting.autoroute.BatchOptimizer`. Must be ported to unified `pipeline.BatchOptimizer`. | **PORT to unified BatchOptimizer for v2.5** |
+| **#818** | Fix optimizer worker trace metric baseline | **SUPERSEDED** | `investigate-issue-811-optimizer` | `master` | **#811 (RE-03)** | **Ported**. Ported to unified `pipeline.BatchOptimizer` with weighted trace length baseline and unit tests on branch `fix/issue-811-optimizer-trace-metric`. | **SUPERSEDED by modern port for v2.5** |
 | **#820** | Fail fast on DSNs with pins outside PCB boundary | **OPEN** | `fix-issue-632-multi-board-routing` | `master` | **#632 (RE-06)** | **Medium**. Master already implemented soft-warning `validateBoardDesignErrors()`. Making it fatal might break valid edge connectors. | **SUPERSEDED by master's soft warnings; CLOSE or add opt-in flag** |
 | **#793** | Draft: headless fixes, Specctra (type protect) handling, and routing heuristic experiments | **OPEN** | `2bee-router-optimizations` | `master` | Heuristics / leaks | **Low (261 commits behind master)**. Author explicitly advised in PR description NOT to merge routing heuristics after 101-board corpus test showed regression. | **DO NOT MERGE HEURISTICS. Cherry-pick only `IntPoint.hashCode()` and `(type protect)` if needed.** |
 | **#743** | Add RoutingEtaCalculator and improve ETA functionality | **OPEN** | `Feat--Routing-ETA-Caluclator` | `master` | UI feature | **Low**. Touches obsolete `interactive.AutorouterAndRouteOptimizerThread`. Author noted accuracy is only ±10-12% and needs multi-phase rework. | **DEFER to post-v2.5** |
@@ -175,10 +175,12 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
   - [x] Verify quality gates (`spotlessCheck`, `checkstyleMain`, `checkstyleTest`, `./gradlew test`).
   - [x] Commit fixes to `fix-issue-798-search-tree-npe` (`54f5500cb`).
 
-- [ ] **Port PR #818 Fix into Unified BatchOptimizer (Issue #811 / RE-03)**
-  - [ ] In `src/main/java/app/freerouting/autoroute/pipeline/BatchOptimizer.java`, apply weighted trace length baseline calculation for worker candidate evaluations.
-  - [ ] Add `BatchOptimizerTraceMetricTest.java` in package `app.freerouting.autoroute.pipeline`.
-  - [ ] Run benchmarks against baseline boards.
+- [x] **Port PR #818 Fix into Unified BatchOptimizer (Issue #811 / RE-03)**
+  - [x] In `src/main/java/app/freerouting/autoroute/pipeline/BatchOptimizer.java`, apply weighted trace length baseline calculation for worker candidate evaluations (`baseline = baselineTraceLength > 0 ? baselineTraceLength : boardStatisticsBefore.traces.totalWeightedLength;`).
+  - [x] Use `totalWeightedLength` consistently for both before baseline and after evaluation in `ItemRouteResult`.
+  - [x] Add `BatchOptimizerTraceMetricTest.java` in package `app.freerouting.autoroute.pipeline`.
+  - [x] Verify quality gates (`spotlessCheck`, `checkstyleTest`, `./gradlew test`).
+  - [x] Push branch `fix/issue-811-optimizer-trace-metric`.
 
 - [ ] **Verify & Close RE-04 (Issue #858)**
   - [ ] Run verification on vanilla KiCad 10 DSN exports.
