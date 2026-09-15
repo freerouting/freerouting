@@ -3,12 +3,12 @@ package app.freerouting.gui.windows.routing;
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.gui.board.BoardFrame;
-import app.freerouting.gui.board.BoardSavableSubWindow;
 import app.freerouting.gui.controls.ComboBoxClearance;
 import app.freerouting.gui.controls.ComboBoxLayer;
 import app.freerouting.gui.workspace.GuiBoardManager;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.ViaRule;
+import app.freerouting.util.TextManager;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -19,6 +19,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -26,41 +27,41 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-/** Used for manual choice of trace widths in interactive routing. */
-public class WindowManualRules extends BoardSavableSubWindow {
+/**
+ * Inline panel for the manual choice of trace widths, clearance class and via rule in interactive
+ * routing. Replaces the former free-floating {@code WindowManualRules} popup; it is embedded in the
+ * route parameter window below the "Manual" radio button and shown only while manual rule selection
+ * is active.
+ */
+public class ManualRulesPanel extends JPanel {
 
-  private static final int max_slider_value = 15000;
-  private static final double scaleFactor = 1;
   private final GuiBoardManager boardHandling;
+  private final TextManager tm;
   private final ComboBoxLayer settingsRoutingManualRuleSelectionLayerComboBox;
   private final ComboBoxClearance settingsRoutingManualRuleSelectionClearanceComboBox;
   private final JComboBox<ViaRule> settingsRoutingManualRuleSelectionViaRuleComboBox;
   private final JFormattedTextField traceWidthField;
   private boolean keyInputCompleted = true;
 
-  /** Creates a new instance of TraceWidthWindow. */
-  public WindowManualRules(BoardFrame boardFrame) {
-    setLanguage(boardFrame.getLocale());
+  /** Creates the inline panel for the manual rule selection. */
+  public ManualRulesPanel(BoardFrame boardFrame) {
     this.boardHandling = boardFrame.boardPanel.boardHandling;
-    setLanguage(boardFrame.getLocale());
+    this.tm = new TextManager(ManualRulesPanel.class, boardFrame.getLocale());
 
-    this.setTitle(tm.getText("title"));
+    // Titled box so the manual options read as belonging to the "Manual" choice.
+    this.setBorder(BorderFactory.createTitledBorder(tm.getText("title")));
 
-    // create main panel
-
-    final JPanel mainPanel = new JPanel();
-    getContentPane().add(createScrollableContainer(mainPanel));
     GridBagLayout gridbag = new GridBagLayout();
-    mainPanel.setLayout(gridbag);
+    this.setLayout(gridbag);
     GridBagConstraints gridbagConstraints = new GridBagConstraints();
-    gridbagConstraints.insets = new Insets(5, 10, 5, 10);
+    gridbagConstraints.insets = new Insets(1, 5, 1, 5);
     gridbagConstraints.anchor = GridBagConstraints.WEST;
 
-    JLabel viaRuleLabel = new JLabel(tm.getText("viaRule"));
+    JLabel viaRuleLabel = new JLabel(tm.getText("via_rule"));
     viaRuleLabel.setToolTipText(tm.getText("via_rule_tooltip"));
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(viaRuleLabel, gridbagConstraints);
-    mainPanel.add(viaRuleLabel);
+    this.add(viaRuleLabel);
 
     RoutingBoard routingBoard = this.boardHandling.getRoutingBoard();
     settingsRoutingManualRuleSelectionViaRuleComboBox =
@@ -70,18 +71,15 @@ public class WindowManualRules extends BoardSavableSubWindow {
         this.settingsRoutingManualRuleSelectionViaRuleComboBox, gridbagConstraints);
     this.settingsRoutingManualRuleSelectionViaRuleComboBox.setToolTipText(
         tm.getText("via_rule_tooltip"));
-    mainPanel.add(this.settingsRoutingManualRuleSelectionViaRuleComboBox);
+    this.add(this.settingsRoutingManualRuleSelectionViaRuleComboBox);
     settingsRoutingManualRuleSelectionViaRuleComboBox.addActionListener(
         new ViaRuleComboBoxListener());
-    // settingsRoutingManualRuleSelectionViaRuleComboBox.addActionListener(evt ->
-    // FRAnalytics.buttonClicked("settingsRoutingManualRuleSelectionViaRuleComboBox",
-    // settingsRoutingManualRuleSelectionViaRuleComboBox.getSelectedItem().toString()));
 
-    JLabel classLabel = new JLabel(tm.getText("traceClearanceClass"));
+    JLabel classLabel = new JLabel(tm.getText("trace_clearance_class"));
     classLabel.setToolTipText(tm.getText("trace_clearance_class_tooltip"));
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(classLabel, gridbagConstraints);
-    mainPanel.add(classLabel);
+    this.add(classLabel);
 
     settingsRoutingManualRuleSelectionClearanceComboBox =
         new ComboBoxClearance(routingBoard.rules.clearanceMatrix);
@@ -90,23 +88,15 @@ public class WindowManualRules extends BoardSavableSubWindow {
         this.settingsRoutingManualRuleSelectionClearanceComboBox, gridbagConstraints);
     this.settingsRoutingManualRuleSelectionClearanceComboBox.setToolTipText(
         tm.getText("trace_clearance_class_tooltip"));
-    mainPanel.add(this.settingsRoutingManualRuleSelectionClearanceComboBox);
+    this.add(this.settingsRoutingManualRuleSelectionClearanceComboBox);
     settingsRoutingManualRuleSelectionClearanceComboBox.addActionListener(
         new ClearanceComboBoxListener());
-    // settingsRoutingManualRuleSelectionClearanceComboBox.addActionListener(evt ->
-    // FRAnalytics.buttonClicked("settingsRoutingManualRuleSelectionClearanceComboBox",
-    // settingsRoutingManualRuleSelectionClearanceComboBox.getSelectedItem().toString()));
 
-    JLabel separator = new JLabel("  ––––––––––––––––––––––––––––––––––––––––  ");
-    gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(separator, gridbagConstraints);
-    mainPanel.add(separator, gridbagConstraints);
-
-    JLabel widthLabel = new JLabel(tm.getText("traceWidth"));
+    JLabel widthLabel = new JLabel(tm.getText("trace_width"));
     widthLabel.setToolTipText(tm.getText("trace_width_tooltip"));
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(widthLabel, gridbagConstraints);
-    mainPanel.add(widthLabel);
+    this.add(widthLabel);
     NumberFormat numberFormat = NumberFormat.getInstance(boardFrame.getLocale());
     numberFormat.setMaximumFractionDigits(7);
     this.traceWidthField = new JFormattedTextField(numberFormat);
@@ -116,7 +106,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     this.traceWidthField.setToolTipText(tm.getText("trace_width_tooltip"));
     gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
     gridbag.setConstraints(traceWidthField, gridbagConstraints);
-    mainPanel.add(traceWidthField);
+    this.add(traceWidthField);
     traceWidthField.addKeyListener(new TraceWidthFieldKeyListener());
     traceWidthField.addFocusListener(new TraceWidthFieldFocusListener());
 
@@ -124,7 +114,7 @@ public class WindowManualRules extends BoardSavableSubWindow {
     layerLabel.setToolTipText(tm.getText("on_layer_tooltip"));
     gridbagConstraints.gridwidth = 2;
     gridbag.setConstraints(layerLabel, gridbagConstraints);
-    mainPanel.add(layerLabel);
+    this.add(layerLabel);
 
     settingsRoutingManualRuleSelectionLayerComboBox =
         new ComboBoxLayer(
@@ -134,25 +124,20 @@ public class WindowManualRules extends BoardSavableSubWindow {
         this.settingsRoutingManualRuleSelectionLayerComboBox, gridbagConstraints);
     this.settingsRoutingManualRuleSelectionLayerComboBox.setToolTipText(
         tm.getText("on_layer_tooltip"));
-    mainPanel.add(this.settingsRoutingManualRuleSelectionLayerComboBox);
+    this.add(this.settingsRoutingManualRuleSelectionLayerComboBox);
     settingsRoutingManualRuleSelectionLayerComboBox.addActionListener(new LayerComboBoxListener());
     settingsRoutingManualRuleSelectionLayerComboBox.addActionListener(
         _ ->
             FRAnalytics.buttonClicked(
                 "settingsRoutingManualRuleSelectionLayerComboBox",
-                settingsRoutingManualRuleSelectionLayerComboBox.getSelectedItem().toString()));
+                String.valueOf(settingsRoutingManualRuleSelectionLayerComboBox.getSelectedItem())));
 
-    JLabel emptyLabel = new JLabel();
-    gridbag.setConstraints(emptyLabel, gridbagConstraints);
-    mainPanel.add(emptyLabel);
-
-    this.pack();
-    this.setResizable(false);
-    clampWindowHeight(this, boardFrame);
+    // The panel is shown/hidden by the Manual/Automatic radio buttons in
+    // WindowRouteParameter; the initial visibility is set by refresh().
+    this.setVisible(false);
   }
 
   /** Recalculates the values in the trace width fields. */
-  @Override
   public void refresh() {
     RoutingBoard routingBoard = boardHandling.getRoutingBoard();
     ComboBoxModel<ViaRule> newModel = new DefaultComboBoxModel<>(routingBoard.rules.viaRules);
