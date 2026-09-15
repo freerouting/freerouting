@@ -7,6 +7,7 @@ import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.datastructures.ArrayStack;
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
@@ -160,12 +161,13 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int debugStep = 0;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(startShape, roomLayer, shapeToBeContained));
-    completeShapeStack.reset();
-    completeShapeStack.push(this.root);
+    ArrayStack<TreeNode> stack = completeShapeStack.get();
+    stack.reset();
+    stack.push(this.root);
     TreeNode currentNode;
 
     for (; ; ) {
-      currentNode = completeShapeStack.pop();
+      currentNode = stack.pop();
       if (currentNode == null) {
         break;
       }
@@ -284,8 +286,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             debugStep++;
           }
         } else {
-          completeShapeStack.push(((InnerNode) currentNode).firstChild);
-          completeShapeStack.push(((InnerNode) currentNode).secondChild);
+          stack.push(((InnerNode) currentNode).firstChild);
+          stack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }

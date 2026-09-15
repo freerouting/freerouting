@@ -53,7 +53,7 @@ public class MinAreaTree extends ShapeTree {
       if (currentNode == null) {
         break;
       }
-      onNodeVisited(currentNode);
+      onNodeVisited();
       if (currentNode.boundingShape.intersects(shape)) {
         if (currentNode instanceof Leaf leaf) {
           foundOverlaps.add(leaf);
@@ -68,7 +68,7 @@ public class MinAreaTree extends ShapeTree {
   }
 
   /** Extension hook for testing and instrumentation during tree traversal. */
-  protected void onNodeVisited(TreeNode node) {}
+  protected void onNodeVisited() {}
 
   @Override
   void insert(Leaf leaf) {

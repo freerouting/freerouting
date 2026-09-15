@@ -53,11 +53,9 @@ public class ShapeSearchTree extends MinAreaTree {
 
   private static final int DRILL_HOLE_CLEARANCE_MARGIN = 10;
 
-  /** Reusable traversal stack for complete-shape queries on this tree. */
-  protected final ArrayStack<TreeNode> completeShapeStack = new ArrayStack<>(10000);
-
-  /** Used in objects of class EntrySortedByClearance. */
-  private static int lastGeneratedEntryId;
+  /** Reusable traversal stack for complete-shape queries, isolated per caller thread. */
+  protected final ThreadLocal<ArrayStack<TreeNode>> completeShapeStack =
+      ThreadLocal.withInitial(() -> new ArrayStack<>(10000));
 
   /**
    * The clearance class number for which the shapes of this tree is compensated. If
@@ -552,6 +550,7 @@ public class ShapeSearchTree extends MinAreaTree {
     Collection<Leaf> tmpList = overlapsUnlocked(offsetBounds);
     // sort the found items by its clearances to clearanceClassIndex on layer layer
     Set<EntrySortedByClearance> sortedItems = new TreeSet<>();
+    int nextEntryId = 0;
 
     for (Leaf currentLeaf : tmpList) {
       Item currentItem = (Item) currentLeaf.object;
@@ -567,7 +566,8 @@ public class ShapeSearchTree extends MinAreaTree {
       if (!ignoreItem) {
         int currentClearance =
             clMatrix.getValue(clearanceClassIndex, currentItem.clearanceClassIndex(), layer, true);
-        EntrySortedByClearance sortedOb = new EntrySortedByClearance(currentLeaf, currentClearance);
+        EntrySortedByClearance sortedOb =
+            new EntrySortedByClearance(currentLeaf, currentClearance, nextEntryId++);
         sortedItems.add(sortedOb);
       }
     }
@@ -618,37 +618,41 @@ public class ShapeSearchTree extends MinAreaTree {
       int clearanceClassIndex,
       Set<SearchTreeObject> obstacles) {
     Collection<TreeEntry> treeEntries = new LinkedList<>();
-    if (this.isClearanceCompensationUsed()) {
-      overlappingTreeEntries(shape, layer, ignoreNetNos, treeEntries);
-    } else {
-      overlappingTreeEntriesWithClearance(
-          shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
-    }
-    if (obstacles == null) {
-      return;
-    }
+    this.overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
     for (TreeEntry currentEntry : treeEntries) {
       obstacles.add((SearchTreeObject) currentEntry.object);
     }
   }
 
   /**
-   * Returns items, which overlap with shape on layer layer inclusive clearance. clearanceClassIndex
-   * is the index in the clearance matrix, which describes the required clearance restrictions to
-   * other items. The function may also return items, which are nearly overlapping, but do not
-   * overlap with exact calculation. If layer {@literal <} 0, the layer is ignored.
+   * Looks up all items in the search tree, so that inserting an item with shape shape, net number
+   * netNumber, clearance type clearanceClassIndex and layer would produce a clearance violation,
+   * and puts them into the set obstacleEntries. If layer {@literal <} 0, the layer is ignored.
+   */
+  public void overlappingObjectsWithClearance(
+      ConvexShape shape,
+      int layer,
+      int[] ignoreNetNos,
+      int clearanceClassIndex,
+      Collection<Item> obstacles) {
+    Collection<TreeEntry> treeEntries = new LinkedList<>();
+    this.overlappingTreeEntriesWithClearance(
+        shape, layer, ignoreNetNos, clearanceClassIndex, treeEntries);
+    for (TreeEntry currentEntry : treeEntries) {
+      obstacles.add((Item) currentEntry.object);
+    }
+  }
+
+  /**
+   * Returns all items in the tree, which overlap with shape on layer layer inclusive clearance.
+   * clearanceClassIndex is the index in the clearance matrix, which describes the required
+   * clearance restrictions to other items. If layer {@literal <} 0, the layer is ignored.
    */
   public Set<Item> overlappingItemsWithClearance(
       ConvexShape shape, int layer, int[] ignoreNetNos, int clearanceClassIndex) {
-    Set<SearchTreeObject> overlaps = new TreeSet<>();
-
-    this.overlappingObjectsWithClearance(shape, layer, ignoreNetNos, clearanceClassIndex, overlaps);
     Set<Item> result = new TreeSet<>();
-    for (SearchTreeObject currentObject : overlaps) {
-      if (currentObject instanceof Item item) {
-        result.add(item);
-      }
-    }
+    this.overlappingObjectsWithClearance(shape, layer, ignoreNetNos, clearanceClassIndex, result);
     return result;
   }
 
@@ -704,18 +708,19 @@ public class ShapeSearchTree extends MinAreaTree {
     // in a deterministic order. The non-deterministic order of tree traversal
     // causes different room partitioning.
     List<Leaf> overlappingLeaves = new ArrayList<>();
-    completeShapeStack.reset();
-    completeShapeStack.push(this.root);
+    ArrayStack<TreeNode> stack = completeShapeStack.get();
+    stack.reset();
+    stack.push(this.root);
     TreeNode currentNode;
     int roomLayer = room.getLayer();
 
-    while ((currentNode = completeShapeStack.pop()) != null) {
+    while ((currentNode = stack.pop()) != null) {
       if (currentNode.boundingShape.intersects(boundingShape)) {
         if (currentNode instanceof Leaf leaf) {
           overlappingLeaves.add(leaf);
         } else {
-          completeShapeStack.push(((InnerNode) currentNode).firstChild);
-          completeShapeStack.push(((InnerNode) currentNode).secondChild);
+          stack.push(((InnerNode) currentNode).firstChild);
+          stack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
@@ -1267,15 +1272,10 @@ public class ShapeSearchTree extends MinAreaTree {
     Leaf leaf;
     int clearance;
 
-    EntrySortedByClearance(Leaf leaf, int clearance) {
+    EntrySortedByClearance(Leaf leaf, int clearance, int entryId) {
       this.leaf = leaf;
       this.clearance = clearance;
-      if (lastGeneratedEntryId == Integer.MAX_VALUE) {
-        lastGeneratedEntryId = 0;
-      } else {
-        ++lastGeneratedEntryId;
-      }
-      entryId = lastGeneratedEntryId;
+      this.entryId = entryId;
     }
 
     @Override
@@ -1283,7 +1283,7 @@ public class ShapeSearchTree extends MinAreaTree {
       if (clearance != other.clearance) {
         return Signum.asInt(clearance - other.clearance);
       }
-      return entryId - other.entryId;
+      return Integer.compare(entryId, other.entryId);
     }
   }
 }

@@ -198,7 +198,7 @@ class MinAreaTreeLeafLifecycleTest {
     }
 
     @Override
-    protected void onNodeVisited(ShapeTree.TreeNode node) {
+    protected void onNodeVisited() {
       if (gate.blockOnce.compareAndSet(true, false)) {
         gate.readerEntered.countDown();
         await(gate.allowReaderToContinue);

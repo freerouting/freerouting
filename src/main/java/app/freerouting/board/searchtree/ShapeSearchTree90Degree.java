@@ -7,6 +7,7 @@ import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.datastructures.ArrayStack;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.OrthogonalBoundingDirections;
 import app.freerouting.geometry.planar.Polyline;
@@ -81,12 +82,13 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
     // Process obstacles inline during tree traversal with dynamic boundingShape updates.
     // This matches v1.9's algorithm exactly: as obstacles are processed, boundingShape
     // shrinks, which prunes subsequent tree traversal (just like v1.9 does).
-    completeShapeStack.reset();
-    completeShapeStack.push(this.root);
+    ArrayStack<TreeNode> stack = completeShapeStack.get();
+    stack.reset();
+    stack.push(this.root);
     TreeNode currentNode;
 
     for (; ; ) {
-      currentNode = completeShapeStack.pop();
+      currentNode = stack.pop();
       if (currentNode == null) {
         break;
       }
@@ -199,8 +201,8 @@ public class ShapeSearchTree90Degree extends ShapeSearchTree {
             debugStep++;
           }
         } else {
-          completeShapeStack.push(((InnerNode) currentNode).firstChild);
-          completeShapeStack.push(((InnerNode) currentNode).secondChild);
+          stack.push(((InnerNode) currentNode).firstChild);
+          stack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }
