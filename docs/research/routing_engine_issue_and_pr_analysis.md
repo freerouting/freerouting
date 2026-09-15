@@ -146,7 +146,7 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 | **#892** | Fix single-sided board regression by updating optimizer board reference | **OPEN** | `fix/v2.5-routing-engine-improvements` | `master` | **#872 (RE-01)** | **High**. Fixes stale board instance in `BatchOptimizer`. Fixture & regression test added. | **MERGE for v2.5** |
 | **#901** | Fix search-tree query/removal race (closes #798) | **OPEN** | `fix-issue-798-search-tree-npe` | `master` | **#798 (RE-02)** | **High**. Supersedes #817; resolves merge conflicts with master, adds thread-local traversal stack & query-local tie-breakers. | **MERGE for v2.5** |
 | **#817** | Fix search-tree query/removal race | **SUPERSEDED** | `fix-issue-798-search-tree-npe` | `master` | **#798 (RE-02)** | **High**. Merged and superseded by PR #901 after resolving conflicts with master. | **SUPERSEDED by #901** |
-| **#818** | Fix optimizer worker trace metric baseline | **OPEN** | `investigate-issue-811-optimizer` | `master` | **#811 (RE-03)** | **Medium (Conflict)**. Written against old `app.freerouting.autoroute.BatchOptimizer`. Must be ported to unified `pipeline.BatchOptimizer`. | **PORT to unified BatchOptimizer for v2.5** |
+| **#818** | Fix optimizer worker trace metric baseline | **SUPERSEDED** | `investigate-issue-811-optimizer` | `master` | **#811 (RE-03)** | **Ported**. Ported to unified `pipeline.BatchOptimizer` with weighted trace length baseline and unit tests on branch `fix/issue-811-optimizer-trace-metric`. | **SUPERSEDED by modern port for v2.5** |
 | **#820** | Fail fast on DSNs with pins outside PCB boundary | **OPEN** | `fix-issue-632-multi-board-routing` | `master` | **#632 (RE-06)** | **Medium**. Master already implemented soft-warning `validateBoardDesignErrors()`. Making it fatal might break valid edge connectors. | **SUPERSEDED by master's soft warnings; CLOSE or add opt-in flag** |
 | **#793** | Draft: headless fixes, Specctra (type protect) handling, and routing heuristic experiments | **OPEN** | `2bee-router-optimizations` | `master` | Heuristics / leaks | **Low (261 commits behind master)**. Author explicitly advised in PR description NOT to merge routing heuristics after 101-board corpus test showed regression. | **DO NOT MERGE HEURISTICS. Cherry-pick only `IntPoint.hashCode()` and `(type protect)` if needed.** |
 | **#743** | Add RoutingEtaCalculator and improve ETA functionality | **OPEN** | `Feat--Routing-ETA-Caluclator` | `master` | UI feature | **Low**. Touches obsolete `interactive.AutorouterAndRouteOptimizerThread`. Author noted accuracy is only ±10-12% and needs multi-phase rework. | **DEFER to post-v2.5** |
@@ -175,10 +175,12 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
   - [x] Verify quality gates (`spotlessCheck`, `checkstyleMain`, `checkstyleTest`, `./gradlew test`).
   - [x] Commit fixes to `fix-issue-798-search-tree-npe` (`54f5500cb`).
 
-- [ ] **Port PR #818 Fix into Unified BatchOptimizer (Issue #811 / RE-03)**
-  - [ ] In `src/main/java/app/freerouting/autoroute/pipeline/BatchOptimizer.java`, apply weighted trace length baseline calculation for worker candidate evaluations.
-  - [ ] Add `BatchOptimizerTraceMetricTest.java` in package `app.freerouting.autoroute.pipeline`.
-  - [ ] Run benchmarks against baseline boards.
+- [x] **Port PR #818 Fix into Unified BatchOptimizer (Issue #811 / RE-03)**
+  - [x] In `src/main/java/app/freerouting/autoroute/pipeline/BatchOptimizer.java`, apply weighted trace length baseline calculation for worker candidate evaluations (`baseline = baselineTraceLength > 0 ? baselineTraceLength : boardStatisticsBefore.traces.totalWeightedLength;`).
+  - [x] Use `totalWeightedLength` consistently for both before baseline and after evaluation in `ItemRouteResult`.
+  - [x] Add `BatchOptimizerTraceMetricTest.java` in package `app.freerouting.autoroute.pipeline`.
+  - [x] Verify quality gates (`spotlessCheck`, `checkstyleTest`, `./gradlew test`).
+  - [x] Push branch `fix/issue-811-optimizer-trace-metric`.
 
 - [ ] **Verify & Close RE-04 (Issue #858)**
   - [ ] Run verification on vanilla KiCad 10 DSN exports.
