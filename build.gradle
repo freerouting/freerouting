@@ -8,9 +8,9 @@ plugins {
     id 'maven-publish'
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
-    id 'io.github.ben-manes.versions' version '0.61.0'
-    id 'org.openrewrite.rewrite' version '7.38.0'
-    id "com.diffplug.spotless" version "8.9.0"
+    id 'io.github.ben-manes.versions' version '0.62.0'
+    id 'org.openrewrite.rewrite' version '7.41.0'
+    id "com.diffplug.spotless" version "8.10.2"
 }
 
 checkstyle {
@@ -181,23 +181,23 @@ dependencies {
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.9'
 
     // Add Jetty dependencies
-    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.12'
-    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.12'
-    implementation 'org.eclipse.jetty:jetty-server:12.1.12'
-    implementation 'org.eclipse.jetty:jetty-util:12.1.12'
-    implementation 'org.eclipse.jetty:jetty-security:12.1.12'
+    implementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.13'
+    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.13'
+    implementation 'org.eclipse.jetty:jetty-server:12.1.13'
+    implementation 'org.eclipse.jetty:jetty-util:12.1.13'
+    implementation 'org.eclipse.jetty:jetty-security:12.1.13'
 
     // Add SLF4J API and binding dependencies for Jersey logging
-    implementation 'org.slf4j:slf4j-api:2.0.18'
-    implementation 'org.slf4j:slf4j-nop:2.0.18'
+    implementation 'org.slf4j:slf4j-api:2.0.19'
+    implementation 'org.slf4j:slf4j-nop:2.0.19'
 
     // Add Google Cloud BigQuery dependencies for telemetry
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.51.0'
-    implementation 'com.google.api:gax:2.84.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.52.0'
+    implementation 'com.google.api:gax:2.85.0'
     implementation 'com.google.api-client:google-api-client-appengine:2.9.1'
-    implementation 'com.google.cloud:google-cloud-core:2.74.0'
-    implementation 'com.google.cloud:google-cloud-core-http:2.74.0'
-    implementation 'com.google.cloud:google-cloud-bigquery:2.70.0'
+    implementation 'com.google.cloud:google-cloud-core:2.75.0'
+    implementation 'com.google.cloud:google-cloud-core-http:2.75.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.71.0'
 
     // Add Google Sheets API dependencies for API key validation
     implementation 'com.google.api-client:google-api-client:2.9.1'
@@ -205,7 +205,7 @@ dependencies {
 
     // Security constraints for transitive dependencies
     constraints {
-        implementation('io.netty:netty-common:4.1.118.Final') {
+        implementation('io.netty:netty-common:4.2.18.Final') {
             because 'CVE-2024-47535 and CVE-2025-25193: DoS vulnerability in Netty on Windows'
         }
     }
@@ -217,19 +217,19 @@ dependencies {
 
     // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
     // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
-    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
+    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.41.1'
+    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.42.1'
     rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
+    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.44.0'
 
-    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.88.0'
+    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.41.1'
+    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.90.4'
+    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.90.4'
     rewrite sourceSets.rewriteRecipes.output
     testImplementation sourceSets.rewriteRecipes.output
-    testImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-core:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-java-25:8.88.0'
+    testImplementation 'org.openrewrite:rewrite-java:8.90.4'
+    testImplementation 'org.openrewrite:rewrite-core:8.90.4'
+    testImplementation 'org.openrewrite:rewrite-java-25:8.90.4'
 
 
     // ArchUnit: package-architecture enforcement
