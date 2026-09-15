@@ -1,0 +1,133 @@
+name: Bug Report
+description: Report a reproducible bug, routing regression, clearance violation, or crash
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue! Please provide as much detail as possible to help us isolate and resolve the problem quickly.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the unexpected behavior, routing error, or visual defect.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps explaining how to reproduce the issue.
+      placeholder: |
+        1. Open board file '...'
+        2. Set router parameter '...'
+        3. Click 'Auto-route'
+        4. Observe error or unexpected route...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen instead?
+      placeholder: A clear description of the expected routing result or UI response.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Subsystem / Component
+      description: Select the primary area where the problem occurs.
+      options:
+        - "routing-engine (Core routing, DRC clearances, fanout, optimizer, search tree)"
+        - "GUI (Desktop Swing UI, visualizer, interactive mode, dialogs)"
+        - "CLI (Command line, batch headless execution, runner scripts)"
+        - "API (REST API server, embedded Jetty, job management)"
+        - "MCP (Model Context Protocol server, AI assistant tools)"
+        - "Other / Unsure"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: Select your operating system platform.
+      options:
+        - "Windows (Windows 11, 10, etc.)"
+        - "macOS (Apple Silicon / ARM64)"
+        - "macOS (Intel / x86_64)"
+        - "Linux (Ubuntu, Debian, Fedora, Arch, etc.)"
+        - "Docker / Container"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: eda
+    attributes:
+      label: EDA Suite & Version
+      description: Which EDA software generated the board / DSN file?
+      options:
+        - "KiCad (v8, v9, v10, etc.)"
+        - "Autodesk Fusion / EAGLE"
+        - "EasyEDA"
+        - "Altium Designer"
+        - "Target 3001!"
+        - "pcb-rnd / tscircuit"
+        - "None / Standalone DSN"
+        - "Other"
+    validations:
+      required: true
+
+  - type: input
+    id: freerouting_version
+    attributes:
+      label: Freerouting Version
+      description: e.g. 2.4.1, 2.3.0, snapshot build, or Git commit hash.
+      placeholder: "2.4.1"
+    validations:
+      required: true
+
+  - type: input
+    id: java_version
+    attributes:
+      label: Java / JRE Version
+      description: e.g. OpenJDK 25, Eclipse Temurin 25, Oracle JRE 25.
+      placeholder: "OpenJDK 25.0.1"
+    validations:
+      required: false
+
+  - type: textarea
+    id: files
+    attributes:
+      label: Project Files (Crucial for Quick Diagnosis)
+      description: |
+        Please attach your full board design (e.g. KiCad project as `.zip`, or exported `.dsn` and `.ses` files).
+        You can drag and drop files directly into this box.
+      placeholder: Drag and drop .zip, .dsn, or .ses files here...
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs & Stack Traces
+      description: Paste relevant sections of `freerouting.log`, terminal output, or stack traces here.
+      render: text
+      placeholder: Paste console output or stack traces...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or parameters used (e.g. CLI flags, rules files).
+    validations:
+      required: false
