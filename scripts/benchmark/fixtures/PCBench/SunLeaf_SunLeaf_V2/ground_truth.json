@@ -1,0 +1,31 @@
+{
+  "board": "SunLeaf_SunLeaf_V2",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\SunLeaf_SunLeaf_V2\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 220,
+  "segment_count": 1293,
+  "approximate_track_length_mm": 1945.41,
+  "kicad_drc_violations": 624,
+  "generated_at": "2026-08-18T18:25:04.499196+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 624,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 125,
+      "copper_edge_clearance": 22,
+      "lib_footprint_issues": 158,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 47,
+      "silk_overlap": 18,
+      "solder_mask_bridge": 85,
+      "text_height": 159,
+      "track_dangling": 6,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 232,
+      "warning": 392
+    }
+  }
+}

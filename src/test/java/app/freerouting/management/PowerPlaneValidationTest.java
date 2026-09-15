@@ -3,12 +3,12 @@ package app.freerouting.management;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.Communication;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Layer;
-import app.freerouting.board.LayerStructure;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
+import app.freerouting.board.state.Communication;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntPoint;
@@ -61,11 +61,11 @@ public class PowerPlaneValidationTest {
 
     // Add net
     Net gndNet = board.rules.nets.add("GND", 1, true);
-    int[] netNoArr = new int[] {gndNet.netNumber};
+    int[] netNumbers = new int[] {gndNet.netNumber};
 
     // Add a conduction area to GND layer (layer index 1)
     Area area = TileShape.getInstance(100, 100, 10000, 10000);
-    board.insertConductionArea(area, 1, netNoArr, 0, false, FixedState.UNFIXED);
+    board.insertConductionArea(area, 1, netNumbers, 0, false, FixedState.UNFIXED);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
     manager.board = board;
@@ -84,16 +84,16 @@ public class PowerPlaneValidationTest {
 
     // Add net
     Net gndNet = board.rules.nets.add("GND", 1, true);
-    int[] netNoArr = new int[] {gndNet.netNumber};
+    int[] netNumbers = new int[] {gndNet.netNumber};
 
     // Add conduction area so that "at least one conduction area" check passes
     Area area = TileShape.getInstance(100, 100, 10000, 10000);
-    board.insertConductionArea(area, 1, netNoArr, 0, false, FixedState.UNFIXED);
+    board.insertConductionArea(area, 1, netNumbers, 0, false, FixedState.UNFIXED);
 
     // Insert trace on GND layer (layer index 1) using direct PolylineTrace constructor
     Polyline polyline = new Polyline(new IntPoint(500, 500), new IntPoint(1000, 1000));
     PolylineTrace trace =
-        new PolylineTrace(polyline, 1, 10, netNoArr, 0, 0, 0, FixedState.UNFIXED, board);
+        new PolylineTrace(polyline, 1, 10, netNumbers, 0, 0, 0, FixedState.UNFIXED, board);
     board.insertItem(trace);
 
     HeadlessBoardManager manager = new HeadlessBoardManager(null);
@@ -183,8 +183,8 @@ public class PowerPlaneValidationTest {
     // Force plane layer to active in settings after optimizations to test override guard
     settings.setLayerActive(1, true);
 
-    app.freerouting.autoroute.AutorouteControl control =
-        new app.freerouting.autoroute.AutorouteControl(board, gndNet.netNumber, settings);
+    app.freerouting.autoroute.maze.AutorouteControl control =
+        new app.freerouting.autoroute.maze.AutorouteControl(board, gndNet.netNumber, settings);
 
     // Assert that the override guard forced it to false
     assertFalse(
@@ -195,5 +195,91 @@ public class PowerPlaneValidationTest {
         logs.contains(
             "is a dedicated power plane and cannot be routed. Forcing active state to false."),
         "Override guard should log a warning message. Logs:\n" + logs);
+  }
+
+  @Test
+  void testPlaneNetsOverride() {
+    RoutingBoard board = createTestBoard(false); // 2 signal layers
+    Net vccNet = board.rules.nets.add("VCC", 1, false);
+    assertFalse(vccNet.containsPlane(), "Initially net should not contain plane.");
+
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new app.freerouting.settings.sources.DefaultSettings().getSettings();
+    job.routerSettings.planeNets = new String[] {"VCC"};
+
+    HeadlessBoardManager manager = new HeadlessBoardManager(job);
+    manager.board = board;
+
+    manager.applyRouterSettingsForLoadedBoard();
+
+    assertTrue(
+        vccNet.containsPlane(), "Net specified in planeNets should have containsPlane=true.");
+  }
+
+  @Test
+  void testPlaneAsObstacleOverride() {
+    RoutingBoard board = createTestBoard(false); // 2 signal layers
+    TileShape area = TileShape.getInstance(0, 0, 1000000, 1000000);
+    Net gnd = board.rules.nets.add("GND", 1, true);
+    board.insertConductionArea(area, 0, new int[] {gnd.netNumber}, 0, false, FixedState.UNFIXED);
+
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob();
+    job.routerSettings = new app.freerouting.settings.sources.DefaultSettings().getSettings();
+    job.routerSettings.planeAsObstacle = true;
+
+    HeadlessBoardManager manager = new HeadlessBoardManager(job);
+    manager.board = board;
+
+    manager.applyRouterSettingsForLoadedBoard();
+
+    assertFalse(
+        board.rules.getIgnoreConduction(),
+        "planeAsObstacle=true should set rules.ignoreConduction=false.");
+    app.freerouting.board.model.items.ConductionArea ca =
+        (app.freerouting.board.model.items.ConductionArea)
+            board.getConductionAreas().iterator().next();
+    assertTrue(ca.getIsObstacle(), "ConductionArea should have isObstacle=true.");
+  }
+
+  @Test
+  void testHeuristicPlaneDetectionOn2LayerBoard() {
+    RoutingBoard board = createTestBoard(false); // 2 signal layers, 2000x2000
+    // Conduction area covering 40% of board (2,000,000 x 800,000 on layer 0)
+    TileShape pourShape = TileShape.getInstance(0, 0, 2000000, 800000);
+    Net gnd = board.rules.nets.add("GND", 1, false);
+    board.insertConductionArea(
+        pourShape, 0, new int[] {gnd.netNumber}, 0, false, FixedState.UNFIXED);
+
+    assertFalse(gnd.containsPlane(), "Initially net should not contain plane.");
+    boolean adjusted =
+        app.freerouting.io.specctra.parser.DsnFile.adjustPlaneAutorouteSettings(board);
+
+    assertTrue(adjusted, "Should adjust plane autoroute settings for >=30% outer pour.");
+    assertTrue(gnd.containsPlane(), "GND net should be recognized as power plane.");
+  }
+
+  @Test
+  void testHeuristicPlaneDetectionWithExistingTraces() {
+    RoutingBoard board = createTestBoard(false); // 2 signal layers, 2000x2000
+    // Insert an existing trace on layer 0
+    Net sigNet = board.rules.nets.add("SIG", 2, false);
+    Polyline traceLine =
+        new Polyline(new IntPoint[] {new IntPoint(100, 100), new IntPoint(500, 100)});
+    PolylineTrace trace =
+        new PolylineTrace(
+            traceLine, 0, 100, new int[] {sigNet.netNumber}, 0, 0, 0, FixedState.UNFIXED, board);
+    board.insertItem(trace);
+
+    // Conduction area covering 50% of board on layer 0
+    TileShape pourShape = TileShape.getInstance(0, 0, 2000000, 1000000);
+    Net gnd = board.rules.nets.add("GND", 1, false);
+    board.insertConductionArea(
+        pourShape, 0, new int[] {gnd.netNumber}, 0, false, FixedState.UNFIXED);
+
+    boolean adjusted =
+        app.freerouting.io.specctra.parser.DsnFile.adjustPlaneAutorouteSettings(board);
+
+    assertTrue(adjusted, "Should adjust plane autoroute settings even with existing traces.");
+    assertTrue(gnd.containsPlane(), "GND net should be recognized as power plane.");
   }
 }

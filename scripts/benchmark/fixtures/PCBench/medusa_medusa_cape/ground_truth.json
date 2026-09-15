@@ -1,0 +1,29 @@
+{
+  "board": "medusa_medusa_cape",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\medusa_medusa_cape\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 162,
+  "segment_count": 806,
+  "approximate_track_length_mm": 1934.96,
+  "kicad_drc_violations": 570,
+  "generated_at": "2026-08-18T18:20:01.839935+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 570,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 199,
+      "copper_edge_clearance": 4,
+      "drill_out_of_range": 5,
+      "invalid_outline": 1,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 88,
+      "silk_overlap": 199,
+      "text_height": 73
+    },
+    "by_severity": {
+      "error": 209,
+      "warning": 361
+    }
+  }
+}

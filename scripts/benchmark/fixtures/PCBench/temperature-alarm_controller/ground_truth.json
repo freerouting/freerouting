@@ -1,0 +1,29 @@
+{
+  "board": "temperature-alarm_controller",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\temperature-alarm_controller\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 149,
+  "approximate_track_length_mm": 659.16,
+  "kicad_drc_violations": 107,
+  "generated_at": "2026-08-18T19:51:14.075300+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 107,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 37,
+      "invalid_outline": 9,
+      "lib_footprint_issues": 18,
+      "lib_footprint_mismatch": 1,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 29,
+      "silk_overlap": 6,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 46,
+      "warning": 61
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "board": "EtherCAT_shield_v1_EtherCAT_shield_v1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\EtherCAT_shield_v1_EtherCAT_shield_v1\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 154,
+  "segment_count": 1268,
+  "approximate_track_length_mm": 2871.01,
+  "kicad_drc_violations": 812,
+  "generated_at": "2026-08-18T18:48:42.597821+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 812,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 37,
+      "clearance": 490,
+      "copper_edge_clearance": 3,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 115,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 1,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 151,
+      "track_dangling": 8
+    },
+    "by_severity": {
+      "error": 682,
+      "warning": 130
+    }
+  }
+}

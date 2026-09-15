@@ -3,9 +3,9 @@ package app.freerouting.i18n;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import app.freerouting.gui.BoardFrame;
-import app.freerouting.gui.WindowClearanceViolations;
+import app.freerouting.gui.board.BoardFrame;
 import app.freerouting.gui.interactive.InteractiveState;
+import app.freerouting.gui.windows.routing.WindowClearanceViolations;
 import app.freerouting.util.TextManager;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class TextManagerFallbackTest {
   void resolvesItalianTranslationsFromLocaleBundle() {
     TextManager italian = new TextManager(BoardFrame.class, Locale.forLanguageTag("it-IT"));
 
-    assertEquals("annulla (Esc)", italian.getText("cancel"));
+    assertEquals("Annulla (Esc)", italian.getText("cancel"));
   }
 
   @Test
@@ -70,7 +70,7 @@ class TextManagerFallbackTest {
     TextManager english =
         new TextManager(WindowClearanceViolations.class, Locale.forLanguageTag("en"));
 
-    assertEquals("No violations found", english.getText("listEmptyMessage"));
+    assertEquals("No clearance violations found.", english.getText("listEmptyMessage"));
   }
 
   @Test

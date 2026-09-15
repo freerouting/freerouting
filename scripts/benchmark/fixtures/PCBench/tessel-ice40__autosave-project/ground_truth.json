@@ -1,0 +1,28 @@
+{
+  "board": "tessel-ice40__autosave-project",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\tessel-ice40__autosave-project\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 46,
+  "segment_count": 395,
+  "approximate_track_length_mm": 872.44,
+  "kicad_drc_violations": 280,
+  "generated_at": "2026-08-18T19:51:27.753380+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 280,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 101,
+      "lib_footprint_issues": 19,
+      "silk_edge_clearance": 52,
+      "silk_over_copper": 4,
+      "silk_overlap": 4,
+      "solder_mask_bridge": 96,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 197,
+      "warning": 83
+    }
+  }
+}

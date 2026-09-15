@@ -1,0 +1,67 @@
+{
+  "board_id": "esp8266_envmonitor_environment-monitor-1.2",
+  "display_name": "esp8266_envmonitor_environment-monitor-1.2",
+  "pcbench_directory": "PCBs/esp8266_envmonitor_environment-monitor-1.2",
+  "source": "https://github.com/theopensourcerer/esp8266_envmonitor",
+  "author": "theopensourcerer",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.633776+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 31.12,
+      "height": 52.07
+    },
+    "area_cm2": 16.2,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 94,
+    "vias": 4,
+    "track_length_mm": 327.57,
+    "kicad_drc_violations": 146,
+    "kicad_drc_breakdown": {
+      "total_violations": 146,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 89,
+        "lib_footprint_issues": 16,
+        "malformed_courtyard": 6,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 22,
+        "silk_overlap": 11,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 96,
+        "warning": 50
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.912632+00:00",
+    "elapsed_seconds": 12.22,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

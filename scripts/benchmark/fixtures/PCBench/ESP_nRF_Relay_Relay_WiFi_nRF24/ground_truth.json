@@ -1,0 +1,30 @@
+{
+  "board": "ESP_nRF_Relay_Relay_WiFi_nRF24",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ESP_nRF_Relay_Relay_WiFi_nRF24\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 28,
+  "segment_count": 230,
+  "approximate_track_length_mm": 712.37,
+  "kicad_drc_violations": 106,
+  "generated_at": "2026-08-18T18:48:26.688659+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 106,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 10,
+      "copper_edge_clearance": 9,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 15,
+      "pth_inside_courtyard": 8,
+      "silk_edge_clearance": 15,
+      "silk_over_copper": 26,
+      "silk_overlap": 21,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 28,
+      "warning": 78
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "board": "RX5808_rx5808_4button",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RX5808_rx5808_4button\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 64,
+  "segment_count": 617,
+  "approximate_track_length_mm": 926.03,
+  "kicad_drc_violations": 407,
+  "generated_at": "2026-08-18T19:43:01.613319+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 407,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 214,
+      "copper_edge_clearance": 13,
+      "courtyards_overlap": 12,
+      "lib_footprint_issues": 54,
+      "padstack": 2,
+      "silk_edge_clearance": 20,
+      "silk_over_copper": 46,
+      "silk_overlap": 43,
+      "starved_thermal": 2,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 241,
+      "warning": 166
+    }
+  }
+}

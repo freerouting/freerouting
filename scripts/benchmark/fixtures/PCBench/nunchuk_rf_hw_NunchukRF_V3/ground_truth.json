@@ -1,0 +1,30 @@
+{
+  "board": "nunchuk_rf_hw_NunchukRF_V3",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\nunchuk_rf_hw_NunchukRF_V3\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 53,
+  "segment_count": 618,
+  "approximate_track_length_mm": 1177.22,
+  "kicad_drc_violations": 348,
+  "generated_at": "2026-08-18T19:28:54.310396+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 348,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 195,
+      "copper_edge_clearance": 27,
+      "courtyards_overlap": 4,
+      "lib_footprint_issues": 44,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 66,
+      "silk_overlap": 3,
+      "starved_thermal": 1,
+      "text_height": 6
+    },
+    "by_severity": {
+      "error": 227,
+      "warning": 121
+    }
+  }
+}

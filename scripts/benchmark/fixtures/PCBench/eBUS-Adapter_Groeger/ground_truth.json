@@ -1,0 +1,26 @@
+{
+  "board": "eBUS-Adapter_Groeger",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\eBUS-Adapter_Groeger\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 82,
+  "approximate_track_length_mm": 297.47,
+  "kicad_drc_violations": 25,
+  "generated_at": "2026-08-18T18:43:40.025865+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 25,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 3,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 14,
+      "silk_edge_clearance": 3,
+      "silk_overlap": 4
+    },
+    "by_severity": {
+      "error": 4,
+      "warning": 21
+    }
+  }
+}

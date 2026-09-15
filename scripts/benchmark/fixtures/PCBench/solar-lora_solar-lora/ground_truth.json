@@ -1,0 +1,35 @@
+{
+  "board": "solar-lora_solar-lora",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\solar-lora_solar-lora\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 46,
+  "segment_count": 591,
+  "approximate_track_length_mm": 1635.78,
+  "kicad_drc_violations": 457,
+  "generated_at": "2026-08-18T19:46:35.319222+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 457,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 211,
+      "copper_edge_clearance": 5,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 64,
+      "padstack": 4,
+      "pth_inside_courtyard": 3,
+      "silk_edge_clearance": 20,
+      "silk_over_copper": 49,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 65,
+      "starved_thermal": 1,
+      "text_height": 14,
+      "text_thickness": 14
+    },
+    "by_severity": {
+      "error": 289,
+      "warning": 168
+    }
+  }
+}

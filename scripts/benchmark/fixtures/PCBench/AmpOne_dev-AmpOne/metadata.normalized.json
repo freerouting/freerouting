@@ -1,0 +1,57 @@
+{
+  "board_id": "AmpOne_dev-AmpOne",
+  "display_name": "AmpOne_dev-AmpOne",
+  "pcbench_directory": "PCBs/AmpOne_dev-AmpOne",
+  "source": "https://github.com/ohdsp/AmpOne",
+  "author": "ohdsp",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.617741+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 62,
+    "components": 164,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1156,
+    "vias": 258,
+    "track_length_mm": 3179.0,
+    "kicad_drc_violations": 559,
+    "kicad_drc_breakdown": {
+      "total_violations": 559,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 371,
+        "lib_footprint_issues": 164,
+        "silk_over_copper": 1,
+        "silk_overlap": 17,
+        "starved_thermal": 4,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 375,
+        "warning": 184
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

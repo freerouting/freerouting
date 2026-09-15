@@ -1,0 +1,32 @@
+{
+  "board": "DronPi_dronPi",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DronPi_dronPi\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 138,
+  "segment_count": 1606,
+  "approximate_track_length_mm": 2804.72,
+  "kicad_drc_violations": 875,
+  "generated_at": "2026-08-18T18:43:06.285465+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 875,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 398,
+      "courtyards_overlap": 5,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 141,
+      "silk_over_copper": 85,
+      "silk_overlap": 53,
+      "solder_mask_bridge": 163,
+      "starved_thermal": 3,
+      "text_height": 10,
+      "text_thickness": 8,
+      "track_dangling": 8
+    },
+    "by_severity": {
+      "error": 570,
+      "warning": 305
+    }
+  }
+}

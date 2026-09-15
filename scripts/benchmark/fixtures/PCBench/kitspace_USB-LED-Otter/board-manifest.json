@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_USB-LED-Otter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 78867,
+      "sha256": "8989978c471e49eac9ccd9c09352f92544e09398a80fdc7c72cedc5a5f283f38"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 59248,
+      "sha256": "0c16b0b81a9dc60fa44d9fe28e9061da2d88182f59f27de2ac485a879a4b0058"
+    },
+    "metadata_json": {
+      "bytes": 557,
+      "sha256": "67aa70060b3740a47369dfa6f6bbf12aaf75fda75282cfab6b613e8f5283b2fd"
+    },
+    "final_json": {
+      "bytes": 56550,
+      "sha256": "921603f9e54a94c7345e74a49c070b3d58ac741837c6f26d84bd99ebbfbcbbfa"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:13:09.550687+00:00"
+  }
+}

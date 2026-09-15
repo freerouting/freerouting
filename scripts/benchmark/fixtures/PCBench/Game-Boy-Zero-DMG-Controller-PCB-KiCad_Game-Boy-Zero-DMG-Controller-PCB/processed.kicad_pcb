@@ -1,0 +1,3443 @@
+
+(kicad_pcb
+  (version 20171130)
+  (host pcbnew "(5.1.12)-1")
+  (general
+    (thickness 1.6)
+    (drawings 23)
+    (tracks 228)
+    (zones 0)
+    (modules 22)
+    (nets 12))
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide))
+  (setup
+    (last_trace_width 0.1524)
+    (trace_clearance 0.1524)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.1524)
+    (via_size 0.6858)
+    (via_drill 0.3302)
+    (via_min_size 0.6858)
+    (via_min_drill 0.3302)
+    (uvia_size 0.762)
+    (uvia_drill 0.508)
+    (uvias_allowed no)
+    (uvia_min_size 0)
+    (uvia_min_drill 0)
+    (edge_width 0.15)
+    (segment_width 0.15)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 2.54 2.54)
+    (pad_drill 2.54)
+    (pad_to_mask_clearance 0.2)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x00030_80000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.0)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory "")))
+  (net 0 "")
+  (net 1 GND)
+  (net 2 "Net-(P1-Pad2)")
+  (net 3 "Net-(P1-Pad3)")
+  (net 4 "Net-(P1-Pad4)")
+  (net 5 "Net-(P1-Pad5)")
+  (net 6 "Net-(P1-Pad6)")
+  (net 7 "Net-(P1-Pad7)")
+  (net 8 "Net-(P1-Pad8)")
+  (net 9 "Net-(P1-Pad9)")
+  (net 10 "Net-(P1-Pad10)")
+  (net 11 "Net-(P1-Pad11)")
+  (net_class Default "This is the default net class."
+    (clearance 0.1524)
+    (trace_width 0.1524)
+    (via_dia 0.6858)
+    (via_drill 0.3302)
+    (uvia_dia 0.762)
+    (uvia_drill 0.508)
+    (add_net GND)
+    (add_net "Net-(P1-Pad10)")
+    (add_net "Net-(P1-Pad11)")
+    (add_net "Net-(P1-Pad2)")
+    (add_net "Net-(P1-Pad3)")
+    (add_net "Net-(P1-Pad4)")
+    (add_net "Net-(P1-Pad5)")
+    (add_net "Net-(P1-Pad6)")
+    (add_net "Net-(P1-Pad7)")
+    (add_net "Net-(P1-Pad8)")
+    (add_net "Net-(P1-Pad9)"))
+  (net_class Button ""
+    (clearance 0.1524)
+    (trace_width 0.1524)
+    (via_dia 0.6858)
+    (via_drill 0.3302)
+    (uvia_dia 0.762)
+    (uvia_drill 0.508))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613F52)
+    (tstamp 58644BF5)
+    (at 194.31 110.49)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_11
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 4.572 4.572)
+      (drill 4.572)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644BE2)
+    (at 205.486 107.442)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_10
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644BBB)
+    (at 178.562 98.552)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_9
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 5861BA03)
+    (tstamp 58644BB5)
+    (at 205.486 89.662)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_8
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 -5.08)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644BAF)
+    (at 206.756 98.552)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_7
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644B82)
+    (at 152.146 110.236)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_6
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644B7C)
+    (at 165.1 117.602)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_5
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644B76)
+    (at 156.972 112.776)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_4
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644B70)
+    (at 157.48 90.424)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_3
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644B63)
+    (at 131.064 89.408)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**_2
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module MountingHole:1pin
+    (layer F.Cu)
+    (tedit 58613EA3)
+    (tstamp 58644AEB)
+    (at 129.54 83.82)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference REF**
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 2.54 2.54)
+      (drill 2.54)
+      (layers *.Cu *.Mask)
+      (zone_connect 0)))
+  (module Socket_Strips:Socket_Strip_Straight_1x11
+    (layer F.Cu)
+    (tedit 5861EA5E)
+    (tstamp 5861B1FF)
+    (at 149.098 78.232)
+    (descr "Through hole socket strip")
+    (tags "socket strip")
+    (path /5861477A)
+    (fp_text reference P1
+      (at 0 -5.1)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X11
+      (at 0 -3.1)
+      (layer F.Fab) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.55 -1.55)
+      (end -1.55 1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -1.55)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end 1.27 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 1.55)
+      (end 0 1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 26.67 -1.27)
+      (end 1.27 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 26.67 1.27)
+      (end 26.67 -1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end 26.67 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 1.75)
+      (end 27.15 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 27.15 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 27.15 -1.75)
+      (end 27.15 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 thru_hole rect
+      (at 0 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 GND))
+    (pad 2 thru_hole oval
+      (at 2.54 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 2 "Net-(P1-Pad2)"))
+    (pad 3 thru_hole oval
+      (at 5.08 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 3 "Net-(P1-Pad3)"))
+    (pad 4 thru_hole oval
+      (at 7.62 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 4 "Net-(P1-Pad4)"))
+    (pad 5 thru_hole oval
+      (at 10.16 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 5 "Net-(P1-Pad5)"))
+    (pad 6 thru_hole oval
+      (at 12.7 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 6 "Net-(P1-Pad6)"))
+    (pad 7 thru_hole oval
+      (at 15.24 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 7 "Net-(P1-Pad7)"))
+    (pad 8 thru_hole oval
+      (at 17.78 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 8 "Net-(P1-Pad8)"))
+    (pad 9 thru_hole oval
+      (at 20.32 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 9 "Net-(P1-Pad9)"))
+    (pad 10 thru_hole oval
+      (at 22.86 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 10 "Net-(P1-Pad10)"))
+    (pad 11 thru_hole oval
+      (at 25.4 0)
+      (size 1.7272 2.032)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 11 "Net-(P1-Pad11)"))
+    (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x11.wrl
+      (offset
+        (xyz 12.69999980926514 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module GameBoy:GameBoy-DMG-BTN
+    (layer F.Cu)
+    (tedit 5861D5F6)
+    (tstamp 5861B237)
+    (at 141.986 90.678)
+    (path /58614320)
+    (attr smd)
+    (fp_text reference SW2
+      (at 0.635 -4.445)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value UP
+      (at 0 -4.572)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (pad 2 connect oval
+      (at 2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 3 "Net-(P1-Pad3)"))
+    (pad 2 connect oval
+      (at -0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 3 "Net-(P1-Pad3)"))
+    (pad 1 connect oval
+      (at -3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at -1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 0 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect oval
+      (at 0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 3 "Net-(P1-Pad3)"))
+    (pad 2 connect oval
+      (at -2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 3 "Net-(P1-Pad3)")))
+  (module GameBoy:GameBoy-DMG-BTN
+    (layer F.Cu)
+    (tedit 5861D5F6)
+    (tstamp 5861B21B)
+    (at 132.588 99.822)
+    (path /586143B6)
+    (attr smd)
+    (fp_text reference SW1
+      (at 0.635 -4.445)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value LEFT
+      (at 0 -4.572)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (pad 2 connect oval
+      (at 2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 2 "Net-(P1-Pad2)"))
+    (pad 2 connect oval
+      (at -0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 2 "Net-(P1-Pad2)"))
+    (pad 1 connect oval
+      (at -3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at -1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 0 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect oval
+      (at 0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 2 "Net-(P1-Pad2)"))
+    (pad 2 connect oval
+      (at -2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 2 "Net-(P1-Pad2)")))
+  (module GameBoy:GameBoy-DMG-BTN
+    (layer F.Cu)
+    (tedit 5861D5F6)
+    (tstamp 5861B253)
+    (at 150.876 99.822)
+    (path /58614485)
+    (attr smd)
+    (fp_text reference SW3
+      (at 0.635 -4.445)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value DOWN
+      (at 0 -4.572)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (pad 2 connect oval
+      (at 2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 5 "Net-(P1-Pad5)"))
+    (pad 2 connect oval
+      (at -0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 5 "Net-(P1-Pad5)"))
+    (pad 1 connect oval
+      (at -3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at -1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 0 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect oval
+      (at 0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 5 "Net-(P1-Pad5)"))
+    (pad 2 connect oval
+      (at -2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 5 "Net-(P1-Pad5)")))
+  (module GameBoy:GameBoy-DMG-BTN
+    (layer F.Cu)
+    (tedit 5861D5F6)
+    (tstamp 5861B26F)
+    (at 141.986 108.966)
+    (path /58614398)
+    (attr smd)
+    (fp_text reference SW4
+      (at 0.635 -4.445)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value RIGHT
+      (at 0 -4.572)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (pad 2 connect oval
+      (at 2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 4 "Net-(P1-Pad4)"))
+    (pad 2 connect oval
+      (at -0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 4 "Net-(P1-Pad4)"))
+    (pad 1 connect oval
+      (at -3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at -1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 0 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect oval
+      (at 0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 4 "Net-(P1-Pad4)"))
+    (pad 2 connect oval
+      (at -2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 4 "Net-(P1-Pad4)")))
+  (module GameBoy:GameBoy-DMG-BTN
+    (layer F.Cu)
+    (tedit 5861D5F6)
+    (tstamp 5861B313)
+    (at 193.802 80.264)
+    (path /586145D4)
+    (attr smd)
+    (fp_text reference SW7
+      (at 0.635 -4.445)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value X
+      (at 0 -4.572)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (pad 2 connect oval
+      (at 2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 8 "Net-(P1-Pad8)"))
+    (pad 2 connect oval
+      (at -0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 8 "Net-(P1-Pad8)"))
+    (pad 1 connect oval
+      (at -3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at -1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 0 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect oval
+      (at 0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 8 "Net-(P1-Pad8)"))
+    (pad 2 connect oval
+      (at -2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 8 "Net-(P1-Pad8)")))
+  (module GameBoy:GameBoy-DMG-BTN
+    (layer F.Cu)
+    (tedit 5861D5F6)
+    (tstamp 5861B32F)
+    (at 179.324 87.122)
+    (path /5861462D)
+    (attr smd)
+    (fp_text reference SW8
+      (at 0.635 -4.445)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value Y
+      (at 0 -4.572)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (pad 2 connect oval
+      (at 2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 9 "Net-(P1-Pad9)"))
+    (pad 2 connect oval
+      (at -0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 9 "Net-(P1-Pad9)"))
+    (pad 1 connect oval
+      (at -3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at -1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 0 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect oval
+      (at 0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 9 "Net-(P1-Pad9)"))
+    (pad 2 connect oval
+      (at -2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 9 "Net-(P1-Pad9)")))
+  (module GameBoy:GameBoy-DMG-BTN
+    (layer F.Cu)
+    (tedit 5861D5F6)
+    (tstamp 5861B34B)
+    (at 185.674 101.854)
+    (path /58614697)
+    (attr smd)
+    (fp_text reference SW9
+      (at 0.635 -4.445)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value B
+      (at 0 -4.572)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (pad 2 connect oval
+      (at 2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 10 "Net-(P1-Pad10)"))
+    (pad 2 connect oval
+      (at -0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 10 "Net-(P1-Pad10)"))
+    (pad 1 connect oval
+      (at -3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at -1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 0 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect oval
+      (at 0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 10 "Net-(P1-Pad10)"))
+    (pad 2 connect oval
+      (at -2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 10 "Net-(P1-Pad10)")))
+  (module GameBoy:GameBoy-DMG-BTN
+    (layer F.Cu)
+    (tedit 5861D5F6)
+    (tstamp 5861B367)
+    (at 200.152 94.996)
+    (path /586146F0)
+    (attr smd)
+    (fp_text reference SW10
+      (at 0.635 -4.445)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value A
+      (at 0 -4.572)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (pad 2 connect oval
+      (at 2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 11 "Net-(P1-Pad11)"))
+    (pad 2 connect oval
+      (at -0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 11 "Net-(P1-Pad11)"))
+    (pad 1 connect oval
+      (at -3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at -1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 3.048 1.27)
+      (size 0.381 3.048)
+      (drill
+        (offset 0 -1.27))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 1.524 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect oval
+      (at 0 3.048)
+      (size 0.381 5.588)
+      (drill
+        (offset 0 -2.54))
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect oval
+      (at 0.762 -3.048)
+      (size 0.381 5.5245)
+      (drill
+        (offset 0 2.54))
+      (layers F.Cu F.Mask)
+      (net 11 "Net-(P1-Pad11)"))
+    (pad 2 connect oval
+      (at -2.286 -2.286)
+      (size 0.381 3.81)
+      (drill
+        (offset 0 1.651))
+      (layers F.Cu F.Mask)
+      (net 11 "Net-(P1-Pad11)")))
+  (module GameBoy:GameBoy-DMG-START-SEL
+    (layer F.Cu)
+    (tedit 5861F356)
+    (tstamp 5861B2B6)
+    (at 155.702 121.666 27.5)
+    (path /5861454E)
+    (attr smd)
+    (fp_text reference SW5
+      (at -0.635 -4.445 27.5)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value SELECT
+      (at 0 -4.572 27.5)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (fp_line
+      (start 0.635 2.413)
+      (end 0.635 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start 0.635 -2.413)
+      (end 5.461 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start 5.461 2.413)
+      (end 5.461 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start 0.635 2.413)
+      (end 5.461 2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start -5.461 2.413)
+      (end -5.461 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start -5.461 -2.413)
+      (end -0.635 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start -0.635 2.413)
+      (end -0.635 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start -5.461 2.413)
+      (end -0.635 2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 2.286)
+      (end 0.762 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 0.381)
+      (end 2.667 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 2.667 2.286)
+      (end 2.667 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 2.286)
+      (end 2.667 2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 2.286)
+      (end 3.429 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 0.381)
+      (end 5.334 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 5.334 2.286)
+      (end 5.334 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 2.286)
+      (end 5.334 2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 -0.381)
+      (end 3.429 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 -2.286)
+      (end 5.334 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 5.334 -0.381)
+      (end 5.334 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 -0.381)
+      (end 5.334 -0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 -0.381)
+      (end 0.762 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 -2.286)
+      (end 2.667 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 2.667 -0.381)
+      (end 2.667 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 -0.381)
+      (end 2.667 -0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 -0.381)
+      (end -2.667 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 -2.286)
+      (end -0.762 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -0.762 -0.381)
+      (end -0.762 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 -0.381)
+      (end -0.762 -0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 2.286)
+      (end -2.667 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 0.381)
+      (end -0.762 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -0.762 2.286)
+      (end -0.762 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 2.286)
+      (end -0.762 2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 2.286)
+      (end -5.334 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 0.381)
+      (end -3.429 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -3.429 2.286)
+      (end -3.429 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 2.286)
+      (end -3.429 2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 -0.381)
+      (end -5.334 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 -2.286)
+      (end -3.429 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -3.429 -0.381)
+      (end -3.429 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 -0.381)
+      (end -3.429 -0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (pad 1 connect rect
+      (at -4.3815 1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect rect
+      (at 1.7145 1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect rect
+      (at -1.71704 -1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect rect
+      (at 4.3815 1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 6 "Net-(P1-Pad6)"))
+    (pad 2 connect rect
+      (at -1.7145 1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 6 "Net-(P1-Pad6)"))
+    (pad 2 connect rect
+      (at -4.3815 -1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 6 "Net-(P1-Pad6)"))
+    (pad 2 connect rect
+      (at 1.7145 -1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 6 "Net-(P1-Pad6)"))
+    (pad 1 connect rect
+      (at 4.37896 -1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 1 GND)))
+  (module GameBoy:GameBoy-DMG-START-SEL
+    (layer F.Cu)
+    (tedit 5861F857)
+    (tstamp 5861B2F7)
+    (at 170.942 121.666 27.5)
+    (path /58614590)
+    (attr smd)
+    (fp_text reference SW6
+      (at -0.635 -4.445 27.5)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1.27 1.27)
+          (thickness 0.1016))))
+    (fp_text value START
+      (at 1.905 -4.572 27.5)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.524 1.524)
+          (thickness 0.15))))
+    (fp_line
+      (start 0.635 2.413)
+      (end 0.635 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start 0.635 -2.413)
+      (end 5.461 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start 5.461 2.413)
+      (end 5.461 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start 0.635 2.413)
+      (end 5.461 2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start -5.461 2.413)
+      (end -5.461 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start -5.461 -2.413)
+      (end -0.635 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start -0.635 2.413)
+      (end -0.635 -2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start -5.461 2.413)
+      (end -0.635 2.413)
+      (layer F.SilkS)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 2.286)
+      (end 0.762 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 0.381)
+      (end 2.667 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 2.667 2.286)
+      (end 2.667 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 2.286)
+      (end 2.667 2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 2.286)
+      (end 3.429 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 0.381)
+      (end 5.334 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 5.334 2.286)
+      (end 5.334 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 2.286)
+      (end 5.334 2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 -0.381)
+      (end 3.429 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 -2.286)
+      (end 5.334 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 5.334 -0.381)
+      (end 5.334 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 3.429 -0.381)
+      (end 5.334 -0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 -0.381)
+      (end 0.762 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 -2.286)
+      (end 2.667 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 2.667 -0.381)
+      (end 2.667 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start 0.762 -0.381)
+      (end 2.667 -0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 -0.381)
+      (end -2.667 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 -2.286)
+      (end -0.762 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -0.762 -0.381)
+      (end -0.762 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 -0.381)
+      (end -0.762 -0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 2.286)
+      (end -2.667 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 0.381)
+      (end -0.762 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -0.762 2.286)
+      (end -0.762 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -2.667 2.286)
+      (end -0.762 2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 2.286)
+      (end -5.334 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 0.381)
+      (end -3.429 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -3.429 2.286)
+      (end -3.429 0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 2.286)
+      (end -3.429 2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 -0.381)
+      (end -5.334 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 -2.286)
+      (end -3.429 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -3.429 -0.381)
+      (end -3.429 -2.286)
+      (layer F.Cu)
+      (width 0.06604))
+    (fp_line
+      (start -5.334 -0.381)
+      (end -3.429 -0.381)
+      (layer F.Cu)
+      (width 0.06604))
+    (pad 1 connect rect
+      (at -4.3815 1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect rect
+      (at 1.7145 1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 1 connect rect
+      (at -1.71704 -1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 1 GND))
+    (pad 2 connect rect
+      (at 4.3815 1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 7 "Net-(P1-Pad7)"))
+    (pad 2 connect rect
+      (at -1.7145 1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 7 "Net-(P1-Pad7)"))
+    (pad 2 connect rect
+      (at -4.3815 -1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 7 "Net-(P1-Pad7)"))
+    (pad 2 connect rect
+      (at 1.7145 -1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 7 "Net-(P1-Pad7)"))
+    (pad 1 connect rect
+      (at 4.37896 -1.3335 27.5)
+      (size 1.905 1.905)
+      (layers F.Cu F.Mask)
+      (net 1 GND)))
+  (gr_text "DMG+ Control Panel"
+    (at 165.862 104.648)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 1.27 1.27)
+        (thickness 0.254))))
+  (gr_text flyingtoaster0
+    (at 134.62 76.708)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 1.27 1.27)
+        (thickness 0.254))))
+  (gr_text A
+    (at 174.498 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text B
+    (at 171.958 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text Y
+    (at 169.418 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text X
+    (at 166.878 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text START
+    (at 164.338 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text SEL
+    (at 161.798 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text RIGHT
+    (at 159.258 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text DOWN
+    (at 156.718 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text LEFT
+    (at 151.638 80.01 90)
+    (layer F.SilkS)
+    (tstamp 58621830)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text UP
+    (at 154.178 80.01 90)
+    (layer F.SilkS)
+    (tstamp 58621824)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_text GND
+    (at 149.098 80.01 90)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 0.762 0.762)
+        (thickness 0.1905))
+      (justify right)))
+  (gr_arc
+    (start 192.278 127)
+    (end 179.578 127)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 208.28 114.3)
+    (end 192.278 114.3)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 208.28 74.676)
+    (end 208.28 114.3)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 127 74.676)
+    (end 208.28 74.676)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 127 106.68)
+    (end 127 74.676)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 135.382 115.062)
+    (end 127 106.68)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 145.542 115.062)
+    (end 135.382 115.062)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 148.59 118.11)
+    (end 145.542 115.062)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 148.59 127)
+    (end 148.59 118.11)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (gr_line
+    (start 148.59 127)
+    (end 179.578 127)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.15))
+  (segment
+    (start 141.986 94.742)
+    (end 141.986 80.518)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 144.272 78.232)
+    (end 149.098 78.232)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F621)
+    (status 800000))
+  (segment
+    (start 141.986 80.518)
+    (end 144.272 78.232)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F61A))
+  (segment
+    (start 174.752 115.316)
+    (end 176.784 115.316)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 176.784 115.316)
+    (end 185.674 106.426)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5FB))
+  (segment
+    (start 159.512 115.316)
+    (end 162.052 117.856)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 162.052 117.856)
+    (end 159.575635 117.856)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5861F4BC))
+  (segment
+    (start 177.292 117.856)
+    (end 174.752 115.316)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 174.815635 117.856)
+    (end 177.292 117.856)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5861F4CE))
+  (segment
+    (start 153.924 113.284)
+    (end 145.796 113.284)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5E4))
+  (segment
+    (start 155.956 115.316)
+    (end 153.924 113.284)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5DD))
+  (segment
+    (start 174.752 115.316)
+    (end 159.512 115.316)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5C3))
+  (segment
+    (start 159.512 115.316)
+    (end 155.956 115.316)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5F1))
+  (segment
+    (start 185.674 106.426)
+    (end 181.356 102.108)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 181.356 102.108)
+    (end 181.356 97.028)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5A7))
+  (segment
+    (start 181.356 97.028)
+    (end 179.324 94.996)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5AD))
+  (segment
+    (start 179.324 94.996)
+    (end 179.324 91.44)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5B3))
+  (segment
+    (start 200.152 99.314)
+    (end 193.04 106.426)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 193.04 106.426)
+    (end 185.674 106.426)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F5A3))
+  (segment
+    (start 185.674 106.426)
+    (end 185.674 104.902)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 193.802 84.582)
+    (end 200.152 90.932)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 200.152 99.314)
+    (end 200.152 98.044)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 200.152 90.932)
+    (end 200.152 99.314)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F59E))
+  (segment
+    (start 179.324 91.44)
+    (end 186.182 84.582)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 186.182 84.582)
+    (end 193.802 84.582)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F598))
+  (segment
+    (start 179.324 90.17)
+    (end 179.324 91.44)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 193.802 84.582)
+    (end 193.802 83.312)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 141.986 94.742)
+    (end 146.558 94.742)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 150.876 99.06)
+    (end 150.876 104.14)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F586))
+  (segment
+    (start 146.558 94.742)
+    (end 150.876 99.06)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F57F))
+  (segment
+    (start 141.986 94.742)
+    (end 137.414 94.742)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 141.986 93.726)
+    (end 141.986 94.742)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 132.588 99.568)
+    (end 132.588 104.14)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F56C))
+  (segment
+    (start 137.414 94.742)
+    (end 132.588 99.568)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F563))
+  (segment
+    (start 150.876 104.14)
+    (end 150.876 108.204)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 150.876 108.204)
+    (end 145.796 113.284)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F53A))
+  (segment
+    (start 145.796 113.284)
+    (end 141.986 113.284)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F541))
+  (segment
+    (start 150.876 102.87)
+    (end 150.876 104.14)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 132.588 104.14)
+    (end 132.588 108.712)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1))
+  (segment
+    (start 132.588 108.712)
+    (end 137.16 113.284)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F4FA))
+  (segment
+    (start 137.16 113.284)
+    (end 141.986 113.284)
+    (width 0.1524)
+    (layer B.Cu)
+    (net 1)
+    (tstamp 5861F520))
+  (segment
+    (start 132.588 104.14)
+    (end 132.588 102.87)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 141.986 112.014)
+    (end 141.986 113.284)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 174.210443 118.461192)
+    (end 174.815635 117.856)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 158.970443 118.461192)
+    (end 159.575635 117.856)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 131.064 102.87)
+    (end 132.588 102.87)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 132.588 102.87)
+    (end 134.112 102.87)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B66))
+  (segment
+    (start 187.198 104.902)
+    (end 185.674 104.902)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 185.674 104.902)
+    (end 184.15 104.902)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B24))
+  (segment
+    (start 182.626 103.124)
+    (end 182.626 103.378)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 182.626 103.378)
+    (end 184.15 104.902)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B1C))
+  (segment
+    (start 187.198 104.902)
+    (end 188.722 103.378)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B1F))
+  (segment
+    (start 188.722 103.378)
+    (end 188.722 103.124)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B20))
+  (segment
+    (start 198.628 98.044)
+    (end 200.152 98.044)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 200.152 98.044)
+    (end 201.676 98.044)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B11))
+  (segment
+    (start 197.104 96.266)
+    (end 197.104 96.52)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 197.104 96.52)
+    (end 198.628 98.044)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B09))
+  (segment
+    (start 201.676 98.044)
+    (end 203.2 96.52)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B0C))
+  (segment
+    (start 203.2 96.52)
+    (end 203.2 96.266)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620B0D))
+  (segment
+    (start 192.278 83.312)
+    (end 193.802 83.312)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 193.802 83.312)
+    (end 195.326 83.312)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AFC))
+  (segment
+    (start 195.326 83.312)
+    (end 196.85 81.788)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AFD))
+  (segment
+    (start 196.85 81.788)
+    (end 196.85 81.534)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AFE))
+  (segment
+    (start 190.754 81.534)
+    (end 190.754 81.788)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 190.754 81.788)
+    (end 192.278 83.312)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AF9))
+  (segment
+    (start 177.8 90.17)
+    (end 179.324 90.17)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 179.324 90.17)
+    (end 180.848 90.17)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AEC))
+  (segment
+    (start 180.848 90.17)
+    (end 182.372 88.646)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AED))
+  (segment
+    (start 182.372 88.646)
+    (end 182.372 88.392)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AEE))
+  (segment
+    (start 176.276 88.392)
+    (end 176.276 88.646)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 176.276 88.646)
+    (end 177.8 90.17)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AE9))
+  (segment
+    (start 143.51 112.014)
+    (end 141.986 112.014)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 141.986 112.014)
+    (end 140.462 112.014)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620ADE))
+  (segment
+    (start 129.54 101.092)
+    (end 129.54 101.346)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 129.54 101.346)
+    (end 131.064 102.87)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AC2))
+  (segment
+    (start 134.112 102.87)
+    (end 135.636 101.346)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AC5))
+  (segment
+    (start 135.636 101.346)
+    (end 135.636 101.092)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AC6))
+  (segment
+    (start 138.938 110.236)
+    (end 138.938 110.49)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 138.938 110.49)
+    (end 140.462 112.014)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AB2))
+  (segment
+    (start 143.51 112.014)
+    (end 145.034 110.49)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AB5))
+  (segment
+    (start 145.034 110.49)
+    (end 145.034 110.236)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AB6))
+  (segment
+    (start 149.352 102.87)
+    (end 150.876 102.87)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 150.876 102.87)
+    (end 152.4 102.87)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AAD))
+  (segment
+    (start 152.4 102.87)
+    (end 153.924 101.346)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AAE))
+  (segment
+    (start 153.924 101.346)
+    (end 153.924 101.092)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AAF))
+  (segment
+    (start 147.828 101.092)
+    (end 147.828 101.346)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 147.828 101.346)
+    (end 149.352 102.87)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58620AAA))
+  (segment
+    (start 140.462 93.726)
+    (end 141.986 93.726)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 141.986 93.726)
+    (end 143.51 93.726)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5861FBD1))
+  (segment
+    (start 143.51 93.726)
+    (end 145.034 92.202)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5861FBD2))
+  (segment
+    (start 145.034 92.202)
+    (end 145.034 91.948)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5861FBD3))
+  (segment
+    (start 138.938 91.948)
+    (end 138.938 92.202)
+    (width 0.25)
+    (layer F.Cu)
+    (net 1))
+  (segment
+    (start 138.938 92.202)
+    (end 140.462 93.726)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5861FBCE))
+  (segment
+    (start 152.431304 124.87198)
+    (end 154.94 125.73)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 586216BE))
+  (segment
+    (start 161.036 118.872)
+    (end 158.970443 118.461192)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 586216C5))
+  (segment
+    (start 162.052 120.65)
+    (end 161.036 118.872)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 586216C3))
+  (segment
+    (start 161.544 122.174)
+    (end 162.052 120.65)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 586216C1))
+  (segment
+    (start 154.94 125.73)
+    (end 161.544 122.174)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 586216BF))
+  (segment
+    (start 157.838522 122.057161)
+    (end 155.956 121.412)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621699))
+  (segment
+    (start 155.448 121.666)
+    (end 153.563225 121.276012)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5862169B))
+  (segment
+    (start 155.956 121.412)
+    (end 155.448 121.666)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 5862169A))
+  (segment
+    (start 158.970443 118.461192)
+    (end 157.838522 122.057161)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621696))
+  (segment
+    (start 167.671304 124.87198)
+    (end 169.672 125.73)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621720))
+  (segment
+    (start 176.022 118.872)
+    (end 174.210443 118.461192)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621727))
+  (segment
+    (start 177.292 121.158)
+    (end 176.022 118.872)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621725))
+  (segment
+    (start 176.784 122.174)
+    (end 177.292 121.158)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621723))
+  (segment
+    (start 169.672 125.73)
+    (end 176.784 122.174)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621721))
+  (segment
+    (start 173.078522 122.057161)
+    (end 171.196 121.666)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621710))
+  (segment
+    (start 170.688 121.92)
+    (end 168.803225 121.276012)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621712))
+  (segment
+    (start 171.196 121.666)
+    (end 170.688 121.92)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621711))
+  (segment
+    (start 174.210443 118.461192)
+    (end 173.078522 122.057161)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 58621703))
+  (segment
+    (start 132.588 96.774)
+    (end 132.588 96.012)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 151.638 87.376)
+    (end 151.638 78.232)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 58681298))
+  (segment
+    (start 143.51 95.504)
+    (end 151.638 87.376)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 58681296))
+  (segment
+    (start 133.096 95.504)
+    (end 143.51 95.504)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 58681295))
+  (segment
+    (start 132.588 96.012)
+    (end 133.096 95.504)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 58681294))
+  (segment
+    (start 131.826 96.774)
+    (end 132.588 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 132.588 96.774)
+    (end 133.35 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 58681292))
+  (segment
+    (start 133.35 96.774)
+    (end 134.112 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 134.112 96.774)
+    (end 134.874 97.536)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 58620AD0))
+  (segment
+    (start 131.826 96.774)
+    (end 131.064 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2))
+  (segment
+    (start 131.064 96.774)
+    (end 130.302 97.536)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 58620ACB))
+  (segment
+    (start 141.986 87.63)
+    (end 141.986 79.502)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3))
+  (segment
+    (start 154.178 76.962)
+    (end 154.178 78.232)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 5868128D))
+  (segment
+    (start 153.416 76.2)
+    (end 154.178 76.962)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 5868128C))
+  (segment
+    (start 145.288 76.2)
+    (end 153.416 76.2)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 5868128A))
+  (segment
+    (start 141.986 79.502)
+    (end 145.288 76.2)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 58681288))
+  (segment
+    (start 142.748 87.63)
+    (end 143.51 87.63)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3))
+  (segment
+    (start 143.51 87.63)
+    (end 144.272 88.392)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 5861FBCB))
+  (segment
+    (start 141.224 87.63)
+    (end 141.986 87.63)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3))
+  (segment
+    (start 141.986 87.63)
+    (end 142.748 87.63)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 58681286))
+  (segment
+    (start 141.224 87.63)
+    (end 140.462 87.63)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3))
+  (segment
+    (start 140.462 87.63)
+    (end 139.7 88.392)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 5861FBC6))
+  (segment
+    (start 156.718 78.232)
+    (end 156.718 83.058)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 141.986 97.79)
+    (end 156.718 83.058)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4)
+    (tstamp 5868129E))
+  (segment
+    (start 141.986 97.79)
+    (end 141.986 105.918)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 142.748 105.918)
+    (end 141.986 105.918)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 141.986 105.918)
+    (end 141.224 105.918)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4)
+    (tstamp 5868129C))
+  (segment
+    (start 142.748 105.918)
+    (end 143.51 105.918)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 143.51 105.918)
+    (end 144.272 106.68)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4)
+    (tstamp 58620AD8))
+  (segment
+    (start 139.7 106.68)
+    (end 139.7 106.426)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4))
+  (segment
+    (start 139.7 106.426)
+    (end 140.208 105.918)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4)
+    (tstamp 58620ABE))
+  (segment
+    (start 140.208 105.918)
+    (end 141.224 105.918)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 4)
+    (tstamp 58620ABF))
+  (segment
+    (start 150.876 96.774)
+    (end 150.876 89.662)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5))
+  (segment
+    (start 159.258 81.28)
+    (end 159.258 78.232)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5)
+    (tstamp 5861F23D))
+  (segment
+    (start 150.876 89.662)
+    (end 159.258 81.28)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5)
+    (tstamp 5861F231))
+  (segment
+    (start 150.114 96.774)
+    (end 150.876 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5))
+  (segment
+    (start 150.876 96.774)
+    (end 151.638 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5)
+    (tstamp 5861F22F))
+  (segment
+    (start 150.114 96.774)
+    (end 149.352 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5))
+  (segment
+    (start 149.352 96.774)
+    (end 148.59 97.536)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5)
+    (tstamp 58620B2C))
+  (segment
+    (start 153.162 97.536)
+    (end 153.162 97.282)
+    (width 0.25)
+    (layer F.Cu)
+    (net 5))
+  (segment
+    (start 153.162 97.282)
+    (end 152.654 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5)
+    (tstamp 58620AA6))
+  (segment
+    (start 152.654 96.774)
+    (end 151.638 96.774)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 5)
+    (tstamp 58620AA7))
+  (segment
+    (start 161.798 78.232)
+    (end 161.798 112.268)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6))
+  (segment
+    (start 156.607038 117.458962)
+    (end 156.607038 119.691503)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 5861F3C6))
+  (segment
+    (start 161.798 112.268)
+    (end 156.607038 117.458962)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 5861F3C4))
+  (segment
+    (start 154.796962 123.640497)
+    (end 156.718 124.206)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 586216B0))
+  (segment
+    (start 159.512 122.682)
+    (end 160.20418 120.825677)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 586216B3))
+  (segment
+    (start 156.718 124.206)
+    (end 159.512 122.682)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 586216B1))
+  (segment
+    (start 151.19982 122.506323)
+    (end 151.892 120.396)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 586216A1))
+  (segment
+    (start 154.178 119.126)
+    (end 156.607038 119.691503)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 586216A4))
+  (segment
+    (start 151.892 120.396)
+    (end 154.178 119.126)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 586216A2))
+  (segment
+    (start 151.19982 122.506323)
+    (end 154.796962 123.640497)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 6)
+    (tstamp 5862169E))
+  (segment
+    (start 164.338 78.232)
+    (end 164.338 112.182465)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7))
+  (segment
+    (start 164.338 112.182465)
+    (end 171.847038 119.691503)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7)
+    (tstamp 5861F3FF))
+  (segment
+    (start 166.43982 122.506323)
+    (end 167.132 120.396)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7)
+    (tstamp 5862172B))
+  (segment
+    (start 170.18 118.872)
+    (end 171.847038 119.691503)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7)
+    (tstamp 5862172E))
+  (segment
+    (start 167.132 120.396)
+    (end 170.18 118.872)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7)
+    (tstamp 5862172C))
+  (segment
+    (start 170.036962 123.640497)
+    (end 171.958 124.206)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7)
+    (tstamp 58621715))
+  (segment
+    (start 174.498 122.936)
+    (end 175.44418 120.825677)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7)
+    (tstamp 58621718))
+  (segment
+    (start 171.958 124.206)
+    (end 174.498 122.936)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7)
+    (tstamp 58621716))
+  (segment
+    (start 166.43982 122.506323)
+    (end 170.036962 123.640497)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 7)
+    (tstamp 58621706))
+  (segment
+    (start 193.802 77.216)
+    (end 193.802 76.708)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 166.878 77.216)
+    (end 166.878 78.232)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8)
+    (tstamp 5861F27A))
+  (segment
+    (start 168.148 75.946)
+    (end 166.878 77.216)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8)
+    (tstamp 5861F278))
+  (segment
+    (start 193.04 75.946)
+    (end 168.148 75.946)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8)
+    (tstamp 5861F273))
+  (segment
+    (start 193.802 76.708)
+    (end 193.04 75.946)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8)
+    (tstamp 5861F26D))
+  (segment
+    (start 193.04 77.216)
+    (end 193.802 77.216)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 193.802 77.216)
+    (end 194.564 77.216)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8)
+    (tstamp 5861F26B))
+  (segment
+    (start 194.564 77.216)
+    (end 195.326 77.216)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 195.326 77.216)
+    (end 196.088 77.978)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8)
+    (tstamp 58620AF4))
+  (segment
+    (start 193.04 77.216)
+    (end 192.278 77.216)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8))
+  (segment
+    (start 192.278 77.216)
+    (end 191.516 77.978)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 8)
+    (tstamp 58620AF1))
+  (segment
+    (start 179.324 84.074)
+    (end 179.324 78.74)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9))
+  (segment
+    (start 170.434 76.708)
+    (end 169.418 77.724)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9)
+    (tstamp 5861F265))
+  (segment
+    (start 177.292 76.708)
+    (end 170.434 76.708)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9)
+    (tstamp 5861F261))
+  (segment
+    (start 179.324 78.74)
+    (end 177.292 76.708)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9)
+    (tstamp 5861F25A))
+  (segment
+    (start 169.418 77.724)
+    (end 169.418 78.232)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9)
+    (tstamp 5861F267))
+  (segment
+    (start 180.086 84.074)
+    (end 179.324 84.074)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9))
+  (segment
+    (start 179.324 84.074)
+    (end 178.562 84.074)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9)
+    (tstamp 5861F258))
+  (segment
+    (start 180.086 84.074)
+    (end 180.848 84.074)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9))
+  (segment
+    (start 180.848 84.074)
+    (end 181.61 84.836)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9)
+    (tstamp 58620AE4))
+  (segment
+    (start 178.562 84.074)
+    (end 177.8 84.074)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9))
+  (segment
+    (start 177.8 84.074)
+    (end 177.038 84.836)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 9)
+    (tstamp 58620AE1))
+  (segment
+    (start 171.958 78.232)
+    (end 171.958 89.408)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10))
+  (segment
+    (start 185.674 96.266)
+    (end 185.674 98.806)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10)
+    (tstamp 5861F2E6))
+  (segment
+    (start 184.658 95.25)
+    (end 185.674 96.266)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10)
+    (tstamp 5861F2E3))
+  (segment
+    (start 177.8 95.25)
+    (end 184.658 95.25)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10)
+    (tstamp 5861F2DD))
+  (segment
+    (start 171.958 89.408)
+    (end 177.8 95.25)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10)
+    (tstamp 5861F2D0))
+  (segment
+    (start 186.436 98.806)
+    (end 185.674 98.806)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10))
+  (segment
+    (start 185.674 98.806)
+    (end 184.912 98.806)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10)
+    (tstamp 5861F2EA))
+  (segment
+    (start 186.436 98.806)
+    (end 187.198 98.806)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10))
+  (segment
+    (start 187.198 98.806)
+    (end 187.96 99.568)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10)
+    (tstamp 58620B17))
+  (segment
+    (start 184.912 98.806)
+    (end 184.15 98.806)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10))
+  (segment
+    (start 184.15 98.806)
+    (end 183.388 99.568)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 10)
+    (tstamp 58620B14))
+  (segment
+    (start 200.152 91.948)
+    (end 200.152 91.694)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11))
+  (segment
+    (start 174.498 91.186)
+    (end 174.498 78.232)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 5861F2C7))
+  (segment
+    (start 178.054 94.742)
+    (end 174.498 91.186)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 5861F2C1))
+  (segment
+    (start 181.61 94.742)
+    (end 178.054 94.742)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 5861F2B3))
+  (segment
+    (start 184.912 91.44)
+    (end 181.61 94.742)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 5861F2AA))
+  (segment
+    (start 199.898 91.44)
+    (end 184.912 91.44)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 5861F2A9))
+  (segment
+    (start 200.152 91.694)
+    (end 199.898 91.44)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 5861F2A8))
+  (segment
+    (start 200.914 91.948)
+    (end 200.152 91.948)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11))
+  (segment
+    (start 200.152 91.948)
+    (end 199.39 91.948)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 5861F2A6))
+  (segment
+    (start 200.914 91.948)
+    (end 201.676 91.948)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11))
+  (segment
+    (start 201.676 91.948)
+    (end 202.438 92.71)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 58620B04))
+  (segment
+    (start 199.39 91.948)
+    (end 198.628 91.948)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11))
+  (segment
+    (start 198.628 91.948)
+    (end 197.866 92.71)
+    (width 0.1524)
+    (layer F.Cu)
+    (net 11)
+    (tstamp 58620B01))
+  (via
+    (at 162.052 117.856)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 177.292 117.856)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 185.674 106.426)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 200.152 99.314)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 179.324 91.44)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 193.802 84.582)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 141.986 94.742)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 150.876 104.14)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 132.588 104.14)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1))
+  (via
+    (at 141.986 113.284)
+    (size 0.6858)
+    (drill 0.3302)
+    (layers F.Cu B.Cu)
+    (net 1)))

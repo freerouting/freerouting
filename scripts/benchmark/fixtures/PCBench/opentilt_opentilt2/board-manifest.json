@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "opentilt_opentilt2",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 60704,
+      "sha256": "5b9482d7f179acd27c1905b40aeafa03b6c36e6f5e24b917b70d3e499e5a1e27"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 35074,
+      "sha256": "8589603397433e80f6c1edb3b8ea5ca0de4f3fbf543e5b3c656fb549d5b89c32"
+    },
+    "metadata_json": {
+      "bytes": 445,
+      "sha256": "f0bb9223baeabd84aa4a2ec7242a5867df9c0e8976b35b6c47356754d0838abb"
+    },
+    "final_json": {
+      "bytes": 30619,
+      "sha256": "e90982455d7aec835cb31c360a291d46d1688604238d26ae0e5832872a9aecd6"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:30:27.659743+00:00"
+  }
+}

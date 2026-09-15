@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "makerspace-emonth_resistor_board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 177947,
+      "sha256": "8a31b77d54f23288d5ae862f68e2763fbcbaac0807debbd258b0e2f06298a0e5"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 114974,
+      "sha256": "eedf35a85fffd6636a68f0d4968e51b16a42e846345f3a85acaeebf9147526b9"
+    },
+    "metadata_json": {
+      "bytes": 710,
+      "sha256": "79b266038e749c08987ef566ac6bfe71bbbbeec0eae54480ea5255a2709006f3"
+    },
+    "final_json": {
+      "bytes": 48234,
+      "sha256": "cdc82ef63efd4b39dd456cdba5f6a467627dc118ee9f3000da74e82300eebe4c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:19:52.882046+00:00"
+  }
+}

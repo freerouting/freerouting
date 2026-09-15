@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "DSKY-alarm-panel-replica_DSKY_alarm",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 286910,
+      "sha256": "a676a2c5726a3c5d4771cb11002fecb538bcb6012a7c247b94164802adf99adf"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 361938,
+      "sha256": "03d87b16df25df937390723a27bd8b73b7f306219a25e137c9a3d2d8cd1e85df"
+    },
+    "metadata_json": {
+      "bytes": 654,
+      "sha256": "b65721b78d0c9a34c035c0c28194ddd5e79729045fc62b3e41f5e5ca65c9d7d9"
+    },
+    "final_json": {
+      "bytes": 178047,
+      "sha256": "6a99e19fad21b9a00270a84ace7d4a32d40fa7e1b4b085fd31668a4dc5732940"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:43:11.167633+00:00"
+  }
+}

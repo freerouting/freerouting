@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Theia_Theia",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 81973,
+      "sha256": "941165d6c4cc0c17191668696b3e1f621790b659951877fd61907edcb077a2b6"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 40199,
+      "sha256": "ac43c8d0a2b2aab03c4ba5c0b336953747bb403125f8428a048d0b1f69fa9ede"
+    },
+    "metadata_json": {
+      "bytes": 672,
+      "sha256": "3daaebdd2d5c56945b6e2469191b9b6c18f1d6ba083344c493a2a0bfeb1886ce"
+    },
+    "final_json": {
+      "bytes": 32014,
+      "sha256": "477bd3c2e58bc6ffbd6da40bd3d6b86b8488f407a4d0db0e1fcd95edb74f7be8"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:51:52.076786+00:00"
+  }
+}

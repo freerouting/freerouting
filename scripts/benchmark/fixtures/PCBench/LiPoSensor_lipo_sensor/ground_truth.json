@@ -1,0 +1,30 @@
+{
+  "board": "LiPoSensor_lipo_sensor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LiPoSensor_lipo_sensor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 12,
+  "segment_count": 275,
+  "approximate_track_length_mm": 460.29,
+  "kicad_drc_violations": 142,
+  "generated_at": "2026-08-18T19:17:01.972402+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 142,
+    "unconnected_count": 6,
+    "by_type": {
+      "clearance": 44,
+      "copper_edge_clearance": 18,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 31,
+      "silk_edge_clearance": 28,
+      "silk_over_copper": 1,
+      "solder_mask_bridge": 17,
+      "starved_thermal": 1,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 81,
+      "warning": 61
+    }
+  }
+}

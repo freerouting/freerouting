@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "xwhatits-capsense-controller_amkey-usb",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 331243,
+      "sha256": "4ffda584f75a8f6984b082b622fa6d47039734ba64957e2dcfabefc8b76e5b14"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 161424,
+      "sha256": "6ab300f5cd71a7545d9832d2a864ade273427f97e1cae9e6d6f035385d5890cb"
+    },
+    "metadata_json": {
+      "bytes": 725,
+      "sha256": "ce52261daa8c6ee04852c7cf2e5a1671af739da50963fb7cd53297d325cf1565"
+    },
+    "final_json": {
+      "bytes": 193084,
+      "sha256": "eef7a039bccb39a8a46e61a2f3a5bdf31e02b7330ce4b0e4b706fd9b7f31cf79"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:58:04.749482+00:00"
+  }
+}

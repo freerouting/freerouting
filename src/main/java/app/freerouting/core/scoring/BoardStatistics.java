@@ -1,25 +1,30 @@
 package app.freerouting.core.scoring;
 
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.ComponentOutline;
-import app.freerouting.board.ConductionArea;
-import app.freerouting.board.DrillItem;
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.Pin;
-import app.freerouting.board.PolylineTrace;
-import app.freerouting.board.Trace;
-import app.freerouting.board.Unit;
-import app.freerouting.board.Via;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.items.ComponentOutline;
+import app.freerouting.board.model.items.ConductionArea;
+import app.freerouting.board.model.items.DrillItem;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Unit;
+import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.constants.Constants;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.Line;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.gui.workspace.progress.RatsNest;
 import app.freerouting.io.FileFormat;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.BoardRules;
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.OptimizerScoreSettings;
+import app.freerouting.settings.RouterScoreSettings;
+import app.freerouting.settings.RouterSettings;
+import app.freerouting.settings.RoutingCostSettings;
+import app.freerouting.settings.sources.DefaultSettings;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import com.google.gson.annotations.SerializedName;
@@ -73,6 +78,12 @@ public class BoardStatistics implements Serializable {
   public BoardStatisticsClearanceViolations clearanceViolations =
       new BoardStatisticsClearanceViolations();
 
+  @SerializedName("difficulty")
+  public BoardStatisticsDifficulty difficulty = new BoardStatisticsDifficulty();
+
+  @SerializedName("bounds")
+  public BoardStatisticsBounds bounds = new BoardStatisticsBounds();
+
   @SerializedName("fanout")
   public BoardStatisticsFanout fanout = new BoardStatisticsFanout();
 
@@ -104,7 +115,7 @@ public class BoardStatistics implements Serializable {
    * Creates board statistics with optional clearance and connection (incomplete) analysis.
    *
    * @param includeConnections when {@code false}, skips {@code calculateAllIncompletes()} — use
-   *     when a {@link app.freerouting.gui.session.RatsNest} will be created immediately after load
+   *     when a {@link RatsNest} will be created immediately after load
    */
   public BoardStatistics(
       BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {
@@ -150,22 +161,22 @@ public class BoardStatistics implements Serializable {
     this.items.otherCount = 0;
     Iterator<UndoableObjects.UndoableObjectNode> it = board.itemList.startReadObject();
     for (; ; ) {
-      Item currItem = (Item) board.itemList.readObject(it);
-      if (currItem == null) {
+      Item currentItem = (Item) board.itemList.readObject(it);
+      if (currentItem == null) {
         break;
       }
       this.items.totalCount++;
-      if (currItem instanceof Trace) {
+      if (currentItem instanceof Trace) {
         this.items.traceCount++;
-      } else if (currItem instanceof Via) {
+      } else if (currentItem instanceof Via) {
         this.items.viaCount++;
-      } else if (currItem instanceof ConductionArea) {
+      } else if (currentItem instanceof ConductionArea) {
         this.items.conductionAreaCount++;
-      } else if (currItem instanceof Pin) {
+      } else if (currentItem instanceof Pin) {
         this.items.pinCount++;
-      } else if (currItem instanceof DrillItem) {
+      } else if (currentItem instanceof DrillItem) {
         this.items.drillItemCount++;
-      } else if (currItem instanceof ComponentOutline) {
+      } else if (currentItem instanceof ComponentOutline) {
         this.items.componentOutlineCount++;
       } else {
         this.items.otherCount++;
@@ -179,7 +190,7 @@ public class BoardStatistics implements Serializable {
     this.pads.totalCount = board.getPins().size();
 
     // Nets
-    this.nets.totalCount = board.rules.nets.maxNetNo();
+    this.nets.totalCount = board.rules.nets.maxNetNumber();
     this.nets.classCount = board.rules.netClasses.count();
 
     // Traces
@@ -196,6 +207,25 @@ public class BoardStatistics implements Serializable {
     double boardUnitToMmFactor =
         Unit.scale(1.0, board.communication.unit, Unit.MM)
             / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    double boardUnitToUmFactor =
+        Unit.scale(1.0, board.communication.unit, Unit.UM)
+            / (board.communication.resolution > 0 ? board.communication.resolution : 1);
+    this.board.areaCm2 =
+        (float)
+            (this.board.size.width
+                * boardUnitToMmFactor
+                * this.board.size.height
+                * boardUnitToMmFactor
+                / 100.0);
+    this.difficulty.pinCount = this.items.pinCount;
+    this.difficulty.signalLayerCount = this.layers.signalCount;
+    this.difficulty.complexityC =
+        Math.max(1, this.difficulty.pinCount * this.difficulty.signalLayerCount);
+    this.difficulty.boardAreaCm2 = this.board.areaCm2;
+    // D is the scoring size scale, not an ETA. It equals C so via/bend/DRC
+    // penalties stay comparable across small and large boards.
+    this.difficulty.difficultyD = (float) this.difficulty.complexityC;
+    this.bounds = BoardStatisticsBoundsCalculator.calculate(board);
     this.traces.totalLengthMm = (float) (this.traces.totalLength * boardUnitToMmFactor);
     if (this.traces.totalCount > 0) {
       this.traces.averageLength = this.traces.totalLength / this.traces.totalCount;
@@ -216,7 +246,7 @@ public class BoardStatistics implements Serializable {
           this.traces.totalSegmentCount += cornerCount - 1;
         }
 
-        for (Line line : polyline.arr) {
+        for (Line line : polyline.lines) {
           FloatPoint a = line.a.toFloat();
           FloatPoint b = line.b.toFloat();
           float length = (float) Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
@@ -236,20 +266,20 @@ public class BoardStatistics implements Serializable {
     int defaultClearanceClass = BoardRules.defaultClearanceClass();
     Iterator<UndoableObjects.UndoableObjectNode> it2 = board.itemList.startReadObject();
     for (; ; ) {
-      UndoableObjects.Storable currItem = board.itemList.readObject(it2);
-      if (currItem == null) {
+      UndoableObjects.Storable currentItem = board.itemList.readObject(it2);
+      if (currentItem == null) {
         break;
       }
-      if (currItem instanceof Trace currTrace) {
-        FixedState fixedState = currTrace.getFixedState();
+      if (currentItem instanceof Trace currentTrace) {
+        FixedState fixedState = currentTrace.getFixedState();
         if (fixedState == FixedState.UNFIXED || fixedState == FixedState.SHOVE_FIXED) {
           double weightedTraceLength =
-              currTrace.getLength()
-                  * (currTrace.getHalfWidth()
+              currentTrace.getLength()
+                  * (currentTrace.getHalfWidth()
                       + board.clearanceValue(
-                          currTrace.clearanceClassNo(),
+                          currentTrace.clearanceClassIndex(),
                           defaultClearanceClass,
-                          currTrace.getLayer()));
+                          currentTrace.getLayer()));
           if (fixedState == FixedState.SHOVE_FIXED) {
             // to produce less violations with pin exit directions.
             weightedTraceLength /= 2;
@@ -288,14 +318,14 @@ public class BoardStatistics implements Serializable {
           // Now classify each bend by angle
           for (int i = 1; i < cornerCount - 1; i++) {
             FloatPoint prev = polyline.corner(i - 1).toFloat();
-            FloatPoint curr = polyline.corner(i).toFloat();
+            FloatPoint current = polyline.corner(i).toFloat();
             FloatPoint next = polyline.corner(i + 1).toFloat();
 
             // Calculate vectors for the two segments
-            double dx1 = curr.x - prev.x;
-            double dy1 = curr.y - prev.y;
-            double dx2 = next.x - curr.x;
-            double dy2 = next.y - curr.y;
+            double dx1 = current.x - prev.x;
+            double dy1 = current.y - prev.y;
+            double dx2 = next.x - current.x;
+            double dy2 = next.y - current.y;
 
             // Calculate the angle between the two segments
             double angle = Math.abs(Math.toDegrees(Math.atan2(dy2, dx2) - Math.atan2(dy1, dx1)));
@@ -333,9 +363,42 @@ public class BoardStatistics implements Serializable {
 
     if (includeClearanceViolations) {
       var clearanceDrc = new app.freerouting.drc.DesignRulesChecker(board, null);
-      this.clearanceViolations.totalCount = clearanceDrc.getAllClearanceViolations().size();
+      java.util.Collection<app.freerouting.drc.ClearanceViolation> violationsList =
+          clearanceDrc.getAllClearanceViolations();
+      this.clearanceViolations.totalCount = violationsList.size();
+      if (!violationsList.isEmpty()) {
+        double minViolation = Double.MAX_VALUE;
+        double maxViolation = 0.0;
+        double sumViolation = 0.0;
+        for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
+          double shortfall = Math.max(0.0, cv.expectedClearance - cv.actualClearance);
+          double shortfallUm = shortfall * boardUnitToUmFactor;
+          minViolation = Math.min(minViolation, shortfallUm);
+          maxViolation = Math.max(maxViolation, shortfallUm);
+          sumViolation += shortfallUm;
+        }
+        this.clearanceViolations.totalViolationUm = sumViolation;
+        this.clearanceViolations.minViolationUm = minViolation;
+        this.clearanceViolations.maxViolationUm = maxViolation;
+        this.clearanceViolations.avgViolationUm = sumViolation / violationsList.size();
+      } else {
+        this.clearanceViolations.totalViolationUm = 0.0;
+        this.clearanceViolations.minViolationUm = 0.0;
+        this.clearanceViolations.maxViolationUm = 0.0;
+        this.clearanceViolations.avgViolationUm = 0.0;
+      }
+      this.clearanceViolations.preExistingCount = board.preExistingClearanceViolationsCount;
+      this.clearanceViolations.routerIntroducedCount =
+          Math.max(
+              0, this.clearanceViolations.totalCount - board.preExistingClearanceViolationsCount);
     } else {
       this.clearanceViolations.totalCount = 0;
+      this.clearanceViolations.preExistingCount = 0;
+      this.clearanceViolations.routerIntroducedCount = 0;
+      this.clearanceViolations.totalViolationUm = 0.0;
+      this.clearanceViolations.minViolationUm = 0.0;
+      this.clearanceViolations.maxViolationUm = 0.0;
+      this.clearanceViolations.avgViolationUm = 0.0;
     }
 
     // Convert all length values from board.communication.unit to the preferred unit
@@ -384,8 +447,8 @@ public class BoardStatistics implements Serializable {
     for (Pin pin : smdPins) {
       if (pin.netCount() > 0) {
         total++;
-        int netNo = pin.getNetNo(0);
-        if (pin.getUnconnectedSet(netNo).isEmpty()) {
+        int netNumber = pin.getNetNumber(0);
+        if (pin.getUnconnectedSet(netNumber).isEmpty()) {
           alreadyConnected++;
         }
         if (isPinEscaped(pin)) {
@@ -566,7 +629,7 @@ public class BoardStatistics implements Serializable {
    * Calculates the score/cost of the board based on the given scoring settings. Higher score means
    * better board.
    */
-  public float calculateScore(ScoringSettings scoringSettings) {
+  public float calculateScore(RoutingCostSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     float penalties =
         this.connections.incompleteCount * scoringSettings.unroutedNetPenalty
@@ -588,12 +651,12 @@ public class BoardStatistics implements Serializable {
   }
 
   /** Returns the maximum score for the supplied scoring settings. */
-  public float getMaximumScore(ScoringSettings scoringSettings) {
+  public float getMaximumScore(RoutingCostSettings scoringSettings) {
     return this.connections.maximumCount * scoringSettings.unroutedNetPenalty;
   }
 
-  /** Returns the score normalized to a range from zero to one thousand. */
-  public float getNormalizedScore(ScoringSettings scoringSettings) {
+  /** Returns the legacy score normalized to a range from zero to one thousand. */
+  private float getLegacyNormalizedScore(RoutingCostSettings scoringSettings) {
     float maximumScore = getMaximumScore(scoringSettings);
     if (maximumScore <= 0f) {
       // Guard against division by zero and negative maximum scores (e.g. boards with no
@@ -604,6 +667,179 @@ public class BoardStatistics implements Serializable {
       return 0f;
     }
     return Math.max(0, calculateScore(scoringSettings) / maximumScore) * 1000;
+  }
+
+  /** Returns the router score normalized to a range from zero to one thousand. */
+  public float getRouterScore(RoutingCostSettings scoringSettings) {
+    return getLegacyNormalizedScore(scoringSettings);
+  }
+
+  /** Returns the configured router score normalized to a range from zero to one thousand. */
+  public float getRouterScore(RouterSettings routerSettings) {
+    if (routerSettings == null
+        || routerSettings.routerScoring == null
+        || routerSettings.routerScoring.version
+            != app.freerouting.settings.RouterScoringVersion.V2_CONTINUOUS) {
+      return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
+    }
+    return getV2RouterScore(routerSettings.routerScoring);
+  }
+
+  private float getV2RouterScore(RouterScoreSettings settings) {
+    ensureDifficulty();
+    double difficulty =
+        this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
+    double connections =
+        this.connections.maximumCount != null ? Math.max(0, this.connections.maximumCount) : 0;
+    double incomplete =
+        this.connections.incompleteCount != null
+            ? Math.max(0, this.connections.incompleteCount)
+            : 0;
+    double violationCount =
+        this.clearanceViolations.totalCount != null
+            ? Math.max(0, this.clearanceViolations.totalCount)
+            : 0;
+    double violationDepth =
+        this.clearanceViolations.totalViolationUm != null
+            ? Math.max(0.0, this.clearanceViolations.totalViolationUm)
+            : 0.0;
+    double split =
+        Math.min(1.0, Math.max(0.0, valueOrDefault(settings.unroutedFreeFraction, 0.5f)));
+    double firstHalfWeight = valueOrDefault(settings.unroutedFirstHalfWeight, 1000.0f / 3.0f);
+    double secondHalfWeight = valueOrDefault(settings.unroutedSecondHalfWeight, 2000.0f / 3.0f);
+    double openFraction = connections > 0 ? incomplete / connections : 0.0;
+    double firstHalfOpen;
+    double secondHalfOpen;
+    if (connections <= 0) {
+      firstHalfOpen = 0.0;
+      secondHalfOpen = 0.0;
+    } else if (split <= 0.0) {
+      firstHalfOpen = 0.0;
+      secondHalfOpen = openFraction;
+    } else if (split >= 1.0) {
+      firstHalfOpen = openFraction;
+      secondHalfOpen = 0.0;
+    } else {
+      firstHalfOpen = Math.min(1.0, Math.max(0.0, (openFraction - split) / (1.0 - split)));
+      secondHalfOpen = Math.min(1.0, openFraction / split);
+    }
+    double unroutedPenalty = firstHalfWeight * firstHalfOpen + secondHalfWeight * secondHalfOpen;
+    double drcPenalty =
+        valueOrDefault(settings.clearanceViolationCountWeight, 25.0f) * violationCount / difficulty;
+    double depthScale =
+        Math.max(1.0, valueOrDefault(settings.clearanceViolationDepthScale, 1000.0f));
+    drcPenalty +=
+        valueOrDefault(settings.clearanceViolationDepthWeight, 300.0f)
+            * violationDepth
+            / depthScale
+            / difficulty;
+    return (float) Math.max(0.0, 1000.0 - unroutedPenalty - drcPenalty);
+  }
+
+  /**
+   * Ensures that difficulty metrics (pin count, signal layer count, complexity C, and difficulty D)
+   * are computed.
+   */
+  public void ensureDifficulty() {
+    if (this.difficulty == null) {
+      this.difficulty = new BoardStatisticsDifficulty();
+    }
+    if (this.difficulty.difficultyD != null) {
+      return;
+    }
+    if (this.difficulty.pinCount == null || this.difficulty.pinCount <= 0) {
+      if (this.items != null && this.items.pinCount != null && this.items.pinCount > 0) {
+        this.difficulty.pinCount = this.items.pinCount;
+      } else if (this.pads != null && this.pads.totalCount != null && this.pads.totalCount > 0) {
+        this.difficulty.pinCount = this.pads.totalCount;
+      } else {
+        this.difficulty.pinCount = 0;
+      }
+    }
+    if (this.difficulty.signalLayerCount == null || this.difficulty.signalLayerCount <= 0) {
+      if (this.layers != null && this.layers.signalCount != null && this.layers.signalCount > 0) {
+        this.difficulty.signalLayerCount = this.layers.signalCount;
+      } else if (this.layers != null
+          && this.layers.totalCount != null
+          && this.layers.totalCount > 0) {
+        this.difficulty.signalLayerCount = this.layers.totalCount;
+      } else {
+        this.difficulty.signalLayerCount = 0;
+      }
+    }
+    if (this.difficulty.complexityC == null || this.difficulty.complexityC <= 0) {
+      int pins = this.difficulty.pinCount != null ? this.difficulty.pinCount : 0;
+      int layers = this.difficulty.signalLayerCount != null ? this.difficulty.signalLayerCount : 0;
+      this.difficulty.complexityC = Math.max(1, pins * layers);
+    }
+    if (this.difficulty.difficultyD == null) {
+      this.difficulty.difficultyD = (float) this.difficulty.complexityC;
+    }
+  }
+
+  private static RoutingCostSettings legacyScoringOrDefault(RouterSettings routerSettings) {
+    if (routerSettings != null && routerSettings.scoring != null) {
+      return routerSettings.scoring;
+    }
+    return new DefaultSettings().getSettings().scoring;
+  }
+
+  private static float valueOrDefault(Float value, float defaultValue) {
+    return value != null ? value : defaultValue;
+  }
+
+  /** Returns the legacy optimizer score normalized to a range from zero to one thousand. */
+  public float getOptimizerScore(RoutingCostSettings scoringSettings) {
+    return getLegacyNormalizedScore(scoringSettings);
+  }
+
+  /** Returns the configured optimizer score normalized to a range from zero to one thousand. */
+  public float getOptimizerScore(RouterSettings routerSettings) {
+    if (routerSettings != null
+        && routerSettings.optimizerScoring != null
+        && routerSettings.optimizerScoring.version
+            == app.freerouting.settings.OptimizerScoringVersion.V2_LOWER_BOUND) {
+      return getV2OptimizerScore(routerSettings.optimizerScoring);
+    }
+    return getLegacyNormalizedScore(legacyScoringOrDefault(routerSettings));
+  }
+
+  /** Calculates the V2 optimizer score from board-only lower bounds and actual route metrics. */
+  private float getV2OptimizerScore(OptimizerScoreSettings settings) {
+    double difficulty =
+        this.difficulty.difficultyD != null ? Math.max(1.0, this.difficulty.difficultyD) : 1.0;
+    double minTraceLength =
+        this.bounds.minTraceLengthMm != null ? Math.max(0.0, this.bounds.minTraceLengthMm) : 0.0;
+    double minViaCount = this.bounds.minViaCount != null ? Math.max(0, this.bounds.minViaCount) : 0;
+    double minBendCount =
+        this.bounds.minBendCount != null ? Math.max(0, this.bounds.minBendCount) : 0;
+    double actualTraceLength =
+        this.traces.totalLengthMm != null ? Math.max(0.0, this.traces.totalLengthMm) : 0.0;
+    double actualViaCount = this.vias.totalCount != null ? Math.max(0, this.vias.totalCount) : 0;
+    double actualBendCount = this.bends.totalCount != null ? Math.max(0, this.bends.totalCount) : 0;
+    double lengthFloor = Math.max(0.0, valueOrDefault(settings.lengthFloor, 1.0f));
+    double difficultyFloor = Math.max(1.0, valueOrDefault(settings.difficultyScaleFloor, 1.0f));
+    double lengthPenalty =
+        valueOrDefault(settings.excessWireLengthWeight, 1000.0f)
+            * Math.max(0.0, actualTraceLength - minTraceLength)
+            / Math.max(minTraceLength, lengthFloor);
+    double viaPenalty =
+        valueOrDefault(settings.excessViaWeight, 2000.0f)
+            * Math.max(0.0, actualViaCount - minViaCount)
+            / Math.max(difficulty, difficultyFloor);
+    double bendPenalty =
+        valueOrDefault(settings.excessBendWeight, 500.0f)
+            * Math.max(0.0, actualBendCount - minBendCount)
+            / Math.max(difficulty, difficultyFloor);
+    return (float) Math.max(0.0, 1000.0 - lengthPenalty - viaPenalty - bendPenalty);
+  }
+
+  /**
+   * @deprecated Use {@link #getRouterScore(RoutingCostSettings)}.
+   */
+  @Deprecated
+  public float getNormalizedScore(RoutingCostSettings scoringSettings) {
+    return getRouterScore(scoringSettings);
   }
 
   /** Statistics for surface-mount pin fanout. */

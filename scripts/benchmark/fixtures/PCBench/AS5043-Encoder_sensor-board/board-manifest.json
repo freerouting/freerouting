@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "AS5043-Encoder_sensor-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 208016,
+      "sha256": "e3add088543b1b86baa163ebd2227cf6ef75b1aca939dd3f55f4a9347c02ad33"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 45887,
+      "sha256": "a140ef94274a4a9f8eb31d9bfe0791c9e0f1a7ad6013859545fbd40570e0db6f"
+    },
+    "metadata_json": {
+      "bytes": 518,
+      "sha256": "6c917408c8cdd25e7c3ba156620405ec815780a63d15707d51e964240b378dc9"
+    },
+    "final_json": {
+      "bytes": 33238,
+      "sha256": "5892308e21869e7dc2a3a4e5e14bcb54b68bd95988bcab2f2f43b8bbe5b94263"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:26.702727+00:00"
+  }
+}

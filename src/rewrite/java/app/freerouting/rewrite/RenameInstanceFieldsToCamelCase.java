@@ -185,7 +185,9 @@ public class RenameInstanceFieldsToCamelCase
           Map<String, String> renamesInClass = new LinkedHashMap<>();
           for (ChangeFieldName change : matching) {
             renamesInClass.put(change.getHasName(), change.getToName());
-            cd = (J.ClassDeclaration) change.visitNonNull(cd, ctx);
+            @SuppressWarnings("unchecked")
+            J.ClassDeclaration renamed = (J.ClassDeclaration) change.visitNonNull(cd, ctx);
+            cd = renamed;
           }
           if (!renamesInClass.isEmpty()) {
             cd =

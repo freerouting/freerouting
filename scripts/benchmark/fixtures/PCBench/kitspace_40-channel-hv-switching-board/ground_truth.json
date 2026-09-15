@@ -1,0 +1,31 @@
+{
+  "board": "kitspace_40-channel-hv-switching-board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_40-channel-hv-switching-board\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 474,
+  "segment_count": 2629,
+  "approximate_track_length_mm": 7087.12,
+  "kicad_drc_violations": 460,
+  "generated_at": "2026-08-18T18:16:36.000438+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 460,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 4,
+      "lib_footprint_issues": 199,
+      "mirrored_text_on_front_layer": 1,
+      "silk_over_copper": 1,
+      "silk_overlap": 6,
+      "solder_mask_bridge": 201,
+      "text_height": 7,
+      "track_dangling": 28,
+      "via_dangling": 9
+    },
+    "by_severity": {
+      "error": 209,
+      "warning": 251
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "pi-zero-stepper-board_pi-zero-stepper-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 282834,
+      "sha256": "9d20d957b1bcb7aef8bbbec84caa19ea1dba53555637c0f38d0c2282fc5be861"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 151165,
+      "sha256": "4e713deda2bb75b3f8be041dec96adb9b25af23d133077d0aebe3bff8ae5ca52"
+    },
+    "metadata_json": {
+      "bytes": 536,
+      "sha256": "7c1a17bc424f9d8083d7d9a3ef9ebaa69317267e77fbab1c3a66a02f31af8769"
+    },
+    "final_json": {
+      "bytes": 100516,
+      "sha256": "3463c6c4c9f9611e50821b0c19f2536ef05214ebc2a4c01f330838b972232f29"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:33:21.748568+00:00"
+  }
+}

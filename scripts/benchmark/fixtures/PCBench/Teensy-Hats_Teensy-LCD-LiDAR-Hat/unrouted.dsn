@@ -1,0 +1,490 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Teensy-Hats_Teensy-LCD-LiDAR-Hat\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  177800 -133350  97790 -133350  97790 -97155  177800 -97155
+            177800 -133350)
+    )
+    (via "Via[0-1]_762:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Wickerlib:TEENSY-3.2-NOSILK"
+      (place J1 158750 -116205 front -90 (PN "TEENSY3.2-72MHz"))
+    )
+    (component "Wickerlib:CONN-HEADER-STRAIGHT-P2.54MM-1x06"
+      (place J2 161798 -127254 front -90 (PN "LIDAR-LITE"))
+    )
+    (component "Wickerlib:LCD-1602A"
+      (place LCD1 169802 -99855 back 0 (PN "LCD-16x2"))
+    )
+    (component "Wickerlib:LED-0603-SMD"
+      (place LED1 105978 -124829 front 0 (PN AMBER))
+      (place LED2 105918 -120384 front 0 (PN AMBER))
+    )
+    (component "Wickerlib:RLC-0603-SMD"
+      (place R1 157722 -124206 front 0 (PN 1K))
+    )
+    (component "Wickerlib:RLC-0603-SMD::1"
+      (place R2 110653 -124829 front 180 (PN 1K))
+      (place R7 110653 -120384 front 180 (PN 1K))
+    )
+    (component "Wickerlib:RLC-0603-SMD::2"
+      (place R3 130429 -121654 front -90 (PN 1K))
+      (place R4 124206 -121678 front -90 (PN 1K))
+      (place R5 117729 -121654 front -90 (PN 1K))
+    )
+    (component "Wickerlib:RES-TRIMPOT-BOURNS-3362-SQUARE-TH-CENTER"
+      (place R6 122936 -102235 front 0 (PN 10K))
+    )
+    (component "Wickerlib:SWITCH-OMRON-MOMENTARY-SMD-B3U-1000P"
+      (place S1 130429 -125349 front -90 (PN BUTTON1))
+      (place S2 124206 -125349 front -90 (PN BUTTON2))
+      (place S3 117729 -125349 front -90 (PN BUTTON3))
+    )
+    (component "Wickerlib:CONN-SD-MICRO-MOLEX-0475710001"
+      (place J3 114354 -110298 front -90 (PN "MICRO-SD"))
+    )
+  )
+  (library
+    (image "Wickerlib:TEENSY-3.2-NOSILK"
+      (outline (polygon signal 0  6345 11425  6345 -24125  -11425 -24125  -11425 11425))
+      (outline (path signal 50  6500 -24000  6500 11500))
+      (outline (path signal 50  6500 11500  -11500 11500))
+      (outline (path signal 50  -11500 11500  -11500 -24000))
+      (outline (path signal 50  -11500 -24000  6500 -24000))
+      (outline (path signal 50  -4500 11500  -4500 9500))
+      (outline (path signal 50  -4500 9500  0 9500))
+      (outline (path signal 50  0 9500  0 11500))
+      (pin Round[A]Pad_1727.200000_um G1 -10160 10160)
+      (pin Round[A]Pad_1727.200000_um 0 -10160 7620)
+      (pin Round[A]Pad_1727.200000_um 1 -10160 5080)
+      (pin Round[A]Pad_1727.200000_um 2 -10160 2540)
+      (pin Round[A]Pad_1727.200000_um 3 -10160 0)
+      (pin Round[A]Pad_1727.200000_um 4 -10160 -2540)
+      (pin Round[A]Pad_1727.200000_um 5 -10160 -5080)
+      (pin Round[A]Pad_1727.200000_um 6 -10160 -7620)
+      (pin Round[A]Pad_1727.200000_um 7 -10160 -10160)
+      (pin Round[A]Pad_1727.200000_um 8 -10160 -12700)
+      (pin Round[A]Pad_1727.200000_um 9 -10160 -15240)
+      (pin Round[A]Pad_1727.200000_um 10 -10160 -17780)
+      (pin Round[A]Pad_1727.200000_um 11 -10160 -20320)
+      (pin Round[A]Pad_1727.200000_um 12 -10160 -22860)
+      (pin Round[A]Pad_1727.200000_um VBAT -7620 -22860)
+      (pin Round[A]Pad_1727.200000_um 3V1 -5080 -22860)
+      (pin Round[A]Pad_1727.200000_um G2 -2540 -22860)
+      (pin Round[A]Pad_1727.200000_um PGM 0 -22860)
+      (pin Round[A]Pad_1727.200000_um DAC 2540 -22860)
+      (pin Round[A]Pad_1727.200000_um 13 5080 -22860)
+      (pin Round[A]Pad_1727.200000_um 16 5080 -15240)
+      (pin Round[A]Pad_1727.200000_um 3V2 5080 5080)
+      (pin Round[A]Pad_1727.200000_um 18 5080 -10160)
+      (pin Round[A]Pad_1727.200000_um 17 5080 -12700)
+      (pin Round[A]Pad_1727.200000_um AG 5080 7620)
+      (pin Round[A]Pad_1727.200000_um 22 5080 0)
+      (pin Round[A]Pad_1727.200000_um VIN 5080 10160)
+      (pin Round[A]Pad_1727.200000_um 21 5080 -2540)
+      (pin Round[A]Pad_1727.200000_um 20 5080 -5080)
+      (pin Round[A]Pad_1727.200000_um 19 5080 -7620)
+      (pin Round[A]Pad_1727.200000_um 23 5080 2540)
+      (pin Round[A]Pad_1727.200000_um 14 5080 -20320)
+      (pin Round[A]Pad_1727.200000_um 15 5080 -17780)
+    )
+    (image "Wickerlib:CONN-HEADER-STRAIGHT-P2.54MM-1x06"
+      (outline (polygon signal 0  1745 1745  1745 -14445  -1745 -14445  -1745 1745))
+      (outline (path signal 50  -1770 -14430  1730 -14430))
+      (outline (path signal 50  1730 1760  1730 -14440))
+      (outline (path signal 50  -1760 1740  1740 1740))
+      (outline (path signal 50  -1750 1750  -1750 -14450))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -13970  -1270 -1270))
+      (outline (path signal 150  1270 -13970  -1270 -13970))
+      (outline (path signal 150  1270 -1270  1270 -13970))
+      (outline (path signal 300  0 359.21  111.002 341.629  211.138 290.607  290.607 211.138
+            341.629 111.002  359.21 0  341.629 -111.002  290.607 -211.138
+            211.138 -290.607  111.002 -341.629  0 -359.21  -111.002 -341.629
+            -211.138 -290.607  -290.607 -211.138  -341.629 -111.002  -359.21 0
+            -341.629 111.002  -290.607 211.138  -211.138 290.607  -111.002 341.629
+            0 359.21))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+    )
+    (image "Wickerlib:LCD-1602A"
+      (outline (polygon signal 0  -1519 2027  39619 2027  39619 -1773  -1519 -1773))
+      (outline (path signal 150  -7998.46 0  -7979.52 307.142  -7922.97 609.628  -7829.68 902.873
+            -7701.07 1182.43  -7539.07 1444.07  -7346.15 1683.81  -7125.23 1898.03
+            -6879.66 2083.47  -6613.16 2237.34  -6329.77 2357.28  -6033.8 2441.5
+            -5729.71 2488.7  -5422.13 2498.18  -5115.72 2469.78  -4815.12 2403.95
+            -4524.89 2301.67  -4249.42 2164.51  -3992.9 1994.53  -3759.21 1794.32
+            -3551.9 1566.91  -3374.1 1315.74  -3228.52 1044.63  -3117.36 757.688
+            -3042.3 459.256  -3004.48 153.863  -3004.48 -153.863  -3042.3 -459.256
+            -3117.36 -757.688  -3228.52 -1044.63  -3374.1 -1315.74  -3551.9 -1566.91
+            -3759.21 -1794.32  -3992.9 -1994.53  -4249.42 -2164.51  -4524.89 -2301.67
+            -4815.12 -2403.95  -5115.72 -2469.78  -5422.13 -2498.18  -5729.71 -2488.7
+            -6033.8 -2441.5  -6329.77 -2357.28  -6613.16 -2237.34  -6879.66 -2083.47
+            -7125.23 -1898.03  -7346.15 -1683.81  -7539.07 -1444.07  -7701.07 -1182.43
+            -7829.68 -902.873  -7922.97 -609.628  -7979.52 -307.142  -7998.46 0))
+      (outline (path signal 150  -8001 -31000.7  -7982.04 -30693.2  -7925.44 -30390.5  -7832.05 -30096.9
+            -7703.3 -29817.1  -7541.14 -29555.2  -7348.03 -29315.2  -7126.88 -29100.7
+            -6881.06 -28915.1  -6614.29 -28761.1  -6330.62 -28641  -6034.34 -28556.7
+            -5729.95 -28509.5  -5422.05 -28500  -5115.33 -28528.4  -4814.42 -28594.3
+            -4523.9 -28696.7  -4248.15 -28834  -3991.37 -29004.1  -3757.44 -29204.6
+            -3549.92 -29432.2  -3371.94 -29683.6  -3226.21 -29955  -3114.93 -30242.2
+            -3039.8 -30541  -3001.95 -30846.7  -3001.95 -31154.7  -3039.8 -31460.4
+            -3114.93 -31759.2  -3226.21 -32046.4  -3371.94 -32317.8  -3549.92 -32569.2
+            -3757.44 -32796.8  -3991.37 -32997.3  -4248.15 -33167.4  -4523.9 -33304.7
+            -4814.42 -33407.1  -5115.33 -33473  -5422.05 -33501.4  -5729.95 -33491.9
+            -6034.34 -33444.7  -6330.62 -33360.4  -6614.29 -33240.3  -6881.06 -33086.3
+            -7126.88 -32900.7  -7348.03 -32686.2  -7541.14 -32446.2  -7703.3 -32184.3
+            -7832.05 -31904.5  -7925.44 -31610.9  -7982.04 -31308.2  -8001 -31000.7))
+      (outline (path signal 150  67000.1 -31000.7  67019.1 -30693.6  67075.6 -30391.1  67168.9 -30097.8
+            67297.5 -29818.3  67459.5 -29556.6  67652.4 -29316.9  67873.4 -29102.7
+            68118.9 -28917.2  68385.4 -28763.4  68668.8 -28643.4  68964.8 -28559.2
+            69268.9 -28512  69576.4 -28502.5  69882.9 -28530.9  70183.5 -28596.8
+            70473.7 -28699  70749.2 -28836.2  71005.7 -29006.2  71239.4 -29206.4
+            71446.7 -29433.8  71624.5 -29685  71770.1 -29956.1  71881.2 -30243
+            71956.3 -30541.4  71994.1 -30846.8  71994.1 -31154.6  71956.3 -31460
+            71881.2 -31758.4  71770.1 -32045.3  71624.5 -32316.4  71446.7 -32567.6
+            71239.4 -32795  71005.7 -32995.2  70749.2 -33165.2  70473.7 -33302.4
+            70183.5 -33404.6  69882.9 -33470.5  69576.4 -33498.9  69268.9 -33489.4
+            68964.8 -33442.2  68668.8 -33358  68385.4 -33238  68118.9 -33084.2
+            67873.4 -32898.7  67652.4 -32684.5  67459.5 -32444.8  67297.5 -32183.1
+            67168.9 -31903.6  67075.6 -31610.3  67019.1 -31307.8  67000.1 -31000.7))
+      (outline (path signal 150  67000.1 0  67019.1 307.142  67075.6 609.628  67168.9 902.873
+            67297.5 1182.43  67459.5 1444.07  67652.4 1683.81  67873.4 1898.03
+            68118.9 2083.47  68385.4 2237.34  68668.8 2357.28  68964.8 2441.5
+            69268.9 2488.7  69576.4 2498.18  69882.9 2469.78  70183.5 2403.95
+            70473.7 2301.67  70749.2 2164.51  71005.7 1994.53  71239.4 1794.32
+            71446.7 1566.91  71624.5 1315.74  71770.1 1044.63  71881.2 757.688
+            71956.3 459.256  71994.1 153.863  71994.1 -153.863  71956.3 -459.256
+            71881.2 -757.688  71770.1 -1044.63  71624.5 -1315.74  71446.7 -1566.91
+            71239.4 -1794.32  71005.7 -1994.53  70749.2 -2164.51  70473.7 -2301.67
+            70183.5 -2403.95  69882.9 -2469.78  69576.4 -2498.18  69268.9 -2488.7
+            68964.8 -2441.5  68668.8 -2357.28  68385.4 -2237.34  68118.9 -2083.47
+            67873.4 -1898.03  67652.4 -1683.81  67459.5 -1444.07  67297.5 -1182.43
+            67168.9 -902.873  67075.6 -609.628  67019.1 -307.142  67000.1 0))
+      (outline (path signal 150  -8001 -33500.1  -8001 2499.36))
+      (outline (path signal 150  71998.8 -33500.1  -8001 -33500.1))
+      (outline (path signal 150  71998.8 2499.36  71998.8 -33500.1))
+      (outline (path signal 150  -8001 2499.36  71998.8 2499.36))
+      (outline (path signal 50  -1524 2032  -1524 -1778))
+      (outline (path signal 50  -1524 -1778  39624 -1778))
+      (outline (path signal 50  39624 -1778  39624 2032))
+      (outline (path signal 50  39624 2032  -1524 2032))
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 1 0 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 3 5080 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 4 7620 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 5 10160 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 6 12700 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 7 15240 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 8 17780 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 9 20320 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 10 22860 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 11 25400 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 12 27940 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 13 30480 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 14 33020 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 15 35560 0)
+      (pin Oval[A]Pad_1800.000000x2600.000000_um 16 38100 0)
+      (pin Round[A]Pad_3000.000000_um 0 -5499.1 0)
+      (pin Round[A]Pad_3000.000000_um 0@1 -5499.1 -31000.7)
+      (pin Round[A]Pad_3000.000000_um 0@2 69499.5 -31000.7)
+      (pin Round[A]Pad_3000.000000_um 0@3 69499.5 0)
+    )
+    (image "Wickerlib:LED-0603-SMD"
+      (outline (polygon signal 0  1445 -745  -1445 -745  -1445 745.021  1445 756.98))
+      (outline (path signal 50  -1778 -762  2032 -762))
+      (outline (path signal 50  2032 750  2032 -750))
+      (outline (path signal 50  -1778 750  -1778 -750))
+      (outline (path signal 150  350 -600  -350 -600))
+      (outline (path signal 150  -350 600  350 600))
+      (outline (path signal 50  -1778 762  2032 762))
+      (outline (path signal 50  -2032 762  -2032 -762))
+      (outline (path signal 50  -1524 -762  -1524 762))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image "Wickerlib:RLC-0603-SMD"
+      (outline (polygon signal 0  1445 -745  -1445 -745  -1445 745  1445 745))
+      (outline (path signal 50  -1450 -750  1450 -750))
+      (outline (path signal 50  1450 750  1450 -750))
+      (outline (path signal 50  -1450 750  -1450 -750))
+      (outline (path signal 150  350 -600  -350 -600))
+      (outline (path signal 150  -350 600  350 600))
+      (outline (path signal 50  -1450 750  1450 750))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image "Wickerlib:RLC-0603-SMD::1"
+      (outline (polygon signal 0  -1445 745  1445 745  1445 -745  -1445 -745))
+      (outline (path signal 50  -1450 -750  1450 -750))
+      (outline (path signal 50  1450 750  1450 -750))
+      (outline (path signal 50  -1450 750  -1450 -750))
+      (outline (path signal 150  350 -600  -350 -600))
+      (outline (path signal 150  -350 600  350 600))
+      (outline (path signal 50  -1450 750  1450 750))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image "Wickerlib:RLC-0603-SMD::2"
+      (outline (polygon signal 0  1445 745  1445 -745  -1445 -745  -1445 745))
+      (outline (path signal 50  -1450 -750  1450 -750))
+      (outline (path signal 50  1450 750  1450 -750))
+      (outline (path signal 50  -1450 750  -1450 -750))
+      (outline (path signal 150  350 -600  -350 -600))
+      (outline (path signal 150  -350 600  350 600))
+      (outline (path signal 50  -1450 750  1450 750))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image "Wickerlib:RES-TRIMPOT-BOURNS-3362-SQUARE-TH-CENTER"
+      (outline (path signal 200  -1672.79 2645.21  -1690.37 2534.21  -1741.39 2434.07  -1820.86 2354.6
+            -1921 2303.58  -2032 2286  -2143 2303.58  -2243.14 2354.6  -2322.61 2434.07
+            -2373.63 2534.21  -2391.21 2645.21  -2373.63 2756.21  -2322.61 2856.35
+            -2243.14 2935.82  -2143 2986.84  -2032 3004.42  -1921 2986.84
+            -1820.86 2935.82  -1741.39 2856.35  -1690.37 2756.21  -1672.79 2645.21))
+      (outline (path signal 200  359.21 2540  341.629 2429  290.607 2328.86  211.138 2249.39
+            111.002 2198.37  0 2180.79  -111.002 2198.37  -211.138 2249.39
+            -290.607 2328.86  -341.629 2429  -359.21 2540  -341.629 2651
+            -290.607 2751.14  -211.138 2830.61  -111.002 2881.63  0 2899.21
+            111.002 2881.63  211.138 2830.61  290.607 2751.14  341.629 2651
+            359.21 2540))
+      (outline (path signal 50  3556 4064  -3556 4064))
+      (outline (path signal 50  -3556 4064  -3556 -3810))
+      (outline (path signal 50  -3556 -3810  3556 -3810))
+      (outline (path signal 50  3556 -3810  3556 4064))
+      (outline (path signal 101.6  3556 4064  -3556 4064))
+      (outline (path signal 101.6  -3556 4064  -3556 -3810))
+      (outline (path signal 101.6  -3556 -3810  3556 -3810))
+      (outline (path signal 101.6  3556 -3810  3556 3810))
+      (outline (path signal 101.6  3556 3810  3556 4064))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -2540)
+    )
+    (image "Wickerlib:SWITCH-OMRON-MOMENTARY-SMD-B3U-1000P"
+      (outline (polygon signal 0  4313 1519  4313 -1519  -757 -1519  -757 1519))
+      (outline (path signal 100  6922.02 -3313.18  6922.02 -3313.18))
+      (outline (path signal 100  0 -2000  0 -2000))
+      (outline (path signal 150  106.68 1250  3106.68 1250))
+      (outline (path signal 150  106.68 -1250  3106.68 -1250))
+      (outline (path signal 50  4318 1524  4318 -1524))
+      (outline (path signal 50  4318 -1524  -762 -1524))
+      (outline (path signal 50  -762 -1524  -762 1524))
+      (outline (path signal 50  -762 1524  4318 1524))
+      (pin Rect[T]Pad_800.000000x1700.000000_um 2 3400 0)
+      (pin Rect[T]Pad_800.000000x1700.000000_um 1 0 0)
+    )
+    (image "Wickerlib:CONN-SD-MICRO-MOLEX-0475710001"
+      (outline (polygon signal 0  5995 245  5995 -15995  -6495 -15995  -6495 245))
+      (outline (path signal 50  -6096 -25.4  5588 -25.4))
+      (outline (path signal 50  5588 -25.4  5588 -5588))
+      (outline (path signal 50  -6096 -25.4  -6096 -5588))
+      (outline (path signal 50  -6096 -5588  5588 -5588))
+      (outline (path signal 50  5750 0  5750 -5750))
+      (outline (path signal 50  5750 -5750  -6250 -5750))
+      (outline (path signal 50  -6250 -5750  -6250 0))
+      (outline (path signal 50  -6250 0  5750 0))
+      (pin Rect[T]Pad_1400.000000x900.000000_um G5 4851.4 -5100)
+      (pin Rect[T]Pad_1200.000000x1150.000000_um G2 -5413.5 -4963.5)
+      (pin Rect[T]Pad_1450.000000x1200.000000_um G3 4826.4 -2800)
+      (pin Rect[T]Pad_1200.000000x1150.000000_um G1 -5413.5 -2363.5)
+      (pin Rect[T]Pad_700.000000x1000.000000_um 7 -2813.5 -1323.5)
+      (pin Rect[T]Pad_700.000000x1000.000000_um 8 -3913.5 -1323.5)
+      (pin Rect[T]Pad_700.000000x1000.000000_um 6 -1713.5 -1323.5)
+      (pin Rect[T]Pad_700.000000x1000.000000_um 5 -613.5 -1323.5)
+      (pin Rect[T]Pad_700.000000x1000.000000_um 4 486.5 -1323.5)
+      (pin Rect[T]Pad_700.000000x1000.000000_um 1 3786.5 -1323.5)
+      (pin Rect[T]Pad_700.000000x1000.000000_um 2 2686.5 -1323.5)
+      (pin Rect[T]Pad_700.000000x1000.000000_um 3 1586.5 -1323.5)
+      (pin Rect[T]Pad_1000.000000x700.000000_um G4 5051.4 -3950)
+    )
+    (padstack Round[A]Pad_1727.200000_um
+      (shape (circle F.Cu 1727.2))
+      (shape (circle B.Cu 1727.2))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3000.000000_um
+      (shape (circle F.Cu 3000))
+      (shape (circle B.Cu 3000))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1800.000000x2600.000000_um
+      (shape (path F.Cu 1800  0 -400  0 400))
+      (shape (path B.Cu 1800  0 -400  0 400))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x1000.000000_um
+      (shape (rect F.Cu -350 -500 350 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x750.000000_um
+      (shape (rect F.Cu -400 -375 400 375))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x1700.000000_um
+      (shape (rect F.Cu -400 -850 400 850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x700.000000_um
+      (shape (rect F.Cu -500 -350 500 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x1150.000000_um
+      (shape (rect F.Cu -600 -575 600 575))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1400.000000x900.000000_um
+      (shape (rect F.Cu -700 -450 700 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1450.000000x1200.000000_um
+      (shape (rect F.Cu -725 -600 725 600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_762:400_um"
+      (shape (circle F.Cu 762))
+      (shape (circle B.Cu 762))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins J1-G1 J1-G2 J1-AG J2-6 LCD1-1 LCD1-16 LED1-1 LED2-1 R6-1 S1-2 S2-2 S3-2
+        J3-6)
+    )
+    (net /LCD_RS
+      (pins J1-2 LCD1-4)
+    )
+    (net /LCD_RW
+      (pins J1-3 LCD1-5)
+    )
+    (net /LCD_EN
+      (pins J1-4 LCD1-6)
+    )
+    (net /LED1
+      (pins J1-5 R2-1)
+    )
+    (net /LCD_D4
+      (pins J1-6 LCD1-11)
+    )
+    (net /LCD_D5
+      (pins J1-7 LCD1-12)
+    )
+    (net /LCD_D6
+      (pins J1-8 LCD1-13)
+    )
+    (net /LCD_D7
+      (pins J1-9 LCD1-14)
+    )
+    (net /SD_CS
+      (pins J1-10 J3-2)
+    )
+    (net /MOSI
+      (pins J1-11 J3-3)
+    )
+    (net /MISO
+      (pins J1-12 J3-7)
+    )
+    (net +3V3
+      (pins J1-3V1 J1-3V2 R3-1 R4-1 R5-1 J3-4)
+    )
+    (net /SCLK
+      (pins J1-13 J3-5)
+    )
+    (net /BUTTON2
+      (pins J1-16 R4-2 S2-1)
+    )
+    (net /SDA
+      (pins J1-18 J2-5)
+    )
+    (net /BUTTON1
+      (pins J1-17 R3-2 S1-1)
+    )
+    (net /LIDAR_MONITOR
+      (pins J1-22 J2-3 R1-2)
+    )
+    (net +5V
+      (pins J1-VIN J2-1 LCD1-2 LCD1-15 R6-3)
+    )
+    (net /LIDAR_TRIGGER
+      (pins J1-21 R1-1)
+    )
+    (net /LIDAR_EN
+      (pins J1-20 J2-2)
+    )
+    (net /SCL
+      (pins J1-19 J2-4)
+    )
+    (net /LED2
+      (pins J1-14 R7-1)
+    )
+    (net /BUTTON3
+      (pins J1-15 R5-2 S3-1)
+    )
+    (net "Net-(LCD1-Pad3)"
+      (pins LCD1-3 R6-2)
+    )
+    (net "Net-(LED1-Pad2)"
+      (pins LED1-2 R2-2)
+    )
+    (net "Net-(LED2-Pad2)"
+      (pins LED2-2 R7-2)
+    )
+    (class kicad_default +3V3 +5V /BUTTON1 /BUTTON2 /BUTTON3 /LCD_D4 /LCD_D5
+      /LCD_D6 /LCD_D7 /LCD_EN /LCD_RS /LCD_RW /LED1 /LED2 /LIDAR_EN /LIDAR_MONITOR
+      /LIDAR_TRIGGER /MISO /MOSI /SCL /SCLK /SDA /SD_CS GND "Net-(LCD1-Pad3)"
+      "Net-(LED1-Pad2)" "Net-(LED2-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_762:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

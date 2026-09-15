@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Youyue-858D-plus-MCU-adapter_youyue-858d-plus-mcu-adapter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 81073,
+      "sha256": "e215ca920e47c9d9d090d8b96e739ee3b7b814c9e77b53d6723db8d9249b9f52"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 102148,
+      "sha256": "58e7a715a6818ebeb674597f0c8b034813dbddf36d895515baf0ffa2dd361dae"
+    },
+    "metadata_json": {
+      "bytes": 588,
+      "sha256": "69719499aac533316d18dc80a45df8b62dd0d2ca4dbec116370f7fdcf8b94b78"
+    },
+    "final_json": {
+      "bytes": 62408,
+      "sha256": "3a9b7b339375171d30a5f2fc642ca8b04b5031b34163df0c4bf2d0eb3917e233"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:59:06.310125+00:00"
+  }
+}

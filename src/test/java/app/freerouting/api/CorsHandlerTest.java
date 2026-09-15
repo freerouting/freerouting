@@ -128,4 +128,57 @@ class CorsHandlerTest {
         "Access-Control-Allow-Headers should include 'Freerouting-Environment-Host', got: "
             + allowedHeaders);
   }
+
+  @Test
+  void corsWildcardOriginDisablesAllowCredentials() throws Exception {
+    Server wildcardServer = null;
+    try {
+      ApiServerSettings settings = new ApiServerSettings();
+      settings.isEnabled = true;
+      settings.isHttpAllowed = true;
+      settings.endpoints = new String[] {"http://127.0.0.1:0"};
+      settings.corsOrigins = "*";
+
+      wildcardServer = Freerouting.initializeAPI(settings);
+      waitForServerStarted(wildcardServer);
+
+      int port = ((ServerConnector) wildcardServer.getConnectors()[0]).getLocalPort();
+      URI wildcardUri = URI.create("http://127.0.0.1:" + port);
+      waitForApiServerReady(wildcardUri);
+
+      HttpClient client = HttpClient.newHttpClient();
+      HttpRequest preflight =
+          HttpRequest.newBuilder(wildcardUri.resolve("/v1/system/status"))
+              .method("OPTIONS", HttpRequest.BodyPublishers.noBody())
+              .header("Origin", "http://arbitrary-site.com")
+              .header("Access-Control-Request-Method", "GET")
+              .timeout(HTTP_TIMEOUT)
+              .build();
+
+      HttpResponse<Void> response = client.send(preflight, HttpResponse.BodyHandlers.discarding());
+      // Access-Control-Allow-Credentials must NOT be true when wildcard origins are configured
+      String allowCredentials =
+          response.headers().firstValue("Access-Control-Allow-Credentials").orElse("false");
+      assertEquals(
+          "false",
+          allowCredentials,
+          "Access-Control-Allow-Credentials should not be true for wildcard CORS origins");
+    } finally {
+      if (wildcardServer != null) {
+        stopServerGracefully(wildcardServer);
+      }
+    }
+  }
+
+  @Test
+  void httpsEndpointFailsClosedWithoutCreatingPlaintextConnector() {
+    ApiServerSettings settings = new ApiServerSettings();
+    settings.isEnabled = true;
+    settings.isHttpAllowed = true;
+    settings.endpoints = new String[] {"https://127.0.0.1:37865"};
+
+    Server httpsServer = Freerouting.initializeAPI(settings);
+    // Because TLS is unimplemented, HTTPS endpoint must be skipped and have no connectors attached
+    assertEquals(0, httpsServer.getConnectors().length);
+  }
 }

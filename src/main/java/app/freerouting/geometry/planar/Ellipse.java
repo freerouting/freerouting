@@ -19,22 +19,22 @@ public class Ellipse implements Serializable {
   /** Creates a new instance of Ellipse. */
   public Ellipse(FloatPoint center, double rotation, double radius1, double radius2) {
     this.center = center;
-    double currRotation;
+    double currentRotation;
     if (radius1 >= radius2) {
       this.biggerRadius = radius1;
       this.smallerRadius = radius2;
-      currRotation = rotation;
+      currentRotation = rotation;
     } else {
       this.biggerRadius = radius2;
       this.smallerRadius = radius1;
-      currRotation = rotation + 0.5 * Math.PI;
+      currentRotation = rotation + 0.5 * Math.PI;
     }
-    while (currRotation >= Math.PI) {
-      currRotation -= Math.PI;
+    while (currentRotation >= Math.PI) {
+      currentRotation -= Math.PI;
     }
-    while (currRotation < 0) {
-      currRotation += Math.PI;
+    while (currentRotation < 0) {
+      currentRotation += Math.PI;
     }
-    this.rotation = currRotation;
+    this.rotation = currentRotation;
   }
 }

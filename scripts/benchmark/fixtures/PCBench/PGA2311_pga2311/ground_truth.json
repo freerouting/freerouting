@@ -1,0 +1,31 @@
+{
+  "board": "PGA2311_pga2311",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\PGA2311_pga2311\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 8,
+  "segment_count": 142,
+  "approximate_track_length_mm": 403.52,
+  "kicad_drc_violations": 240,
+  "generated_at": "2026-08-18T19:32:41.288859+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 240,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 53,
+      "copper_edge_clearance": 7,
+      "lib_footprint_issues": 26,
+      "silk_edge_clearance": 16,
+      "silk_over_copper": 81,
+      "silk_overlap": 29,
+      "starved_thermal": 1,
+      "text_height": 23,
+      "text_thickness": 3,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 61,
+      "warning": 179
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "board_id": "Horticulture_Light_EQ_3-Band_light",
+  "display_name": "Horticulture_Light_EQ_3-Band_light",
+  "pcbench_directory": "PCBs/Horticulture_Light_EQ_3-Band_light",
+  "source": "https://github.com/Faust-Lighting/Horticulture_Light_EQ_3-Band",
+  "author": "Faust-Lighting",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:38.137888+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 40,
+    "components": 390,
+    "dimensions_mm": {
+      "width": 551.18,
+      "height": 12.7
+    },
+    "area_cm2": 70.0,
+    "zones": 19
+  },
+  "reference": {
+    "segments": 554,
+    "vias": 26,
+    "track_length_mm": 3760.75,
+    "kicad_drc_violations": 751,
+    "kicad_drc_breakdown": {
+      "total_violations": 751,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 283,
+        "copper_edge_clearance": 69,
+        "hole_clearance": 8,
+        "hole_to_hole": 2,
+        "lib_footprint_issues": 199,
+        "silk_over_copper": 130,
+        "solder_mask_bridge": 56,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 416,
+        "warning": 335
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
+}

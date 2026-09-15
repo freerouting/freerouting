@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PsuFanController_FanController",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 34902,
+      "sha256": "1a7ace709d0f2b1c5ece44da9e4adfded1dc0b6cb26a86e9724909fa57299802"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 43503,
+      "sha256": "97b721e679a7d747ad585ea63bd98d8139eedc78f59be464d63899031002d214"
+    },
+    "metadata_json": {
+      "bytes": 701,
+      "sha256": "d21900b585a8aeb040128b905c18c8faa09737dd42d520577d96d6061fa68dad"
+    },
+    "final_json": {
+      "bytes": 13363,
+      "sha256": "eea1d4a7ce6c37f91907d85f3291e8b58630006a89af5a368c430ccc07153ed5"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:36:38.976689+00:00"
+  }
+}

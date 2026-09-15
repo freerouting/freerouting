@@ -1,0 +1,23 @@
+{
+  "board": "mini-whip_mini-whip",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mini-whip_mini-whip\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 34,
+  "segment_count": 157,
+  "approximate_track_length_mm": 370.47,
+  "kicad_drc_violations": 91,
+  "generated_at": "2026-08-18T19:23:33.454415+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 91,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 74,
+      "lib_footprint_issues": 17
+    },
+    "by_severity": {
+      "error": 74,
+      "warning": 17
+    }
+  }
+}

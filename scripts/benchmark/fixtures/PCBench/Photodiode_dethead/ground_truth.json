@@ -1,0 +1,28 @@
+{
+  "board": "Photodiode_dethead",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Photodiode_dethead\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 103,
+  "approximate_track_length_mm": 187.07,
+  "kicad_drc_violations": 113,
+  "generated_at": "2026-08-18T19:33:06.890073+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 113,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 66,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 22,
+      "shorting_items": 1,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 9,
+      "silk_overlap": 7
+    },
+    "by_severity": {
+      "error": 69,
+      "warning": 44
+    }
+  }
+}

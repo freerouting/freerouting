@@ -1,0 +1,27 @@
+{
+  "board": "pcb-usb-ft245r-parallel-adapter_pcb-usb-ft245r-parallel-adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\pcb-usb-ft245r-parallel-adapter_pcb-usb-ft245r-parallel-adapter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 9,
+  "segment_count": 124,
+  "approximate_track_length_mm": 313.56,
+  "kicad_drc_violations": 77,
+  "generated_at": "2026-08-18T19:31:56.958319+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 77,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 18,
+      "lib_footprint_issues": 23,
+      "silk_edge_clearance": 8,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 25,
+      "text_height": 1
+    },
+    "by_severity": {
+      "error": 43,
+      "warning": 34
+    }
+  }
+}

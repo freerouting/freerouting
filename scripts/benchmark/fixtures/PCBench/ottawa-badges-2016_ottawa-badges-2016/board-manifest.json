@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ottawa-badges-2016_ottawa-badges-2016",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 710995,
+      "sha256": "4cd89fd395d12a50f78d4f8cd051bcbf96070f88ffc0a1596b31aee414c458c6"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 404987,
+      "sha256": "6e6c52f7c18fe1eea2b9cc6d8a7bf0d4cde95516b3f558f8dd37fd2e76096538"
+    },
+    "metadata_json": {
+      "bytes": 515,
+      "sha256": "ff7d03fa57525bd1ccdef2b7003a748792a48cad2c1a4770dfe277a6082a15ed"
+    },
+    "final_json": {
+      "bytes": 252934,
+      "sha256": "4621777381174e7863937ffa201e2052b601658385a850718e04917910a053a9"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:31:00.775049+00:00"
+  }
+}

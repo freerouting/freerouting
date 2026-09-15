@@ -12,8 +12,8 @@ public class Unit extends ScopeKeyword {
     super("unit");
   }
 
-  public static void writeScope(IndentFileWriter file, app.freerouting.board.Unit unit)
-      throws IOException {
+  public static void writeScope(
+      IndentFileWriter file, app.freerouting.board.model.structure.Unit unit) throws IOException {
     file.newLine();
     file.write("(unit ");
     file.write(unit.toString());
@@ -21,7 +21,7 @@ public class Unit extends ScopeKeyword {
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     return false;
   }
 }

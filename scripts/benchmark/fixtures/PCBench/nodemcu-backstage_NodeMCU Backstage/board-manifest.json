@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "nodemcu-backstage_NodeMCU Backstage",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 72256,
+      "sha256": "35763ee1765e7f41b5f874f5b3679866ff67254bb606266ce44b0576fb55f92a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 34754,
+      "sha256": "a7e8e5351700463b842743ba7417a7479dd7f57087e7d3c1f3455a5e5547ae39"
+    },
+    "metadata_json": {
+      "bytes": 511,
+      "sha256": "e0c102049f0b3fcb24657c412a0e4749bd6f80bb97c6a54d3e44c2cd3028d74c"
+    },
+    "final_json": {
+      "bytes": 34279,
+      "sha256": "f2fe40c85788a5619a42ed20d6e7638a5d5f11aac1d7e6abae7d222844689ef2"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:27:59.531911+00:00"
+  }
+}

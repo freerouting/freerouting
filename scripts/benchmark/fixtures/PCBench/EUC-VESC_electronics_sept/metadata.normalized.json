@@ -1,0 +1,62 @@
+{
+  "board_id": "EUC-VESC_electronics_sept",
+  "display_name": "EUC-VESC_electronics_sept",
+  "pcbench_directory": "PCBs/EUC-VESC_electronics_sept",
+  "source": "https://github.com/EGG-electric-unicycle/EUC-VESC_electronics",
+  "author": "EGG-electric-unicycle",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.354185+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 102,
+    "components": 577,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 150.0
+    },
+    "area_cm2": 150.0,
+    "zones": 66
+  },
+  "reference": {
+    "segments": 1408,
+    "vias": 78,
+    "track_length_mm": 4625.63,
+    "kicad_drc_violations": 958,
+    "kicad_drc_breakdown": {
+      "total_violations": 958,
+      "unconnected_count": 2,
+      "by_type": {
+        "clearance": 261,
+        "courtyards_overlap": 2,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 169,
+        "pth_inside_courtyard": 170,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 199,
+        "silk_overlap": 138,
+        "text_height": 1,
+        "track_dangling": 9,
+        "via_dangling": 2,
+        "zones_intersect": 5
+      },
+      "by_severity": {
+        "error": 439,
+        "warning": 519
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
+}

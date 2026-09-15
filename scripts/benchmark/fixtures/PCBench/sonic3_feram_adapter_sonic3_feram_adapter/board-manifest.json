@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "sonic3_feram_adapter_sonic3_feram_adapter",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 44075,
+      "sha256": "b6c3bd67a8beea790791505d758e637db37f6bae7321f8c1383d1e99420e226f"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 31442,
+      "sha256": "1acfd76bf44a17505b8f829c4ff98b09fc11f0d84e3e16f687b5bd30d18eded8"
+    },
+    "metadata_json": {
+      "bytes": 532,
+      "sha256": "4fa2be4fdfdcb223c095dc44eaeda4c4ae6ef601f6ac5f37fd590ad4068140c7"
+    },
+    "final_json": {
+      "bytes": 33921,
+      "sha256": "0ecdc007b3e6ffbe3cdc81c2a42ab999ff7c220907de30c0f72854c9161cbe70"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:46:45.084832+00:00"
+  }
+}

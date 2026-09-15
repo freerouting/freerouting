@@ -28,9 +28,9 @@ public class PolylineArea implements Area, Serializable {
       TileShape dividePiece, TileShape holePiece, Collection<TileShape> pieces) {
     TileShape[] resultPieces = dividePiece.cutout(holePiece);
     for (int i = 0; i < resultPieces.length; i++) {
-      TileShape currPiece = resultPieces[i];
-      if (currPiece.dimension() == 2) {
-        pieces.add(currPiece);
+      TileShape currentPiece = resultPieces[i];
+      if (currentPiece.dimension() == 2) {
+        pieces.add(currentPiece);
       }
     }
   }
@@ -107,11 +107,11 @@ public class PolylineArea implements Area, Serializable {
     FloatPoint result = null;
     TileShape[] convexShapes = splitToConvex();
     for (int i = 0; i < convexShapes.length; i++) {
-      FloatPoint currNearestPoint = convexShapes[i].nearestPointApprox(fromPoint);
-      double currDist = currNearestPoint.distanceSquare(fromPoint);
-      if (currDist < minDist) {
-        minDist = currDist;
-        result = currNearestPoint;
+      FloatPoint currentNearestPoint = convexShapes[i].nearestPointApprox(fromPoint);
+      double currentDistance = currentNearestPoint.distanceSquare(fromPoint);
+      if (currentDistance < minDist) {
+        minDist = currentDistance;
+        result = currentNearestPoint;
       }
     }
     return result;
@@ -137,13 +137,13 @@ public class PolylineArea implements Area, Serializable {
       cornerCount += holeArr[i].borderLineCount();
     }
     FloatPoint[] result = new FloatPoint[cornerCount];
-    FloatPoint[] currCornerArr = borderShape.cornerApproxArr();
-    System.arraycopy(currCornerArr, 0, result, 0, currCornerArr.length);
-    int destPos = currCornerArr.length;
+    FloatPoint[] currentCornerArr = borderShape.cornerApproxArr();
+    System.arraycopy(currentCornerArr, 0, result, 0, currentCornerArr.length);
+    int destPos = currentCornerArr.length;
     for (int i = 0; i < holeArr.length; i++) {
-      currCornerArr = holeArr[i].cornerApproxArr();
-      System.arraycopy(currCornerArr, 0, result, destPos, currCornerArr.length);
-      destPos += currCornerArr.length;
+      currentCornerArr = holeArr[i].cornerApproxArr();
+      System.arraycopy(currentCornerArr, 0, result, destPos, currentCornerArr.length);
+      destPos += currentCornerArr.length;
     }
     return result;
   }
@@ -163,7 +163,7 @@ public class PolylineArea implements Area, Serializable {
    * Splits this polygon shape with holes into convex pieces. The result is not exact, because
    * rounded intersections of lines are used in the result pieces. It can be made exact, if
    * Polylines are returned instead of Polygons, so that no intersection points are needed in the
-   * result. If p_stoppable_thread != null, this function can be interrupted.
+   * result. If stoppableThread != null, this function can be interrupted.
    */
   public TileShape[] splitToConvex(Stoppable stoppableThread) {
     if (precalculatedConvexPieces == null) {
@@ -172,7 +172,7 @@ public class PolylineArea implements Area, Serializable {
         // split failed
         return null;
       }
-      Collection<TileShape> currPieceList = new LinkedList<>(Arrays.asList(convexBorderPieces));
+      Collection<TileShape> currentPieceList = new LinkedList<>(Arrays.asList(convexBorderPieces));
       for (int i = 0; i < holeArr.length; i++) {
         if (holeArr[i].dimension() < 2) {
           FRLogger.warn("PolylineArea. split_to_convex: dimension 2 for hole expected");
@@ -183,19 +183,19 @@ public class PolylineArea implements Area, Serializable {
           return null;
         }
         for (int j = 0; j < convexHolePieces.length; j++) {
-          TileShape currHolePiece = convexHolePieces[j];
+          TileShape currentHolePiece = convexHolePieces[j];
           Collection<TileShape> newPieceList = new LinkedList<>();
-          for (TileShape currDividePiece : currPieceList) {
+          for (TileShape currentDividePiece : currentPieceList) {
             if (stoppableThread != null && stoppableThread.isStopRequested()) {
               return null;
             }
-            cutoutHolePiece(currDividePiece, currHolePiece, newPieceList);
+            cutoutHolePiece(currentDividePiece, currentHolePiece, newPieceList);
           }
-          currPieceList = newPieceList;
+          currentPieceList = newPieceList;
         }
       }
-      precalculatedConvexPieces = new TileShape[currPieceList.size()];
-      Iterator<TileShape> it = currPieceList.iterator();
+      precalculatedConvexPieces = new TileShape[currentPieceList.size()];
+      Iterator<TileShape> it = currentPieceList.iterator();
       for (int i = 0; i < precalculatedConvexPieces.length; i++) {
         precalculatedConvexPieces[i] = it.next();
       }

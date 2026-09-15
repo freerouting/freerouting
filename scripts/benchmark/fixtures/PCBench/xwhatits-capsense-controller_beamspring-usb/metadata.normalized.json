@@ -1,0 +1,61 @@
+{
+  "board_id": "xwhatits-capsense-controller_beamspring-usb",
+  "display_name": "xwhatits-capsense-controller_beamspring-usb",
+  "pcbench_directory": "PCBs/xwhatits-capsense-controller_beamspring-usb",
+  "source": "https://github.com/BASLQC/xwhatits-capsense-controller",
+  "author": "BASLQC",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:25.393738+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 36,
+    "dimensions_mm": {
+      "width": 145.5,
+      "height": 21.25
+    },
+    "area_cm2": 30.92,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 868,
+    "vias": 105,
+    "track_length_mm": 2471.57,
+    "kicad_drc_violations": 448,
+    "kicad_drc_breakdown": {
+      "total_violations": 448,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 92,
+        "copper_edge_clearance": 80,
+        "invalid_outline": 3,
+        "padstack": 2,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 177,
+        "silk_overlap": 12,
+        "text_height": 63,
+        "track_dangling": 7
+      },
+      "by_severity": {
+        "error": 177,
+        "warning": 271
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

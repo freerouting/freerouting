@@ -1,0 +1,25 @@
+{
+  "board": "esp8266-external-temp-sensor_external-temp-sensor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\esp8266-external-temp-sensor_external-temp-sensor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 60,
+  "approximate_track_length_mm": 167.77,
+  "kicad_drc_violations": 107,
+  "generated_at": "2026-08-18T18:46:35.885286+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 107,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 65,
+      "lib_footprint_issues": 14,
+      "malformed_courtyard": 6,
+      "silk_over_copper": 22
+    },
+    "by_severity": {
+      "error": 71,
+      "warning": 36
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "board": "rufs_smart_psu",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\rufs_smart_psu\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 179,
+  "approximate_track_length_mm": 416.12,
+  "kicad_drc_violations": 62,
+  "generated_at": "2026-08-18T19:42:35.070025+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 62,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 22,
+      "lib_footprint_issues": 26,
+      "silk_over_copper": 12,
+      "silk_overlap": 1,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 22,
+      "warning": 40
+    }
+  }
+}

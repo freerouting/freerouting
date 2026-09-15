@@ -1,0 +1,62 @@
+{
+  "board_id": "WordClock_v2.0_WordClock_v2",
+  "display_name": "WordClock_v2.0_WordClock_v2",
+  "pcbench_directory": "PCBs/WordClock_v2.0_WordClock_v2",
+  "source": "https://github.com/icchalmers/WordClock_v2.0",
+  "author": "icchalmers",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:55.410091+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 105.55,
+      "height": 33.62
+    },
+    "area_cm2": 35.49,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 220,
+    "vias": 0,
+    "track_length_mm": 693.02,
+    "kicad_drc_violations": 88,
+    "kicad_drc_breakdown": {
+      "total_violations": 88,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 25,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 41,
+        "silk_overlap": 13
+      },
+      "by_severity": {
+        "warning": 88
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.162669+00:00",
+    "elapsed_seconds": 11.07,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

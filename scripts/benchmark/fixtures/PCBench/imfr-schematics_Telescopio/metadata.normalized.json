@@ -1,0 +1,55 @@
+{
+  "board_id": "imfr-schematics_Telescopio",
+  "display_name": "imfr-schematics_Telescopio",
+  "pcbench_directory": "PCBs/imfr-schematics_Telescopio",
+  "source": "https://github.com/IMFR11Ghz/imfr-schematics",
+  "author": "IMFR11Ghz",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.718012+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 201.93,
+      "height": 119.38
+    },
+    "area_cm2": 241.06,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 261,
+    "vias": 0,
+    "track_length_mm": 1491.88,
+    "kicad_drc_violations": 290,
+    "kicad_drc_breakdown": {
+      "total_violations": 290,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 218,
+        "lib_footprint_issues": 19,
+        "silk_edge_clearance": 9,
+        "silk_overlap": 44
+      },
+      "by_severity": {
+        "error": 218,
+        "warning": 72
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "tier-c",
+    "zone"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

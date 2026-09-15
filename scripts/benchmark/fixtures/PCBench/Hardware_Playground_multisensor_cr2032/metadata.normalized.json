@@ -1,0 +1,61 @@
+{
+  "board_id": "Hardware_Playground_multisensor_cr2032",
+  "display_name": "Hardware_Playground_multisensor_cr2032",
+  "pcbench_directory": "PCBs/Hardware_Playground_multisensor_cr2032",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 147,
+    "dimensions_mm": {
+      "width": 14.99,
+      "height": 9.91
+    },
+    "area_cm2": 1.49,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 417,
+    "vias": 39,
+    "track_length_mm": 727.64,
+    "kicad_drc_violations": 558,
+    "kicad_drc_breakdown": {
+      "total_violations": 558,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 105,
+        "clearance": 106,
+        "copper_edge_clearance": 25,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 42,
+        "pth_inside_courtyard": 87,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 97,
+        "starved_thermal": 2,
+        "text_height": 90
+      },
+      "by_severity": {
+        "error": 425,
+        "warning": 133
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

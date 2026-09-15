@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "phone_rtty_interface_phone_rtty_rev_b",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 283401,
+      "sha256": "9c5f16a252b3aa81c5632c4ec7b5aa141b0be7b3f35cd39f9c56c8849cf0c657"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 160398,
+      "sha256": "d1a57a7feb3c06fdb49eee23cdc99b4d802ac88776e6f515014fd63c8fbf833f"
+    },
+    "metadata_json": {
+      "bytes": 672,
+      "sha256": "9ba09403dea8e317aaead7496ba7a5ac9ee8149d71d54afd7f5b39c05527d660"
+    },
+    "final_json": {
+      "bytes": 48400,
+      "sha256": "0084f2c9e7ae3bca92b137131bd8ba448f885a15872aaf9522ce7771fa2f4017"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:33:02.115993+00:00"
+  }
+}

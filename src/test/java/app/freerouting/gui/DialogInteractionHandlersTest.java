@@ -8,8 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveSettings;
+import app.freerouting.gui.controls.ComboBoxLayer;
+import app.freerouting.gui.windows.routing.WindowAutorouteParameter;
+import app.freerouting.gui.windows.routing.WindowClearanceMatrix;
+import app.freerouting.gui.windows.routing.WindowNetClasses;
+import app.freerouting.gui.windows.routing.WindowRouteParameter;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.rules.ClearanceMatrix;
 import app.freerouting.rules.NetClass;
 import app.freerouting.settings.RouterSettings;
@@ -19,42 +24,39 @@ class DialogInteractionHandlersTest {
 
   @Test
   void routingSettingsCheckboxAndRadioInteractionsInvokeExpectedSetters() {
-    InteractiveSettings interactiveSettings = mock(InteractiveSettings.class);
+    WorkspaceSettings workspaceSettings = mock(WorkspaceSettings.class);
     GuiBoardManager boardManager = mock(GuiBoardManager.class);
 
-    WindowRouteParameter.applyStitchRouteSelection(interactiveSettings, true);
-    WindowRouteParameter.applyPushAndShoveSelection(interactiveSettings, false);
+    WindowRouteParameter.applyStitchRouteSelection(workspaceSettings, true);
+    WindowRouteParameter.applyPushAndShoveSelection(workspaceSettings, false);
     WindowRouteParameter.applyIgnoreConductionSelection(boardManager, true);
     WindowRouteParameter.applyClearanceCompensationSelection(boardManager, false);
     WindowRouteParameter.applyPinExitEdgeToTurnDistance(boardManager, 125.5f);
 
-    verify(interactiveSettings).setStitchRoute(true);
-    verify(interactiveSettings).setPushEnabled(false);
+    verify(workspaceSettings).setStitchRoute(true);
+    verify(workspaceSettings).setPushEnabled(false);
     verify(boardManager).setIgnoreConduction(true);
     verify(boardManager).setClearanceCompensation(false);
     verify(boardManager).setPinEdgeToTurnDist(125.5f);
   }
 
   @Test
-  void autoRouterSettingsCheckboxAndAlgorithmInteractionsInvokeExpectedSetters() {
+  void autoRouterSettingsCheckboxInteractionsInvokeExpectedSetters() {
     RouterSettings settings = mock(RouterSettings.class);
 
     WindowAutorouteParameter.applyViasAllowedSelection(settings, true);
     WindowAutorouteParameter.applyAutorouteEnabledSelection(settings, false);
     WindowAutorouteParameter.applyOptimizerEnabledSelection(settings, true);
-    WindowAutorouteParameter.applyAlgorithmSelection(settings, true);
-    WindowAutorouteParameter.applyAlgorithmSelection(settings, false);
 
     verify(settings).setViasAllowed(true);
     verify(settings).setEnabled(false);
     verify(settings).setOptimizerEnabled(true);
-    verify(settings).setAlgorithm(RouterSettings.ALGORITHM_V19);
-    verify(settings).setAlgorithm(RouterSettings.ALGORITHM_CURRENT);
   }
 
   @Test
   void autoRouterSettingsTextFieldNormalizationHandlesBoundsAndInvalidInputs() {
     assertEquals(1, WindowAutorouteParameter.normalizeIntInput(0, 9, 1, 9999));
+    assertEquals(0, WindowAutorouteParameter.normalizeIntInput(0, 9, 0, 9999));
     assertEquals(9999, WindowAutorouteParameter.normalizeIntInput(12000, 9, 1, 9999));
     assertEquals(42, WindowAutorouteParameter.normalizeIntInput(42, 9, 1, 9999));
     assertEquals(9, WindowAutorouteParameter.normalizeIntInput("bad", 9, 1, 9999));

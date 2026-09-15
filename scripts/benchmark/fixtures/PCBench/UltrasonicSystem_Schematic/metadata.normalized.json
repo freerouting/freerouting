@@ -1,0 +1,58 @@
+{
+  "board_id": "UltrasonicSystem_Schematic",
+  "display_name": "UltrasonicSystem_Schematic",
+  "pcbench_directory": "PCBs/UltrasonicSystem_Schematic",
+  "source": "https://github.com/Sonicators/UltrasonicSystem",
+  "author": "Sonicators",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.829743+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 67,
+    "components": 94,
+    "dimensions_mm": {
+      "width": 145.0,
+      "height": 110.0
+    },
+    "area_cm2": 159.5,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 679,
+    "vias": 10,
+    "track_length_mm": 3365.66,
+    "kicad_drc_violations": 566,
+    "kicad_drc_breakdown": {
+      "total_violations": 566,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 371,
+        "lib_footprint_issues": 94,
+        "malformed_courtyard": 4,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 39,
+        "silk_overlap": 54,
+        "starved_thermal": 2
+      },
+      "by_severity": {
+        "error": 377,
+        "warning": 189
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

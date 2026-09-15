@@ -1,0 +1,28 @@
+{
+  "board": "mac-pro-conversion_front-panel-usb-adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mac-pro-conversion_front-panel-usb-adapter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 27,
+  "approximate_track_length_mm": 75.39,
+  "kicad_drc_violations": 66,
+  "generated_at": "2026-08-18T19:19:22.535326+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 66,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 49,
+      "holes_co_located": 4,
+      "isolated_copper": 2,
+      "lib_footprint_issues": 3,
+      "silk_edge_clearance": 3,
+      "solder_mask_bridge": 4,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 53,
+      "warning": 13
+    }
+  }
+}

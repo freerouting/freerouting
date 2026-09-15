@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "hardware-designs_soil-moisture-sensor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 134312,
+      "sha256": "38ed9e512175b7bdd25a9c2788c0e4df6b607faea6105dabec434723e2bfc5a0"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 74909,
+      "sha256": "2e062e558144490cd93cb46a9d8cf20770ed8f7b5b9ad8962614591b22979a98"
+    },
+    "metadata_json": {
+      "bytes": 552,
+      "sha256": "84fe6eba1d9b0a8d7a5b34f2b4ee2c9670e7cb62cd5c0401fce6bd9ae7a23546"
+    },
+    "final_json": {
+      "bytes": 30004,
+      "sha256": "8f6d774c47032d903e802e70f2de5e26ba724dfccf7b2ca0818d462a7a7f4195"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:52:45.075316+00:00"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "board": "microphone_preamp",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\microphone_preamp\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 25,
+  "segment_count": 148,
+  "approximate_track_length_mm": 321.76,
+  "kicad_drc_violations": 84,
+  "generated_at": "2026-08-18T19:23:12.374079+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 84,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 49,
+      "lib_footprint_issues": 26,
+      "malformed_courtyard": 6,
+      "silk_over_copper": 1,
+      "solder_mask_bridge": 2
+    },
+    "by_severity": {
+      "error": 57,
+      "warning": 27
+    }
+  }
+}

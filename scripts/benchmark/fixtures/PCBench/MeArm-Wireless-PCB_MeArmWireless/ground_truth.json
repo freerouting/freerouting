@@ -1,0 +1,31 @@
+{
+  "board": "MeArm-Wireless-PCB_MeArmWireless",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MeArm-Wireless-PCB_MeArmWireless\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 38,
+  "segment_count": 382,
+  "approximate_track_length_mm": 1203.61,
+  "kicad_drc_violations": 290,
+  "generated_at": "2026-08-18T19:21:00.579686+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 290,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 147,
+      "copper_edge_clearance": 12,
+      "items_not_allowed": 40,
+      "lib_footprint_issues": 31,
+      "silk_edge_clearance": 11,
+      "silk_over_copper": 34,
+      "silk_overlap": 3,
+      "solder_mask_bridge": 1,
+      "starved_thermal": 5,
+      "text_height": 6
+    },
+    "by_severity": {
+      "error": 205,
+      "warning": 85
+    }
+  }
+}

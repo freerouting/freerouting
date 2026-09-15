@@ -29,13 +29,13 @@ Below is a comprehensive list of command-line options available in Freerouting, 
     - Freerouting design rules file (`.rules` - optional)
 
   The DSN file is mandatory, while the SES and RULES files are optional.
-  They can be provided in any order, separately or appended by the `+` sign (e.g. `-de myboard.dsn+myboard.ses+myboard.rules`).
+  They can be provided in any order, separately or combined with the `+` delimiter (e.g. `-de myboard.dsn+myboard.ses+myboard.rules` or `-de myboard.dsn+myboard.rules`). When a `.rules` file is loaded, its design rules, net classes, clearances, via definitions, and `(autoroute_settings ...)` / `(layer_rule ...)` parameters are applied to the board and autorouter configuration. If no rules file is explicitly specified, Freerouting will automatically look for an adjacent `<boardname>.rules` file in the same directory as the DSN file.
 
 - **`-do [design output file]`**
   Saves the routing results when the routing is finished. The output can be:
   - Specctra board (`.dsn`)
   - Specctra session file (`.ses`)
-  - Eagle session script file (`.scr`)
+  - Autodesk Fusion script file (`.scr`)
 
   The output format is determined by the file extension provided.
 
@@ -43,7 +43,7 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   Sets the default folder for the open design dialogs when using the GUI.
 
 - **`-dr [design rules file]`**
-  Reads design rules from a previously saved `.rules` file.
+  Reads design rules from an explicit `.rules` file. Supports design rules, net classes, clearances, via definitions, and `(autoroute_settings ...)` / `(layer_rule ...)` blocks.
 
 - **`-drc [design rules check json file]`**
   Writes the design rules check report in KiCad JSON DRC schema format.
@@ -59,11 +59,16 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   - Set to `0` to disable route optimization.
   - Increasing the number may improve performance on multi-core systems.
 
-- **`-oit [percentage]`**
-  Specifies the optimizer improvement threshold per pass:
-  - Default: `0.1%`
-  - The optimizer stops if the improvement falls below this threshold.
-  - Setting `-oit 0` continues optimization until manually stopped or no further improvements are possible.
+- **`--router.optimizer.improvement_threshold=[percentage]`**
+  Specifies the relative optimizer pass-improvement stopping threshold directly as a percentage (e.g. `2.5` = 2.5%, `5.5` = 5.5%):
+  - Default: `2.5` (2.5%)
+  - Practical ranges and tradeoffs:
+    - `0.5 – 1.0` (0.5% – 1.0%): Precision mode. Maximizes via elimination on complex boards, but runs significantly longer with diminishing-return tail passes.
+    - `2.0 – 2.5` (2.0% – 2.5%): Balanced default. Retains >80% of via reductions while cutting optimizer runtime by ~25%.
+    - `3.5 – 5.0` (3.5% – 5.0%): Fast mode. Cuts optimizer runtime by ~45%, retaining ~65% of via reductions.
+    - `> 5.5` (> 5.5%): Rapid prototyping. Stops after 1–2 passes; not recommended for production boards where via minimization matters.
+  - Setting `0.0` continues optimization until `max_passes` is reached or no further improvements are possible.
+  - *Note:* The legacy `-oit` flag is deprecated and no longer supported. A warning will be logged if used.
 
 - **`-inc [net class names]`**
   Lists net classes to ignore during autorouting:
@@ -162,10 +167,15 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   Sets the **console** logging level. Equivalent to `--logging.console.level=[level]`.
 
 - **`--user_data_path=[directory]`**
-  Defines the directory where configuration and log files are stored.
+  Defines the directory where configuration and user data files are stored.
   - Purpose:
-    - `freerouting.log` will be created in this directory.
     - `freerouting.json` (settings) will be read from this directory if it exists, or created there if it doesn't.
+    - Saved routing jobs (`data/`) will be stored under this directory.
+    - When `--logging.file.location` is not specified, `freerouting.log` will be created in this directory if `--user_data_path` is explicitly set, or in the platform default log directory if left at default.
+  - Default locations:
+    - **Windows:** `%APPDATA%\freerouting` (e.g. `C:\Users\<User>\AppData\Roaming\freerouting`)
+    - **macOS:** `~/Library/Application Support/freerouting`
+    - **Linux / POSIX:** `$XDG_CONFIG_HOME/freerouting` (default `~/.config/freerouting`)
   - Format constraint: Must use the `--user_data_path=path` syntax with an equals sign.
   - If the directory does not exist when Freerouting starts, it is created automatically on the first write (e.g. when `freerouting.json` is saved for the first time). A warning is printed to stderr if the initial `mkdirs()` attempt fails; the path is still registered and the directory will be created later.
   - This option takes priority over the `FREEROUTING__USER_DATA_PATH` environment variable and over `FREEROUTING__LOGGING__FILE__LOCATION`.
@@ -203,10 +213,10 @@ Settings whose value is a list (e.g. `api_server.endpoints`) accept a **comma-se
 
 ```bash
 # Single endpoint
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864
 
 # Multiple endpoints (comma-separated)
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
 ```
 
 The equivalent environment-variable syntax is:
@@ -243,7 +253,7 @@ FREEROUTING__ROUTER__LAYERS__PREFERRED_DIRECTION_HORIZONTAL=true,false
 |---------|------|-------------|
 | `api_server.enabled` | Boolean | Enable or disable the built-in REST API server. |
 | `api_server.http_allowed` | Boolean | Allow plain HTTP connections (in addition to HTTPS). |
-| `api_server-endpoints` | String list | Comma-separated list of `protocol://host:port` endpoints the server will bind to. Default: `http://127.0.0.1:37864`. |
+| `api_server.endpoints` | String list | Comma-separated list of `protocol://host:port` endpoints the server will bind to. Default: `http://127.0.0.1:37864`. |
 | `api_server.authentication.enabled` | Boolean | Require API-key authentication. Default: `true`. |
 | `api_server.cors_origins` | String | Comma-separated CORS origin allowlist (use `*` for all origins). |
 
@@ -254,7 +264,7 @@ java -jar freerouting-executable.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
-  --api_server-endpoints=http://0.0.0.0:37864
+  --api_server.endpoints=http://0.0.0.0:37864
 ```
 
 For a complete self-hosting walkthrough — including Docker Compose, systemd, and platform-specific notes — see the [Self-Hosting Guide](self-hosting.md).

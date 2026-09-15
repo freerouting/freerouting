@@ -1,0 +1,33 @@
+{
+  "board": "Hardware_Playground_esp8266_uno",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_esp8266_uno\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 39,
+  "segment_count": 339,
+  "approximate_track_length_mm": 1214.21,
+  "kicad_drc_violations": 349,
+  "generated_at": "2026-08-18T18:53:23.691404+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 349,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 87,
+      "clearance": 171,
+      "copper_edge_clearance": 3,
+      "courtyards_overlap": 2,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 39,
+      "malformed_courtyard": 7,
+      "npth_inside_courtyard": 1,
+      "pth_inside_courtyard": 13,
+      "silk_edge_clearance": 10,
+      "silk_over_copper": 13,
+      "starved_thermal": 2
+    },
+    "by_severity": {
+      "error": 287,
+      "warning": 62
+    }
+  }
+}

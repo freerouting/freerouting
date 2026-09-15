@@ -1,0 +1,64 @@
+{
+  "board_id": "crossover-schiit-stack_xover4schiit",
+  "display_name": "crossover-schiit-stack_xover4schiit",
+  "pcbench_directory": "PCBs/crossover-schiit-stack_xover4schiit",
+  "source": "https://github.com/introprose/crossover-schiit-stack",
+  "author": "introprose",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:40.773919+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 28.0,
+      "height": 53.0
+    },
+    "area_cm2": 14.84,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 8,
+    "vias": 0,
+    "track_length_mm": 77.58,
+    "kicad_drc_violations": 18,
+    "kicad_drc_breakdown": {
+      "total_violations": 18,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "lib_footprint_issues": 3,
+        "silk_overlap": 8,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 12
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.888277+00:00",
+    "elapsed_seconds": 4.39,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Hardware_Playground_heater_actuator_node",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 731620,
+      "sha256": "b64086f94da3c5bc72d257e31968beb68c7fa44eda1548970c03b1148750000b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 693679,
+      "sha256": "9117dafcc31d38cf3fa261e0c7267a64849867f2f3a6743f2bed603def1f42dc"
+    },
+    "metadata_json": {
+      "bytes": 535,
+      "sha256": "518e1a44773e51bff1c334d87bb04aacefa582bd3a0bc86a1622a55fe1f187a3"
+    },
+    "final_json": {
+      "bytes": 440502,
+      "sha256": "f2b78203c137ad50619a1cef773b47060708be12b60f02d0dd90404c7e159b9b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:53:34.648289+00:00"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "board": "rgb-strip-controller__autosave-rgb-strip",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\rgb-strip-controller__autosave-rgb-strip\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 8,
+  "segment_count": 108,
+  "approximate_track_length_mm": 337.76,
+  "kicad_drc_violations": 124,
+  "generated_at": "2026-08-18T19:40:45.144662+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 124,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 82,
+      "lib_footprint_issues": 20,
+      "silk_overlap": 12,
+      "text_height": 10
+    },
+    "by_severity": {
+      "error": 82,
+      "warning": 42
+    }
+  }
+}

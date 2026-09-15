@@ -1,0 +1,66 @@
+{
+  "board_id": "kitspace_PWR",
+  "display_name": "kitspace_PWR",
+  "pcbench_directory": "PCBs/kitspace_PWR",
+  "source": "https://github.com/nerdyscout/NodeMCU",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/nerdyscout/NodeMCU/master/lib/LICENSE.md'}, {'name': 'CERN', 'link': 'https://raw.githubusercontent.com/nerdyscout/NodeMCU/master/CO2/LICENSE.TXT'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:13:40.138010+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 26.67,
+      "height": 53.34
+    },
+    "area_cm2": 14.23,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 59,
+    "vias": 0,
+    "track_length_mm": 260.43,
+    "kicad_drc_violations": 245,
+    "kicad_drc_breakdown": {
+      "total_violations": 245,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 17,
+        "lib_footprint_issues": 3,
+        "lib_footprint_mismatch": 12,
+        "pth_inside_courtyard": 93,
+        "silk_over_copper": 37,
+        "silk_overlap": 16,
+        "solder_mask_bridge": 60
+      },
+      "by_severity": {
+        "error": 177,
+        "warning": 68
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.000194+00:00",
+    "elapsed_seconds": 25.08,
+    "unrouted_nets": 5,
+    "clearance_violations": 6,
+    "quality_score": 793.33
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "TMC261-stepstick_TMC261-stepstick-v1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 63994,
+      "sha256": "bf47178963e8577ad0b0c8785b5e9fc602abc98014ca445546f0b77dd84a6178"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 66023,
+      "sha256": "533b0af310fd1263b346c7bf674d72c03a141ecee27a62a7954f78400e2dc4a5"
+    },
+    "metadata_json": {
+      "bytes": 516,
+      "sha256": "b574352344a319e1f84c98a882f234fe084368d9a22a8d7419ce60ca65e13b55"
+    },
+    "final_json": {
+      "bytes": 72957,
+      "sha256": "0ad7aa96589d84c01c04175c6607f6ae329dc15f9923369488b1565bccb82f55"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:52:58.319402+00:00"
+  }
+}

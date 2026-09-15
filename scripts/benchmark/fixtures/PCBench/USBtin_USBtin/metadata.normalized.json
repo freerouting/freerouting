@@ -1,0 +1,65 @@
+{
+  "board_id": "USBtin_USBtin",
+  "display_name": "USBtin_USBtin",
+  "pcbench_directory": "PCBs/USBtin_USBtin",
+  "source": "https://github.com/Villanut0/USBtin",
+  "author": "Villanut0",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.318067+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 18,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 32.0,
+      "height": 65.0
+    },
+    "area_cm2": 20.8,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 149,
+    "vias": 4,
+    "track_length_mm": 440.71,
+    "kicad_drc_violations": 34,
+    "kicad_drc_breakdown": {
+      "total_violations": 34,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 1,
+        "isolated_copper": 1,
+        "lib_footprint_mismatch": 21,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 1,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 28
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.158669+00:00",
+    "elapsed_seconds": 16.33,
+    "unrouted_nets": 2,
+    "clearance_violations": 0,
+    "quality_score": 962.96
+  }
+}

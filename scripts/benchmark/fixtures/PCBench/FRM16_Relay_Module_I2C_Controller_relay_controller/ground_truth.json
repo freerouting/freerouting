@@ -1,0 +1,27 @@
+{
+  "board": "FRM16_Relay_Module_I2C_Controller_relay_controller",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\FRM16_Relay_Module_I2C_Controller_relay_controller\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 6,
+  "segment_count": 269,
+  "approximate_track_length_mm": 1330.49,
+  "kicad_drc_violations": 64,
+  "generated_at": "2026-08-18T18:50:40.930283+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 64,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 8,
+      "copper_edge_clearance": 18,
+      "lib_footprint_issues": 31,
+      "silk_overlap": 2,
+      "starved_thermal": 3,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 29,
+      "warning": 35
+    }
+  }
+}

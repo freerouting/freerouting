@@ -1,0 +1,37 @@
+{
+  "board": "BlueBerry-Zero_blueberry",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BlueBerry-Zero_blueberry\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 68,
+  "segment_count": 294,
+  "approximate_track_length_mm": 491.95,
+  "kicad_drc_violations": 569,
+  "generated_at": "2026-08-18T18:34:25.939316+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 569,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 167,
+      "copper_edge_clearance": 7,
+      "courtyards_overlap": 1,
+      "hole_clearance": 32,
+      "holes_co_located": 25,
+      "items_not_allowed": 70,
+      "lib_footprint_issues": 50,
+      "padstack": 4,
+      "silk_edge_clearance": 9,
+      "silk_over_copper": 145,
+      "silk_overlap": 6,
+      "starved_thermal": 8,
+      "text_height": 39,
+      "track_dangling": 1,
+      "zones_intersect": 1
+    },
+    "by_severity": {
+      "error": 290,
+      "warning": 279
+    }
+  }
+}

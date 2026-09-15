@@ -1,0 +1,133 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\autohat-board_usd-adapter\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  159090 -125075  141925 -125075  141925 -89949.9  159090 -89949.9
+            159090 -125075)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component connectors:PSB_IDC_4x2
+      (place P1 150368 -121412 front 180 (PN CONN_02X04))
+    )
+    (component connectors:usd
+      (place J1 147300 -92580 front 0 (PN "usd-plug"))
+    )
+  )
+  (library
+    (image connectors:PSB_IDC_4x2
+      (outline (path signal 150  -5080 3175  5080 3175))
+      (outline (path signal 150  5080 3175  5080 -3175))
+      (outline (path signal 150  5080 -3175  -5080 -3175))
+      (outline (path signal 150  -5080 -3175  -5080 3175))
+      (pin Oval[A][0.000000,250.000000]Pad_1500.000000x2000.000000_um 8 3810 1270)
+      (pin "Oval[A][0.000000,-250.000000]Pad_1500.000000x2000.000000_um" 7 3810 -1270)
+      (pin "Rect[A][0.000000,-250.000000]Pad_1500.000000x2000.000000_um" 1 -3810 -1270)
+      (pin Oval[A][0.000000,250.000000]Pad_1500.000000x2000.000000_um 2 -3810 1270)
+      (pin "Oval[A][0.000000,-250.000000]Pad_1500.000000x2000.000000_um" 3 -1270 -1270)
+      (pin Oval[A][0.000000,250.000000]Pad_1500.000000x2000.000000_um 4 -1270 1270)
+      (pin "Oval[A][0.000000,-250.000000]Pad_1500.000000x2000.000000_um" 5 1270 -1270)
+      (pin Oval[A][0.000000,250.000000]Pad_1500.000000x2000.000000_um 6 1270 1270)
+    )
+    (image connectors:usd
+      (pin Rect[T]Pad_800.000000x2900.000000_um 8 7700 0)
+      (pin Rect[T]Pad_800.000000x2900.000000_um 7 6600 0)
+      (pin Rect[T]Pad_800.000000x3200.000000_um 6 5500 150)
+      (pin Rect[T]Pad_800.000000x2900.000000_um 5 4400 0)
+      (pin Rect[T]Pad_800.000000x3200.000000_um 4 3300 150)
+      (pin Rect[T]Pad_800.000000x2900.000000_um 3 2200 0)
+      (pin Rect[T]Pad_800.000000x2900.000000_um 2 1100 0)
+      (pin Rect[T]Pad_800.000000x2900.000000_um 1 0 0)
+    )
+    (padstack "Oval[A][0.000000,-250.000000]Pad_1500.000000x2000.000000_um"
+      (shape (path F.Cu 1500  0 -500  0 0))
+      (shape (path B.Cu 1500  0 -500  0 0))
+      (attach off)
+    )
+    (padstack Oval[A][0.000000,250.000000]Pad_1500.000000x2000.000000_um
+      (shape (path F.Cu 1500  0 0  0 500))
+      (shape (path B.Cu 1500  0 0  0 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x2900.000000_um
+      (shape (rect F.Cu -400 -1450 400 1450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x3200.000000_um
+      (shape (rect F.Cu -400 -1600 400 1600))
+      (attach off)
+    )
+    (padstack "Rect[A][0.000000,-250.000000]Pad_1500.000000x2000.000000_um"
+      (shape (rect F.Cu -750 -1250 750 750))
+      (shape (rect B.Cu -750 -1250 750 750))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net /N8
+      (pins P1-8 J1-8)
+    )
+    (net /N7
+      (pins P1-7 J1-7)
+    )
+    (net /N6
+      (pins P1-6 J1-6)
+    )
+    (net /N5
+      (pins P1-5 J1-5)
+    )
+    (net /N4
+      (pins P1-4 J1-4)
+    )
+    (net /N3
+      (pins P1-3 J1-3)
+    )
+    (net /N2
+      (pins P1-2 J1-2)
+    )
+    (net /N1
+      (pins P1-1 J1-1)
+    )
+    (class kicad_default /N1 /N2 /N3 /N4 /N5 /N6 /N7 /N8
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

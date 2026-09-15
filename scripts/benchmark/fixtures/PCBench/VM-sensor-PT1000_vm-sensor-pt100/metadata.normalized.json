@@ -1,0 +1,59 @@
+{
+  "board_id": "VM-sensor-PT1000_vm-sensor-pt100",
+  "display_name": "VM-sensor-PT1000_vm-sensor-pt100",
+  "pcbench_directory": "PCBs/VM-sensor-PT1000_vm-sensor-pt100",
+  "source": "https://github.com/iotmakervn/VM-sensor-PT1000",
+  "author": "iotmakervn",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.409938+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 36.0,
+      "height": 50.5
+    },
+    "area_cm2": 18.18,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 171,
+    "vias": 44,
+    "track_length_mm": 516.11,
+    "kicad_drc_violations": 137,
+    "kicad_drc_breakdown": {
+      "total_violations": 137,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 52,
+        "lib_footprint_issues": 27,
+        "silk_edge_clearance": 14,
+        "silk_overlap": 16,
+        "solder_mask_bridge": 2,
+        "starved_thermal": 1,
+        "text_height": 1,
+        "via_dangling": 24
+      },
+      "by_severity": {
+        "error": 55,
+        "warning": 82
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

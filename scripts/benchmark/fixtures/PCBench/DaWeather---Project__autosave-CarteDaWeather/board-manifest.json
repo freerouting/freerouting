@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "DaWeather---Project__autosave-CarteDaWeather",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 52707,
+      "sha256": "c57312398be1347a663b4e2141f64140a4cf956bb39b5ea24f7073d388588f5b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 65892,
+      "sha256": "10803da1d7695a478653bc248182c9a2eda8d316fa544ef02dbaa29a70c44bf7"
+    },
+    "metadata_json": {
+      "bytes": 553,
+      "sha256": "85a3451688ccab072c69ba56efecf15ecc8a17b23af4ec7c65789e11327e4e95"
+    },
+    "final_json": {
+      "bytes": 45080,
+      "sha256": "0d5da5de26017651c1499282623bb624fafd5c71a3e5ba3201a4319204525bdf"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:40:22.485303+00:00"
+  }
+}

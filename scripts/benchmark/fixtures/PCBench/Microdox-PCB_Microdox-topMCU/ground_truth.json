@@ -1,0 +1,31 @@
+{
+  "board": "Microdox-PCB_Microdox-topMCU",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Microdox-PCB_Microdox-topMCU\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 567,
+  "approximate_track_length_mm": 1797.83,
+  "kicad_drc_violations": 710,
+  "generated_at": "2026-08-18T19:22:51.344605+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 710,
+    "unconnected_count": 21,
+    "by_type": {
+      "annular_width": 62,
+      "clearance": 133,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 36,
+      "padstack": 58,
+      "shorting_items": 203,
+      "silk_edge_clearance": 7,
+      "silk_overlap": 5,
+      "solder_mask_bridge": 202,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 602,
+      "warning": 108
+    }
+  }
+}

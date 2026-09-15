@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "soil-moisture-sensor-analog_analog-moist-sensor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 104109,
+      "sha256": "4b36dfd5c8528a0f22543405f6fe008f7ed975cc8a81c03ee399d89f97486bc3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 69487,
+      "sha256": "6be578c1ddddc9b1d52b2e1ca8e9cf86a8c6b81c68f33b578eff152ad23ef4f2"
+    },
+    "metadata_json": {
+      "bytes": 740,
+      "sha256": "725784d001bc4c1adf42152d85ac2938d50399b0d61deece844252540e0864bc"
+    },
+    "final_json": {
+      "bytes": 58150,
+      "sha256": "62977865e59c88ecedca753753c464a6f85f5b6378e2cb0141dca72084911b53"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:46:24.570415+00:00"
+  }
+}

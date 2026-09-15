@@ -1,0 +1,28 @@
+{
+  "board": "Hardware_Playground_serial_gw_maple_mini",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_serial_gw_maple_mini\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 88,
+  "approximate_track_length_mm": 485.65,
+  "kicad_drc_violations": 307,
+  "generated_at": "2026-08-18T18:55:29.579323+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 307,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 170,
+      "clearance": 107,
+      "copper_edge_clearance": 1,
+      "invalid_outline": 3,
+      "lib_footprint_issues": 19,
+      "pth_inside_courtyard": 6,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 288,
+      "warning": 19
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "board_id": "kitspace_Mixtape_Barebone",
+  "display_name": "kitspace_Mixtape_Barebone",
+  "pcbench_directory": "PCBs/kitspace_Mixtape_Barebone",
+  "source": "https://github.com/8BitMixtape/mCore_Mixtape",
+  "author": "",
+  "license": "[{'name': 'License not found', 'link': ''}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:16:51.049455+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 35.49,
+      "height": 23.23
+    },
+    "area_cm2": 8.24,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 116,
+    "vias": 0,
+    "track_length_mm": 223.01,
+    "kicad_drc_violations": 301,
+    "kicad_drc_breakdown": {
+      "total_violations": 301,
+      "unconnected_count": 6,
+      "by_type": {
+        "clearance": 88,
+        "copper_edge_clearance": 1,
+        "invalid_outline": 17,
+        "lib_footprint_issues": 31,
+        "shorting_items": 9,
+        "solder_mask_bridge": 151,
+        "starved_thermal": 2,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 268,
+        "warning": 33
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

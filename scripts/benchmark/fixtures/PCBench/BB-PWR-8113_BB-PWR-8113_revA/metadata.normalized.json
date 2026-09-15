@@ -1,0 +1,59 @@
+{
+  "board_id": "BB-PWR-8113_BB-PWR-8113_revA",
+  "display_name": "BB-PWR-8113_BB-PWR-8113_revA",
+  "pcbench_directory": "PCBs/BB-PWR-8113_BB-PWR-8113_revA",
+  "source": "https://github.com/OLIMEX/BB-PWR-8113",
+  "author": "OLIMEX",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:55.822096+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 28,
+    "dimensions_mm": {
+      "width": 19.69,
+      "height": 13.34
+    },
+    "area_cm2": 2.63,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 81,
+    "vias": 0,
+    "track_length_mm": 122.24,
+    "kicad_drc_violations": 115,
+    "kicad_drc_breakdown": {
+      "total_violations": 115,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 3,
+        "clearance": 19,
+        "copper_edge_clearance": 15,
+        "lib_footprint_issues": 27,
+        "silk_over_copper": 36,
+        "silk_overlap": 6,
+        "starved_thermal": 1,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 38,
+        "warning": 77
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

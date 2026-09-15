@@ -15,6 +15,8 @@ import app.freerouting.rules.BoardRules;
 import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.Unit;
 import app.freerouting.board.ClearanceViolation;
+import app.freerouting.core.results.RoutingResultManifest;
+import app.freerouting.core.scoring.BoardStatistics;
 import java.util.HashSet;
 
 import java.util.Collection;
@@ -167,6 +169,11 @@ public class BatchOptRoute {
     float startScore = calculateScore(ratsNestStart);
     int startIncomplete = ratsNestStart.incomplete_count();
     int startViolations = calculateViolationsCount();
+    RoutingResultManifest.PhaseSnapshot before = new RoutingResultManifest.PhaseSnapshot();
+    before.boardStatistics = new BoardStatistics(routing_board);
+    before.score = startScore;
+    before.scoreSource = "v19_native";
+    thread.hdlg.resultPhaseMetrics.optimizer.before = before;
 
     if (routing_board.get_test_level() != TestLevel.RELEASE_VERSION) {
       FRLogger.warn(
@@ -222,6 +229,16 @@ public class BatchOptRoute {
     float endScore = calculateScore(ratsNestEnd);
     int endIncomplete = ratsNestEnd.incomplete_count();
     int endViolations = calculateViolationsCount();
+    RoutingResultManifest.PhaseSnapshot after = new RoutingResultManifest.PhaseSnapshot();
+    after.boardStatistics = new BoardStatistics(routing_board);
+    after.score = endScore;
+    after.scoreSource = "v19_native";
+    thread.hdlg.resultPhaseMetrics.optimizer.after = after;
+    thread.hdlg.resultPhaseMetrics.optimizer.durationSeconds =
+        (float) ((phaseEndTime - phaseStartTime) / 1000.0);
+    thread.hdlg.resultPhaseMetrics.optimizer.cpuSeconds = (float) totalCpuTime;
+    thread.hdlg.resultPhaseMetrics.optimizer.totalAllocatedGb = (float) totalAllocatedGb;
+    thread.hdlg.resultPhaseMetrics.optimizer.peakHeapMb = (float) peakHeap;
 
     String optimizerCompletionStatus = isStopRequested.is_stop_requested() ? "interrupted:" : "completed:";
     FRLogger.info(String.format(java.util.Locale.US,

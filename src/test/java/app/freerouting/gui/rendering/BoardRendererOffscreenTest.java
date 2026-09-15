@@ -3,7 +3,7 @@ package app.freerouting.gui.rendering;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.autoroute.AutorouteDiagnostic;
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.io.BoardReadResult;

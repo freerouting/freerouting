@@ -55,14 +55,14 @@ public class LayerSettings implements Serializable, Cloneable {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
+  public boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (other == null || getClass() != other.getClass()) {
       return false;
     }
-    LayerSettings that = (LayerSettings) o;
+    LayerSettings that = (LayerSettings) other;
     return java.util.Objects.equals(routable, that.routable)
         && java.util.Objects.equals(preferredDirectionHorizontal, that.preferredDirectionHorizontal)
         && java.util.Objects.equals(bendCost, that.bendCost);

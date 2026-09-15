@@ -1,0 +1,67 @@
+{
+  "board_id": "Camera-Modules_LG-G2-G3-13M-Breakout",
+  "display_name": "Camera-Modules_LG-G2-G3-13M-Breakout",
+  "pcbench_directory": "PCBs/Camera-Modules_LG-G2-G3-13M-Breakout",
+  "source": "https://github.com/cyrozap/Camera-Modules",
+  "author": "cyrozap",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:50.186030+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 8,
+    "dimensions_mm": {
+      "width": 45.72,
+      "height": 68.58
+    },
+    "area_cm2": 31.35,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1291,
+    "vias": 42,
+    "track_length_mm": 955.28,
+    "kicad_drc_violations": 461,
+    "kicad_drc_breakdown": {
+      "total_violations": 461,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 42,
+        "clearance": 349,
+        "hole_clearance": 12,
+        "lib_footprint_issues": 8,
+        "solder_mask_bridge": 46,
+        "starved_thermal": 3,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 452,
+        "warning": 9
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.857644+00:00",
+    "elapsed_seconds": 14.33,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

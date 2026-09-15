@@ -1,0 +1,199 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Smart-Watch_BON-PCB\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  144653 -127762  109093 -127762  109093 -92202  144653 -92202
+            144653 -127762)
+    )
+    (plane /GND (polygon F.Cu 0  144526 -127635  144399 -102997  134112 -102870  134112 -96012
+            126492 -96012  126492 -98933  109347 -98933  109220 -127635
+            144526 -127635))
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component TP_SW
+      (place TP6 127711.2 -96570.8 front 0 (PN RTCC))
+      (place TP7 130632.2 -96596.2 front 0 (PN SCL))
+      (place TP8 129159 -96570.8 front 0 (PN SDA))
+    )
+    (component "PIN-ARRAY_11x1"
+      (place P1 133096 -124333 front 180 (PN CONN_11))
+    )
+    (component 1_Pin_0.04dia
+      (place TP1 122605.8 -112102.9 front 0 (PN 3.3VDC))
+      (place TP2 122605.8 -116357.4 front 0 (PN GND))
+      (place TP9 129235.2 -119938.8 front 0 (PN +13VDC))
+      (place TP10 110083.6 -112395 front 0 (PN "USB +5VDC"))
+      (place TP11 117170.2 -100787.2 front 0 (PN VBAT))
+    )
+    (component TP2_SW
+      (place TP3 138185 -106540 front 0 (PN PGD))
+      (place TP4 137285 -107640 front 0 (PN PGC))
+      (place TP5 139014.2 -108026.2 front 0 (PN MCLR))
+    )
+    (component "OSHW-logo_copper-back_8mm"
+      (place G*** 139827 -96520 front 0 (PN "OSHW-logo_copper-back_8mm"))
+    )
+  )
+  (library
+    (image TP_SW
+      (pin Rect[A]Pad_1200.000000x2032.000000_um 1 0 -1270)
+    )
+    (image "PIN-ARRAY_11x1"
+      (outline (path signal 150  -6350 1270  -6350 -1270))
+      (outline (path signal 150  -8890 1270  -8890 -1270))
+      (outline (path signal 150  -8890 -1270  19050 -1270))
+      (outline (path signal 150  19050 -1270  19050 1270))
+      (outline (path signal 150  19050 1270  -8890 1270))
+      (pin Round[A]Pad_1524.000000_um 1 -7620 0)
+      (pin Round[A]Pad_1524.000000_um 2 -5080 0)
+      (pin Round[A]Pad_1524.000000_um 3 -2540 0)
+      (pin Round[A]Pad_1524.000000_um 4 0 0)
+      (pin Round[A]Pad_1524.000000_um 5 2540 0)
+      (pin Round[A]Pad_1524.000000_um 6 5080 0)
+      (pin Round[A]Pad_1524.000000_um 7 7620 0)
+      (pin Round[A]Pad_1524.000000_um 8 10160 0)
+      (pin Round[A]Pad_1524.000000_um 9 12700 0)
+      (pin Round[A]Pad_1524.000000_um 10 15240 0)
+      (pin Round[A]Pad_1524.000000_um 11 17780 0)
+    )
+    (image 1_Pin_0.04dia
+      (pin Round[A]Pad_2032.000000_um 1 0 -1270)
+    )
+    (image TP2_SW
+      (pin Round[A]Pad_1200.000000_um 1 0 -1270)
+    )
+    (image "OSHW-logo_copper-back_8mm"
+    )
+    (padstack Round[A]Pad_1200.000000_um
+      (shape (circle F.Cu 1200))
+      (shape (circle B.Cu 1200))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2032.000000_um
+      (shape (circle F.Cu 2032))
+      (shape (circle B.Cu 2032))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1200.000000x2032.000000_um
+      (shape (rect F.Cu -600 -1016 600 1016))
+      (shape (rect B.Cu -600 -1016 600 1016))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net /+13VDC
+      (pins P1-5 TP9-1)
+    )
+    (net /+3.3VDC
+      (pins P1-9 TP1-1)
+    )
+    (net /GND
+      (pins P1-8 TP2-1)
+    )
+    (net /MCLR
+      (pins P1-1 TP5-1)
+    )
+    (net /PGC
+      (pins P1-2 TP4-1)
+    )
+    (net /PGD
+      (pins P1-3 TP3-1)
+    )
+    (net /RTCC
+      (pins TP6-1 P1-4)
+    )
+    (net /SCL
+      (pins TP7-1 P1-6)
+    )
+    (net /SDA
+      (pins TP8-1 P1-7)
+    )
+    (net "/USB +5VDC"
+      (pins P1-11 TP10-1)
+    )
+    (net /VBAT
+      (pins P1-10 TP11-1)
+    )
+    (class kicad_default /+13VDC /+3.3VDC /GND /MCLR /PGC /PGD /RTCC /SCL
+      /SDA "/USB +5VDC" /VBAT
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 635  130556 -124333  130556 -122530  129235 -121209)(net /+13VDC)(type route))
+    (wire (path F.Cu 635  122606 -113373  121831 -113373)(net /+3.3VDC)(type route))
+    (wire (path F.Cu 635  120396 -114808  120396 -124333)(net /+3.3VDC)(type route))
+    (wire (path F.Cu 635  121831 -113373  120396 -114808)(net /+3.3VDC)(type route))
+    (wire (path F.Cu 635  122606 -117627  122606 -124003  122936 -124333)(net /GND)(type route))
+    (wire (path F.Cu 635  139014 -109296  140538 -109296)(net /MCLR)(type route))
+    (wire (path F.Cu 635  140716 -109474  140716 -124333)(net /MCLR)(type route))
+    (wire (path F.Cu 635  140538 -109296  140716 -109474)(net /MCLR)(type route))
+    (wire (path F.Cu 635  137285 -108910  137285 -116838)(net /PGC)(type route))
+    (wire (path F.Cu 635  138176 -117729  138176 -124333)(net /PGC)(type route))
+    (wire (path F.Cu 635  137285 -116838  138176 -117729)(net /PGC)(type route))
+    (wire (path F.Cu 635  135636 -124333  135636 -111506)(net /PGD)(type route))
+    (wire (path F.Cu 635  138185 -105419  138185 -107810)(net /PGD)(type route))
+    (wire (path F.Cu 635  137541 -104775  138185 -105419)(net /PGD)(type route))
+    (wire (path F.Cu 635  136271 -104775  137541 -104775)(net /PGD)(type route))
+    (wire (path F.Cu 635  134747 -106299  136271 -104775)(net /PGD)(type route))
+    (wire (path F.Cu 635  134747 -110617  134747 -106299)(net /PGD)(type route))
+    (wire (path F.Cu 635  135636 -111506  134747 -110617)(net /PGD)(type route))
+    (wire (path F.Cu 635  127711 -97840.8  127711 -95554.8)(net /RTCC)(type route))
+    (wire (path F.Cu 635  133096 -96901  133096 -124333)(net /RTCC)(type route))
+    (wire (path F.Cu 635  131699 -95504  133096 -96901)(net /RTCC)(type route))
+    (wire (path F.Cu 635  127762 -95504  131699 -95504)(net /RTCC)(type route))
+    (wire (path F.Cu 635  127711 -95554.8  127762 -95504)(net /RTCC)(type route))
+    (wire (path F.Cu 635  130632 -97866.2  130632 -102921)(net /SCL)(type route))
+    (wire (path F.Cu 635  127127 -123444  128016 -124333)(net /SCL)(type route))
+    (wire (path F.Cu 635  127127 -106426  127127 -123444)(net /SCL)(type route))
+    (wire (path F.Cu 635  130632 -102921  127127 -106426)(net /SCL)(type route))
+    (wire (path F.Cu 635  125476 -124333  125476 -105664)(net /SDA)(type route))
+    (wire (path F.Cu 635  129159 -101981  129159 -97840.8)(net /SDA)(type route))
+    (wire (path F.Cu 635  125476 -105664  129159 -101981)(net /SDA)(type route))
+    (wire (path F.Cu 635  110084 -113665  110084 -121387)(net "/USB +5VDC")(type route))
+    (wire (path F.Cu 635  113030 -124333  115316 -124333)(net "/USB +5VDC")(type route))
+    (wire (path F.Cu 635  110084 -121387  113030 -124333)(net "/USB +5VDC")(type route))
+    (wire (path F.Cu 635  117170 -102057  117170 -123647  117856 -124333)(net /VBAT)(type route))
+  )
+)

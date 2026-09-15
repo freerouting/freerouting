@@ -1,0 +1,29 @@
+{
+  "board": "ReST32_ReST SD-Module",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ReST32_ReST SD-Module\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 11,
+  "segment_count": 86,
+  "approximate_track_length_mm": 305.31,
+  "kicad_drc_violations": 125,
+  "generated_at": "2026-08-18T19:39:24.812102+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 125,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 84,
+      "copper_edge_clearance": 1,
+      "lib_footprint_issues": 15,
+      "npth_inside_courtyard": 4,
+      "pth_inside_courtyard": 12,
+      "silk_over_copper": 1,
+      "silk_overlap": 6,
+      "solder_mask_bridge": 2
+    },
+    "by_severity": {
+      "error": 103,
+      "warning": 22
+    }
+  }
+}

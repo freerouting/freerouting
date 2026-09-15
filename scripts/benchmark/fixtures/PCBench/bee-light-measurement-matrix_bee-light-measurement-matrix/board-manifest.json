@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "bee-light-measurement-matrix_bee-light-measurement-matrix",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 283407,
+      "sha256": "3b6e9a60674b765d22f16e62be47d9966e1df893d36ad0dda62aca6e1b3df88f"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 179456,
+      "sha256": "f8695f1028267750497d137052581a2999019ea1064b01787a129c148a2781b1"
+    },
+    "metadata_json": {
+      "bytes": 585,
+      "sha256": "152b3e0c0e4cad6255ef4a2425de8e05830c3499c8191e0c81ecfc24a5602deb"
+    },
+    "final_json": {
+      "bytes": 168110,
+      "sha256": "35f8911bc18553f3347d693d7bb46bd341ca21450abe683747759e0027ba4eba"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:32:47.679092+00:00"
+  }
+}

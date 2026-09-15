@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "solar-lora_solar-lora",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 236401,
+      "sha256": "32fa6eb69edbabce69f24c3f6fe6e3a812e40c71376db0aa14e36f26e6e1919a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 157536,
+      "sha256": "0aba73fcf5dae607c15aacb871ed4be92eae126781fc3f551d95c21b8b42d47d"
+    },
+    "metadata_json": {
+      "bytes": 465,
+      "sha256": "07474efd284be6d42dfc205f066e19df699fb8c06281738c3b3d831940332d32"
+    },
+    "final_json": {
+      "bytes": 148038,
+      "sha256": "6bb6e1f8ccc853c48c41f77ffa39923bd854a72880dbb0d6d7111e7f836f6ecb"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:46:35.334857+00:00"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "board_id": "NRC2016_z80",
+  "display_name": "NRC2016_z80",
+  "pcbench_directory": "PCBs/NRC2016_z80",
+  "source": "https://github.com/alangarf/NRC2016",
+  "author": "alangarf",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:42.389938+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 19,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 104.77,
+      "height": 111.76
+    },
+    "area_cm2": 117.09,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 860,
+    "vias": 36,
+    "track_length_mm": 4980.15,
+    "kicad_drc_violations": 694,
+    "kicad_drc_breakdown": {
+      "total_violations": 694,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 417,
+        "courtyards_overlap": 15,
+        "lib_footprint_issues": 36,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 199,
+        "silk_overlap": 24,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 432,
+        "warning": 262
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

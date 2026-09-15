@@ -1,0 +1,59 @@
+{
+  "board_id": "mechkeys_lfk78-jtag",
+  "display_name": "mechkeys_lfk78-jtag",
+  "pcbench_directory": "PCBs/mechkeys_lfk78-jtag",
+  "source": "https://github.com/BalzGuenat/mechkeys",
+  "author": "BalzGuenat",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.641894+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 2,
+    "dimensions_mm": {
+      "width": 18.42,
+      "height": 15.24
+    },
+    "area_cm2": 2.81,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 51,
+    "vias": 0,
+    "track_length_mm": 129.87,
+    "kicad_drc_violations": 2,
+    "kicad_drc_breakdown": {
+      "total_violations": 2,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 2
+      },
+      "by_severity": {
+        "warning": 2
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.029585+00:00",
+    "elapsed_seconds": 5.71,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

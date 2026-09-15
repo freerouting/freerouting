@@ -1,0 +1,30 @@
+{
+  "board": "RASPMINI_RASPmini",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RASPMINI_RASPmini\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 138,
+  "approximate_track_length_mm": 713.88,
+  "kicad_drc_violations": 240,
+  "generated_at": "2026-08-18T19:38:11.888034+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 240,
+    "unconnected_count": 9,
+    "by_type": {
+      "clearance": 141,
+      "copper_edge_clearance": 6,
+      "courtyards_overlap": 3,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 15,
+      "malformed_courtyard": 54,
+      "silk_overlap": 4,
+      "starved_thermal": 15,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 220,
+      "warning": 20
+    }
+  }
+}

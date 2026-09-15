@@ -1,0 +1,218 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\LED_port-status_LED_port-status\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Front
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Back
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  102870 -80698.8  103014 -80745.7  103137 -80835  103226 -80957.9
+            103273 -81102.4  103276 -81178.4  103276 -92710  103273 -92786
+            103226 -92930.5  103137 -93053.4  103014 -93142.7  102870 -93189.6
+            102794 -93192.6  80010 -93192.6  79934 -93189.6  79789.5 -93142.7
+            79666.6 -93053.4  79577.3 -92930.5  79530.4 -92786  79527.4 -92710
+            79527.4 -81178.4  79530.4 -81102.4  79577.3 -80957.9  79666.6 -80835
+            79789.5 -80745.7  79934 -80698.8  80010 -80695.8  102794 -80695.8
+            102870 -80698.8)
+    )
+    (via "Via[0-1]_635:330.2_um")
+    (rule
+      (width 300)
+      (clearance 300)
+      (clearance 75 (type smd_smd))
+    )
+  )
+  (placement
+    (component MADW__1206*4_resistor_array
+      (place RP1 85100 -88000 back 0 (PN 1k))
+      (place RP2 95300 -88000 back 0 (PN 1k))
+    )
+    (component "SIL-9"
+      (place P1 91440 -91440 front 180 (PN CONN_9))
+    )
+    (component LOGO
+      (place G2 81400 -82500 back 180 (PN LOGO))
+      (place G1 101400 -82500 back 180 (PN LOGO))
+    )
+    (component my_parts:R_0805_0603_0402_0201
+      (place D7 96520 -87630 front -90 (PN LED))
+      (place D2 83820 -87630 front -90 (PN LED))
+      (place D3 86360 -87630 front -90 (PN LED))
+      (place D4 88900 -87630 front -90 (PN LED))
+      (place D5 91440 -87630 front -90 (PN LED))
+      (place D6 93980 -87630 front -90 (PN LED))
+      (place D8 99060 -87630 front -90 (PN LED))
+      (place D15 96520 -83185 front -90 (PN LED))
+      (place D16 99060 -83185 front -90 (PN LED))
+      (place D1 81280 -87630 front -90 (PN LED))
+      (place D11 86360 -83185 front -90 (PN LED))
+      (place D12 88900 -83185 front -90 (PN LED))
+      (place D9 81280 -83185 front -90 (PN LED))
+      (place D10 83820 -83185 front -90 (PN LED))
+      (place D13 91440 -83185 front -90 (PN LED))
+      (place D14 93980 -83185 front -90 (PN LED))
+    )
+  )
+  (library
+    (image MADW__1206*4_resistor_array
+      (pin Rect[T]Pad_650.000000x1000.000000_um 8 -1325 900)
+      (pin Rect[T]Pad_500.000000x1000.000000_um 7 -400 900)
+      (pin Rect[T]Pad_500.000000x1000.000000_um 6 400 900)
+      (pin Rect[T]Pad_650.000000x1000.000000_um 5 1325 900)
+      (pin Rect[T]Pad_650.000000x1000.000000_um 1 -1325 -900)
+      (pin Rect[T]Pad_500.000000x1000.000000_um 2 -400 -900)
+      (pin Rect[T]Pad_500.000000x1000.000000_um 3 400 -900)
+      (pin Rect[T]Pad_650.000000x1000.000000_um 4 1325 -900)
+    )
+    (image "SIL-9"
+      (pin Rect[A]Pad_1650.000000x1650.000000_um 1 -10160 0)
+      (pin Round[A]Pad_1650.000000_um 2 -7620 0)
+      (pin Round[A]Pad_1650.000000_um 3 -5080 0)
+      (pin Round[A]Pad_1650.000000_um 4 -2540 0)
+      (pin Round[A]Pad_1650.000000_um 5 0 0)
+      (pin Round[A]Pad_1650.000000_um 6 2540 0)
+      (pin Round[A]Pad_1650.000000_um 7 5080 0)
+      (pin Round[A]Pad_1650.000000_um 8 7620 0)
+      (pin Round[A]Pad_1650.000000_um 9 10160 0)
+    )
+    (image LOGO
+    )
+    (image my_parts:R_0805_0603_0402_0201
+      (outline (polygon signal 0  1995 1045  1995 -1045  -1995 -1045  -1995 1045))
+      (pin Rect[T]Pad_1000.000000x1300.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1000.000000x1300.000000_um 2 1100 0)
+      (pin Rect[T]Pad_800.000000x900.000000_um 1@1 -900 0)
+      (pin Rect[T]Pad_800.000000x900.000000_um 2@1 900 0)
+      (pin Rect[T]Pad_800.000000x600.000000_um 1@2 -650 0)
+      (pin Rect[T]Pad_800.000000x600.000000_um 2@2 650 0)
+      (pin Rect[T]Pad_280.000000x430.000000_um 1@3 -255 0)
+      (pin Rect[T]Pad_280.000000x430.000000_um 2@3 255 0)
+    )
+    (padstack Round[A]Pad_1650.000000_um
+      (shape (circle Front 1650))
+      (shape (circle Back 1650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_280.000000x430.000000_um
+      (shape (rect Front -140 -215 140 215))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x1000.000000_um
+      (shape (rect Front -250 -500 250 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_650.000000x1000.000000_um
+      (shape (rect Front -325 -500 325 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x600.000000_um
+      (shape (rect Front -400 -300 400 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x900.000000_um
+      (shape (rect Front -400 -450 400 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1300.000000_um
+      (shape (rect Front -500 -650 500 650))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1650.000000x1650.000000_um
+      (shape (rect Front -825 -825 825 825))
+      (shape (rect Back -825 -825 825 825))
+      (attach off)
+    )
+    (padstack "Via[0-1]_635:330.2_um"
+      (shape (circle Front 635))
+      (shape (circle Back 635))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(D1-Pad1)"
+      (pins P1-1 D7-1 D7-1@1 D7-1@2 D7-1@3 D2-1 D2-1@1 D2-1@2 D2-1@3 D3-1 D3-1@1 D3-1@2
+        D3-1@3 D4-1 D4-1@1 D4-1@2 D4-1@3 D5-1 D5-1@1 D5-1@2 D5-1@3 D6-1 D6-1@1 D6-1@2
+        D6-1@3 D8-1 D8-1@1 D8-1@2 D8-1@3 D15-2 D15-2@1 D15-2@2 D15-2@3 D16-2 D16-2@1
+        D16-2@2 D16-2@3 D1-1 D1-1@1 D1-1@2 D1-1@3 D11-2 D11-2@1 D11-2@2 D11-2@3 D12-2
+        D12-2@1 D12-2@2 D12-2@3 D9-2 D9-2@1 D9-2@2 D9-2@3 D10-2 D10-2@1 D10-2@2 D10-2@3
+        D13-2 D13-2@1 D13-2@2 D13-2@3 D14-2 D14-2@1 D14-2@2 D14-2@3)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins RP1-5 D1-2 D1-2@1 D1-2@2 D1-2@3 D9-1 D9-1@1 D9-1@2 D9-1@3)
+    )
+    (net "Net-(D10-Pad1)"
+      (pins RP1-6 D2-2 D2-2@1 D2-2@2 D2-2@3 D10-1 D10-1@1 D10-1@2 D10-1@3)
+    )
+    (net "Net-(D11-Pad1)"
+      (pins RP1-7 D3-2 D3-2@1 D3-2@2 D3-2@3 D11-1 D11-1@1 D11-1@2 D11-1@3)
+    )
+    (net "Net-(D12-Pad1)"
+      (pins RP1-8 D4-2 D4-2@1 D4-2@2 D4-2@3 D12-1 D12-1@1 D12-1@2 D12-1@3)
+    )
+    (net "Net-(D13-Pad1)"
+      (pins RP2-5 D5-2 D5-2@1 D5-2@2 D5-2@3 D13-1 D13-1@1 D13-1@2 D13-1@3)
+    )
+    (net "Net-(D14-Pad1)"
+      (pins RP2-6 D6-2 D6-2@1 D6-2@2 D6-2@3 D14-1 D14-1@1 D14-1@2 D14-1@3)
+    )
+    (net "Net-(D15-Pad1)"
+      (pins RP2-7 D7-2 D7-2@1 D7-2@2 D7-2@3 D15-1 D15-1@1 D15-1@2 D15-1@3)
+    )
+    (net "Net-(D16-Pad1)"
+      (pins RP2-8 D8-2 D8-2@1 D8-2@2 D8-2@3 D16-1 D16-1@1 D16-1@2 D16-1@3)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins RP2-1 P1-2)
+    )
+    (net "Net-(P1-Pad3)"
+      (pins RP2-2 P1-3)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins RP2-3 P1-4)
+    )
+    (net "Net-(P1-Pad5)"
+      (pins RP2-4 P1-5)
+    )
+    (net "Net-(P1-Pad6)"
+      (pins RP1-1 P1-6)
+    )
+    (net "Net-(P1-Pad7)"
+      (pins RP1-2 P1-7)
+    )
+    (net "Net-(P1-Pad8)"
+      (pins RP1-3 P1-8)
+    )
+    (net "Net-(P1-Pad9)"
+      (pins RP1-4 P1-9)
+    )
+    (class kicad_default "Net-(D1-Pad1)" "Net-(D1-Pad2)" "Net-(D10-Pad1)"
+      "Net-(D11-Pad1)" "Net-(D12-Pad1)" "Net-(D13-Pad1)" "Net-(D14-Pad1)"
+      "Net-(D15-Pad1)" "Net-(D16-Pad1)" "Net-(P1-Pad2)" "Net-(P1-Pad3)" "Net-(P1-Pad4)"
+      "Net-(P1-Pad5)" "Net-(P1-Pad6)" "Net-(P1-Pad7)" "Net-(P1-Pad8)" "Net-(P1-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_635:330.2_um")
+      )
+      (rule
+        (width 300)
+        (clearance 300)
+      )
+    )
+  )
+  (wiring
+  )
+)

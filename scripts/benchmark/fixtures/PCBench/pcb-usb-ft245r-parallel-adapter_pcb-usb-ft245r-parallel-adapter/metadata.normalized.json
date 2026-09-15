@@ -1,0 +1,63 @@
+{
+  "board_id": "pcb-usb-ft245r-parallel-adapter_pcb-usb-ft245r-parallel-adapter",
+  "display_name": "pcb-usb-ft245r-parallel-adapter_pcb-usb-ft245r-parallel-adapter",
+  "pcbench_directory": "PCBs/pcb-usb-ft245r-parallel-adapter_pcb-usb-ft245r-parallel-adapter",
+  "source": "https://github.com/yeokm1/pcb-usb-ft245r-parallel-adapter",
+  "author": "yeokm1",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:54.594082+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 23,
+    "dimensions_mm": {
+      "width": 49.0,
+      "height": 57.0
+    },
+    "area_cm2": 27.93,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 124,
+    "vias": 9,
+    "track_length_mm": 313.56,
+    "kicad_drc_violations": 77,
+    "kicad_drc_breakdown": {
+      "total_violations": 77,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 18,
+        "lib_footprint_issues": 23,
+        "silk_edge_clearance": 8,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 25,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 43,
+        "warning": 34
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.063837+00:00",
+    "elapsed_seconds": 31.78,
+    "unrouted_nets": 0,
+    "clearance_violations": 4,
+    "quality_score": 987.49
+  }
+}

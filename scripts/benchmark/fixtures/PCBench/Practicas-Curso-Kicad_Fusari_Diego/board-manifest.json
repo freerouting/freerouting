@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Practicas-Curso-Kicad_Fusari_Diego",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 16338,
+      "sha256": "b2068026edf51bc4df15043fd1f616afe9892e84648dacb65d6332fa3f545cd5"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 19847,
+      "sha256": "9455db6caac9af61a8462cbf11ce10ea686e10d3b3cad2a18d0da9de9da9be0d"
+    },
+    "metadata_json": {
+      "bytes": 518,
+      "sha256": "e78595ba1c86dc7764c5f5676210e6eb509066328deb33aa432bea33192c7c63"
+    },
+    "final_json": {
+      "bytes": 6746,
+      "sha256": "2e91ebd750c17ceb4b7d4ec8575dd229d4936ca9bc301cdf246574095cd3e091"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:35:43.780049+00:00"
+  }
+}

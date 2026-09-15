@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PmodHDMIIn_PmodHDMIIn",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 193773,
+      "sha256": "46bf6eb976874945e7065b807a4daa7ef964a3f9696e18be8cbb29199f101ba2"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 96286,
+      "sha256": "a2fcc4ad4c1ee492cc44aadd9eb0e2db2e234adff2fbeac8bc8ea4222a885cc8"
+    },
+    "metadata_json": {
+      "bytes": 453,
+      "sha256": "54837b0b9c4ab3c8268b8b887bf6f429a78c17d4ff379d3c3a4d2f4d5c25aa0e"
+    },
+    "final_json": {
+      "bytes": 97692,
+      "sha256": "86eaba28d70dd28b180e4d5316a9a101dc279ff6e67262a962b49efe6dca0c72"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:34:22.271547+00:00"
+  }
+}

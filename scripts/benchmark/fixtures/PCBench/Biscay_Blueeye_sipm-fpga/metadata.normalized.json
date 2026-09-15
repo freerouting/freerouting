@@ -1,0 +1,64 @@
+{
+  "board_id": "Biscay_Blueeye_sipm-fpga",
+  "display_name": "Biscay_Blueeye_sipm-fpga",
+  "pcbench_directory": "PCBs/Biscay_Blueeye_sipm-fpga",
+  "source": "https://github.com/team-impulse/Biscay_Blueeye",
+  "author": "team-impulse",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.166088+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 658,
+    "vias": 37,
+    "track_length_mm": 1496.41,
+    "kicad_drc_violations": 313,
+    "kicad_drc_breakdown": {
+      "total_violations": 313,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 173,
+        "copper_edge_clearance": 12,
+        "lib_footprint_issues": 24,
+        "silk_over_copper": 58,
+        "silk_overlap": 11,
+        "starved_thermal": 8,
+        "track_dangling": 27
+      },
+      "by_severity": {
+        "error": 193,
+        "warning": 120
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.840604+00:00",
+    "elapsed_seconds": 39.38,
+    "unrouted_nets": 21,
+    "clearance_violations": 0,
+    "quality_score": 859.99
+  }
+}

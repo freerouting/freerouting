@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "hackaday_esp-14_power_meter__autosave-esp-14",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 19862,
+      "sha256": "82e2f2d8b92f547d5127eed2ca8dbe7183115cb8a9ea7e5129397e3fd8c8ed5a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 23942,
+      "sha256": "88072ebf2e153417f0030db6924a6db20f096c116dd9b50aa6f4300f7d24ffd9"
+    },
+    "metadata_json": {
+      "bytes": 564,
+      "sha256": "1624911c63577017adcb13ee1af6fbd624d5dd742bf7b2505faa2684954aab3a"
+    },
+    "final_json": {
+      "bytes": 20362,
+      "sha256": "b2391ffc0ce441f81da844b62adc4731cd09f7762c221d4d78ff1ce3bc741a2b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:51:46.037644+00:00"
+  }
+}

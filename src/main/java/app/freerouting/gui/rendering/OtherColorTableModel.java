@@ -14,22 +14,22 @@ public class OtherColorTableModel extends ColorTableModel implements Serializabl
   public OtherColorTableModel(Locale locale) {
     super(1, locale);
     data[0] = new Color[ColumnNames.values().length];
-    Object[] currRow = data[0];
-    currRow[ColumnNames.BACKGROUND.ordinal()] = new Color(0, 16, 35);
-    currRow[ColumnNames.HIGHLIGHT.ordinal()] = Color.white;
-    currRow[ColumnNames.INCOMPLETES.ordinal()] = Color.white;
-    currRow[ColumnNames.OUTLINE.ordinal()] = new Color(100, 150, 255);
-    currRow[ColumnNames.VIOLATIONS.ordinal()] = Color.magenta;
-    currRow[ColumnNames.COMPONENT_FRONT.ordinal()] = new Color(255, 38, 226);
-    currRow[ColumnNames.COMPONENT_BACK.ordinal()] = new Color(38, 233, 255);
-    currRow[ColumnNames.LENGTH_MATCHING_AREA.ordinal()] = Color.green;
-    currRow[ColumnNames.DRILL_HOLE.ordinal()] = Color.black;
-    currRow[ColumnNames.SILKSCREEN_FRONT.ordinal()] = new Color(242, 237, 161);
-    currRow[ColumnNames.SILKSCREEN_BACK.ordinal()] = new Color(232, 178, 167);
-    currRow[ColumnNames.COURTYARD_FRONT.ordinal()] = new Color(255, 38, 226);
-    currRow[ColumnNames.COURTYARD_BACK.ordinal()] = new Color(38, 233, 255);
-    currRow[ColumnNames.FAB_FRONT.ordinal()] = new Color(175, 175, 175);
-    currRow[ColumnNames.FAB_BACK.ordinal()] = new Color(88, 93, 132);
+    Object[] currentRow = data[0];
+    currentRow[ColumnNames.BACKGROUND.ordinal()] = new Color(0, 16, 35);
+    currentRow[ColumnNames.HIGHLIGHT.ordinal()] = Color.white;
+    currentRow[ColumnNames.INCOMPLETES.ordinal()] = Color.white;
+    currentRow[ColumnNames.OUTLINE.ordinal()] = new Color(100, 150, 255);
+    currentRow[ColumnNames.VIOLATIONS.ordinal()] = Color.magenta;
+    currentRow[ColumnNames.COMPONENT_FRONT.ordinal()] = new Color(255, 38, 226);
+    currentRow[ColumnNames.COMPONENT_BACK.ordinal()] = new Color(38, 233, 255);
+    currentRow[ColumnNames.LENGTH_MATCHING_AREA.ordinal()] = Color.green;
+    currentRow[ColumnNames.DRILL_HOLE.ordinal()] = Color.black;
+    currentRow[ColumnNames.SILKSCREEN_FRONT.ordinal()] = new Color(242, 237, 161);
+    currentRow[ColumnNames.SILKSCREEN_BACK.ordinal()] = new Color(232, 178, 167);
+    currentRow[ColumnNames.COURTYARD_FRONT.ordinal()] = new Color(255, 38, 226);
+    currentRow[ColumnNames.COURTYARD_BACK.ordinal()] = new Color(38, 233, 255);
+    currentRow[ColumnNames.FAB_FRONT.ordinal()] = new Color(175, 175, 175);
+    currentRow[ColumnNames.FAB_BACK.ordinal()] = new Color(88, 93, 132);
   }
 
   /** OtherColorTableModel. */

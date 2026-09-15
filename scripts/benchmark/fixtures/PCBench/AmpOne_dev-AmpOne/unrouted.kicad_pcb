@@ -1,0 +1,5074 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 69)
+    (tracks 1132)
+    (zones 0)
+    (modules 164)
+    (nets 80)
+  )
+
+  (page A4)
+  (title_block
+    (title "AmpOne - Class D Amp Module")
+    (date 2017-02-14)
+    (rev 1.0)
+    (company "Open Hardware DSP Platform - www.ohdsp.org")
+    (comment 1 "MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A PARTICULAR PURPOSE.")
+    (comment 2 "is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF")
+    (comment 3 "Licensed under the TAPR Open Hardware License (www.tapr.org/OHL). This documentation")
+    (comment 4 "Copyright Paul Janicki 2017")
+  )
+
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+  )
+
+  (setup
+    (last_trace_width 0.3)
+    (user_trace_width 0.135)
+    (user_trace_width 0.2)
+    (user_trace_width 0.35)
+    (user_trace_width 0.5)
+    (user_trace_width 0.75)
+    (user_trace_width 0.8)
+    (user_trace_width 1)
+    (user_trace_width 1.2)
+    (trace_clearance 0.15)
+    (zone_clearance 0.5)
+    (zone_45_only yes)
+    (trace_min 0.127)
+    (via_size 0.8)
+    (via_drill 0.5)
+    (via_min_size 0.5)
+    (via_min_drill 0.3)
+    (user_via 0.5 0.3)
+    (user_via 0.6 0.3)
+    (user_via 0.7 0.4)
+    (user_via 0.8 0.5)
+    (user_via 1 0.6)
+    (user_via 1 0.8)
+    (user_via 1.2 0.8)
+    (user_via 1.5 1.2)
+    (uvia_size 0.6)
+    (uvia_drill 0.2)
+    (uvias_allowed no)
+    (uvia_min_size 0.508)
+    (uvia_min_drill 0.127)
+    (edge_width 0.1)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.3 1.3)
+    (pad_drill 0.9)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 107 136)
+    (grid_origin 107 136)
+    (visible_elements 7FFFFF7F)
+    (pcbplotparams
+      (layerselection 0x00008_00000000)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer false)
+      (linewidth 0.150000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin true)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "../Drawings/PCB/SVG"))
+  )
+
+  (net 0 "")
+  (net 1 GNDD)
+  (net 2 VCC)
+  (net 3 /InputStage/P1)
+  (net 4 /InputStage/N1)
+  (net 5 /InputStage/P2)
+  (net 6 /InputStage/N2)
+  (net 7 "Net-(C312-Pad2)")
+  (net 8 /InputStage/P3)
+  (net 9 /InputStage/N3)
+  (net 10 /InputStage/P4)
+  (net 11 /InputStage/N4)
+  (net 12 "Net-(C315-Pad2)")
+  (net 13 /TDA7498/MUTE)
+  (net 14 /TDA7498/STBY)
+  (net 15 "Net-(C329-Pad2)")
+  (net 16 "Net-(C201-Pad2)")
+  (net 17 "Net-(C205-Pad2)")
+  (net 18 "Net-(C208-Pad2)")
+  (net 19 "Net-(C212-Pad2)")
+  (net 20 "Net-(C215-Pad2)")
+  (net 21 "Net-(C219-Pad2)")
+  (net 22 "Net-(C222-Pad2)")
+  (net 23 "Net-(C226-Pad2)")
+  (net 24 "Net-(C304-Pad1)")
+  (net 25 "Net-(C304-Pad2)")
+  (net 26 "Net-(C306-Pad1)")
+  (net 27 "Net-(C306-Pad2)")
+  (net 28 "Net-(C307-Pad2)")
+  (net 29 "Net-(C311-Pad1)")
+  (net 30 "Net-(C311-Pad2)")
+  (net 31 "Net-(C313-Pad1)")
+  (net 32 "Net-(C315-Pad1)")
+  (net 33 "Net-(C316-Pad1)")
+  (net 34 "Net-(C316-Pad2)")
+  (net 35 "Net-(C317-Pad2)")
+  (net 36 "Net-(C321-Pad1)")
+  (net 37 "Net-(C323-Pad1)")
+  (net 38 "Net-(C324-Pad1)")
+  (net 39 "Net-(C330-Pad1)")
+  (net 40 "Net-(C334-Pad1)")
+  (net 41 "Net-(C334-Pad2)")
+  (net 42 "Net-(C339-Pad1)")
+  (net 43 "Net-(C339-Pad2)")
+  (net 44 "Net-(C340-Pad2)")
+  (net 45 "Net-(C344-Pad1)")
+  (net 46 "Net-(C344-Pad2)")
+  (net 47 "Net-(C345-Pad2)")
+  (net 48 "Net-(C346-Pad1)")
+  (net 49 "Net-(C348-Pad1)")
+  (net 50 "Net-(C348-Pad2)")
+  (net 51 "Net-(C349-Pad1)")
+  (net 52 "Net-(C349-Pad2)")
+  (net 53 "Net-(C350-Pad2)")
+  (net 54 "Net-(C354-Pad1)")
+  (net 55 "Net-(C356-Pad1)")
+  (net 56 "Net-(C361-Pad2)")
+  (net 57 "Net-(C362-Pad1)")
+  (net 58 "Net-(L301-Pad1)")
+  (net 59 "Net-(L304-Pad1)")
+  (net 60 "Net-(L305-Pad1)")
+  (net 61 "Net-(L308-Pad1)")
+  (net 62 "Net-(P201-Pad4)")
+  (net 63 "Net-(P201-Pad6)")
+  (net 64 "Net-(P201-Pad8)")
+  (net 65 "Net-(P201-Pad10)")
+  (net 66 "Net-(P201-Pad12)")
+  (net 67 "Net-(P201-Pad14)")
+  (net 68 "Net-(P201-Pad16)")
+  (net 69 "Net-(P201-Pad18)")
+  (net 70 "Net-(P303-Pad2)")
+  (net 71 "Net-(P304-Pad2)")
+  (net 72 "Net-(P305-Pad2)")
+  (net 73 "Net-(R311-Pad2)")
+  (net 74 "Net-(R316-Pad1)")
+  (net 75 /TDA7498/3v3)
+  (net 76 /TDA7498/GAIN0A)
+  (net 77 /TDA7498/GAIN1A)
+  (net 78 /TDA7498/GAIN0B)
+  (net 79 /TDA7498/GAIN1B)
+
+  (net_class Default "This is the default net class."
+    (clearance 0.15)
+    (trace_width 0.3)
+    (via_dia 0.8)
+    (via_drill 0.5)
+    (uvia_dia 0.6)
+    (uvia_drill 0.2)
+    (add_net /InputStage/N1)
+    (add_net /InputStage/N2)
+    (add_net /InputStage/N3)
+    (add_net /InputStage/N4)
+    (add_net /InputStage/P1)
+    (add_net /InputStage/P2)
+    (add_net /InputStage/P3)
+    (add_net /InputStage/P4)
+    (add_net /TDA7498/3v3)
+    (add_net /TDA7498/GAIN0A)
+    (add_net /TDA7498/GAIN0B)
+    (add_net /TDA7498/GAIN1A)
+    (add_net /TDA7498/GAIN1B)
+    (add_net /TDA7498/MUTE)
+    (add_net /TDA7498/STBY)
+    (add_net GNDD)
+    (add_net "Net-(C201-Pad2)")
+    (add_net "Net-(C205-Pad2)")
+    (add_net "Net-(C208-Pad2)")
+    (add_net "Net-(C212-Pad2)")
+    (add_net "Net-(C215-Pad2)")
+    (add_net "Net-(C219-Pad2)")
+    (add_net "Net-(C222-Pad2)")
+    (add_net "Net-(C226-Pad2)")
+    (add_net "Net-(C304-Pad1)")
+    (add_net "Net-(C304-Pad2)")
+    (add_net "Net-(C306-Pad1)")
+    (add_net "Net-(C306-Pad2)")
+    (add_net "Net-(C307-Pad2)")
+    (add_net "Net-(C311-Pad1)")
+    (add_net "Net-(C311-Pad2)")
+    (add_net "Net-(C312-Pad2)")
+    (add_net "Net-(C313-Pad1)")
+    (add_net "Net-(C315-Pad1)")
+    (add_net "Net-(C315-Pad2)")
+    (add_net "Net-(C316-Pad1)")
+    (add_net "Net-(C316-Pad2)")
+    (add_net "Net-(C317-Pad2)")
+    (add_net "Net-(C321-Pad1)")
+    (add_net "Net-(C323-Pad1)")
+    (add_net "Net-(C324-Pad1)")
+    (add_net "Net-(C329-Pad2)")
+    (add_net "Net-(C330-Pad1)")
+    (add_net "Net-(C334-Pad1)")
+    (add_net "Net-(C334-Pad2)")
+    (add_net "Net-(C339-Pad1)")
+    (add_net "Net-(C339-Pad2)")
+    (add_net "Net-(C340-Pad2)")
+    (add_net "Net-(C344-Pad1)")
+    (add_net "Net-(C344-Pad2)")
+    (add_net "Net-(C345-Pad2)")
+    (add_net "Net-(C346-Pad1)")
+    (add_net "Net-(C348-Pad1)")
+    (add_net "Net-(C348-Pad2)")
+    (add_net "Net-(C349-Pad1)")
+    (add_net "Net-(C349-Pad2)")
+    (add_net "Net-(C350-Pad2)")
+    (add_net "Net-(C354-Pad1)")
+    (add_net "Net-(C356-Pad1)")
+    (add_net "Net-(C361-Pad2)")
+    (add_net "Net-(C362-Pad1)")
+    (add_net "Net-(L301-Pad1)")
+    (add_net "Net-(L304-Pad1)")
+    (add_net "Net-(L305-Pad1)")
+    (add_net "Net-(L308-Pad1)")
+    (add_net "Net-(P201-Pad10)")
+    (add_net "Net-(P201-Pad12)")
+    (add_net "Net-(P201-Pad14)")
+    (add_net "Net-(P201-Pad16)")
+    (add_net "Net-(P201-Pad18)")
+    (add_net "Net-(P201-Pad4)")
+    (add_net "Net-(P201-Pad6)")
+    (add_net "Net-(P201-Pad8)")
+    (add_net "Net-(P303-Pad2)")
+    (add_net "Net-(P304-Pad2)")
+    (add_net "Net-(P305-Pad2)")
+    (add_net "Net-(R311-Pad2)")
+    (add_net "Net-(R316-Pad1)")
+    (add_net VCC)
+  )
+
+  (net_class 89Ohm ""
+    (clearance 0.5)
+    (trace_width 0.3)
+    (via_dia 0.6)
+    (via_drill 0.3)
+    (uvia_dia 0.6)
+    (uvia_drill 0.2)
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589D209A)
+    (at 137 78.75 270)
+    (path /589EC251/589EA4C0)
+    (attr smd)
+    (fp_text reference C359 (at 1.25 -1.4 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C687) (tstamp 5650E6AE)
+    (at 121.5 118 90)
+    (path /589E6017/589E69BB)
+    (attr smd)
+    (fp_text reference C204 (at -2.1 0.1 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 3 /InputStage/P1))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 4 /InputStage/N1))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C784) (tstamp 561D2775)
+    (at 121.5 112 90)
+    (path /589E6017/589EB2B3)
+    (attr smd)
+    (fp_text reference C209 (at 2.1 0 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 5 /InputStage/P2))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 5898A35D) (tstamp 5561D3A1)
+    (at 131 62.75 180)
+    (path /589EC251/589ED626)
+    (attr smd)
+    (fp_text reference R321 (at -0.9 1.15) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 78 /TDA7498/GAIN0B))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C73F) (tstamp 5501A6A3)
+    (at 131 104 180)
+    (path /589EC251/589ED5D4)
+    (attr smd)
+    (fp_text reference R308 (at -2.4 4.5 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 39k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 38 "Net-(C324-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58989A00) (tstamp 5501A682)
+    (at 131 113.25 180)
+    (path /589EC251/589ED60A)
+    (attr smd)
+    (fp_text reference R305 (at -3.2 0.05 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 76 /TDA7498/GAIN0A))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58989A19) (tstamp 5501A66C)
+    (at 131 115.5 180)
+    (path /589EC251/589ED615)
+    (attr smd)
+    (fp_text reference R304 (at -2.3 0 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 77 /TDA7498/GAIN1A))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C77B) (tstamp 550034D9)
+    (at 126.5 112 90)
+    (path /589E6017/589EB2BE)
+    (attr smd)
+    (fp_text reference C213 (at 0 -1.2 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 6 /InputStage/N2))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C77F) (tstamp 54E4F9C6)
+    (at 124 112 90)
+    (path /589E6017/589EB272)
+    (attr smd)
+    (fp_text reference C211 (at 0 -1.2 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 5 /InputStage/P2))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 6 /InputStage/N2))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C702) (tstamp 54E4F9BC)
+    (at 122.5 115 180)
+    (path /589E6017/589EA77D)
+    (attr smd)
+    (fp_text reference C206 (at -3.1 -0.5 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 4 /InputStage/N1))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 561D2781)
+    (at 126.5 60 270)
+    (path /589E6017/589EB603)
+    (attr smd)
+    (fp_text reference C216 (at 2.4 -1.3 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 8 /InputStage/P3))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 5650E6B8)
+    (at 122.5 121.5 180)
+    (path /589E6017/589EA68F)
+    (attr smd)
+    (fp_text reference C202 (at 1.2 -1.4 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 3 /InputStage/P1))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 5898A179) (tstamp 5697BE7F)
+    (at 132 93.5 270)
+    (path /589EC251/58A0A539)
+    (attr smd)
+    (fp_text reference R311 (at 0.138 1.334 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 0 (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 71 "Net-(P304-Pad2)"))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 73 "Net-(R311-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58989B23) (tstamp 0)
+    (at 131 60.25 180)
+    (path /589EC251/589ED631)
+    (attr smd)
+    (fp_text reference R320 (at -3.1 0.45 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 79 /TDA7498/GAIN1B))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 57E5A25A)
+    (at 186.5 92.5 180)
+    (path /589CA3D3)
+    (attr smd)
+    (fp_text reference C102 (at 1.3 1.35 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 4u7 (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 5899FB27) (tstamp 57E5A264)
+    (at 194.5 91.5 270)
+    (path /589CA3C7)
+    (attr smd)
+    (fp_text reference C103 (at -0.2 2.3 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 587B3F6D)
+    (at 134.2 80 270)
+    (path /589EC251/589ED5F8)
+    (attr smd)
+    (fp_text reference R316 (at 2.3 -2.2) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 33 (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 74 "Net-(R316-Pad1)"))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 71 "Net-(P304-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D6.3mmP2.5mm (layer F.Cu) (tedit 56406E7F) (tstamp 589CB48D)
+    (at 110.5 118 90)
+    (path /589E6017/589E7732)
+    (fp_text reference C201 (at 0 -1.7 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 -2.032 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.15 0.05) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.032 1.778) (end -1.016 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.524 1.27) (end -1.524 2.286) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.25 0 90) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 3 /InputStage/P1))
+    (pad 2 thru_hole circle (at 1.25 0 90) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 16 "Net-(C201-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm_W3.5mm (layer F.Cu) (tedit 5745B0E2) (tstamp 589CB495)
+    (at 118 118 90)
+    (path /589E6017/589E9ED9)
+    (fp_text reference C203 (at 0 -2.5 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0 -2.794 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -1.778) (end 3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 -1.778) (end -3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 1.778) (end 3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end -3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.302 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 3 /InputStage/P1))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 16 "Net-(C201-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm_W3.5mm (layer F.Cu) (tedit 5745B0E2) (tstamp 589CB4A2)
+    (at 116.5 112 180)
+    (path /589E6017/589EA033)
+    (fp_text reference C205 (at 2.2 -2.5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0 -2.794 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -1.778) (end 3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 -1.778) (end -3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 1.778) (end 3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end -3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.302 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 4 /InputStage/N1))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 17 "Net-(C205-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D6.3mmP2.5mm (layer F.Cu) (tedit 56406E7F) (tstamp 589CB4B7)
+    (at 116 106.5 180)
+    (path /589E6017/589E7C31)
+    (fp_text reference C207 (at 0.2 -1.8 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 -2.032 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.15 0.05) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.032 1.778) (end -1.016 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.524 1.27) (end -1.524 2.286) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.25 0 180) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 4 /InputStage/N1))
+    (pad 2 thru_hole circle (at 1.25 0 180) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 17 "Net-(C205-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D6.3mmP2.5mm (layer F.Cu) (tedit 56406E7F) (tstamp 589CB4C0)
+    (at 123 106 180)
+    (path /589E6017/589EB27B)
+    (fp_text reference C208 (at -0.1 -1.9 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 -2.032 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.15 0.05) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.032 1.778) (end -1.016 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.524 1.27) (end -1.524 2.286) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.25 0 180) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 5 /InputStage/P2))
+    (pad 2 thru_hole circle (at 1.25 0 180) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 18 "Net-(C208-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm_W3.5mm (layer F.Cu) (tedit 58A2C76B) (tstamp 589CB4C1)
+    (at 121 100.5 180)
+    (path /589E6017/589EB291)
+    (fp_text reference C210 (at 0 -1.1 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0 -2.794 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -1.778) (end 3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 -1.778) (end -3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 1.778) (end 3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end -3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.302 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 5 /InputStage/P2))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 18 "Net-(C208-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm_W3.5mm (layer F.Cu) (tedit 5745B0E2) (tstamp 589CB4CE)
+    (at 127 99 270)
+    (path /589E6017/589EB29C)
+    (fp_text reference C212 (at -1.6 -2.6 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0 -2.794 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -1.778) (end 3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 -1.778) (end -3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 1.778) (end 3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end -3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.302 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 270) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 6 /InputStage/N2))
+    (pad 2 thru_hole circle (at 2.5 0 270) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 19 "Net-(C212-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D6.3mmP2.5mm (layer F.Cu) (tedit 56406E7F) (tstamp 589CB4E3)
+    (at 127 91.5 90)
+    (path /589E6017/589EB284)
+    (fp_text reference C214 (at 0.1 -1.8 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 -2.032 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.15 0.05) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.032 1.778) (end -1.016 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.524 1.27) (end -1.524 2.286) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.25 0 90) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 6 /InputStage/N2))
+    (pad 2 thru_hole circle (at 1.25 0 90) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 19 "Net-(C212-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D6.3mmP2.5mm (layer F.Cu) (tedit 56406E7F) (tstamp 589CB4E4)
+    (at 127 80.5 270)
+    (path /589E6017/589EB5CB)
+    (fp_text reference C215 (at 0.2 -1.8 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 -2.032 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.15 0.05) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.032 1.778) (end -1.016 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.524 1.27) (end -1.524 2.286) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.25 0 270) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 8 /InputStage/P3))
+    (pad 2 thru_hole circle (at 1.25 0 270) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 20 "Net-(C215-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm_W3.5mm (layer F.Cu) (tedit 58A2D657) (tstamp 589CB4F9)
+    (at 127 73 270)
+    (path /589E6017/589EB5E1)
+    (fp_text reference C217 (at 0 1 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0 -2.794 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -1.778) (end 3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 -1.778) (end -3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 1.778) (end 3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end -3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.302 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 270) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 8 /InputStage/P3))
+    (pad 2 thru_hole circle (at 2.5 0 270) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 20 "Net-(C215-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB503)
+    (at 123 61.5 180)
+    (path /589E6017/589EB5C2)
+    (attr smd)
+    (fp_text reference C218 (at 2.2 0.1 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 8 /InputStage/P3))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 9 /InputStage/N3))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm_W3.5mm (layer F.Cu) (tedit 58A2C7B7) (tstamp 589CB511)
+    (at 121 71.5 180)
+    (path /589E6017/589EB5EC)
+    (fp_text reference C219 (at 0 -1.1 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0 -2.794 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -1.778) (end 3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 -1.778) (end -3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 1.778) (end 3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end -3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.302 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 9 /InputStage/N3))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 21 "Net-(C219-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2EADE) (tstamp 589CB51B)
+    (at 123 59 180)
+    (path /589E6017/589EB60E)
+    (attr smd)
+    (fp_text reference C220 (at 1.25 1.25 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 9 /InputStage/N3))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D6.3mmP2.5mm (layer F.Cu) (tedit 56406E7F) (tstamp 589CB524)
+    (at 123 66 180)
+    (path /589E6017/589EB5D4)
+    (fp_text reference C221 (at 0 -1.9 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 -2.032 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.15 0.05) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.032 1.778) (end -1.016 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.524 1.27) (end -1.524 2.286) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.25 0 180) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 9 /InputStage/N3))
+    (pad 2 thru_hole circle (at 1.25 0 180) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 21 "Net-(C219-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D6.3mmP2.5mm (layer F.Cu) (tedit 56406E7F) (tstamp 589CB52D)
+    (at 116 65.5 180)
+    (path /589E6017/589EB63C)
+    (fp_text reference C222 (at 0.1 -1.9 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 -2.032 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.15 0.05) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.032 1.778) (end -1.016 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.524 1.27) (end -1.524 2.286) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.25 0 180) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 10 /InputStage/P4))
+    (pad 2 thru_hole circle (at 1.25 0 180) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(C222-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2DFC8) (tstamp 589CB537)
+    (at 124 56 180)
+    (path /589E6017/589EB674)
+    (attr smd)
+    (fp_text reference C223 (at -1.9 -1.2 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 10 /InputStage/P4))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm_W3.5mm (layer F.Cu) (tedit 58A2EB30) (tstamp 589CB545)
+    (at 116.5 60 180)
+    (path /589E6017/589EB652)
+    (fp_text reference C224 (at 0 -1.2 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0 -2.794 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -1.778) (end 3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 -1.778) (end -3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 1.778) (end 3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end -3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.302 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 10 /InputStage/P4))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(C222-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB54F)
+    (at 121 54 90)
+    (path /589E6017/589EB633)
+    (attr smd)
+    (fp_text reference C225 (at 3.5 0.3 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 10 /InputStage/P4))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 11 /InputStage/N4))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm_W3.5mm (layer F.Cu) (tedit 5745B0E2) (tstamp 589CB55D)
+    (at 117.5 54 270)
+    (path /589E6017/589EB65D)
+    (fp_text reference C226 (at -3.5 -2.5 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0 -2.794 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -1.778) (end 3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.302 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 -1.778) (end -3.302 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 1.778) (end 3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end -3.302 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.302 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 270) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 11 /InputStage/N4))
+    (pad 2 thru_hole circle (at 2.5 0 270) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 23 "Net-(C226-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB567)
+    (at 124 52.5 180)
+    (path /589E6017/589EB67F)
+    (attr smd)
+    (fp_text reference C227 (at 0 -1.5 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1n (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 11 /InputStage/N4))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D6.3mmP2.5mm (layer F.Cu) (tedit 56406E7F) (tstamp 589CB570)
+    (at 110.5 54 270)
+    (path /589E6017/589EB645)
+    (fp_text reference C228 (at 0.7 -4 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0 -2.032 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.15 0.05) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.032 1.778) (end -1.016 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.524 1.27) (end -1.524 2.286) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.25 0 270) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 11 /InputStage/N4))
+    (pad 2 thru_hole circle (at 1.25 0 270) (size 1.7 1.7) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 23 "Net-(C226-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB583)
+    (at 143.75 132 270)
+    (path /589EC251/589ED863)
+    (attr smd)
+    (fp_text reference C302 (at 0.1 1.35 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 4u7 (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB58D)
+    (at 142.75 128)
+    (path /589EC251/589ED857)
+    (attr smd)
+    (fp_text reference C303 (at -0.05 1.5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB5AE)
+    (at 131 117.75 180)
+    (path /589EC251/589ED6CD)
+    (attr smd)
+    (fp_text reference C306 (at -0.3 -1.45 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 26 "Net-(C306-Pad1)"))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 27 "Net-(C306-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm (layer F.Cu) (tedit 5745B0C6) (tstamp 589CB5E9)
+    (at 156.5 115)
+    (path /589EC251/589ED74D)
+    (fp_text reference C311 (at 0 -0.3 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 330p (at 1.2 -3.8) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.6 2.8) (end -3.6 -0.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.6 2.8) (end -3.6 2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.6 -2.8) (end 3.6 2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.6 -2.8) (end 3.6 -2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.6 0) (end -3.6 -2.8) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 29 "Net-(C311-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 30 "Net-(C311-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C711) (tstamp 589CB5F3)
+    (at 125 118 270)
+    (path /589EC251/589ED6BB)
+    (attr smd)
+    (fp_text reference C313 (at 0.254 -1.3 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 31 "Net-(C313-Pad1)"))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C717) (tstamp 589CB5FD)
+    (at 127.5 118 270)
+    (path /589EC251/589ED6AF)
+    (attr smd)
+    (fp_text reference C314 (at 1.7 -1.3 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 31 "Net-(C313-Pad1)"))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm (layer F.Cu) (tedit 5745B0C6) (tstamp 589CB638)
+    (at 156.5 109)
+    (path /589EC251/589ED7BA)
+    (fp_text reference C315 (at 0 -0.2 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 330p (at 1.2 -3.8) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.6 2.8) (end -3.6 -0.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.6 2.8) (end -3.6 2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.6 -2.8) (end 3.6 2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.6 -2.8) (end 3.6 -2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.6 0) (end -3.6 -2.8) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 32 "Net-(C315-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 12 "Net-(C315-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C730) (tstamp 589CB642)
+    (at 131 108.75)
+    (path /589EC251/589ED697)
+    (attr smd)
+    (fp_text reference C321 (at 2.3 0.25 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 36 "Net-(C321-Pad1)"))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C72B) (tstamp 589CB64C)
+    (at 131 111)
+    (path /589EC251/589ED68B)
+    (attr smd)
+    (fp_text reference C322 (at 3.1 0.8) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 36 "Net-(C321-Pad1)"))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C738) (tstamp 589CB656)
+    (at 131 106.25)
+    (path /589EC251/589ED64F)
+    (attr smd)
+    (fp_text reference C323 (at 0 1.25) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 37 "Net-(C323-Pad1)"))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C774) (tstamp 589CB660)
+    (at 127.5 105.5 90)
+    (path /589EC251/589ED5E0)
+    (attr smd)
+    (fp_text reference C324 (at -2.2 0 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 38 "Net-(C324-Pad1)"))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB67F)
+    (at 140 93.5 90)
+    (path /589EC251/589ED88B)
+    (attr smd)
+    (fp_text reference C326 (at 0.1 1.8 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 4u7 (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB689)
+    (at 137 93.5 90)
+    (path /589EC251/589ED87F)
+    (attr smd)
+    (fp_text reference C327 (at 0.254 -1.524 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB69F)
+    (at 131 101.75)
+    (path /589EC251/589ED63D)
+    (attr smd)
+    (fp_text reference C330 (at -0.1 -1.35) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 39 "Net-(C330-Pad1)"))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB6B2)
+    (at 143 41 90)
+    (path /589EC251/589EA4A6)
+    (attr smd)
+    (fp_text reference C332 (at 0.254 -1.524 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 4u7 (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB6BC)
+    (at 141.75 45)
+    (path /589EC251/589EA49B)
+    (attr smd)
+    (fp_text reference C333 (at 0.254 -1.524) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C82C) (tstamp 589CB719)
+    (at 131 65)
+    (path /589EC251/589F5DB9)
+    (attr smd)
+    (fp_text reference C346 (at 2.7 -0.7 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 48 "Net-(C346-Pad1)"))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C839) (tstamp 589CB723)
+    (at 127.75 67 270)
+    (path /589EC251/589F5DAE)
+    (attr smd)
+    (fp_text reference C347 (at 2.1 -1.05) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 48 "Net-(C346-Pad1)"))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB768)
+    (at 131 56.25)
+    (path /589EC251/589ED6EB)
+    (attr smd)
+    (fp_text reference C354 (at -2.9 0.65 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 54 "Net-(C354-Pad1)"))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C80B) (tstamp 589CB772)
+    (at 131 58.25)
+    (path /589EC251/589ED6DF)
+    (attr smd)
+    (fp_text reference C355 (at 3.1 0.35) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10u (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 54 "Net-(C354-Pad1)"))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB77C)
+    (at 131 54.25)
+    (path /589EC251/589ED661)
+    (attr smd)
+    (fp_text reference C356 (at 0 -1.25) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 55 "Net-(C356-Pad1)"))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589CB7BB)
+    (at 127.75 53.25 90)
+    (path /589EC251/589ED673)
+    (attr smd)
+    (fp_text reference C362 (at 3.45 -1.05 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 57 "Net-(C362-Pad1)"))
+    (pad 2 smd rect (at 1.1 0 90) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:IND-TH-PCV-0-223-10L (layer F.Cu) (tedit 589C5187) (tstamp 589CB7DC)
+    (at 153.5 127 270)
+    (path /589EC251/589ED71F)
+    (fp_text reference L301 (at 0 -6.6 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PCV-0-223-10L (at 0 9.2 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 8.4 0) (layer F.SilkS) (width 0.2))
+    (pad 1 thru_hole circle (at -5.35 0 270) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 58 "Net-(L301-Pad1)"))
+    (pad 2 thru_hole circle (at 5.35 0 270) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 24 "Net-(C304-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:IND-TH-PCV-0-223-10L (layer F.Cu) (tedit 589C5187) (tstamp 589CB7E3)
+    (at 175.5 127 270)
+    (path /589EC251/589ED729)
+    (fp_text reference L302 (at 0.1 -6 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PCV-0-223-10L (at 0 9.2 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 8.4 0) (layer F.SilkS) (width 0.2))
+    (pad 1 thru_hole circle (at -5.35 0 270) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 30 "Net-(C311-Pad2)"))
+    (pad 2 thru_hole circle (at 5.35 0 270) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 28 "Net-(C307-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:IND-TH-PCV-0-223-10L (layer F.Cu) (tedit 589C5187) (tstamp 589CB7EA)
+    (at 175.5 97 90)
+    (path /589EC251/589ED762)
+    (fp_text reference L303 (at 0 -7 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PCV-0-223-10L (at 0 9.2 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 8.4 0) (layer F.SilkS) (width 0.2))
+    (pad 1 thru_hole circle (at -5.35 0 90) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 12 "Net-(C315-Pad2)"))
+    (pad 2 thru_hole circle (at 5.35 0 90) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 33 "Net-(C316-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:IND-TH-PCV-0-223-10L (layer F.Cu) (tedit 589C5187) (tstamp 589CB7F1)
+    (at 153.5 97 90)
+    (path /589EC251/589ED76C)
+    (fp_text reference L304 (at 0 -6.6 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PCV-0-223-10L (at 0 9.2 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 8.4 0) (layer F.SilkS) (width 0.2))
+    (pad 1 thru_hole circle (at -5.35 0 90) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 59 "Net-(L304-Pad1)"))
+    (pad 2 thru_hole circle (at 5.35 0 90) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 35 "Net-(C317-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:IND-TH-PCV-0-223-10L (layer F.Cu) (tedit 589C5187) (tstamp 589CB7F8)
+    (at 153.5 75 270)
+    (path /589EC251/589EA3AF)
+    (fp_text reference L305 (at 0 -6.9 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PCV-0-223-10L (at 0 9.2 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 8.4 0) (layer F.SilkS) (width 0.2))
+    (pad 1 thru_hole circle (at -5.35 0 270) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 60 "Net-(L305-Pad1)"))
+    (pad 2 thru_hole circle (at 5.35 0 270) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 40 "Net-(C334-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:IND-TH-PCV-0-223-10L (layer F.Cu) (tedit 589C5187) (tstamp 589CB7FF)
+    (at 175.5 75 270)
+    (path /589EC251/589EA3B8)
+    (fp_text reference L306 (at 0.1 -6.9 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PCV-0-223-10L (at 0 9.2 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 8.4 0) (layer F.SilkS) (width 0.2))
+    (pad 1 thru_hole circle (at -5.35 0 270) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 46 "Net-(C344-Pad2)"))
+    (pad 2 thru_hole circle (at 5.35 0 270) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 44 "Net-(C340-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:IND-TH-PCV-0-223-10L (layer F.Cu) (tedit 589C5187) (tstamp 589CB806)
+    (at 175.5 45 90)
+    (path /589EC251/589EA3EC)
+    (fp_text reference L307 (at 0 -7.1 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PCV-0-223-10L (at 0 9.2 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 8.4 0) (layer F.SilkS) (width 0.2))
+    (pad 1 thru_hole circle (at -5.35 0 90) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 50 "Net-(C348-Pad2)"))
+    (pad 2 thru_hole circle (at 5.35 0 90) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 51 "Net-(C349-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:IND-TH-PCV-0-223-10L (layer F.Cu) (tedit 589C5187) (tstamp 589CB80D)
+    (at 153.5 45 90)
+    (path /589EC251/589EA3F5)
+    (fp_text reference L308 (at 0 -6.4 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PCV-0-223-10L (at 0 9.2 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 8.4 0) (layer F.SilkS) (width 0.2))
+    (pad 1 thru_hole circle (at -5.35 0 90) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 61 "Net-(L308-Pad1)"))
+    (pad 2 thru_hole circle (at 5.35 0 90) (size 3 3) (drill 2) (layers *.Cu *.Mask)
+      (net 53 "Net-(C350-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN-SCREW-2WAY-7.5mm-7.62mm (layer F.Cu) (tedit 589C68B7) (tstamp 589CB819)
+    (at 201 86 90)
+    (path /589CA3DB)
+    (fp_text reference P104 (at 0 -4 90) (layer F.SilkS)
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 0 5.9 90) (layer F.SilkS) hide
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_line (start 0 4.6) (end 7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 4.6) (end 7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 -5.2) (end -7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 -5.2) (end -7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 4.6) (end 0.1 4.6) (layer F.SilkS) (width 0.2))
+    (fp_text user Front (at -0.1 3.6 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at -3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 VCC))
+    (pad 2 thru_hole circle (at 3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN_DIL_2X10_BOX_1MM (layer F.Cu) (tedit 56D4300F) (tstamp 589CB83E)
+    (at 111.75 86 180)
+    (path /589E6017/589E696D)
+    (fp_text reference P201 (at 0.15 14.4) (layer F.SilkS)
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_text value CONN_02X10 (at -5.5 -5 270) (layer F.SilkS) hide
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_line (start 2.413 12.7) (end -2.413 12.7) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.413 -12.573) (end 2.413 -12.573) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.413 12.7) (end 2.413 -12.573) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.413 -12.573) (end -2.413 12.7) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.5 -16.5) (end 0 -16.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.5 16.5) (end 4.5 -16.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.5 16.5) (end 4.5 16.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -16.5) (end -4.5 -16.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.5 16.5) (end -4.5 1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.5 1) (end -4 1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4 1) (end -4 -1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4 -1) (end -4.5 -1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.5 -1) (end -4.5 -16.5) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.27 -11.43 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 2 thru_hole circle (at 1.27 -11.43 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 3 thru_hole circle (at -1.27 -8.89 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 4 thru_hole circle (at 1.27 -8.89 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 62 "Net-(P201-Pad4)"))
+    (pad 5 thru_hole circle (at -1.27 -6.35 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 6 thru_hole circle (at 1.27 -6.35 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 63 "Net-(P201-Pad6)"))
+    (pad 7 thru_hole circle (at -1.27 -3.81 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 8 thru_hole circle (at 1.27 -3.81 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 64 "Net-(P201-Pad8)"))
+    (pad 9 thru_hole circle (at -1.27 -1.27 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 10 thru_hole circle (at 1.27 -1.27 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 65 "Net-(P201-Pad10)"))
+    (pad 11 thru_hole circle (at -1.27 1.27 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 12 thru_hole circle (at 1.27 1.27 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 66 "Net-(P201-Pad12)"))
+    (pad 13 thru_hole circle (at -1.27 3.81 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 14 thru_hole circle (at 1.27 3.81 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 67 "Net-(P201-Pad14)"))
+    (pad 15 thru_hole circle (at -1.27 6.35 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 16 thru_hole circle (at 1.27 6.35 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 68 "Net-(P201-Pad16)"))
+    (pad 17 thru_hole circle (at -1.27 8.89 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 18 thru_hole circle (at 1.27 8.89 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 69 "Net-(P201-Pad18)"))
+    (pad 19 thru_hole circle (at -1.27 11.43 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 20 thru_hole circle (at 1.27 11.43 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN-SCREW-2WAY-7.5mm-7.62mm (layer F.Cu) (tedit 589C68B7) (tstamp 589CB83F)
+    (at 201 119 90)
+    (path /589EC251/589ED7F8)
+    (fp_text reference P301 (at 0.1 -3.9 90) (layer F.SilkS)
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 0 5.9 90) (layer F.SilkS) hide
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_line (start 0 4.6) (end 7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 4.6) (end 7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 -5.2) (end -7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 -5.2) (end -7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 4.6) (end 0.1 4.6) (layer F.SilkS) (width 0.2))
+    (fp_text user Front (at -0.1 3.6 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at -3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(C307-Pad2)"))
+    (pad 2 thru_hole circle (at 3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(C304-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN-SCREW-2WAY-7.5mm-7.62mm (layer F.Cu) (tedit 589C68B7) (tstamp 589CB84A)
+    (at 201 102 90)
+    (path /589EC251/589ED899)
+    (fp_text reference P302 (at 0 -4 90) (layer F.SilkS)
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 0 5.9 90) (layer F.SilkS) hide
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_line (start 0 4.6) (end 7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 4.6) (end 7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 -5.2) (end -7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 -5.2) (end -7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 4.6) (end 0.1 4.6) (layer F.SilkS) (width 0.2))
+    (fp_text user Front (at -0.1 3.6 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at -3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 35 "Net-(C317-Pad2)"))
+    (pad 2 thru_hole circle (at 3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(C316-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN_SIL_2_1MM (layer F.Cu) (tedit 5745B103) (tstamp 589CB855)
+    (at 128 86)
+    (path /589EC251/58A0921C)
+    (fp_text reference P304 (at 2.4 2) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 1.27 -2.159) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.683 1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end 3.683 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.683 -1.143) (end 3.683 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 71 "Net-(P304-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN-SCREW-2WAY-7.5mm-7.62mm (layer F.Cu) (tedit 589C68B7) (tstamp 589CB85E)
+    (at 201 70 90)
+    (path /589EC251/589EA476)
+    (fp_text reference P306 (at 0.1 -4.1 90) (layer F.SilkS)
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 0 5.9 90) (layer F.SilkS) hide
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_line (start 0 4.6) (end 7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 4.6) (end 7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 -5.2) (end -7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 -5.2) (end -7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 4.6) (end 0.1 4.6) (layer F.SilkS) (width 0.2))
+    (fp_text user Front (at -0.1 3.6 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at -3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(C340-Pad2)"))
+    (pad 2 thru_hole circle (at 3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 40 "Net-(C334-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN-SCREW-2WAY-7.5mm-7.62mm (layer F.Cu) (tedit 589C68B7) (tstamp 589CB869)
+    (at 201 53 90)
+    (path /589EC251/589EA4D2)
+    (fp_text reference P307 (at -0.3 -4.1 90) (layer F.SilkS)
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 0 5.9 90) (layer F.SilkS) hide
+      (effects (font (size 1.5 1.5) (thickness 0.15)))
+    )
+    (fp_line (start 0 4.6) (end 7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 4.6) (end 7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 7.6 -5.2) (end -7.6 -5.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 -5.2) (end -7.6 4.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start -7.6 4.6) (end 0.1 4.6) (layer F.SilkS) (width 0.2))
+    (fp_text user Front (at -0.1 3.6 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at -3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(C350-Pad2)"))
+    (pad 2 thru_hole circle (at 3.77 0 90) (size 3 3) (drill 1.8) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(C349-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 58A2C6B4) (tstamp 589CB874)
+    (at 108.5 112 90)
+    (path /589E6017/589E698E)
+    (attr smd)
+    (fp_text reference R201 (at -1.3 1.5 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100 (at 0 1.6256 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 16 "Net-(C201-Pad2)"))
+    (pad 2 smd rect (at 1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 62 "Net-(P201-Pad4)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 58A2C6C3) (tstamp 589CB87D)
+    (at 110 107.5 180)
+    (path /589E6017/589E69A4)
+    (attr smd)
+    (fp_text reference R202 (at 0 1.4 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100k (at 0 1.6256 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 180) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 62 "Net-(P201-Pad4)"))
+    (pad 2 smd rect (at 1.7 0 180) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 58A2C6A6) (tstamp 589CB88F)
+    (at 110 104.5 180)
+    (path /589E6017/589E69AF)
+    (attr smd)
+    (fp_text reference R203 (at 0.1 1.4 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100k (at 0 1.6256 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 180) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 63 "Net-(P201-Pad6)"))
+    (pad 2 smd rect (at 1.7 0 180) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 58A2C6B1) (tstamp 589CB890)
+    (at 111.5 112 90)
+    (path /589E6017/589E6999)
+    (attr smd)
+    (fp_text reference R204 (at 1.7 -1.4 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100 (at 0 1.6256 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 17 "Net-(C205-Pad2)"))
+    (pad 2 smd rect (at 1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 63 "Net-(P201-Pad6)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 55A244DB) (tstamp 589CB899)
+    (at 118.5 95.5 90)
+    (path /589E6017/589E69DC)
+    (attr smd)
+    (fp_text reference R205 (at 0 -1.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100 (at 0 1.6256 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(C208-Pad2)"))
+    (pad 2 smd rect (at 1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 64 "Net-(P201-Pad8)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 55A244DB) (tstamp 589CB8A2)
+    (at 118.5 89.5 90)
+    (path /589E6017/589E69F2)
+    (attr smd)
+    (fp_text reference R206 (at 0.2 -1.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100k (at 0 1.6256 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 64 "Net-(P201-Pad8)"))
+    (pad 2 smd rect (at 1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 55A244DB) (tstamp 589CB8AB)
+    (at 122 95.5 270)
+    (path /589E6017/589E69FD)
+    (attr smd)
+    (fp_text reference R207 (at 0 1.6 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100k (at 0 1.6256 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 65 "Net-(P201-Pad10)"))
+    (pad 2 smd rect (at 1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 55A244DB) (tstamp 589CB8B4)
+    (at 122 89.5 270)
+    (path /589E6017/589E69E7)
+    (attr smd)
+    (fp_text reference R208 (at -1.2 -1.6 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100 (at 0 1.6256 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 19 "Net-(C212-Pad2)"))
+    (pad 2 smd rect (at 1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 65 "Net-(P201-Pad10)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 55A244DB) (tstamp 589CB8BD)
+    (at 122 82.5 90)
+    (path /589E6017/589E6A2A)
+    (attr smd)
+    (fp_text reference R209 (at 0 -1.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100 (at 0 1.6256 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 20 "Net-(C215-Pad2)"))
+    (pad 2 smd rect (at 1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 66 "Net-(P201-Pad12)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 55A244DB) (tstamp 589CB8C6)
+    (at 122 76.5 90)
+    (path /589E6017/589E6A40)
+    (attr smd)
+    (fp_text reference R210 (at -0.4 -1.6 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100k (at 0 1.6256 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 66 "Net-(P201-Pad12)"))
+    (pad 2 smd rect (at 1.7 0 90) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 55A244DB) (tstamp 589CB8CF)
+    (at 118.5 82.5 270)
+    (path /589E6017/589E6A4B)
+    (attr smd)
+    (fp_text reference R211 (at -0.2 1.5 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100k (at 0 1.6256 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 67 "Net-(P201-Pad14)"))
+    (pad 2 smd rect (at 1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 55A244DB) (tstamp 589CB8D8)
+    (at 118.5 76.5 270)
+    (path /589E6017/589E6A35)
+    (attr smd)
+    (fp_text reference R212 (at 0.7 1.5 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100 (at 0 1.6256 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 21 "Net-(C219-Pad2)"))
+    (pad 2 smd rect (at 1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 67 "Net-(P201-Pad14)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 58A2C7D3) (tstamp 589CB8E1)
+    (at 111.5 60.2 270)
+    (path /589E6017/589E6A78)
+    (attr smd)
+    (fp_text reference R213 (at 1.8 1.4 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100 (at 0 1.6256 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(C222-Pad2)"))
+    (pad 2 smd rect (at 1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 68 "Net-(P201-Pad16)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 58A2C7C6) (tstamp 589CB8F3)
+    (at 110 67.5 180)
+    (path /589E6017/589E6A8E)
+    (attr smd)
+    (fp_text reference R214 (at 0 -1.5 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100k (at 0 1.6256 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 180) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 68 "Net-(P201-Pad16)"))
+    (pad 2 smd rect (at 1.7 0 180) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 58A2C7C3) (tstamp 589CB8FD)
+    (at 110 64.5 180)
+    (path /589E6017/589E6A99)
+    (attr smd)
+    (fp_text reference R215 (at 0 -1.5 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100k (at 0 1.6256 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 180) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 69 "Net-(P201-Pad18)"))
+    (pad 2 smd rect (at 1.7 0 180) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-1206 (layer F.Cu) (tedit 58A2C7C0) (tstamp 589CB907)
+    (at 108.5 60.2 270)
+    (path /589E6017/589E6A83)
+    (attr smd)
+    (fp_text reference R216 (at -1.4 -1.5 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100 (at 0 1.6256 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.8128) (end -1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.8128) (end 1.016 -0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end 1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.8128) (end -1.016 0.8128) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(C226-Pad2)"))
+    (pad 2 smd rect (at 1.7 0 270) (size 1.1 1.7) (layers F.Cu F.Paste F.Mask)
+      (net 69 "Net-(P201-Pad18)"))
+  )
+
+  (module MyKiCadLibs-Footprints:MNT_HOLE_3mm (layer F.Cu) (tedit 56D6D22F) (tstamp 589CF43F)
+    (at 112 131)
+    (path /589CF417)
+    (fp_text reference MNT101 (at -0.175 -3.75) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MNT_HOLE (at 0 -5) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3 3) (drill 3) (layers *.Cu *.Mask F.SilkS)
+      (solder_mask_margin 1.6) (clearance 1.7))
+  )
+
+  (module MyKiCadLibs-Footprints:MNT_HOLE_3mm (layer F.Cu) (tedit 56D6D22F) (tstamp 589CF444)
+    (at 202 131)
+    (path /589CF584)
+    (fp_text reference MNT102 (at -0.175 -3.75) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MNT_HOLE (at 0 -5) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3 3) (drill 3) (layers *.Cu *.Mask F.SilkS)
+      (solder_mask_margin 1.6) (clearance 1.7))
+  )
+
+  (module MyKiCadLibs-Footprints:MNT_HOLE_3mm (layer F.Cu) (tedit 56D6D22F) (tstamp 589CF449)
+    (at 202 41)
+    (path /589CF5CF)
+    (fp_text reference MNT103 (at -0.175 -3.75) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MNT_HOLE (at 0 -5) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3 3) (drill 3) (layers *.Cu *.Mask F.SilkS)
+      (solder_mask_margin 1.6) (clearance 1.7))
+  )
+
+  (module MyKiCadLibs-Footprints:MNT_HOLE_3mm (layer F.Cu) (tedit 56D6D22F) (tstamp 589CF44E)
+    (at 112 41)
+    (path /589CF61F)
+    (fp_text reference MNT104 (at -0.175 -3.75) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MNT_HOLE (at 0 -5) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3 3) (drill 3) (layers *.Cu *.Mask F.SilkS)
+      (solder_mask_margin 1.6) (clearance 1.7))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D131F)
+    (at 182.5 116 180)
+    (path /589EC251/589DDEE1)
+    (attr smd)
+    (fp_text reference R301 (at 0 -2.2098 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 8R2 (at 0 2.2098 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 25 "Net-(C304-Pad2)"))
+    (pad 2 smd rect (at 2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D1328)
+    (at 149 115 180)
+    (path /589EC251/589ED758)
+    (attr smd)
+    (fp_text reference R302 (at 0 -2.2098 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 22 (at 0 2.2098 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 29 "Net-(C311-Pad1)"))
+    (pad 2 smd rect (at 2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 58 "Net-(L301-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D1331)
+    (at 191.5 133.5)
+    (path /589EC251/589DF436)
+    (attr smd)
+    (fp_text reference R303 (at -5.8 0) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 8R2 (at 0 2.2098) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(C312-Pad2)"))
+    (pad 2 smd rect (at 2.45 0) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D133A)
+    (at 149 107.5 180)
+    (path /589EC251/589DCC41)
+    (attr smd)
+    (fp_text reference R306 (at 0 -2.2098 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 22 (at 0 2.2098 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 32 "Net-(C315-Pad1)"))
+    (pad 2 smd rect (at 2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 59 "Net-(L304-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D1343)
+    (at 191.5 96)
+    (path /589EC251/589DF569)
+    (attr smd)
+    (fp_text reference R307 (at -0.3 -2) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 8R2 (at 0 2.2098) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 34 "Net-(C316-Pad2)"))
+    (pad 2 smd rect (at 2.45 0) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D134C)
+    (at 182.5 112 180)
+    (path /589EC251/589DF8CF)
+    (attr smd)
+    (fp_text reference R309 (at -0.2 2 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 8R2 (at 0 2.2098 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 15 "Net-(C329-Pad2)"))
+    (pad 2 smd rect (at 2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D1355)
+    (at 182.5 60 180)
+    (path /589EC251/589EA596)
+    (attr smd)
+    (fp_text reference R317 (at 0 -2.2098 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 8R2 (at 0 2.2098 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 41 "Net-(C334-Pad2)"))
+    (pad 2 smd rect (at 2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D135E)
+    (at 149 64.25 180)
+    (path /589EC251/589EA3E3)
+    (attr smd)
+    (fp_text reference R318 (at 0 -2.2098 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 22 (at 0 2.2098 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 45 "Net-(C344-Pad1)"))
+    (pad 2 smd rect (at 2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 60 "Net-(L305-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D1367)
+    (at 191.5 76)
+    (path /589EC251/589EA5A0)
+    (attr smd)
+    (fp_text reference R319 (at -4.3 -0.1 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 8R2 (at 0 2.2098) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 47 "Net-(C345-Pad2)"))
+    (pad 2 smd rect (at 2.45 0) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D1370)
+    (at 149 57 180)
+    (path /589EC251/589EA58C)
+    (attr smd)
+    (fp_text reference R322 (at 0 -2.2098 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 22 (at 0 2.2098 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 49 "Net-(C348-Pad1)"))
+    (pad 2 smd rect (at 2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 61 "Net-(L308-Pad1)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D1379)
+    (at 191.5 38.5)
+    (path /589EC251/589EA5AA)
+    (attr smd)
+    (fp_text reference R323 (at 5.8 -1.3) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 8R2 (at 0 2.2098) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 52 "Net-(C349-Pad2)"))
+    (pad 2 smd rect (at 2.45 0) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD_MELF_0207 (layer F.Cu) (tedit 55A2461E) (tstamp 589D1382)
+    (at 182.5 55.5 180)
+    (path /589EC251/589EA5B4)
+    (attr smd)
+    (fp_text reference R324 (at 0 -2.2098 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 8R2 (at 0 2.2098 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 1.1176) (end 1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.1176) (end -1.2446 1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end -1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.1176) (end 1.2446 -1.1176) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 56 "Net-(C361-Pad2)"))
+    (pad 2 smd rect (at 2.45 0 180) (size 2.1 2.6) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm (layer F.Cu) (tedit 5745B0C6) (tstamp 589D2049)
+    (at 156.5 63)
+    (path /589EC251/589EA3D9)
+    (fp_text reference C344 (at 0 -0.1 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 330p (at 1.2 -3.8) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.6 2.8) (end -3.6 -0.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.6 2.8) (end -3.6 2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.6 -2.8) (end 3.6 2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.6 -2.8) (end 3.6 -2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.6 0) (end -3.6 -2.8) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 45 "Net-(C344-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 46 "Net-(C344-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_5mm (layer F.Cu) (tedit 5745B0C6) (tstamp 589D205E)
+    (at 156.5 57)
+    (path /589EC251/589EA43D)
+    (fp_text reference C348 (at 0 -0.3 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 330p (at 1.2 -3.8) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.6 2.8) (end -3.6 -0.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.6 2.8) (end -3.6 2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.6 -2.8) (end 3.6 2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.6 -2.8) (end 3.6 -2.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.6 0) (end -3.6 -2.8) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 49 "Net-(C348-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2.2 2.2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 50 "Net-(C348-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589D2091)
+    (at 140 78.75 270)
+    (path /589EC251/589EA4CB)
+    (attr smd)
+    (fp_text reference C358 (at 0.254 -1.524 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 4u7 (at 0.254 1.524 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (pad 2 smd rect (at 1.1 0 270) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D12.5mmP5mm (layer F.Cu) (tedit 5) (tstamp 589D2089)
+    (at 139.5 69)
+    (path /589EC251/589EA4B5)
+    (fp_text reference C357 (at -1.9 -3.7) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 560u (at 0 -4.953) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 6.25 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.596 -0.452) (end -4.596 0.564) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.104 0.056) (end -4.088 0.056) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 2 VCC))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D12.5mmP5mm (layer F.Cu) (tedit 5) (tstamp 589CB6A8)
+    (at 139.5 53)
+    (path /589EC251/589EA490)
+    (fp_text reference C331 (at 0 -3.3) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 560u (at 0 -4.953) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 6.25 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.596 -0.452) (end -4.596 0.564) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.104 0.056) (end -4.088 0.056) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 2 VCC))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D12.5mmP5mm (layer F.Cu) (tedit 5) (tstamp 589CB675)
+    (at 139.5 104)
+    (path /589EC251/589ED873)
+    (fp_text reference C325 (at -1.8 -3.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 560u (at 0 -4.953) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 6.25 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.596 -0.452) (end -4.596 0.564) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.104 0.056) (end -4.088 0.056) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 2 VCC))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D12.5mmP5mm (layer F.Cu) (tedit 5) (tstamp 589CB579)
+    (at 139.5 120)
+    (path /589EC251/589ED84B)
+    (fp_text reference C301 (at -1.3 -3.4) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 560u (at 0 -4.953) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 6.25 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.596 -0.452) (end -4.596 0.564) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.104 0.056) (end -4.088 0.056) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 2 VCC))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D189C)
+    (at 189 119 90)
+    (path /589EC251/589ED7F0)
+    (fp_text reference C304 (at -1.7 -2.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(C304-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 25 "Net-(C304-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 58A2C976) (tstamp 589D18A9)
+    (at 193.5 119 90)
+    (path /589EC251/589E34D2)
+    (fp_text reference C305 (at 0 -1.1 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(C304-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D18B6)
+    (at 164.5 120)
+    (path /589EC251/589E0198)
+    (fp_text reference C308 (at 0 2.7) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(C304-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(C307-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D18C3)
+    (at 165.5 114.5)
+    (path /589EC251/589D7BE9)
+    (fp_text reference C307 (at 0 2.6) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(C304-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(C307-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 58A2C97A) (tstamp 589D18D0)
+    (at 193.5 127.5 90)
+    (path /589EC251/589E3610)
+    (fp_text reference C310 (at 0 -1.1 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(C307-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D18DD)
+    (at 189 127.5 270)
+    (path /589EC251/589E5FDB)
+    (fp_text reference C312 (at -0.3 2.5 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 270) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(C307-Pad2)"))
+    (pad 2 thru_hole circle (at 2.5 0 270) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 7 "Net-(C312-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D18EA)
+    (at 189 102 90)
+    (path /589EC251/589E6116)
+    (fp_text reference C316 (at 1.7 -2.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(C316-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 34 "Net-(C316-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D18F7)
+    (at 164.5 104 180)
+    (path /589EC251/589E060F)
+    (fp_text reference C317 (at -0.2 2.4 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(C316-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 35 "Net-(C317-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D1904)
+    (at 165.5 109.5 180)
+    (path /589EC251/589E0755)
+    (fp_text reference C318 (at 0 2.5 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(C316-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 35 "Net-(C317-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 58A2C96E) (tstamp 589D1911)
+    (at 193.5 102 90)
+    (path /589EC251/589E373F)
+    (fp_text reference C320 (at 0.1 -1 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(C316-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 58A2C972) (tstamp 589D191E)
+    (at 193.5 110.5 90)
+    (path /589EC251/589E3873)
+    (fp_text reference C328 (at -0.1 -1.1 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 35 "Net-(C317-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D192B)
+    (at 189 110.5 270)
+    (path /589EC251/589E6256)
+    (fp_text reference C329 (at -2.1 2.5 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 270) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 35 "Net-(C317-Pad2)"))
+    (pad 2 thru_hole circle (at 2.5 0 270) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 15 "Net-(C329-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D1938)
+    (at 189 61.5 90)
+    (path /589EC251/589E6AE8)
+    (fp_text reference C334 (at -2 -2.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 40 "Net-(C334-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 41 "Net-(C334-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 58A2C964) (tstamp 589D1945)
+    (at 193.5 61.5 90)
+    (path /589EC251/589E3E2D)
+    (fp_text reference C338 (at -0.1 -1.1 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 40 "Net-(C334-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D1952)
+    (at 164.5 68)
+    (path /589EC251/589E162E)
+    (fp_text reference C340 (at 0 2.7) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 40 "Net-(C334-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(C340-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D195F)
+    (at 165.5 62.5)
+    (path /589EC251/589E1A02)
+    (fp_text reference C341 (at 0 2.6) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 40 "Net-(C334-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(C340-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 58A2C968) (tstamp 589D196C)
+    (at 193.5 70 90)
+    (path /589EC251/589E4191)
+    (fp_text reference C343 (at 0 -1.1 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(C340-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D1979)
+    (at 189 70 270)
+    (path /589EC251/589E6C34)
+    (fp_text reference C345 (at -0.1 2.6 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 270) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(C340-Pad2)"))
+    (pad 2 thru_hole circle (at 2.5 0 270) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 47 "Net-(C345-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D1986)
+    (at 189 44.5 90)
+    (path /589EC251/589E71DC)
+    (fp_text reference C349 (at 1.1 -2.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(C349-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 52 "Net-(C349-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D1993)
+    (at 173.5 57.5)
+    (path /589EC251/589E1B35)
+    (fp_text reference C350 (at 0 -2.5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(C349-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(C350-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D19A0)
+    (at 164.38 52.0296 180)
+    (path /589EC251/589E1C7B)
+    (fp_text reference C351 (at 0 2.529562 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(C349-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(C350-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D19AD)
+    (at 193.5 44.5 90)
+    (path /589EC251/589E4553)
+    (fp_text reference C353 (at 1.6 2.7 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(C349-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 58A2C961) (tstamp 589D19BA)
+    (at 193.5 53 90)
+    (path /589EC251/589E468B)
+    (fp_text reference C360 (at -0.1 -1.1 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(C350-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D19C7)
+    (at 189 53 270)
+    (path /589EC251/589E7318)
+    (fp_text reference C361 (at -1.7 2.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 270) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 270) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(C350-Pad2)"))
+    (pad 2 thru_hole circle (at 2.5 0 270) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 56 "Net-(C361-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D19D4)
+    (at 173.5 114.5 180)
+    (path /589EC251/589E8C1C)
+    (fp_text reference C309 (at 0.1 -2.5 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(C304-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(C307-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D19E1)
+    (at 173.5 109.5)
+    (path /589EC251/589E8AEA)
+    (fp_text reference C319 (at -0.1 -2.5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(C316-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 35 "Net-(C317-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D19EE)
+    (at 173.5 62.5 180)
+    (path /589EC251/589E83F5)
+    (fp_text reference C342 (at 0 -2.6 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 40 "Net-(C334-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 44 "Net-(C340-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP_TH_P5mm_W3.5mm_L7.3mm (layer F.Cu) (tedit 589CA20A) (tstamp 589D19FB)
+    (at 165.5 57.5 180)
+    (path /589EC251/589E82C3)
+    (fp_text reference C352 (at 0 2.5 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220n (at 0 3 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -1.778) (end 3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 -1.778) (end 3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -1.778) (end -3.65 -1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 -1.778) (end -3.65 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.65 1.778) (end 3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end -3.65 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.65 1.778) (end 0 1.778) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1.778) (end 3.65 1.778) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(C349-Pad1)"))
+    (pad 2 thru_hole circle (at 2.5 0 180) (size 2 2) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 53 "Net-(C350-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589DED3A)
+    (at 127 38.5)
+    (path /589EC251/589E26F1)
+    (attr smd)
+    (fp_text reference C335 (at 3.75 -1.25) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 75 /TDA7498/3v3))
+    (pad 2 smd rect (at 1.1 0) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589DED44)
+    (at 118 38.5 180)
+    (path /589EC251/589E5F9E)
+    (attr smd)
+    (fp_text reference C336 (at 0.3 1.4 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 2u2 (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 13 /TDA7498/MUTE))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589DED4E)
+    (at 118 41 180)
+    (path /589EC251/589E63F6)
+    (attr smd)
+    (fp_text reference C337 (at 0.254 -1.524 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 2u2 (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 14 /TDA7498/STBY))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:DIODE-SOD-123 (layer F.Cu) (tedit 56177C2E) (tstamp 589DED64)
+    (at 127.5 41)
+    (path /589EC251/589E09B7)
+    (fp_text reference D301 (at 3.75 -1.25) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MMSZ5225BT1G (at 0 -1.7) (layer F.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.9) (end -1.4 -0.9) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 -0.9) (end -1.4 -0.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.9) (end 1.4 -0.9) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.4 -0.9) (end 1.4 -0.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 0.8) (end -1.4 0.9) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 0.9) (end 1.6 0.9) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 0.9) (end 1.6 0.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.1 0) (end 0.3 -0.4) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.3 -0.4) (end 0.3 0.4) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.3 0.4) (end -0.1 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.2 -0.4) (end -0.2 0.4) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.3 0) (end 0.7 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.2 0) (end -0.6 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.9 -0.9) (end -0.9 0.9) (layer F.SilkS) (width 0.15))
+    (fp_text user K (at -3 0) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text user A (at 3 0) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 2 smd rect (at -1.7 0) (size 1 1) (layers F.Cu F.Paste F.Mask)
+      (net 75 /TDA7498/3v3))
+    (pad 1 smd rect (at 1.7 0) (size 1 1) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN_SIL_2_1MM (layer F.Cu) (tedit 58A2E4BD) (tstamp 589DED6E)
+    (at 112.5 48.54 90)
+    (path /589EC251/589F2AEB)
+    (fp_text reference P303 (at -1.76 0.2 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 1.27 -2.159 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.683 1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end 3.683 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.683 -1.143) (end 3.683 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 2 thru_hole circle (at 2.54 0 90) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 70 "Net-(P303-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN_SIL_2_1MM (layer F.Cu) (tedit 58A2E4BA) (tstamp 589DED78)
+    (at 109 48.54 90)
+    (path /589EC251/589F346C)
+    (fp_text reference P305 (at -1.76 -0.2 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 1.27 -2.159 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.683 1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end 3.683 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.683 -1.143) (end 3.683 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+    (pad 2 thru_hole circle (at 2.54 0 90) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 72 "Net-(P305-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-2512 (layer F.Cu) (tedit 58307F1B) (tstamp 589DED79)
+    (at 129 45.5)
+    (descr "Resistor SMD 2512, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 2512")
+    (path /589EC251/589DE672)
+    (attr smd)
+    (fp_text reference R310 (at 0 -2.5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1800 (at 0 3.1) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -2.6 -1.825) (end 2.6 -1.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.6 1.825) (end -2.6 1.825) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.9 -1.95) (end 3.9 1.95) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.9 -1.95) (end -3.9 1.95) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.9 1.95) (end 3.9 1.95) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.9 -1.95) (end 3.9 -1.95) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.15 -1.6) (end 3.15 -1.6) (layer F.Fab) (width 0.1))
+    (fp_line (start 3.15 -1.6) (end 3.15 1.6) (layer F.Fab) (width 0.1))
+    (fp_line (start 3.15 1.6) (end -3.15 1.6) (layer F.Fab) (width 0.1))
+    (fp_line (start -3.15 1.6) (end -3.15 -1.6) (layer F.Fab) (width 0.1))
+    (pad 1 smd rect (at -3.1 0) (size 1 3.2) (layers F.Cu F.Paste F.Mask)
+      (net 75 /TDA7498/3v3))
+    (pad 2 smd rect (at 3.1 0) (size 1 3.2) (layers F.Cu F.Paste F.Mask)
+      (net 2 VCC))
+    (model Resistors_SMD.3dshapes/R_2512.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589DED91)
+    (at 122.5 41 180)
+    (path /589EC251/589E3EC7)
+    (attr smd)
+    (fp_text reference R312 (at 0.254 -1.524 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 47k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 75 /TDA7498/3v3))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 14 /TDA7498/STBY))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589DED9B)
+    (at 116.7 48 180)
+    (path /589EC251/589F8383)
+    (attr smd)
+    (fp_text reference R313 (at -0.8 -1.4 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 14 /TDA7498/STBY))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 70 "Net-(P303-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589DEDA5)
+    (at 122.5 38.5 180)
+    (path /589EC251/589E5814)
+    (attr smd)
+    (fp_text reference R314 (at 0 1.4 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 220k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 75 /TDA7498/3v3))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 13 /TDA7498/MUTE))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 55A244A3) (tstamp 589DEDAF)
+    (at 116.7 45 180)
+    (path /589EC251/589F8D21)
+    (attr smd)
+    (fp_text reference R315 (at -3.5 -0.2 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1k (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 13 /TDA7498/MUTE))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 72 "Net-(P305-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:SMD-0805 (layer F.Cu) (tedit 58A2C840) (tstamp 589DF4BD)
+    (at 131 67.25 180)
+    (path /589EC251/58A08866)
+    (attr smd)
+    (fp_text reference C339 (at -0.7 -1.25 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 100n (at 0.254 1.524 180) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 0 -0.635) (end 0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 -0.635) (end -0.5334 -0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end 0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0.635) (end -0.5334 0.635) (layer F.SilkS) (width 0.15))
+    (pad 1 smd rect (at -1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 42 "Net-(C339-Pad1)"))
+    (pad 2 smd rect (at 1.1 0 180) (size 0.9 1.3) (layers F.Cu F.Paste F.Mask)
+      (net 43 "Net-(C339-Pad2)"))
+  )
+
+  (module MyKiCadLibs-Footprints:CAP-TH-D12.5mmP5mm (layer F.Cu) (tedit 5) (tstamp 58A1B2BB)
+    (at 189 84.5 90)
+    (path /58A1C727)
+    (fp_text reference C101 (at -0.254 -6.985 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 560u (at 0 -4.953 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 6.25 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.596 -0.452) (end -4.596 0.564) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.104 0.056) (end -4.088 0.056) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.5 0 90) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 2 VCC))
+    (pad 2 thru_hole circle (at 2.5 0 90) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:MNT_HOLE_3mm_PTH (layer F.Cu) (tedit 58A1C1DE) (tstamp 589CF462)
+    (at 137 86)
+    (path /589CFFFC)
+    (fp_text reference P103 (at 0 4) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PIN (at 0 -4) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 6.5 6.5) (drill 3.2) (layers *.Cu *.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:MNT_HOLE_3mm_PTH (layer F.Cu) (tedit 58A1C1DE) (tstamp 589CF458)
+    (at 137 131)
+    (path /589CFF5F)
+    (fp_text reference P102 (at 0 4) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PIN (at 0 -4) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 6.5 6.5) (drill 3.2) (layers *.Cu *.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:MNT_HOLE_3mm_PTH (layer F.Cu) (tedit 58A1C1DE) (tstamp 589CF453)
+    (at 137 41)
+    (path /589CF67F)
+    (fp_text reference P101 (at 0 4) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value PIN (at 0 -4) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 6.5 6.5) (drill 3.2) (layers *.Cu *.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:IC-PowerSSO-36-EPU (layer B.Cu) (tedit 58A2CBC6) (tstamp 589CB9D0)
+    (at 137 61 90)
+    (path /589EC251/589ED5ED)
+    (fp_text reference U302 (at -6.13 0) (layer B.SilkS)
+      (effects (font (size 1.2 1.2) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TDA7498 (at 6 0) (layer B.Fab)
+      (effects (font (size 1.2 1.2) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 4.93 3.4) (end -3.93 3.4) (layer B.SilkS) (width 0.15))
+    (fp_line (start 4.93 -3.4) (end 4.93 3.4) (layer B.SilkS) (width 0.15))
+    (fp_line (start -4.93 -3.4) (end 4.93 -3.4) (layer B.SilkS) (width 0.15))
+    (fp_line (start -4.93 2.4) (end -4.93 -3.4) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.93 3.4) (end -4.93 2.4) (layer B.SilkS) (width 0.15))
+    (fp_circle (center -3.5 2) (end -3 1.5) (layer B.SilkS) (width 0.2))
+    (pad 36 smd rect (at -4.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 42 "Net-(C339-Pad1)"))
+    (pad 1 smd rect (at -4.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 35 smd rect (at -3.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 43 "Net-(C339-Pad2)"))
+    (pad 2 smd rect (at -3.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 60 "Net-(L305-Pad1)"))
+    (pad 34 smd rect (at -3.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 48 "Net-(C346-Pad1)"))
+    (pad 3 smd rect (at -3.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 60 "Net-(L305-Pad1)"))
+    (pad 33 smd rect (at -2.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 8 /InputStage/P3))
+    (pad 4 smd rect (at -2.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 32 smd rect (at -2.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 9 /InputStage/N3))
+    (pad 5 smd rect (at -2.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 31 smd rect (at -1.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 79 /TDA7498/GAIN1B))
+    (pad 6 smd rect (at -1.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 2 VCC))
+    (pad 30 smd rect (at -1.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 78 /TDA7498/GAIN0B))
+    (pad 7 smd rect (at -1.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 2 VCC))
+    (pad 29 smd rect (at -0.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 54 "Net-(C354-Pad1)"))
+    (pad 8 smd rect (at -0.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 46 "Net-(C344-Pad2)"))
+    (pad 28 smd rect (at -0.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask))
+    (pad 9 smd rect (at -0.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 46 "Net-(C344-Pad2)"))
+    (pad 27 smd rect (at 0.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 10 smd rect (at 0.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 50 "Net-(C348-Pad2)"))
+    (pad 26 smd rect (at 0.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 55 "Net-(C356-Pad1)"))
+    (pad 11 smd rect (at 0.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 50 "Net-(C348-Pad2)"))
+    (pad 25 smd rect (at 1.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 74 "Net-(R316-Pad1)"))
+    (pad 12 smd rect (at 1.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 2 VCC))
+    (pad 24 smd rect (at 1.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask))
+    (pad 13 smd rect (at 1.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 2 VCC))
+    (pad 23 smd rect (at 2.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 10 /InputStage/P4))
+    (pad 14 smd rect (at 2.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 22 smd rect (at 2.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 11 /InputStage/N4))
+    (pad 15 smd rect (at 2.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 21 smd rect (at 3.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 13 /TDA7498/MUTE))
+    (pad 16 smd rect (at 3.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 61 "Net-(L308-Pad1)"))
+    (pad 20 smd rect (at 3.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 14 /TDA7498/STBY))
+    (pad 17 smd rect (at 3.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 61 "Net-(L308-Pad1)"))
+    (pad 19 smd rect (at 4.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 57 "Net-(C362-Pad1)"))
+    (pad 18 smd rect (at 4.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:IC-PowerSSO-36-EPU (layer B.Cu) (tedit 58A2CBC6) (tstamp 589CB9A2)
+    (at 137 111 90)
+    (path /589EC251/589ED5C9)
+    (fp_text reference U301 (at -6.13 0) (layer B.SilkS)
+      (effects (font (size 1.2 1.2) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value TDA7498 (at 6 0) (layer B.Fab)
+      (effects (font (size 1.2 1.2) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 4.93 3.4) (end -3.93 3.4) (layer B.SilkS) (width 0.15))
+    (fp_line (start 4.93 -3.4) (end 4.93 3.4) (layer B.SilkS) (width 0.15))
+    (fp_line (start -4.93 -3.4) (end 4.93 -3.4) (layer B.SilkS) (width 0.15))
+    (fp_line (start -4.93 2.4) (end -4.93 -3.4) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.93 3.4) (end -4.93 2.4) (layer B.SilkS) (width 0.15))
+    (fp_circle (center -3.5 2) (end -3 1.5) (layer B.SilkS) (width 0.2))
+    (pad 36 smd rect (at -4.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 26 "Net-(C306-Pad1)"))
+    (pad 1 smd rect (at -4.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 35 smd rect (at -3.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 27 "Net-(C306-Pad2)"))
+    (pad 2 smd rect (at -3.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 58 "Net-(L301-Pad1)"))
+    (pad 34 smd rect (at -3.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 31 "Net-(C313-Pad1)"))
+    (pad 3 smd rect (at -3.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 58 "Net-(L301-Pad1)"))
+    (pad 33 smd rect (at -2.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 3 /InputStage/P1))
+    (pad 4 smd rect (at -2.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 32 smd rect (at -2.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 4 /InputStage/N1))
+    (pad 5 smd rect (at -2.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 31 smd rect (at -1.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 77 /TDA7498/GAIN1A))
+    (pad 6 smd rect (at -1.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 2 VCC))
+    (pad 30 smd rect (at -1.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 76 /TDA7498/GAIN0A))
+    (pad 7 smd rect (at -1.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 2 VCC))
+    (pad 29 smd rect (at -0.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 36 "Net-(C321-Pad1)"))
+    (pad 8 smd rect (at -0.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 30 "Net-(C311-Pad2)"))
+    (pad 28 smd rect (at -0.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask))
+    (pad 9 smd rect (at -0.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 30 "Net-(C311-Pad2)"))
+    (pad 27 smd rect (at 0.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 10 smd rect (at 0.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 12 "Net-(C315-Pad2)"))
+    (pad 26 smd rect (at 0.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 37 "Net-(C323-Pad1)"))
+    (pad 11 smd rect (at 0.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 12 "Net-(C315-Pad2)"))
+    (pad 25 smd rect (at 1.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 73 "Net-(R311-Pad2)"))
+    (pad 12 smd rect (at 1.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 2 VCC))
+    (pad 24 smd rect (at 1.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 38 "Net-(C324-Pad1)"))
+    (pad 13 smd rect (at 1.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 2 VCC))
+    (pad 23 smd rect (at 2.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 5 /InputStage/P2))
+    (pad 14 smd rect (at 2.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 22 smd rect (at 2.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 6 /InputStage/N2))
+    (pad 15 smd rect (at 2.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+    (pad 21 smd rect (at 3.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 13 /TDA7498/MUTE))
+    (pad 16 smd rect (at 3.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 59 "Net-(L304-Pad1)"))
+    (pad 20 smd rect (at 3.75 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 14 /TDA7498/STBY))
+    (pad 17 smd rect (at 3.75 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 59 "Net-(L304-Pad1)"))
+    (pad 19 smd rect (at 4.25 -5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 39 "Net-(C330-Pad1)"))
+    (pad 18 smd rect (at 4.25 5 90) (size 0.34 2.2) (layers B.Cu B.Paste B.Mask)
+      (net 1 GNDD))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN_SIL_2_1MM (layer F.Cu) (tedit 5745B103) (tstamp 58A2D85D)
+    (at 129.86 123)
+    (path /589EC251/58A2EE6B)
+    (fp_text reference P308 (at 1.24 -1.8) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 1.27 -2.159) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.683 1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end 3.683 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.683 -1.143) (end 3.683 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 76 /TDA7498/GAIN0A))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 75 /TDA7498/3v3))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN_SIL_2_1MM (layer F.Cu) (tedit 5745B103) (tstamp 58A2D867)
+    (at 129.86 125.8)
+    (path /589EC251/58A2FE0C)
+    (fp_text reference P309 (at 1.04 2) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 1.27 -2.159) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.683 1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end 3.683 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.683 -1.143) (end 3.683 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 77 /TDA7498/GAIN1A))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 75 /TDA7498/3v3))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN_SIL_2_1MM (layer F.Cu) (tedit 5745B103) (tstamp 58A2D871)
+    (at 131.6 72.8 90)
+    (path /589EC251/58A3846C)
+    (fp_text reference P310 (at 1 -1.9 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 1.27 -2.159 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.683 1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end 3.683 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.683 -1.143) (end 3.683 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 78 /TDA7498/GAIN0B))
+    (pad 2 thru_hole circle (at 2.54 0 90) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 75 /TDA7498/3v3))
+  )
+
+  (module MyKiCadLibs-Footprints:CONN_SIL_2_1MM (layer F.Cu) (tedit 5745B103) (tstamp 58A2D87B)
+    (at 131.6 78 90)
+    (path /589EC251/58A38475)
+    (fp_text reference P311 (at 1.9 -1.9 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_2x1 (at 1.27 -2.159 90) (layer F.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 3.683 1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end 3.683 -1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.683 -1.143) (end 3.683 1.143) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.143 -1.143) (end -1.143 1.143) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 79 /TDA7498/GAIN1B))
+    (pad 2 thru_hole circle (at 2.54 0 90) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 75 /TDA7498/3v3))
+  )
+
+  (gr_text "MUTE/STBY\nOPEN = HIGH\nSHORT = LOW (Active)" (at 125 41.3) (layer B.SilkS) (tstamp 58A2E911)
+    (effects (font (size 1 1) (thickness 0.2)) (justify mirror))
+  )
+  (gr_text "SHORT = HIGH\nOPEN = LOW" (at 122.9 127.7) (layer F.SilkS) (tstamp 58A2E8FD)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text STBY (at 114.3 47.4 270) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text MUTE (at 108.1 42.8 270) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text GAIN0 (at 137.6 76.1) (layer F.SilkS) (tstamp 58A2D9F5)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text "GAIN1\nMODE" (at 131.8 81.4 90) (layer F.SilkS) (tstamp 58A2D9F4)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text GAIN1/MODE (at 123.8 125.2) (layer F.SilkS) (tstamp 58A2D9E5)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text GAIN0 (at 126.4 123.1) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text "Input\n12V-36V max" (at 196.7 86.1 90) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text GND (at 115 86.05 270) (layer B.SilkS) (tstamp 58A2CCEC)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 108.4 79.6) (layer B.SilkS) (tstamp 58A2CCE8)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 108.3 77.2 90) (layer B.SilkS) (tstamp 58A2CCE7)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 108.4 84.6) (layer B.SilkS) (tstamp 58A2CCE6)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 108.3 82.2 90) (layer B.SilkS) (tstamp 58A2CCE5)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 108.4 89.7) (layer B.SilkS) (tstamp 58A2CCE4)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 108.3 87.3 90) (layer B.SilkS) (tstamp 58A2CCE3)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 108.3 92.5 90) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 108.4 94.9) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text INPUTS (at 117.2 78.7 270) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 202.8 96.1 90) (layer B.SilkS) (tstamp 58A2C53B)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 202.6 108.2 90) (layer B.SilkS) (tstamp 58A2C53A)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 202.6 125.1 270) (layer B.SilkS) (tstamp 58A2C539)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 202.8 113 270) (layer B.SilkS) (tstamp 58A2C538)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 202.6 76.2 270) (layer B.SilkS) (tstamp 58A2C522)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 202.8 64.1 270) (layer B.SilkS) (tstamp 58A2C521)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 202.8 47.2 90) (layer B.SilkS) (tstamp 58A2C509)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 202.6 59.3 90) (layer B.SilkS) (tstamp 58A2C505)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text - (at 203.3 83.5 90) (layer B.SilkS) (tstamp 58A2C501)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text + (at 203.2 88.1 90) (layer B.SilkS) (tstamp 58A2C4FC)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text POWER (at 205.5 85.6 90) (layer B.SilkS) (tstamp 58A2C4B8)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text SPEAKER (at 205.5 69.9 90) (layer B.SilkS) (tstamp 58A2C498)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text SPEAKER (at 205.5 53.6 90) (layer B.SilkS) (tstamp 58A2C483)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text SPEAKER (at 205.5 101.6 90) (layer B.SilkS) (tstamp 58A2C480)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text SPEAKER (at 205.5 118.8 90) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text "Open Hardware DSP Platform - www.ohdsp.org\nAmpOne - Class D Amp Module\nRevision 1.0" (at 15 22.5) (layer Cmts.User) (tstamp 570B9AB6)
+    (effects (font (size 3 3) (thickness 0.3)) (justify left))
+  )
+  (gr_text "Open Hardware DSP\nwww.ohdsp.org" (at 183.5 43.8 90) (layer B.SilkS) (tstamp 56F5C4D5)
+    (effects (font (size 1.2 1.2) (thickness 0.25)) (justify left mirror))
+  )
+  (gr_text Notes: (at 24 179.5) (layer Cmts.User)
+    (effects (font (size 3 3) (thickness 0.3)))
+  )
+  (gr_text "Copyright © \nPaul Janicki 2017" (at 181.1 74.1 90) (layer B.SilkS)
+    (effects (font (size 1.2 1.2) (thickness 0.25)) (justify mirror))
+  )
+  (gr_text "OHDSP AmpOne\nRevision 1.0" (at 117 131.6) (layer F.SilkS)
+    (effects (font (size 1.2 1.2) (thickness 0.25)) (justify left))
+  )
+  (gr_text "Licensed under TAPR OHL \nwww.tapr.org/OHL" (at 164.2 86.1) (layer B.SilkS)
+    (effects (font (size 1.2 1.2) (thickness 0.25)) (justify mirror))
+  )
+  (gr_text "89ohm traces with ground plane:\nTrace 0.3mm Clearance 0.5mm (to other traces/ground plane)\n\nUse 26AWG ribbon cables to match PCB impedances (approx 89ohm)\n\n\n" (at 17.5 190.25) (layer Cmts.User)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify left))
+  )
+  (gr_line (start 128.8 56.3) (end 129.2 56.3) (layer F.SilkS) (width 0.2))
+  (gr_line (start 136.1 75.1) (end 133.1 73.1) (layer F.SilkS) (width 0.2))
+  (gr_line (start 110.4 99.849726) (end 110.4 99.249726) (layer B.SilkS) (width 0.2) (tstamp 58A2CD16))
+  (gr_line (start 115 99.849726) (end 110.4 99.849726) (layer B.SilkS) (width 0.2) (tstamp 58A2CD15))
+  (gr_line (start 115 97.549726) (end 115 99.849726) (layer B.SilkS) (width 0.2) (tstamp 58A2CD14))
+  (gr_line (start 110.4 72.2) (end 110.4 72.8) (layer B.SilkS) (width 0.2))
+  (gr_line (start 115 72.2) (end 110.4 72.2) (layer B.SilkS) (width 0.2))
+  (gr_line (start 115 74.5) (end 115 72.2) (layer B.SilkS) (width 0.2))
+  (gr_line (start 114.3 97.6) (end 114.9 97.6) (layer B.SilkS) (width 0.2) (tstamp 58A2CCFD))
+  (gr_line (start 114.4 94.9) (end 115 94.9) (layer B.SilkS) (width 0.2) (tstamp 58A2CCFC))
+  (gr_line (start 114.4 92.4) (end 115 92.4) (layer B.SilkS) (width 0.2) (tstamp 58A2CCFB))
+  (gr_line (start 114.3 89.8) (end 114.9 89.8) (layer B.SilkS) (width 0.2) (tstamp 58A2CCFA))
+  (gr_line (start 114.2 82.2) (end 114.8 82.2) (layer B.SilkS) (width 0.2) (tstamp 58A2CCF9))
+  (gr_line (start 114.2 79.7) (end 114.8 79.7) (layer B.SilkS) (width 0.2) (tstamp 58A2CCF8))
+  (gr_line (start 114.3 77.1) (end 114.9 77.1) (layer B.SilkS) (width 0.2) (tstamp 58A2CCF7))
+  (gr_line (start 115 97.6) (end 115 88.6) (layer B.SilkS) (width 0.2) (tstamp 58A2CCF4))
+  (gr_line (start 114.4 74.5) (end 115 74.5) (layer B.SilkS) (width 0.2))
+  (gr_line (start 115 83.5) (end 115 74.5) (layer B.SilkS) (width 0.2))
+  (gr_line (start 129.1 68.4) (end 128.6 67.7) (layer F.SilkS) (width 0.2))
+  (gr_line (start 133 64) (end 132.4 64.2) (layer F.SilkS) (width 0.2))
+  (gr_line (start 110.7 63) (end 111.1 62.7) (layer F.SilkS) (width 0.2))
+  (gr_line (start 133.3 101.1) (end 132.7 103.3) (layer F.SilkS) (width 0.2))
+  (gr_line (start 110.8 109.2) (end 111.4 109.5) (layer F.SilkS) (width 0.2))
+  (gr_line (start 107 36) (end 207 36) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 122 136) (end 107 136) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 207 136) (end 122 136) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 207 36) (end 207 136) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 107 136) (end 107 36) (angle 90) (layer Edge.Cuts) (width 0.1))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PCB_small_halogen_replacement",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 116124,
+      "sha256": "669c8829ce4c4fe7192b3928a9e76e27c60bb9811aeb2738a603c5db9ae3af3a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 148832,
+      "sha256": "5e6b69c76786630739241bdd6d25927f261bfab91b1408ba5734d8929c645062"
+    },
+    "metadata_json": {
+      "bytes": 678,
+      "sha256": "2203bae454ba733df36875f8237c4129698c2c6c2bbd656a43972d5938e3ec64"
+    },
+    "final_json": {
+      "bytes": 37589,
+      "sha256": "5ef43517064a0179320a0b22eea769f6d43807a76220a8a4cbe0797275c0ab71"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:32:17.460066+00:00"
+  }
+}

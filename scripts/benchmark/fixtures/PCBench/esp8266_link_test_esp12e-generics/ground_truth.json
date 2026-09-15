@@ -1,0 +1,27 @@
+{
+  "board": "esp8266_link_test_esp12e-generics",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\esp8266_link_test_esp12e-generics\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 88,
+  "approximate_track_length_mm": 169.82,
+  "kicad_drc_violations": 99,
+  "generated_at": "2026-08-18T18:47:21.242581+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 99,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 53,
+      "copper_edge_clearance": 1,
+      "isolated_copper": 1,
+      "silk_over_copper": 24,
+      "silk_overlap": 14,
+      "text_height": 6
+    },
+    "by_severity": {
+      "error": 54,
+      "warning": 45
+    }
+  }
+}

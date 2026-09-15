@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "WeatherSpot_vreg_pressure",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 15386,
+      "sha256": "d2fb9c0d1cf62dd9cbddabb6d4af77f739b8b7cba12277dcff5ea6beead7b092"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 18507,
+      "sha256": "47f09d334a6c04e3b9d985b974b605afe4f93d0a8a93c3c2899554e9216eb21d"
+    },
+    "metadata_json": {
+      "bytes": 630,
+      "sha256": "4315a7a31e8a494b385a5ad038797231418c36a1bfa9265f893105580b4c53f8"
+    },
+    "final_json": {
+      "bytes": 11066,
+      "sha256": "c2f4d93d865617f45873f6d1fc4fdf0de9c745b6cfa766b1cd9287a24d09bd0b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:56:28.232139+00:00"
+  }
+}

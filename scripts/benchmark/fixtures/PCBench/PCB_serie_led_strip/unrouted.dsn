@@ -1,0 +1,168 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\PCB_serie_led_strip\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  177000 -105000  86000 -105000  86000 -95000  177000 -95000
+            177000 -105000)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 1000)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Mounting_Holes:MountingHole_2.2mm_M2_DIN965_Pad
+      (place Noname_2 169500 -100000 front 0 (PN MountingHole_2.2mm_M2_DIN965_Pad))
+      (place Noname_1 93500 -100000 front 0 (PN MountingHole_2.2mm_M2_DIN965_Pad))
+    )
+    (component LEDs:LED_PLCC_2835_Handsolder
+      (place D1 100000 -100000 front 0 (PN LED))
+      (place D2 107000 -100000 front 0 (PN LED))
+      (place D3 114000 -100000 front 0 (PN LED))
+      (place D10 163000 -100000 front 0 (PN LED))
+      (place D9 156000 -100000 front 0 (PN LED))
+      (place D8 149000 -100000 front 0 (PN LED))
+      (place D7 142000 -100000 front 0 (PN LED))
+      (place D6 135330 -100000 front 0 (PN LED))
+      (place D5 128000 -100000 front 0 (PN LED))
+      (place D4 121000 -100000 front 0 (PN LED))
+    )
+  )
+  (library
+    (image Mounting_Holes:MountingHole_2.2mm_M2_DIN965_Pad
+      (outline (polygon signal 0  292.418 2127.5  579.388 2067.87  855.567 1969.71  1115.8 1834.87
+            1355.26 1665.84  1569.47 1465.78  1754.44 1238.42  1906.73 987.991
+            2023.5 719.157  2102.58 436.917  2142.5 146.51  2145 0  2142.5 -146.509
+            2102.58 -436.916  2023.5 -719.156  1906.73 -987.99  1754.44 -1238.42
+            1569.47 -1465.78  1355.26 -1665.84  1115.8 -1834.87  855.567 -1969.71
+            579.388 -2067.86  292.418 -2127.5  0 -2147.5  -292.419 -2127.5
+            -579.389 -2067.86  -855.568 -1969.71  -1115.81 -1834.87  -1355.26 -1665.84
+            -1569.47 -1465.78  -1754.44 -1238.42  -1906.73 -987.99  -2023.51 -719.156
+            -2102.59 -436.916  -2142.49 -146.553  -2142.49 146.554  -2102.59 436.917
+            -2023.51 719.157  -1906.73 987.991  -1754.44 1238.42  -1569.47 1465.78
+            -1355.26 1665.84  -1115.81 1834.87  -855.568 1969.71  -579.389 2067.87
+            -292.419 2127.5  0 2147.5))
+      (outline (path signal 150  1900 0  1880.66 -270.398  1823.04 -535.292  1728.3 -789.289
+            1598.38 -1027.22  1435.92 -1244.23  1244.23 -1435.92  1027.22 -1598.38
+            789.289 -1728.3  535.292 -1823.04  270.398 -1880.66  0 -1900
+            -270.398 -1880.66  -535.292 -1823.04  -789.289 -1728.3  -1027.22 -1598.38
+            -1244.23 -1435.92  -1435.92 -1244.23  -1598.38 -1027.22  -1728.3 -789.289
+            -1823.04 -535.292  -1880.66 -270.398  -1900 0  -1880.66 270.398
+            -1823.04 535.292  -1728.3 789.289  -1598.38 1027.22  -1435.92 1244.23
+            -1244.23 1435.92  -1027.22 1598.38  -789.289 1728.3  -535.292 1823.04
+            -270.398 1880.66  0 1900  270.398 1880.66  535.292 1823.04  789.289 1728.3
+            1027.22 1598.38  1244.23 1435.92  1435.92 1244.23  1598.38 1027.22
+            1728.3 789.289  1823.04 535.292  1880.66 270.398  1900 0))
+      (pin Round[A]Pad_3800.000000_um 1 0 0)
+    )
+    (image LEDs:LED_PLCC_2835_Handsolder
+      (outline (polygon signal 0  2195 -1895  -2195 -1895  -2195 1895  2195 1895))
+      (outline (path signal 100  -1730 1400  1770 1400))
+      (outline (path signal 100  1770 1400  1770 -1400))
+      (outline (path signal 100  1770 -1400  -1730 -1400))
+      (outline (path signal 100  -1730 -1400  -1730 1400))
+      (outline (path signal 100  -1580 0  -1580 800))
+      (outline (path signal 100  -1580 800  -1180 1200))
+      (outline (path signal 100  -1180 1200  1220 1200))
+      (outline (path signal 100  1220 1200  1620 800))
+      (outline (path signal 100  1620 800  1620 -800))
+      (outline (path signal 100  1620 -800  1220 -1200))
+      (outline (path signal 100  1220 -1200  -1180 -1200))
+      (outline (path signal 100  -1180 -1200  -1580 -800))
+      (outline (path signal 100  -1580 -800  -1580 0))
+      (outline (path signal 150  -2000 1600  1400 1600))
+      (outline (path signal 150  -2000 -1600  1400 -1600))
+      (outline (path signal 50  -1130 800  -1130 300))
+      (outline (path signal 50  -1380 550  -880 550))
+      (pin Rect[T]Pad_2500.000000x2100.000000_um 1 1130 0)
+      (pin Rect[T]Pad_1500.000000x2100.000000_um 2 -1530 0)
+    )
+    (padstack Round[A]Pad_3800.000000_um
+      (shape (circle F.Cu 3800))
+      (shape (circle B.Cu 3800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2500.000000x2100.000000_um
+      (shape (rect F.Cu -1250 -1050 1250 1050))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x2100.000000_um
+      (shape (rect F.Cu -750 -1050 750 1050))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(D1-Pad1)"
+      (pins D1-1 D2-2)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins D1-2)
+    )
+    (net "Net-(D2-Pad1)"
+      (pins D2-1 D3-2)
+    )
+    (net "Net-(D3-Pad1)"
+      (pins D3-1 D4-2)
+    )
+    (net "Net-(D4-Pad1)"
+      (pins D5-2 D4-1)
+    )
+    (net "Net-(D5-Pad1)"
+      (pins D6-2 D5-1)
+    )
+    (net "Net-(D6-Pad1)"
+      (pins D7-2 D6-1)
+    )
+    (net "Net-(D7-Pad1)"
+      (pins D8-2 D7-1)
+    )
+    (net "Net-(D8-Pad1)"
+      (pins D9-2 D8-1)
+    )
+    (net "Net-(D10-Pad2)"
+      (pins D10-2 D9-1)
+    )
+    (net "Net-(D10-Pad1)"
+      (pins D10-1)
+    )
+    (class kicad_default "Net-(D1-Pad1)" "Net-(D1-Pad2)" "Net-(D10-Pad1)"
+      "Net-(D10-Pad2)" "Net-(D2-Pad1)" "Net-(D3-Pad1)" "Net-(D4-Pad1)" "Net-(D5-Pad1)"
+      "Net-(D6-Pad1)" "Net-(D7-Pad1)" "Net-(D8-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 1000)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

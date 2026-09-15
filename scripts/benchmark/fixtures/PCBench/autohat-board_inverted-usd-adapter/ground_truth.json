@@ -1,0 +1,25 @@
+{
+  "board": "autohat-board_inverted-usd-adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\autohat-board_inverted-usd-adapter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 28,
+  "approximate_track_length_mm": 234.21,
+  "kicad_drc_violations": 15,
+  "generated_at": "2026-08-18T18:30:36.810180+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 15,
+    "unconnected_count": 0,
+    "by_type": {
+      "invalid_outline": 4,
+      "lib_footprint_issues": 2,
+      "silk_edge_clearance": 2,
+      "solder_mask_bridge": 7
+    },
+    "by_severity": {
+      "error": 11,
+      "warning": 4
+    }
+  }
+}

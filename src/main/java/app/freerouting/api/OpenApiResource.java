@@ -1,7 +1,7 @@
 package app.freerouting.api;
 
 import app.freerouting.api.mcp.AgentCardController;
-import app.freerouting.api.v1.McpControllerV1;
+import app.freerouting.api.mcp.McpControllerV1;
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,0 +1,61 @@
+{
+  "board_id": "DerKnopf_power-supply",
+  "display_name": "DerKnopf_power-supply",
+  "pcbench_directory": "PCBs/DerKnopf_power-supply",
+  "source": "https://github.com/hzeller/DerKnopf",
+  "author": "hzeller",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:46.781990+00:00",
+  "cad": {
+    "source_version": "KiCad 20160815",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 14,
+    "dimensions_mm": {
+      "width": 55.25,
+      "height": 22.86
+    },
+    "area_cm2": 12.63,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 78,
+    "vias": 0,
+    "track_length_mm": 235.08,
+    "kicad_drc_violations": 53,
+    "kicad_drc_breakdown": {
+      "total_violations": 53,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 21,
+        "copper_edge_clearance": 4,
+        "lib_footprint_issues": 14,
+        "silk_overlap": 14
+      },
+      "by_severity": {
+        "error": 25,
+        "warning": 28
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.894138+00:00",
+    "elapsed_seconds": 14.34,
+    "unrouted_nets": 0,
+    "clearance_violations": 4,
+    "quality_score": 966.66
+  }
+}

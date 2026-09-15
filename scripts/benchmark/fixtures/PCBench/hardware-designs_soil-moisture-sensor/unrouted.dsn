@@ -1,0 +1,254 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\hardware-designs_soil-moisture-sensor\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  88125 -72125  194875 -72125  199875 -72125  210125 -82375
+            199875 -92625  194875 -92625  88125 -92625  88125 -105625  61875 -105625
+            61875 -59125  88125 -59125  88125 -72125)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component SM0603_Resistor
+      (place R1 76375 -85125 front 180 (PN 10k))
+      (place R2 81375 -74375 front 0 (PN 510k))
+      (place R5 74875 -75875 front 90 (PN 100R))
+      (place R4 74875 -80125 front 90 (PN 100R))
+      (place R3 71625 -85125 front 180 (PN 3k3))
+    )
+    (component SM0603_Capa
+      (place C4 81375 -77125 front 0 (PN 1uF))
+      (place C2 71125 -76625 front 0 (PN 100pF))
+      (place C1 71125 -80875 front 0 (PN 100pF))
+    )
+    (component PIN_ARRAY_2X1
+      (place P1 84125 -104125 front 0 (PN CONN_2))
+    )
+    (component "PIN_ARRAY-6X1"
+      (place P2 69825 -103987 front 180 (PN CN_6))
+      (place P3 69825 -60807 front 0 (PN CN_6))
+    )
+    (component "CONN-10-2MM"
+      (place CN2 72375 -71375 front 0 (PN CN_10))
+      (place CN1 72375 -93375 front 0 (PN CN_10))
+    )
+    (component "HSMS-2815"
+      (place U1 82125 -84375 front 180 (PN "HSMS-2815"))
+    )
+    (component SOIL_SENSOR_CAPACITIVE
+      (place SENSOR_TRACK1 164875 -82375 front 90 (PN C))
+    )
+    (component LOGO_SNOWCAP_FRONT
+      (place Noname_1 93200 -82400 front 90)
+    )
+  )
+  (library
+    (image SM0603_Resistor
+      (outline (path signal 127  1206.5 -698.5  500.38 -698.5))
+      (outline (path signal 127  1206.5 698.5  1206.5 -698.5))
+      (outline (path signal 127  1206.5 698.5  500.38 698.5))
+      (outline (path signal 127  -1206.5 -698.5  -500.38 -698.5))
+      (outline (path signal 127  -1206.5 698.5  -1206.5 -698.5))
+      (outline (path signal 127  -500.38 698.5  -1206.5 698.5))
+      (pin Rect[T]Pad_635.000000x1143.000000_um 1 -762 0)
+      (pin Rect[T]Pad_635.000000x1143.000000_um 2 762 0)
+    )
+    (image SM0603_Capa
+      (outline (path signal 119.38  -1198.88 -635  -1198.88 635))
+      (outline (path signal 119.38  1198.88 635  1198.88 -635))
+      (outline (path signal 119.38  -1198.88 650.24  -500.38 650.24))
+      (outline (path signal 119.38  500.38 650.24  1198.88 650.24))
+      (outline (path signal 119.38  -500.38 -650.24  -1198.88 -650.24))
+      (outline (path signal 119.38  500.38 -650.24  1198.88 -650.24))
+      (pin Rect[T]Pad_635.000000x1143.000000_um 1 -762 0)
+      (pin Rect[T]Pad_635.000000x1143.000000_um 2 762 0)
+    )
+    (image PIN_ARRAY_2X1
+      (outline (path signal 152.4  2540 -1270  -2540 -1270))
+      (outline (path signal 152.4  2540 1270  2540 -1270))
+      (outline (path signal 152.4  -2540 1270  2540 1270))
+      (outline (path signal 152.4  -2540 -1270  -2540 1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -1270 0)
+      (pin Round[A]Pad_1524.000000_um 2 1270 0)
+    )
+    (image "PIN_ARRAY-6X1"
+      (outline (path signal 304.8  -5080 -1270  -5080 1270))
+      (outline (path signal 304.8  7620 -1270  -7620 -1270))
+      (outline (path signal 304.8  7620 1270  7620 -1270))
+      (outline (path signal 304.8  -7620 1270  7620 1270))
+      (outline (path signal 304.8  -7620 -1270  -7620 1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -6350 0)
+      (pin Round[A]Pad_1524.000000_um 2 -3810 0)
+      (pin Round[A]Pad_1524.000000_um 3 -1270 0)
+      (pin Round[A]Pad_1524.000000_um 4 1270 0)
+      (pin Round[A]Pad_1524.000000_um 5 3810 0)
+      (pin Round[A]Pad_1524.000000_um 6 6350 0)
+    )
+    (image "CONN-10-2MM"
+      (outline (path signal 304.8  10226 1000.76  -10050.8 1000.76))
+      (outline (path signal 304.8  -10050.8 -1000.76  10226 -1000.76))
+      (outline (path signal 304.8  -10050.8 -975.36  -10050.8 975.36))
+      (outline (path signal 304.8  10226 975.36  10226 -949.96))
+      (pin Round[A]Pad_1150.620000_um 10 8999.22 0)
+      (pin Round[A]Pad_1150.620000_um 6 1000.76 0)
+      (pin Round[A]Pad_1150.620000_um 7 2999.74 0)
+      (pin Round[A]Pad_1150.620000_um 8 5001.26 0)
+      (pin Round[A]Pad_1150.620000_um 9 7000.24 0)
+      (pin Round[A]Pad_1150.620000_um 5 -1000.76 0)
+      (pin Round[A]Pad_1150.620000_um 4 -2999.74 0)
+      (pin Round[A]Pad_1150.620000_um 3 -5001.26 0)
+      (pin Rect[A]Pad_1150.620000x1150.620000_um 1 -8999.22 0)
+      (pin Round[A]Pad_1150.620000_um 2 -7000.24 0)
+    )
+    (image "HSMS-2815"
+      (outline (path signal 150  -1905 -1016  -1905 1016))
+      (outline (path signal 150  2032 -1016  -1905 -1016))
+      (outline (path signal 150  2032 1016  2032 -1016))
+      (outline (path signal 150  -1905 1016  2032 1016))
+      (pin Rect[T]Pad_700.000000x1500.000000_um 4 -950 -2000)
+      (pin Rect[T]Pad_700.000000x1500.000000_um 3 950 -2000)
+      (pin Rect[T]Pad_700.000000x1500.000000_um 2 -950 2000)
+      (pin Rect[T]Pad_1000.000000x1500.000000_um 1 950 2000)
+    )
+    (image SOIL_SENSOR_CAPACITIVE
+      (outline (path signal 150  -10000 -30000  0 -45000))
+      (outline (path signal 150  -10000 45000  -10000 -30000))
+      (outline (path signal 150  10000 45000  -10000 45000))
+      (outline (path signal 150  10000 -30000  10000 45000))
+      (outline (path signal 150  0 -45000  10000 -30000))
+      (pin Oval[T]Pad_7500.000000x70000.000000_um 1 0 5000)
+      (pin Rect[T]Pad_8000.000000x2000.000000_um 2 -5000 43500)
+      (pin Rect[T]Pad_8000.000000x2000.000000_um 2@1 5000 43500)
+      (pin Rect[B]Pad_8000.000000x2000.000000_um 2@2 -5000 43500)
+      (pin Rect[B]Pad_8000.000000x2000.000000_um 2@3 5000 43500)
+      (pin Oval[B]Pad_7500.000000x70000.000000_um 1@1 0 5000)
+    )
+    (image LOGO_SNOWCAP_FRONT
+    )
+    (padstack Round[A]Pad_1150.620000_um
+      (shape (circle F.Cu 1150.62))
+      (shape (circle B.Cu 1150.62))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Oval[B]Pad_7500.000000x70000.000000_um
+      (shape (path B.Cu 7500  0 -31250  0 31250))
+      (attach off)
+    )
+    (padstack Oval[T]Pad_7500.000000x70000.000000_um
+      (shape (path F.Cu 7500  0 -31250  0 31250))
+      (attach off)
+    )
+    (padstack Rect[B]Pad_8000.000000x2000.000000_um
+      (shape (rect B.Cu -4000 -1000 4000 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_635.000000x1143.000000_um
+      (shape (rect F.Cu -317.5 -571.5 317.5 571.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x1500.000000_um
+      (shape (rect F.Cu -350 -750 350 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_8000.000000x2000.000000_um
+      (shape (rect F.Cu -4000 -1000 4000 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1500.000000_um
+      (shape (rect F.Cu -500 -750 500 750))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1150.620000x1150.620000_um
+      (shape (rect F.Cu -575.31 -575.31 575.31 575.31))
+      (shape (rect B.Cu -575.31 -575.31 575.31 575.31))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect F.Cu -762 -762 762 762))
+      (shape (rect B.Cu -762 -762 762 762))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net +3.3V
+      (pins P1-1 P2-1 CN1-1)
+    )
+    (net /CAP_ADC
+      (pins R2-1 C4-1 CN2-9 U1-2)
+    )
+    (net /CAP_CLK
+      (pins CN2-6 R5-2)
+    )
+    (net /TEMP_ADJ_ADC
+      (pins CN2-8 R3-1 U1-3)
+    )
+    (net /TEMP_ADJ_VCC
+      (pins CN2-3 R3-2)
+    )
+    (net /V_MEASURE1
+      (pins P2-6 CN2-10)
+    )
+    (net /V_MEASURE2
+      (pins P3-5 CN2-5)
+    )
+    (net GND
+      (pins R2-2 C4-2 P1-2 P2-2 CN1-10 C2-1 C1-1 U1-1 SENSOR_TRACK1-2 SENSOR_TRACK1-2@1
+        SENSOR_TRACK1-2@2 SENSOR_TRACK1-2@3)
+    )
+    (net "N-0000014"
+      (pins R5-1 R4-2 C2-2)
+    )
+    (net "N-0000015"
+      (pins R1-2 R4-1 C1-2)
+    )
+    (net "N-0000028"
+      (pins R1-1 U1-4 SENSOR_TRACK1-1 SENSOR_TRACK1-1@1)
+    )
+    (class kicad_default +3.3V /CAP_ADC /CAP_CLK /TEMP_ADJ_ADC /TEMP_ADJ_VCC
+      /V_MEASURE1 /V_MEASURE2 GND "N-0000014" "N-0000015" "N-0000028"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

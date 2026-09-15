@@ -1,0 +1,233 @@
+/*
+ * Autodesk Fusion Electronics - Freerouting Integration
+ *
+ * Automated PCB Auto-Routing bridge for Autodesk Fusion Electronics and EAGLE CAD.
+ * Exports Specctra DSN, launches Freerouting, and imports routed SCR scripts.
+ */
+
+#require 6.00.00;
+
+#include "include/fusion_common.inc"
+#include "include/fusion_env.inc"
+#include "include/fusion_dsn_export.inc"
+
+/* Main Entry Point & User Interface ***************************************************/
+
+init_logging();
+log_info("freerouting_fusion_plugin started (Version " + version + ")");
+
+detect_java();
+detect_jar();
+
+// Default display filenames (kept as short filenames when using the default log directory)
+string dsn_display_name = "freerouting_input_board.dsn";
+string scr_display_name = "freerouting_output_board.scr";
+
+string get_full_dsn_path(void) {
+	if (strstr(dsn_display_name, "/") >= 0 || strstr(dsn_display_name, "\\") >= 0) {
+		return to_ulp_path(dsn_display_name);
+	}
+	return to_ulp_path(log_dir + "/" + dsn_display_name);
+}
+
+string get_full_scr_path(void) {
+	if (strstr(scr_display_name, "/") >= 0 || strstr(scr_display_name, "\\") >= 0) {
+		return to_ulp_path(scr_display_name);
+	}
+	return to_ulp_path(log_dir + "/" + scr_display_name);
+}
+
+int selected_action = 0; // 0 = none, 1 = 1-click, 2 = export dsn, 3 = run router, 4 = import script
+
+dlgDialog("Freerouting Bridge for Autodesk Fusion") {
+	dlgVBoxLayout {
+		dlgHBoxLayout {
+			dlgSpacing(800);
+		}
+		dlgHBoxLayout {
+			dlgLabel("<b><font size='+2'>Freerouting&nbsp;Fusion&nbsp;Plugin</font></b>");
+			dlgStretch(1);
+			dlgLabel("<small>v" + version + "</small>");
+		}
+		dlgLabel("Automated PCB Auto-Routing for Autodesk Fusion Electronics");
+		dlgSpacing(6);
+
+		// Environment Setup Group
+		dlgGroup("Environment Setup") {
+			dlgGridLayout {
+				dlgCell(0, 0) dlgLabel("<b>Java Runtime:</b>");
+				dlgCell(0, 1, 0, 2) {
+					if (java_status == 1) {
+						dlgLabel("<font color='#008800'><b>✓&nbsp;Ready</b></font>&nbsp;(" + filename(java_path) + ")");
+					} else {
+						dlgLabel("<font color='#cc0000'><b>✗&nbsp;Not&nbsp;Found</b></font>");
+					}
+				}
+				dlgCell(0, 3) dlgPushButton("Check / Browse Java...") {
+					string chosen_java = dlgFileOpen("Locate Java Executable (java.exe)", java_path, "Java Executable (java.exe);;All Files (*.*)");
+					if (strlen(chosen_java) > 0) {
+						java_path = to_ulp_path(chosen_java);
+						java_status = 1;
+						cfgset("Freerouting.JavaPath", java_path);
+						log_info("User manually set Java path: " + java_path);
+						dlgRedisplay();
+					}
+				};
+
+				dlgCell(1, 0) dlgLabel("<b>Freerouting JAR:</b>");
+				dlgCell(1, 1, 1, 2) {
+					if (jar_status == 1) {
+						dlgLabel("<font color='#008800'><b>✓&nbsp;Ready</b></font>&nbsp;(" + filename(jar_path) + ")");
+					} else {
+						dlgLabel("<font color='#cc0000'><b>✗&nbsp;Not&nbsp;Located</b></font>");
+					}
+				}
+				dlgCell(1, 3) dlgPushButton("Locate Freerouting JAR...") {
+					string chosen_jar = dlgFileOpen("Locate Freerouting JAR file", jar_path, "Executable JAR (*.jar);;All Files (*.*)");
+					if (strlen(chosen_jar) > 0) {
+						jar_path = to_ulp_path(chosen_jar);
+						jar_status = 1;
+						cfgset("Freerouting.JarPath", jar_path);
+						log_info("User manually set JAR path: " + jar_path);
+						dlgRedisplay();
+					}
+				};
+			}
+		}
+
+		dlgSpacing(6);
+
+		// Board Files & Parameters Group
+		dlgGroup("Routing Settings") {
+			dlgGridLayout {
+				dlgCell(0, 0) dlgLabel("DSN Input File:");
+				dlgCell(0, 1) dlgStringEdit(dsn_display_name);
+				dlgCell(0, 2) dlgPushButton("Browse DSN...") {
+					string chosen = dlgFileSave("Save Specctra DSN File", get_full_dsn_path(), "Specctra DSN (*.dsn);;All Files (*.*)");
+					if (strlen(chosen) > 0) {
+						chosen = to_ulp_path(chosen);
+						if (filedir(chosen) == log_dir + "/") {
+							dsn_display_name = filename(chosen);
+						} else {
+							dsn_display_name = chosen;
+						}
+						scr_display_name = filesetext(dsn_display_name, ".scr");
+						dlgRedisplay();
+					}
+				};
+
+				dlgCell(1, 0) dlgLabel("SCR Output File:");
+				dlgCell(1, 1) dlgStringEdit(scr_display_name);
+				dlgCell(1, 2) dlgPushButton("Browse SCR...") {
+					string chosen = dlgFileSave("Set Autodesk Fusion Script Destination", get_full_scr_path(), "Fusion Script (*.scr);;All Files (*.*)");
+					if (strlen(chosen) > 0) {
+						chosen = to_ulp_path(chosen);
+						if (filedir(chosen) == log_dir + "/") {
+							scr_display_name = filename(chosen);
+						} else {
+							scr_display_name = chosen;
+						}
+						dlgRedisplay();
+					}
+				};
+
+				dlgCell(2, 0) dlgLabel("Execution Mode:");
+				dlgCell(2, 1) dlgRadioButton("Headless Mode (Fast background routing, automatic import)", route_mode);
+				dlgCell(3, 1) dlgRadioButton("Interactive GUI (Visual router window for inspection)", route_mode);
+			}
+		}
+
+		dlgSpacing(8);
+
+		// Workflow Actions Group
+		dlgGroup("Auto-Routing Actions") {
+			dlgVBoxLayout {
+				dlgHBoxLayout {
+					dlgStretch(1);
+					dlgPushButton("+★ 1-Click Auto-Route (Export -> Route -> Import)") {
+						selected_action = 1;
+						dlgAccept();
+					};
+					dlgStretch(1);
+				}
+				dlgSpacing(4);
+				dlgLabel("<center><small>— or perform individual pipeline steps —</small></center>");
+				dlgSpacing(4);
+				dlgHBoxLayout {
+					dlgStretch(1);
+					dlgPushButton("Step 1: Export DSN") {
+						DSN_output_file = get_full_dsn_path();
+						if (do_export_dsn(DSN_output_file)) {
+							status_message = "DSN file exported to: " + DSN_output_file;
+							dlgMessageBox("DSN exported successfully to:\n" + DSN_output_file);
+						}
+					};
+					dlgSpacing(8);
+					dlgPushButton("Step 2: Run Router") {
+						DSN_output_file = get_full_dsn_path();
+						SCR_output_file = get_full_scr_path();
+						do_run_freerouting(route_mode == 0);
+					};
+					dlgSpacing(8);
+					dlgPushButton("Step 3: Import Script") {
+						SCR_output_file = get_full_scr_path();
+						if (file_exists(SCR_output_file)) {
+							selected_action = 4;
+							dlgAccept();
+						} else {
+							dlgMessageBox("!Script file does not exist yet:\n" + SCR_output_file + "\n\nPlease run auto-routing first.");
+						}
+					};
+					dlgStretch(1);
+				}
+			}
+		}
+
+		dlgSpacing(6);
+
+		// Status & Log Footer
+		dlgHBoxLayout {
+			dlgLabel("Logs Directory:  " + log_dir);
+			dlgStretch(1);
+			dlgPushButton("Open Log Folder") {
+				open_log_folder();
+			};
+			dlgSpacing(6);
+			dlgPushButton("Close") {
+				dlgReject();
+			};
+		}
+	}
+};
+
+// Handle Workflow Action Dispatch
+DSN_output_file = get_full_dsn_path();
+SCR_output_file = get_full_scr_path();
+
+if (selected_action == 1) {
+	// 1-Click Auto-Route
+	log_info("Starting 1-Click Auto-Route workflow...");
+	if (!do_export_dsn(DSN_output_file)) {
+		ERROR("Exporting DSN file failed. Check log file for details.");
+	}
+
+	if (route_mode == 0) {
+		// Headless mode: run synchronously and auto-import
+		int success = do_run_freerouting(1);
+		if (success && file_exists(SCR_output_file)) {
+			log_info("Triggering automatic script import into Autodesk Fusion: " + to_ulp_path(SCR_output_file));
+			exit("SCRIPT '" + to_ulp_path(SCR_output_file) + "';\n");
+		} else {
+			ERROR("Auto-routing did not produce an SCR script file. Check the log folder for details.");
+		}
+	} else {
+		// GUI mode: launch GUI for user
+		do_run_freerouting(0);
+		dlgMessageBox("Freerouting GUI has been launched.\n\nWhen routing is complete, save your design as:\n" + SCR_output_file + "\n\nThen in Fusion run 'Automate > Run Script' to import.");
+		exit(0);
+	}
+} else if (selected_action == 4) {
+	// Manual Import Script
+	log_info("Manual script import triggered: " + to_ulp_path(SCR_output_file));
+	exit("SCRIPT '" + to_ulp_path(SCR_output_file) + "';\n");
+}

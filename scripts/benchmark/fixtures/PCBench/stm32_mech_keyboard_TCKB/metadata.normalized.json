@@ -1,0 +1,65 @@
+{
+  "board_id": "stm32_mech_keyboard_TCKB",
+  "display_name": "stm32_mech_keyboard_TCKB",
+  "pcbench_directory": "PCBs/stm32_mech_keyboard_TCKB",
+  "source": "https://github.com/julbouln/stm32_mech_keyboard",
+  "author": "julbouln",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:31.609811+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 66,
+    "components": 242,
+    "dimensions_mm": {
+      "width": 285.0,
+      "height": 94.6
+    },
+    "area_cm2": 269.61,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 2435,
+    "vias": 220,
+    "track_length_mm": 11185.34,
+    "kicad_drc_violations": 907,
+    "kicad_drc_breakdown": {
+      "total_violations": 907,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 509,
+        "copper_edge_clearance": 2,
+        "courtyards_overlap": 10,
+        "hole_clearance": 7,
+        "hole_to_hole": 8,
+        "lib_footprint_issues": 199,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 9,
+        "silk_overlap": 46,
+        "solder_mask_bridge": 64,
+        "starved_thermal": 3,
+        "text_height": 18,
+        "track_dangling": 29,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 595,
+        "warning": 312
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

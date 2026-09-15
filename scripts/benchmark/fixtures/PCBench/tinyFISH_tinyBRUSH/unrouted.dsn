@@ -1,0 +1,279 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\tinyFISH_tinyBRUSH\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  35930.8 -17251.7  35930.8 -26593.8  22931.1 -26598.9
+            22900 -22500  22902.5 -22410.1  22942.5 -22234.9  23020.5 -22073
+            23132.5 -21932.5  23273 -21820.5  23434.9 -21742.5  23610.1 -21702.5
+            23700 -21700  26100 -21700  26189.9 -21697.5  26365.1 -21657.5
+            26527 -21579.5  26667.5 -21467.5  26779.5 -21327  26857.5 -21165.1
+            26897.5 -20989.9  26900 -20900  26893.5 -17246.6  35930.8 -17251.7)
+    )
+    (via "Via[0-1]_685.8:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component custom:edge_conn_1mm
+      (place TP1 23801 -25754 front 0 (PN ESC_0))
+      (place TP2 28301 -25754 front 0 (PN ESC_1))
+      (place TP3 25301 -25754 front 0 (PN ESC_2))
+      (place TP4 26801 -25754 front 0 (PN ESC_3))
+      (place TP11 35000 -23400 front 90 (PN GND))
+      (place TP12 28092.4 -18186.4 front 180 (PN GND))
+    )
+    (component Capacitors_SMD:C_0805
+      (place C2 34251.9 -21920.2 back 90 (PN 47u))
+    )
+    (component Capacitors_SMD:C_0805::1
+      (place C4 31305.5 -25666.7 back 180 (PN 47u))
+    )
+    (component Capacitors_SMD:C_0805::2
+      (place C5 33401 -21971 back 90 (PN 47u))
+      (place C3 31064.2 -20040.6 back 90 (PN 47u))
+    )
+    (component "custom:SI2302DS_SOT-23"
+      (place Q1 24663.4 -23393.4 back 270 (PN FET_N))
+      (place Q4 27863.8 -23393.4 back 270 (PN FET_N))
+    )
+    (component "custom:SI2302DS_SOT-23::1"
+      (place Q2 31064.2 -23393.4 back 270 (PN FET_N))
+    )
+    (component "custom:SI2302DS_SOT-23::2"
+      (place Q3 28651.2 -20116.8 back 90 (PN FET_N))
+    )
+    (component Resistors_SMD:R_0402
+      (place R1 23558.5 -23380.7 back 270 (PN 10k))
+      (place R4 26758.9 -23393.4 back 270 (PN 10k))
+    )
+    (component Resistors_SMD:R_0402::1
+      (place R2 29959.3 -23393.4 back 270 (PN 10k))
+    )
+    (component Resistors_SMD:R_0402::2
+      (place R3 29743.4 -20116.8 back 90 (PN 10k))
+    )
+    (component custom:TP_1x1
+      (place TP5 25552.4 -22631.4 back 180 (PN "M-_0"))
+      (place TP6 31978.6 -22606 back 180 (PN "M-_1"))
+      (place TP7 27508.2 -21463 back 180 (PN "M-_2"))
+      (place TP8 28778.2 -22631.4 back 180 (PN "M-_3"))
+    )
+    (component custom:PAD_2x3
+      (place TP9 33299.4 -19354.8 back 270 (PN VBAT))
+      (place TP10 33756.6 -24892 back 0 (PN GND))
+    )
+  )
+  (library
+    (image custom:edge_conn_1mm
+      (pin RoundRect[A][0.000000,100.000000]Pad_1000.000000x1300.000000_250.951000_um_0.000000_0 1 0 0)
+    )
+    (image Capacitors_SMD:C_0805
+      (outline (polygon signal 0  -1795 -995  -1795 995  1795 995  1795 -995))
+      (outline (path signal 150  -500 -850  500 -850))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -1000 625  1000 625))
+      (outline (path signal 150  1000 625  1000 -625))
+      (outline (path signal 150  1000 -625  -1000 -625))
+      (outline (path signal 150  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+    )
+    (image Capacitors_SMD:C_0805::1
+      (outline (polygon signal 0  1795 -995  -1795 -995  -1795 995  1795 995))
+      (outline (path signal 150  -500 -850  500 -850))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -1000 625  1000 625))
+      (outline (path signal 150  1000 625  1000 -625))
+      (outline (path signal 150  1000 -625  -1000 -625))
+      (outline (path signal 150  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+    )
+    (image Capacitors_SMD:C_0805::2
+      (outline (polygon signal 0  -1795 -995  -1795 995  1795 995  1795 -995))
+      (outline (path signal 150  -1000 -625  -1000 625))
+      (outline (path signal 150  1000 -625  -1000 -625))
+      (outline (path signal 150  1000 625  1000 -625))
+      (outline (path signal 150  -1000 625  1000 625))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -500 -850  500 -850))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+    )
+    (image "custom:SI2302DS_SOT-23"
+      (outline (polygon signal 0  1645 1595  1645 -1595  -1645 -1595  -1645 1595))
+      (outline (path signal 150  1499.82 650.24  1499.82 -50.8))
+      (outline (path signal 150  1299.16 650.24  1499.82 650.24))
+      (outline (path signal 150  -1499.82 650.24  -1250.9 650.24))
+      (outline (path signal 150  -1499.82 -50.8  -1499.82 650.24))
+      (outline (path signal 150  1299.16 650.24  1250.9 650.24))
+      (pin Rect[T]Pad_800.100000x800.100000_um D 0 998.22)
+      (pin Rect[T]Pad_800.100000x800.100000_um S 950 -1000.76)
+      (pin Rect[T]Pad_800.100000x800.100000_um G -950 -1000.76)
+    )
+    (image "custom:SI2302DS_SOT-23::1"
+      (outline (polygon signal 0  1645 1595  1645 -1595  -1645 -1595  -1645 1595))
+      (outline (path signal 150  1299.16 650.24  1250.9 650.24))
+      (outline (path signal 150  -1499.82 -50.8  -1499.82 650.24))
+      (outline (path signal 150  -1499.82 650.24  -1250.9 650.24))
+      (outline (path signal 150  1299.16 650.24  1499.82 650.24))
+      (outline (path signal 150  1499.82 650.24  1499.82 -50.8))
+      (pin Rect[T]Pad_800.100000x800.100000_um G -950 -1000.76)
+      (pin Rect[T]Pad_800.100000x800.100000_um S 950 -1000.76)
+      (pin Rect[T]Pad_800.100000x800.100000_um D 0 998.22)
+    )
+    (image "custom:SI2302DS_SOT-23::2"
+      (outline (polygon signal 0  -1645 -1595  -1645 1595  1645 1595  1645 -1595))
+      (outline (path signal 150  1299.16 650.24  1250.9 650.24))
+      (outline (path signal 150  -1499.82 -50.8  -1499.82 650.24))
+      (outline (path signal 150  -1499.82 650.24  -1250.9 650.24))
+      (outline (path signal 150  1299.16 650.24  1499.82 650.24))
+      (outline (path signal 150  1499.82 650.24  1499.82 -50.8))
+      (pin Rect[T]Pad_800.100000x800.100000_um G -950 -1000.76)
+      (pin Rect[T]Pad_800.100000x800.100000_um S 950 -1000.76)
+      (pin Rect[T]Pad_800.100000x800.100000_um D 0 998.22)
+    )
+    (image Resistors_SMD:R_0402
+      (outline (polygon signal 0  945 645  945 -645  -945 -645  -945 645))
+      (outline (path signal 150  250 525  -250 525))
+      (outline (path signal 150  -250 -525  250 -525))
+      (pin Rect[T]Pad_400.000000x600.000000_um 1 -450 0)
+      (pin Rect[T]Pad_400.000000x600.000000_um 2 450 0)
+    )
+    (image Resistors_SMD:R_0402::1
+      (outline (polygon signal 0  945 645  945 -645  -945 -645  -945 645))
+      (outline (path signal 150  -250 -525  250 -525))
+      (outline (path signal 150  250 525  -250 525))
+      (pin Rect[T]Pad_400.000000x600.000000_um 2 450 0)
+      (pin Rect[T]Pad_400.000000x600.000000_um 1 -450 0)
+    )
+    (image Resistors_SMD:R_0402::2
+      (outline (polygon signal 0  -945 -645  -945 645  945 645  945 -645))
+      (outline (path signal 150  -250 -525  250 -525))
+      (outline (path signal 150  250 525  -250 525))
+      (pin Rect[T]Pad_400.000000x600.000000_um 2 450 0)
+      (pin Rect[T]Pad_400.000000x600.000000_um 1 -450 0)
+    )
+    (image custom:TP_1x1
+      (pin Rect[T]Pad_1000.000000x1000.000000_um 1 100 -300)
+    )
+    (image custom:PAD_2x3
+      (pin RoundRect[T]Pad_2000.000000x3000.000000_501.903000_um_0.000000_0 1 0 0)
+    )
+    (padstack RoundRect[T]Pad_2000.000000x3000.000000_501.903000_um_0.000000_0
+      (shape (polygon F.Cu 0  -1001.9 1000  -990.433 1106.69  -940.51 1240.54  -854.899 1354.9
+            -740.537 1440.51  -606.687 1490.43  -499.999 1501.9  500 1501.9
+            606.687 1490.43  740.537 1440.51  854.899 1354.9  940.51 1240.54
+            990.433 1106.69  1001.9 999.999  1001.9 -1000  990.433 -1106.69
+            940.51 -1240.54  854.899 -1354.9  740.537 -1440.51  606.687 -1490.43
+            499.999 -1501.9  -500 -1501.9  -606.687 -1490.43  -740.537 -1440.51
+            -854.899 -1354.9  -940.51 -1240.54  -990.433 -1106.69  -1001.9 -999.999
+            -1001.9 1000))
+      (attach off)
+    )
+    (padstack RoundRect[A][0.000000,100.000000]Pad_1000.000000x1300.000000_250.951000_um_0.000000_0
+      (shape (polygon F.Cu 0  -500.951 500  -481.848 596.035  -427.449 677.449  -346.035 731.848
+            -249.999 750.95  250 750.951  346.035 731.848  427.449 677.449
+            481.848 596.035  500.95 499.999  500.951 -300  481.848 -396.035
+            427.449 -477.449  346.035 -531.848  249.999 -550.95  -250 -550.951
+            -346.035 -531.848  -427.449 -477.449  -481.848 -396.035  -500.95 -299.999
+            -500.951 500))
+      (shape (polygon B.Cu 0  -500.951 500  -481.848 596.035  -427.449 677.449  -346.035 731.848
+            -249.999 750.95  250 750.951  346.035 731.848  427.449 677.449
+            481.848 596.035  500.95 499.999  500.951 -300  481.848 -396.035
+            427.449 -477.449  346.035 -531.848  249.999 -550.95  -250 -550.951
+            -346.035 -531.848  -427.449 -477.449  -481.848 -396.035  -500.95 -299.999
+            -500.951 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x600.000000_um
+      (shape (rect F.Cu -200 -300 200 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.100000x800.100000_um
+      (shape (rect F.Cu -400.05 -400.05 400.05 400.05))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1000.000000_um
+      (shape (rect F.Cu -500 -500 500 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1250.000000_um
+      (shape (rect F.Cu -500 -625 500 625))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins TP11-1 C2-2 C4-2 C5-2 Q1-S Q2-S Q3-S Q4-S R1-2 R2-2 R3-2 TP10-1 C3-2 R4-2
+        TP12-1)
+    )
+    (net "Net-(Q1-PadD)"
+      (pins Q1-D TP5-1)
+    )
+    (net "Net-(Q1-PadG)"
+      (pins TP1-1 Q1-G R1-1)
+    )
+    (net "Net-(Q2-PadG)"
+      (pins TP2-1 Q2-G R2-1)
+    )
+    (net "Net-(Q2-PadD)"
+      (pins Q2-D TP6-1)
+    )
+    (net "Net-(Q3-PadG)"
+      (pins TP3-1 Q3-G R3-1)
+    )
+    (net "Net-(Q3-PadD)"
+      (pins Q3-D TP7-1)
+    )
+    (net "Net-(Q4-PadD)"
+      (pins Q4-D TP8-1)
+    )
+    (net "Net-(Q4-PadG)"
+      (pins TP4-1 Q4-G R4-1)
+    )
+    (net "Net-(C2-Pad1)"
+      (pins C2-1 C4-1 C5-1 TP9-1 C3-1)
+    )
+    (class kicad_default GND "Net-(C2-Pad1)" "Net-(Q1-PadD)" "Net-(Q1-PadG)"
+      "Net-(Q2-PadD)" "Net-(Q2-PadG)" "Net-(Q3-PadD)" "Net-(Q3-PadG)" "Net-(Q4-PadD)"
+      "Net-(Q4-PadG)"
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

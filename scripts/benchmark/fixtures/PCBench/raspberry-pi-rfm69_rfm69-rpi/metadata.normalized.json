@@ -1,0 +1,60 @@
+{
+  "board_id": "raspberry-pi-rfm69_rfm69-rpi",
+  "display_name": "raspberry-pi-rfm69_rfm69-rpi",
+  "pcbench_directory": "PCBs/raspberry-pi-rfm69_rfm69-rpi",
+  "source": "https://github.com/russss/raspberry-pi-rfm69",
+  "author": "russss",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:49.462021+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 44,
+    "components": 21,
+    "dimensions_mm": {
+      "width": 65.0,
+      "height": 56.0
+    },
+    "area_cm2": 36.4,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 523,
+    "vias": 107,
+    "track_length_mm": 1556.94,
+    "kicad_drc_violations": 283,
+    "kicad_drc_breakdown": {
+      "total_violations": 283,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 208,
+        "copper_edge_clearance": 20,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 20,
+        "silk_edge_clearance": 10,
+        "silk_over_copper": 12,
+        "starved_thermal": 1,
+        "text_height": 2,
+        "track_dangling": 9
+      },
+      "by_severity": {
+        "error": 230,
+        "warning": 53
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

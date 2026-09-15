@@ -1,0 +1,58 @@
+{
+  "board_id": "VC4000MultiROM_MultiRomCard",
+  "display_name": "VC4000MultiROM_MultiRomCard",
+  "pcbench_directory": "PCBs/VC4000MultiROM_MultiRomCard",
+  "source": "https://github.com/mkeller0815/VC4000MultiROM",
+  "author": "mkeller0815",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:31.821814+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 80,
+    "components": 55,
+    "dimensions_mm": {
+      "width": 160.0,
+      "height": 100.0
+    },
+    "area_cm2": 160.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1237,
+    "vias": 132,
+    "track_length_mm": 6199.33,
+    "kicad_drc_violations": 683,
+    "kicad_drc_breakdown": {
+      "total_violations": 683,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 500,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 55,
+        "silk_edge_clearance": 3,
+        "silk_overlap": 115,
+        "starved_thermal": 4
+      },
+      "by_severity": {
+        "error": 510,
+        "warning": 173
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

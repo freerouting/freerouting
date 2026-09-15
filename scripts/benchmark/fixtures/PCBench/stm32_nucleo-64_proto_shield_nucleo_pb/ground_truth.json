@@ -1,0 +1,28 @@
+{
+  "board": "stm32_nucleo-64_proto_shield_nucleo_pb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\stm32_nucleo-64_proto_shield_nucleo_pb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 503,
+  "approximate_track_length_mm": 1909.57,
+  "kicad_drc_violations": 206,
+  "generated_at": "2026-08-18T19:48:59.918333+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 206,
+    "unconnected_count": 62,
+    "by_type": {
+      "invalid_outline": 2,
+      "shorting_items": 1,
+      "silk_over_copper": 1,
+      "silk_overlap": 199,
+      "solder_mask_bridge": 1,
+      "track_dangling": 1,
+      "tracks_crossing": 1
+    },
+    "by_severity": {
+      "error": 5,
+      "warning": 201
+    }
+  }
+}

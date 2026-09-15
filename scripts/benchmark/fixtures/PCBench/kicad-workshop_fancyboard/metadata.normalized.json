@@ -1,0 +1,66 @@
+{
+  "board_id": "kicad-workshop_fancyboard",
+  "display_name": "kicad-workshop_fancyboard",
+  "pcbench_directory": "PCBs/kicad-workshop_fancyboard",
+  "source": "https://github.com/xil-se/kicad-workshop",
+  "author": "xil-se",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.514151+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 18,
+    "dimensions_mm": {
+      "width": 48.26,
+      "height": 30.48
+    },
+    "area_cm2": 14.71,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 143,
+    "vias": 8,
+    "track_length_mm": 390.2,
+    "kicad_drc_violations": 155,
+    "kicad_drc_breakdown": {
+      "total_violations": 155,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 68,
+        "lib_footprint_issues": 18,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 10,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 49
+      },
+      "by_severity": {
+        "error": 117,
+        "warning": 38
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.971380+00:00",
+    "elapsed_seconds": 14.01,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "board": "kitspace_OtterCastAudioV2",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_OtterCastAudioV2\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 451,
+  "segment_count": 2813,
+  "approximate_track_length_mm": 2535.73,
+  "kicad_drc_violations": 690,
+  "generated_at": "2026-08-18T18:18:53.236408+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 690,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 4,
+      "courtyards_overlap": 1,
+      "footprint_type_mismatch": 7,
+      "hole_clearance": 199,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 199,
+      "lib_footprint_mismatch": 7,
+      "silk_edge_clearance": 12,
+      "silk_over_copper": 8,
+      "silk_overlap": 30,
+      "solder_mask_bridge": 2,
+      "starved_thermal": 11,
+      "text_height": 199,
+      "track_dangling": 2,
+      "via_dangling": 8
+    },
+    "by_severity": {
+      "error": 225,
+      "warning": 465
+    }
+  }
+}

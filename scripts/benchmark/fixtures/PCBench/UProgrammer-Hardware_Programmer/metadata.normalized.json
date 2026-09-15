@@ -1,0 +1,62 @@
+{
+  "board_id": "UProgrammer-Hardware_Programmer",
+  "display_name": "UProgrammer-Hardware_Programmer",
+  "pcbench_directory": "PCBs/UProgrammer-Hardware_Programmer",
+  "source": "https://github.com/MackPI/UProgrammer-Hardware",
+  "author": "MackPI",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:55.434092+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 45,
+    "components": 78,
+    "dimensions_mm": {
+      "width": 76.2,
+      "height": 50.8
+    },
+    "area_cm2": 38.71,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 856,
+    "vias": 78,
+    "track_length_mm": 1837.9,
+    "kicad_drc_violations": 177,
+    "kicad_drc_breakdown": {
+      "total_violations": 177,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 51,
+        "copper_edge_clearance": 19,
+        "courtyards_overlap": 2,
+        "holes_co_located": 1,
+        "lib_footprint_issues": 78,
+        "malformed_courtyard": 8,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 6,
+        "silk_overlap": 2,
+        "starved_thermal": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 82,
+        "warning": 95
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

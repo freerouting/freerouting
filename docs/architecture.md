@@ -2,7 +2,8 @@
 
 This document provides a concise map of the current codebase for contributors and maintainers. It highlights the principal packages, the repository layout, and the fastest path to the code that owns a given behavior.
 
-For long-term structural recommendations, see [docs/research/code_structure_recommendations.md](research/code_structure_recommendations.md). For the active GUI/headless separation plan and boundary-debt ledger, see [docs/issues/soc-gui-separation-and-accessibility-plan.md](issues/soc-gui-separation-and-accessibility-plan.md).
+For the GUI/headless separation rules and boundary-debt ledger, see [Module Boundaries](#module-boundaries-archunit)
+below, which mirrors the strict ArchUnit rules in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.
 
 ## System Overview
 
@@ -19,24 +20,26 @@ flowchart TD
 
     subgraph interfaces ["User Interfaces"]
         direction LR
-        GUI["**gui + gui.session + gui.interactive**\nSwing desktop"]
+        GUI["**gui windows/menus/board + workspace + interactive + a11y**\nSwing desktop"]
         RENDER["**gui.rendering**\nGUI-owned board renderer"]
+        A11Y["**gui.a11y**\nAccessibility locators"]
         API["**api.v1**\nREST / HTTP"]
-        MCP["**api.mcp + api.v1.McpControllerV1**\nMCP JSON-RPC + SSE + WS"]
+        MCP["**api.mcp**\nMCP JSON-RPC + SSE + WS"]
     end
 
     subgraph services ["Shared Services"]
         direction LR
-        MGMT["**management**\nScheduler · analytics"]
+        MGMT["**management**\nScheduler · sessions"]
+        ANALYTICS["**analytics**\nMetrics · telemetry"]
         CORE["**core**\nJobs · sessions · stats"]
         CFG["**settings**\nConfig merging"]
     end
 
     subgraph pipeline ["Core Routing Pipeline"]
         IO["**io.specctra**\nDSN / SES reader-writer"]
-        BOARD["**board**\nLive board model"]
+        BOARD["**board.model/facade/state/actions/trace + searchtree + optimize**\nLive board model · search trees · optimization"]
         RULES["**rules**\nNets · clearances"]
-        AR["**autoroute**\nMaze · fanout · optimizer"]
+        AR["**autoroute.pipeline + maze + expansion + drill + path**\nRouting stages · maze · expansion · path"]
         DRC["**drc**\nDesign-rule checking"]
         GEO["**geometry.planar**\nShapes · points · math"]
     end
@@ -52,6 +55,7 @@ flowchart TD
     GUI --> MGMT
     GUI --> RENDER --> BOARD
     RENDER --> AR
+    A11Y -. helpers .-> GUI
     API --> MGMT
     MCP --> API
     MGMT <--> CORE
@@ -79,14 +83,15 @@ Use the table below to jump to the package most likely to own the behavior you a
 | If you are working on... | Start with... |
 | --- | --- |
 | DSN / SES file loading or writing | `app.freerouting.io.specctra` |
-| Board items, board state, or board-level helpers | `app.freerouting.board` |
-| Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute` |
+| Board items, board state, or board-level helpers | `app.freerouting.board.model.items`, `app.freerouting.board.model.structure`, `app.freerouting.board.facade`, `app.freerouting.board.state`, `app.freerouting.board.actions`, and `app.freerouting.board.trace` |
+| Routing decisions, fanout, maze search, or optimization | `app.freerouting.autoroute.pipeline`, `app.freerouting.autoroute.maze`, `app.freerouting.autoroute.expansion`, `app.freerouting.autoroute.drill`, `app.freerouting.autoroute.path`, and `app.freerouting.board.optimize` |
 | Nets, vias, clearance classes, or board rules | `app.freerouting.rules` |
 | Clearance violations or design-rule checks | `app.freerouting.drc` |
-| GUI windows, panels, menus, editor state, or drawing | `app.freerouting.gui`, `app.freerouting.gui.session`, `app.freerouting.gui.interactive`, and `app.freerouting.gui.rendering` |
+| GUI windows, panels, menus, editor state, accessibility locators, or drawing | `app.freerouting.gui.windows.board`, `app.freerouting.gui.windows.routing`, `app.freerouting.gui.menus`, `app.freerouting.gui.board`, `app.freerouting.gui.controls`, `app.freerouting.gui.support`, `app.freerouting.gui.workspace`, `app.freerouting.gui.interactive`, `app.freerouting.gui.a11y`, and `app.freerouting.gui.rendering` |
 | API endpoints or background job execution | `app.freerouting.api.v1` and `app.freerouting.management` |
-| MCP server protocol bridge | `app.freerouting.api.mcp` and `app.freerouting.api.v1.McpControllerV1` |
+| MCP server protocol bridge | `app.freerouting.api.mcp` |
 | Runtime settings and settings sources | `app.freerouting.settings` |
+| Router or optimizer board scores | `app.freerouting.core.scoring` (`BoardStatistics.getRouterScore` / `getOptimizerScore`) |
 | Geometry, shapes, points, and planar math | `app.freerouting.geometry.planar` |
 
 ## Module Boundaries (ArchUnit)
@@ -94,29 +99,38 @@ Use the table below to jump to the package most likely to own the behavior you a
 Architectural boundaries are codified in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java`.
 
 - **Strict boundaries (must pass):**
-  - Core routing/model packages (`autoroute`, `board`, `rules`, `drc`, `geometry`) must not depend on GUI/editor or API packages.
-  - API/management packages must not depend on `gui` or `gui.rendering`.
-  - Headless paths (`api`, `management`, `core`) must not depend on `GuiBoardManager` or `InteractiveState`.
+  - `rules`, `drc`, `geometry`, and `datastructures` must not depend on `gui`/`gui.interactive` or `api`.
+  - `settings`, `logger`, and `debug` must not depend on `gui`/`gui.interactive`, `api`, `management`, or `analytics`.
+  - `core`, `board`, and `autoroute` must not depend on `gui`/`gui.interactive`.
+  - `api`, `management`, and `analytics` must not depend on `GuiBoardManager` or `InteractiveState`, nor on `gui`/`gui.rendering` types.
 - **Strict boundaries (continued):**
-  - `gui.interactive` concrete state classes should not be used outside the GUI layer.
-  - `gui.session` owns the opaque editor-state handles, events, commands, manager, settings, messages,
+  - `gui.interactive` concrete state classes must only be used from within the GUI layer.
+  - `gui.workspace` owns the opaque editor-state handles, events, commands, manager, settings, messages,
     and action threads; it must not depend on `gui.interactive`.
   - `board` and `autoroute` must not depend on `gui.rendering`; rendering is GUI-owned.
-  - Pipeline/support packages must not depend on Swing or non-geometry AWT UI types.
-  - `io.specctra.parser` internals must not be depended on outside `io.specctra` public I/O entry points.
+  - Pipeline/support packages (`board`, `rules`, `autoroute`, `drc`, `geometry`, `datastructures`,
+    `settings`, `logger`, `debug`, `util`, `io`, `core`, `analytics`) must not depend on Swing or on
+    AWT types outside `java.awt.geom`.
+  - `io.specctra.parser` internals must not be used outside `io..` (the `io.kicad` importer is an allowed consumer).
+  - `gui.workspace`, `gui.interactive`, and `gui.rendering` must stay cycle-free (slices rule).
+  - Background workspace workers (`InteractiveActionThread`, `GuiRoutingJobWorker`) must reach
+    presentation only through workspace ports, never Swing or window owners.
 
-The only intentional GUI boundary exception is the documented D26 `gui.session` →
+The only intentional GUI boundary exception is the documented D26 `gui.workspace` →
 `gui.rendering` dependency used by `GuiBoardManager` for its graphics context state. These
 boundaries are strict ArchUnit rules; no frozen violation store is required.
 
 ## Accepted architectural debt
 
-- `board.ObjectInfoPanel` remains a presentation-shaped writer API; converting it to DTOs is
+- `board.actions.ItemInfoPrinter` remains a presentation-shaped writer API; converting it to DTOs is
   outside this initiative.
 - Incomplete-connection computation remains under `drc`; the package name is broader than
   clearance checking by design.
-- `gui.session` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
+- `gui.workspace` may depend on `gui.rendering` for the `GuiBoardManager` graphics context (D26);
   moving that state fully into views is outside this initiative.
+- `gui.board`, `gui.windows.*`, `gui.menus`, and `gui.controls` retain bidirectional `BoardFrame`
+  owner references after the Phase 8 split; ArchUnit cycle checks apply to
+  `gui.workspace` / `gui.interactive` / `gui.rendering` only.
 
 ## Package Glossary
 
@@ -130,11 +144,54 @@ Import and export for board files. The public DSN and SES entry points are in th
 
 ### `app.freerouting.board`
 
-The live board model: components, pins, vias, traces, layers, and the board-level operations that mutate them.
+The live board model is split into cohesive subpackages. There are no remaining Java sources in the
+`board` root package.
+
+- `board.model.items` — pins, vias, traces, conduction areas, keepouts, and connectivity.
+- `board.model.structure` — layers, outline, components, units, and fixed-state.
+- `board.trace` — polyline-trace geometry, normalization, and search-tree adaptation.
+- `board.facade` — `BasicBoard`, `RoutingBoard`, and repository/snapshot/search/undo façades.
+- `board.state` — observers, communication, changed-area, coordinate transform, and comparison.
+- `board.actions` — forced routing, item inspection/selection, drill-item moves, and ID generation.
+
+Start with [BasicBoard.java](src/main/java/app/freerouting/board/facade/BasicBoard.java) and
+[RoutingBoard.java](src/main/java/app/freerouting/board/facade/RoutingBoard.java).
+
+### `app.freerouting.board.searchtree`
+
+Board search-tree implementations and their manager/trace-entry support. These trees index board
+items for clearance and overlap queries and remain headless.
+
+### `app.freerouting.board.optimize`
+
+Board trace-pull-tight, shove, and via-optimization implementations. The package contains
+algorithmic board mutation helpers and has no GUI dependency.
+
+### `app.freerouting.autoroute.pipeline`
+
+Routing orchestration and stage implementations: fanout, batch autorouting, optimization, pipeline
+lifecycle, and per-pass autorouter workers.
+
+### `app.freerouting.autoroute.maze`
+
+Maze-search control, engine, distance/list elements, and maze trace-shoving support.
+
+### `app.freerouting.autoroute.expansion`
+
+Expansion rooms, doors, and angle-specific room-neighbour calculations used by maze routing.
+
+### `app.freerouting.autoroute.drill`
+
+Drill-page indexing and expansion-drill support used during maze expansion.
+
+### `app.freerouting.autoroute.path`
+
+Found-connection reconstruction and insertion, including path connection value objects.
 
 ### `app.freerouting.autoroute`
 
-The routing engine and its orchestration. This package contains the logic for connecting items, selecting vias, fanout, maze search, and route optimization.
+Remaining autoroute support types and routing diagnostics. The implementation families are kept in
+the dedicated subpackages above; `app.freerouting.autoroute.events` remains the event boundary.
 
 ### `app.freerouting.rules`
 
@@ -150,22 +207,33 @@ Planar geometry primitives and helper classes used throughout routing and board 
 
 ### `app.freerouting.gui`
 
-The Swing user interface: frames, dialogs, menus, panels, and rendering support. Accessibility
-coverage uses the frame-free component seams in `BoardMenuBar`, `BoardToolbar`, and
+The Swing user interface is split into cohesive subpackages. There are no remaining Java sources in
+the `gui` root package.
+
+- `gui.windows.board` — board/information windows (`WindowAbout`, `WindowNets`, `WindowVisibility`).
+- `gui.windows.routing` — routing, rules, clearance, via, and autoroute windows.
+- `gui.menus` — board menus and popup menus (`BoardMenuBar`, `BoardMenuFile`, `PopupMenuMain`).
+- `gui.board` — board shell and frame classes (`BoardFrame`, `BoardPanel`, `GuiManager`, toolbars).
+- `gui.controls` — reusable controls (`ColorManager`, combo boxes, progress controls).
+- `gui.support` — GUI defaults, text, and progress support (`GuiDefaultsFile`, `GuiTextManager`).
+- `gui.a11y` — accessibility helpers and stable component locators (`A11y`, `GuiLocators`) used by views and the component-only test harness.
+
+Accessibility coverage uses the frame-free component seams in `BoardMenuBar`, `BoardToolbar`, and
 `WindowVisibility`; these keep menu, toolbar, and settings workflows testable under forced
 headless mode without creating top-level windows.
 
 ### `app.freerouting.gui.interactive`
 
-Concrete GUI editor states and their controller implementation. States implement the session-owned
+Concrete GUI editor states and their controller implementation. States implement the workspace-owned
 opaque handle/command contracts; views register the controller and bootstrap the initial route-menu
 state.
 
-### `app.freerouting.gui.session`
+### `app.freerouting.gui.workspace`
 
-The GUI board session boundary: `GuiBoardManager`, `GuiSessionContract`, `InteractiveSettings`,
-`ScreenMessages`, action threads, ratsnest/violation presentation façades, opaque
-`EditorStateHandle`/`EditorStateKind`, `EditorEvent`, and `InteractiveCommand`. This package owns no
+The GUI board workspace boundary. The root package is a compatibility façade with `GuiBoardManager`,
+`WorkspaceContract`, and `WorkspaceSettings`. Collaborators live in `gui.workspace.controllers`,
+`gui.workspace.session`, `gui.workspace.ports`, and `gui.workspace.progress` (`ScreenMessages`,
+`GuiRoutingJobWorker`, ratsnest, and route-progress façades). This package owns no
 concrete editor state and has no dependency on `gui.interactive`; GUI views perform initial-state
 registration.
 
@@ -173,17 +241,26 @@ registration.
 
 HTTP API controllers, filters, and server-facing request handling. The concrete REST endpoints live in `api.v1`, MCP server infrastructure lives in `api.mcp`, supporting DTOs are in `api.dto`, authentication in `api.security`, and developer-only mocks in `api.dev`.
 
+### `app.freerouting.analytics`
+
+Analytics telemetry and metrics dispatch (`FRAnalytics`, `BigQueryClient`, `SegmentClient`, and event DTOs).
+
+### `app.freerouting.io`
+
+Board and design file input/output serialization, parsing, and multi-format generation. Specific formats include Specctra (`io.specctra`), KiCad JSON (`io.kicad`), and multi-output synthesis (`MultiOutputGenerator`).
+
 ### `app.freerouting.management`
 
-Headless board management (using `BoardManager` and `HeadlessBoardManager`), session management, job scheduling, analytics, Gson adapters, and service-layer coordination. The analytics code lives in `management.analytics`, and the JSON helpers live in `util.gson`.
+Headless board management (using `BoardManager` and `HeadlessBoardManager`), composite board input assembly (`CompositeBoardInput`), board loading (`BoardLoader`), job scheduling (`management.jobs`), and session lifecycle management (`management.sessions`).
 
 ### `app.freerouting.core`
 
-Shared application data such as routing jobs, sessions, scoring, and statistics. The board statistics helpers live in `core.scoring`.
+Shared application data such as routing jobs, sessions, job/board-file events (`core.events`),
+scoring (`core.scoring`), CLI result manifests (`core.results`), and board library definitions (`core.library`).
 
 ### `app.freerouting.settings`
 
-Runtime configuration objects and settings sources that define application and routing behavior.
+Application configuration, defaults, and the priority-based `SettingsMerger`. Stage knobs live under `router.fanout`, `router.autorouter`, and `router.optimizer`; `max_threads` stays on the parent `router` object.
 
 ### `app.freerouting.datastructures`
 
@@ -210,20 +287,31 @@ Several implementation areas live one level below the top-level package grouping
 
 - `app.freerouting.geometry.planar` contains the actual planar primitives and helper classes; start with [Point.java](src/main/java/app/freerouting/geometry/planar/Point.java) and [Shape.java](src/main/java/app/freerouting/geometry/planar/Shape.java).
 - `app.freerouting.io.specctra` contains DSN and SES import/export; parser internals live in `parser/`. Start with [DsnReader.java](src/main/java/app/freerouting/io/specctra/DsnReader.java), [DsnWriter.java](src/main/java/app/freerouting/io/specctra/DsnWriter.java), [SesReader.java](src/main/java/app/freerouting/io/specctra/SesReader.java), and [SesWriter.java](src/main/java/app/freerouting/io/specctra/SesWriter.java).
-- `app.freerouting.management.analytics` and `app.freerouting.management.gson` contain analytics clients and Gson adapters; start with [FRAnalytics.java](src/main/java/app/freerouting/management/analytics/FRAnalytics.java) and [GsonProvider.java](src/main/java/app/freerouting/management/gson/GsonProvider.java).
+- `app.freerouting.analytics` contains analytics telemetry and dispatch; start with [FRAnalytics.java](src/main/java/app/freerouting/analytics/FRAnalytics.java).
+- `app.freerouting.util.gson` contains Gson adapters and JSON provider helpers; start with [GsonProvider.java](src/main/java/app/freerouting/util/gson/GsonProvider.java).
 - `app.freerouting.core.scoring` contains board statistics and scoring helpers; start with [BoardStatistics.java](src/main/java/app/freerouting/core/scoring/BoardStatistics.java).
+- `app.freerouting.core.results` contains the headless CLI routing result manifest; start with [RoutingResultManifest.java](src/main/java/app/freerouting/core/results/RoutingResultManifest.java).
 - `app.freerouting.api.v1`, `app.freerouting.api.dto`, `app.freerouting.api.security`, and `app.freerouting.api.dev` contain the public controllers, payloads, authentication, and mocked endpoints; start with [JobControllerV1.java](src/main/java/app/freerouting/api/v1/JobControllerV1.java), [BoardFilePayload.java](src/main/java/app/freerouting/api/dto/BoardFilePayload.java), and [ApiKeyValidationService.java](src/main/java/app/freerouting/api/security/ApiKeyValidationService.java).
 - `app.freerouting.autoroute.events` contains routing event callbacks; start with [BoardUpdatedEvent.java](src/main/java/app/freerouting/autoroute/events/BoardUpdatedEvent.java).
+- `app.freerouting.autoroute.pipeline` contains the shared routing sequencer; start with [RoutingPipeline.java](src/main/java/app/freerouting/autoroute/pipeline/RoutingPipeline.java).
+- `app.freerouting.board.searchtree` contains board spatial indexes; start with [SearchTreeManager.java](src/main/java/app/freerouting/board/searchtree/SearchTreeManager.java).
+- `app.freerouting.board.facade` keeps board services behind the stable `BasicBoard` and `RoutingBoard`
+  façades: item storage/connectivity/snapshots, routing operations/search, and routing undo/redo.
+- `app.freerouting.gui.windows.board` and `app.freerouting.gui.windows.routing` contain the Swing
+  information and routing-parameter windows; start with [WindowVisibility.java](src/main/java/app/freerouting/gui/windows/board/WindowVisibility.java) and [WindowAutorouteParameter.java](src/main/java/app/freerouting/gui/windows/routing/WindowAutorouteParameter.java).
+- `app.freerouting.gui.board` contains the board shell; start with [BoardFrame.java](src/main/java/app/freerouting/gui/board/BoardFrame.java).
 
 ## How The Code Fits Together
 
 ### Routing Path
 
-The primary routing packages are `board`, `autoroute`, `rules`, `drc`, and `geometry.planar`.
+The primary routing packages are `board`, `board.searchtree`, `board.optimize`, `autoroute.pipeline`,
+`autoroute.maze`, `autoroute.expansion`, `autoroute.drill`, `autoroute.path`, `rules`, `drc`, and
+`geometry.planar`.
 
 - `board` stores the current design.
 - `rules` defines what is permitted.
-- `autoroute` chooses the next routing action.
+- `autoroute.pipeline` sequences routing stages and `autoroute.maze` chooses the next routing action.
 - `drc` validates the result.
 - `geometry.planar` provides the shapes and measurements used by all of the above.
 
@@ -242,7 +330,7 @@ Freerouting has two related routing stages:
 | Autorouter | Attempts to make every required connection | Adds missing traces and vias so unfinished nets become complete |
 | Optimizer | Improve route quality | Reroutes parts of existing connections to reduce length, vias, and awkward shapes |
 
-In settings, autorouter and optimizer options are part of the same routing configuration, so both can be reviewed before you run a job. During execution, Freerouting runs autorouter passes first and then continues to optimizer passes (if optimizer is enabled and the run is not interrupted).
+In settings, fanout, autorouter, and optimizer options are nested under the same `router` object so they can be reviewed before you run a job. During execution, Freerouting runs fanout, then autorouter passes, then optimizer passes (if each stage is enabled and the run is not interrupted).
 
 #### Autorouter
 
@@ -288,14 +376,39 @@ The optimizer is the "make it better" stage. It runs after routing is already co
 
 The optimizer changes the board more conservatively than the autorouter. Its job is to shorten routes, reduce vias, and polish the final layout.
 
+#### Board scores (router vs optimizer)
+
+Autorouter and optimizer **do not share a score**. Maze-search costs (`via_costs`, preferred-direction trace costs, rip-up costs) stay on `RoutingCostSettings` and are independent of these board scores. Both V2 scores are on a 0–1000 scale (higher is better). `getNormalizedScore()` is a deprecated alias of the **router** score.
+
+The equations, default weights, and a technical-plus-plain-language glossary for every symbol are in **[docs/scoring.md](scoring.md)**. Settings keys live in [docs/settings.md](settings.md).
+
+| Score | Used by | V2 default | What it measures |
+| --- | --- | --- | --- |
+| Router | `BatchAutorouter`, `BoardHistory`, API `normalized_score` | `V2_CONTINUOUS` | Incomplete connections (first half cheaper than the last half) plus DRC count and stacked violation depth |
+| Optimizer | `BatchOptimizer` candidate keep/undo, API `optimizer_score` | `V2_LOWER_BOUND` | Excess wire length, vias, and bends versus placement-derived lower bounds. Completeness and DRC count are gates, not score terms |
+
+Router V2:
+
+$$\mathrm{score}_{\mathrm{router}} = \max\bigl(0,\ 1000 - W_1 o_1 - W_2 o_2 - W_C N_{\mathrm{viol}}/D - W_D (\sum L_{\mathrm{um}})/(U_{\mathrm{scale}} D)\bigr)$$
+
+Optimizer V2:
+
+$$\mathrm{score}_{\mathrm{opt}} = \max\bigl(0,\ 1000 - \Delta L - \Delta V - \Delta B\bigr)$$
+
+The optimizer stops a pass series when relative score gain falls below
+`optimizer.improvement_threshold` (default 0.01 of the incumbent optimizer score), not when
+the score is merely close to 1000.
+
+Difficulty \(D = \max(1,\ P \times N_L)\) (pins × signal layers) scales DRC, via, and bend penalties. Unrouted fraction and length excess do **not** divide by \(D\).
+
 ### GUI and Interaction Path
 
-The interactive editor is split between `gui`, `gui.session`, and `gui.interactive`.
+The interactive editor is split between GUI window/shell packages, `gui.workspace`, and `gui.interactive`.
 
-- `gui` contains the visible application components.
-- `gui.session` contains the opaque session facade and board-session services.
+- `gui.windows.*`, `gui.menus`, `gui.board`, `gui.controls`, and `gui.support` contain the visible application components.
+- `gui.workspace` contains the opaque workspace facade and board-workspace services.
 - `gui.interactive` contains the concrete state machine and its inverted controller.
-- Views construct the controller and bootstrap `RouteMenuState`; session code never names a concrete state.
+- Views construct the controller and bootstrap `RouteMenuState`; workspace code never names a concrete state.
 
 When diagnosing user interaction, rendering, or editor state, begin here.
 
@@ -368,9 +481,8 @@ To maintain clarity and consistency across the codebase, user interfaces, logs, 
 1. [README.md](README.md) for the product overview.
 2. [docs/developer.md](docs/developer.md) for build, test, and release guidance.
 3. [docs/settings.md](docs/settings.md) for the settings merge model.
-4. [docs/research/code_structure_recommendations.md](research/code_structure_recommendations.md) for longer-term structure guidance.
-5. [docs/issues/soc-gui-separation-and-accessibility-plan.md](issues/soc-gui-separation-and-accessibility-plan.md) for the GUI/headless separation plan and live boundary-debt ledger.
-6. This document again, using the package glossary above to jump directly to the relevant area.
+4. [docs/scoring.md](docs/scoring.md) for V2 router and optimizer board-score equations.
+5. This document again, using the package glossary above to jump directly to the relevant area.
 
 ## Practical Rules Of Thumb
 

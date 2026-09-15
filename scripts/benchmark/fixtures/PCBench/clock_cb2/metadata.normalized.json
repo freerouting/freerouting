@@ -1,0 +1,57 @@
+{
+  "board_id": "clock_cb2",
+  "display_name": "clock_cb2",
+  "pcbench_directory": "PCBs/clock_cb2",
+  "source": "https://github.com/gtaubman/clock",
+  "author": "gtaubman",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:54.522081+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 34,
+    "components": 41,
+    "dimensions_mm": {
+      "width": 110.49,
+      "height": 38.1
+    },
+    "area_cm2": 42.1,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 498,
+    "vias": 5,
+    "track_length_mm": 1832.26,
+    "kicad_drc_violations": 298,
+    "kicad_drc_breakdown": {
+      "total_violations": 298,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 218,
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 41,
+        "shorting_items": 1,
+        "silk_overlap": 31,
+        "starved_thermal": 4
+      },
+      "by_severity": {
+        "error": 226,
+        "warning": 72
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

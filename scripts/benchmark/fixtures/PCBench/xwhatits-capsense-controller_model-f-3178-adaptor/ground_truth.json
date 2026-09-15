@@ -1,0 +1,23 @@
+{
+  "board": "xwhatits-capsense-controller_model-f-3178-adaptor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\xwhatits-capsense-controller_model-f-3178-adaptor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 40,
+  "approximate_track_length_mm": 92.22,
+  "kicad_drc_violations": 34,
+  "generated_at": "2026-08-18T19:58:19.860618+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 34,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 31,
+      "text_height": 3
+    },
+    "by_severity": {
+      "error": 31,
+      "warning": 3
+    }
+  }
+}

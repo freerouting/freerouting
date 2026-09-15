@@ -1,0 +1,203 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\CubeSAT-Reaction-Wheel_Edison_Motor_Servo\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  147431 -88902.4  147649 -88940.9  147858 -89016.8  148050 -89127.7
+            148220 -89270.3  148362 -89440.2  148473 -89632.2  148549 -89840.7
+            148588 -90059.1  148590 -90170  148590 -91440  148590 -106680
+            148590 -107950  148588 -108061  148549 -108279  148473 -108488
+            148362 -108680  148220 -108850  148050 -108992  147858 -109103
+            147649 -109179  147431 -109218  147320 -109220  146050 -109220
+            139700 -109220  138430 -109220  137160 -109220  137049 -109222
+            136831 -109261  136622 -109337  136430 -109448  136260 -109590
+            136118 -109760  136007 -109952  135931 -110161  135892 -110379
+            135890 -110490  135890 -111760  135890 -114300  135890 -115570
+            135888 -115681  135849 -115899  135773 -116108  135662 -116300
+            135520 -116470  135350 -116612  135158 -116723  134949 -116799
+            134731 -116838  134620 -116840  123190 -116840  121920 -116840
+            121809 -116838  121591 -116799  121382 -116723  121190 -116612
+            121020 -116470  120878 -116300  120767 -116108  120691 -115899
+            120652 -115681  120650 -115570  120650 -114300  120650 -91440
+            120650 -90170  120652 -90059.1  120691 -89840.7  120767 -89632.2
+            120878 -89440.2  121020 -89270.3  121190 -89127.7  121382 -89016.8
+            121591 -88940.9  121809 -88902.4  121920 -88900  123190 -88900
+            146050 -88900  147320 -88900  147431 -88902.4)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Socket_Strips:Socket_Strip_Straight_1x03
+      (place Ma 140970 -95250 front 0 (PN CONN_01X03))
+      (place Mb 140970 -99060 front 0 (PN CONN_01X03))
+      (place Mc 140970 -102870 front 0 (PN CONN_01X03))
+      (place Md 140970 -106680 front 0 (PN CONN_01X03))
+    )
+    (component Socket_Strips:Socket_Strip_Straight_1x10
+      (place P5 123190 -91440 front -90 (PN CONN_01X10))
+      (place P6 133350 -91440 front -90 (PN CONN_01X10))
+    )
+  )
+  (library
+    (image Socket_Strips:Socket_Strip_Straight_1x03
+      (outline (polygon signal 0  6845 -1745  -1745 -1745  -1745 1745  6845 1745))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  6350 -1270  1270 -1270))
+      (outline (path signal 150  6350 1270  6350 -1270))
+      (outline (path signal 150  1270 1270  6350 1270))
+      (outline (path signal 150  -1550 -1550  0 -1550))
+      (outline (path signal 150  -1550 1550  -1550 -1550))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (pin Rect[A]Pad_1727.200000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 3 5080 0)
+    )
+    (image Socket_Strips:Socket_Strip_Straight_1x10
+      (outline (polygon signal 0  24645 1745  24645 -1745  -1745 -1745  -1745 1745))
+      (outline (path signal 150  -1550 1550  -1550 -1550))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  -1550 -1550  0 -1550))
+      (outline (path signal 150  24130 1270  1270 1270))
+      (outline (path signal 150  24130 -1270  24130 1270))
+      (outline (path signal 150  1270 -1270  24130 -1270))
+      (pin Rect[A]Pad_1727.200000x2032.000000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 3 5080 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 4 7620 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 5 10160 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 6 12700 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 7 15240 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 8 17780 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 9 20320 0)
+      (pin Oval[A]Pad_1727.200000x2032.000000_um 10 22860 0)
+    )
+    (padstack Oval[A]Pad_1727.200000x2032.000000_um
+      (shape (path F.Cu 1727.2  0 -152.4  0 152.4))
+      (shape (path B.Cu 1727.2  0 -152.4  0 152.4))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x2032.000000_um
+      (shape (rect F.Cu -863.6 -1016 863.6 1016))
+      (shape (rect B.Cu -863.6 -1016 863.6 1016))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(P1-Pad1)"
+      (pins Ma-1 P5-7)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins Ma-2)
+    )
+    (net "Net-(P2-Pad2)"
+      (pins Mb-2)
+    )
+    (net "Net-(P3-Pad2)"
+      (pins Mc-2)
+    )
+    (net "Net-(P4-Pad2)"
+      (pins Md-2)
+    )
+    (net "Net-(P5-Pad1)"
+      (pins P5-1)
+    )
+    (net "Net-(P5-Pad2)"
+      (pins P5-2)
+    )
+    (net "Net-(P5-Pad3)"
+      (pins P5-3)
+    )
+    (net "Net-(P5-Pad4)"
+      (pins P5-4)
+    )
+    (net "Net-(P5-Pad5)"
+      (pins P5-5)
+    )
+    (net "Net-(P5-Pad6)"
+      (pins P5-6)
+    )
+    (net "Net-(P6-Pad2)"
+      (pins P6-2)
+    )
+    (net "Net-(P6-Pad3)"
+      (pins P6-3)
+    )
+    (net "Net-(P6-Pad4)"
+      (pins P6-4)
+    )
+    (net "Net-(P6-Pad5)"
+      (pins P6-5)
+    )
+    (net "Net-(P6-Pad6)"
+      (pins P6-6)
+    )
+    (net "Net-(P6-Pad7)"
+      (pins P6-7)
+    )
+    (net "Net-(P6-Pad8)"
+      (pins P6-8)
+    )
+    (net "Net-(P6-Pad9)"
+      (pins P6-9)
+    )
+    (net "Net-(P6-Pad10)"
+      (pins P6-10)
+    )
+    (net GND
+      (pins Ma-3 Mb-3 Mc-3 Md-3 P6-1)
+    )
+    (net "Net-(P2-Pad1)"
+      (pins Mb-1 P5-8)
+    )
+    (net "Net-(P3-Pad1)"
+      (pins Mc-1 P5-9)
+    )
+    (net "Net-(P4-Pad1)"
+      (pins Md-1 P5-10)
+    )
+    (class kicad_default GND "Net-(P1-Pad1)" "Net-(P1-Pad2)" "Net-(P2-Pad1)"
+      "Net-(P2-Pad2)" "Net-(P3-Pad1)" "Net-(P3-Pad2)" "Net-(P4-Pad1)" "Net-(P4-Pad2)"
+      "Net-(P5-Pad1)" "Net-(P5-Pad2)" "Net-(P5-Pad3)" "Net-(P5-Pad4)" "Net-(P5-Pad5)"
+      "Net-(P5-Pad6)" "Net-(P6-Pad10)" "Net-(P6-Pad2)" "Net-(P6-Pad3)" "Net-(P6-Pad4)"
+      "Net-(P6-Pad5)" "Net-(P6-Pad6)" "Net-(P6-Pad7)" "Net-(P6-Pad8)" "Net-(P6-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

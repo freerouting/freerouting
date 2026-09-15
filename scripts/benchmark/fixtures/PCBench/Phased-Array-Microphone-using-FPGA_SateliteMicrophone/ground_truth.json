@@ -1,0 +1,27 @@
+{
+  "board": "Phased-Array-Microphone-using-FPGA_SateliteMicrophone",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Phased-Array-Microphone-using-FPGA_SateliteMicrophone\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 11,
+  "segment_count": 103,
+  "approximate_track_length_mm": 153.17,
+  "kicad_drc_violations": 71,
+  "generated_at": "2026-08-18T19:32:46.409983+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 71,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 33,
+      "copper_edge_clearance": 3,
+      "lib_footprint_issues": 21,
+      "silk_overlap": 1,
+      "solder_mask_bridge": 12,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 49,
+      "warning": 22
+    }
+  }
+}

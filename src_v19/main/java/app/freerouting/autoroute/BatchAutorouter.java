@@ -10,6 +10,8 @@ import app.freerouting.board.PolylineTrace;
 import app.freerouting.board.RoutingBoard;
 import app.freerouting.board.TestLevel;
 import app.freerouting.board.Trace;
+import app.freerouting.core.scoring.BoardStatistics;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.board.Unit;
 import app.freerouting.datastructures.TimeLimit;
 import app.freerouting.datastructures.UndoableObjects;
@@ -228,6 +230,21 @@ public class BatchAutorouter {
       if (sessionStartTimeMillis == 0) {
         sessionStartTimeMillis = System.currentTimeMillis();
         initialUnroutedCount = new RatsNest(routing_board, hdlg.get_locale()).incomplete_count();
+        float initialScore = new BoardStatistics(routing_board).calculateNormalizedScore();
+        RoutingResultManifest.PhaseSnapshot before =
+            new RoutingResultManifest.PhaseSnapshot();
+        before.boardStatistics = new BoardStatistics(routing_board);
+        before.score = initialScore;
+        before.scoreSource = "v19_native";
+        hdlg.resultPhaseMetrics.autorouter.before = before;
+        FRLogger.info(
+            String.format(
+                java.util.Locale.US,
+                "Auto-routing stage started on board '%s' with baseline score %.2f for %d "
+                    + "unrouted items.",
+                routing_board.get_hash(),
+                initialScore,
+                initialUnroutedCount));
       }
 
       still_unrouted_items = autoroute_pass(curr_pass_no, true);
@@ -313,6 +330,16 @@ public class BatchAutorouter {
         totalCpuTime,
         totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0,
         (double) peakHeap));
+    RoutingResultManifest.PhaseSnapshot after = new RoutingResultManifest.PhaseSnapshot();
+    after.boardStatistics = new BoardStatistics(routing_board);
+    after.score = finalScore;
+    after.scoreSource = "v19_native";
+    hdlg.resultPhaseMetrics.autorouter.after = after;
+    hdlg.resultPhaseMetrics.autorouter.durationSeconds = sessionDuration / 1000.0f;
+    hdlg.resultPhaseMetrics.autorouter.cpuSeconds = (float) totalCpuTime;
+    hdlg.resultPhaseMetrics.autorouter.totalAllocatedGb =
+        (float) (totalAllocatedBytes / 1024.0 / 1024.0 / 1024.0);
+    hdlg.resultPhaseMetrics.autorouter.peakHeapMb = (float) peakHeap;
 
     PerformanceProfiler.printResults();
     PerformanceProfiler.reset();

@@ -1,0 +1,65 @@
+{
+  "board_id": "LeeChee_1800",
+  "display_name": "LeeChee_1800",
+  "pcbench_directory": "PCBs/LeeChee_1800",
+  "source": "https://github.com/Gacathon/LeeChee",
+  "author": "Gacathon",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:37.709883+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 298,
+    "components": 587,
+    "dimensions_mm": {
+      "width": 378.41,
+      "height": 156.86
+    },
+    "area_cm2": 593.57,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 5942,
+    "vias": 381,
+    "track_length_mm": 22648.87,
+    "kicad_drc_violations": 1530,
+    "kicad_drc_breakdown": {
+      "total_violations": 1530,
+      "unconnected_count": 10,
+      "by_type": {
+        "annular_width": 1,
+        "clearance": 506,
+        "copper_edge_clearance": 102,
+        "courtyards_overlap": 9,
+        "hole_clearance": 27,
+        "hole_to_hole": 116,
+        "invalid_outline": 199,
+        "lib_footprint_issues": 199,
+        "pth_inside_courtyard": 20,
+        "shorting_items": 1,
+        "silk_edge_clearance": 37,
+        "silk_over_copper": 76,
+        "silk_overlap": 20,
+        "solder_mask_bridge": 199,
+        "track_dangling": 18
+      },
+      "by_severity": {
+        "error": 1064,
+        "warning": 466
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "extreme-stress",
+    "plane",
+    "tier-d"
+  ],
+  "tier": "D",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:30:00"
+}

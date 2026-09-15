@@ -1,0 +1,618 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Hardware_Playground_samd51_micropython\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  48260 -35052  12700 -35052  12700 -30734  13462 -30734
+            13462 -21590  12700 -21590  12700 -16256  48260 -16256  48260 -35052)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Connector_Wire:SolderWirePad_1x01_Drill0.8mm
+      (place REF** 19558 -21082 front 0 (PN SolderWirePad_1x01_Drill0.8mm))
+    )
+    (component "easyeda:SOT-25"
+      (place U3 22352 -25654 front 0 (PN "AP2112K-3.3TRG1"))
+    )
+    (component easyeda:0402
+      (place C2 21590 -23368 front 180 (PN 1uF))
+      (place C4 23114 -28194 front 0 (PN 1uF))
+      (place C10 31242 -29718 front 180 (PN 1uF))
+      (place C3 35560 -26162 front 90 (PN 1uF))
+      (place C8 27940 -26162 front -90 (PN 1uF))
+      (place C9 29718 -22352 front 180 (PN 1uF))
+    )
+    (component easyeda:48QFN7X7
+      (place U1 31750 -25908 front 90 (PN "ATSAMD51G19A-MU"))
+    )
+    (component "easyeda:MICRO-USB-12"
+      (place USB 17272 -26162 front 0 (PN "Micro USB-B 5P_C40942"))
+    )
+    (component easyeda:1X14
+      (place JP1 30480 -17526 front 0 (PN M14))
+      (place JP2 30480 -33782 front 180 (PN M14))
+    )
+    (component "easyeda:SWITCH-3X6X2.5_SMD"
+      (place SW1 22098 -26162 front 180 (PN RESET))
+    )
+    (component "easyeda:210S-1X4P"
+      (place H2 46990 -26162 front 90 (PN "Header-Male-2.54_1x4"))
+    )
+    (component easyeda:0402::1
+      (place C6 25908 -26162 front 90 (PN 10uF))
+      (place R2 44958 -27178 front 90 (PN 2K2))
+      (place C5 38100 -23114 front 90 (PN 100nF))
+      (place R3 37592 -29464 front 180 (PN 100K))
+    )
+    (component easyeda:0402::2
+      (place C7 29972 -31496 front -135 (PN 1uF))
+    )
+    (component "easyeda:SOIC-8"
+      (place U2 39116 -29210 front 90 (PN "IS25LP016D-JBLE"))
+    )
+    (component easyeda:0402::3
+      (place R1 25146 -24638 front 180 (PN 10K))
+      (place C1 24892 -26924 front 90 (PN 1uF))
+    )
+  )
+  (library
+    (image Connector_Wire:SolderWirePad_1x01_Drill0.8mm
+      (outline (polygon signal 0  1495 -1495  -1495 -1495  -1495 1495  1495 1495))
+      (pin Rect[T]Pad_1200.000000x1200.000000_um 1 0 0)
+    )
+    (image "easyeda:SOT-25"
+      (outline (path signal 254  -500 -1400  -500 1400))
+      (outline (path signal 254  500 -1400  -500 -1400))
+      (outline (path signal 254  500 1400  500 -1400))
+      (outline (path signal 254  -500 1400  500 1400))
+      (outline (polygon signal 0  -1399.5 -1802.02  -1412.28 -1855.94  -1447.18 -1898.97
+            -1497.3 -1922.6  -1552.7 -1922.15  -1602.42 -1897.7  -1636.61 -1854.09
+            -1648.5 -1799.98  -1631.09 -1710.62  -1582.67 -1633.54  -1509.74 -1579.06
+            -1422.08 -1554.5  -1331.46 -1563.15  -1250.04 -1603.86  -1188.74 -1671.16
+            -1155.79 -1756.02  -1155.61 -1847.05  -1188.22 -1932.04  -1249.26 -1999.58
+            -1330.52 -2040.61  -1421.1 -2049.63  -1508.86 -2025.41  -1582 -1971.22
+            -1630.72 -1894.33  -1648.49 -1805.05  -1636.82 -1750.88  -1602.8 -1707.14
+            -1553.17 -1682.5  -1497.77 -1681.82  -1447.56 -1705.25  -1412.49 -1748.15
+            -1399.5 -1802.01))
+      (pin Rect[B]Pad_622.000000x1105.000000_um (rotate 270) 5 1398 -941)
+      (pin Rect[B]Pad_622.000000x1105.000000_um (rotate 270) 4 1398 939)
+      (pin Rect[B]Pad_622.000000x1105.000000_um (rotate 270) 3 -1396 939)
+      (pin Rect[B]Pad_622.000000x1105.000000_um (rotate 270) 2 -1396 -1)
+      (pin Rect[B]Pad_622.000000x1105.000000_um (rotate 270) 1 -1396 -941)
+    )
+    (image easyeda:0402
+      (outline (path signal 102  -272 432  -196 432))
+      (outline (path signal 102  -805 432  -272 432))
+      (outline (path signal 102  -805 -432  -805 432))
+      (outline (path signal 102  -196 -432  -805 -432))
+      (outline (path signal 102  287 -432  185 -432))
+      (outline (path signal 102  820 -432  287 -432))
+      (outline (path signal 102  820 432  820 -432))
+      (outline (path signal 102  185 432  820 432))
+      (pin Rect[B]Pad_600.000000x650.000000_um 2 -424 0)
+      (pin Rect[B]Pad_600.000000x650.000000_um 1 424 0)
+    )
+    (image easyeda:48QFN7X7
+      (outline (path signal 201  3675 3675  3274 3675))
+      (outline (path signal 201  3675 3274  3675 3675))
+      (outline (path signal 201  3675 -3675  3675 -3274))
+      (outline (path signal 201  3274 -3675  3675 -3675))
+      (outline (path signal 201  -3675 -3675  -3274 -3675))
+      (outline (path signal 201  -3675 -3274  -3675 -3675))
+      (outline (path signal 201  -3675 3675  -3274 3675))
+      (outline (path signal 201  -3675 3274  -3675 3675))
+      (outline (polygon signal 0  -4325.5 3523.98  -4312.74 3577.9  -4277.86 3620.94  -4227.75 3644.59
+            -4172.35 3644.16  -4122.61 3619.73  -4088.41 3576.14  -4076.5 3522.02
+            -4093.95 3432.3  -4142.53 3354.89  -4215.74 3300.16  -4303.74 3275.47
+            -4394.72 3284.13  -4476.49 3324.97  -4538.06 3392.52  -4571.18 3477.7
+            -4571.39 3569.1  -4538.68 3654.45  -4477.42 3722.28  -4395.85 3763.51
+            -4304.91 3772.59  -4216.79 3748.31  -4143.33 3693.93  -4094.38 3616.75
+            -4076.52 3527.11  -4088.17 3472.94  -4122.17 3429.19  -4171.78 3404.53
+            -4227.18 3403.83  -4277.4 3427.24  -4312.49 3470.13  -4325.5 3523.99
+            -4326.01 3524.99  -4326 3522.97  -4325.5 3523.98))
+      (pin Rect[T]Pad_5220.000000x5220.000000_um 49 -1 -1)
+      (pin Rect[T]Pad_267.000000x826.000000_um 48 -2744 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 47 -2262 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 46 -1754 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 45 -1246 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 44 -738 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 43 -255 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 42 253 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 41 761 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 40 1243 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 39 1751 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 38 2259 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um 37 2742 3504)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 36 3504 2742)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 35 3504 2259)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 34 3504 1751)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 33 3504 1243)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 32 3504 735)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 31 3504 253)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 30 3504 -255)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 29 3504 -763)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 28 3504 -1246)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 27 3504 -1754)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 26 3504 -2262)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 25 3504 -2744)
+      (pin Rect[T]Pad_267.000000x826.000000_um 24 2742 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 23 2259 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 22 1751 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 21 1243 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 20 761 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 19 253 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 18 -255 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 17 -738 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 16 -1246 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 15 -1754 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 14 -2262 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um 13 -2744 -3506)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 12 -3506 -2744)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 11 -3506 -2262)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 10 -3506 -1754)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 9 -3506 -1246)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 8 -3506 -763)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 7 -3506 -255)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 6 -3506 253)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 5 -3506 735)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 4 -3506 1243)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 3 -3506 1751)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 2 -3506 2259)
+      (pin Rect[T]Pad_267.000000x826.000000_um (rotate 90) 1 -3506 2742)
+    )
+    (image "easyeda:MICRO-USB-12"
+      (outline (path signal 254  1527 -4000  1527 4000))
+      (outline (path signal 254  1516 4000  -3985 4000))
+      (outline (path signal 254  -4404 4369  -3985 4011))
+      (outline (path signal 254  -4455 4369  -4404 4369))
+      (outline (path signal 254  -4455 4204  -4455 4369))
+      (outline (path signal 254  -3744 3541  -4455 4204))
+      (outline (path signal 254  -3744 -3475  -3744 3541))
+      (outline (path signal 254  -4404 -4084  -3744 -3475))
+      (outline (path signal 254  -4404 -4376  -4404 -4084))
+      (outline (path signal 254  -3985 -3990  -4404 -4376))
+      (outline (path signal 254  1527 -4000  -3975 -4000))
+      (pin Rect[T]Pad_2000.000000x450.000000_um (rotate 180) 5 1336 -1300)
+      (pin Rect[T]Pad_2000.000000x450.000000_um (rotate 180) 4 1336 -650)
+      (pin Rect[T]Pad_2000.000000x450.000000_um (rotate 180) 3 1336 0)
+      (pin Rect[T]Pad_2000.000000x450.000000_um (rotate 180) 2 1336 650)
+      (pin Rect[T]Pad_2000.000000x450.000000_um (rotate 180) 1 1336 1300)
+      (pin Rect[T]Pad_2100.000000x1900.000000_um (rotate 270) 0 -1333 -3950)
+      (pin Rect[T]Pad_2100.000000x1900.000000_um (rotate 270) 0@1 -1333 3950)
+      (keepout "" (circle F.Cu 1150 814 1999))
+      (keepout "" (circle B.Cu 1150 814 1999))
+      (keepout "" (circle F.Cu 1150 814 -1999))
+      (keepout "" (circle B.Cu 1150 814 -1999))
+    )
+    (image easyeda:1X14
+      (outline (path signal 254  17780 635  17780 -635))
+      (outline (path signal 254  1905 -1270  635 -1270))
+      (outline (path signal 254  0 -635  635 -1270))
+      (outline (path signal 254  635 1270  0 635))
+      (outline (path signal 254  3175 -1270  2540 -635))
+      (outline (path signal 254  4445 -1270  3175 -1270))
+      (outline (path signal 254  5080 -635  4445 -1270))
+      (outline (path signal 254  4445 1270  5080 635))
+      (outline (path signal 254  3175 1270  4445 1270))
+      (outline (path signal 254  2540 635  3175 1270))
+      (outline (path signal 254  2540 -635  1905 -1270))
+      (outline (path signal 254  1905 1270  2540 635))
+      (outline (path signal 254  635 1270  1905 1270))
+      (outline (path signal 254  9525 -1270  8255 -1270))
+      (outline (path signal 254  7620 -635  8255 -1270))
+      (outline (path signal 254  8255 1270  7620 635))
+      (outline (path signal 254  5715 -1270  5080 -635))
+      (outline (path signal 254  6985 -1270  5715 -1270))
+      (outline (path signal 254  7620 -635  6985 -1270))
+      (outline (path signal 254  6985 1270  7620 635))
+      (outline (path signal 254  5715 1270  6985 1270))
+      (outline (path signal 254  5080 635  5715 1270))
+      (outline (path signal 254  10795 -1270  10160 -635))
+      (outline (path signal 254  12065 -1270  10795 -1270))
+      (outline (path signal 254  12700 -635  12065 -1270))
+      (outline (path signal 254  12065 1270  12700 635))
+      (outline (path signal 254  10795 1270  12065 1270))
+      (outline (path signal 254  10160 635  10795 1270))
+      (outline (path signal 254  10160 -635  9525 -1270))
+      (outline (path signal 254  9525 1270  10160 635))
+      (outline (path signal 254  8255 1270  9525 1270))
+      (outline (path signal 254  17145 -1270  15875 -1270))
+      (outline (path signal 254  15240 -635  15875 -1270))
+      (outline (path signal 254  15875 1270  15240 635))
+      (outline (path signal 254  13335 -1270  12700 -635))
+      (outline (path signal 254  14605 -1270  13335 -1270))
+      (outline (path signal 254  15240 -635  14605 -1270))
+      (outline (path signal 254  14605 1270  15240 635))
+      (outline (path signal 254  13335 1270  14605 1270))
+      (outline (path signal 254  12700 635  13335 1270))
+      (outline (path signal 254  17780 -635  17145 -1270))
+      (outline (path signal 254  17145 1270  17780 635))
+      (outline (path signal 254  15875 1270  17145 1270))
+      (outline (path signal 254  -15875 -1270  -17145 -1270))
+      (outline (path signal 254  -17780 -635  -17145 -1270))
+      (outline (path signal 254  -17145 1270  -17780 635))
+      (outline (path signal 254  -17780 635  -17780 -635))
+      (outline (path signal 254  -14605 -1270  -15240 -635))
+      (outline (path signal 254  -13335 -1270  -14605 -1270))
+      (outline (path signal 254  -12700 -635  -13335 -1270))
+      (outline (path signal 254  -13335 1270  -12700 635))
+      (outline (path signal 254  -14605 1270  -13335 1270))
+      (outline (path signal 254  -15240 635  -14605 1270))
+      (outline (path signal 254  -15240 -635  -15875 -1270))
+      (outline (path signal 254  -15875 1270  -15240 635))
+      (outline (path signal 254  -17145 1270  -15875 1270))
+      (outline (path signal 254  -8255 -1270  -9525 -1270))
+      (outline (path signal 254  -10160 -635  -9525 -1270))
+      (outline (path signal 254  -9525 1270  -10160 635))
+      (outline (path signal 254  -12065 -1270  -12700 -635))
+      (outline (path signal 254  -10795 -1270  -12065 -1270))
+      (outline (path signal 254  -10160 -635  -10795 -1270))
+      (outline (path signal 254  -10795 1270  -10160 635))
+      (outline (path signal 254  -12065 1270  -10795 1270))
+      (outline (path signal 254  -12700 635  -12065 1270))
+      (outline (path signal 254  -6985 -1270  -7620 -635))
+      (outline (path signal 254  -5715 -1270  -6985 -1270))
+      (outline (path signal 254  -5080 -635  -5715 -1270))
+      (outline (path signal 254  -5715 1270  -5080 635))
+      (outline (path signal 254  -6985 1270  -5715 1270))
+      (outline (path signal 254  -7620 635  -6985 1270))
+      (outline (path signal 254  -7620 -635  -8255 -1270))
+      (outline (path signal 254  -8255 1270  -7620 635))
+      (outline (path signal 254  -9525 1270  -8255 1270))
+      (outline (path signal 254  -635 -1270  -1905 -1270))
+      (outline (path signal 254  -2540 -635  -1905 -1270))
+      (outline (path signal 254  -1905 1270  -2540 635))
+      (outline (path signal 254  -4445 -1270  -5080 -635))
+      (outline (path signal 254  -3175 -1270  -4445 -1270))
+      (outline (path signal 254  -2540 -635  -3175 -1270))
+      (outline (path signal 254  -3175 1270  -2540 635))
+      (outline (path signal 254  -4445 1270  -3175 1270))
+      (outline (path signal 254  -5080 635  -4445 1270))
+      (outline (path signal 254  0 -635  -635 -1270))
+      (outline (path signal 254  -635 1270  0 635))
+      (outline (path signal 254  -1905 1270  -635 1270))
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 1 -16510 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 2 -13970 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 3 -11430 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 4 -8890 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 5 -6350 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 6 -3810 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 7 -1270 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 8 1270 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 9 3810 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 10 6350 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 11 8890 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 12 11430 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 13 13970 0)
+      (pin Round[A]Pad_1880.000000_um (rotate 90) 14 16510 0)
+    )
+    (image "easyeda:SWITCH-3X6X2.5_SMD"
+      (outline (path signal 254  0 -1722  0 1834))
+      (outline (path signal 254  508 -2230  508 2342))
+      (outline (path signal 254  -508 -2230  508 -2230))
+      (outline (path signal 254  -508 2342  -508 -2230))
+      (outline (path signal 254  508 2342  -508 2342))
+      (outline (path signal 254  1016 -2738  1016 2850))
+      (outline (path signal 254  -1016 -2738  1016 -2738))
+      (outline (path signal 254  -1016 2850  -1016 -2738))
+      (outline (path signal 254  1016 2850  -1016 2850))
+      (outline (path signal 254  1854 3307  1849 -3297))
+      (outline (path signal 254  -1847 3307  1854 3307))
+      (outline (path signal 254  -1849 -3297  -1847 3307))
+      (outline (path signal 254  1849 -3297  -1849 -3297))
+      (pin Rect[T]Pad_1524.000000x1016.000000_um (rotate 270) 1 0 4374)
+      (pin Rect[T]Pad_1524.000000x1016.000000_um (rotate 270) 2 0 -4374)
+    )
+    (image "easyeda:210S-1X4P"
+      (outline (path signal 254  635 1270  0 635))
+      (outline (path signal 254  1905 1270  635 1270))
+      (outline (path signal 254  2540 635  1905 1270))
+      (outline (path signal 254  3175 -1270  2540 -635))
+      (outline (path signal 254  4445 -1270  3175 -1270))
+      (outline (path signal 254  5080 -635  4445 -1270))
+      (outline (path signal 254  3175 1270  2540 635))
+      (outline (path signal 254  4445 1270  3175 1270))
+      (outline (path signal 254  5080 635  4445 1270))
+      (outline (path signal 254  -5080 635  -5080 -635))
+      (outline (path signal 254  -4445 -1270  -5080 -635))
+      (outline (path signal 254  -3175 -1270  -4445 -1270))
+      (outline (path signal 254  -2540 -635  -3175 -1270))
+      (outline (path signal 254  -4445 1270  -5080 635))
+      (outline (path signal 254  -3175 1270  -4445 1270))
+      (outline (path signal 254  -2540 635  -3175 1270))
+      (outline (path signal 254  5080 635  5080 -635))
+      (outline (path signal 254  -1905 -1270  -2540 -635))
+      (outline (path signal 254  -635 -1270  -1905 -1270))
+      (outline (path signal 254  0 -635  -635 -1270))
+      (outline (path signal 254  -1905 1270  -2540 635))
+      (outline (path signal 254  -635 1270  -1905 1270))
+      (outline (path signal 254  0 635  -635 1270))
+      (outline (path signal 254  635 -1270  0 -635))
+      (outline (path signal 254  1905 -1270  635 -1270))
+      (outline (path signal 254  2540 -635  1905 -1270))
+      (pin Round[A]Pad_1524.000000_um 1 -3810 0)
+      (pin Round[A]Pad_1524.000000_um 2 -1270 0)
+      (pin Round[A]Pad_1524.000000_um 3 1270 0)
+      (pin Round[A]Pad_1524.000000_um 4 3810 0)
+    )
+    (image easyeda:0402::1
+      (outline (path signal 102  272 432  196 432))
+      (outline (path signal 102  805 432  272 432))
+      (outline (path signal 102  805 -432  805 432))
+      (outline (path signal 102  196 -432  805 -432))
+      (outline (path signal 102  -287 -432  -185 -432))
+      (outline (path signal 102  -820 -432  -287 -432))
+      (outline (path signal 102  -820 432  -820 -432))
+      (outline (path signal 102  -185 432  -820 432))
+      (pin Rect[T]Pad_600.000000x650.000000_um 2 424 0)
+      (pin Rect[T]Pad_600.000000x650.000000_um 1 -424 0)
+    )
+    (image easyeda:0402::2
+      (outline (path signal 102  272 432  196 432))
+      (outline (path signal 102  805 432  272 432))
+      (outline (path signal 102  805 -432  805 432))
+      (outline (path signal 102  196 -432  805 -432))
+      (outline (path signal 102  -287.001 -432  -185 -432))
+      (outline (path signal 102  -820 -432.001  -287.001 -432))
+      (outline (path signal 102  -820 432.001  -820 -432.001))
+      (outline (path signal 102  -185 432  -820 432.001))
+      (pin Rect[T]Pad_600.000000x650.000000_um 2 424 0)
+      (pin Rect[T]Pad_600.000000x650.000000_um 1 -424 0)
+    )
+    (image "easyeda:SOIC-8"
+      (outline (path signal 254  737 470  659.72 486.426  595.802 532.865  556.299 601.287
+            548.041 679.86  572.455 755  625.321 813.713  697.497 845.848
+            776.503 845.848  848.679 813.713  901.545 755  925.959 679.86
+            917.701 601.287  878.198 532.865  814.28 486.426  737 470))
+      (outline (path signal 254  2261 432  1321 432))
+      (outline (path signal 254  4470 432  3531 432))
+      (outline (path signal 254  4470 -4394  4470 432))
+      (outline (path signal 254  1321 -4394  4470 -4394))
+      (outline (path signal 254  1321 432  1321 -4394))
+      (outline (polygon signal 0  3404 432  3416.58 487.103  3451.82 531.293  3502.74 555.816
+            3559.26 555.816  3610.18 531.293  3645.42 487.103  3658 432
+            3641.35 273.571  3592.12 122.067  3512.47 -15.892  3405.88 -134.276
+            3277 -227.911  3131.47 -292.705  2975.65 -325.826  2816.35 -325.826
+            2660.53 -292.705  2515 -227.911  2386.12 -134.276  2279.53 -15.892
+            2199.88 122.067  2150.65 273.571  2134 432  2146.58 487.103
+            2181.82 531.293  2232.74 555.816  2289.26 555.816  2340.18 531.293
+            2375.42 487.103  2388 432  2388 365.12  2422.62 235.919  2489.5 120.08
+            2584.08 25.498  2699.92 -41.381  2829.12 -76  2962.88 -76  3092.08 -41.381
+            3207.92 25.498  3302.5 120.08  3369.38 235.919  3404 365.12
+            3404 432))
+      (pin Oval[T]Pad_700.000000x2200.000000_um (rotate 90) 1 -102 -76)
+      (pin Oval[T]Pad_700.000000x2200.000000_um (rotate 90) 2 -102 -1346)
+      (pin Oval[T]Pad_700.000000x2200.000000_um (rotate 90) 3 -102 -2616)
+      (pin Oval[T]Pad_700.000000x2200.000000_um (rotate 90) 4 -102 -3886)
+      (pin Oval[T]Pad_700.000000x2200.000000_um (rotate 90) 8 5944 -76)
+      (pin Oval[T]Pad_700.000000x2200.000000_um (rotate 90) 7 5944 -1346)
+      (pin Oval[T]Pad_700.000000x2200.000000_um (rotate 90) 6 5944 -2616)
+      (pin Oval[T]Pad_700.000000x2200.000000_um (rotate 90) 5 5944 -3886)
+    )
+    (image easyeda:0402::3
+      (outline (path signal 102  272 432  196 432))
+      (outline (path signal 102  805 432  272 432))
+      (outline (path signal 102  805 -432  805 432))
+      (outline (path signal 102  196 -432  805 -432))
+      (outline (path signal 102  -287 -432  -185 -432))
+      (outline (path signal 102  -820 -432  -287 -432))
+      (outline (path signal 102  -820 432  -820 -432))
+      (outline (path signal 102  -185 432  -820 432))
+      (pin Rect[T]Pad_600.000000x650.000000_um (rotate 180) 2 424 0)
+      (pin Rect[T]Pad_600.000000x650.000000_um (rotate 180) 1 -424 0)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1880.000000_um
+      (shape (circle F.Cu 1880))
+      (shape (circle B.Cu 1880))
+      (attach off)
+    )
+    (padstack Oval[T]Pad_700.000000x2200.000000_um
+      (shape (path F.Cu 700  0 -750  0 750))
+      (attach off)
+    )
+    (padstack Rect[B]Pad_600.000000x650.000000_um
+      (shape (rect B.Cu -300 -325 300 325))
+      (attach off)
+    )
+    (padstack Rect[B]Pad_622.000000x1105.000000_um
+      (shape (rect B.Cu -311 -552.5 311 552.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x450.000000_um
+      (shape (rect F.Cu -1000 -225 1000 225))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2100.000000x1900.000000_um
+      (shape (rect F.Cu -1050 -950 1050 950))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_267.000000x826.000000_um
+      (shape (rect F.Cu -133.5 -413 133.5 413))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_5220.000000x5220.000000_um
+      (shape (rect F.Cu -2610 -2610 2610 2610))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x650.000000_um
+      (shape (rect F.Cu -300 -325 300 325))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x1200.000000_um
+      (shape (rect F.Cu -600 -600 600 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1524.000000x1016.000000_um
+      (shape (rect F.Cu -762 -508 762 508))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net +3V3
+      (pins U3-5 C4-1 C10-2 C3-2 C8-1 C9-1 U1-44 U1-36 U1-17 U1-6 JP2-13 JP2-14 R2-2
+        U2-8 C5-2 R3-2 R1-2)
+    )
+    (net A0
+      (pins U1-3 JP2-8)
+    )
+    (net A1
+      (pins U1-10 JP2-4)
+    )
+    (net A2
+      (pins U1-7 JP2-7)
+    )
+    (net A3
+      (pins U1-8 JP2-6)
+    )
+    (net A4
+      (pins U1-9 JP2-5)
+    )
+    (net A5
+      (pins U1-11 JP2-3)
+    )
+    (net AREF
+      (pins U1-4 C7-1)
+    )
+    (net D+
+      (pins U1-34 USB-3)
+    )
+    (net "D-"
+      (pins U1-33 USB-2)
+    )
+    (net D10
+      (pins U1-29 JP1-7)
+    )
+    (net D11
+      (pins U1-30 JP1-6)
+    )
+    (net D12
+      (pins U1-32 JP1-4)
+    )
+    (net D13
+      (pins U1-31 JP1-5)
+    )
+    (net D2
+      (pins U1-12 JP2-2)
+    )
+    (net D3
+      (pins U1-37 H2-4)
+    )
+    (net D4
+      (pins U1-23 H2-3)
+    )
+    (net D5
+      (pins U1-24 JP1-12)
+    )
+    (net D7
+      (pins U1-27 JP1-9)
+    )
+    (net D9
+      (pins U1-28 JP1-8)
+    )
+    (net GND
+      (pins U3-2 C2-2 C4-2 C10-1 C3-1 C8-2 C9-2 U1-49 U1-42 U1-35 U1-18 U1-5 USB-5
+        JP2-1 JP2-11 JP2-12 SW1-1 C6-1 C7-2 U2-4 C1-1)
+    )
+    (net MISO
+      (pins U1-38 JP1-3)
+    )
+    (net MOSI
+      (pins U1-1 JP2-10)
+    )
+    (net QSPI_CS
+      (pins U1-20 U2-1 R3-1)
+    )
+    (net QSPI_DAT0
+      (pins U1-13 U2-5)
+    )
+    (net QSPI_DAT1
+      (pins U1-14 U2-2)
+    )
+    (net QSPI_DAT2
+      (pins U1-15 U2-3)
+    )
+    (net QSPI_DAT3
+      (pins U1-16 U2-7)
+    )
+    (net QSPI_SCK
+      (pins U1-19 U2-6)
+    )
+    (net RST
+      (pins REF**-1 U1-40 SW1-2 R1-1 C1-2)
+    )
+    (net RX_D0
+      (pins U1-25 JP1-11)
+    )
+    (net SCK
+      (pins U1-2 JP2-9)
+    )
+    (net SCL
+      (pins U1-22 JP1-13)
+    )
+    (net SDA
+      (pins U1-21 JP1-14)
+    )
+    (net SWCLK
+      (pins U1-45 H2-2 R2-1)
+    )
+    (net SWDIO
+      (pins U1-46 H2-1)
+    )
+    (net TX_D1
+      (pins U1-26 JP1-10)
+    )
+    (net U1_41
+      (pins U1-41 C6-2)
+    )
+    (net VUSB
+      (pins U3-3 U3-1 C2-1 USB-1 JP1-1 JP1-2)
+    )
+    (class kicad_default +3V3 A0 A1 A2 A3 A4 A5 AREF D+ "D-" D10 D11 D12 D13
+      D2 D3 D4 D5 D7 D9 GND MISO MOSI QSPI_CS QSPI_DAT0 QSPI_DAT1 QSPI_DAT2
+      QSPI_DAT3 QSPI_SCK RST RX_D0 SCK SCL SDA SWCLK SWDIO TX_D1 U1_41 VUSB
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,0 +1,66 @@
+{
+  "board_id": "hardware-designs_nixie-power",
+  "display_name": "hardware-designs_nixie-power",
+  "pcbench_directory": "PCBs/hardware-designs_nixie-power",
+  "source": "https://github.com/snowcap-electronics/hardware-designs",
+  "author": "snowcap-electronics",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.905944+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 24,
+    "dimensions_mm": {
+      "width": 49.0,
+      "height": 49.0
+    },
+    "area_cm2": 24.01,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 110,
+    "vias": 5,
+    "track_length_mm": 304.92,
+    "kicad_drc_violations": 42,
+    "kicad_drc_breakdown": {
+      "total_violations": 42,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 11,
+        "silk_overlap": 18,
+        "starved_thermal": 4,
+        "text_height": 5
+      },
+      "by_severity": {
+        "error": 6,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.940674+00:00",
+    "elapsed_seconds": 6.57,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

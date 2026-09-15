@@ -1,0 +1,29 @@
+{
+  "board": "LPC2148_Stick__autosave-LPC2148_stick",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LPC2148_Stick__autosave-LPC2148_stick\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 116,
+  "segment_count": 1915,
+  "approximate_track_length_mm": 5513.91,
+  "kicad_drc_violations": 726,
+  "generated_at": "2026-08-18T19:18:19.081054+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 726,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 257,
+      "copper_edge_clearance": 9,
+      "lib_footprint_issues": 73,
+      "silk_over_copper": 199,
+      "silk_overlap": 5,
+      "solder_mask_bridge": 74,
+      "text_height": 69,
+      "track_dangling": 40
+    },
+    "by_severity": {
+      "error": 340,
+      "warning": 386
+    }
+  }
+}

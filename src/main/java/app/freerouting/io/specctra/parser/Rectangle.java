@@ -13,9 +13,8 @@ public class Rectangle extends Shape {
   public final double[] coor;
 
   /**
-   * Creates a new instance of Rectangle p_coor is an array of dimension 4 and contains the
-   * rectangle coordinates in the following order: lower left x, lower left y, upper right x, upper
-   * right y.
+   * Creates a new instance of Rectangle coor is an array of dimension 4 and contains the rectangle
+   * coordinates in the following order: lower left x, lower left y, upper right x, upper right y.
    */
   public Rectangle(Layer layer, double[] coor) {
     super(layer);
@@ -27,7 +26,7 @@ public class Rectangle extends Shape {
     return this;
   }
 
-  /** Creates the smallest rectangle containing this rectangle and p_other. */
+  /** Creates the smallest rectangle containing this rectangle and other. */
   public Rectangle union(Rectangle other) {
     double[] resultCoor = new double[4];
     resultCoor[0] = Math.min(this.coor[0], other.coor[0]);
@@ -59,13 +58,13 @@ public class Rectangle extends Shape {
   @Override
   public app.freerouting.geometry.planar.Shape transformToBoard(
       CoordinateTransform coordinateTransform) {
-    double[] currPoint = new double[2];
-    currPoint[0] = Math.min(coor[0], coor[2]);
-    currPoint[1] = Math.min(coor[1], coor[3]);
-    FloatPoint lowerLeft = coordinateTransform.dsnToBoard(currPoint);
-    currPoint[0] = Math.max(coor[0], coor[2]);
-    currPoint[1] = Math.max(coor[1], coor[3]);
-    FloatPoint upperRight = coordinateTransform.dsnToBoard(currPoint);
+    double[] currentPoint = new double[2];
+    currentPoint[0] = Math.min(coor[0], coor[2]);
+    currentPoint[1] = Math.min(coor[1], coor[3]);
+    FloatPoint lowerLeft = coordinateTransform.dsnToBoard(currentPoint);
+    currentPoint[0] = Math.max(coor[0], coor[2]);
+    currentPoint[1] = Math.max(coor[1], coor[3]);
+    FloatPoint upperRight = coordinateTransform.dsnToBoard(currentPoint);
     return new IntBox(lowerLeft.round(), upperRight.round());
   }
 
@@ -89,8 +88,8 @@ public class Rectangle extends Shape {
     identifier.write(this.layer.name, file);
     for (int i = 0; i < coor.length; i++) {
       file.write(" ");
-      int currCoor = (int) Math.round(coor[i]);
-      file.write(String.valueOf(currCoor));
+      int currentCoor = (int) Math.round(coor[i]);
+      file.write(String.valueOf(currentCoor));
     }
     file.write(")");
   }

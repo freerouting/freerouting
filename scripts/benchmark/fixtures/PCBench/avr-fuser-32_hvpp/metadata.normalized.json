@@ -1,0 +1,61 @@
+{
+  "board_id": "avr-fuser-32_hvpp",
+  "display_name": "avr-fuser-32_hvpp",
+  "pcbench_directory": "PCBs/avr-fuser-32_hvpp",
+  "source": "https://github.com/emard/avr-fuser-32",
+  "author": "emard",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.258089+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 70,
+    "dimensions_mm": {
+      "width": 71.75,
+      "height": 99.69
+    },
+    "area_cm2": 71.53,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 464,
+    "vias": 21,
+    "track_length_mm": 2405.43,
+    "kicad_drc_violations": 552,
+    "kicad_drc_breakdown": {
+      "total_violations": 552,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 206,
+        "copper_edge_clearance": 9,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 84,
+        "silk_overlap": 131,
+        "solder_mask_bridge": 50,
+        "starved_thermal": 1,
+        "text_height": 58,
+        "text_thickness": 8,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 266,
+        "warning": 286
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,92 @@
+name: Feature Request
+description: Suggest a new capability, algorithmic enhancement, UI feature, or integration
+title: "[Feat]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature or improvement for Freerouting! Please provide clear rationale and use cases.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      description: Is your feature request related to a problem or specific routing limitation? Please describe.
+      placeholder: A clear and concise description of the problem or limitation...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution / Desired Behavior
+      description: Describe the solution or new feature you would like to see.
+      placeholder: A clear and concise description of what you want to happen...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Target Subsystem / Area
+      description: Which area of Freerouting does this request enhance?
+      options:
+        - "routing-engine (Core routing algorithms, DRC, fanout, optimizer, heuristics)"
+        - "GUI (Desktop UI, visualizer, interactive editing, menus, settings dialogs)"
+        - "CLI (Command line interface, batch arguments, headless execution)"
+        - "API (REST API server, embedded Jetty, job management)"
+        - "MCP (Model Context Protocol, AI assistant tools)"
+        - "Integrations (KiCad, Autodesk Fusion, Altium, EasyEDA, etc.)"
+        - "Documentation (Guides, developer docs, tutorials)"
+        - "Other"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System / Platform
+      description: Is this request specific to a particular platform or applicable across all systems?
+      options:
+        - "All Platforms / Cross-platform"
+        - "Windows"
+        - "macOS"
+        - "Linux"
+        - "Docker"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: eda
+    attributes:
+      label: Relevant EDA Tool (If Applicable)
+      description: Which EDA suite is most relevant to this request?
+      options:
+        - "General / Not EDA specific"
+        - "KiCad"
+        - "Autodesk Fusion / EAGLE"
+        - "Altium Designer"
+        - "EasyEDA"
+        - "Target 3001!"
+        - "pcb-rnd / tscircuit"
+        - "Other"
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: A clear and concise description of any alternative solutions or workarounds you have considered.
+      placeholder: Any other tools, scripts, or manual workarounds...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockup screenshots, sample DSN/SES files, or links to references.
+    validations:
+      required: false

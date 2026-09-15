@@ -1,0 +1,27 @@
+{
+  "board": "LAUNCHXL-F28027-isolation-PCB_project1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LAUNCHXL-F28027-isolation-PCB_project1\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 11,
+  "segment_count": 185,
+  "approximate_track_length_mm": 323.81,
+  "kicad_drc_violations": 225,
+  "generated_at": "2026-08-18T19:14:54.313751+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 225,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 21,
+      "copper_edge_clearance": 42,
+      "silk_edge_clearance": 9,
+      "silk_over_copper": 115,
+      "silk_overlap": 32,
+      "text_height": 6
+    },
+    "by_severity": {
+      "error": 63,
+      "warning": 162
+    }
+  }
+}

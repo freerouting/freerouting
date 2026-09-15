@@ -2,13 +2,13 @@ package app.freerouting.api.v1;
 
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.api.BaseController;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
 import app.freerouting.logger.FRLogger;
-import app.freerouting.management.RoutingJobScheduler;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.jobs.RoutingJobScheduler;
+import app.freerouting.management.sessions.SessionManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

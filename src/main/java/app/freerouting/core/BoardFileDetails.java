@@ -1,6 +1,6 @@
 package app.freerouting.core;
 
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEvent;
 import app.freerouting.core.events.BoardFileDetailsUpdatedEventListener;
 import app.freerouting.core.scoring.BoardStatistics;
@@ -110,7 +110,12 @@ public class BoardFileDetails implements Serializable {
     this.crc32 = crc.getValue();
 
     // read the file contents to determine the file format
-    this.format = RoutingJob.getFileFormat(this.dataBytes);
+    FileFormat detectedFormat = RoutingJob.getFileFormat(this.dataBytes);
+    if (detectedFormat != FileFormat.UNKNOWN) {
+      this.format = detectedFormat;
+    } else if (this.format == FileFormat.UNKNOWN && !this.filename.isEmpty()) {
+      this.format = RoutingJob.getFileFormat(Path.of(this.filename));
+    }
 
     // set the statistical data based on the file content
     this.statistics = new BoardStatistics(this.dataBytes, this.format);
@@ -178,26 +183,15 @@ public class BoardFileDetails implements Serializable {
 
     // add the default file extension if it is missing
     if ((this.format != FileFormat.UNKNOWN) && (!this.filename.contains("."))) {
-      String extension = "";
-      switch (this.format) {
-        case SES:
-          extension = "ses";
-          break;
-        case DSN:
-          extension = "dsn";
-          break;
-        case FRB:
-          extension = "frb";
-          break;
-        case RULES:
-          extension = "rules";
-          break;
-        case SCR:
-          extension = "scr";
-          break;
-        default:
-          break;
-      }
+      String extension =
+          switch (this.format) {
+            case SES -> "ses";
+            case DSN -> "dsn";
+            case FRB -> "frb";
+            case RULES -> "rules";
+            case SCR -> "scr";
+            default -> "";
+          };
 
       if (!extension.isEmpty()) {
         this.filename = this.filename + "." + extension;

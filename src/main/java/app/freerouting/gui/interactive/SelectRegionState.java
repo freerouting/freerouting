@@ -1,7 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -16,6 +16,14 @@ public class SelectRegionState extends InteractiveState {
   /** Creates a new instance of SelectRegionState. */
   protected SelectRegionState(InteractiveState parentState, GuiBoardManager boardHandling) {
     super(parentState, boardHandling);
+  }
+
+  private static Rectangle screenRect(Point2D a, Point2D b) {
+    int x = (int) Math.min(a.getX(), b.getX());
+    int y = (int) Math.min(a.getY(), b.getY());
+    int w = (int) Math.abs(a.getX() - b.getX()) + 1;
+    int h = (int) Math.abs(a.getY() - b.getY()) + 1;
+    return new Rectangle(x, y, w, h);
   }
 
   @Override
@@ -84,14 +92,6 @@ public class SelectRegionState extends InteractiveState {
 
     dirtyRect.grow(3, 3); // stroke margin
     return dirtyRect;
-  }
-
-  private static Rectangle screenRect(Point2D a, Point2D b) {
-    int x = (int) Math.min(a.getX(), b.getX());
-    int y = (int) Math.min(a.getY(), b.getY());
-    int w = (int) Math.abs(a.getX() - b.getX()) + 1;
-    int h = (int) Math.abs(a.getY() - b.getY()) + 1;
-    return new Rectangle(x, y, w, h);
   }
 
   @Override

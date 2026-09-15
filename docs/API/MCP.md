@@ -99,27 +99,28 @@ Click **+ New MCP Server** and enter:
 
 When executing routing tasks, LLMs must invoke the Freerouting MCP tools in a structured state-machine sequence to complete the routing job correctly.
 
-### Workflow Sequence
+### Preferred 1-Turn Workflow: `autoroute_board`
+
+For modern AI coding assistants (e.g. Cursor, Claude Desktop), Freerouting provides a composite single-turn tool:
 
 ```mermaid
 graph TD
-    A[create_session] -->|Step 1| B[enqueue_job]
-    B -->|Step 2 (Recommended)| C[upload_job_input_from_local_file]
-    B -->|Step 2 (Alternative)| D[encode_base64]
-    D -->|Local Encode| E[upload_job_input_file]
-    C -->|Step 3| F[update_job_settings]
-    E -->|Step 3| F
-    C -->|Step 3 (Optional)| G[start_job]
-    E -->|Step 3 (Optional)| G
-    F -->|Step 4| G
-    G -->|Step 4| H[get_job_details]
-    H -->|Poll: State != COMPLETED| H
-    H -->|State == COMPLETED (Recommended)| I[download_job_output_to_local_file]
-    H -->|State == COMPLETED (Alternative)| J[download_job_output_file]
-    J -->|Step 5| K[decode_base64]
+    Agent[AI Agent] -->|autoroute_board (filePath or fileContent)| Freerouting[Freerouting Engine]
+    Freerouting -->|1 Turn: Routed SES + DRC Diagnostics + Stats| Agent
 ```
 
-#### Step 1: Create Session (`create_session`)
+- **Tool:** `autoroute_board`
+- **Arguments:**
+  - `filePath` (or `fileContent`): Primary design file path or text.
+  - `rulesPath` (or `rulesContent`): Optional custom `.rules` file path or text.
+  - `sessionPath` (or `sessionContent`): Optional initial routing `.ses` or KiCad `.json`.
+  - `outputFormats`: List of desired output representations (`["SES", "DRC_SUMMARY"]`).
+  - `timeoutSeconds`: Routing budget limit.
+- **Benefit:** Reduces conversational turn latency from 6-7 round-trips to **1 single turn**, while automatically retrieving diagnostic DRC summaries without polluting context with raw trace coordinate blobs.
+
+---
+
+### Step-by-Step Multi-Turn Workflow (Alternative)
 - Call `create_session` to initialize a routing session.
 - Returns a `sessionId` (e.g. `123e4567-e89b-12d3-a456-426614174000`).
 
@@ -137,8 +138,9 @@ graph TD
 - **Encode**: It is recommended to use the local `encode_base64` tool to convert your plain-text board file (typically a `.dsn` Specctra file) into a Base64-encoded string. Prefer this over running external shell commands (like PowerShell or `base64`).
 - **Upload**: Call `upload_job_input_file` with the `jobId` and the generated Base64 string under `body.data`.
 
-#### Step 3.5 (Optional): Update Settings (`update_job_settings`)
-- Call `update_job_settings` with the `jobId` if you need to override default clearance classes, passes, optimizer settings, or rules.
+#### Step 3.5 (Optional): Update Settings or Rules (`update_job_settings` or `.rules` upload)
+- Call `update_job_settings` with the `jobId` if you need to override default clearance classes, passes, or optimizer settings.
+- If a `.rules` file is available, it can also be submitted via the API (`POST /v1/jobs/{jobId}/rules`) to supply custom design rules, net classes, clearances, and layer routing costs.
 
 #### Step 4: Start and Poll the Job (`start_job` & `get_job_details`)
 - **Start**: Call `start_job` with the `jobId`.

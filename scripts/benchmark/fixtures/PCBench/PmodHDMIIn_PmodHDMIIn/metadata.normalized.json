@@ -1,0 +1,57 @@
+{
+  "board_id": "PmodHDMIIn_PmodHDMIIn",
+  "display_name": "PmodHDMIIn_PmodHDMIIn",
+  "pcbench_directory": "PCBs/PmodHDMIIn_PmodHDMIIn",
+  "source": "https://github.com/twam/PmodHDMIIn",
+  "author": "twam",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:52.042052+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 33,
+    "dimensions_mm": {
+      "width": 43.18,
+      "height": 34.29
+    },
+    "area_cm2": 14.81,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 400,
+    "vias": 26,
+    "track_length_mm": 872.95,
+    "kicad_drc_violations": 347,
+    "kicad_drc_breakdown": {
+      "total_violations": 347,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 122,
+        "copper_edge_clearance": 5,
+        "lib_footprint_issues": 33,
+        "silk_edge_clearance": 2,
+        "solder_mask_bridge": 184,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 311,
+        "warning": 36
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

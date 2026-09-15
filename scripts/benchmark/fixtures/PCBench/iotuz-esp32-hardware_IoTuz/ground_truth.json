@@ -1,0 +1,32 @@
+{
+  "board": "iotuz-esp32-hardware_IoTuz",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\iotuz-esp32-hardware_IoTuz\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 202,
+  "segment_count": 1553,
+  "approximate_track_length_mm": 6639.07,
+  "kicad_drc_violations": 933,
+  "generated_at": "2026-08-18T18:59:25.253793+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 933,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 433,
+      "copper_edge_clearance": 78,
+      "lib_footprint_issues": 154,
+      "padstack": 6,
+      "silk_over_copper": 78,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 165,
+      "starved_thermal": 3,
+      "text_height": 5,
+      "track_dangling": 5
+    },
+    "by_severity": {
+      "error": 683,
+      "warning": 250
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PowerGloveUHID_sensor_board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 96131,
+      "sha256": "a73981c2d153a3bb02e6e84171e6114673730cefe43acd6922bd37eece4d6029"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 41620,
+      "sha256": "0f18cedc2cbf00954ba7d2dbc656d7e5b038f74de98bf9b57e2c9a134285c13b"
+    },
+    "metadata_json": {
+      "bytes": 493,
+      "sha256": "847cca3e464ab2e9b8f74098b197bc1642538c42ecd85f8702823b4120844dca"
+    },
+    "final_json": {
+      "bytes": 21997,
+      "sha256": "fa31e181c39c6aa8a911fed4e9ff6c50eb87a516c04c97363315a3f499f2d0eb"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:35:18.598198+00:00"
+  }
+}

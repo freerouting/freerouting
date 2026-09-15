@@ -1,0 +1,25 @@
+{
+  "board": "C-BISCUIT_crowbar",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\C-BISCUIT_crowbar\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 3,
+  "segment_count": 41,
+  "approximate_track_length_mm": 116.53,
+  "kicad_drc_violations": 22,
+  "generated_at": "2026-08-18T18:37:15.340434+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 22,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 2,
+      "lib_footprint_issues": 13,
+      "silk_over_copper": 6,
+      "text_height": 1
+    },
+    "by_severity": {
+      "error": 2,
+      "warning": 20
+    }
+  }
+}

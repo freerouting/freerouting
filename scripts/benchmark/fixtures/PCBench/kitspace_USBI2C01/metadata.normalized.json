@@ -1,0 +1,59 @@
+{
+  "board_id": "kitspace_USBI2C01",
+  "display_name": "kitspace_USBI2C01",
+  "pcbench_directory": "PCBs/kitspace_USBI2C01",
+  "source": "https://github.com/mlab-modules/USBI2C01",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/mlab-modules/USBI2C01/USBI2C01A/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:19:12.444132+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 26,
+    "dimensions_mm": {
+      "width": 29.97,
+      "height": 40.13
+    },
+    "area_cm2": 12.03,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 193,
+    "vias": 11,
+    "track_length_mm": 369.5,
+    "kicad_drc_violations": 142,
+    "kicad_drc_breakdown": {
+      "total_violations": 142,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 7,
+        "lib_footprint_issues": 22,
+        "lib_footprint_mismatch": 4,
+        "silk_edge_clearance": 5,
+        "silk_over_copper": 83,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 15,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 23,
+        "warning": 119
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

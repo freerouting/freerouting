@@ -1,0 +1,27 @@
+{
+  "board": "bikedar_bikedar",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\bikedar_bikedar\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 153,
+  "segment_count": 714,
+  "approximate_track_length_mm": 945.19,
+  "kicad_drc_violations": 229,
+  "generated_at": "2026-08-18T18:13:20.895287+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 229,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 30,
+      "copper_edge_clearance": 141,
+      "courtyards_overlap": 4,
+      "invalid_outline": 3,
+      "lib_footprint_issues": 50,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 178,
+      "warning": 51
+    }
+  }
+}

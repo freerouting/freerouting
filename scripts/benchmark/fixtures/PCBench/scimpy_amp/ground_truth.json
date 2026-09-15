@@ -1,0 +1,28 @@
+{
+  "board": "scimpy_amp",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\scimpy_amp\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 361,
+  "approximate_track_length_mm": 1408.36,
+  "kicad_drc_violations": 360,
+  "generated_at": "2026-08-18T19:43:28.010756+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 360,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 248,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 51,
+      "silk_edge_clearance": 25,
+      "silk_over_copper": 14,
+      "silk_overlap": 20,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 250,
+      "warning": 110
+    }
+  }
+}

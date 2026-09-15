@@ -1,0 +1,29 @@
+{
+  "board": "nan-15_top-plate",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\nan-15_top-plate\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 333,
+  "approximate_track_length_mm": 1029.91,
+  "kicad_drc_violations": 219,
+  "generated_at": "2026-08-18T19:26:44.057513+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 219,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 57,
+      "hole_clearance": 44,
+      "lib_footprint_issues": 48,
+      "silk_edge_clearance": 15,
+      "silk_overlap": 25,
+      "solder_mask_bridge": 25,
+      "text_thickness": 1,
+      "track_dangling": 4
+    },
+    "by_severity": {
+      "error": 126,
+      "warning": 93
+    }
+  }
+}

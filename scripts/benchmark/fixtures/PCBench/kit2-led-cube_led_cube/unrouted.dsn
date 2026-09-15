@@ -1,0 +1,322 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kit2-led-cube_led_cube\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  178718 -103502  179153 -103540  179583 -103616  180004 -103729
+            180414 -103878  180810 -104063  181188 -104281  181545 -104531
+            181880 -104812  182188 -105120  182469 -105455  182719 -105812
+            182937 -106190  183122 -106586  183271 -106996  183384 -107417
+            183460 -107847  183498 -108282  183500 -108500  183500 -138500
+            183498 -138718  183460 -139153  183384 -139583  183271 -140004
+            183122 -140414  182937 -140810  182719 -141188  182469 -141545
+            182188 -141880  181880 -142188  181545 -142469  181188 -142719
+            180810 -142937  180414 -143122  180004 -143271  179583 -143384
+            179153 -143460  178718 -143498  178500 -143500  148500 -143500
+            148282 -143498  147847 -143460  147417 -143384  146996 -143271
+            146586 -143122  146190 -142937  145812 -142719  145455 -142469
+            145120 -142188  144812 -141880  144531 -141545  144281 -141188
+            144063 -140810  143878 -140414  143729 -140004  143616 -139583
+            143540 -139153  143502 -138718  143500 -138500  143500 -108500
+            143502 -108282  143540 -107847  143616 -107417  143729 -106996
+            143878 -106586  144063 -106190  144281 -105812  144531 -105455
+            144812 -105120  145120 -104812  145455 -104531  145812 -104281
+            146190 -104063  146586 -103878  146996 -103729  147417 -103616
+            147847 -103540  148282 -103502  148500 -103500  178500 -103500
+            178718 -103502)
+    )
+    (via "Via[0-1]_685.8:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component logo:27_3mm_icon
+      (place G*** 163500 -123500 back 0 (PN LOGO))
+    )
+    (component mechanical:Mechanical_1x03
+      (place REF**_4 171000 -142000 front 90 (PN Pin_Header_Straight_1x03))
+      (place REF**_3 150960 -142000 front 90 (PN Pin_Header_Straight_1x03))
+      (place REF**_2 150960 -105000 front 90 (PN Pin_Header_Straight_1x03))
+      (place REF** 170960 -105000 front 90 (PN Pin_Header_Straight_1x03))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x03
+      (place P4 166000 -142000 front -90 (PN CONN_01X03))
+      (place P1 166080 -105000 front -90 (PN CONN_01X03))
+    )
+    (component Capacitors_SMD:C_0603
+      (place C1 154500 -111000 front 90 (PN 1uF))
+      (place C2 163500 -111000 front 90 (PN 1uF))
+      (place C3 172500 -111000 front 90 (PN 1uF))
+      (place C5 154500 -120000 front 90 (PN 1uF))
+      (place C6 163500 -120000 front 90 (PN 1uF))
+      (place C7 172500 -120000 front 90 (PN 1uF))
+      (place C9 154500 -129000 front 90 (PN 1uF))
+      (place C10 163500 -129000 front 90 (PN 1uF))
+      (place C11 172500 -129000 front 90 (PN 1uF))
+      (place C13 154500 -138000 front 90 (PN 1uF))
+      (place C14 163500 -137000 front 90 (PN 1uF))
+      (place C15 172500 -138000 front 90 (PN 1uF))
+      (place C16 181500 -138000 front 90 (PN 1uF))
+    )
+    (component Capacitors_SMD:C_0603::1
+      (place C8 177000 -123000 front 180 (PN 1uF))
+      (place C12 178500 -131500 front 180 (PN 1uF))
+      (place C4 178500 -113500 front 180 (PN 1uF))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x08
+      (place P2 145000 -114610 front 0 (PN CONN_01X08))
+    )
+    (component Pin_Headers:Pin_Header_Straight_1x08::1
+      (place P3 182000 -132350 front 180 (PN CONN_01X08))
+    )
+    (component ws2812b:5050
+      (place LED1 150000 -110000 front 180 (PN LED_RGB_WS2812B))
+      (place LED16 177000 -137000 front 180 (PN LED_RGB_WS2812B))
+      (place LED15 168000 -137000 front 180 (PN LED_RGB_WS2812B))
+      (place LED14 159000 -137000 front 180 (PN LED_RGB_WS2812B))
+      (place LED13 150000 -137000 front 180 (PN LED_RGB_WS2812B))
+      (place LED11 168000 -128000 front 180 (PN LED_RGB_WS2812B))
+      (place LED10 159000 -128000 front 180 (PN LED_RGB_WS2812B))
+      (place LED9 150000 -128000 front 180 (PN LED_RGB_WS2812B))
+      (place LED8 177000 -119000 front 180 (PN LED_RGB_WS2812B))
+      (place LED7 168000 -119000 front 180 (PN LED_RGB_WS2812B))
+      (place LED6 159000 -119000 front 180 (PN LED_RGB_WS2812B))
+      (place LED5 150000 -119000 front 180 (PN LED_RGB_WS2812B))
+      (place LED2 159000 -110000 front 180 (PN LED_RGB_WS2812B))
+      (place LED3 168000 -110000 front 180 (PN LED_RGB_WS2812B))
+      (place LED4 177000 -110000 front 180 (PN LED_RGB_WS2812B))
+      (place LED12 177000 -128000 front 180 (PN LED_RGB_WS2812B))
+    )
+  )
+  (library
+    (image logo:27_3mm_icon
+    )
+    (image mechanical:Mechanical_1x03
+      (outline (polygon signal 0  -1745 -6845  -1745 1745  1745 1745  1745 -6845))
+      (pin Round[A]Pad_2032.000000_um 1 0 0)
+      (pin Round[A]Pad_2032.000000_um 2 0 -2540)
+      (pin Round[A]Pad_2032.000000_um 3 0 -5080)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x03
+      (outline (polygon signal 0  1745 1745  1745 -6845  -1745 -6845  -1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -6350  1270 -1270))
+      (outline (path signal 150  -1270 -6350  1270 -6350))
+      (outline (path signal 150  -1270 -1270  -1270 -6350))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+    )
+    (image Capacitors_SMD:C_0603
+      (outline (polygon signal 0  -1445 -745  -1445 745  1445 745  1445 -745))
+      (outline (path signal 150  350 -600  -350 -600))
+      (outline (path signal 150  -350 600  350 600))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image Capacitors_SMD:C_0603::1
+      (outline (polygon signal 0  -1445 745  1445 745  1445 -745  -1445 -745))
+      (outline (path signal 150  350 -600  -350 -600))
+      (outline (path signal 150  -350 600  350 600))
+      (pin Rect[T]Pad_800.000000x750.000000_um 1 -750 0)
+      (pin Rect[T]Pad_800.000000x750.000000_um 2 750 0)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x08
+      (outline (polygon signal 0  1745 -19545  -1745 -19545  -1745 1745  1745 1745))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -19050  -1270 -1270))
+      (outline (path signal 150  1270 -19050  -1270 -19050))
+      (outline (path signal 150  1270 -1270  1270 -19050))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 8 0 -17780)
+    )
+    (image Pin_Headers:Pin_Header_Straight_1x08::1
+      (outline (polygon signal 0  -1745 1745  1745 1745  1745 -19545  -1745 -19545))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  -1270 -19050  -1270 -1270))
+      (outline (path signal 150  1270 -19050  -1270 -19050))
+      (outline (path signal 150  1270 -1270  1270 -19050))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 8 0 -17780)
+    )
+    (image ws2812b:5050
+      (outline (path signal 127  -316.225 0  -299.091 102.678  -249.546 194.229  -172.959 264.733
+            -77.629 306.549  26.114 315.145  127.026 289.59  214.173 232.654
+            278.112 150.506  311.912 52.049  311.912 -52.049  278.112 -150.506
+            214.173 -232.654  127.026 -289.59  26.114 -315.145  -77.629 -306.549
+            -172.959 -264.733  -249.546 -194.229  -299.091 -102.678  -316.225 0))
+      (outline (path signal 150  2500 2500  -2500 2500))
+      (outline (path signal 150  -2500 2500  -2500 -2500))
+      (outline (path signal 150  -2500 -2500  2500 -2500))
+      (outline (path signal 150  2500 -2500  2500 2500))
+      (outline (path signal 150  2500 -2500  2000 -3000))
+      (outline (path signal 150  2000 -3000  1500 -2500))
+      (pin Rect[T]Pad_1500.000000x900.000000_um 1 -2450 1650)
+      (pin Rect[T]Pad_1500.000000x900.000000_um 2 -2450 -1650)
+      (pin Rect[T]Pad_1500.000000x900.000000_um 3 2450 -1650)
+      (pin Rect[T]Pad_1500.000000x900.000000_um 4 2450 1650)
+    )
+    (padstack Round[A]Pad_2032.000000_um
+      (shape (circle F.Cu 2032))
+      (shape (circle B.Cu 2032))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x750.000000_um
+      (shape (rect F.Cu -400 -375 400 375))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x900.000000_um
+      (shape (rect F.Cu -750 -450 750 450))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+  )
+  (network
+    (net +5V
+      (pins P4-1 P1-1 C1-1 C2-1 C3-1 C5-1 C6-1 C7-1 C8-1 C9-1 C10-1 C11-1 C12-1 C13-1
+        C14-1 C15-1 C16-1 C4-1 P2-1 P3-8 LED1-1 LED16-1 LED15-1 LED14-1 LED13-1 LED11-1
+        LED10-1 LED9-1 LED8-1 LED7-1 LED6-1 LED5-1 LED2-1 LED3-1 LED4-1 LED12-1)
+    )
+    (net GND
+      (pins REF**_4-1 REF**_4-2 REF**_4-3 P4-3 P1-3 C1-2 C2-2 C3-2 C5-2 C6-2 C7-2
+        C8-2 C9-2 C10-2 C11-2 C12-2 C13-2 C14-2 C15-2 C16-2 C4-2 REF**_3-1 REF**_3-2
+        REF**_3-3 REF**_2-1 REF**_2-2 REF**_2-3 REF**-1 REF**-2 REF**-3 P2-3 P3-7
+        LED1-3 LED16-3 LED15-3 LED14-3 LED13-3 LED11-3 LED10-3 LED9-3 LED8-3 LED7-3
+        LED6-3 LED5-3 LED2-3 LED3-3 LED4-3 LED12-3)
+    )
+    (net "Net-(LED1-Pad2)"
+      (pins LED1-2 LED2-4)
+    )
+    (net "Net-(LED1-Pad4)"
+      (pins P1-2 P2-2 LED1-4)
+    )
+    (net "Net-(LED2-Pad2)"
+      (pins LED2-2 LED3-4)
+    )
+    (net "Net-(LED3-Pad2)"
+      (pins LED3-2 LED4-4)
+    )
+    (net "Net-(LED4-Pad2)"
+      (pins LED5-4 LED4-2)
+    )
+    (net "Net-(LED5-Pad2)"
+      (pins LED6-4 LED5-2)
+    )
+    (net "Net-(LED6-Pad2)"
+      (pins LED7-4 LED6-2)
+    )
+    (net "Net-(LED7-Pad2)"
+      (pins LED8-4 LED7-2)
+    )
+    (net "Net-(LED8-Pad2)"
+      (pins LED9-4 LED8-2)
+    )
+    (net "Net-(LED10-Pad4)"
+      (pins LED10-4 LED9-2)
+    )
+    (net "Net-(LED10-Pad2)"
+      (pins LED11-4 LED10-2)
+    )
+    (net "Net-(LED11-Pad2)"
+      (pins LED11-2 LED12-4)
+    )
+    (net "Net-(LED12-Pad2)"
+      (pins LED13-4 LED12-2)
+    )
+    (net "Net-(LED13-Pad2)"
+      (pins LED14-4 LED13-2)
+    )
+    (net "Net-(LED14-Pad2)"
+      (pins LED15-4 LED14-2)
+    )
+    (net "Net-(LED15-Pad2)"
+      (pins LED16-4 LED15-2)
+    )
+    (net "Net-(LED16-Pad2)"
+      (pins P4-2 LED16-2)
+    )
+    (net /SCL
+      (pins P2-4 P3-6)
+    )
+    (net /SDA
+      (pins P2-5 P3-5)
+    )
+    (net /INT
+      (pins P2-8 P3-1)
+    )
+    (net /AD0
+      (pins P2-7 P3-2)
+    )
+    (class kicad_default +5V /AD0 /INT /SCL /SDA GND "Net-(LED1-Pad2)" "Net-(LED1-Pad4)"
+      "Net-(LED10-Pad2)" "Net-(LED10-Pad4)" "Net-(LED11-Pad2)" "Net-(LED12-Pad2)"
+      "Net-(LED13-Pad2)" "Net-(LED14-Pad2)" "Net-(LED15-Pad2)" "Net-(LED16-Pad2)"
+      "Net-(LED2-Pad2)" "Net-(LED3-Pad2)" "Net-(LED4-Pad2)" "Net-(LED5-Pad2)"
+      "Net-(LED6-Pad2)" "Net-(LED7-Pad2)" "Net-(LED8-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,12 +1,12 @@
 package app.freerouting.core.scoring;
 
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.RoutingCostSettings;
 
 /**
  * An immutable, per-component breakdown of a single board-score calculation.
  *
  * <p>Use {@link app.freerouting.core.scoring.ScoringWeightComparison} to produce instances, or call
- * {@link #of(BoardStatistics, ScoringSettings)} directly.
+ * {@link #of(BoardStatistics, RoutingCostSettings)} directly.
  *
  * <p>The score formula is:
  *
@@ -71,7 +71,7 @@ public final class BoardScoreBreakdown {
   public final float normalizedScore;
 
   /** The weight configuration used to compute this breakdown. */
-  public final ScoringSettings weights;
+  public final RoutingCostSettings weights;
 
   // Statistics used as input — kept for reference / formatted output.
   public final int maxConnections;
@@ -82,7 +82,7 @@ public final class BoardScoreBreakdown {
   public final int viaCount;
 
   private BoardScoreBreakdown(
-      ScoringSettings weights,
+      RoutingCostSettings weights,
       int maxConnections,
       int incompleteConnections,
       int clearanceViolations,
@@ -122,7 +122,7 @@ public final class BoardScoreBreakdown {
    * @throws NullPointerException if either argument is null
    * @throws IllegalArgumentException if a required weight field is null
    */
-  public static BoardScoreBreakdown of(BoardStatistics stats, ScoringSettings weights) {
+  public static BoardScoreBreakdown of(BoardStatistics stats, RoutingCostSettings weights) {
     if (stats == null) {
       throw new NullPointerException("stats must not be null");
     }
@@ -141,7 +141,7 @@ public final class BoardScoreBreakdown {
         stats.vias.totalCount != null ? stats.vias.totalCount : 0);
   }
 
-  private static void validateWeights(ScoringSettings w) {
+  private static void validateWeights(RoutingCostSettings w) {
     if (w.unroutedNetPenalty == null) {
       throw new IllegalArgumentException("weights.unroutedNetPenalty must not be null");
     }

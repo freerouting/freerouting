@@ -1,0 +1,59 @@
+{
+  "board_id": "card_card",
+  "display_name": "card_card",
+  "pcbench_directory": "PCBs/card_card",
+  "source": "https://github.com/Hylian/card",
+  "author": "Hylian",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:32.713824+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 7,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 55.0,
+      "height": 85.0
+    },
+    "area_cm2": 46.75,
+    "zones": 56
+  },
+  "reference": {
+    "segments": 143,
+    "vias": 12,
+    "track_length_mm": 480.17,
+    "kicad_drc_violations": 376,
+    "kicad_drc_breakdown": {
+      "total_violations": 376,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 4,
+        "copper_edge_clearance": 19,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 8,
+        "padstack": 4,
+        "silk_edge_clearance": 33,
+        "silk_over_copper": 173,
+        "silk_overlap": 134
+      },
+      "by_severity": {
+        "error": 24,
+        "warning": 352
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

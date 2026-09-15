@@ -6,13 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import app.freerouting.board.BoardObserverAdaptor;
-import app.freerouting.board.ItemIdentificationNumberGenerator;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.actions.ItemIdGenerator;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.state.BoardObserverAdaptor;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.management.HeadlessBoardManager;
-import app.freerouting.settings.ScoringSettings;
+import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.DefaultSettings;
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ class BoardHistoryTest {
 
   private RoutingBoard board1;
   private RoutingBoard board2;
-  private ScoringSettings scoringSettings;
+  private RouterSettings routerSettings;
 
   @BeforeEach
   void setUp() throws Exception {
@@ -32,7 +32,7 @@ class BoardHistoryTest {
     try (FileInputStream inputStream1 = new FileInputStream("fixtures/empty_board.dsn")) {
       BoardReadResult result1 =
           boardManager1.loadFromSpecctraDsn(
-              inputStream1, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+              inputStream1, new BoardObserverAdaptor(), new ItemIdGenerator());
       board1 = boardManager1.getRoutingBoard();
     }
 
@@ -41,18 +41,18 @@ class BoardHistoryTest {
     try (FileInputStream inputStream2 =
         new FileInputStream("fixtures/Issue159-setonix_2hp-pcb.dsn")) {
       boardManager2.loadFromSpecctraDsn(
-          inputStream2, new BoardObserverAdaptor(), new ItemIdentificationNumberGenerator());
+          inputStream2, new BoardObserverAdaptor(), new ItemIdGenerator());
       board2 = boardManager2.getRoutingBoard();
     }
 
     SettingsMerger settingsMerger = new SettingsMerger();
     settingsMerger.addOrReplaceSources(new DefaultSettings());
-    scoringSettings = settingsMerger.merge().scoring;
+    routerSettings = settingsMerger.merge();
   }
 
   @Test
   void addAndRestoreBoard() {
-    BoardHistory history = new BoardHistory(scoringSettings);
+    BoardHistory history = new BoardHistory(routerSettings);
     history.add(board1);
 
     RoutingBoard restoredBoard = history.restoreBestBoard();
@@ -67,7 +67,7 @@ class BoardHistoryTest {
 
   @Test
   void restoreBestBoardFromMultiple() {
-    BoardHistory history = new BoardHistory(scoringSettings);
+    BoardHistory history = new BoardHistory(routerSettings);
 
     // board2 has items, so it should have a worse (lower) score than the empty board1
     history.add(board1);
@@ -83,7 +83,7 @@ class BoardHistoryTest {
 
   @Test
   void contains() {
-    BoardHistory history = new BoardHistory(scoringSettings);
+    BoardHistory history = new BoardHistory(routerSettings);
     history.add(board1);
 
     assertTrue(history.contains(board1), "History should contain the added board");
@@ -92,7 +92,7 @@ class BoardHistoryTest {
 
   @Test
   void clear() {
-    BoardHistory history = new BoardHistory(scoringSettings);
+    BoardHistory history = new BoardHistory(routerSettings);
     history.add(board1);
     history.add(board2);
     assertEquals(2, history.size());
@@ -103,7 +103,7 @@ class BoardHistoryTest {
 
   @Test
   void sizeCapNeverExceedsMaxHistorySize() {
-    BoardHistory history = new BoardHistory(scoringSettings, BoardHistory.MAX_HISTORY_SIZE);
+    BoardHistory history = new BoardHistory(routerSettings, BoardHistory.MAX_HISTORY_SIZE);
 
     // Add more entries than the configured cap and verify the cap is enforced.
     history.add(board1);
@@ -119,7 +119,7 @@ class BoardHistoryTest {
   void sizeCapEvictsWorstEntry() {
     // Use a cap of 1 so we can verify eviction with only two boards.
     // board1 is empty (high score) and board2 is complex (lower score).
-    BoardHistory history = new BoardHistory(scoringSettings, 1);
+    BoardHistory history = new BoardHistory(routerSettings, 1);
 
     // Fill to capacity with the better board.
     history.add(board1);

@@ -25,11 +25,20 @@ RUN apt-get update \
 # Stage 2: Create the final image
 FROM eclipse-temurin:25-jre-jammy
 
+# Create non-root system group and user
+RUN groupadd -r freerouting -g 10001 \
+    && useradd -u 10001 -r -g freerouting -d /app -s /sbin/nologin freerouting \
+    && mkdir -p /mnt/freerouting \
+    && chown -R freerouting:freerouting /mnt/freerouting
+
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy the built application from the build stage
-COPY --from=build /app/build/libs/freerouting-current-executable.jar /app/freerouting-executable.jar
+COPY --from=build --chown=freerouting:freerouting /app/build/libs/freerouting-current-executable.jar /app/freerouting-executable.jar
+
+# Switch to non-root user
+USER 10001:10001
 
 # Expose the port the app runs on
 EXPOSE 37864

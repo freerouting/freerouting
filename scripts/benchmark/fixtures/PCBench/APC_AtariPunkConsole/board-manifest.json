@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "APC_AtariPunkConsole",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 152168,
+      "sha256": "b01cc7077ab186b22f626dc61b546cce817142f3808d7636613e463d3b8fbfc3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 196999,
+      "sha256": "108e65196dd49ebe23cd50842f4ef5696a9b6d1addb75441674fe35b6b93c3bf"
+    },
+    "metadata_json": {
+      "bytes": 446,
+      "sha256": "b46717c849902cf048a82345fe1cbca266a686d670f0209a444b9ea20a44cb3e"
+    },
+    "final_json": {
+      "bytes": 41576,
+      "sha256": "7e50e296bca9e7a04043328b5510c6e1ea62471db534f4f471e25963a330c737"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:28:46.737738+00:00"
+  }
+}

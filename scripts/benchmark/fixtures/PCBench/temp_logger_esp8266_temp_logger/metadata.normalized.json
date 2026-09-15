@@ -1,0 +1,65 @@
+{
+  "board_id": "temp_logger_esp8266_temp_logger",
+  "display_name": "temp_logger_esp8266_temp_logger",
+  "pcbench_directory": "PCBs/temp_logger_esp8266_temp_logger",
+  "source": "https://github.com/facelesstech/temp_logger_esp8266",
+  "author": "facelesstech",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.969898+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 34.04,
+      "height": 33.78
+    },
+    "area_cm2": 11.5,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 86,
+    "vias": 1,
+    "track_length_mm": 324.15,
+    "kicad_drc_violations": 23,
+    "kicad_drc_breakdown": {
+      "total_violations": 23,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "invalid_outline": 1,
+        "silk_edge_clearance": 9,
+        "silk_overlap": 9,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 4,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.139807+00:00",
+    "elapsed_seconds": 7.12,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

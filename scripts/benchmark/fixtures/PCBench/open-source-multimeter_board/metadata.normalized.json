@@ -1,0 +1,66 @@
+{
+  "board_id": "open-source-multimeter_board",
+  "display_name": "open-source-multimeter_board",
+  "pcbench_directory": "PCBs/open-source-multimeter_board",
+  "source": "https://github.com/PreferLinux/open-source-multimeter",
+  "author": "PreferLinux",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:26.057746+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 23,
+    "dimensions_mm": {
+      "width": 29.72,
+      "height": 83.06
+    },
+    "area_cm2": 24.69,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 463,
+    "vias": 4,
+    "track_length_mm": 1673.24,
+    "kicad_drc_violations": 320,
+    "kicad_drc_breakdown": {
+      "total_violations": 320,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 199,
+        "copper_edge_clearance": 16,
+        "courtyards_overlap": 2,
+        "lib_footprint_issues": 23,
+        "silk_over_copper": 16,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 60,
+        "starved_thermal": 2,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 279,
+        "warning": 41
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.057331+00:00",
+    "elapsed_seconds": 35.23,
+    "unrouted_nets": 67,
+    "clearance_violations": 0,
+    "quality_score": 379.62
+  }
+}

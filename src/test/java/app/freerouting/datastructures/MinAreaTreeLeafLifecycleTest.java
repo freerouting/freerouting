@@ -9,12 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.RegularTileShape;
-import app.freerouting.geometry.planar.Shape;
-import app.freerouting.geometry.planar.ShapeBoundingDirections;
 import app.freerouting.geometry.planar.TileShape;
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -99,14 +96,14 @@ class MinAreaTreeLeafLifecycleTest {
   void deterministicRemovalCanMakeReaderMissSurvivingLeaf() throws Exception {
     BlockingGate gate = new BlockingGate();
     MinAreaTree tree = new GatedMinAreaTree(gate);
-    TestStorable removed = new TestStorable(1, new BlockingIntBox(-20, -20, -5, -5, gate));
-    TestStorable surviving = new TestStorable(2, new BlockingIntBox(5, 5, 20, 20, gate));
+    TestStorable removed = new TestStorable(1, new IntBox(-20, -20, -5, -5));
+    TestStorable surviving = new TestStorable(2, new IntBox(5, 5, 20, 20));
     tree.insert(removed);
     tree.insert(surviving);
 
     ExecutorService executor = Executors.newFixedThreadPool(2);
     try {
-      final Future<Set<ShapeTree.Leaf>> reader = executor.submit(() -> tree.overlaps(QUERY_SHAPE));
+      final Future<List<ShapeTree.Leaf>> reader = executor.submit(() -> tree.overlaps(QUERY_SHAPE));
 
       await(gate.readerEntered);
       final Future<?> writer =
@@ -125,12 +122,12 @@ class MinAreaTreeLeafLifecycleTest {
           "writer must remain blocked while the reader owns the logical read lock");
       gate.allowReaderToContinue.countDown();
 
-      Set<ShapeTree.Leaf> result = reader.get(30, TimeUnit.SECONDS);
+      List<ShapeTree.Leaf> result = reader.get(30, TimeUnit.SECONDS);
       assertTrue(
           result.stream().anyMatch(leaf -> leaf == surviving.entries[0]),
           "the reader must still see the surviving leaf");
       writer.get(30, TimeUnit.SECONDS);
-      Set<ShapeTree.Leaf> afterRemoval = tree.overlaps(QUERY_SHAPE);
+      List<ShapeTree.Leaf> afterRemoval = tree.overlaps(QUERY_SHAPE);
       assertFalse(afterRemoval.contains(removed.entries[0]));
       assertTrue(afterRemoval.contains(surviving.entries[0]));
     } finally {
@@ -201,45 +198,18 @@ class MinAreaTreeLeafLifecycleTest {
     }
 
     @Override
-    public void removeLeaf(ShapeTree.Leaf leaf) {
-      gate.writerEntered.countDown();
-      await(gate.allowWriterToContinue);
-      super.removeLeaf(leaf);
-    }
-  }
-
-  private static final class BlockingIntBox extends IntBox {
-
-    private final BlockingGate gate;
-
-    private BlockingIntBox(int llX, int llY, int urX, int urY, BlockingGate gate) {
-      super(new IntPoint(llX, llY), new IntPoint(urX, urY));
-      this.gate = gate;
-    }
-
-    @Override
-    public RegularTileShape boundingShape(ShapeBoundingDirections dirs) {
-      return this;
-    }
-
-    @Override
-    public RegularTileShape union(RegularTileShape other) {
-      IntBox otherBox = other.boundingBox();
-      return new BlockingIntBox(
-          Math.min(ll.x, otherBox.ll.x),
-          Math.min(ll.y, otherBox.ll.y),
-          Math.max(ur.x, otherBox.ur.x),
-          Math.max(ur.y, otherBox.ur.y),
-          gate);
-    }
-
-    @Override
-    public boolean intersects(Shape other) {
+    protected void onNodeVisited(ShapeTree.TreeNode node) {
       if (gate.blockOnce.compareAndSet(true, false)) {
         gate.readerEntered.countDown();
         await(gate.allowReaderToContinue);
       }
-      return super.intersects(other);
+    }
+
+    @Override
+    public void removeLeaf(ShapeTree.Leaf leaf) {
+      gate.writerEntered.countDown();
+      await(gate.allowWriterToContinue);
+      super.removeLeaf(leaf);
     }
   }
 }

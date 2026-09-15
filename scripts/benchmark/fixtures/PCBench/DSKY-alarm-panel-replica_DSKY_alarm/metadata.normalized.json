@@ -1,0 +1,59 @@
+{
+  "board_id": "DSKY-alarm-panel-replica_DSKY_alarm",
+  "display_name": "DSKY-alarm-panel-replica_DSKY_alarm",
+  "pcbench_directory": "PCBs/DSKY-alarm-panel-replica_DSKY_alarm",
+  "source": "https://github.com/rrainey/DSKY-alarm-panel-replica",
+  "author": "rrainey",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:38.525892+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 40,
+    "components": 88,
+    "dimensions_mm": {
+      "width": 141.83,
+      "height": 150.11
+    },
+    "area_cm2": 212.9,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 744,
+    "vias": 32,
+    "track_length_mm": 2622.4,
+    "kicad_drc_violations": 328,
+    "kicad_drc_breakdown": {
+      "total_violations": 328,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 7,
+        "lib_footprint_issues": 59,
+        "lib_footprint_mismatch": 28,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 11,
+        "silk_overlap": 3,
+        "solder_mask_bridge": 201,
+        "text_height": 15,
+        "text_thickness": 3
+      },
+      "by_severity": {
+        "error": 208,
+        "warning": 120
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

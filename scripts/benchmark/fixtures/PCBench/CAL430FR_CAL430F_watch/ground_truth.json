@@ -1,0 +1,25 @@
+{
+  "board": "CAL430FR_CAL430F_watch",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\CAL430FR_CAL430F_watch\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 139,
+  "approximate_track_length_mm": 376.69,
+  "kicad_drc_violations": 36,
+  "generated_at": "2026-08-18T18:37:24.709345+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 36,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 20,
+      "lib_footprint_issues": 8,
+      "padstack": 4
+    },
+    "by_severity": {
+      "error": 24,
+      "warning": 12
+    }
+  }
+}

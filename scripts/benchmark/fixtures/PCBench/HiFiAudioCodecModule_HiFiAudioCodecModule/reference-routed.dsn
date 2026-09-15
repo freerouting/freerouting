@@ -1,0 +1,710 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\HiFiAudioCodecModule_HiFiAudioCodecModule\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  38100 -38100  12700 -38100  12700 -12700  38100 -12700
+            38100 -38100)
+    )
+    (plane GNDA (polygon B.Cu 0  37909.5 -27305  34163 -27305  32639 -28829  32639 -30734
+            30861 -30734  30861 -25908  28067 -25908  28067 -27051  18669 -27051
+            16510 -24892  16510 -21463  12890.5 -21463  12890.5 -12890.5
+            37909.5 -12890.5  37909.5 -27305))
+    (plane GND (polygon B.Cu 0  12890.5 -21717  16256 -21717  16256 -25019  18542 -27305
+            28321 -27305  28321 -26162  30607 -26162  30607 -30988  32893 -30988
+            32893 -28956  34290 -27559  37909.5 -27559  37909.5 -37909.5
+            12890.5 -37909.5  12890.5 -21717))
+    (plane GNDA (polygon F.Cu 0  37909.5 -27305  34163 -27305  32639 -28829  32639 -30734
+            30861 -30734  30861 -25908  28067 -25908  28067 -27051  18669 -27051
+            16510 -24892  16510 -21463  12890.5 -21463  12890.5 -12890.5
+            37909.5 -12890.5  37909.5 -27305))
+    (plane GND (polygon F.Cu 0  18542 -27305  28321 -27305  28321 -26162  30607 -26162
+            30607 -30988  32893 -30988  32893 -28956  34290 -27559  37909.5 -27559
+            37909.5 -37909.5  12890.5 -37909.5  12890.5 -21717  16256 -21717
+            16256 -25019  18542 -27305))
+    (keepout "" (polygon F.Cu 0  23571.2 -27482.8  23571.2 -30911.8  27228.8 -30911.8  27228.8 -27254.2
+            23571.2 -27254.2  23571.2 -27482.8))
+    (keepout "" (polygon B.Cu 0  23571.2 -27482.8  23571.2 -30911.8  27228.8 -30911.8  27228.8 -27254.2
+            23571.2 -27254.2  23571.2 -27482.8))
+    (via "Via[0-1]_508:330.2_um" "Via[0-1]_584.2:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component oshw_logo:LOGO
+      (place LOGO1 20320 -34290 back 0 (PN OSHW))
+      (place LOGO2 30480 -34290 back 0 (PN HACKADAY))
+    )
+    (component "HiFiAudioCodecModule-footprints:Pin_Header_Straight_1x06"
+      (place P1 14605 -23495 front 0 (PN CONN_01X06))
+    )
+    (component "HiFiAudioCodecModule-footprints:Pin_Header_Straight_1x06::1"
+      (place P2 36195 -36195 front 180 (PN CONN_01X06))
+    )
+    (component "HiFiAudioCodecModule-footprints:Pin_Header_Straight_2x05"
+      (place P3 20320 -17145 front 90 (PN CONN_02X05))
+    )
+    (component "HiFiAudioCodecModule-footprints:R_0402"
+      (place R8 29146.5 -26924 back 90 (PN 1K))
+      (place R7 30416.5 -26924 back 90 (PN 1K))
+      (place R6 31686.5 -32448.5 front 90 (PN 1K))
+      (place R5 33020 -31940.5 front 90 (PN 1K))
+      (place R4 17907 -14097 front 90 (PN 20K))
+      (place R2 16510 -14097 front 90 (PN 220))
+    )
+    (component "HiFiAudioCodecModule-footprints:R_0402::1"
+      (place R3 18796 -19685 front 180 (PN 20K))
+    )
+    (component "HiFiAudioCodecModule-footprints:R_0402::2"
+      (place R1 18796 -21082 front 0 (PN 220))
+    )
+    (component "HiFiAudioCodecModule-footprints:C_Radial_D5_L11_P2-bipolar"
+      (place C10 15494 -18034 front -90 (PN 1u))
+      (place C7 34925 -18351.5 front -90 (PN 10u))
+    )
+    (component "HiFiAudioCodecModule-footprints:C_Radial_D5_L11_P2-bipolar::1"
+      (place C9 22733 -20955 front 0 (PN 1u))
+    )
+    (component "HiFiAudioCodecModule-footprints:C_Radial_D5_L11_P2-bipolar::2"
+      (place C8 28905.2 -21539.2 front 180 (PN 10u))
+    )
+    (component "HiFiAudioCodecModule-footprints:CAP_ELEC_SMD_3x5mm"
+      (place C4 20955 -35306 front 180 (PN 10u))
+    )
+    (component "HiFiAudioCodecModule-footprints:CAP_ELEC_SMD_3x5mm::1"
+      (place C5 31750 -27559 front -90 (PN 10u))
+    )
+    (component "HiFiAudioCodecModule-footprints:CAP_ELEC_SMD_3x5mm::2"
+      (place C6 28765.5 -35052 front 90 (PN 1u))
+    )
+    (component "HiFiAudioCodecModule-footprints:C_0402"
+      (place C3 24384 -23622 front 0 (PN 1u))
+      (place C1 25527 -33655 front 0 (PN 0.1u))
+    )
+    (component "HiFiAudioCodecModule-footprints:C_0402::1"
+      (place C2 25958.8 -24866.6 front 180 (PN 0.1u))
+    )
+    (component "HiFiAudioCodecModule-footprints:SMD_Jumper"
+      (place JP2 29146.5 -28702 back 90 (PN Jumper_NO_Small))
+      (place JP1 30416.5 -28702 back 90 (PN Jumper_NO_Small))
+    )
+    (component "HiFiAudioCodecModule-footprints:QFN-28-2xEP_5x5mm_Pitch0.5mm"
+      (place U1 25400 -29083 front 0 (PN AK4558EN))
+    )
+  )
+  (library
+    (image oshw_logo:LOGO
+    )
+    (image "HiFiAudioCodecModule-footprints:Pin_Header_Straight_1x06"
+      (outline (polygon signal 0  1195 -13895  -1195 -13895  -1195 1195  1195 1195))
+      (pin Rect[A]Pad_2032.000000x2032.000000_um 1 0 0)
+      (pin Round[A]Pad_2032.000000_um 2 0 -2540)
+      (pin Round[A]Pad_2032.000000_um 3 0 -5080)
+      (pin Round[A]Pad_2032.000000_um 4 0 -7620)
+      (pin Round[A]Pad_2032.000000_um 5 0 -10160)
+      (pin Round[A]Pad_2032.000000_um 6 0 -12700)
+    )
+    (image "HiFiAudioCodecModule-footprints:Pin_Header_Straight_1x06::1"
+      (outline (polygon signal 0  -1195 1195  1195 1195  1195 -13895  -1195 -13895))
+      (pin Rect[A]Pad_2032.000000x2032.000000_um 1 0 0)
+      (pin Round[A]Pad_2032.000000_um 2 0 -2540)
+      (pin Round[A]Pad_2032.000000_um 3 0 -5080)
+      (pin Round[A]Pad_2032.000000_um 4 0 -7620)
+      (pin Round[A]Pad_2032.000000_um 5 0 -10160)
+      (pin Round[A]Pad_2032.000000_um 6 0 -12700)
+    )
+    (image "HiFiAudioCodecModule-footprints:Pin_Header_Straight_2x05"
+      (outline (polygon signal 0  -2295 -11195  -2295 995  2295 995  2295 -11195))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 -1270 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 1270 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 -1270 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 1270 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 -1270 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 1270 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 7 -1270 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 8 1270 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 9 -1270 -10160)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 10 1270 -10160)
+    )
+    (image "HiFiAudioCodecModule-footprints:R_0402"
+      (outline (polygon signal 0  -945 -645  -945 645  945 645  945 -645))
+      (outline (path signal 150  250 525  -250 525))
+      (outline (path signal 150  -250 -525  250 -525))
+      (pin Rect[T]Pad_600.000000x700.000000_um 1 -500 0)
+      (pin Rect[T]Pad_600.000000x700.000000_um 2 500 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:R_0402::1"
+      (outline (polygon signal 0  -945 645  945 645  945 -645  -945 -645))
+      (outline (path signal 150  250 525  -250 525))
+      (outline (path signal 150  -250 -525  250 -525))
+      (pin Rect[T]Pad_600.000000x700.000000_um 1 -500 0)
+      (pin Rect[T]Pad_600.000000x700.000000_um 2 500 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:R_0402::2"
+      (outline (polygon signal 0  945 -645  -945 -645  -945 645  945 645))
+      (outline (path signal 150  250 525  -250 525))
+      (outline (path signal 150  -250 -525  250 -525))
+      (pin Rect[T]Pad_600.000000x700.000000_um 1 -500 0)
+      (pin Rect[T]Pad_600.000000x700.000000_um 2 500 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:C_Radial_D5_L11_P2-bipolar"
+      (outline (polygon signal 0  -2737.63 501.688  -2657.19 828.018  -2538.01 1142.27
+            -2381.82 1439.86  -2190.91 1716.46  -1968.03 1968.03  -1716.46 2190.9
+            -1439.86 2381.82  -1142.27 2538.01  -828.019 2657.19  -501.689 2737.62
+            -168.001 2778.14  0 2780.68  168 2778.14  501.688 2737.62  828.018 2657.19
+            1142.27 2538.01  1439.86 2381.82  1716.46 2190.9  1968.03 1968.03
+            2190.9 1716.46  2381.82 1439.86  2538.01 1142.27  2657.19 828.018
+            2737.62 501.688  2778.14 168.042  2778.14 -168.042  2737.62 -501.689
+            2657.19 -828.019  2538.01 -1142.27  2381.82 -1439.86  2190.9 -1716.46
+            1968.03 -1968.03  1716.46 -2190.91  1439.86 -2381.82  1142.27 -2538.01
+            828.018 -2657.19  501.688 -2737.63  168.042 -2778.14  -168.043 -2778.14
+            -501.689 -2737.63  -828.019 -2657.19  -1142.27 -2538.01  -1439.86 -2381.82
+            -1716.46 -2190.91  -1968.03 -1968.03  -2190.91 -1716.46  -2381.82 -1439.86
+            -2538.01 -1142.27  -2657.19 -828.019  -2737.63 -501.689  -2778.14 -168.042
+            -2778.14 168.042))
+      (outline (path signal 150  0 2500  307.221 2481.05  609.784 2424.49  903.104 2331.18
+            1182.73 2202.53  1444.43 2040.49  1684.24 1847.52  1898.51 1626.55
+            2084.01 1380.91  2237.91 1114.35  2357.89 830.887  2442.12 534.833
+            2489.34 230.671  2498.81 -76.988  2470.41 -383.479  2404.56 -684.157
+            2302.26 -974.465  2165.06 -1250  1995.04 -1506.59  1794.78 -1740.34
+            1567.31 -1947.7  1316.08 -2125.54  1044.9 -2271.16  757.882 -2382.36
+            459.374 -2457.43  153.902 -2495.26  -153.902 -2495.26  -459.374 -2457.43
+            -757.882 -2382.36  -1044.9 -2271.16  -1316.08 -2125.54  -1567.31 -1947.7
+            -1794.78 -1740.34  -1995.04 -1506.59  -2165.06 -1250  -2302.26 -974.465
+            -2404.56 -684.157  -2470.41 -383.479  -2498.81 -76.988  -2489.34 230.671
+            -2442.12 534.833  -2357.89 830.887  -2237.91 1114.35  -2084.01 1380.91
+            -1898.51 1626.55  -1684.24 1847.52  -1444.43 2040.49  -1182.73 2202.53
+            -903.104 2331.18  -609.784 2424.49  -307.221 2481.05  0 2500))
+      (pin Round[A]Pad_1300.000000_um 1 -1000 0)
+      (pin Round[A]Pad_1300.000000_um 2 1000 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:C_Radial_D5_L11_P2-bipolar::1"
+      (outline (polygon signal 0  501.688 2737.63  828.018 2657.19  1142.27 2538.01  1439.86 2381.82
+            1716.46 2190.91  1968.03 1968.03  2190.9 1716.46  2381.82 1439.86
+            2538.01 1142.27  2657.19 828.019  2737.62 501.689  2778.14 168.001
+            2780.68 0  2778.14 -168  2737.62 -501.688  2657.19 -828.018
+            2538.01 -1142.27  2381.82 -1439.86  2190.9 -1716.46  1968.03 -1968.03
+            1716.46 -2190.9  1439.86 -2381.82  1142.27 -2538.01  828.018 -2657.19
+            501.688 -2737.62  168.042 -2778.14  -168.042 -2778.14  -501.689 -2737.62
+            -828.019 -2657.19  -1142.27 -2538.01  -1439.86 -2381.82  -1716.46 -2190.9
+            -1968.03 -1968.03  -2190.91 -1716.46  -2381.82 -1439.86  -2538.01 -1142.27
+            -2657.19 -828.018  -2737.63 -501.688  -2778.14 -168.042  -2778.14 168.043
+            -2737.63 501.689  -2657.19 828.019  -2538.01 1142.27  -2381.82 1439.86
+            -2190.91 1716.46  -1968.03 1968.03  -1716.46 2190.91  -1439.86 2381.82
+            -1142.27 2538.01  -828.019 2657.19  -501.689 2737.63  -168.042 2778.14
+            168.042 2778.14))
+      (outline (path signal 150  2500 0  2481.05 -307.221  2424.49 -609.784  2331.18 -903.104
+            2202.53 -1182.73  2040.49 -1444.43  1847.52 -1684.24  1626.55 -1898.51
+            1380.91 -2084.01  1114.35 -2237.91  830.887 -2357.89  534.833 -2442.12
+            230.671 -2489.34  -76.988 -2498.81  -383.479 -2470.41  -684.157 -2404.56
+            -974.465 -2302.26  -1250 -2165.06  -1506.59 -1995.04  -1740.34 -1794.78
+            -1947.7 -1567.31  -2125.54 -1316.08  -2271.16 -1044.9  -2382.36 -757.882
+            -2457.43 -459.374  -2495.26 -153.902  -2495.26 153.902  -2457.43 459.374
+            -2382.36 757.882  -2271.16 1044.9  -2125.54 1316.08  -1947.7 1567.31
+            -1740.34 1794.78  -1506.59 1995.04  -1250 2165.06  -974.465 2302.26
+            -684.157 2404.56  -383.479 2470.41  -76.988 2498.81  230.671 2489.34
+            534.833 2442.12  830.887 2357.89  1114.35 2237.91  1380.91 2084.01
+            1626.55 1898.51  1847.52 1684.24  2040.49 1444.43  2202.53 1182.73
+            2331.18 903.104  2424.49 609.784  2481.05 307.221  2500 0))
+      (pin Round[A]Pad_1300.000000_um 1 -1000 0)
+      (pin Round[A]Pad_1300.000000_um 2 1000 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:C_Radial_D5_L11_P2-bipolar::2"
+      (outline (polygon signal 0  -501.688 -2737.63  -828.018 -2657.19  -1142.27 -2538.01
+            -1439.86 -2381.82  -1716.46 -2190.91  -1968.03 -1968.03  -2190.9 -1716.46
+            -2381.82 -1439.86  -2538.01 -1142.27  -2657.19 -828.019  -2737.62 -501.689
+            -2778.14 -168.001  -2780.68 0  -2778.14 168  -2737.62 501.688
+            -2657.19 828.018  -2538.01 1142.27  -2381.82 1439.86  -2190.9 1716.46
+            -1968.03 1968.03  -1716.46 2190.9  -1439.86 2381.82  -1142.27 2538.01
+            -828.018 2657.19  -501.688 2737.62  -168.042 2778.14  168.042 2778.14
+            501.689 2737.62  828.019 2657.19  1142.27 2538.01  1439.86 2381.82
+            1716.46 2190.9  1968.03 1968.03  2190.91 1716.46  2381.82 1439.86
+            2538.01 1142.27  2657.19 828.018  2737.63 501.688  2778.14 168.042
+            2778.14 -168.043  2737.63 -501.689  2657.19 -828.019  2538.01 -1142.27
+            2381.82 -1439.86  2190.91 -1716.46  1968.03 -1968.03  1716.46 -2190.91
+            1439.86 -2381.82  1142.27 -2538.01  828.019 -2657.19  501.689 -2737.63
+            168.042 -2778.14  -168.042 -2778.14))
+      (outline (path signal 150  -2500 0  -2481.05 307.221  -2424.49 609.784  -2331.18 903.104
+            -2202.53 1182.73  -2040.49 1444.43  -1847.52 1684.24  -1626.55 1898.51
+            -1380.91 2084.01  -1114.35 2237.91  -830.887 2357.89  -534.833 2442.12
+            -230.671 2489.34  76.988 2498.81  383.479 2470.41  684.157 2404.56
+            974.465 2302.26  1250 2165.06  1506.59 1995.04  1740.34 1794.78
+            1947.7 1567.31  2125.54 1316.08  2271.16 1044.9  2382.36 757.882
+            2457.43 459.374  2495.26 153.902  2495.26 -153.902  2457.43 -459.374
+            2382.36 -757.882  2271.16 -1044.9  2125.54 -1316.08  1947.7 -1567.31
+            1740.34 -1794.78  1506.59 -1995.04  1250 -2165.06  974.465 -2302.26
+            684.157 -2404.56  383.479 -2470.41  76.988 -2498.81  -230.671 -2489.34
+            -534.833 -2442.12  -830.887 -2357.89  -1114.35 -2237.91  -1380.91 -2084.01
+            -1626.55 -1898.51  -1847.52 -1684.24  -2040.49 -1444.43  -2202.53 -1182.73
+            -2331.18 -903.104  -2424.49 -609.784  -2481.05 -307.221  -2500 0))
+      (pin Round[A]Pad_1300.000000_um 1 -1000 0)
+      (pin Round[A]Pad_1300.000000_um 2 1000 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:CAP_ELEC_SMD_3x5mm"
+      (outline (polygon signal 0  -2408 1773  2408 1773  2408 -1773  -2408 -1773))
+      (outline (path signal 150  -1143 1651  -1143 1016))
+      (outline (path signal 150  -1270 1016  -1270 1651))
+      (outline (path signal 150  -1397 1651  -1397 1016))
+      (outline (path signal 150  -1524 1016  -1524 1651))
+      (outline (path signal 150  -1143 -1016  -1143 -1651))
+      (outline (path signal 150  -1270 -1016  -1270 -1651))
+      (outline (path signal 150  -1397 -1016  -1397 -1651))
+      (outline (path signal 150  -1524 -1016  -1524 -1651))
+      (outline (path signal 150  -1016 -1016  -1016 -1651))
+      (outline (path signal 150  -1651 -1016  -1016 -1016))
+      (outline (path signal 150  -1016 1016  -1016 1651))
+      (outline (path signal 150  -1651 1016  -1016 1016))
+      (outline (path signal 150  889 -1651  1524 -1016))
+      (outline (path signal 150  -1651 -1016  -1651 -1651))
+      (outline (path signal 150  889 1651  1524 1016))
+      (outline (path signal 150  -1651 1016  -1651 1651))
+      (outline (path signal 150  -1651 -1651  889 -1651))
+      (outline (path signal 150  889 1651  -1651 1651))
+      (pin Rect[T]Pad_2200.000000x1600.000000_um 1 1200 0)
+      (pin Rect[T]Pad_2200.000000x1600.000000_um 2 -1200 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:CAP_ELEC_SMD_3x5mm::1"
+      (outline (polygon signal 0  2408 1773  2408 -1773  -2408 -1773  -2408 1773))
+      (outline (path signal 150  -1143 1651  -1143 1016))
+      (outline (path signal 150  -1270 1016  -1270 1651))
+      (outline (path signal 150  -1397 1651  -1397 1016))
+      (outline (path signal 150  -1524 1016  -1524 1651))
+      (outline (path signal 150  -1143 -1016  -1143 -1651))
+      (outline (path signal 150  -1270 -1016  -1270 -1651))
+      (outline (path signal 150  -1397 -1016  -1397 -1651))
+      (outline (path signal 150  -1524 -1016  -1524 -1651))
+      (outline (path signal 150  -1016 -1016  -1016 -1651))
+      (outline (path signal 150  -1651 -1016  -1016 -1016))
+      (outline (path signal 150  -1016 1016  -1016 1651))
+      (outline (path signal 150  -1651 1016  -1016 1016))
+      (outline (path signal 150  889 -1651  1524 -1016))
+      (outline (path signal 150  -1651 -1016  -1651 -1651))
+      (outline (path signal 150  889 1651  1524 1016))
+      (outline (path signal 150  -1651 1016  -1651 1651))
+      (outline (path signal 150  -1651 -1651  889 -1651))
+      (outline (path signal 150  889 1651  -1651 1651))
+      (pin Rect[T]Pad_2200.000000x1600.000000_um 1 1200 0)
+      (pin Rect[T]Pad_2200.000000x1600.000000_um 2 -1200 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:CAP_ELEC_SMD_3x5mm::2"
+      (outline (polygon signal 0  -2408 -1773  -2408 1773  2408 1773  2408 -1773))
+      (outline (path signal 150  -1143 1651  -1143 1016))
+      (outline (path signal 150  -1270 1016  -1270 1651))
+      (outline (path signal 150  -1397 1651  -1397 1016))
+      (outline (path signal 150  -1524 1016  -1524 1651))
+      (outline (path signal 150  -1143 -1016  -1143 -1651))
+      (outline (path signal 150  -1270 -1016  -1270 -1651))
+      (outline (path signal 150  -1397 -1016  -1397 -1651))
+      (outline (path signal 150  -1524 -1016  -1524 -1651))
+      (outline (path signal 150  -1016 -1016  -1016 -1651))
+      (outline (path signal 150  -1651 -1016  -1016 -1016))
+      (outline (path signal 150  -1016 1016  -1016 1651))
+      (outline (path signal 150  -1651 1016  -1016 1016))
+      (outline (path signal 150  889 -1651  1524 -1016))
+      (outline (path signal 150  -1651 -1016  -1651 -1651))
+      (outline (path signal 150  889 1651  1524 1016))
+      (outline (path signal 150  -1651 1016  -1651 1651))
+      (outline (path signal 150  -1651 -1651  889 -1651))
+      (outline (path signal 150  889 1651  -1651 1651))
+      (pin Rect[T]Pad_2200.000000x1600.000000_um 1 1200 0)
+      (pin Rect[T]Pad_2200.000000x1600.000000_um 2 -1200 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:C_0402"
+      (outline (polygon signal 0  1145 -595  -1145 -595  -1145 595  1145 595))
+      (outline (path signal 150  250 475  -250 475))
+      (outline (path signal 150  -250 -475  250 -475))
+      (pin Rect[T]Pad_600.000000x700.000000_um 1 -500 0)
+      (pin Rect[T]Pad_600.000000x700.000000_um 2 500 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:C_0402::1"
+      (outline (polygon signal 0  -1145 595  1145 595  1145 -595  -1145 -595))
+      (outline (path signal 150  250 475  -250 475))
+      (outline (path signal 150  -250 -475  250 -475))
+      (pin Rect[T]Pad_600.000000x700.000000_um 1 -500 0)
+      (pin Rect[T]Pad_600.000000x700.000000_um 2 500 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:SMD_Jumper"
+      (outline (polygon signal 0  -1295 -695  -1295 695  1295 695  1295 -695))
+      (outline (path signal 100  -1200 600  0 600))
+      (outline (path signal 100  0 600  1200 600))
+      (outline (path signal 100  1200 600  1200 -600))
+      (outline (path signal 100  1200 -600  -1200 -600))
+      (outline (path signal 100  -1200 -600  -1200 600))
+      (pin Round[T]Pad_900.000000_um 2 600 0)
+      (pin Rect[T]Pad_400.000000x900.000000_um 1 -350 0)
+      (pin Rect[T]Pad_400.000000x900.000000_um 2@1 350 0)
+      (pin Round[T]Pad_900.000000_um 1@1 -600 0)
+    )
+    (image "HiFiAudioCodecModule-footprints:QFN-28-2xEP_5x5mm_Pitch0.5mm"
+      (outline (polygon signal 0  3145 -3145  -3145 -3145  -3145 3145  3145 3145))
+      (outline (path signal 150  2625 2625  2625 1875))
+      (outline (path signal 150  -2625 -2625  -2625 -1875))
+      (outline (path signal 150  2625 -2625  2625 -1875))
+      (outline (path signal 150  -2625 2625  -1875 2625))
+      (outline (path signal 150  -2625 -2625  -1875 -2625))
+      (outline (path signal 150  2625 -2625  1875 -2625))
+      (outline (path signal 150  2625 2625  1875 2625))
+      (pin Oval[T]Pad_850.000000x300.000000_um 1 -2450 1500)
+      (pin Oval[T]Pad_850.000000x300.000000_um 2 -2450 1000)
+      (pin Oval[T]Pad_850.000000x300.000000_um 3 -2450 500)
+      (pin Oval[T]Pad_850.000000x300.000000_um 4 -2450 0)
+      (pin Oval[T]Pad_850.000000x300.000000_um 5 -2450 -500)
+      (pin Oval[T]Pad_850.000000x300.000000_um 6 -2450 -1000)
+      (pin Oval[T]Pad_850.000000x300.000000_um 7 -2450 -1500)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 8 -1500 -2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 9 -1000 -2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 10 -500 -2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 11 0 -2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 12 500 -2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 13 1000 -2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 14 1500 -2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um 15 2450 -1500)
+      (pin Oval[T]Pad_850.000000x300.000000_um 16 2450 -1000)
+      (pin Oval[T]Pad_850.000000x300.000000_um 17 2450 -500)
+      (pin Oval[T]Pad_850.000000x300.000000_um 18 2450 0)
+      (pin Oval[T]Pad_850.000000x300.000000_um 19 2450 500)
+      (pin Oval[T]Pad_850.000000x300.000000_um 20 2450 1000)
+      (pin Oval[T]Pad_850.000000x300.000000_um 21 2450 1500)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 22 1500 2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 23 1000 2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 24 500 2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 25 0 2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 26 -500 2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 27 -1000 2450)
+      (pin Oval[T]Pad_850.000000x300.000000_um (rotate 90) 28 -1500 2450)
+      (pin Rect[A]Pad_1675.000000x1675.000000_um 29 837.5 -837.5)
+      (pin Rect[A]Pad_1675.000000x1675.000000_um 29@1 837.5 837.5)
+      (pin Rect[A]Pad_1675.000000x1675.000000_um 29@2 -837.5 -837.5)
+      (pin Rect[A]Pad_1675.000000x1675.000000_um 29@3 -837.5 837.5)
+    )
+    (padstack Round[A]Pad_1300.000000_um
+      (shape (circle F.Cu 1300))
+      (shape (circle B.Cu 1300))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2032.000000_um
+      (shape (circle F.Cu 2032))
+      (shape (circle B.Cu 2032))
+      (attach off)
+    )
+    (padstack Round[T]Pad_900.000000_um
+      (shape (circle F.Cu 900))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Oval[T]Pad_850.000000x300.000000_um
+      (shape (path F.Cu 300  -275 0  275 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x2032.000000_um
+      (shape (rect F.Cu -1016 -1016 1016 1016))
+      (shape (rect B.Cu -1016 -1016 1016 1016))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2200.000000x1600.000000_um
+      (shape (rect F.Cu -1100 -800 1100 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x900.000000_um
+      (shape (rect F.Cu -200 -450 200 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x700.000000_um
+      (shape (rect F.Cu -300 -350 300 350))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1675.000000x1675.000000_um
+      (shape (rect F.Cu -837.5 -837.5 837.5 837.5))
+      (shape (rect B.Cu -837.5 -837.5 837.5 837.5))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_508:330.2_um"
+      (shape (circle F.Cu 508))
+      (shape (circle B.Cu 508))
+      (attach off)
+    )
+    (padstack "Via[0-1]_584.2:330.2_um"
+      (shape (circle F.Cu 584.2))
+      (shape (circle B.Cu 584.2))
+      (attach off)
+    )
+  )
+  (network
+    (net VDD
+      (pins P1-6 R8-1 R7-1 R6-1 R5-1 C4-1 C1-1 U1-12 U1-21)
+    )
+    (net GND
+      (pins P2-1 C4-2 C6-2 C1-2 JP2-2 JP2-2@1 JP1-2 JP1-2@1 U1-1 U1-2 U1-3 U1-4 U1-5
+        U1-6 U1-13 U1-20 U1-29 U1-29@1 U1-29@2 U1-29@3)
+    )
+    (net AVDD
+      (pins P2-5 P3-5 C5-1 C2-1 U1-24)
+    )
+    (net GNDA
+      (pins P2-6 P3-2 P3-4 P3-6 P3-8 P3-10 R4-2 R3-2 C5-2 C3-2 C2-2 U1-25)
+    )
+    (net VCOM
+      (pins C3-1 U1-26)
+    )
+    (net VDD18
+      (pins C6-1 U1-14)
+    )
+    (net LIN
+      (pins C7-1 U1-22)
+    )
+    (net "LIN-CON"
+      (pins P3-9 C7-2)
+    )
+    (net RIN
+      (pins C8-1 U1-23)
+    )
+    (net "RIN-CON"
+      (pins P3-7 C8-2)
+    )
+    (net LOUT
+      (pins C9-1 U1-27)
+    )
+    (net "Net-(C9-Pad2)"
+      (pins R1-2 C9-2)
+    )
+    (net ROUT
+      (pins C10-1 U1-28)
+    )
+    (net "Net-(C10-Pad2)"
+      (pins R2-2 C10-2)
+    )
+    (net CAD0
+      (pins R7-2 JP1-1 JP1-1@1 U1-18)
+    )
+    (net CAD1
+      (pins R8-2 JP2-1 JP2-1@1 U1-19)
+    )
+    (net LRCK
+      (pins P1-1 U1-7)
+    )
+    (net SDTO
+      (pins P1-2 U1-8)
+    )
+    (net BICK
+      (pins P1-3 U1-9)
+    )
+    (net SDTI
+      (pins P1-4 U1-10)
+    )
+    (net MCKI
+      (pins P1-5 U1-11)
+    )
+    (net PDN
+      (pins P2-2 U1-15)
+    )
+    (net SCL
+      (pins P2-3 R6-2 U1-16)
+    )
+    (net SDA
+      (pins P2-4 R5-2 U1-17)
+    )
+    (net "ROUT-CON"
+      (pins P3-1 R4-1 R2-1)
+    )
+    (net "LOUT-CON"
+      (pins P3-3 R3-1 R1-1)
+    )
+    (class kicad_default BICK CAD0 CAD1 LIN "LIN-CON" LOUT "LOUT-CON" LRCK
+      MCKI "Net-(C10-Pad2)" "Net-(C9-Pad2)" PDN RIN "RIN-CON" ROUT "ROUT-CON"
+      SCL SDA SDTI SDTO
+      (circuit
+        (use_via "Via[0-1]_508:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+    (class PWR AVDD GND GNDA VCOM VDD VDD18
+      (circuit
+        (use_via "Via[0-1]_584.2:330.2_um")
+      )
+      (rule
+        (width 304.8)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 304.8  14605 -36195  18265.1 -36195  19154.1 -35306)(net VDD)(type route))
+    (wire (path F.Cu 304.8  24596 -34036  24977 -33655)(net VDD)(type route))
+    (wire (path F.Cu 304.8  18265.1 -36195  20424.1 -34036  24596 -34036)(net VDD)(type route))
+    (wire (path B.Cu 304.8  27876.5 -27432  27876.5 -33655)(net VDD)(type route))
+    (wire (path B.Cu 304.8  28829 -26479.5  27876.5 -27432)(net VDD)(type route))
+    (wire (path B.Cu 304.8  29141 -26479.5  28829 -26479.5)(net VDD)(type route))
+    (wire (path B.Cu 304.8  27813 -33591.5  27749.5 -33655)(net VDD)(type route))
+    (wire (path B.Cu 304.8  27813 -33655  27813 -33591.5)(net VDD)(type route))
+    (wire (path B.Cu 304.8  27876.5 -33655  27813 -33655)(net VDD)(type route))
+    (wire (path B.Cu 304.8  29146.5 -26474  29141 -26479.5)(net VDD)(type route))
+    (wire (path B.Cu 304.8  27051 -33655  24977 -33655)(net VDD)(type route))
+    (wire (path B.Cu 304.8  27051 -33655  27749.5 -33655)(net VDD)(type route))
+    (wire (path F.Cu 304.8  31686.5 -32898.5  31686.5 -32956.5)(net VDD)(type route))
+    (wire (path B.Cu 304.8  27749.5 -33655  30988 -33655  31686.5 -32956.5)(net VDD)(type route))
+    (wire (path F.Cu 304.8  25900 -31533  25900 -32732  24977 -33655)(net VDD)(type route))
+    (wire (path F.Cu 304.8  33020 -32390.5  32512 -32898.5  31686.5 -32898.5)(net VDD)(type route))
+    (wire (path F.Cu 304.8  19154.1 -35306  19685 -35306)(net VDD)(type route))
+    (wire (path F.Cu 304.8  27850 -27583  28170 -27583  29210 -26543)(net VDD)(type route))
+    (wire (path B.Cu 304.8  29146.5 -26543  29146.5 -26474  30416.5 -26474)(net VDD)(type route))
+    (wire (path F.Cu 304.8  26400 -31533  26400 -33332  26077 -33655)(net GND)(type route))
+    (wire (path F.Cu 304.8  22755.9 -35306  24438.7 -35293.3  26077 -33655  26077 -33864.6
+            28765.5 -36553.1)(net GND)(type route))
+    (wire (path F.Cu 304.8  22950 -29083  25400 -29083  26237.5 -29920.5)(net GND)(type route))
+    (wire (path F.Cu 304.8  22950 -27583  23900 -27583  24562.5 -28245.5)(net GND)(type route))
+    (wire (path F.Cu 304.8  22950 -28083  24400 -28083  24562.5 -28245.5)(net GND)(type route))
+    (wire (path F.Cu 304.8  22950 -28583  24225 -28583  24562.5 -28245.5)(net GND)(type route))
+    (wire (path F.Cu 304.8  22950 -29583  24225 -29583  24562.5 -29920.5)(net GND)(type route))
+    (wire (path B.Cu 304.8  26237.5 -28245.5  26238.2 -28244.8)(net GND)(type route))
+    (wire (path B.Cu 304.8  26237.5 -29920.5  26238.2 -29921.2)(net GND)(type route))
+    (wire (path B.Cu 304.8  24562.5 -29920.5  24561.8 -29921.2)(net GND)(type route))
+    (wire (path F.Cu 304.8  24562.5 -29920.5  24562.5 -28245.5)(net GND)(type route))
+    (wire (path B.Cu 304.8  24562.5 -28245.5  24561.8 -28244.8)(net GND)(type route))
+    (wire (path B.Cu 304.8  29146.5 -29057.6  30416.5 -29057.6)(net GND)(type route))
+    (wire (path F.Cu 304.8  35941 -35941  36195 -36195)(net GND)(type route))
+    (wire (path F.Cu 304.8  26400 -28083  26237.5 -28245.5)(net GND)(type route))
+    (wire (path F.Cu 304.8  27850 -28083  26400 -28083)(net GND)(type route))
+    (wire (path F.Cu 304.8  26400 -31533  26400 -30083  26237.5 -29920.5)(net GND)(type route))
+    (wire (path F.Cu 304.8  22950 -30083  24400 -30083  24562.5 -29920.5  26237.5 -28245.5
+            26237.5 -29920.5  24562.5 -29920.5)(net GND)(type route))
+    (wire (path F.Cu 304.8  35074.9 -26035  31750 -29359.9)(net AVDD)(type route))
+    (wire (path F.Cu 304.8  36195 -26035  35074.9 -26035)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  35074.9 -26035  36195 -26035)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  31750 -29359.9  35074.9 -26035)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  25400 -17145  25400 -17018  26543 -15875)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  34861.5 -24701.5  36195 -26035)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  34861.5 -22860  34861.5 -24701.5)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  36766.5 -20955  34861.5 -22860)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  36766.5 -15875  36766.5 -20955)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  35496.5 -14605  36766.5 -15875)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  34163 -14605  35496.5 -14605)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  32893 -15875  34163 -14605)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  26543 -15875  32893 -15875)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  26543 -24892  26543 -23977.6)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  25577.8 -23012.4  25577.8 -17322.8)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  26543 -23977.6  25577.8 -23012.4)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  25577.8 -17322.8  25400 -17145)(net AVDD)(type route))
+    (wire (path F.Cu 304.8  26517.6 -24866.6  26508.8 -24866.6)(net AVDD)(type route))
+    (wire (path F.Cu 304.8  26543 -24892  26517.6 -24866.6)(net AVDD)(type route))
+    (wire (path F.Cu 304.8  25900 -26633  25900 -25475.4  26508.8 -24866.6)(net AVDD)(type route))
+    (wire (path B.Cu 304.8  17907 -13647  17907 -13652.5)(net GNDA)(type route))
+    (wire (path F.Cu 304.8  18351.5 -19621.5  18346 -19627  18346 -19685)(net GNDA)(type route))
+    (wire (path F.Cu 304.8  25408.8 -24866.6  24934 -24391.8)(net GNDA)(type route))
+    (wire (path F.Cu 304.8  24934 -23622  24934 -24391.8)(net GNDA)(type route))
+    (wire (path B.Cu 304.8  24934 -23622  24955.5 -23622)(net GNDA)(type route))
+    (wire (path F.Cu 304.8  34013.1 -23495  31750 -25758.1)(net GNDA)(type route))
+    (wire (path F.Cu 304.8  36195 -23495  34013.1 -23495)(net GNDA)(type route))
+    (wire (path B.Cu 304.8  31750 -25758.1  31750 -25781)(net GNDA)(type route))
+    (wire (path F.Cu 304.8  25400 -26633  25400 -24875.4  25408.8 -24866.6)(net GNDA)(type route))
+    (wire (path F.Cu 304.8  24900 -26633  24900 -25885.2)(net VCOM)(type route))
+    (wire (path F.Cu 304.8  23834 -24819.2  23834 -23622)(net VCOM)(type route))
+    (wire (path F.Cu 304.8  24900 -25885.2  23834 -24819.2)(net VCOM)(type route))
+    (wire (path F.Cu 304.8  26900 -31533  26900 -31980  28470.9 -33550.9  28765.5 -33550.9)(net VDD18)(type route))
+    (wire (path F.Cu 152.4  26900 -26633  26900 -26186  30226 -22860  32893 -22860
+            34925 -20828  34925 -20152.4)(net LIN)(type route))
+    (wire (path F.Cu 152.4  30480 -17145  34330.6 -17145  34925 -16550.6)(net LIN)(type route))
+    (wire (path F.Cu 152.4  26400 -26633  26400 -26178  27104.3 -25473.7  27104.3 -21539.2)(net RIN)(type route))
+    (wire (path F.Cu 152.4  27940 -17145  27940 -18773.1  30706.1 -21539.2)(net "RIN-CON")(type route))
+    (wire (path F.Cu 152.4  24400 -26633  24400 -25924)(net LOUT)(type route))
+    (wire (path F.Cu 152.4  23241 -24765  23241 -21717)(net LOUT)(type route))
+    (wire (path F.Cu 152.4  24400 -25924  23241 -24765)(net LOUT)(type route))
+    (wire (path F.Cu 152.4  23241 -21717  24003 -20955)(net LOUT)(type route))
+    (wire (path F.Cu 152.4  24003 -20955  24234.1 -20955)(net "Net-(C9-Pad2)")(type route))
+    (wire (path F.Cu 152.4  21231.9 -20955  19373 -20955  19246 -21082)(net "Net-(C9-Pad2)")(type route))
+    (wire (path F.Cu 152.4  23900 -26633  23900 -25932  20193 -22225  18183.9 -22225)(net ROUT)(type route))
+    (wire (path F.Cu 152.4  18183.9 -22225  15494 -19535.1)(net "Net-(C10-Pad2)")(type route))
+    (wire (path F.Cu 152.4  15494 -16532.9  15494 -13970)(net "Net-(C10-Pad2)")(type route))
+    (wire (path F.Cu 152.4  15817 -13647  16510 -13647)(net "Net-(C10-Pad2)")(type route))
+    (wire (path F.Cu 152.4  15494 -13970  15817 -13647)(net "Net-(C10-Pad2)")(type route))
+    (wire (path B.Cu 152.4  30416.5 -28346.4  30416.5 -27374)(net CAD0)(type route))
+    (wire (path F.Cu 152.4  27850 -29083  29718 -29083)(net CAD0)(type route))
+    (wire (path B.Cu 152.4  30416.5 -28321  30416.5 -28346.4)(net CAD0)(type route))
+    (wire (path F.Cu 152.4  29718 -29083  30480 -28321)(net CAD0)(type route))
+    (wire (path B.Cu 152.4  29146.5 -28346.4  29146.5 -27374)(net CAD1)(type route))
+    (wire (path F.Cu 152.4  27850 -28583  28948 -28583)(net CAD1)(type route))
+    (wire (path B.Cu 152.4  29146.5 -28321  29146.5 -28346.4)(net CAD1)(type route))
+    (wire (path F.Cu 152.4  28948 -28583  29210 -28321)(net CAD1)(type route))
+    (wire (path F.Cu 152.4  22950 -30583  21693 -30583  14605 -23495)(net LRCK)(type route))
+    (wire (path F.Cu 152.4  23900 -31533  23900 -32462.6)(net SDTO)(type route))
+    (wire (path F.Cu 152.4  21310.6 -32740.6  14605 -26035)(net SDTO)(type route))
+    (wire (path F.Cu 152.4  23622 -32740.6  21310.6 -32740.6)(net SDTO)(type route))
+    (wire (path F.Cu 152.4  23900 -32462.6  23622 -32740.6)(net SDTO)(type route))
+    (wire (path F.Cu 152.4  24400 -31533  24400 -32394.4)(net BICK)(type route))
+    (wire (path F.Cu 152.4  19075.4 -33045.4  14605 -28575)(net BICK)(type route))
+    (wire (path F.Cu 152.4  23749 -33045.4  19075.4 -33045.4)(net BICK)(type route))
+    (wire (path F.Cu 152.4  24400 -32394.4  23749 -33045.4)(net BICK)(type route))
+    (wire (path F.Cu 152.4  24900 -31533  24900 -32326.2)(net SDTI)(type route))
+    (wire (path F.Cu 152.4  16840.2 -33350.2  14605 -31115)(net SDTI)(type route))
+    (wire (path F.Cu 152.4  23876 -33350.2  16840.2 -33350.2)(net SDTI)(type route))
+    (wire (path F.Cu 152.4  24900 -32326.2  23876 -33350.2)(net SDTI)(type route))
+    (wire (path F.Cu 152.4  25400 -31533  25400 -32258)(net MCKI)(type route))
+    (wire (path F.Cu 152.4  24003 -33655  14605 -33655)(net MCKI)(type route))
+    (wire (path F.Cu 152.4  25400 -32258  24003 -33655)(net MCKI)(type route))
+    (wire (path F.Cu 152.4  30162.5 -32448.5  31369 -33655)(net PDN)(type route))
+    (wire (path F.Cu 152.4  28297 -30583  30162.5 -32448.5  30162.5 -32448.5)(net PDN)(type route))
+    (wire (path F.Cu 152.4  27850 -30583  28297 -30583)(net PDN)(type route))
+    (wire (path F.Cu 152.4  31369 -33655  36195 -33655)(net PDN)(type route))
+    (wire (path F.Cu 152.4  27850 -30583  28195.4 -30583)(net PDN)(type route))
+    (wire (path F.Cu 152.4  31686.5 -31998.5  31744.5 -31940.5  31115 -31940.5)(net SCL)(type route))
+    (wire (path F.Cu 152.4  29337 -30861  30416.5 -31940.5)(net SCL)(type route))
+    (wire (path F.Cu 152.4  28559 -30083  29337 -30861)(net SCL)(type route))
+    (wire (path F.Cu 152.4  27850 -30083  28559 -30083)(net SCL)(type route))
+    (wire (path F.Cu 152.4  30416.5 -31940.5  31115 -31940.5  32004 -31940.5  35369.5 -31940.5
+            36195 -31115)(net SCL)(type route))
+    (wire (path F.Cu 152.4  33020 -31490.5  33078 -31432.5  33337.5 -31432.5)(net SDA)(type route))
+    (wire (path F.Cu 152.4  30670.5 -31432.5  33337.5 -31432.5  36195 -28575)(net SDA)(type route))
+    (wire (path F.Cu 152.4  27850 -29583  28821 -29583  30670.5 -31432.5)(net SDA)(type route))
+    (wire (path F.Cu 152.4  17907 -14547  17907 -14732  20320 -17145)(net "ROUT-CON")(type route))
+    (wire (path F.Cu 152.4  16510 -14547  17907 -14547)(net "ROUT-CON")(type route))
+    (wire (path F.Cu 152.4  19246 -19685  20320 -19685  22860 -17145)(net "LOUT-CON")(type route))
+    (wire (path F.Cu 152.4  18346 -21082  18346 -20585  19246 -19685)(net "LOUT-CON")(type route))
+    (via "Via[0-1]_584.2:330.2_um"  24977 -33655 (net VDD)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  31686.5 -32956.5 (net VDD)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  29146.5 -26543 (net VDD)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  26237.5 -28245.5 (net GND)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  26237.5 -29920.5 (net GND)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  24562.5 -29920.5 (net GND)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  24562.5 -28245.5 (net GND)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  31750 -29359.9 (net AVDD)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  26543 -24892 (net AVDD)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  17907 -13647 (net GNDA)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  18351.5 -19621.5 (net GNDA)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  24934 -23622 (net GNDA)(type route))
+    (via "Via[0-1]_584.2:330.2_um"  31750 -25758.1 (net GNDA)(type route))
+    (via "Via[0-1]_508:330.2_um"  30416.5 -28321 (net CAD0)(type route))
+    (via "Via[0-1]_508:330.2_um"  29146.5 -28321 (net CAD1)(type route))
+  )
+)

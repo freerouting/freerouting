@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Game-Boy-Zero-DMG-Controller-PCB-KiCad_Game-Boy-Zero-DMG-Controller-PCB",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 61214,
+      "sha256": "ed188db63b1b08ed61048c9deaed791c992ccc5792e7cf5e85ee1119545485e2"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 76461,
+      "sha256": "62a7bdf7c35f1f7ce510b39f1b162f809e3cda633f0f5b6e7dfc5d87e6b061f9"
+    },
+    "metadata_json": {
+      "bytes": 668,
+      "sha256": "c1b9318f0ac614d08af0cb48741c8ab619a18b65bcb9aafd577744a590f699cd"
+    },
+    "final_json": {
+      "bytes": 60918,
+      "sha256": "1376306e78a94562fe27da8977343b3f2219665895b1e13dec98764be80207c4"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:51:05.396000+00:00"
+  }
+}

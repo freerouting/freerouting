@@ -1,0 +1,26 @@
+{
+  "board": "LED_port-status_LED_port-status-CA-CC-combo",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LED_port-status_LED_port-status-CA-CC-combo\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 8,
+  "segment_count": 59,
+  "approximate_track_length_mm": 77.91,
+  "kicad_drc_violations": 266,
+  "generated_at": "2026-08-18T19:15:49.696319+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 266,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 63,
+      "copper_edge_clearance": 2,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 199,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 66,
+      "warning": 200
+    }
+  }
+}

@@ -1,0 +1,2202 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Hardware_Playground_heater_actuator_node\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  184250 -123000  115150 -123000  115150 -57475  184250 -57475
+            184250 -123000)
+    )
+    (keepout "" (polygon signal 0  147225 -80675  151100 -80675  151100 -73525  156950 -73525
+            156950 -71850  151100 -71850  151100 -64700  147225 -64700  147225 -80675))
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 350)
+      (clearance 300)
+      (clearance 75 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_1x01_Pitch2.54mm
+      (place P1 139350 -120675 front 0 (PN ANTENNA))
+    )
+    (component myfootprints:Symbol_HighVoltage_Type2_FrontSilk_VerySmall
+      (place REF**_7 170800 -73300 back 0 (PN "High Voltage"))
+    )
+    (component "Symbols:OSHW-Logo_5.7x6mm_SilkScreen"
+      (place REF*** 118875 -112150 front 0 (PN "OSHW-Logo_5.7x6mm_SilkScreen"))
+    )
+    (component Mounting_Holes:MountingHole_2.2mm_M2
+      (place REF**_6 117650 -59875 front 0 (PN MountingHole_2.2mm_M2))
+      (place REF**_5 181800 -59925 front 0 (PN MountingHole_2.2mm_M2))
+      (place REF**_4 181800 -95275 front 0 (PN MountingHole_2.2mm_M2))
+      (place REF**_3 181800 -120475 front 0 (PN MountingHole_2.2mm_M2))
+      (place REF**_2 117750 -87175 front 0 (PN MountingHole_2.2mm_M2))
+      (place REF** 117650 -120475 front 0 (PN MountingHole_2.2mm_M2))
+    )
+    (component Resistors_ThroughHole:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal
+      (place R8 174270 -117775 front 180 (PN 330))
+      (place R5 174270 -113275 front 180 (PN 330))
+      (place R6 174270 -108475 front 180 (PN 330))
+      (place R7 174370 -104075 front 180 (PN 330))
+    )
+    (component "myfootprints:ZTTCR-3"
+      (place Y1 122650 -95975 front 90 (PN 8MHz))
+    )
+    (component Buttons_Switches_ThroughHole:SW_PUSH_6mm
+      (place SW1 117500 -102375 front 0 (PN RESET))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering
+      (place C2 138200 -95925 front 180 (PN 100n))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering::1
+      (place C3 122100 -91275 front 0 (PN 100n))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering::2
+      (place C4 138200 -92975 front 180 (PN 100n))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering::3
+      (place C6 141800 -109275 back 270 (PN 100n))
+    )
+    (component Capacitors_SMD:C_0805_HandSoldering::4
+      (place C7 138650 -85775 back 180 (PN 100n))
+    )
+    (component "Capacitors_Tantalum_SMD:CP_Tantalum_Case-B_EIA-3528-21_Hand"
+      (place C8 123000 -72925 back 90 (PN 22u))
+    )
+    (component "Capacitors_Tantalum_SMD:CP_Tantalum_Case-B_EIA-3528-21_Hand::1"
+      (place C9 126950 -114475 front 90 (PN 10u))
+    )
+    (component Pin_Headers:Pin_Header_Straight_2x05_Pitch2.54mm
+      (place CON1 156725 -109905 front 0 (PN "AVR-ISP-10"))
+    )
+    (component "Diodes_ThroughHole:D_DO-35_SOD27_P10.16mm_Horizontal"
+      (place D1 150950 -87615 front -90 (PN 1N4148))
+    )
+    (component LEDs:LED_D3.0mm
+      (place D2 182215 -110325 front 180 (PN GW_RX))
+      (place D3 182215 -105525 front 180 (PN GW_TX))
+    )
+    (component LEDs:LED_D3.0mm::1
+      (place D4 182215 -100725 front 180 (PN GW_ERR))
+      (place D5 182215 -114925 front 180 (PN HEATER_ON))
+    )
+    (component "Fuse_Holders_and_Fuses:Fuseholder5x20_horiz_open_lateral_Type-II"
+      (place F1 170750 -77875 front 0 (PN 0.5A))
+    )
+    (component "Housings_QFP:TQFP-32_7x7mm_Pitch0.8mm"
+      (place IC1 130350 -93275 front 0 (PN "ATMEGA328P-A"))
+    )
+    (component "TO_SOT_Packages_THT:TO-92_Molded_Narrow"
+      (place Q1 146350 -90875 front 180 (PN BC337))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering
+      (place R1 144950 -96675 front 180 (PN 5K6))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering::1
+      (place R2 136825 -112900 back 180 (PN 56K))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering::2
+      (place R3 130950 -86375 front 180 (PN 10K))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering::3
+      (place R4 134850 -88975 back 270 (PN 1K))
+    )
+    (component Resistors_SMD:R_0805_HandSoldering::4
+      (place R9 138275 -98725 front 0 (PN 56K))
+    )
+    (component myfootprints:RM50_SP
+      (place RL1 155550 -93275 front 0 (PN "RM50-SP"))
+    )
+    (component "Housings_SOIC:SOIC-8_3.9x4.9mm_Pitch1.27mm"
+      (place U1 136650 -108675 back 180 (PN AT25DF512C))
+    )
+    (component "TO_SOT_Packages_SMD:SOT-23_Handsoldering"
+      (place U2 139050 -89075 back 180 (PN ATSHA204A))
+    )
+    (component "TO_SOT_Packages_SMD:SOT-223"
+      (place U3 130000 -73025 back 180 (PN "AMS1117-3.3"))
+    )
+    (component "myfootprints:HLK-PM01"
+      (place U4 153350 -75175 front 180 (PN "HLK-PM01"))
+    )
+    (component mysensors_radios:RFM69HW_SMD_Handsoldering
+      (place U5 132950 -103475 front 0 (PN RFM69W))
+    )
+    (component Varistors:RV_Disc_D12_W6.3_P7.5
+      (place VR1 169750 -66875 front 180 (PN "VAR10-300"))
+    )
+    (component "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol"
+      (place X1 179450 -90275 front 90 (PN HEATER_SW))
+    )
+    (component "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol::1"
+      (place X2 179350 -69375 front 90 (PN 230Vac~))
+    )
+    (component VIA_MATRIX
+      (place V14_4 120702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V15_4 121702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V16_4 122702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V17_4 123702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V18_4 124702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V19_4 125702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V20_4 126702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V21_4 127702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V22_4 128702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V23_4 129702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V24_4 130702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V25_4 131702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V26_4 132702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V27_4 133702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V28_4 134702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V29_4 135702 -59617.5 front 0 (PN AUTO_VIA))
+      (place V14_5 120702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V15_5 121702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V16_5 122702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V17_5 123702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V18_5 124702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V19_5 125702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V20_5 126702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V21_5 127702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V22_5 128702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V23_5 129702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V24_5 130702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V25_5 131702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V26_5 132702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V27_5 133702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V28_5 134702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V29_5 135702 -60617.5 front 0 (PN AUTO_VIA))
+      (place V10_6 116702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V13_6 119702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V14_6 120702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V15_6 121702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V16_6 122702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V17_6 123702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V18_6 124702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V19_6 125702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V20_6 126702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V21_6 127702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V22_6 128702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V23_6 129702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V24_6 130702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V25_6 131702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V26_6 132702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V27_6 133702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V28_6 134702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V29_6 135702 -61617.5 front 0 (PN AUTO_VIA))
+      (place V10_7 116702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V11_7 117702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V12_7 118702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V13_7 119702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V14_7 120702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V15_7 121702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V16_7 122702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V17_7 123702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V18_7 124702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V19_7 125702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V20_7 126702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V21_7 127702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V22_7 128702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V23_7 129702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V24_7 130702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V25_7 131702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V26_7 132702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V27_7 133702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V28_7 134702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V29_7 135702 -62617.5 front 0 (PN AUTO_VIA))
+      (place V10_8 116702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V11_8 117702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V12_8 118702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V13_8 119702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V14_8 120702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V15_8 121702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V20_8 126702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V21_8 127702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V22_8 128702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V23_8 129702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V24_8 130702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V25_8 131702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V26_8 132702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V27_8 133702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V28_8 134702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V29_8 135702 -63617.5 front 0 (PN AUTO_VIA))
+      (place V10_9 116702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V11_9 117702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V12_9 118702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V13_9 119702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V14_9 120702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V15_9 121702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V20_9 126702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V21_9 127702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V22_9 128702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V23_9 129702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V24_9 130702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V25_9 131702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V26_9 132702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V27_9 133702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V28_9 134702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V29_9 135702 -64617.5 front 0 (PN AUTO_VIA))
+      (place V10_10 116702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V11_10 117702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V12_10 118702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V13_10 119702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V14_10 120702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V15_10 121702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V20_10 126702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V21_10 127702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V22_10 128702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V23_10 129702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V24_10 130702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V25_10 131702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V26_10 132702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V27_10 133702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V28_10 134702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V29_10 135702 -65617.5 front 0 (PN AUTO_VIA))
+      (place V10_11 116702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V11_11 117702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V12_11 118702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V13_11 119702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V14_11 120702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V15_11 121702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V21_11 127702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V22_11 128702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V23_11 129702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V24_11 130702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V25_11 131702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V26_11 132702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V27_11 133702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V28_11 134702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V29_11 135702 -66617.5 front 0 (PN AUTO_VIA))
+      (place V10_12 116702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V11_12 117702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V12_12 118702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V13_12 119702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V14_12 120702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V15_12 121702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V16_12 122702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V17_12 123702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V28_12 134702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V29_12 135702 -67617.5 front 0 (PN AUTO_VIA))
+      (place V10_13 116702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V11_13 117702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V12_13 118702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V13_13 119702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V14_13 120702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V15_13 121702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V16_13 122702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V17_13 123702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V18_13 124702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V19_13 125702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V29_13 135702 -68617.5 front 0 (PN AUTO_VIA))
+      (place V10_14 116702 -69617.5 front 0 (PN AUTO_VIA))
+      (place V11_14 117702 -69617.5 front 0 (PN AUTO_VIA))
+      (place V12_14 118702 -69617.5 front 0 (PN AUTO_VIA))
+      (place V13_14 119702 -69617.5 front 0 (PN AUTO_VIA))
+      (place V14_14 120702 -69617.5 front 0 (PN AUTO_VIA))
+      (place V24_14 130702 -69617.5 front 0 (PN AUTO_VIA))
+      (place V25_14 131702 -69617.5 front 0 (PN AUTO_VIA))
+      (place V26_14 132702 -69617.5 front 0 (PN AUTO_VIA))
+      (place V10_15 116702 -70617.5 front 0 (PN AUTO_VIA))
+      (place V11_15 117702 -70617.5 front 0 (PN AUTO_VIA))
+      (place V12_15 118702 -70617.5 front 0 (PN AUTO_VIA))
+      (place V13_15 119702 -70617.5 front 0 (PN AUTO_VIA))
+      (place V14_15 120702 -70617.5 front 0 (PN AUTO_VIA))
+      (place V25_15 131702 -70617.5 front 0 (PN AUTO_VIA))
+      (place V26_15 132702 -70617.5 front 0 (PN AUTO_VIA))
+      (place V27_15 133702 -70617.5 front 0 (PN AUTO_VIA))
+      (place V10_16 116702 -71617.5 front 0 (PN AUTO_VIA))
+      (place V11_16 117702 -71617.5 front 0 (PN AUTO_VIA))
+      (place V12_16 118702 -71617.5 front 0 (PN AUTO_VIA))
+      (place V13_16 119702 -71617.5 front 0 (PN AUTO_VIA))
+      (place V22_16 128702 -71617.5 front 0 (PN AUTO_VIA))
+      (place V28_16 134702 -71617.5 front 0 (PN AUTO_VIA))
+      (place V10_17 116702 -72617.5 front 0 (PN AUTO_VIA))
+      (place V11_17 117702 -72617.5 front 0 (PN AUTO_VIA))
+      (place V12_17 118702 -72617.5 front 0 (PN AUTO_VIA))
+      (place V28_17 134702 -72617.5 front 0 (PN AUTO_VIA))
+      (place V29_17 135702 -72617.5 front 0 (PN AUTO_VIA))
+      (place V10_18 116702 -73617.5 front 0 (PN AUTO_VIA))
+      (place V11_18 117702 -73617.5 front 0 (PN AUTO_VIA))
+      (place V12_18 118702 -73617.5 front 0 (PN AUTO_VIA))
+      (place V28_18 134702 -73617.5 front 0 (PN AUTO_VIA))
+      (place V29_18 135702 -73617.5 front 0 (PN AUTO_VIA))
+      (place V10_19 116702 -74617.5 front 0 (PN AUTO_VIA))
+      (place V11_19 117702 -74617.5 front 0 (PN AUTO_VIA))
+      (place V12_19 118702 -74617.5 front 0 (PN AUTO_VIA))
+      (place V28_19 134702 -74617.5 front 0 (PN AUTO_VIA))
+      (place V29_19 135702 -74617.5 front 0 (PN AUTO_VIA))
+      (place V10_20 116702 -75617.5 front 0 (PN AUTO_VIA))
+      (place V11_20 117702 -75617.5 front 0 (PN AUTO_VIA))
+      (place V12_20 118702 -75617.5 front 0 (PN AUTO_VIA))
+      (place V22_20 128702 -75617.5 front 0 (PN AUTO_VIA))
+      (place V28_20 134702 -75617.5 front 0 (PN AUTO_VIA))
+      (place V29_20 135702 -75617.5 front 0 (PN AUTO_VIA))
+      (place V10_21 116702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V11_21 117702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V12_21 118702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V19_21 125702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V20_21 126702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V21_21 127702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V22_21 128702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V23_21 129702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V28_21 134702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V29_21 135702 -76617.5 front 0 (PN AUTO_VIA))
+      (place V10_22 116702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V11_22 117702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V12_22 118702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V15_22 121702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V17_22 123702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V18_22 124702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V19_22 125702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V20_22 126702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V21_22 127702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V22_22 128702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V23_22 129702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V24_22 130702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V29_22 135702 -77617.5 front 0 (PN AUTO_VIA))
+      (place V10_23 116702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V11_23 117702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V12_23 118702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V15_23 121702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V19_23 125702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V20_23 126702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V21_23 127702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V22_23 128702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V23_23 129702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V24_23 130702 -78617.5 front 0 (PN AUTO_VIA))
+      (place V10_24 116702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V11_24 117702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V12_24 118702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V15_24 121702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V20_24 126702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V21_24 127702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V22_24 128702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V23_24 129702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V24_24 130702 -79617.5 front 0 (PN AUTO_VIA))
+      (place V10_25 116702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V11_25 117702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V12_25 118702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V15_25 121702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V20_25 126702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V21_25 127702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V22_25 128702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V23_25 129702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V24_25 130702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V27_25 133702 -80617.5 front 0 (PN AUTO_VIA))
+      (place V10_26 116702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V11_26 117702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V12_26 118702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V15_26 121702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V20_26 126702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V21_26 127702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V22_26 128702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V23_26 129702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V24_26 130702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V27_26 133702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V28_26 134702 -81617.5 front 0 (PN AUTO_VIA))
+      (place V10_27 116702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V11_27 117702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V12_27 118702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V15_27 121702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V16_27 122702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V19_27 125702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V20_27 126702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V21_27 127702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V22_27 128702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V23_27 129702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V24_27 130702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V27_27 133702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V28_27 134702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V29_27 135702 -82617.5 front 0 (PN AUTO_VIA))
+      (place V10_28 116702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V11_28 117702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V12_28 118702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V16_28 122702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V17_28 123702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V18_28 124702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V19_28 125702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V20_28 126702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V21_28 127702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V22_28 128702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V23_28 129702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V24_28 130702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V27_28 133702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V28_28 134702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V29_28 135702 -83617.5 front 0 (PN AUTO_VIA))
+      (place V10_29 116702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V11_29 117702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V12_29 118702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V17_29 123702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V18_29 124702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V19_29 125702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V20_29 126702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V21_29 127702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V22_29 128702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V23_29 129702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V24_29 130702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V27_29 133702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V28_29 134702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V29_29 135702 -84617.5 front 0 (PN AUTO_VIA))
+      (place V10_30 116702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V13_30 119702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V18_30 124702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V19_30 125702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V27_30 133702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V28_30 134702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V29_30 135702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V35_30 141702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V36_30 142702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V37_30 143702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V38_30 144702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V39_30 145702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V40_30 146702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V41_30 147702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V42_30 148702 -85617.5 front 0 (PN AUTO_VIA))
+      (place V14_31 120702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V19_31 125702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V35_31 141702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V36_31 142702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V37_31 143702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V38_31 144702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V39_31 145702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V40_31 146702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V41_31 147702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V42_31 148702 -86617.5 front 0 (PN AUTO_VIA))
+      (place V14_32 120702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V24_32 130702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V25_32 131702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V26_32 132702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V35_32 141702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V36_32 142702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V37_32 143702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V38_32 144702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V39_32 145702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V40_32 146702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V41_32 147702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V42_32 148702 -87617.5 front 0 (PN AUTO_VIA))
+      (place V37_33 143702 -88617.5 front 0 (PN AUTO_VIA))
+      (place V38_33 144702 -88617.5 front 0 (PN AUTO_VIA))
+      (place V39_33 145702 -88617.5 front 0 (PN AUTO_VIA))
+      (place V40_33 146702 -88617.5 front 0 (PN AUTO_VIA))
+      (place V41_33 147702 -88617.5 front 0 (PN AUTO_VIA))
+      (place V42_33 148702 -88617.5 front 0 (PN AUTO_VIA))
+      (place V10_34 116702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V11_34 117702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V12_34 118702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V13_34 119702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V15_34 121702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V38_34 144702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V39_34 145702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V40_34 146702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V41_34 147702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V42_34 148702 -89617.5 front 0 (PN AUTO_VIA))
+      (place V10_35 116702 -90617.5 front 0 (PN AUTO_VIA))
+      (place V11_35 117702 -90617.5 front 0 (PN AUTO_VIA))
+      (place V12_35 118702 -90617.5 front 0 (PN AUTO_VIA))
+      (place V33_35 139702 -90617.5 front 0 (PN AUTO_VIA))
+      (place V42_35 148702 -90617.5 front 0 (PN AUTO_VIA))
+      (place V10_36 116702 -91617.5 front 0 (PN AUTO_VIA))
+      (place V11_36 117702 -91617.5 front 0 (PN AUTO_VIA))
+      (place V12_36 118702 -91617.5 front 0 (PN AUTO_VIA))
+      (place V42_36 148702 -91617.5 front 0 (PN AUTO_VIA))
+      (place V10_37 116702 -92617.5 front 0 (PN AUTO_VIA))
+      (place V11_37 117702 -92617.5 front 0 (PN AUTO_VIA))
+      (place V12_37 118702 -92617.5 front 0 (PN AUTO_VIA))
+      (place V10_38 116702 -93617.5 front 0 (PN AUTO_VIA))
+      (place V11_38 117702 -93617.5 front 0 (PN AUTO_VIA))
+      (place V12_38 118702 -93617.5 front 0 (PN AUTO_VIA))
+      (place V10_39 116702 -94617.5 front 0 (PN AUTO_VIA))
+      (place V11_39 117702 -94617.5 front 0 (PN AUTO_VIA))
+      (place V12_39 118702 -94617.5 front 0 (PN AUTO_VIA))
+      (place V35_39 141702 -94617.5 front 0 (PN AUTO_VIA))
+      (place V41_39 147702 -94617.5 front 0 (PN AUTO_VIA))
+      (place V10_40 116702 -95617.5 front 0 (PN AUTO_VIA))
+      (place V11_40 117702 -95617.5 front 0 (PN AUTO_VIA))
+      (place V12_40 118702 -95617.5 front 0 (PN AUTO_VIA))
+      (place V24_40 130702 -95617.5 front 0 (PN AUTO_VIA))
+      (place V41_40 147702 -95617.5 front 0 (PN AUTO_VIA))
+      (place V42_40 148702 -95617.5 front 0 (PN AUTO_VIA))
+      (place V10_41 116702 -96617.5 front 0 (PN AUTO_VIA))
+      (place V11_41 117702 -96617.5 front 0 (PN AUTO_VIA))
+      (place V12_41 118702 -96617.5 front 0 (PN AUTO_VIA))
+      (place V42_41 148702 -96617.5 front 0 (PN AUTO_VIA))
+      (place V10_42 116702 -97617.5 front 0 (PN AUTO_VIA))
+      (place V11_42 117702 -97617.5 front 0 (PN AUTO_VIA))
+      (place V12_42 118702 -97617.5 front 0 (PN AUTO_VIA))
+      (place V10_43 116702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V11_43 117702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V12_43 118702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V14_43 120702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V15_43 121702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V16_43 122702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V17_43 123702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V18_43 124702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V35_43 141702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V36_43 142702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V37_43 143702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V38_43 144702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V39_43 145702 -98617.5 front 0 (PN AUTO_VIA))
+      (place V10_44 116702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V11_44 117702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V12_44 118702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V14_44 120702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V15_44 121702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V16_44 122702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V17_44 123702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V18_44 124702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V21_44 127702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V36_44 142702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V37_44 143702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V38_44 144702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V39_44 145702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V40_44 146702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V71_44 177702 -99617.5 front 0 (PN AUTO_VIA))
+      (place V10_45 116702 -100618 front 0 (PN AUTO_VIA))
+      (place V11_45 117702 -100618 front 0 (PN AUTO_VIA))
+      (place V12_45 118702 -100618 front 0 (PN AUTO_VIA))
+      (place V14_45 120702 -100618 front 0 (PN AUTO_VIA))
+      (place V15_45 121702 -100618 front 0 (PN AUTO_VIA))
+      (place V16_45 122702 -100618 front 0 (PN AUTO_VIA))
+      (place V17_45 123702 -100618 front 0 (PN AUTO_VIA))
+      (place V18_45 124702 -100618 front 0 (PN AUTO_VIA))
+      (place V21_45 127702 -100618 front 0 (PN AUTO_VIA))
+      (place V71_45 177702 -100618 front 0 (PN AUTO_VIA))
+      (place V14_46 120702 -101618 front 0 (PN AUTO_VIA))
+      (place V15_46 121702 -101618 front 0 (PN AUTO_VIA))
+      (place V21_46 127702 -101618 front 0 (PN AUTO_VIA))
+      (place V31_46 137702 -101618 front 0 (PN AUTO_VIA))
+      (place V21_47 127702 -102618 front 0 (PN AUTO_VIA))
+      (place V32_47 138702 -102618 front 0 (PN AUTO_VIA))
+      (place V14_48 120702 -103618 front 0 (PN AUTO_VIA))
+      (place V15_48 121702 -103618 front 0 (PN AUTO_VIA))
+      (place V16_48 122702 -103618 front 0 (PN AUTO_VIA))
+      (place V21_48 127702 -103618 front 0 (PN AUTO_VIA))
+      (place V33_48 139702 -103618 front 0 (PN AUTO_VIA))
+      (place V62_48 168702 -103618 front 0 (PN AUTO_VIA))
+      (place V63_48 169702 -103618 front 0 (PN AUTO_VIA))
+      (place V64_48 170702 -103618 front 0 (PN AUTO_VIA))
+      (place V65_48 171702 -103618 front 0 (PN AUTO_VIA))
+      (place V66_48 172702 -103618 front 0 (PN AUTO_VIA))
+      (place V72_48 178702 -103618 front 0 (PN AUTO_VIA))
+      (place V73_48 179702 -103618 front 0 (PN AUTO_VIA))
+      (place V74_48 180702 -103618 front 0 (PN AUTO_VIA))
+      (place V10_49 116702 -104618 front 0 (PN AUTO_VIA))
+      (place V11_49 117702 -104618 front 0 (PN AUTO_VIA))
+      (place V12_49 118702 -104618 front 0 (PN AUTO_VIA))
+      (place V14_49 120702 -104618 front 0 (PN AUTO_VIA))
+      (place V15_49 121702 -104618 front 0 (PN AUTO_VIA))
+      (place V16_49 122702 -104618 front 0 (PN AUTO_VIA))
+      (place V17_49 123702 -104618 front 0 (PN AUTO_VIA))
+      (place V18_49 124702 -104618 front 0 (PN AUTO_VIA))
+      (place V34_49 140702 -104618 front 0 (PN AUTO_VIA))
+      (place V62_49 168702 -104618 front 0 (PN AUTO_VIA))
+      (place V63_49 169702 -104618 front 0 (PN AUTO_VIA))
+      (place V64_49 170702 -104618 front 0 (PN AUTO_VIA))
+      (place V65_49 171702 -104618 front 0 (PN AUTO_VIA))
+      (place V66_49 172702 -104618 front 0 (PN AUTO_VIA))
+      (place V71_49 177702 -104618 front 0 (PN AUTO_VIA))
+      (place V12_50 118702 -105618 front 0 (PN AUTO_VIA))
+      (place V14_50 120702 -105618 front 0 (PN AUTO_VIA))
+      (place V15_50 121702 -105618 front 0 (PN AUTO_VIA))
+      (place V16_50 122702 -105618 front 0 (PN AUTO_VIA))
+      (place V54_50 160702 -105618 front 0 (PN AUTO_VIA))
+      (place V55_50 161702 -105618 front 0 (PN AUTO_VIA))
+      (place V59_50 165702 -105618 front 0 (PN AUTO_VIA))
+      (place V62_50 168702 -105618 front 0 (PN AUTO_VIA))
+      (place V63_50 169702 -105618 front 0 (PN AUTO_VIA))
+      (place V64_50 170702 -105618 front 0 (PN AUTO_VIA))
+      (place V65_50 171702 -105618 front 0 (PN AUTO_VIA))
+      (place V66_50 172702 -105618 front 0 (PN AUTO_VIA))
+      (place V67_50 173702 -105618 front 0 (PN AUTO_VIA))
+      (place V70_50 176702 -105618 front 0 (PN AUTO_VIA))
+      (place V71_50 177702 -105618 front 0 (PN AUTO_VIA))
+      (place V38_51 144702 -106618 front 0 (PN AUTO_VIA))
+      (place V55_51 161702 -106618 front 0 (PN AUTO_VIA))
+      (place V56_51 162702 -106618 front 0 (PN AUTO_VIA))
+      (place V60_51 166702 -106618 front 0 (PN AUTO_VIA))
+      (place V61_51 167702 -106618 front 0 (PN AUTO_VIA))
+      (place V62_51 168702 -106618 front 0 (PN AUTO_VIA))
+      (place V63_51 169702 -106618 front 0 (PN AUTO_VIA))
+      (place V64_51 170702 -106618 front 0 (PN AUTO_VIA))
+      (place V65_51 171702 -106618 front 0 (PN AUTO_VIA))
+      (place V66_51 172702 -106618 front 0 (PN AUTO_VIA))
+      (place V67_51 173702 -106618 front 0 (PN AUTO_VIA))
+      (place V68_51 174702 -106618 front 0 (PN AUTO_VIA))
+      (place V69_51 175702 -106618 front 0 (PN AUTO_VIA))
+      (place V70_51 176702 -106618 front 0 (PN AUTO_VIA))
+      (place V13_52 119702 -107618 front 0 (PN AUTO_VIA))
+      (place V14_52 120702 -107618 front 0 (PN AUTO_VIA))
+      (place V15_52 121702 -107618 front 0 (PN AUTO_VIA))
+      (place V21_52 127702 -107618 front 0 (PN AUTO_VIA))
+      (place V22_52 128702 -107618 front 0 (PN AUTO_VIA))
+      (place V56_52 162702 -107618 front 0 (PN AUTO_VIA))
+      (place V57_52 163702 -107618 front 0 (PN AUTO_VIA))
+      (place V62_52 168702 -107618 front 0 (PN AUTO_VIA))
+      (place V63_52 169702 -107618 front 0 (PN AUTO_VIA))
+      (place V64_52 170702 -107618 front 0 (PN AUTO_VIA))
+      (place V65_52 171702 -107618 front 0 (PN AUTO_VIA))
+      (place V66_52 172702 -107618 front 0 (PN AUTO_VIA))
+      (place V69_52 175702 -107618 front 0 (PN AUTO_VIA))
+      (place V73_52 179702 -107618 front 0 (PN AUTO_VIA))
+      (place V74_52 180702 -107618 front 0 (PN AUTO_VIA))
+      (place V10_53 116702 -108618 front 0 (PN AUTO_VIA))
+      (place V13_53 119702 -108618 front 0 (PN AUTO_VIA))
+      (place V14_53 120702 -108618 front 0 (PN AUTO_VIA))
+      (place V15_53 121702 -108618 front 0 (PN AUTO_VIA))
+      (place V16_53 122702 -108618 front 0 (PN AUTO_VIA))
+      (place V21_53 127702 -108618 front 0 (PN AUTO_VIA))
+      (place V22_53 128702 -108618 front 0 (PN AUTO_VIA))
+      (place V38_53 144702 -108618 front 0 (PN AUTO_VIA))
+      (place V39_53 145702 -108618 front 0 (PN AUTO_VIA))
+      (place V40_53 146702 -108618 front 0 (PN AUTO_VIA))
+      (place V57_53 163702 -108618 front 0 (PN AUTO_VIA))
+      (place V58_53 164702 -108618 front 0 (PN AUTO_VIA))
+      (place V62_53 168702 -108618 front 0 (PN AUTO_VIA))
+      (place V63_53 169702 -108618 front 0 (PN AUTO_VIA))
+      (place V64_53 170702 -108618 front 0 (PN AUTO_VIA))
+      (place V65_53 171702 -108618 front 0 (PN AUTO_VIA))
+      (place V66_53 172702 -108618 front 0 (PN AUTO_VIA))
+      (place V72_53 178702 -108618 front 0 (PN AUTO_VIA))
+      (place V73_53 179702 -108618 front 0 (PN AUTO_VIA))
+      (place V74_53 180702 -108618 front 0 (PN AUTO_VIA))
+      (place V10_54 116702 -109618 front 0 (PN AUTO_VIA))
+      (place V11_54 117702 -109618 front 0 (PN AUTO_VIA))
+      (place V12_54 118702 -109618 front 0 (PN AUTO_VIA))
+      (place V13_54 119702 -109618 front 0 (PN AUTO_VIA))
+      (place V14_54 120702 -109618 front 0 (PN AUTO_VIA))
+      (place V15_54 121702 -109618 front 0 (PN AUTO_VIA))
+      (place V16_54 122702 -109618 front 0 (PN AUTO_VIA))
+      (place V17_54 123702 -109618 front 0 (PN AUTO_VIA))
+      (place V18_54 124702 -109618 front 0 (PN AUTO_VIA))
+      (place V21_54 127702 -109618 front 0 (PN AUTO_VIA))
+      (place V22_54 128702 -109618 front 0 (PN AUTO_VIA))
+      (place V58_54 164702 -109618 front 0 (PN AUTO_VIA))
+      (place V59_54 165702 -109618 front 0 (PN AUTO_VIA))
+      (place V62_54 168702 -109618 front 0 (PN AUTO_VIA))
+      (place V63_54 169702 -109618 front 0 (PN AUTO_VIA))
+      (place V64_54 170702 -109618 front 0 (PN AUTO_VIA))
+      (place V65_54 171702 -109618 front 0 (PN AUTO_VIA))
+      (place V66_54 172702 -109618 front 0 (PN AUTO_VIA))
+      (place V70_54 176702 -109618 front 0 (PN AUTO_VIA))
+      (place V71_54 177702 -109618 front 0 (PN AUTO_VIA))
+      (place V10_55 116702 -110618 front 0 (PN AUTO_VIA))
+      (place V11_55 117702 -110618 front 0 (PN AUTO_VIA))
+      (place V12_55 118702 -110618 front 0 (PN AUTO_VIA))
+      (place V13_55 119702 -110618 front 0 (PN AUTO_VIA))
+      (place V14_55 120702 -110618 front 0 (PN AUTO_VIA))
+      (place V15_55 121702 -110618 front 0 (PN AUTO_VIA))
+      (place V16_55 122702 -110618 front 0 (PN AUTO_VIA))
+      (place V17_55 123702 -110618 front 0 (PN AUTO_VIA))
+      (place V18_55 124702 -110618 front 0 (PN AUTO_VIA))
+      (place V22_55 128702 -110618 front 0 (PN AUTO_VIA))
+      (place V29_55 135702 -110618 front 0 (PN AUTO_VIA))
+      (place V30_55 136702 -110618 front 0 (PN AUTO_VIA))
+      (place V31_55 137702 -110618 front 0 (PN AUTO_VIA))
+      (place V59_55 165702 -110618 front 0 (PN AUTO_VIA))
+      (place V60_55 166702 -110618 front 0 (PN AUTO_VIA))
+      (place V61_55 167702 -110618 front 0 (PN AUTO_VIA))
+      (place V62_55 168702 -110618 front 0 (PN AUTO_VIA))
+      (place V63_55 169702 -110618 front 0 (PN AUTO_VIA))
+      (place V64_55 170702 -110618 front 0 (PN AUTO_VIA))
+      (place V65_55 171702 -110618 front 0 (PN AUTO_VIA))
+      (place V66_55 172702 -110618 front 0 (PN AUTO_VIA))
+      (place V67_55 173702 -110618 front 0 (PN AUTO_VIA))
+      (place V68_55 174702 -110618 front 0 (PN AUTO_VIA))
+      (place V69_55 175702 -110618 front 0 (PN AUTO_VIA))
+      (place V70_55 176702 -110618 front 0 (PN AUTO_VIA))
+      (place V71_55 177702 -110618 front 0 (PN AUTO_VIA))
+      (place V10_56 116702 -111618 front 0 (PN AUTO_VIA))
+      (place V11_56 117702 -111618 front 0 (PN AUTO_VIA))
+      (place V12_56 118702 -111618 front 0 (PN AUTO_VIA))
+      (place V13_56 119702 -111618 front 0 (PN AUTO_VIA))
+      (place V14_56 120702 -111618 front 0 (PN AUTO_VIA))
+      (place V15_56 121702 -111618 front 0 (PN AUTO_VIA))
+      (place V16_56 122702 -111618 front 0 (PN AUTO_VIA))
+      (place V17_56 123702 -111618 front 0 (PN AUTO_VIA))
+      (place V18_56 124702 -111618 front 0 (PN AUTO_VIA))
+      (place V30_56 136702 -111618 front 0 (PN AUTO_VIA))
+      (place V31_56 137702 -111618 front 0 (PN AUTO_VIA))
+      (place V55_56 161702 -111618 front 0 (PN AUTO_VIA))
+      (place V60_56 166702 -111618 front 0 (PN AUTO_VIA))
+      (place V61_56 167702 -111618 front 0 (PN AUTO_VIA))
+      (place V62_56 168702 -111618 front 0 (PN AUTO_VIA))
+      (place V63_56 169702 -111618 front 0 (PN AUTO_VIA))
+      (place V64_56 170702 -111618 front 0 (PN AUTO_VIA))
+      (place V65_56 171702 -111618 front 0 (PN AUTO_VIA))
+      (place V66_56 172702 -111618 front 0 (PN AUTO_VIA))
+      (place V67_56 173702 -111618 front 0 (PN AUTO_VIA))
+      (place V68_56 174702 -111618 front 0 (PN AUTO_VIA))
+      (place V69_56 175702 -111618 front 0 (PN AUTO_VIA))
+      (place V70_56 176702 -111618 front 0 (PN AUTO_VIA))
+      (place V10_57 116702 -112618 front 0 (PN AUTO_VIA))
+      (place V11_57 117702 -112618 front 0 (PN AUTO_VIA))
+      (place V12_57 118702 -112618 front 0 (PN AUTO_VIA))
+      (place V13_57 119702 -112618 front 0 (PN AUTO_VIA))
+      (place V14_57 120702 -112618 front 0 (PN AUTO_VIA))
+      (place V15_57 121702 -112618 front 0 (PN AUTO_VIA))
+      (place V16_57 122702 -112618 front 0 (PN AUTO_VIA))
+      (place V17_57 123702 -112618 front 0 (PN AUTO_VIA))
+      (place V18_57 124702 -112618 front 0 (PN AUTO_VIA))
+      (place V27_57 133702 -112618 front 0 (PN AUTO_VIA))
+      (place V35_57 141702 -112618 front 0 (PN AUTO_VIA))
+      (place V36_57 142702 -112618 front 0 (PN AUTO_VIA))
+      (place V37_57 143702 -112618 front 0 (PN AUTO_VIA))
+      (place V55_57 161702 -112618 front 0 (PN AUTO_VIA))
+      (place V56_57 162702 -112618 front 0 (PN AUTO_VIA))
+      (place V62_57 168702 -112618 front 0 (PN AUTO_VIA))
+      (place V63_57 169702 -112618 front 0 (PN AUTO_VIA))
+      (place V64_57 170702 -112618 front 0 (PN AUTO_VIA))
+      (place V65_57 171702 -112618 front 0 (PN AUTO_VIA))
+      (place V66_57 172702 -112618 front 0 (PN AUTO_VIA))
+      (place V73_57 179702 -112618 front 0 (PN AUTO_VIA))
+      (place V74_57 180702 -112618 front 0 (PN AUTO_VIA))
+      (place V10_58 116702 -113618 front 0 (PN AUTO_VIA))
+      (place V11_58 117702 -113618 front 0 (PN AUTO_VIA))
+      (place V12_58 118702 -113618 front 0 (PN AUTO_VIA))
+      (place V13_58 119702 -113618 front 0 (PN AUTO_VIA))
+      (place V14_58 120702 -113618 front 0 (PN AUTO_VIA))
+      (place V15_58 121702 -113618 front 0 (PN AUTO_VIA))
+      (place V16_58 122702 -113618 front 0 (PN AUTO_VIA))
+      (place V17_58 123702 -113618 front 0 (PN AUTO_VIA))
+      (place V18_58 124702 -113618 front 0 (PN AUTO_VIA))
+      (place V55_58 161702 -113618 front 0 (PN AUTO_VIA))
+      (place V56_58 162702 -113618 front 0 (PN AUTO_VIA))
+      (place V57_58 163702 -113618 front 0 (PN AUTO_VIA))
+      (place V62_58 168702 -113618 front 0 (PN AUTO_VIA))
+      (place V63_58 169702 -113618 front 0 (PN AUTO_VIA))
+      (place V64_58 170702 -113618 front 0 (PN AUTO_VIA))
+      (place V65_58 171702 -113618 front 0 (PN AUTO_VIA))
+      (place V66_58 172702 -113618 front 0 (PN AUTO_VIA))
+      (place V74_58 180702 -113618 front 0 (PN AUTO_VIA))
+      (place V10_59 116702 -114618 front 0 (PN AUTO_VIA))
+      (place V11_59 117702 -114618 front 0 (PN AUTO_VIA))
+      (place V12_59 118702 -114618 front 0 (PN AUTO_VIA))
+      (place V13_59 119702 -114618 front 0 (PN AUTO_VIA))
+      (place V14_59 120702 -114618 front 0 (PN AUTO_VIA))
+      (place V15_59 121702 -114618 front 0 (PN AUTO_VIA))
+      (place V16_59 122702 -114618 front 0 (PN AUTO_VIA))
+      (place V17_59 123702 -114618 front 0 (PN AUTO_VIA))
+      (place V18_59 124702 -114618 front 0 (PN AUTO_VIA))
+      (place V22_59 128702 -114618 front 0 (PN AUTO_VIA))
+      (place V55_59 161702 -114618 front 0 (PN AUTO_VIA))
+      (place V56_59 162702 -114618 front 0 (PN AUTO_VIA))
+      (place V57_59 163702 -114618 front 0 (PN AUTO_VIA))
+      (place V58_59 164702 -114618 front 0 (PN AUTO_VIA))
+      (place V62_59 168702 -114618 front 0 (PN AUTO_VIA))
+      (place V63_59 169702 -114618 front 0 (PN AUTO_VIA))
+      (place V64_59 170702 -114618 front 0 (PN AUTO_VIA))
+      (place V65_59 171702 -114618 front 0 (PN AUTO_VIA))
+      (place V66_59 172702 -114618 front 0 (PN AUTO_VIA))
+      (place V70_59 176702 -114618 front 0 (PN AUTO_VIA))
+      (place V71_59 177702 -114618 front 0 (PN AUTO_VIA))
+      (place V10_60 116702 -115618 front 0 (PN AUTO_VIA))
+      (place V11_60 117702 -115618 front 0 (PN AUTO_VIA))
+      (place V12_60 118702 -115618 front 0 (PN AUTO_VIA))
+      (place V13_60 119702 -115618 front 0 (PN AUTO_VIA))
+      (place V14_60 120702 -115618 front 0 (PN AUTO_VIA))
+      (place V15_60 121702 -115618 front 0 (PN AUTO_VIA))
+      (place V16_60 122702 -115618 front 0 (PN AUTO_VIA))
+      (place V17_60 123702 -115618 front 0 (PN AUTO_VIA))
+      (place V18_60 124702 -115618 front 0 (PN AUTO_VIA))
+      (place V22_60 128702 -115618 front 0 (PN AUTO_VIA))
+      (place V27_60 133702 -115618 front 0 (PN AUTO_VIA))
+      (place V28_60 134702 -115618 front 0 (PN AUTO_VIA))
+      (place V29_60 135702 -115618 front 0 (PN AUTO_VIA))
+      (place V33_60 139702 -115618 front 0 (PN AUTO_VIA))
+      (place V34_60 140702 -115618 front 0 (PN AUTO_VIA))
+      (place V35_60 141702 -115618 front 0 (PN AUTO_VIA))
+      (place V36_60 142702 -115618 front 0 (PN AUTO_VIA))
+      (place V37_60 143702 -115618 front 0 (PN AUTO_VIA))
+      (place V55_60 161702 -115618 front 0 (PN AUTO_VIA))
+      (place V56_60 162702 -115618 front 0 (PN AUTO_VIA))
+      (place V57_60 163702 -115618 front 0 (PN AUTO_VIA))
+      (place V58_60 164702 -115618 front 0 (PN AUTO_VIA))
+      (place V59_60 165702 -115618 front 0 (PN AUTO_VIA))
+      (place V61_60 167702 -115618 front 0 (PN AUTO_VIA))
+      (place V62_60 168702 -115618 front 0 (PN AUTO_VIA))
+      (place V63_60 169702 -115618 front 0 (PN AUTO_VIA))
+      (place V64_60 170702 -115618 front 0 (PN AUTO_VIA))
+      (place V65_60 171702 -115618 front 0 (PN AUTO_VIA))
+      (place V66_60 172702 -115618 front 0 (PN AUTO_VIA))
+      (place V67_60 173702 -115618 front 0 (PN AUTO_VIA))
+      (place V68_60 174702 -115618 front 0 (PN AUTO_VIA))
+      (place V69_60 175702 -115618 front 0 (PN AUTO_VIA))
+      (place V70_60 176702 -115618 front 0 (PN AUTO_VIA))
+      (place V10_61 116702 -116618 front 0 (PN AUTO_VIA))
+      (place V11_61 117702 -116618 front 0 (PN AUTO_VIA))
+      (place V12_61 118702 -116618 front 0 (PN AUTO_VIA))
+      (place V13_61 119702 -116618 front 0 (PN AUTO_VIA))
+      (place V14_61 120702 -116618 front 0 (PN AUTO_VIA))
+      (place V15_61 121702 -116618 front 0 (PN AUTO_VIA))
+      (place V16_61 122702 -116618 front 0 (PN AUTO_VIA))
+      (place V17_61 123702 -116618 front 0 (PN AUTO_VIA))
+      (place V18_61 124702 -116618 front 0 (PN AUTO_VIA))
+      (place V22_61 128702 -116618 front 0 (PN AUTO_VIA))
+      (place V27_61 133702 -116618 front 0 (PN AUTO_VIA))
+      (place V28_61 134702 -116618 front 0 (PN AUTO_VIA))
+      (place V32_61 138702 -116618 front 0 (PN AUTO_VIA))
+      (place V33_61 139702 -116618 front 0 (PN AUTO_VIA))
+      (place V34_61 140702 -116618 front 0 (PN AUTO_VIA))
+      (place V35_61 141702 -116618 front 0 (PN AUTO_VIA))
+      (place V36_61 142702 -116618 front 0 (PN AUTO_VIA))
+      (place V40_61 146702 -116618 front 0 (PN AUTO_VIA))
+      (place V41_61 147702 -116618 front 0 (PN AUTO_VIA))
+      (place V42_61 148702 -116618 front 0 (PN AUTO_VIA))
+      (place V55_61 161702 -116618 front 0 (PN AUTO_VIA))
+      (place V56_61 162702 -116618 front 0 (PN AUTO_VIA))
+      (place V57_61 163702 -116618 front 0 (PN AUTO_VIA))
+      (place V58_61 164702 -116618 front 0 (PN AUTO_VIA))
+      (place V59_61 165702 -116618 front 0 (PN AUTO_VIA))
+      (place V61_61 167702 -116618 front 0 (PN AUTO_VIA))
+      (place V62_61 168702 -116618 front 0 (PN AUTO_VIA))
+      (place V63_61 169702 -116618 front 0 (PN AUTO_VIA))
+      (place V64_61 170702 -116618 front 0 (PN AUTO_VIA))
+      (place V65_61 171702 -116618 front 0 (PN AUTO_VIA))
+      (place V66_61 172702 -116618 front 0 (PN AUTO_VIA))
+      (place V69_61 175702 -116618 front 0 (PN AUTO_VIA))
+      (place V76_61 182702 -116618 front 0 (PN AUTO_VIA))
+      (place V10_62 116702 -117618 front 0 (PN AUTO_VIA))
+      (place V11_62 117702 -117618 front 0 (PN AUTO_VIA))
+      (place V12_62 118702 -117618 front 0 (PN AUTO_VIA))
+      (place V13_62 119702 -117618 front 0 (PN AUTO_VIA))
+      (place V14_62 120702 -117618 front 0 (PN AUTO_VIA))
+      (place V15_62 121702 -117618 front 0 (PN AUTO_VIA))
+      (place V16_62 122702 -117618 front 0 (PN AUTO_VIA))
+      (place V17_62 123702 -117618 front 0 (PN AUTO_VIA))
+      (place V18_62 124702 -117618 front 0 (PN AUTO_VIA))
+      (place V31_62 137702 -117618 front 0 (PN AUTO_VIA))
+      (place V32_62 138702 -117618 front 0 (PN AUTO_VIA))
+      (place V33_62 139702 -117618 front 0 (PN AUTO_VIA))
+      (place V34_62 140702 -117618 front 0 (PN AUTO_VIA))
+      (place V35_62 141702 -117618 front 0 (PN AUTO_VIA))
+      (place V39_62 145702 -117618 front 0 (PN AUTO_VIA))
+      (place V40_62 146702 -117618 front 0 (PN AUTO_VIA))
+      (place V41_62 147702 -117618 front 0 (PN AUTO_VIA))
+      (place V42_62 148702 -117618 front 0 (PN AUTO_VIA))
+      (place V55_62 161702 -117618 front 0 (PN AUTO_VIA))
+      (place V56_62 162702 -117618 front 0 (PN AUTO_VIA))
+      (place V57_62 163702 -117618 front 0 (PN AUTO_VIA))
+      (place V58_62 164702 -117618 front 0 (PN AUTO_VIA))
+      (place V62_62 168702 -117618 front 0 (PN AUTO_VIA))
+      (place V63_62 169702 -117618 front 0 (PN AUTO_VIA))
+      (place V64_62 170702 -117618 front 0 (PN AUTO_VIA))
+      (place V65_62 171702 -117618 front 0 (PN AUTO_VIA))
+      (place V66_62 172702 -117618 front 0 (PN AUTO_VIA))
+      (place V72_62 178702 -117618 front 0 (PN AUTO_VIA))
+      (place V73_62 179702 -117618 front 0 (PN AUTO_VIA))
+      (place V74_62 180702 -117618 front 0 (PN AUTO_VIA))
+      (place V75_62 181702 -117618 front 0 (PN AUTO_VIA))
+      (place V76_62 182702 -117618 front 0 (PN AUTO_VIA))
+      (place V10_63 116702 -118618 front 0 (PN AUTO_VIA))
+      (place V11_63 117702 -118618 front 0 (PN AUTO_VIA))
+      (place V12_63 118702 -118618 front 0 (PN AUTO_VIA))
+      (place V13_63 119702 -118618 front 0 (PN AUTO_VIA))
+      (place V14_63 120702 -118618 front 0 (PN AUTO_VIA))
+      (place V15_63 121702 -118618 front 0 (PN AUTO_VIA))
+      (place V16_63 122702 -118618 front 0 (PN AUTO_VIA))
+      (place V17_63 123702 -118618 front 0 (PN AUTO_VIA))
+      (place V18_63 124702 -118618 front 0 (PN AUTO_VIA))
+      (place V22_63 128702 -118618 front 0 (PN AUTO_VIA))
+      (place V23_63 129702 -118618 front 0 (PN AUTO_VIA))
+      (place V24_63 130702 -118618 front 0 (PN AUTO_VIA))
+      (place V25_63 131702 -118618 front 0 (PN AUTO_VIA))
+      (place V26_63 132702 -118618 front 0 (PN AUTO_VIA))
+      (place V27_63 133702 -118618 front 0 (PN AUTO_VIA))
+      (place V28_63 134702 -118618 front 0 (PN AUTO_VIA))
+      (place V29_63 135702 -118618 front 0 (PN AUTO_VIA))
+      (place V30_63 136702 -118618 front 0 (PN AUTO_VIA))
+      (place V31_63 137702 -118618 front 0 (PN AUTO_VIA))
+      (place V32_63 138702 -118618 front 0 (PN AUTO_VIA))
+      (place V33_63 139702 -118618 front 0 (PN AUTO_VIA))
+      (place V34_63 140702 -118618 front 0 (PN AUTO_VIA))
+      (place V38_63 144702 -118618 front 0 (PN AUTO_VIA))
+      (place V39_63 145702 -118618 front 0 (PN AUTO_VIA))
+      (place V40_63 146702 -118618 front 0 (PN AUTO_VIA))
+      (place V41_63 147702 -118618 front 0 (PN AUTO_VIA))
+      (place V42_63 148702 -118618 front 0 (PN AUTO_VIA))
+      (place V43_63 149702 -118618 front 0 (PN AUTO_VIA))
+      (place V44_63 150702 -118618 front 0 (PN AUTO_VIA))
+      (place V45_63 151702 -118618 front 0 (PN AUTO_VIA))
+      (place V46_63 152702 -118618 front 0 (PN AUTO_VIA))
+      (place V55_63 161702 -118618 front 0 (PN AUTO_VIA))
+      (place V56_63 162702 -118618 front 0 (PN AUTO_VIA))
+      (place V57_63 163702 -118618 front 0 (PN AUTO_VIA))
+      (place V58_63 164702 -118618 front 0 (PN AUTO_VIA))
+      (place V62_63 168702 -118618 front 0 (PN AUTO_VIA))
+      (place V63_63 169702 -118618 front 0 (PN AUTO_VIA))
+      (place V64_63 170702 -118618 front 0 (PN AUTO_VIA))
+      (place V65_63 171702 -118618 front 0 (PN AUTO_VIA))
+      (place V66_63 172702 -118618 front 0 (PN AUTO_VIA))
+      (place V70_63 176702 -118618 front 0 (PN AUTO_VIA))
+      (place V71_63 177702 -118618 front 0 (PN AUTO_VIA))
+      (place V72_63 178702 -118618 front 0 (PN AUTO_VIA))
+      (place V73_63 179702 -118618 front 0 (PN AUTO_VIA))
+      (place V74_63 180702 -118618 front 0 (PN AUTO_VIA))
+      (place V75_63 181702 -118618 front 0 (PN AUTO_VIA))
+      (place V76_63 182702 -118618 front 0 (PN AUTO_VIA))
+      (place V13_64 119702 -119618 front 0 (PN AUTO_VIA))
+      (place V14_64 120702 -119618 front 0 (PN AUTO_VIA))
+      (place V15_64 121702 -119618 front 0 (PN AUTO_VIA))
+      (place V16_64 122702 -119618 front 0 (PN AUTO_VIA))
+      (place V17_64 123702 -119618 front 0 (PN AUTO_VIA))
+      (place V18_64 124702 -119618 front 0 (PN AUTO_VIA))
+      (place V19_64 125702 -119618 front 0 (PN AUTO_VIA))
+      (place V20_64 126702 -119618 front 0 (PN AUTO_VIA))
+      (place V21_64 127702 -119618 front 0 (PN AUTO_VIA))
+      (place V22_64 128702 -119618 front 0 (PN AUTO_VIA))
+      (place V23_64 129702 -119618 front 0 (PN AUTO_VIA))
+      (place V24_64 130702 -119618 front 0 (PN AUTO_VIA))
+      (place V25_64 131702 -119618 front 0 (PN AUTO_VIA))
+      (place V26_64 132702 -119618 front 0 (PN AUTO_VIA))
+      (place V27_64 133702 -119618 front 0 (PN AUTO_VIA))
+      (place V28_64 134702 -119618 front 0 (PN AUTO_VIA))
+      (place V29_64 135702 -119618 front 0 (PN AUTO_VIA))
+      (place V30_64 136702 -119618 front 0 (PN AUTO_VIA))
+      (place V31_64 137702 -119618 front 0 (PN AUTO_VIA))
+      (place V37_64 143702 -119618 front 0 (PN AUTO_VIA))
+      (place V38_64 144702 -119618 front 0 (PN AUTO_VIA))
+      (place V39_64 145702 -119618 front 0 (PN AUTO_VIA))
+      (place V40_64 146702 -119618 front 0 (PN AUTO_VIA))
+      (place V41_64 147702 -119618 front 0 (PN AUTO_VIA))
+      (place V42_64 148702 -119618 front 0 (PN AUTO_VIA))
+      (place V43_64 149702 -119618 front 0 (PN AUTO_VIA))
+      (place V44_64 150702 -119618 front 0 (PN AUTO_VIA))
+      (place V45_64 151702 -119618 front 0 (PN AUTO_VIA))
+      (place V46_64 152702 -119618 front 0 (PN AUTO_VIA))
+      (place V55_64 161702 -119618 front 0 (PN AUTO_VIA))
+      (place V56_64 162702 -119618 front 0 (PN AUTO_VIA))
+      (place V57_64 163702 -119618 front 0 (PN AUTO_VIA))
+      (place V58_64 164702 -119618 front 0 (PN AUTO_VIA))
+      (place V59_64 165702 -119618 front 0 (PN AUTO_VIA))
+      (place V61_64 167702 -119618 front 0 (PN AUTO_VIA))
+      (place V62_64 168702 -119618 front 0 (PN AUTO_VIA))
+      (place V63_64 169702 -119618 front 0 (PN AUTO_VIA))
+      (place V64_64 170702 -119618 front 0 (PN AUTO_VIA))
+      (place V65_64 171702 -119618 front 0 (PN AUTO_VIA))
+      (place V66_64 172702 -119618 front 0 (PN AUTO_VIA))
+      (place V67_64 173702 -119618 front 0 (PN AUTO_VIA))
+      (place V69_64 175702 -119618 front 0 (PN AUTO_VIA))
+      (place V70_64 176702 -119618 front 0 (PN AUTO_VIA))
+      (place V71_64 177702 -119618 front 0 (PN AUTO_VIA))
+      (place V72_64 178702 -119618 front 0 (PN AUTO_VIA))
+      (place V73_64 179702 -119618 front 0 (PN AUTO_VIA))
+      (place V14_65 120702 -120618 front 0 (PN AUTO_VIA))
+      (place V15_65 121702 -120618 front 0 (PN AUTO_VIA))
+      (place V16_65 122702 -120618 front 0 (PN AUTO_VIA))
+      (place V17_65 123702 -120618 front 0 (PN AUTO_VIA))
+      (place V18_65 124702 -120618 front 0 (PN AUTO_VIA))
+      (place V19_65 125702 -120618 front 0 (PN AUTO_VIA))
+      (place V20_65 126702 -120618 front 0 (PN AUTO_VIA))
+      (place V21_65 127702 -120618 front 0 (PN AUTO_VIA))
+      (place V22_65 128702 -120618 front 0 (PN AUTO_VIA))
+      (place V23_65 129702 -120618 front 0 (PN AUTO_VIA))
+      (place V24_65 130702 -120618 front 0 (PN AUTO_VIA))
+      (place V25_65 131702 -120618 front 0 (PN AUTO_VIA))
+      (place V26_65 132702 -120618 front 0 (PN AUTO_VIA))
+      (place V27_65 133702 -120618 front 0 (PN AUTO_VIA))
+      (place V28_65 134702 -120618 front 0 (PN AUTO_VIA))
+      (place V29_65 135702 -120618 front 0 (PN AUTO_VIA))
+      (place V30_65 136702 -120618 front 0 (PN AUTO_VIA))
+      (place V31_65 137702 -120618 front 0 (PN AUTO_VIA))
+      (place V36_65 142702 -120618 front 0 (PN AUTO_VIA))
+      (place V37_65 143702 -120618 front 0 (PN AUTO_VIA))
+      (place V38_65 144702 -120618 front 0 (PN AUTO_VIA))
+      (place V39_65 145702 -120618 front 0 (PN AUTO_VIA))
+      (place V40_65 146702 -120618 front 0 (PN AUTO_VIA))
+      (place V41_65 147702 -120618 front 0 (PN AUTO_VIA))
+      (place V42_65 148702 -120618 front 0 (PN AUTO_VIA))
+      (place V43_65 149702 -120618 front 0 (PN AUTO_VIA))
+      (place V44_65 150702 -120618 front 0 (PN AUTO_VIA))
+      (place V45_65 151702 -120618 front 0 (PN AUTO_VIA))
+      (place V46_65 152702 -120618 front 0 (PN AUTO_VIA))
+      (place V54_65 160702 -120618 front 0 (PN AUTO_VIA))
+      (place V55_65 161702 -120618 front 0 (PN AUTO_VIA))
+      (place V56_65 162702 -120618 front 0 (PN AUTO_VIA))
+      (place V57_65 163702 -120618 front 0 (PN AUTO_VIA))
+      (place V58_65 164702 -120618 front 0 (PN AUTO_VIA))
+      (place V59_65 165702 -120618 front 0 (PN AUTO_VIA))
+      (place V60_65 166702 -120618 front 0 (PN AUTO_VIA))
+      (place V61_65 167702 -120618 front 0 (PN AUTO_VIA))
+      (place V62_65 168702 -120618 front 0 (PN AUTO_VIA))
+      (place V63_65 169702 -120618 front 0 (PN AUTO_VIA))
+      (place V64_65 170702 -120618 front 0 (PN AUTO_VIA))
+      (place V65_65 171702 -120618 front 0 (PN AUTO_VIA))
+      (place V66_65 172702 -120618 front 0 (PN AUTO_VIA))
+      (place V67_65 173702 -120618 front 0 (PN AUTO_VIA))
+      (place V68_65 174702 -120618 front 0 (PN AUTO_VIA))
+      (place V69_65 175702 -120618 front 0 (PN AUTO_VIA))
+      (place V70_65 176702 -120618 front 0 (PN AUTO_VIA))
+      (place V71_65 177702 -120618 front 0 (PN AUTO_VIA))
+      (place V72_65 178702 -120618 front 0 (PN AUTO_VIA))
+      (place V73_65 179702 -120618 front 0 (PN AUTO_VIA))
+      (place V14_66 120702 -121618 front 0 (PN AUTO_VIA))
+      (place V15_66 121702 -121618 front 0 (PN AUTO_VIA))
+      (place V16_66 122702 -121618 front 0 (PN AUTO_VIA))
+      (place V17_66 123702 -121618 front 0 (PN AUTO_VIA))
+      (place V18_66 124702 -121618 front 0 (PN AUTO_VIA))
+      (place V19_66 125702 -121618 front 0 (PN AUTO_VIA))
+      (place V20_66 126702 -121618 front 0 (PN AUTO_VIA))
+      (place V21_66 127702 -121618 front 0 (PN AUTO_VIA))
+      (place V22_66 128702 -121618 front 0 (PN AUTO_VIA))
+      (place V23_66 129702 -121618 front 0 (PN AUTO_VIA))
+      (place V24_66 130702 -121618 front 0 (PN AUTO_VIA))
+      (place V25_66 131702 -121618 front 0 (PN AUTO_VIA))
+      (place V26_66 132702 -121618 front 0 (PN AUTO_VIA))
+      (place V27_66 133702 -121618 front 0 (PN AUTO_VIA))
+      (place V28_66 134702 -121618 front 0 (PN AUTO_VIA))
+      (place V29_66 135702 -121618 front 0 (PN AUTO_VIA))
+      (place V30_66 136702 -121618 front 0 (PN AUTO_VIA))
+      (place V31_66 137702 -121618 front 0 (PN AUTO_VIA))
+      (place V35_66 141702 -121618 front 0 (PN AUTO_VIA))
+      (place V36_66 142702 -121618 front 0 (PN AUTO_VIA))
+      (place V37_66 143702 -121618 front 0 (PN AUTO_VIA))
+      (place V38_66 144702 -121618 front 0 (PN AUTO_VIA))
+      (place V39_66 145702 -121618 front 0 (PN AUTO_VIA))
+      (place V40_66 146702 -121618 front 0 (PN AUTO_VIA))
+      (place V41_66 147702 -121618 front 0 (PN AUTO_VIA))
+      (place V42_66 148702 -121618 front 0 (PN AUTO_VIA))
+      (place V43_66 149702 -121618 front 0 (PN AUTO_VIA))
+      (place V44_66 150702 -121618 front 0 (PN AUTO_VIA))
+      (place V45_66 151702 -121618 front 0 (PN AUTO_VIA))
+      (place V46_66 152702 -121618 front 0 (PN AUTO_VIA))
+      (place V47_66 153702 -121618 front 0 (PN AUTO_VIA))
+      (place V55_66 161702 -121618 front 0 (PN AUTO_VIA))
+      (place V56_66 162702 -121618 front 0 (PN AUTO_VIA))
+      (place V57_66 163702 -121618 front 0 (PN AUTO_VIA))
+      (place V58_66 164702 -121618 front 0 (PN AUTO_VIA))
+      (place V59_66 165702 -121618 front 0 (PN AUTO_VIA))
+      (place V60_66 166702 -121618 front 0 (PN AUTO_VIA))
+      (place V61_66 167702 -121618 front 0 (PN AUTO_VIA))
+      (place V62_66 168702 -121618 front 0 (PN AUTO_VIA))
+      (place V63_66 169702 -121618 front 0 (PN AUTO_VIA))
+      (place V64_66 170702 -121618 front 0 (PN AUTO_VIA))
+      (place V65_66 171702 -121618 front 0 (PN AUTO_VIA))
+      (place V66_66 172702 -121618 front 0 (PN AUTO_VIA))
+      (place V67_66 173702 -121618 front 0 (PN AUTO_VIA))
+      (place V68_66 174702 -121618 front 0 (PN AUTO_VIA))
+      (place V69_66 175702 -121618 front 0 (PN AUTO_VIA))
+      (place V70_66 176702 -121618 front 0 (PN AUTO_VIA))
+      (place V71_66 177702 -121618 front 0 (PN AUTO_VIA))
+      (place V72_66 178702 -121618 front 0 (PN AUTO_VIA))
+      (place V73_66 179702 -121618 front 0 (PN AUTO_VIA))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_1x01_Pitch2.54mm
+      (outline (polygon signal 0  1595 -1595  -1595 -1595  -1595 1595  1595 1595))
+      (outline (path signal 100  -1270 1270  -1270 -1270))
+      (outline (path signal 100  -1270 -1270  1270 -1270))
+      (outline (path signal 100  1270 -1270  1270 1270))
+      (outline (path signal 100  1270 1270  -1270 1270))
+      (outline (path signal 120  -1390 -1270  -1390 -1390))
+      (outline (path signal 120  -1390 -1390  1390 -1390))
+      (outline (path signal 120  1390 -1390  1390 -1270))
+      (outline (path signal 120  1390 -1270  -1390 -1270))
+      (outline (path signal 120  -1390 0  -1390 1390))
+      (outline (path signal 120  -1390 1390  0 1390))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 0 0)
+    )
+    (image myfootprints:Symbol_HighVoltage_Type2_FrontSilk_VerySmall
+      (outline (path signal 381  -4699 -2794  0 4191))
+      (outline (path signal 381  4699 -2794  -4699 -2794))
+      (outline (path signal 381  0 4191  4699 -2794))
+      (outline (path signal 381  -497.84 -2199.64  -599.44 -1300.48))
+      (outline (path signal 381  299.72 599.44  -497.84 -2199.64))
+      (outline (path signal 381  -899.16 -200.66  299.72 599.44))
+      (outline (path signal 381  -99.06 2799.08  -899.16 -200.66))
+      (outline (path signal 381  -497.84 -2199.64  101.6 -1501.14))
+      (outline (path signal 381  -899.16 -200.66  401.32 2600.96))
+      (outline (path signal 381  701.04 899.16  101.6 500.38))
+      (outline (path signal 381  -497.84 -2199.64  701.04 899.16))
+    )
+    (image "Symbols:OSHW-Logo_5.7x6mm_SilkScreen"
+    )
+    (image Mounting_Holes:MountingHole_2.2mm_M2
+      (outline (polygon signal 0  235.013 2436.2  544.624 2386.15  845.283 2296.91  1132.07 2169.96
+            1400.27 2007.38  1645.46 1811.84  1863.65 1586.55  2051.23 1335.2
+            2205.13 1061.93  2322.83 771.226  2402.38 467.868  2442.49 156.77
+            2445 0  2442.49 -156.769  2402.38 -467.867  2322.83 -771.225
+            2205.13 -1061.93  2051.23 -1335.2  1863.65 -1586.55  1645.46 -1811.84
+            1400.27 -2007.38  1132.07 -2169.96  845.283 -2296.91  544.624 -2386.15
+            235.013 -2436.2  -78.443 -2446.25  -390.62 -2416.14  -696.39 -2346.35
+            -990.71 -2238.04  -1268.77 -2092.97  -1526.01 -1913.54  -1758.17 -1702.69
+            -1961.47 -1463.88  -2132.56 -1201.04  -2268.64 -918.47  -2367.47 -620.824
+            -2427.42 -312.981  -2447.51 0  -2427.42 312.982  -2367.47 620.825
+            -2268.64 918.471  -2132.56 1201.04  -1961.47 1463.88  -1758.17 1702.69
+            -1526.01 1913.54  -1268.77 2092.97  -990.71 2238.04  -696.39 2346.35
+            -390.62 2416.14  -78.443 2446.26))
+      (outline (path signal 150  2200 0  2181.18 -287.158  2125.04 -569.402  2032.54 -841.904
+            1905.26 -1100  1745.38 -1339.28  1555.63 -1555.63  1339.28 -1745.38
+            1100 -1905.26  841.904 -2032.54  569.402 -2125.04  287.158 -2181.18
+            0 -2200  -287.158 -2181.18  -569.402 -2125.04  -841.904 -2032.54
+            -1100 -1905.26  -1339.28 -1745.38  -1555.63 -1555.63  -1745.38 -1339.28
+            -1905.26 -1100  -2032.54 -841.904  -2125.04 -569.402  -2181.18 -287.158
+            -2200 0  -2181.18 287.158  -2125.04 569.402  -2032.54 841.904
+            -1905.26 1100  -1745.38 1339.28  -1555.63 1555.63  -1339.28 1745.38
+            -1100 1905.26  -841.904 2032.54  -569.402 2125.04  -287.158 2181.18
+            0 2200  287.158 2181.18  569.402 2125.04  841.904 2032.54  1100 1905.26
+            1339.28 1745.38  1555.63 1555.63  1745.38 1339.28  1905.26 1100
+            2032.54 841.904  2125.04 569.402  2181.18 287.158  2200 0))
+      (keepout "" (circle F.Cu 2700))
+      (keepout "" (circle B.Cu 2700))
+    )
+    (image Resistors_ThroughHole:R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal
+      (outline (polygon signal 0  -945 1145  8595 1145  8595 -1145  -945 -1145))
+      (outline (path signal 120  6740 0  5670 0))
+      (outline (path signal 120  880 0  1950 0))
+      (outline (path signal 120  5670 860  1950 860))
+      (outline (path signal 120  5670 -860  5670 860))
+      (outline (path signal 120  1950 -860  5670 -860))
+      (outline (path signal 120  1950 860  1950 -860))
+      (outline (path signal 100  7620 0  5610 0))
+      (outline (path signal 100  0 0  2010 0))
+      (outline (path signal 100  5610 800  2010 800))
+      (outline (path signal 100  5610 -800  5610 800))
+      (outline (path signal 100  2010 -800  5610 -800))
+      (outline (path signal 100  2010 800  2010 -800))
+      (pin Round[A]Pad_1400.000000_um 1 0 0)
+      (pin Oval[A]Pad_1400.000000x1400.000000_um 2 7620 0)
+    )
+    (image "myfootprints:ZTTCR-3"
+      (outline (polygon signal 0  -2395 -1845  -2395 1845  2395 1845  2395 -1845))
+      (outline (path signal 150  -2250 -1699.29  -2250 1700))
+      (outline (path signal 150  -2250 1700  2250 1700))
+      (outline (path signal 150  2250 1700  2250 -1700))
+      (outline (path signal 150  2250 -1700  -2247.9 -1700))
+      (pin Rect[T]Pad_800.000000x3000.000000_um 3 1500 0)
+      (pin Rect[T]Pad_800.000000x3000.000000_um 2 0 0)
+      (pin Rect[T]Pad_800.000000x3000.000000_um 1 -1500 0)
+    )
+    (image Buttons_Switches_ThroughHole:SW_PUSH_6mm
+      (outline (polygon signal 0  7995 -5995  -1495 -5995  -1495 1495  7995 1495))
+      (outline (path signal 100  5265.56 -2250  5246.79 -2524.45  5190.82 -2793.79  5098.7 -3053
+            4972.14 -3297.26  4813.5 -3522  4625.73 -3723.05  4412.34 -3896.66
+            4177.29 -4039.59  3924.97 -4149.19  3660.08 -4223.41  3387.55 -4260.86
+            3112.45 -4260.86  2839.92 -4223.41  2575.03 -4149.19  2322.71 -4039.59
+            2087.66 -3896.66  1874.27 -3723.05  1686.5 -3522  1527.86 -3297.26
+            1401.3 -3053  1309.18 -2793.79  1253.21 -2524.45  1234.44 -2250
+            1253.21 -1975.55  1309.18 -1706.21  1401.3 -1447  1527.86 -1202.74
+            1686.5 -978.002  1874.27 -776.953  2087.66 -603.345  2322.71 -460.411
+            2575.03 -350.813  2839.92 -276.593  3112.45 -239.135  3387.55 -239.135
+            3660.08 -276.593  3924.97 -350.813  4177.29 -460.411  4412.34 -603.345
+            4625.73 -776.953  4813.5 -978.002  4972.14 -1202.74  5098.7 -1447
+            5190.82 -1706.21  5246.79 -1975.55  5265.56 -2250))
+      (outline (path signal 150  6750 -3000  6750 -1500))
+      (outline (path signal 150  5500 1000  1000 1000))
+      (outline (path signal 150  -250 -1500  -250 -3000))
+      (outline (path signal 150  1000 -5500  5500 -5500))
+      (outline (path signal 100  250 750  3250 750))
+      (outline (path signal 100  250 -5250  250 750))
+      (outline (path signal 100  6250 -5250  250 -5250))
+      (outline (path signal 100  6250 750  6250 -5250))
+      (outline (path signal 100  3250 750  6250 750))
+      (pin Round[A]Pad_2000.000000_um (rotate 90) 2 0 -4500)
+      (pin Round[A]Pad_2000.000000_um (rotate 90) 1 0 0)
+      (pin Round[A]Pad_2000.000000_um (rotate 90) 2@1 6500 -4500)
+      (pin Round[A]Pad_2000.000000_um (rotate 90) 1@1 6500 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering
+      (outline (polygon signal 0  -2295 995  2295 995  2295 -995  -2295 -995))
+      (outline (path signal 120  -500 -850  500 -850))
+      (outline (path signal 120  500 850  -500 850))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering::1
+      (outline (polygon signal 0  2295 -995  -2295 -995  -2295 995  2295 995))
+      (outline (path signal 120  -500 -850  500 -850))
+      (outline (path signal 120  500 850  -500 850))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering::2
+      (outline (polygon signal 0  -2295 995  2295 995  2295 -995  -2295 -995))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 120  500 850  -500 850))
+      (outline (path signal 120  -500 -850  500 -850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering::3
+      (outline (polygon signal 0  2295 995  2295 -995  -2295 -995  -2295 995))
+      (outline (path signal 120  -500 -850  500 -850))
+      (outline (path signal 120  500 850  -500 850))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image Capacitors_SMD:C_0805_HandSoldering::4
+      (outline (polygon signal 0  2295 -995  -2295 -995  -2295 995  2295 995))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 120  500 850  -500 850))
+      (outline (path signal 120  -500 -850  500 -850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+    )
+    (image "Capacitors_Tantalum_SMD:CP_Tantalum_Case-B_EIA-3528-21_Hand"
+      (outline (polygon signal 0  -4145 -1745  -4145 1745  4145 1745  4145 -1745))
+      (outline (path signal 120  -4050 1650  -4050 -1650))
+      (outline (path signal 120  -4050 -1650  1750 -1650))
+      (outline (path signal 120  -4050 1650  1750 1650))
+      (outline (path signal 100  -1225 1400  -1225 -1400))
+      (outline (path signal 100  -1400 1400  -1400 -1400))
+      (outline (path signal 100  1750 1400  -1750 1400))
+      (outline (path signal 100  1750 -1400  1750 1400))
+      (outline (path signal 100  -1750 -1400  1750 -1400))
+      (outline (path signal 100  -1750 1400  -1750 -1400))
+      (pin Rect[T]Pad_3200.000000x2500.000000_um 1 -2150 0)
+      (pin Rect[T]Pad_3200.000000x2500.000000_um 2 2150 0)
+    )
+    (image "Capacitors_Tantalum_SMD:CP_Tantalum_Case-B_EIA-3528-21_Hand::1"
+      (outline (polygon signal 0  -4145 -1745  -4145 1745  4145 1745  4145 -1745))
+      (outline (path signal 100  -1750 1400  -1750 -1400))
+      (outline (path signal 100  -1750 -1400  1750 -1400))
+      (outline (path signal 100  1750 -1400  1750 1400))
+      (outline (path signal 100  1750 1400  -1750 1400))
+      (outline (path signal 100  -1400 1400  -1400 -1400))
+      (outline (path signal 100  -1225 1400  -1225 -1400))
+      (outline (path signal 120  -4050 1650  1750 1650))
+      (outline (path signal 120  -4050 -1650  1750 -1650))
+      (outline (path signal 120  -4050 1650  -4050 -1650))
+      (pin Rect[T]Pad_3200.000000x2500.000000_um 2 2150 0)
+      (pin Rect[T]Pad_3200.000000x2500.000000_um 1 -2150 0)
+    )
+    (image Pin_Headers:Pin_Header_Straight_2x05_Pitch2.54mm
+      (outline (polygon signal 0  4095 -11695  -1595 -11695  -1595 1595  4095 1595))
+      (outline (path signal 100  -1270 1270  -1270 -11430))
+      (outline (path signal 100  -1270 -11430  3810 -11430))
+      (outline (path signal 100  3810 -11430  3810 1270))
+      (outline (path signal 100  3810 1270  -1270 1270))
+      (outline (path signal 120  -1390 -1270  -1390 -11550))
+      (outline (path signal 120  -1390 -11550  3930 -11550))
+      (outline (path signal 120  3930 -11550  3930 1390))
+      (outline (path signal 120  3930 1390  1270 1390))
+      (outline (path signal 120  1270 1390  1270 -1270))
+      (outline (path signal 120  1270 -1270  -1390 -1270))
+      (outline (path signal 120  -1390 0  -1390 1390))
+      (outline (path signal 120  -1390 1390  0 1390))
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 10 2540 -10160)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 9 0 -10160)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 8 2540 -7620)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 7 0 -7620)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 6 2540 -5080)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 5 0 -5080)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 4 2540 -2540)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 3 0 -2540)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 2 2540 0)
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 0 0)
+    )
+    (image "Diodes_ThroughHole:D_DO-35_SOD27_P10.16mm_Horizontal"
+      (outline (polygon signal 0  11245 1345  11245 -1345  -1045 -1345  -1045 1345))
+      (outline (path signal 100  3080 1000  3080 -1000))
+      (outline (path signal 100  3080 -1000  7080 -1000))
+      (outline (path signal 100  7080 -1000  7080 1000))
+      (outline (path signal 100  7080 1000  3080 1000))
+      (outline (path signal 100  0 0  3080 0))
+      (outline (path signal 100  10160 0  7080 0))
+      (outline (path signal 100  3680 1000  3680 -1000))
+      (outline (path signal 120  3020 1060  3020 -1060))
+      (outline (path signal 120  3020 -1060  7140 -1060))
+      (outline (path signal 120  7140 -1060  7140 1060))
+      (outline (path signal 120  7140 1060  3020 1060))
+      (outline (path signal 120  980 0  3020 0))
+      (outline (path signal 120  9180 0  7140 0))
+      (outline (path signal 120  3680 1060  3680 -1060))
+      (pin Oval[A]Pad_1600.000000x1600.000000_um 2 10160 0)
+      (pin Rect[A]Pad_1600.000000x1600.000000_um 1 0 0)
+    )
+    (image LEDs:LED_D3.0mm
+      (outline (polygon signal 0  -1145 2245  3695 2245  3695 -2245  -1145 -2245))
+      (outline (path signal 100  -230 0  -210.575 240.617  -152.805 475.002  -58.184 697.085
+            70.836 901.113  230.913 1081.8  417.903 1234.48  626.961 1355.18
+            852.674 1440.78  1089.19 1489.06  1330.4 1498.78  1570.04 1469.69
+            1801.91 1402.52  2020 1299.04  2218.67 1161.91  2392.77 994.684
+            2537.78 801.699  2649.97 587.95  2726.41 358.973  2765.14 120.7
+            2765.14 -120.7  2726.41 -358.973  2649.97 -587.95  2537.78 -801.699
+            2392.77 -994.684  2218.67 -1161.91  2020 -1299.04  1801.91 -1402.52
+            1570.04 -1469.69  1330.4 -1498.78  1089.19 -1489.06  852.674 -1440.78
+            626.961 -1355.18  417.903 -1234.48  230.913 -1081.8  70.836 -901.113
+            -58.184 -697.085  -152.805 -475.002  -210.575 -240.617  -230 0))
+      (outline (path signal 100  -230 1166.19  -230 -1166.19))
+      (outline (path signal 120  -290 1236  -290 1080))
+      (outline (path signal 120  -290 -1080  -290 -1236))
+      (outline (polygon signal 0  2269.49 -1036.64  2302.83 -1020.41  2339.34 -1026.88
+            2365.08 -1053.58  2370.21 -1090.3  2352.78 -1123.03  2186.14 -1262.65
+            2001.72 -1377.75  1803.09 -1466.09  1594.1 -1525.96  1378.82 -1556.2
+            1161.42 -1556.22  946.14 -1526.01  737.145 -1466.17  538.497 -1377.86
+            354.055 -1262.79  187.401 -1123.2  169.96 -1090.47  175.086 -1053.75
+            200.82 -1027.05  237.333 -1020.58  270.677 -1036.8  350.37 -1113.6
+            531.343 -1241.05  729.668 -1339.35  940.685 -1406.19  1159.44 -1440
+            1380.79 -1439.98  1599.54 -1406.14  1810.54 -1339.27  2008.85 -1240.94
+            2189.8 -1113.45  2269.49 -1036.64))
+      (outline (polygon signal 0  270.677 1036.8  237.333 1020.58  200.82 1027.05  175.086 1053.75
+            169.96 1090.47  187.401 1123.2  354.055 1262.79  538.497 1377.86
+            737.145 1466.17  946.14 1526.01  1161.42 1556.22  1378.82 1556.2
+            1594.1 1525.96  1803.09 1466.09  2001.72 1377.75  2186.14 1262.65
+            2352.78 1123.03  2370.21 1090.3  2365.08 1053.58  2339.34 1026.88
+            2302.83 1020.41  2269.49 1036.64  2189.8 1113.45  2008.85 1240.94
+            1810.54 1339.27  1599.54 1406.14  1380.79 1439.98  1159.44 1440
+            940.685 1406.19  729.668 1339.35  531.343 1241.05  350.37 1113.6
+            270.677 1036.8))
+      (outline (polygon signal 0  2891.91 -1046.09  2920.66 -1022.66  2957.68 -1020.6  2988.84 -1040.7
+            3002.24 -1075.28  2992.76 -1111.13  2838.68 -1319.75  2659.5 -1507.24
+            2458.08 -1670.62  2237.65 -1807.25  2001.73 -1914.96  1754.1 -1992.02
+            1498.72 -2037.2  1239.68 -2049.78  981.122 -2029.54  727.19 -1976.83
+            481.946 -1892.48  249.314 -1777.84  33.019 -1634.74  -163.48 -1465.48
+            -337.035 -1272.77  -349.948 -1238.01  -339.963 -1202.29  -310.894 -1179.27
+            -273.844 -1177.73  -242.965 -1198.26  -161.622 -1301.07  27.46 -1482.71
+            239.366 -1637.11  470.204 -1761.43  715.734 -1853.41  971.445 -1911.33
+            1232.64 -1934.15  1494.52 -1921.44  1752.28 -1873.43  2001.18 -1791.01
+            2236.64 -1675.69  2454.36 -1529.59  2650.31 -1355.39  2820.91 -1156.29
+            2891.91 -1046.09))
+      (outline (polygon signal 0  -242.965 1198.26  -273.844 1177.73  -310.894 1179.27
+            -339.963 1202.29  -349.948 1238.01  -337.035 1272.77  -163.48 1465.48
+            33.019 1634.74  249.314 1777.84  481.946 1892.48  727.19 1976.83
+            981.122 2029.54  1239.68 2049.78  1498.72 2037.2  1754.1 1992.02
+            2001.73 1914.96  2237.65 1807.25  2458.08 1670.62  2659.5 1507.24
+            2838.68 1319.75  2992.76 1111.13  3002.24 1075.28  2988.84 1040.7
+            2957.68 1020.6  2920.66 1022.66  2891.91 1046.09  2820.91 1156.29
+            2650.31 1355.39  2454.36 1529.59  2236.64 1675.69  2001.18 1791.01
+            1752.28 1873.43  1494.52 1921.44  1232.64 1934.15  971.445 1911.33
+            715.734 1853.41  470.204 1761.43  239.366 1637.11  27.46 1482.71
+            -161.622 1301.07  -242.965 1198.26))
+      (outline (polygon signal 0  -190.526 1135.5  -216.104 1118.16  -246.989 1119.16  -271.385 1138.13
+            -279.974 1167.82  -269.474 1196.88  -90.426 1397.05  114.425 1570.71
+            341.195 1714.59  585.583 1825.94  842.952 1902.66  1108.42 1943.29
+            1376.96 1947.06  1643.46 1913.9  1902.88 1844.44  2150.3 1739.99
+            2381.02 1602.54  2590.67 1434.69  2775.26 1239.63  2931.31 1021.05
+            3055.84 783.113  3146.5 530.318  3201.57 267.463  3220 -0.464
+            3201.44 -268.383  3146.25 -531.211  3055.47 -783.964  2930.82 -1021.85
+            2774.67 -1240.35  2589.98 -1435.32  2380.26 -1603.07  2149.47 -1740.41
+            1902.01 -1844.74  1642.55 -1914.08  1376.03 -1947.12  1107.5 -1943.22
+            842.046 -1902.46  584.713 -1825.62  340.379 -1714.15  113.677 -1570.16
+            -91.091 -1396.4  -270.043 -1196.15  -280.529 -1167.08  -271.927 -1137.4
+            -247.522 -1118.44  -216.636 -1117.45  -191.067 -1134.81  -110.542 -1238.59
+            78.317 -1421.23  291.088 -1575.35  523.5 -1697.87  770.891 -1786.31
+            1028.3 -1838.91  1290.55 -1854.61  1552.4 -1833.1  1808.57 -1774.81
+            2053.94 -1680.9  2283.58 -1553.27  2492.89 -1394.47  2677.65 -1207.69
+            2834.17 -996.682  2959.31 -765.671  3050.55 -519.297  3106.06 -262.503
+            3124.73 -0.442  3106.18 261.629  3050.79 518.449  2959.67 764.867
+            2834.65 995.937  2678.23 1207.02  2493.55 1393.89  2284.32 1552.79
+            2054.74 1680.53  1809.42 1774.55  1553.27 1832.97  1291.44 1854.6
+            1029.17 1839.02  771.742 1786.55  524.309 1698.22  291.838 1575.82
+            78.994 1421.8  -109.952 1239.25  -190.526 1135.5))
+      (pin Round[A]Pad_1800.000000_um 2 2540 0)
+      (pin Rect[A]Pad_1800.000000x1800.000000_um 1 0 0)
+    )
+    (image LEDs:LED_D3.0mm::1
+      (outline (polygon signal 0  -1145 2245  3695 2245  3695 -2245  -1145 -2245))
+      (outline (path signal 120  -290 -1080  -290 -1236))
+      (outline (path signal 120  -290 1236  -290 1080))
+      (outline (path signal 100  -230 1166.19  -230 -1166.19))
+      (outline (path signal 100  -230 0  -210.575 240.617  -152.805 475.002  -58.184 697.085
+            70.836 901.113  230.913 1081.8  417.903 1234.48  626.961 1355.18
+            852.674 1440.78  1089.19 1489.06  1330.4 1498.78  1570.04 1469.69
+            1801.91 1402.52  2020 1299.04  2218.67 1161.91  2392.77 994.684
+            2537.78 801.699  2649.97 587.95  2726.41 358.973  2765.14 120.7
+            2765.14 -120.7  2726.41 -358.973  2649.97 -587.95  2537.78 -801.699
+            2392.77 -994.684  2218.67 -1161.91  2020 -1299.04  1801.91 -1402.52
+            1570.04 -1469.69  1330.4 -1498.78  1089.19 -1489.06  852.674 -1440.78
+            626.961 -1355.18  417.903 -1234.48  230.913 -1081.8  70.836 -901.113
+            -58.184 -697.085  -152.805 -475.002  -210.575 -240.617  -230 0))
+      (outline (polygon signal 0  -190.526 1135.5  -216.104 1118.16  -246.989 1119.16  -271.385 1138.13
+            -279.974 1167.82  -269.474 1196.88  -90.426 1397.05  114.425 1570.71
+            341.195 1714.59  585.583 1825.94  842.952 1902.66  1108.42 1943.29
+            1376.96 1947.06  1643.46 1913.9  1902.88 1844.44  2150.3 1739.99
+            2381.02 1602.54  2590.67 1434.69  2775.26 1239.63  2931.31 1021.05
+            3055.84 783.113  3146.5 530.318  3201.57 267.463  3220 -0.464
+            3201.44 -268.383  3146.25 -531.211  3055.47 -783.964  2930.82 -1021.85
+            2774.67 -1240.35  2589.98 -1435.32  2380.26 -1603.07  2149.47 -1740.41
+            1902.01 -1844.74  1642.55 -1914.08  1376.03 -1947.12  1107.5 -1943.22
+            842.046 -1902.46  584.713 -1825.62  340.379 -1714.15  113.677 -1570.16
+            -91.091 -1396.4  -270.043 -1196.15  -280.529 -1167.08  -271.927 -1137.4
+            -247.522 -1118.44  -216.636 -1117.45  -191.067 -1134.81  -110.542 -1238.59
+            78.317 -1421.23  291.088 -1575.35  523.5 -1697.87  770.891 -1786.31
+            1028.3 -1838.91  1290.55 -1854.61  1552.4 -1833.1  1808.57 -1774.81
+            2053.94 -1680.9  2283.58 -1553.27  2492.89 -1394.47  2677.65 -1207.69
+            2834.17 -996.682  2959.31 -765.671  3050.55 -519.297  3106.06 -262.503
+            3124.73 -0.442  3106.18 261.629  3050.79 518.449  2959.67 764.867
+            2834.65 995.937  2678.23 1207.02  2493.55 1393.89  2284.32 1552.79
+            2054.74 1680.53  1809.42 1774.55  1553.27 1832.97  1291.44 1854.6
+            1029.17 1839.02  771.742 1786.55  524.309 1698.22  291.838 1575.82
+            78.994 1421.8  -109.952 1239.25  -190.526 1135.5))
+      (outline (polygon signal 0  -242.965 1198.26  -273.844 1177.73  -310.894 1179.27
+            -339.963 1202.29  -349.948 1238.01  -337.035 1272.77  -163.48 1465.48
+            33.019 1634.74  249.314 1777.84  481.946 1892.48  727.19 1976.83
+            981.122 2029.54  1239.68 2049.78  1498.72 2037.2  1754.1 1992.02
+            2001.73 1914.96  2237.65 1807.25  2458.08 1670.62  2659.5 1507.24
+            2838.68 1319.75  2992.76 1111.13  3002.24 1075.28  2988.84 1040.7
+            2957.68 1020.6  2920.66 1022.66  2891.91 1046.09  2820.91 1156.29
+            2650.31 1355.39  2454.36 1529.59  2236.64 1675.69  2001.18 1791.01
+            1752.28 1873.43  1494.52 1921.44  1232.64 1934.15  971.445 1911.33
+            715.734 1853.41  470.204 1761.43  239.366 1637.11  27.46 1482.71
+            -161.622 1301.07  -242.965 1198.26))
+      (outline (polygon signal 0  2891.91 -1046.09  2920.66 -1022.66  2957.68 -1020.6  2988.84 -1040.7
+            3002.24 -1075.28  2992.76 -1111.13  2838.68 -1319.75  2659.5 -1507.24
+            2458.08 -1670.62  2237.65 -1807.25  2001.73 -1914.96  1754.1 -1992.02
+            1498.72 -2037.2  1239.68 -2049.78  981.122 -2029.54  727.19 -1976.83
+            481.946 -1892.48  249.314 -1777.84  33.019 -1634.74  -163.48 -1465.48
+            -337.035 -1272.77  -349.948 -1238.01  -339.963 -1202.29  -310.894 -1179.27
+            -273.844 -1177.73  -242.965 -1198.26  -161.622 -1301.07  27.46 -1482.71
+            239.366 -1637.11  470.204 -1761.43  715.734 -1853.41  971.445 -1911.33
+            1232.64 -1934.15  1494.52 -1921.44  1752.28 -1873.43  2001.18 -1791.01
+            2236.64 -1675.69  2454.36 -1529.59  2650.31 -1355.39  2820.91 -1156.29
+            2891.91 -1046.09))
+      (outline (polygon signal 0  270.677 1036.8  237.333 1020.58  200.82 1027.05  175.086 1053.75
+            169.96 1090.47  187.401 1123.2  354.055 1262.79  538.497 1377.86
+            737.145 1466.17  946.14 1526.01  1161.42 1556.22  1378.82 1556.2
+            1594.1 1525.96  1803.09 1466.09  2001.72 1377.75  2186.14 1262.65
+            2352.78 1123.03  2370.21 1090.3  2365.08 1053.58  2339.34 1026.88
+            2302.83 1020.41  2269.49 1036.64  2189.8 1113.45  2008.85 1240.94
+            1810.54 1339.27  1599.54 1406.14  1380.79 1439.98  1159.44 1440
+            940.685 1406.19  729.668 1339.35  531.343 1241.05  350.37 1113.6
+            270.677 1036.8))
+      (outline (polygon signal 0  2269.49 -1036.64  2302.83 -1020.41  2339.34 -1026.88
+            2365.08 -1053.58  2370.21 -1090.3  2352.78 -1123.03  2186.14 -1262.65
+            2001.72 -1377.75  1803.09 -1466.09  1594.1 -1525.96  1378.82 -1556.2
+            1161.42 -1556.22  946.14 -1526.01  737.145 -1466.17  538.497 -1377.86
+            354.055 -1262.79  187.401 -1123.2  169.96 -1090.47  175.086 -1053.75
+            200.82 -1027.05  237.333 -1020.58  270.677 -1036.8  350.37 -1113.6
+            531.343 -1241.05  729.668 -1339.35  940.685 -1406.19  1159.44 -1440
+            1380.79 -1439.98  1599.54 -1406.14  1810.54 -1339.27  2008.85 -1240.94
+            2189.8 -1113.45  2269.49 -1036.64))
+      (pin Rect[A]Pad_1800.000000x1800.000000_um 1 0 0)
+      (pin Round[A]Pad_1800.000000_um 2 2540 0)
+    )
+    (image "Fuse_Holders_and_Fuses:Fuseholder5x20_horiz_open_lateral_Type-II"
+      (outline (path signal 150  3251.2 0  -3251.2 0))
+      (outline (path signal 150  12867.6 -3429  9057.64 -3429))
+      (outline (path signal 150  3215.64 -3429  6263.64 -3429))
+      (outline (path signal 150  5715 -2540  8382 -2540))
+      (outline (path signal 150  11978.6 -2540  9311.64 -2540))
+      (outline (path signal 150  3215.64 2540  6009.64 2540))
+      (outline (path signal 150  11976.1 2540  9309.1 2540))
+      (outline (path signal 150  12867.6 3429  9184.64 3429))
+      (outline (path signal 150  3215.64 3429  6136.64 3429))
+      (outline (path signal 150  -12867.6 -3429  -9184.64 -3429))
+      (outline (path signal 150  -3342.64 -3429  -6136.64 -3429))
+      (outline (path signal 150  -5882.64 -2540  -6009.64 -2540))
+      (outline (path signal 150  -5882.64 -2540  -3342.64 -2540))
+      (outline (path signal 150  -12105.6 -2540  -9311.64 -2540))
+      (outline (path signal 150  -12867.6 3429  -9057.64 3429))
+      (outline (path signal 150  -3342.64 3429  -6136.64 3429))
+      (outline (path signal 150  -3342.64 2540  -6009.64 2540))
+      (outline (path signal 150  -12105.6 2540  -9311.64 2540))
+      (outline (path signal 150  12867.6 3429  12867.6 -3429))
+      (outline (path signal 150  3215.64 -3429  3215.64 -2540))
+      (outline (path signal 150  3215.64 3429  3215.64 2540))
+      (outline (path signal 150  -12867.6 3429  -12867.6 -3429))
+      (outline (path signal 150  -3342.64 -3429  -3342.64 -2540))
+      (outline (path signal 150  -3342.64 3429  -3342.64 2413))
+      (outline (path signal 150  5715 -2540  -5969 -2540))
+      (outline (path signal 150  -5842 2540  5715 2540))
+      (outline (path signal 150  -3342.64 0  -3342.64 2540))
+      (outline (path signal 150  -12103.1 2540  -12103.1 -2540))
+      (outline (path signal 150  -3342.64 -2540  -3342.64 0))
+      (outline (path signal 150  3215.64 0  3215.64 2540))
+      (outline (path signal 150  11976.1 2540  11976.1 -2540))
+      (outline (path signal 150  3215.64 -2540  3215.64 0))
+      (pin Round[A]Pad_2349.500000_um 1 -7660.64 -2540)
+      (pin Round[A]Pad_2349.500000_um 1@1 -7660.64 2540)
+      (pin Round[A]Pad_2349.500000_um 2 7660.64 -2540)
+      (pin Round[A]Pad_2349.500000_um 2@1 7660.64 2540)
+    )
+    (image "Housings_QFP:TQFP-32_7x7mm_Pitch0.8mm"
+      (outline (polygon signal 0  5295 -5295  -5295 -5295  -5295 5295  5295 5295))
+      (outline (path signal 150  -2500 3500  3500 3500))
+      (outline (path signal 150  3500 3500  3500 -3500))
+      (outline (path signal 150  3500 -3500  -3500 -3500))
+      (outline (path signal 150  -3500 -3500  -3500 2500))
+      (outline (path signal 150  -3500 2500  -2500 3500))
+      (outline (path signal 150  -3625 3625  -3625 3400))
+      (outline (path signal 150  3625 3625  3625 3300))
+      (outline (path signal 150  3625 -3625  3625 -3300))
+      (outline (path signal 150  -3625 -3625  -3625 -3300))
+      (outline (path signal 150  -3625 3625  -3300 3625))
+      (outline (path signal 150  -3625 -3625  -3300 -3625))
+      (outline (path signal 150  3625 -3625  3300 -3625))
+      (outline (path signal 150  3625 3625  3300 3625))
+      (outline (path signal 150  -3625 3400  -5050 3400))
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 32 -2800 4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 31 -2000 4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 30 -1200 4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 29 -400 4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 28 400 4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 27 1200 4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 26 2000 4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 25 2800 4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 24 4250 2800)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 23 4250 2000)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 22 4250 1200)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 21 4250 400)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 20 4250 -400)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 19 4250 -1200)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 18 4250 -2000)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 17 4250 -2800)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 16 2800 -4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 15 2000 -4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 14 1200 -4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 13 400 -4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 12 -400 -4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 11 -1200 -4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 10 -2000 -4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um (rotate 90) 9 -2800 -4250)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 8 -4250 -2800)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 7 -4250 -2000)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 6 -4250 -1200)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 5 -4250 -400)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 4 -4250 400)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 3 -4250 1200)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 2 -4250 2000)
+      (pin Rect[T]Pad_1600.000000x550.000000_um 1 -4250 2800)
+    )
+    (image "TO_SOT_Packages_THT:TO-92_Molded_Narrow"
+      (outline (polygon signal 0  -1645 2895  4145 2895  4145 -2195  -1645 -2195))
+      (outline (path signal 120  -530 -1850  3070 -1850))
+      (outline (path signal 100  -500 -1750  3000 -1750))
+      (outline (polygon signal 0  1270 2540  1234.73 2551.46  1212.94 2581.46  1212.94 2618.54
+            1234.73 2648.54  1270 2660  1582.65 2641.56  1890.96 2586.5
+            2190.67 2495.59  2477.61 2370.08  2747.82 2211.71  2997.53 2022.68
+            3223.3 1805.61  3421.99 1563.51  3590.84 1299.73  3727.52 1017.94
+            3830.13 722.032  3897.25 416.116  3927.95 104.431  3921.8 -208.701
+            3878.89 -518.94  3799.81 -821.985  3685.66 -1113.63  3538.02 -1389.85
+            3358.94 -1646.79  3150.9 -1880.9  3117.86 -1897.74  3081.24 -1891.94
+            3055.02 -1865.72  3049.22 -1829.09  3066.05 -1796.05  3172.01 -1690.17
+            3357.49 -1454.9  3514.02 -1199.45  3639.45 -927.384  3732.03 -642.457
+            3790.47 -348.624  3813.98 -49.957  3802.22 249.401  3755.35 545.303
+            3674.03 833.645  3559.38 1110.43  3413 1371.82  3236.9 1614.19
+            3033.54 1834.19  2805.73 2028.76  2556.63 2195.2  2289.69 2331.21
+            2008.62 2434.91  1717.31 2504.84  1419.8 2540.06  1270 2540))
+      (outline (polygon signal 0  -448.27 -1718.27  -434.241 -1745.8  -439.075 -1776.33
+            -460.925 -1798.17  -491.447 -1803.01  -518.98 -1788.98  -716.852 -1566.31
+            -887.18 -1321.92  -1027.6 -1059.21  -1136.17 -781.813  -1211.39 -493.579
+            -1252.2 -198.502  -1258.05 99.327  -1228.85 395.779  -1165.01 686.744
+            -1067.41 968.189  -937.415 1236.21  -776.813 1487.1  -587.836 1717.37
+            -373.103 1923.83  -135.593 2103.62  121.404 2254.25  394.324 2373.62
+            679.383 2460.1  972.63 2512.46  1270 2530  1299.39 2520.45  1317.55 2495.45
+            1317.55 2464.55  1299.39 2439.55  1270 2430  1119.14 2429.94
+            819.731 2392.62  527.239 2318.55  246.156 2208.87  -19.202 2065.26
+            -264.76 1889.94  -486.746 1685.59  -681.75 1455.35  -846.777 1202.75
+            -979.294 931.688  -1077.26 646.312  -1139.18 351.009  -1164.1 50.316
+            -1151.63 -251.15  -1101.97 -548.759  -1015.87 -837.94  -894.673 -1114.25
+            -740.225 -1373.45  -554.902 -1611.55  -448.27 -1718.27))
+      (outline (polygon signal 0  -526.052 -1796.05  -509.217 -1829.09  -515.018 -1865.72
+            -541.239 -1891.94  -577.864 -1897.74  -610.904 -1880.9  -818.943 -1646.79
+            -998.023 -1389.85  -1145.66 -1113.63  -1259.81 -821.985  -1338.89 -518.94
+            -1381.8 -208.701  -1387.95 104.431  -1357.25 416.116  -1290.13 722.032
+            -1187.52 1017.94  -1050.84 1299.73  -881.985 1563.51  -683.298 1805.61
+            -457.532 2022.68  -207.817 2211.71  62.385 2370.08  349.329 2495.59
+            649.035 2586.5  957.35 2641.56  1270 2660  1305.27 2648.54  1327.06 2618.54
+            1327.06 2581.46  1305.27 2551.46  1270 2540  1120.2 2540.06
+            822.692 2504.84  531.38 2434.91  250.307 2331.21  -16.63 2195.2
+            -265.73 2028.76  -493.539 1834.19  -696.901 1614.19  -872.996 1371.82
+            -1019.38 1110.43  -1134.03 833.645  -1215.35 545.303  -1262.22 249.401
+            -1273.98 -49.957  -1250.47 -348.624  -1192.03 -642.457  -1099.45 -927.384
+            -974.022 -1199.45  -817.486 -1454.9  -632.012 -1690.17  -526.052 -1796.05))
+      (outline (polygon signal 0  1270 2430  1240.61 2439.55  1222.45 2464.55  1222.45 2495.45
+            1240.61 2520.45  1270 2530  1567.37 2512.46  1860.62 2460.1
+            2145.68 2373.62  2418.6 2254.25  2675.59 2103.62  2913.1 1923.83
+            3127.84 1717.37  3316.81 1487.1  3477.41 1236.21  3607.41 968.189
+            3705.01 686.744  3768.85 395.779  3798.05 99.327  3792.2 -198.502
+            3751.39 -493.579  3676.17 -781.813  3567.6 -1059.21  3427.18 -1321.92
+            3256.85 -1566.31  3058.98 -1788.98  3031.45 -1803.01  3000.93 -1798.17
+            2979.07 -1776.33  2974.24 -1745.8  2988.27 -1718.27  3094.9 -1611.55
+            3280.22 -1373.45  3434.67 -1114.25  3555.87 -837.94  3641.97 -548.759
+            3691.63 -251.15  3704.1 50.316  3679.18 351.009  3617.26 646.312
+            3519.29 931.688  3386.78 1202.75  3221.75 1455.35  3026.75 1685.59
+            2804.76 1889.94  2559.2 2065.26  2293.84 2208.87  2012.76 2318.55
+            1720.27 2392.62  1420.86 2429.94  1270 2430))
+      (pin Rect[A]Pad_1000.000000x1000.000000_um (rotate 90) 1 0 0)
+      (pin Round[A]Pad_1000.000000_um (rotate 90) 3 2540 0)
+      (pin Round[A]Pad_1000.000000_um (rotate 90) 2 1270 1270)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering
+      (outline (polygon signal 0  -2395 995  2395 995  2395 -995  -2395 -995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering::1
+      (outline (polygon signal 0  2395 -995  -2395 -995  -2395 995  2395 995))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 150  -600 875  600 875))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering::2
+      (outline (polygon signal 0  -2395 995  2395 995  2395 -995  -2395 -995))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 150  -600 875  600 875))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering::3
+      (outline (polygon signal 0  2395 995  2395 -995  -2395 -995  -2395 995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (image Resistors_SMD:R_0805_HandSoldering::4
+      (outline (polygon signal 0  2395 -995  -2395 -995  -2395 995  2395 995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 1 -1350 0)
+      (pin Rect[T]Pad_1500.000000x1300.000000_um 2 1350 0)
+    )
+    (image myfootprints:RM50_SP
+      (outline (path signal 150  8050 -1850  4050 -1850))
+      (outline (path signal 150  8050 1750  8050 -1850))
+      (outline (path signal 150  4050 1750  8050 1750))
+      (outline (path signal 150  4050 -1850  4050 1750))
+      (outline (path signal 150  8050 -1850  4050 1750))
+      (outline (path signal 150  6050 -1850  6050 -6050))
+      (outline (path signal 150  6050 5950  6050 1750))
+      (outline (path signal 150  2650 -50  2650 -3650))
+      (outline (path signal 150  9450 -50  9450 -3650))
+      (outline (path signal 150  9450 -3650  2650 -3650))
+      (outline (path signal 150  10950 -50  15700 -1900))
+      (outline (path signal 150  9450 -50  10950 -50))
+      (outline (path signal 150  6050 5950  3550 5950))
+      (outline (path signal 150  2650 -50  1850 -50))
+      (outline (path signal 150  3550 -6050  6050 -6050))
+      (outline (path signal 150  14200 -1600  14200 -4100))
+      (outline (path signal 150  -1300 7650  -1300 1400))
+      (outline (path signal 150  -1300 7700  18300 7700))
+      (outline (path signal 150  -1300 1400  -1300 7700))
+      (outline (path signal 150  -1300 -7700  13250 -7700))
+      (outline (path signal 150  -1300 -1350  -1300 -7700))
+      (outline (path signal 150  18300 -7700  18300 7700))
+      (outline (path signal 150  15000 -7700  18300 -7700))
+      (outline (path signal 150  13200 -7700  15000 -7700))
+      (pin Round[A]Pad_2500.000000_um (rotate 90) A2 1950 -6050)
+      (pin Round[A]Pad_2500.000000_um (rotate 90) A1 1950 5950)
+      (pin Round[A]Pad_3000.000000_um (rotate 90) 11 0 0)
+      (pin Round[A]Pad_3000.000000_um (rotate 90) 14 14200 -6000)
+    )
+    (image "Housings_SOIC:SOIC-8_3.9x4.9mm_Pitch1.27mm"
+      (outline (polygon signal 0  3745 -2745  -3745 -2745  -3745 2745  3745 2745))
+      (outline (path signal 150  -950 2450  1950 2450))
+      (outline (path signal 150  1950 2450  1950 -2450))
+      (outline (path signal 150  1950 -2450  -1950 -2450))
+      (outline (path signal 150  -1950 -2450  -1950 1450))
+      (outline (path signal 150  -1950 1450  -950 2450))
+      (outline (path signal 150  -2075 2575  -2075 2525))
+      (outline (path signal 150  2075 2575  2075 2430))
+      (outline (path signal 150  2075 -2575  2075 -2430))
+      (outline (path signal 150  -2075 -2575  -2075 -2430))
+      (outline (path signal 150  -2075 2575  2075 2575))
+      (outline (path signal 150  -2075 -2575  2075 -2575))
+      (outline (path signal 150  -2075 2525  -3475 2525))
+      (pin Rect[T]Pad_1550.000000x600.000000_um 8 2700 1905)
+      (pin Rect[T]Pad_1550.000000x600.000000_um 7 2700 635)
+      (pin Rect[T]Pad_1550.000000x600.000000_um 6 2700 -635)
+      (pin Rect[T]Pad_1550.000000x600.000000_um 5 2700 -1905)
+      (pin Rect[T]Pad_1550.000000x600.000000_um 4 -2700 -1905)
+      (pin Rect[T]Pad_1550.000000x600.000000_um 3 -2700 -635)
+      (pin Rect[T]Pad_1550.000000x600.000000_um 2 -2700 635)
+      (pin Rect[T]Pad_1550.000000x600.000000_um 1 -2700 1905)
+    )
+    (image "TO_SOT_Packages_SMD:SOT-23_Handsoldering"
+      (outline (polygon signal 0  2695 -1745  -2695 -1745  -2695 1745  2695 1745))
+      (outline (path signal 100  -200 1520  -700 1020))
+      (outline (path signal 120  760 -1580  760 -650))
+      (outline (path signal 120  760 1580  760 650))
+      (outline (path signal 100  700 1520  700 -1520))
+      (outline (path signal 100  -700 -1520  700 -1520))
+      (outline (path signal 120  760 1580  -2400 1580))
+      (outline (path signal 100  -200 1520  700 1520))
+      (outline (path signal 100  -700 1020  -700 -1520))
+      (outline (path signal 120  760 -1580  -700 -1580))
+      (pin Rect[T]Pad_1900.000000x800.000000_um 3 1500 0)
+      (pin Rect[T]Pad_1900.000000x800.000000_um 2 -1500 -950)
+      (pin Rect[T]Pad_1900.000000x800.000000_um 1 -1500 950)
+    )
+    (image "TO_SOT_Packages_SMD:SOT-223"
+      (outline (polygon signal 0  4395 -3595  -4395 -3595  -4395 3595  4395 3595))
+      (outline (path signal 120  1910 -3410  1910 -2150))
+      (outline (path signal 120  1910 3410  1910 2150))
+      (outline (path signal 100  -1850 2350  -850 3350))
+      (outline (path signal 100  -1850 2350  -1850 -3350))
+      (outline (path signal 120  -1850 -3410  1910 -3410))
+      (outline (path signal 100  -850 3350  1850 3350))
+      (outline (path signal 120  -4100 3410  1910 3410))
+      (outline (path signal 100  -1850 -3350  1850 -3350))
+      (outline (path signal 100  1850 3350  1850 -3350))
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 1 -3150 2300)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 3 -3150 -2300)
+      (pin Rect[T]Pad_2000.000000x1500.000000_um 2 -3150 0)
+      (pin Rect[T]Pad_2000.000000x3800.000000_um 4 3150 0)
+    )
+    (image "myfootprints:HLK-PM01"
+      (outline (path signal 150  -3750 -6316.67  -3750 -13950))
+      (outline (path signal 150  -3750.56 1363.34  -3750.56 -6269.99))
+      (outline (path signal 150  -3750 8950  -3750 1316.67))
+      (outline (path signal 150  33150 8950  -3750 8950))
+      (outline (path signal 150  33150 -13950  33150 8950))
+      (outline (path signal 150  -3750 -13950  33150 -13950))
+      (pin Round[A]Pad_3000.000000_um 1 0 0)
+      (pin Round[A]Pad_3000.000000_um 2 0 -5000)
+      (pin Round[A]Pad_3000.000000_um 4 29400 5200)
+      (pin Round[A]Pad_3000.000000_um 3 29400 -10200)
+    )
+    (image mysensors_radios:RFM69HW_SMD_Handsoldering
+      (outline (polygon signal 0  20295 -14995  -3395 -14995  -3395 995  20295 995))
+      (outline (path signal 150  -3400 -15000  -3400 1000))
+      (outline (path signal 150  20300 -15000  -3400 -15000))
+      (outline (path signal 150  20300 1000  20300 -15000))
+      (outline (path signal 150  -3400 1000  20300 1000))
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 16 18300 0)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 15 18300 -2000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 14 18300 -4000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 13 18300 -6000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 12 18300 -8000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 11 18300 -10000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 10 18300 -12000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 9 18300 -14000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 8 -1400 -14000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 7 -1400 -12000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 6 -1400 -10000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 5 -1400 -8000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 4 -1400 -6000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 3 -1400 -4000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 2 -1400 -2000)
+      (pin Rect[T]Pad_3000.000000x1200.000000_um 1 -1400 0)
+    )
+    (image Varistors:RV_Disc_D12_W6.3_P7.5
+      (outline (polygon signal 0  -2495 1845  9995 1845  9995 -4945  -2495 -4945))
+      (outline (path signal 150  -2250 -4700  9750 -4700))
+      (outline (path signal 150  -2250 1600  9750 1600))
+      (outline (path signal 150  9750 1600  9750 -4700))
+      (outline (path signal 150  -2250 1600  -2250 -4700))
+      (pin Round[A]Pad_1800.000000_um 2 7500 -3100)
+      (pin Round[A]Pad_1800.000000_um 1 0 0)
+    )
+    (image "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol"
+      (outline (polygon signal 0  -1895 -4695  -1895 3295  5395 3295  5395 -4695))
+      (outline (path signal 150  5250 3100  -1750 3100))
+      (outline (path signal 150  5250 -4500  5250 3100))
+      (outline (path signal 150  -1750 3100  -1750 -4500))
+      (outline (path signal 150  -1750 -4100  5250 -4100))
+      (outline (path signal 150  -1750 -3000  5250 -3000))
+      (outline (path signal 150  1750 -4100  1750 -4500))
+      (pin Round[A]Pad_2400.000000_um 2 3500 0)
+      (pin Rect[A]Pad_2400.000000x2400.000000_um 1 0 0)
+    )
+    (image "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol::1"
+      (outline (polygon signal 0  -1895 -4695  -1895 3295  5395 3295  5395 -4695))
+      (outline (path signal 150  1750 -4100  1750 -4500))
+      (outline (path signal 150  -1750 -3000  5250 -3000))
+      (outline (path signal 150  -1750 -4100  5250 -4100))
+      (outline (path signal 150  -1750 3100  -1750 -4500))
+      (outline (path signal 150  5250 -4500  5250 3100))
+      (outline (path signal 150  5250 3100  -1750 3100))
+      (pin Rect[A]Pad_2400.000000x2400.000000_um 1 0 0)
+      (pin Round[A]Pad_2400.000000_um 2 3500 0)
+    )
+    (image VIA_MATRIX
+      (pin Round[A]Pad_400.000000_um 1 0 0)
+    )
+    (padstack Round[A]Pad_1000.000000_um
+      (shape (circle F.Cu 1000))
+      (shape (circle B.Cu 1000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1400.000000_um
+      (shape (circle F.Cu 1400))
+      (shape (circle B.Cu 1400))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1800.000000_um
+      (shape (circle F.Cu 1800))
+      (shape (circle B.Cu 1800))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2000.000000_um
+      (shape (circle F.Cu 2000))
+      (shape (circle B.Cu 2000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2349.500000_um
+      (shape (circle F.Cu 2349.5))
+      (shape (circle B.Cu 2349.5))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2400.000000_um
+      (shape (circle F.Cu 2400))
+      (shape (circle B.Cu 2400))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2500.000000_um
+      (shape (circle F.Cu 2500))
+      (shape (circle B.Cu 2500))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3000.000000_um
+      (shape (circle F.Cu 3000))
+      (shape (circle B.Cu 3000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_400.000000_um
+      (shape (circle F.Cu 400))
+      (shape (circle B.Cu 400))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1400.000000x1400.000000_um
+      (shape (path F.Cu 1400  0 0  0 0))
+      (shape (path B.Cu 1400  0 0  0 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1600.000000x1600.000000_um
+      (shape (path F.Cu 1600  0 0  0 0))
+      (shape (path B.Cu 1600  0 0  0 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1700.000000x1700.000000_um
+      (shape (path F.Cu 1700  0 0  0 0))
+      (shape (path B.Cu 1700  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x3800.000000_um
+      (shape (rect F.Cu -1000 -1900 1000 1900))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1500.000000_um
+      (shape (rect F.Cu -1000 -750 1000 750))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2400.000000x2400.000000_um
+      (shape (rect F.Cu -1200 -1200 1200 1200))
+      (shape (rect B.Cu -1200 -1200 1200 1200))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3000.000000x1200.000000_um
+      (shape (rect F.Cu -1500 -600 1500 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3200.000000x2500.000000_um
+      (shape (rect F.Cu -1600 -1250 1600 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_800.000000x3000.000000_um
+      (shape (rect F.Cu -400 -1500 400 1500))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1000.000000x1000.000000_um
+      (shape (rect F.Cu -500 -500 500 500))
+      (shape (rect B.Cu -500 -500 500 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1250.000000_um
+      (shape (rect F.Cu -750 -625 750 625))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1300.000000_um
+      (shape (rect F.Cu -750 -650 750 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1550.000000x600.000000_um
+      (shape (rect F.Cu -775 -300 775 300))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x550.000000_um
+      (shape (rect F.Cu -800 -275 800 275))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1600.000000x1600.000000_um
+      (shape (rect F.Cu -800 -800 800 800))
+      (shape (rect B.Cu -800 -800 800 800))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect F.Cu -850 -850 850 850))
+      (shape (rect B.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1800.000000x1800.000000_um
+      (shape (rect F.Cu -900 -900 900 900))
+      (shape (rect B.Cu -900 -900 900 900))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1900.000000x800.000000_um
+      (shape (rect F.Cu -950 -400 950 400))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins Y1-2 SW1-2 SW1-2@1 C2-1 C3-1 C4-1 C6-2 C7-2 C8-2 C9-2 CON1-10 CON1-8 CON1-6
+        CON1-4 D2-1 D3-1 D4-1 D5-1 IC1-21 IC1-5 IC1-3 Q1-3 U1-4 U2-3 U3-1 U4-4 U5-11
+        U5-9 V14_4-1 V15_4-1 V16_4-1 V17_4-1 V18_4-1 V19_4-1 V20_4-1 V21_4-1 V22_4-1
+        V23_4-1 V24_4-1 V25_4-1 V26_4-1 V27_4-1 V28_4-1 V29_4-1 V14_5-1 V15_5-1 V16_5-1
+        V17_5-1 V18_5-1 V19_5-1 V20_5-1 V21_5-1 V22_5-1 V23_5-1 V24_5-1 V25_5-1 V26_5-1
+        V27_5-1 V28_5-1 V29_5-1 V10_6-1 V13_6-1 V14_6-1 V15_6-1 V16_6-1 V17_6-1 V18_6-1
+        V19_6-1 V20_6-1 V21_6-1 V22_6-1 V23_6-1 V24_6-1 V25_6-1 V26_6-1 V27_6-1 V28_6-1
+        V29_6-1 V10_7-1 V11_7-1 V12_7-1 V13_7-1 V14_7-1 V15_7-1 V16_7-1 V17_7-1 V18_7-1
+        V19_7-1 V20_7-1 V21_7-1 V22_7-1 V23_7-1 V24_7-1 V25_7-1 V26_7-1 V27_7-1 V28_7-1
+        V29_7-1 V10_8-1 V11_8-1 V12_8-1 V13_8-1 V14_8-1 V15_8-1 V20_8-1 V21_8-1 V22_8-1
+        V23_8-1 V24_8-1 V25_8-1 V26_8-1 V27_8-1 V28_8-1 V29_8-1 V10_9-1 V11_9-1 V12_9-1
+        V13_9-1 V14_9-1 V15_9-1 V20_9-1 V21_9-1 V22_9-1 V23_9-1 V24_9-1 V25_9-1 V26_9-1
+        V27_9-1 V28_9-1 V29_9-1 V10_10-1 V11_10-1 V12_10-1 V13_10-1 V14_10-1 V15_10-1
+        V20_10-1 V21_10-1 V22_10-1 V23_10-1 V24_10-1 V25_10-1 V26_10-1 V27_10-1 V28_10-1
+        V29_10-1 V10_11-1 V11_11-1 V12_11-1 V13_11-1 V14_11-1 V15_11-1 V21_11-1 V22_11-1
+        V23_11-1 V24_11-1 V25_11-1 V26_11-1 V27_11-1 V28_11-1 V29_11-1 V10_12-1 V11_12-1
+        V12_12-1 V13_12-1 V14_12-1 V15_12-1 V16_12-1 V17_12-1 V28_12-1 V29_12-1 V10_13-1
+        V11_13-1 V12_13-1 V13_13-1 V14_13-1 V15_13-1 V16_13-1 V17_13-1 V18_13-1 V19_13-1
+        V29_13-1 V10_14-1 V11_14-1 V12_14-1 V13_14-1 V14_14-1 V24_14-1 V25_14-1 V26_14-1
+        V10_15-1 V11_15-1 V12_15-1 V13_15-1 V14_15-1 V25_15-1 V26_15-1 V27_15-1 V10_16-1
+        V11_16-1 V12_16-1 V13_16-1 V22_16-1 V28_16-1 V10_17-1 V11_17-1 V12_17-1 V28_17-1
+        V29_17-1 V10_18-1 V11_18-1 V12_18-1 V28_18-1 V29_18-1 V10_19-1 V11_19-1 V12_19-1
+        V28_19-1 V29_19-1 V10_20-1 V11_20-1 V12_20-1 V22_20-1 V28_20-1 V29_20-1 V10_21-1
+        V11_21-1 V12_21-1 V19_21-1 V20_21-1 V21_21-1 V22_21-1 V23_21-1 V28_21-1 V29_21-1
+        V10_22-1 V11_22-1 V12_22-1 V15_22-1 V17_22-1 V18_22-1 V19_22-1 V20_22-1 V21_22-1
+        V22_22-1 V23_22-1 V24_22-1 V29_22-1 V10_23-1 V11_23-1 V12_23-1 V15_23-1 V19_23-1
+        V20_23-1 V21_23-1 V22_23-1 V23_23-1 V24_23-1 V10_24-1 V11_24-1 V12_24-1 V15_24-1
+        V20_24-1 V21_24-1 V22_24-1 V23_24-1 V24_24-1 V10_25-1 V11_25-1 V12_25-1 V15_25-1
+        V20_25-1 V21_25-1 V22_25-1 V23_25-1 V24_25-1 V27_25-1 V10_26-1 V11_26-1 V12_26-1
+        V15_26-1 V20_26-1 V21_26-1 V22_26-1 V23_26-1 V24_26-1 V27_26-1 V28_26-1 V10_27-1
+        V11_27-1 V12_27-1 V15_27-1 V16_27-1 V19_27-1 V20_27-1 V21_27-1 V22_27-1 V23_27-1
+        V24_27-1 V27_27-1 V28_27-1 V29_27-1 V10_28-1 V11_28-1 V12_28-1 V16_28-1 V17_28-1
+        V18_28-1 V19_28-1 V20_28-1 V21_28-1 V22_28-1 V23_28-1 V24_28-1 V27_28-1 V28_28-1
+        V29_28-1 V10_29-1 V11_29-1 V12_29-1 V17_29-1 V18_29-1 V19_29-1 V20_29-1 V21_29-1
+        V22_29-1 V23_29-1 V24_29-1 V27_29-1 V28_29-1 V29_29-1 V10_30-1 V13_30-1 V18_30-1
+        V19_30-1 V27_30-1 V28_30-1 V29_30-1 V35_30-1 V36_30-1 V37_30-1 V38_30-1 V39_30-1
+        V40_30-1 V41_30-1 V42_30-1 V14_31-1 V19_31-1 V35_31-1 V36_31-1 V37_31-1 V38_31-1
+        V39_31-1 V40_31-1 V41_31-1 V42_31-1 V14_32-1 V24_32-1 V25_32-1 V26_32-1 V35_32-1
+        V36_32-1 V37_32-1 V38_32-1 V39_32-1 V40_32-1 V41_32-1 V42_32-1 V37_33-1 V38_33-1
+        V39_33-1 V40_33-1 V41_33-1 V42_33-1 V10_34-1 V11_34-1 V12_34-1 V13_34-1 V15_34-1
+        V38_34-1 V39_34-1 V40_34-1 V41_34-1 V42_34-1 V10_35-1 V11_35-1 V12_35-1 V33_35-1
+        V42_35-1 V10_36-1 V11_36-1 V12_36-1 V42_36-1 V10_37-1 V11_37-1 V12_37-1 V10_38-1
+        V11_38-1 V12_38-1 V10_39-1 V11_39-1 V12_39-1 V35_39-1 V41_39-1 V10_40-1 V11_40-1
+        V12_40-1 V24_40-1 V41_40-1 V42_40-1 V10_41-1 V11_41-1 V12_41-1 V42_41-1 V10_42-1
+        V11_42-1 V12_42-1 V10_43-1 V11_43-1 V12_43-1 V14_43-1 V15_43-1 V16_43-1 V17_43-1
+        V18_43-1 V35_43-1 V36_43-1 V37_43-1 V38_43-1 V39_43-1 V10_44-1 V11_44-1 V12_44-1
+        V14_44-1 V15_44-1 V16_44-1 V17_44-1 V18_44-1 V21_44-1 V36_44-1 V37_44-1 V38_44-1
+        V39_44-1 V40_44-1 V71_44-1 V10_45-1 V11_45-1 V12_45-1 V14_45-1 V15_45-1 V16_45-1
+        V17_45-1 V18_45-1 V21_45-1 V71_45-1 V14_46-1 V15_46-1 V21_46-1 V31_46-1 V21_47-1
+        V32_47-1 V14_48-1 V15_48-1 V16_48-1 V21_48-1 V33_48-1 V62_48-1 V63_48-1 V64_48-1
+        V65_48-1 V66_48-1 V72_48-1 V73_48-1 V74_48-1 V10_49-1 V11_49-1 V12_49-1 V14_49-1
+        V15_49-1 V16_49-1 V17_49-1 V18_49-1 V34_49-1 V62_49-1 V63_49-1 V64_49-1 V65_49-1
+        V66_49-1 V71_49-1 V12_50-1 V14_50-1 V15_50-1 V16_50-1 V54_50-1 V55_50-1 V59_50-1
+        V62_50-1 V63_50-1 V64_50-1 V65_50-1 V66_50-1 V67_50-1 V70_50-1 V71_50-1 V38_51-1
+        V55_51-1 V56_51-1 V60_51-1 V61_51-1 V62_51-1 V63_51-1 V64_51-1 V65_51-1 V66_51-1
+        V67_51-1 V68_51-1 V69_51-1 V70_51-1 V13_52-1 V14_52-1 V15_52-1 V21_52-1 V22_52-1
+        V56_52-1 V57_52-1 V62_52-1 V63_52-1 V64_52-1 V65_52-1 V66_52-1 V69_52-1 V73_52-1
+        V74_52-1 V10_53-1 V13_53-1 V14_53-1 V15_53-1 V16_53-1 V21_53-1 V22_53-1 V38_53-1
+        V39_53-1 V40_53-1 V57_53-1 V58_53-1 V62_53-1 V63_53-1 V64_53-1 V65_53-1 V66_53-1
+        V72_53-1 V73_53-1 V74_53-1 V10_54-1 V11_54-1 V12_54-1 V13_54-1 V14_54-1 V15_54-1
+        V16_54-1 V17_54-1 V18_54-1 V21_54-1 V22_54-1 V58_54-1 V59_54-1 V62_54-1 V63_54-1
+        V64_54-1 V65_54-1 V66_54-1 V70_54-1 V71_54-1 V10_55-1 V11_55-1 V12_55-1 V13_55-1
+        V14_55-1 V15_55-1 V16_55-1 V17_55-1 V18_55-1 V22_55-1 V29_55-1 V30_55-1 V31_55-1
+        V59_55-1 V60_55-1 V61_55-1 V62_55-1 V63_55-1 V64_55-1 V65_55-1 V66_55-1 V67_55-1
+        V68_55-1 V69_55-1 V70_55-1 V71_55-1 V10_56-1 V11_56-1 V12_56-1 V13_56-1 V14_56-1
+        V15_56-1 V16_56-1 V17_56-1 V18_56-1 V30_56-1 V31_56-1 V55_56-1 V60_56-1 V61_56-1
+        V62_56-1 V63_56-1 V64_56-1 V65_56-1 V66_56-1 V67_56-1 V68_56-1 V69_56-1 V70_56-1
+        V10_57-1 V11_57-1 V12_57-1 V13_57-1 V14_57-1 V15_57-1 V16_57-1 V17_57-1 V18_57-1
+        V27_57-1 V35_57-1 V36_57-1 V37_57-1 V55_57-1 V56_57-1 V62_57-1 V63_57-1 V64_57-1
+        V65_57-1 V66_57-1 V73_57-1 V74_57-1 V10_58-1 V11_58-1 V12_58-1 V13_58-1 V14_58-1
+        V15_58-1 V16_58-1 V17_58-1 V18_58-1 V55_58-1 V56_58-1 V57_58-1 V62_58-1 V63_58-1
+        V64_58-1 V65_58-1 V66_58-1 V74_58-1 V10_59-1 V11_59-1 V12_59-1 V13_59-1 V14_59-1
+        V15_59-1 V16_59-1 V17_59-1 V18_59-1 V22_59-1 V55_59-1 V56_59-1 V57_59-1 V58_59-1
+        V62_59-1 V63_59-1 V64_59-1 V65_59-1 V66_59-1 V70_59-1 V71_59-1 V10_60-1 V11_60-1
+        V12_60-1 V13_60-1 V14_60-1 V15_60-1 V16_60-1 V17_60-1 V18_60-1 V22_60-1 V27_60-1
+        V28_60-1 V29_60-1 V33_60-1 V34_60-1 V35_60-1 V36_60-1 V37_60-1 V55_60-1 V56_60-1
+        V57_60-1 V58_60-1 V59_60-1 V61_60-1 V62_60-1 V63_60-1 V64_60-1 V65_60-1 V66_60-1
+        V67_60-1 V68_60-1 V69_60-1 V70_60-1 V10_61-1 V11_61-1 V12_61-1 V13_61-1 V14_61-1
+        V15_61-1 V16_61-1 V17_61-1 V18_61-1 V22_61-1 V27_61-1 V28_61-1 V32_61-1 V33_61-1
+        V34_61-1 V35_61-1 V36_61-1 V40_61-1 V41_61-1 V42_61-1 V55_61-1 V56_61-1 V57_61-1
+        V58_61-1 V59_61-1 V61_61-1 V62_61-1 V63_61-1 V64_61-1 V65_61-1 V66_61-1 V69_61-1
+        V76_61-1 V10_62-1 V11_62-1 V12_62-1 V13_62-1 V14_62-1 V15_62-1 V16_62-1 V17_62-1
+        V18_62-1 V31_62-1 V32_62-1 V33_62-1 V34_62-1 V35_62-1 V39_62-1 V40_62-1 V41_62-1
+        V42_62-1 V55_62-1 V56_62-1 V57_62-1 V58_62-1 V62_62-1 V63_62-1 V64_62-1 V65_62-1
+        V66_62-1 V72_62-1 V73_62-1 V74_62-1 V75_62-1 V76_62-1 V10_63-1 V11_63-1 V12_63-1
+        V13_63-1 V14_63-1 V15_63-1 V16_63-1 V17_63-1 V18_63-1 V22_63-1 V23_63-1 V24_63-1
+        V25_63-1 V26_63-1 V27_63-1 V28_63-1 V29_63-1 V30_63-1 V31_63-1 V32_63-1 V33_63-1
+        V34_63-1 V38_63-1 V39_63-1 V40_63-1 V41_63-1 V42_63-1 V43_63-1 V44_63-1 V45_63-1
+        V46_63-1 V55_63-1 V56_63-1 V57_63-1 V58_63-1 V62_63-1 V63_63-1 V64_63-1 V65_63-1
+        V66_63-1 V70_63-1 V71_63-1 V72_63-1 V73_63-1 V74_63-1 V75_63-1 V76_63-1 V13_64-1
+        V14_64-1 V15_64-1 V16_64-1 V17_64-1 V18_64-1 V19_64-1 V20_64-1 V21_64-1 V22_64-1
+        V23_64-1 V24_64-1 V25_64-1 V26_64-1 V27_64-1 V28_64-1 V29_64-1 V30_64-1 V31_64-1
+        V37_64-1 V38_64-1 V39_64-1 V40_64-1 V41_64-1 V42_64-1 V43_64-1 V44_64-1 V45_64-1
+        V46_64-1 V55_64-1 V56_64-1 V57_64-1 V58_64-1 V59_64-1 V61_64-1 V62_64-1 V63_64-1
+        V64_64-1 V65_64-1 V66_64-1 V67_64-1 V69_64-1 V70_64-1 V71_64-1 V72_64-1 V73_64-1
+        V14_65-1 V15_65-1 V16_65-1 V17_65-1 V18_65-1 V19_65-1 V20_65-1 V21_65-1 V22_65-1
+        V23_65-1 V24_65-1 V25_65-1 V26_65-1 V27_65-1 V28_65-1 V29_65-1 V30_65-1 V31_65-1
+        V36_65-1 V37_65-1 V38_65-1 V39_65-1 V40_65-1 V41_65-1 V42_65-1 V43_65-1 V44_65-1
+        V45_65-1 V46_65-1 V54_65-1 V55_65-1 V56_65-1 V57_65-1 V58_65-1 V59_65-1 V60_65-1
+        V61_65-1 V62_65-1 V63_65-1 V64_65-1 V65_65-1 V66_65-1 V67_65-1 V68_65-1 V69_65-1
+        V70_65-1 V71_65-1 V72_65-1 V73_65-1 V14_66-1 V15_66-1 V16_66-1 V17_66-1 V18_66-1
+        V19_66-1 V20_66-1 V21_66-1 V22_66-1 V23_66-1 V24_66-1 V25_66-1 V26_66-1 V27_66-1
+        V28_66-1 V29_66-1 V30_66-1 V31_66-1 V35_66-1 V36_66-1 V37_66-1 V38_66-1 V39_66-1
+        V40_66-1 V41_66-1 V42_66-1 V43_66-1 V44_66-1 V45_66-1 V46_66-1 V47_66-1 V55_66-1
+        V56_66-1 V57_66-1 V58_66-1 V59_66-1 V60_66-1 V61_66-1 V62_66-1 V63_66-1 V64_66-1
+        V65_66-1 V66_66-1 V67_66-1 V68_66-1 V69_66-1 V70_66-1 V71_66-1 V72_66-1 V73_66-1)
+    )
+    (net +3V3
+      (pins C2-2 C3-2 C6-1 C7-1 C8-1 C9-1 CON1-2 IC1-18 IC1-6 IC1-4 R2-2 R4-2 R9-2
+        U1-8 U1-7 U1-3 U2-2 U3-2 U5-8)
+    )
+    (net "Net-(C4-Pad2)"
+      (pins C4-2 IC1-20)
+    )
+    (net /RST
+      (pins SW1-1 SW1-1@1 CON1-5 IC1-29 R3-2)
+    )
+    (net /MISO
+      (pins CON1-9 IC1-16 U1-2 U5-13)
+    )
+    (net /SCK
+      (pins CON1-7 IC1-17 U1-6 U5-12)
+    )
+    (net /MOSI
+      (pins CON1-1 IC1-15 U1-5 U5-14)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins D1-2 Q1-1 RL1-A2)
+    )
+    (net +5V
+      (pins D1-1 R3-1 RL1-A1 U3-3 U4-3)
+    )
+    (net "Net-(D2-Pad2)"
+      (pins R5-1 D2-2)
+    )
+    (net "Net-(D3-Pad2)"
+      (pins R6-1 D3-2)
+    )
+    (net "Net-(D4-Pad2)"
+      (pins R7-1 D4-2)
+    )
+    (net "Net-(D5-Pad2)"
+      (pins R8-1 D5-2)
+    )
+    (net "Net-(F1-Pad1)"
+      (pins F1-1 F1-1@1 U4-1 VR1-1)
+    )
+    (net "Net-(F1-Pad2)"
+      (pins F1-2 F1-2@1 X2-1)
+    )
+    (net /H_RELAY_CMD
+      (pins IC1-27 R1-2)
+    )
+    (net /ATSHA204A
+      (pins IC1-26 R4-1 U2-1)
+    )
+    (net /ERR_LED
+      (pins R7-2 IC1-25)
+    )
+    (net /TX_LED
+      (pins R6-2 IC1-24)
+    )
+    (net /RX_LED
+      (pins R5-2 IC1-23)
+    )
+    (net /SPI_FLASH_SS
+      (pins IC1-12 R2-1 U1-1)
+    )
+    (net "Net-(IC1-Pad8)"
+      (pins Y1-1 IC1-8)
+    )
+    (net "Net-(IC1-Pad7)"
+      (pins Y1-3 IC1-7)
+    )
+    (net "Net-(P1-Pad1)"
+      (pins P1-1 U5-10)
+    )
+    (net "Net-(Q1-Pad2)"
+      (pins Q1-2 R1-1)
+    )
+    (net /HEATER_ON_LED
+      (pins R8-2 IC1-28)
+    )
+    (net "Net-(RL1-Pad11)"
+      (pins RL1-11 X1-2)
+    )
+    (net "Net-(RL1-Pad14)"
+      (pins RL1-14 X1-1)
+    )
+    (net "Net-(U4-Pad2)"
+      (pins U4-2 VR1-2 X2-2)
+    )
+    (net /RFM69W_INT
+      (pins IC1-32 U5-2)
+    )
+    (net /RFM69W_SS
+      (pins IC1-14 R9-1 U5-15)
+    )
+    (class kicad_default +3V3 +5V /ATSHA204A /ERR_LED /HEATER_ON_LED /H_RELAY_CMD
+      /MISO /MOSI /RFM69W_INT /RFM69W_SS /RST /RX_LED /SCK /SPI_FLASH_SS /TX_LED
+      GND "Net-(C4-Pad2)" "Net-(D1-Pad2)" "Net-(D2-Pad2)" "Net-(D3-Pad2)"
+      "Net-(D4-Pad2)" "Net-(D5-Pad2)" "Net-(F1-Pad1)" "Net-(F1-Pad2)" "Net-(IC1-Pad7)"
+      "Net-(IC1-Pad8)" "Net-(P1-Pad1)" "Net-(Q1-Pad2)" "Net-(RL1-Pad11)" "Net-(RL1-Pad14)"
+      "Net-(U4-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 350)
+        (clearance 300)
+      )
+    )
+  )
+  (wiring
+  )
+)

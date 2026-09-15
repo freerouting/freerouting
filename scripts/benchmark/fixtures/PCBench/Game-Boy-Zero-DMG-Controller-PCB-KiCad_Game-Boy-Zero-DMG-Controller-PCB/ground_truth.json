@@ -1,0 +1,26 @@
+{
+  "board": "Game-Boy-Zero-DMG-Controller-PCB-KiCad_Game-Boy-Zero-DMG-Controller-PCB",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Game-Boy-Zero-DMG-Controller-PCB-KiCad_Game-Boy-Zero-DMG-Controller-PCB\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 218,
+  "approximate_track_length_mm": 730.92,
+  "kicad_drc_violations": 251,
+  "generated_at": "2026-08-18T18:51:05.382982+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 251,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 5,
+      "lib_footprint_issues": 22,
+      "shorting_items": 85,
+      "solder_mask_bridge": 128,
+      "text_height": 11
+    },
+    "by_severity": {
+      "error": 218,
+      "warning": 33
+    }
+  }
+}

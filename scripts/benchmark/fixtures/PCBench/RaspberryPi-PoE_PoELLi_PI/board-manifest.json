@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "RaspberryPi-PoE_PoELLi_PI",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 229474,
+      "sha256": "9202af4bf3e6a56cf7736d4d4e9d33cf8fcdf4e09217f7d64620ae7cd265e961"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 137083,
+      "sha256": "8e49d1e8b552a569be53436339c60dd498e6a5d6bc3f0b63cf9eac4eaf0346a9"
+    },
+    "metadata_json": {
+      "bytes": 672,
+      "sha256": "a8e0d0e17420a421dba2eafd1be4a704a6b6c36d5910b4ba1c5cf6faf5cf80e3"
+    },
+    "final_json": {
+      "bytes": 90128,
+      "sha256": "f2377ccd9618435a158898e164937bc44bc105db14c75b4ee0422b8f8371a70d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:37:51.942766+00:00"
+  }
+}

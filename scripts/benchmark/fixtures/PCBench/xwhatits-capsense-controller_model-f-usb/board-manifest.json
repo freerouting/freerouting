@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "xwhatits-capsense-controller_model-f-usb",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 290397,
+      "sha256": "5f2f8365444e0041e74097654365232737432887ff16469cfc7552a08118b56b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 212020,
+      "sha256": "30843db9f4fac4a7cc8bb9a0f4610273bbe9747382296620d00fc0e5c5225663"
+    },
+    "metadata_json": {
+      "bytes": 724,
+      "sha256": "a6e83ac88e19a817de5a7bf5f3a373285a294602a8b388cad4283b39a47a8c76"
+    },
+    "final_json": {
+      "bytes": 252568,
+      "sha256": "fc3f549994cecd4fda808a236822b30d34404689653db3bc00bcd97b9302342c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:58:25.189504+00:00"
+  }
+}

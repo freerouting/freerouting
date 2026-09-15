@@ -1,0 +1,54 @@
+{
+  "board_id": "magic-table_etch-a-sketch",
+  "display_name": "magic-table_etch-a-sketch",
+  "pcbench_directory": "PCBs/magic-table_etch-a-sketch",
+  "source": "https://github.com/bqlabs/magic-table",
+  "author": "bqlabs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:52.038052+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 98.0,
+      "height": 75.0
+    },
+    "area_cm2": 73.5,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 117,
+    "vias": 0,
+    "track_length_mm": 610.65,
+    "kicad_drc_violations": 195,
+    "kicad_drc_breakdown": {
+      "total_violations": 195,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 133,
+        "silk_overlap": 54,
+        "text_height": 8
+      },
+      "by_severity": {
+        "error": 133,
+        "warning": 62
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,28 @@
+{
+  "board": "DoroidOscillo-Board_Android_Oscilloscope",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DoroidOscillo-Board_Android_Oscilloscope\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 155,
+  "segment_count": 1070,
+  "approximate_track_length_mm": 1603.15,
+  "kicad_drc_violations": 207,
+  "generated_at": "2026-08-18T18:14:25.864880+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 207,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 2,
+      "copper_edge_clearance": 6,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 134,
+      "silk_over_copper": 5,
+      "silk_overlap": 11,
+      "solder_mask_bridge": 48
+    },
+    "by_severity": {
+      "error": 57,
+      "warning": 150
+    }
+  }
+}

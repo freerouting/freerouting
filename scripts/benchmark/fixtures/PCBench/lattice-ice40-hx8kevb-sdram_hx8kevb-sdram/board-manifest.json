@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "lattice-ice40-hx8kevb-sdram_hx8kevb-sdram",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 117926,
+      "sha256": "e61372c5bbf4e4ec4ec338ad60e06e87f18118c53298f3c891db7c0b64b1b8ec"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 108096,
+      "sha256": "a8df35d6fdfefb58127e1cdbf212af4db5f1f0d5a57a10df4d1c4f643516d210"
+    },
+    "metadata_json": {
+      "bytes": 557,
+      "sha256": "9977b2933cb97fb1a8ac7f26d3e2d9b773f2856c840000d32f6f5b86ceef31fe"
+    },
+    "final_json": {
+      "bytes": 136647,
+      "sha256": "9f9e316c04c2035a40e66d16a8829124c506922c6a8e90ef506c97a2143913f3"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:14:49.065474+00:00"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "board_id": "Radar-System_fmcw_radar",
+  "display_name": "Radar-System_fmcw_radar",
+  "pcbench_directory": "PCBs/Radar-System_fmcw_radar",
+  "source": "https://github.com/wvat/Radar-System",
+  "author": "wvat",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.329937+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 18,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 51.0,
+      "height": 25.0
+    },
+    "area_cm2": 12.75,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 439,
+    "vias": 214,
+    "track_length_mm": 553.56,
+    "kicad_drc_violations": 298,
+    "kicad_drc_breakdown": {
+      "total_violations": 298,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 90,
+        "copper_edge_clearance": 10,
+        "courtyards_overlap": 2,
+        "drill_out_of_range": 20,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 30,
+        "padstack": 20,
+        "silk_over_copper": 84,
+        "silk_overlap": 15,
+        "starved_thermal": 2,
+        "text_height": 21,
+        "track_dangling": 2,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 126,
+        "warning": 172
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,779 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 13)
+    (tracks 121)
+    (zones 0)
+    (modules 16)
+    (nets 22)
+  )
+
+  (page A3)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (33 F.Adhes user hide)
+    (35 F.Paste user hide)
+    (37 F.SilkS user hide)
+    (39 F.Mask user hide)
+    (44 Edge.Cuts user)
+  )
+
+  (setup
+    (last_trace_width 0.254)
+    (trace_clearance 0.254)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.254)
+    (via_size 0.889)
+    (via_drill 0.635)
+    (via_min_size 0.889)
+    (via_min_drill 0.508)
+    (uvia_size 0.508)
+    (uvia_drill 0.127)
+    (uvias_allowed no)
+    (uvia_min_size 0.508)
+    (uvia_min_drill 0.127)
+    (edge_width 0.1)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 2 2)
+    (pad_drill 1)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x00030_ffffffff)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.150000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory ""))
+  )
+
+  (net 0 "")
+  (net 1 +3.3V)
+  (net 2 +5V)
+  (net 3 GNDA)
+  (net 4 LIVE)
+  (net 5 N-0000010)
+  (net 6 N-0000011)
+  (net 7 N-0000014)
+  (net 8 N-0000019)
+  (net 9 N-000002)
+  (net 10 N-0000020)
+  (net 11 N-0000021)
+  (net 12 N-0000022)
+  (net 13 N-0000023)
+  (net 14 N-0000024)
+  (net 15 N-0000025)
+  (net 16 N-0000026)
+  (net 17 N-000005)
+  (net 18 N-000006)
+  (net 19 N-000008)
+  (net 20 N-000009)
+  (net 21 NEUT)
+
+  (net_class Default "This is the default net class."
+    (clearance 0.254)
+    (trace_width 0.254)
+    (via_dia 0.889)
+    (via_drill 0.635)
+    (uvia_dia 0.508)
+    (uvia_drill 0.127)
+    (add_net GNDA)
+    (add_net N-0000010)
+    (add_net N-0000014)
+    (add_net N-0000019)
+    (add_net N-000002)
+    (add_net N-0000020)
+    (add_net N-0000021)
+    (add_net N-0000022)
+    (add_net N-0000023)
+    (add_net N-0000024)
+    (add_net N-0000026)
+    (add_net N-000005)
+    (add_net N-000008)
+    (add_net N-000009)
+  )
+
+  (net_class 1A ""
+    (clearance 0.254)
+    (trace_width 1)
+    (via_dia 0.889)
+    (via_drill 0.635)
+    (uvia_dia 0.508)
+    (uvia_drill 0.127)
+    (add_net +3.3V)
+    (add_net +5V)
+    (add_net N-0000025)
+  )
+
+  (net_class HV ""
+    (clearance 0.254)
+    (trace_width 3.6)
+    (via_dia 0.889)
+    (via_drill 0.635)
+    (uvia_dia 0.508)
+    (uvia_drill 0.127)
+    (add_net LIVE)
+    (add_net N-0000011)
+    (add_net N-000006)
+    (add_net NEUT)
+  )
+
+  (module Wire2.54 (layer F.Cu) (tedit 57D5606A) (tstamp 57CF1421)
+    (at 84 58 270)
+    (path /57C85E0C)
+    (fp_text reference Noname_11 (at 0 -5.08 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 5.08 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5 -2.6) (end 5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 2.6) (end -5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 2.6) (end -5 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 -2.6) (end 5 -2.6) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.54 0 270) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 2 +5V))
+    (pad 2 thru_hole circle (at 2.54 0 270) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 3 GNDA))
+  )
+
+  (module Wire2.54 (layer F.Cu) (tedit 57D55F92) (tstamp 57CF142B)
+    (at 65 63)
+    (path /57CC36ED)
+    (fp_text reference Noname_10 (at 0 -5.08) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 5.08) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 5 -2.6) (end 5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 2.6) (end -5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 2.6) (end -5 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 -2.6) (end 5 -2.6) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.54 0) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 4 LIVE))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.6 1.6) (drill 0.8) (layers *.Cu *.Mask F.SilkS)
+      (net 21 NEUT))
+  )
+
+  (module TO220_VERT (layer F.Cu) (tedit 57D56055) (tstamp 57CF1439)
+    (at 76 58)
+    (descr "Regulateur TO220 serie LM78xx")
+    (tags "TR TO220")
+    (path /57CAF440)
+    (fp_text reference Noname_9 (at -3.175 0 90) (layer F.SilkS)
+      (effects (font (size 1.524 1.016) (thickness 0.2032)))
+    )
+    (fp_text value LD1117 (at 4 0 90) (layer F.SilkS)
+      (effects (font (size 1.524 1.016) (thickness 0.2032)))
+    )
+    (fp_line (start 1.905 -5.08) (end 2.54 -5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start 2.54 -5.08) (end 2.54 5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start 2.54 5.08) (end 1.905 5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start -1.905 -5.08) (end 1.905 -5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start 1.905 -5.08) (end 1.905 5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start 1.905 5.08) (end -1.905 5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start -1.905 5.08) (end -1.905 -5.08) (layer F.SilkS) (width 0.381))
+    (pad 2 thru_hole circle (at 0 -2.54) (size 1.778 1.778) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +3.3V))
+    (pad 3 thru_hole circle (at 0 0) (size 1.778 1.778) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 +5V))
+    (pad 1 thru_hole rect (at 0 2.54) (size 1.778 1.778) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 GNDA))
+  )
+
+  (module TO220_VERT (layer F.Cu) (tedit 57D56005) (tstamp 57CF1447)
+    (at 76 69)
+    (descr "Regulateur TO220 serie LM78xx")
+    (tags "TR TO220")
+    (path /57CB162D)
+    (fp_text reference Noname_8 (at -3.175 0 90) (layer F.SilkS)
+      (effects (font (size 1.524 1.016) (thickness 0.2032)))
+    )
+    (fp_text value TIP120_NPN (at -2.5 0 90) (layer F.SilkS)
+      (effects (font (size 1.524 1.016) (thickness 0.2032)))
+    )
+    (fp_line (start 1.905 -5.08) (end 2.54 -5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start 2.54 -5.08) (end 2.54 5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start 2.54 5.08) (end 1.905 5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start -1.905 -5.08) (end 1.905 -5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start 1.905 -5.08) (end 1.905 5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start 1.905 5.08) (end -1.905 5.08) (layer F.SilkS) (width 0.381))
+    (fp_line (start -1.905 5.08) (end -1.905 -5.08) (layer F.SilkS) (width 0.381))
+    (pad 2 thru_hole circle (at 0 -2.54) (size 1.778 1.778) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 10 N-0000020))
+    (pad 3 thru_hole circle (at 0 0) (size 1.778 1.778) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 15 N-0000025))
+    (pad 1 thru_hole rect (at 0 2.54) (size 1.778 1.778) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 GNDA))
+  )
+
+  (module SRD-05VDC-SL-C (layer F.Cu) (tedit 57ED31DC) (tstamp 57CF1469)
+    (at 64 67 270)
+    (path /57AF6D51)
+    (fp_text reference Noname_7 (at 10 -2 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value SRD-05VDC-SL-C (at 6.5 -0.5) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.4 -7.8) (end -1.4 7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 17.7 7.8) (end 17.7 -7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 17.7 -7.8) (end 17.5 -7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 7.8) (end 17.7 7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 -7.8) (end 17.7 -7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 7.8) (end -1.3 7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.3 -7.8) (end -1.4 -7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 -7.8) (end -1.4 -7.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.4 7.7) (end -1.4 7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 7.8) (end 1.7 7.8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 -7.8) (end 2.4 -7.8) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at 0 0 270) (size 2 2) (drill oval 1.1) (layers *.Cu *.Mask F.SilkS)
+      (net 4 LIVE))
+    (pad 3 thru_hole circle (at 2 -6 270) (size 2 2) (drill 1.2) (layers *.Cu *.Mask F.SilkS)
+      (net 2 +5V))
+    (pad 2 thru_hole circle (at 2 6 270) (size 2 2) (drill 1.2) (layers *.Cu *.Mask F.SilkS)
+      (net 15 N-0000025))
+    (pad 5 thru_hole circle (at 14.2 -6 270) (size 2 2) (drill 1.1) (layers *.Cu *.Mask F.SilkS)
+      (net 18 N-000006))
+    (pad 4 thru_hole circle (at 14.2 6 270) (size 2 2) (drill 1.2) (layers *.Cu *.Mask F.SilkS)
+      (net 6 N-0000011))
+  )
+
+  (module SIL-8 (layer F.Cu) (tedit 57D5609C) (tstamp 57CF147A)
+    (at 99 54 180)
+    (descr "Connecteur 8 pins")
+    (tags "CONN DEV")
+    (path /57CC6D3A)
+    (fp_text reference Noname_6 (at -6.35 -2.54 180) (layer F.SilkS)
+      (effects (font (size 1.72974 1.08712) (thickness 0.27178)))
+    )
+    (fp_text value "" (at 12 0 180) (layer F.SilkS)
+      (effects (font (size 1.524 1.016) (thickness 0.254)))
+    )
+    (fp_line (start -10.16 -1.27) (end 10.16 -1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 10.16 -1.27) (end 10.16 1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 10.16 1.27) (end -10.16 1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -10.16 1.27) (end -10.16 -1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -7.62 1.27) (end -7.62 -1.27) (layer F.SilkS) (width 0.3048))
+    (pad 1 thru_hole rect (at -8.89 0 180) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 17 N-000005))
+    (pad 2 thru_hole circle (at -6.35 0 180) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 19 N-000008))
+    (pad 3 thru_hole circle (at -3.81 0 180) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 20 N-000009))
+    (pad 4 thru_hole circle (at -1.27 0 180) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 5 N-0000010))
+    (pad 5 thru_hole circle (at 1.27 0 180) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 9 N-000002))
+    (pad 6 thru_hole circle (at 3.81 0 180) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +3.3V))
+    (pad 7 thru_hole circle (at 6.35 0 180) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 3 GNDA))
+    (pad 8 thru_hole circle (at 8.89 0 180) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 2 +5V))
+  )
+
+  (module SIL-4 (layer F.Cu) (tedit 57D5623F) (tstamp 57D58E48)
+    (at 103 89)
+    (descr "Connecteur 4 pibs")
+    (tags "CONN DEV")
+    (path /57ADFA85)
+    (fp_text reference PROG (at 0 -2.54) (layer F.SilkS)
+      (effects (font (size 1.73482 1.08712) (thickness 0.27178)))
+    )
+    (fp_text value "" (at 0 -2.54) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.016) (thickness 0.254)))
+    )
+    (fp_line (start -5.08 -1.27) (end -5.08 -1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -5.08 1.27) (end -5.08 -1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -5.08 -1.27) (end -5.08 -1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -5.08 -1.27) (end 5.08 -1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 5.08 -1.27) (end 5.08 1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 5.08 1.27) (end -5.08 1.27) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -2.54 1.27) (end -2.54 -1.27) (layer F.SilkS) (width 0.3048))
+    (pad 1 thru_hole rect (at -3.81 0) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 3 GNDA))
+    (pad 2 thru_hole circle (at -1.27 0) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 13 N-0000023))
+    (pad 3 thru_hole circle (at 1.27 0) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 14 N-0000024))
+    (pad 4 thru_hole circle (at 3.81 0) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +3.3V))
+  )
+
+  (module R1 (layer F.Cu) (tedit 200000) (tstamp 57CF1491)
+    (at 80 67 90)
+    (descr "Resistance verticale")
+    (tags R)
+    (path /57AF2F22)
+    (autoplace_cost90 10)
+    (autoplace_cost180 10)
+    (fp_text reference R1 (at -1.016 2.54 90) (layer F.SilkS)
+      (effects (font (size 1.397 1.27) (thickness 0.2032)))
+    )
+    (fp_text value 1kOhm (at -1.143 2.54 90) (layer F.SilkS) hide
+      (effects (font (size 1.397 1.27) (thickness 0.2032)))
+    )
+    (fp_line (start -1.27 0) (end 1.27 0) (layer F.SilkS) (width 0.381))
+    (fp_circle (center -1.27 0) (end -0.635 1.27) (layer F.SilkS) (width 0.381))
+    (pad 1 thru_hole circle (at -1.27 0 90) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 8 N-0000019))
+    (pad 2 thru_hole circle (at 1.27 0 90) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 10 N-0000020))
+    (model discret/verti_resistor.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module ESP8266-12 (layer F.Cu) (tedit 57D562EE) (tstamp 57CF14C3)
+    (at 109 81 180)
+    (path /57ADE642)
+    (fp_text reference Noname_5 (at 15 3 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value ESP8266-12 (at 18 8 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start 4 0) (end 6 2) (layer F.SilkS) (width 0.15))
+    (fp_line (start 6 5) (end 1 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 14) (end 2 16) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2 16) (end 5 16) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 16) (end 0 11) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 11) (end 0 8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 8) (end 6 14) (layer F.SilkS) (width 0.15))
+    (fp_line (start 6 14) (end 6 11) (layer F.SilkS) (width 0.15))
+    (fp_line (start 6 11) (end 0 5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 5) (end 0 2) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 2) (end 6 8) (layer F.SilkS) (width 0.15))
+    (fp_line (start 6 8) (end 6 4) (layer F.SilkS) (width 0.15))
+    (fp_line (start 6 0) (end 6 16) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3 0) (end 1 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 1) (end 0 3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 5) (end 0 7) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 9) (end 0 11) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 16) (end 3 16) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 13) (end 0 15) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 16) (end 7 16) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 0) (end 0 16) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0 16) (end 24 16) (layer F.SilkS) (width 0.15))
+    (fp_line (start 24 16) (end 24 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 24 0) (end 0 0) (layer F.SilkS) (width 0.15))
+    (pad 15 smd rect (at 22 0 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 3 GNDA))
+    (pad 16 smd rect (at 20 0 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 7 N-0000014))
+    (pad 17 smd rect (at 18 0 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 16 N-0000026))
+    (pad 18 smd rect (at 16 0 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 16 N-0000026))
+    (pad 19 smd rect (at 14 0 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 9 N-000002))
+    (pad 20 smd rect (at 12 0 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 5 N-0000010))
+    (pad 21 smd rect (at 10 0 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 13 N-0000023))
+    (pad 22 smd rect (at 8 0 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 14 N-0000024))
+    (pad 8 smd rect (at 22 16 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 1 +3.3V))
+    (pad 7 smd rect (at 20 16 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 12 N-0000022))
+    (pad 6 smd rect (at 18 16 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 20 N-000009))
+    (pad 5 smd rect (at 16 16 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 8 N-0000019))
+    (pad 4 smd rect (at 14 16 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 19 N-000008))
+    (pad 3 smd rect (at 12 16 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 16 N-0000026))
+    (pad 2 smd rect (at 10 16 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 17 N-000005))
+    (pad 1 smd rect (at 8 16 180) (size 1 2) (layers F.Cu F.Paste F.Mask)
+      (net 11 N-0000021))
+    (pad 9 smd rect (at 24 13 270) (size 1 2) (layers F.Cu F.Paste F.Mask))
+    (pad 10 smd rect (at 24 11 270) (size 1 2) (layers F.Cu F.Paste F.Mask))
+    (pad 11 smd rect (at 24 9 270) (size 1 2) (layers F.Cu F.Paste F.Mask))
+    (pad 12 smd rect (at 24 7 270) (size 1 2) (layers F.Cu F.Paste F.Mask))
+    (pad 13 smd rect (at 24 5 270) (size 1 2) (layers F.Cu F.Paste F.Mask))
+    (pad 14 smd rect (at 24 3 270) (size 1 2) (layers F.Cu F.Paste F.Mask))
+  )
+
+  (module D3 (layer F.Cu) (tedit 200000) (tstamp 57CF14D3)
+    (at 80 78 270)
+    (descr "Diode 3 pas")
+    (tags "DIODE DEV")
+    (path /57AF6EEC)
+    (fp_text reference D1 (at 0 0 270) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.2032)))
+    )
+    (fp_text value 1N4001 (at 0 0 270) (layer F.SilkS) hide
+      (effects (font (size 1.016 1.016) (thickness 0.2032)))
+    )
+    (fp_line (start 3.81 0) (end 3.048 0) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 3.048 0) (end 3.048 -1.016) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 3.048 -1.016) (end -3.048 -1.016) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -3.048 -1.016) (end -3.048 0) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -3.048 0) (end -3.81 0) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -3.048 0) (end -3.048 1.016) (layer F.SilkS) (width 0.3048))
+    (fp_line (start -3.048 1.016) (end 3.048 1.016) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 3.048 1.016) (end 3.048 0) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 2.54 -1.016) (end 2.54 1.016) (layer F.SilkS) (width 0.3048))
+    (fp_line (start 2.286 1.016) (end 2.286 -1.016) (layer F.SilkS) (width 0.3048))
+    (pad 2 thru_hole rect (at 3.81 0 270) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 2 +5V))
+    (pad 1 thru_hole circle (at -3.81 0 270) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS)
+      (net 15 N-0000025))
+    (model discret/diode.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 0.3 0.3 0.3))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Conn2.54 (layer F.Cu) (tedit 57ED3404) (tstamp 57CF14E7)
+    (at 79 90 180)
+    (path /5790EA90)
+    (fp_text reference Noname_4 (at 0 -5.08 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 5.08 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -5 2.6) (end -5 4.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 4.6) (end 5 4.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 4.6) (end 5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.6 -2.6) (end -1.6 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.6 -2.1) (end -3.4 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.4 -2.1) (end -3.4 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 -2.6) (end 1.6 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 -2.1) (end 3.4 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.4 -2.1) (end 3.4 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.4 -2.6) (end 3.4 -2.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 -2.6) (end 5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 2.6) (end -5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 2.6) (end -5 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 -2.6) (end 5 -2.6) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.54 0 180) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +3.3V))
+    (pad 2 thru_hole circle (at 2.54 0 180) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 12 N-0000022))
+  )
+
+  (module Conn2.54 (layer F.Cu) (tedit 57ED33E6) (tstamp 57CF14FB)
+    (at 61.5 90 180)
+    (path /57AF7988)
+    (fp_text reference Noname_3 (at 0 -5.08 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 5.08 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -5 2.6) (end -5 4.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 4.6) (end 5 4.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 4.6) (end 5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.6 -2.6) (end -1.6 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.6 -2.1) (end -3.4 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.4 -2.1) (end -3.4 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 -2.6) (end 1.6 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 -2.1) (end 3.4 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.4 -2.1) (end 3.4 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.4 -2.6) (end 3.4 -2.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 -2.6) (end 5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 2.6) (end -5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 2.6) (end -5 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 -2.6) (end 5 -2.6) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.54 0 180) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 18 N-000006))
+    (pad 2 thru_hole circle (at 2.54 0 180) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 6 N-0000011))
+  )
+
+  (module Conn2.54 (layer F.Cu) (tedit 57ED33F6) (tstamp 57CF150F)
+    (at 65 55)
+    (path /57CC36C3)
+    (fp_text reference Noname_2 (at 0 -5.08) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 5.08) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -5 2.6) (end -5 4.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 4.6) (end 5 4.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 4.6) (end 5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.6 -2.6) (end -1.6 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.6 -2.1) (end -3.4 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.4 -2.1) (end -3.4 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 -2.6) (end 1.6 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.6 -2.1) (end 3.4 -2.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.4 -2.1) (end 3.4 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.4 -2.6) (end 3.4 -2.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 -2.6) (end 5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start 5 2.6) (end -5 2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 2.6) (end -5 -2.6) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5 -2.6) (end 5 -2.6) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -2.54 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 4 LIVE))
+    (pad 2 thru_hole circle (at 2.54 0) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 21 NEUT))
+  )
+
+  (module 2bit_dipsw (layer F.Cu) (tedit 57D55FCE) (tstamp 57CF151B)
+    (at 90 87 270)
+    (path /57CDC9F2)
+    (fp_text reference Noname_1 (at 0 -6 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 6 270) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.4 5) (end 3.4 5) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.4 -5) (end 3.4 -5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.4 -5) (end 3.4 5) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.4 -5) (end -3.4 5) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole circle (at -1.3 3.8 270) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 3 GNDA))
+    (pad 2 thru_hole circle (at -1.3 -3.8 270) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 7 N-0000014))
+    (pad 3 thru_hole circle (at 1.3 3.8 270) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +3.3V))
+    (pad 4 thru_hole circle (at 1.3 -3.8 270) (size 2 2) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 16 N-0000026))
+  )
+
+  (module TESTPOINT (layer F.Cu) (tedit 57D560B4) (tstamp 57D10F49)
+    (at 105 63)
+    (descr "Connecteurs 2 pins")
+    (tags "CONN DEV")
+    (fp_text reference RST (at 0 -1.524) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.1524)))
+    )
+    (fp_text value "" (at 0.127 1.524) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.1524)))
+    )
+    (fp_line (start -1.905 -0.889) (end 1.778 -0.889) (layer F.SilkS) (width 0.2032))
+    (fp_line (start 1.778 -0.889) (end 2.286 -0.381) (layer F.SilkS) (width 0.2032))
+    (fp_line (start 2.286 -0.381) (end 2.286 0.381) (layer F.SilkS) (width 0.2032))
+    (fp_line (start 2.286 0.381) (end 1.778 0.889) (layer F.SilkS) (width 0.2032))
+    (fp_line (start 1.778 0.889) (end -1.905 0.889) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -1.905 0.889) (end -2.413 0.381) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -2.413 0.381) (end -2.413 -0.381) (layer F.SilkS) (width 0.2032))
+    (fp_line (start -2.413 -0.381) (end -1.905 -0.889) (layer F.SilkS) (width 0.2032))
+    (pad 1 thru_hole circle (at -1.27 0) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS))
+    (pad 1 thru_hole circle (at 1.27 0) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS))
+    (model connectors/testpoint.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module R1 (layer F.Cu) (tedit 57DBEC8A) (tstamp 57DBF1AE)
+    (at 75.5 82.5 90)
+    (descr "Resistance verticale")
+    (tags R)
+    (autoplace_cost90 10)
+    (autoplace_cost180 10)
+    (fp_text reference 550 (at -2 -3 180) (layer F.SilkS)
+      (effects (font (size 1.397 1.27) (thickness 0.2032)))
+    )
+    (fp_text value "" (at -1.143 2.54 90) (layer F.SilkS) hide
+      (effects (font (size 1.397 1.27) (thickness 0.2032)))
+    )
+    (fp_line (start -1.27 0) (end 1.27 0) (layer F.SilkS) (width 0.381))
+    (fp_circle (center -1.27 0) (end -0.635 1.27) (layer F.SilkS) (width 0.381))
+    (pad 1 thru_hole circle (at -1.27 0 90) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS))
+    (pad 2 thru_hole circle (at 1.27 0 90) (size 1.397 1.397) (drill 0.8128) (layers *.Cu *.Mask F.SilkS))
+    (model discret/verti_resistor.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (gr_text "THEIA MK2" (at 106 73 90) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text +5V (at 90.17 57.785 270) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text GND (at 92.71 57.785 270) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text +3.3V (at 95.25 59.055 270) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text IO4 (at 97.79 57.785 270) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text IO5 (at 100.33 57.785 270) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text IO12 (at 102.87 58.42 270) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text IO16 (at 105.41 58.42 270) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text ADC (at 107.95 57.785 270) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_line (start 56 92) (end 110 92) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 56 52) (end 56 92) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 110 52) (end 56 52) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 110 92) (end 110 52) (angle 90) (layer Edge.Cuts) (width 0.1))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

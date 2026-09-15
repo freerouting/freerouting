@@ -1,0 +1,149 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\MySRaspiGW_MySRaspiGW\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Bottom
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  65500 -46000  54000 -46000  54000 -34100  65500 -34100
+            65500 -46000)
+    )
+    (via "Via[0-1]_889:431.8_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component Capacitors_SMD:C_0805_HandSoldering
+      (place C1 56450 -35600 back 180 (PN 0.1µF))
+      (place C2 56450 -40000 back 180 (PN 4.7µF))
+      (place C3 56450 -44750 back 180 (PN 47µF))
+    )
+    (component "mysensors_radios:NRF24L01-SMD"
+      (place U1 48200 -40050 front 90 (PN NRF24L01))
+    )
+    (component Socket_Strips:Socket_Strip_Straight_2x04
+      (place P1 61400 -36350 back 90 (PN CONN_02X04))
+    )
+  )
+  (library
+    (image Capacitors_SMD:C_0805_HandSoldering
+      (outline (polygon signal 0  2295 -995  -2295 -995  -2295 995  2295 995))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -500 -850  500 -850))
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 1 -1250 0)
+      (pin Rect[T]Pad_1500.000000x1250.000000_um 2 1250 0)
+    )
+    (image "mysensors_radios:NRF24L01-SMD"
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 2 -4400 -8700)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 1 -3130 -8700)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 3 -1860 -8700)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 4 -590 -8700)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 5 680 -8700)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 6 1950 -8700)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 7 3220 -8700)
+      (pin Rect[T]Pad_1000.000000x2000.000000_um 8 4490 -8700)
+    )
+    (image Socket_Strips:Socket_Strip_Straight_2x04
+      (outline (polygon signal 0  -1745 -4295  -1745 1745  9395 1745  9395 -4295))
+      (outline (path signal 150  1270 1270  8890 1270))
+      (outline (path signal 150  8890 1270  8890 -3810))
+      (outline (path signal 150  8890 -3810  -1270 -3810))
+      (outline (path signal 150  -1270 -3810  -1270 -1270))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  -1270 -1270  1270 -1270))
+      (outline (path signal 150  1270 -1270  1270 1270))
+      (outline (path signal 150  -1550 1550  -1550 0))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 2540 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 5080 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 5080 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 7 7620 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 8 7620 -2540)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path Top 1727.2  0 0  0 0))
+      (shape (path Bottom 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x2000.000000_um
+      (shape (rect Top -500 -1000 500 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1250.000000_um
+      (shape (rect Top -750 -625 750 625))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect Top -863.6 -863.6 863.6 863.6))
+      (shape (rect Bottom -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:431.8_um"
+      (shape (circle Top 889))
+      (shape (circle Bottom 889))
+      (attach off)
+    )
+  )
+  (network
+    (net +3V3
+      (pins C1-1 C2-1 C3-1 U1-2 P1-1)
+    )
+    (net GND
+      (pins C1-2 C2-2 C3-2 U1-1 P1-4)
+    )
+    (net MOSI
+      (pins U1-6 P1-3)
+    )
+    (net MISO
+      (pins U1-7 P1-5)
+    )
+    (net CE
+      (pins U1-3 P1-6)
+    )
+    (net SCK
+      (pins U1-5 P1-7)
+    )
+    (net CSN
+      (pins U1-4 P1-8)
+    )
+    (net "Net-(U1-Pad8)"
+      (pins U1-8)
+    )
+    (net "Net-(P1-Pad2)"
+      (pins P1-2)
+    )
+    (class kicad_default +3V3 CE CSN GND MISO MOSI "Net-(P1-Pad2)" "Net-(U1-Pad8)"
+      SCK
+      (circuit
+        (use_via "Via[0-1]_889:431.8_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

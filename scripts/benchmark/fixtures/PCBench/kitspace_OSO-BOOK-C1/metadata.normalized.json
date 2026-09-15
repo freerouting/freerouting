@@ -1,0 +1,57 @@
+{
+  "board_id": "kitspace_OSO-BOOK-C1",
+  "display_name": "kitspace_OSO-BOOK-C1",
+  "pcbench_directory": "PCBs/kitspace_OSO-BOOK-C1",
+  "source": "https://github.com/joeycastillo/The-Open-Book",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/joeycastillo/The-Open-Book/main/LICENSE.md'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:13:30.900074+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 41,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 115.0
+    },
+    "area_cm2": 97.75,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 296,
+    "vias": 76,
+    "track_length_mm": 1920.29,
+    "kicad_drc_violations": 210,
+    "kicad_drc_breakdown": {
+      "total_violations": 210,
+      "unconnected_count": 0,
+      "by_type": {
+        "footprint_type_mismatch": 2,
+        "lib_footprint_issues": 15,
+        "lib_footprint_mismatch": 17,
+        "silk_edge_clearance": 19,
+        "solder_mask_bridge": 156,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 158,
+        "warning": 52
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

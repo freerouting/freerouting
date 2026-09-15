@@ -1,0 +1,234 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\USB-TypeC-breakout-board_USB-TypeC-breakout-board\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  178730 -121270  128730 -121270  128730 -71270  178730 -71270
+            178730 -121270)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_2x12_Pitch2.54mm
+      (place P1 157480 -82550 front 0 (PN CONN_02X12))
+    )
+    (component "usb-typec:JAE-DX07S024JJ2-oshpark"
+      (place P2 134000 -94000 front -90 (PN USB_TYPE_C))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_2x12_Pitch2.54mm
+      (outline (polygon signal 0  4095 -29495  -1595 -29495  -1595 1595  4095 1595))
+      (outline (path signal 120  -1390 1390  0 1390))
+      (outline (path signal 120  -1390 0  -1390 1390))
+      (outline (path signal 120  1270 -1270  -1390 -1270))
+      (outline (path signal 120  1270 1390  1270 -1270))
+      (outline (path signal 120  3930 1390  1270 1390))
+      (outline (path signal 120  3930 -29330  3930 1390))
+      (outline (path signal 120  -1390 -29330  3930 -29330))
+      (outline (path signal 120  -1390 -1270  -1390 -29330))
+      (outline (path signal 100  3810 1270  -1270 1270))
+      (outline (path signal 100  3810 -29210  3810 1270))
+      (outline (path signal 100  -1270 -29210  3810 -29210))
+      (outline (path signal 100  -1270 1270  -1270 -29210))
+      (pin Rect[A]Pad_1700.000000x1700.000000_um 1 0 0)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 2 2540 0)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 3 0 -2540)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 4 2540 -2540)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 5 0 -5080)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 6 2540 -5080)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 7 0 -7620)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 8 2540 -7620)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 9 0 -10160)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 10 2540 -10160)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 11 0 -12700)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 12 2540 -12700)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 13 0 -15240)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 14 2540 -15240)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 15 0 -17780)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 16 2540 -17780)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 17 0 -20320)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 18 2540 -20320)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 19 0 -22860)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 20 2540 -22860)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 21 0 -25400)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 22 2540 -25400)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 23 0 -27940)
+      (pin Oval[A]Pad_1700.000000x1700.000000_um 24 2540 -27940)
+    )
+    (image "usb-typec:JAE-DX07S024JJ2-oshpark"
+      (outline (path signal 150  -300 -4850  7500 -4850))
+      (pin Rect[T]Pad_270.000000x900.000000_um A1 975 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A2 1475 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A3 1975 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A4 2475 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A5 2975 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A6 3475 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A7 3975 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A8 4475 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A9 4975 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A10 5475 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A11 5975 2700)
+      (pin Rect[T]Pad_270.000000x900.000000_um A12 6475 2700)
+      (pin Rect[T]Pad_270.000000x800.000000_um B1 6220 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B2 5720 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B3 5220 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B4 4720 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B5 4220 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B6 3720 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B7 3220 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B8 2720 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B9 2220 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B10 1720 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B11 1220 1100)
+      (pin Rect[T]Pad_270.000000x800.000000_um B12 720 1100)
+      (pin Oval[A]Pad_600.000000x600.000000_um @1 7200 0)
+      (pin Rect[A]Pad_1650.000000x2300.000000_um 0 -495 2000)
+      (pin Rect[A]Pad_1650.000000x2300.000000_um 0@1 7695 2000)
+      (pin Oval[A]Pad_1778.000000x3048.000000_um 0@2 -960.12 -3050)
+      (pin Oval[A]Pad_1778.000000x3048.000000_um 0@3 8158.48 -3050)
+      (keepout "" (circle F.Cu 1100))
+      (keepout "" (circle B.Cu 1100))
+    )
+    (padstack Oval[A]Pad_1700.000000x1700.000000_um
+      (shape (path F.Cu 1700  0 0  0 0))
+      (shape (path B.Cu 1700  0 0  0 0))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1778.000000x3048.000000_um
+      (shape (path F.Cu 1778  0 -635  0 635))
+      (shape (path B.Cu 1778  0 -635  0 635))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_600.000000x600.000000_um
+      (shape (path F.Cu 600  0 0  0 0))
+      (shape (path B.Cu 600  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_270.000000x800.000000_um
+      (shape (rect F.Cu -135 -400 135 400))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_270.000000x900.000000_um
+      (shape (rect F.Cu -135 -450 135 450))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1650.000000x2300.000000_um
+      (shape (rect F.Cu -825 -1150 825 1150))
+      (shape (rect B.Cu -825 -1150 825 1150))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1700.000000x1700.000000_um
+      (shape (rect F.Cu -850 -850 850 850))
+      (shape (rect B.Cu -850 -850 850 850))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins P1-1 P1-2 P1-23 P1-24 P2-A1 P2-A12 P2-B1 P2-B12 P2-0 P2-0@1 P2-0@2 P2-0@3)
+    )
+    (net "Net-(P1-Pad3)"
+      (pins P1-3 P2-A2)
+    )
+    (net "Net-(P1-Pad4)"
+      (pins P1-4 P2-B11)
+    )
+    (net "Net-(P1-Pad5)"
+      (pins P1-5 P2-A3)
+    )
+    (net "Net-(P1-Pad6)"
+      (pins P1-6 P2-B10)
+    )
+    (net VCC
+      (pins P1-7 P1-8 P1-17 P1-18 P2-A4 P2-A9 P2-B4 P2-B9)
+    )
+    (net "Net-(P1-Pad9)"
+      (pins P1-9 P2-A5)
+    )
+    (net "Net-(P1-Pad10)"
+      (pins P1-10 P2-B8)
+    )
+    (net "Net-(P1-Pad11)"
+      (pins P1-11 P2-A6)
+    )
+    (net "Net-(P1-Pad12)"
+      (pins P1-12 P2-B7)
+    )
+    (net "Net-(P1-Pad13)"
+      (pins P1-13 P2-A7)
+    )
+    (net "Net-(P1-Pad14)"
+      (pins P1-14 P2-B6)
+    )
+    (net "Net-(P1-Pad15)"
+      (pins P1-15 P2-A8)
+    )
+    (net "Net-(P1-Pad16)"
+      (pins P1-16 P2-B5)
+    )
+    (net "Net-(P1-Pad19)"
+      (pins P1-19 P2-A10)
+    )
+    (net "Net-(P1-Pad20)"
+      (pins P1-20 P2-B3)
+    )
+    (net "Net-(P1-Pad21)"
+      (pins P1-21 P2-A11)
+    )
+    (net "Net-(P1-Pad22)"
+      (pins P1-22 P2-B2)
+    )
+    (class kicad_default GND "Net-(P1-Pad10)" "Net-(P1-Pad11)" "Net-(P1-Pad12)"
+      "Net-(P1-Pad13)" "Net-(P1-Pad14)" "Net-(P1-Pad15)" "Net-(P1-Pad16)"
+      "Net-(P1-Pad19)" "Net-(P1-Pad20)" "Net-(P1-Pad21)" "Net-(P1-Pad22)"
+      "Net-(P1-Pad3)" "Net-(P1-Pad4)" "Net-(P1-Pad5)" "Net-(P1-Pad6)" "Net-(P1-Pad9)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+    (class PWR VCC
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 300)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

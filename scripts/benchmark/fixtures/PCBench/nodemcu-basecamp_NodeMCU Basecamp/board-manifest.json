@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "nodemcu-basecamp_NodeMCU Basecamp",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 215058,
+      "sha256": "fdf2165846c3a2d144c279105f763ecaf3e3b20c1c63ea7c2f42d99fb045f42d"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 138540,
+      "sha256": "82aa90603e2b57d81c905c3464a6f2bfc85704cae1d476710a6ceafd46e6bdb4"
+    },
+    "metadata_json": {
+      "bytes": 504,
+      "sha256": "2da96ab16cd37db582b59286fefb7c1b0e8cffadeb9bf5f5a81b11804ddf4610"
+    },
+    "final_json": {
+      "bytes": 137262,
+      "sha256": "a07767750b4db583003eee7dfdb0c278f3a5345cf9b0d29047dd6efb10023d1e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:28:04.149577+00:00"
+  }
+}

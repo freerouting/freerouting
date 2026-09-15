@@ -1,0 +1,23 @@
+{
+  "board": "DA_Lamp_attiny44a_servo_i2c",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DA_Lamp_attiny44a_servo_i2c\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 95,
+  "approximate_track_length_mm": 230.57,
+  "kicad_drc_violations": 102,
+  "generated_at": "2026-08-18T18:40:27.103490+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 102,
+    "unconnected_count": 1,
+    "by_type": {
+      "lib_footprint_issues": 7,
+      "silk_over_copper": 80,
+      "silk_overlap": 15
+    },
+    "by_severity": {
+      "warning": 102
+    }
+  }
+}

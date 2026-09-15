@@ -1,0 +1,31 @@
+{
+  "board": "RoBoC_RoboticsMKII",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RoBoC_RoboticsMKII\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 136,
+  "segment_count": 1614,
+  "approximate_track_length_mm": 3635.2,
+  "kicad_drc_violations": 788,
+  "generated_at": "2026-08-18T19:41:32.234094+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 788,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 293,
+      "copper_edge_clearance": 2,
+      "isolated_copper": 2,
+      "lib_footprint_issues": 94,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 199,
+      "silk_overlap": 6,
+      "starved_thermal": 2,
+      "text_height": 156,
+      "track_dangling": 30
+    },
+    "by_severity": {
+      "error": 297,
+      "warning": 491
+    }
+  }
+}

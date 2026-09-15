@@ -1,0 +1,31 @@
+{
+  "board": "RN2483shield_RN2483shield",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RN2483shield_RN2483shield\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 14,
+  "segment_count": 115,
+  "approximate_track_length_mm": 407.64,
+  "kicad_drc_violations": 250,
+  "generated_at": "2026-08-18T19:41:22.151112+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 250,
+    "unconnected_count": 2,
+    "by_type": {
+      "clearance": 106,
+      "courtyards_overlap": 2,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 8,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 2,
+      "silk_overlap": 65,
+      "solder_mask_bridge": 55,
+      "starved_thermal": 7,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 171,
+      "warning": 79
+    }
+  }
+}

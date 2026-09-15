@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_Potentiometer_mount_8LED",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 121048,
+      "sha256": "f3dcdb6dc975926f7822fb44e6d5e6ac30ff2f8e22d306ff9392a45b69ba3d4e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 109964,
+      "sha256": "d4203b29a8601e6258b4b6af048a54a00377dd883ad646095338aa2271a50675"
+    },
+    "metadata_json": {
+      "bytes": 710,
+      "sha256": "22da0b77dcd0439d400fcc25155c14919b8c4b1f66e46d8adbb861368cd72e9b"
+    },
+    "final_json": {
+      "bytes": 25885,
+      "sha256": "9c2e15cdf00a4e77cc335ca0624f4bf2ff486848d9ceb12317d26edaccd0bfc8"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:10:23.070982+00:00"
+  }
+}

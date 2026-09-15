@@ -1,0 +1,27 @@
+{
+  "board": "96boards-robomezzi_96boards-robomezzi",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\96boards-robomezzi_96boards-robomezzi\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 113,
+  "segment_count": 968,
+  "approximate_track_length_mm": 2366.8,
+  "kicad_drc_violations": 478,
+  "generated_at": "2026-08-18T17:47:02.751942+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 478,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 98,
+      "courtyards_overlap": 25,
+      "lib_footprint_issues": 118,
+      "silk_over_copper": 36,
+      "silk_overlap": 199,
+      "text_height": 2
+    },
+    "by_severity": {
+      "error": 123,
+      "warning": 355
+    }
+  }
+}

@@ -1,0 +1,520 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\KiwiSDR_PCB_ant\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Top
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Gnd
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  222000 -88000  84000 -88000  84000 -50000  222000 -50000
+            222000 -88000)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 1000)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "kiwi-MCL_KK81"
+      (place T504 196000 -80000 front 90 (PN "DNL T1-6"))
+    )
+    (component "kiwi-RJ45_8"
+      (place J11 214000 -65350 front 90 (PN "DNL RJ45"))
+    )
+    (component "kiwi-TB_2P_2_54MM"
+      (place J13 207000 -79000 back 90 (PN TB_2))
+      (place J12 198000 -70000 back 90 (PN "DNL TB_2"))
+    )
+    (component "kiwi-TP_1250"
+      (place TP501 192000 -53000 front 0 (PN TEST_POINT))
+      (place TP502 187000 -55000 front 0 (PN TEST_POINT))
+    )
+    (component "kiwi-SM1812"
+      (place L506 191000 -73000 front 0 (PN 100uH))
+    )
+    (component "kiwi-SM0805"
+      (place R502 145000 -81000 front 90 (PN 1M))
+      (place R505 164000 -56000 front -90 (PN 100K))
+      (place C509 195000 -54000 front 90 (PN 100n/100))
+      (place C527 183000 -74000 front 90 (PN 1n/100))
+      (place C526 183000 -64000 front -90 (PN 1n/100))
+      (place C523 156000 -56500 front 0 (PN 1n/100))
+      (place C524 151000 -69000 front -90 (PN 1n/100))
+      (place C525 156000 -81500 front 0 (PN 1n/100))
+      (place R525 186000 -74000 front 90 (PN 1K5))
+      (place C522 198000 -54000 front 90 (PN 1n/100))
+      (place R508 174500 -56000 front -90 (PN 470R))
+      (place R524 203000 -85000 front 180 (PN 0R))
+      (place R523 203000 -75000 front 180 (PN 0R))
+      (place R506 168000 -69000 front -90 (PN 2K2))
+      (place R514 148000 -69000 front 90 (PN 100R))
+      (place C511 139000 -72000 front 0 (PN DNL))
+      (place R501 147000 -56000 front -90 (PN 1M))
+      (place C516 158000 -75000 front 0 (PN DNL))
+      (place C515 163000 -59000 front 0 (PN DNL))
+      (place C514 163000 -63000 front 0 (PN DNL))
+      (place C513 158000 -59000 front 0 (PN DNL))
+      (place C512 158000 -63000 front 0 (PN DNL))
+      (place L505 163000 -71000 front 0 (PN 0R))
+      (place L503 163000 -67000 front 0 (PN 0R))
+      (place L504 158000 -71000 front 0 (PN 0R))
+      (place L502 158000 -67000 front 0 (PN 0R))
+      (place R519 139000 -65000 front 90 (PN 0R))
+      (place L501 139000 -69000 front 180 (PN 0R))
+      (place R512 145000 -69000 front -90 (PN 0R))
+      (place R511 146000 -74000 front 180 (PN "DNL 1M"))
+      (place R518 185000 -80000 front -90 (PN "DNL 0R"))
+      (place R503 159000 -72000 back 0 (PN "DNL 100R"))
+      (place R504 159000 -66000 back 0 (PN "DNL 100R"))
+      (place R513 151000 -77000 front 90 (PN "DNL 0R"))
+      (place R516 151000 -81000 front 90 (PN 0R))
+      (place R522 201000 -54000 front 90 (PN DNL))
+      (place R509 174500 -82000 front -90 (PN 470R))
+      (place R517 169000 -66000 front 180 (PN "DNL 47R"))
+      (place C510 192000 -58000 front 90 (PN 10u/25))
+      (place R515 150000 -60000 front -90 (PN 0R))
+      (place R521 185000 -60000 front 90 (PN 1K))
+      (place R520 185000 -56000 front -90 (PN 11K))
+      (place C520 189000 -58000 front 90 (PN 10u/25))
+      (place L508 178000 -75000 front 0 (PN "FB 80Z"))
+      (place L507 178000 -63000 front 0 (PN "FB 80Z"))
+      (place L510 169000 -75000 front 0 (PN "FB 80Z"))
+      (place L509 169000 -63000 front 0 (PN "FB 80Z"))
+      (place C519 163000 -79000 front 0 (PN DNL))
+      (place C518 163000 -75000 front 0 (PN DNL))
+      (place C517 158000 -79000 front 0 (PN DNL))
+      (place R507 164000 -82000 front -90 (PN 100K))
+      (place C521 148000 -81000 front -90 (PN "DNL 100n/100"))
+    )
+    (component "kiwi-SM1206"
+      (place R510 174000 -69000 front -90 (PN 10R/0.66W))
+      (place C505 160000 -63000 back 180 (PN "DNL 470n/100"))
+      (place C504 160000 -75000 back 0 (PN "DNL 470n/100"))
+      (place C508 154000 -69000 front -90 (PN 470n/100))
+      (place C503 154000 -77000 front 90 (PN 470n/100))
+      (place C507 179000 -71000 front 0 (PN 470n/100))
+      (place C506 179000 -67000 front 0 (PN 470n/100))
+      (place C502 154000 -61000 front -90 (PN 470n/100))
+      (place C501 139000 -59000 front 90 (PN 470n/100))
+    )
+    (component "kiwi-CMC"
+      (place T503 198000 -62000 front -90 (PN "CMC 2 mH"))
+    )
+    (component "kiwi-BNC_SMA_NO_VIP"
+      (place J10 222000 -79500 front 180 (PN "DNL BNC"))
+    )
+    (component "kiwi-MCL_KK81::1"
+      (place T501 158000 -69000 back 90 (PN "DNL T-622"))
+      (place T502 148000 -69000 back 90 (PN "DNL T1-6"))
+    )
+    (component "kiwi-OSHW_6MM"
+      (place GFX3 91500 -78000 front 0 (PN OSHW))
+      (place GFX1 96000 -61000 front 0 (PN LOGO))
+    )
+    (component "kiwi-SOT223_EBEC"
+      (place Q504 170000 -80000 front 180 (PN BFG35))
+      (place Q505 179000 -58000 front 0 (PN BFG35))
+      (place Q503 170000 -58000 front 0 (PN BFG31))
+      (place Q506 179000 -80000 front 180 (PN BFG31))
+    )
+    (component "kiwi-SOT23_DGS"
+      (place Q501 146000 -61000 front 90 (PN J310))
+      (place Q502 146000 -77000 front 90 (PN J271))
+      (place Q507 151000 -73000 back 90 (PN "DNL J310"))
+    )
+    (component "kiwi-FIDUCIAL_2_SIDE"
+      (place FID1 139000 -85000 front 0 (PN FIDUCIAL))
+      (place FID2 219000 -53000 front 0 (PN FIDUCIAL))
+    )
+    (component "kiwi-E_FIELD_PROBE"
+      (place EP501 110000 -69000 front 90 (PN E_FIELD_PROBE))
+    )
+    (component "kiwi-SOT223_6"
+      (place U501 190000 -65000 front 180 (PN TPS7A4501))
+    )
+  )
+  (library
+    (image "kiwi-MCL_KK81"
+      (outline (path signal 250  -4250 -4125  -4312.5 -4108.25  -4358.25 -4062.5  -4375 -4000
+            -4358.25 -3937.5  -4312.5 -3891.75  -4250 -3875  -4187.5 -3891.75
+            -4141.75 -3937.5  -4125 -4000  -4141.75 -4062.5  -4187.5 -4108.25
+            -4250 -4125))
+      (outline (path signal 10  -3810 3430  3810 3430))
+      (outline (path signal 10  3810 3430  3810 -3430))
+      (outline (path signal 10  3810 -3430  -3810 -3430))
+      (outline (path signal 10  -3810 -3430  -3810 3430))
+      (pin Rect[T]Pad_1270.000000x3180.000000_um 1 -2540 6030)
+      (pin Rect[T]Pad_1270.000000x3180.000000_um 2 0 6030)
+      (pin Rect[T]Pad_1270.000000x3180.000000_um 3 2540 6030)
+      (pin Rect[T]Pad_1270.000000x3180.000000_um 4 2540 -6030)
+      (pin Rect[T]Pad_1270.000000x3180.000000_um 5 0 -6030)
+      (pin Rect[T]Pad_1270.000000x3180.000000_um 6 -2540 -6030)
+    )
+    (image "kiwi-RJ45_8"
+      (outline (path signal 200  -8000 -7500  -8000 10500))
+      (outline (path signal 200  -8000 10500  8000 10500))
+      (outline (path signal 200  8000 10500  8000 -7500))
+      (outline (path signal 10  -7650 -7620  7650 -7620))
+      (outline (path signal 10  7650 -7620  7650 10120))
+      (outline (path signal 10  7650 10120  -7650 10120))
+      (outline (path signal 10  -7650 10120  -7650 -7620))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -4445 6350)
+      (pin Round[A]Pad_1524.000000_um 2 -3175 8890)
+      (pin Round[A]Pad_1524.000000_um 3 -1905 6350)
+      (pin Round[A]Pad_1524.000000_um 4 -635 8890)
+      (pin Round[A]Pad_1524.000000_um 5 635 6350)
+      (pin Round[A]Pad_1524.000000_um 6 1905 8890)
+      (pin Round[A]Pad_1524.000000_um 7 3175 6350)
+      (pin Round[A]Pad_1524.000000_um 8 4445 8890)
+      (keepout "" (circle Top 3700 5715 0))
+      (keepout "" (circle Gnd 3700 5715 0))
+      (keepout "" (circle Top 3700 -5715 0))
+      (keepout "" (circle Gnd 3700 -5715 0))
+    )
+    (image "kiwi-TB_2P_2_54MM"
+      (outline (path signal 200  -3000 -3000  -3000 3500))
+      (outline (path signal 200  -3000 3500  3000 3500))
+      (outline (path signal 200  3000 3500  3000 -3000))
+      (outline (path signal 10  -2770 3250  2770 3250))
+      (outline (path signal 10  2770 3250  2770 -3250))
+      (outline (path signal 10  2770 -3250  -2770 -3250))
+      (outline (path signal 10  -2770 -3250  -2770 3250))
+      (pin Rect[A]Pad_1650.000000x1650.000000_um 1 -1270 0)
+      (pin Round[A]Pad_1650.000000_um 2 1270 0)
+    )
+    (image "kiwi-TP_1250"
+      (pin Round[T]Pad_1250.000000_um 1 0 0)
+    )
+    (image "kiwi-SM1812"
+      (pin Rect[T]Pad_1550.000000x3600.000000_um 1 -2125 0)
+      (pin Rect[T]Pad_1550.000000x3600.000000_um 2 2125 0)
+    )
+    (image "kiwi-SM0805"
+      (pin Rect[T]Pad_889.000000x1397.000000_um 1 -965.2 0)
+      (pin Rect[T]Pad_889.000000x1397.000000_um 2 965.2 0)
+    )
+    (image "kiwi-SM1206"
+      (pin Rect[T]Pad_1500.000000x2000.000000_um 1 -1650 0)
+      (pin Rect[T]Pad_1500.000000x2000.000000_um 2 1650 0)
+    )
+    (image "kiwi-CMC"
+      (outline (path signal 200  -5500 -2500  -5500 -3500))
+      (outline (path signal 200  -5500 -3500  5500 -3500))
+      (outline (path signal 200  5500 -3500  5500 -2500))
+      (outline (path signal 200  -5500 2500  -5500 3500))
+      (outline (path signal 200  -5500 3500  5500 3500))
+      (outline (path signal 200  5500 3500  5500 2500))
+      (outline (path signal 10  -4600 3000  4600 3000))
+      (outline (path signal 10  4600 3000  4600 -3000))
+      (outline (path signal 10  4600 -3000  -4600 -3000))
+      (outline (path signal 10  -4600 -3000  -4600 3000))
+      (pin Rect[T]Pad_2000.000000x1200.000000_um 1 -3750 1270)
+      (pin Rect[T]Pad_2000.000000x1200.000000_um 4 3750 1270)
+      (pin Rect[T]Pad_2000.000000x1200.000000_um 2 -3750 -1270)
+      (pin Rect[T]Pad_2000.000000x1200.000000_um 3 3750 -1270)
+    )
+    (image "kiwi-BNC_SMA_NO_VIP"
+      (outline (path signal 10  -1520 5510  0 5510))
+      (outline (path signal 10  0 5510  0 -5510))
+      (outline (path signal 10  0 -5510  -1520 -5510))
+      (outline (path signal 10  -1520 -5510  -1520 5510))
+      (outline (path signal 10  0 380  4570 380))
+      (outline (path signal 10  4570 380  4570 -380))
+      (outline (path signal 10  4570 -380  0 -380))
+      (outline (path signal 10  0 5510  4570 5510))
+      (outline (path signal 10  4570 5510  4570 4345))
+      (outline (path signal 10  4570 4345  0 4345))
+      (outline (path signal 10  0 -5510  4570 -5510))
+      (outline (path signal 10  4570 -5510  4570 -4345))
+      (outline (path signal 10  4570 -4345  0 -4345))
+      (outline (path signal 10  -1520 -4825  -12400 -4825))
+      (outline (path signal 10  -12400 -4825  -12400 4825))
+      (outline (path signal 10  -12400 4825  -1520 4825))
+      (pin Rect[T]Pad_5080.000000x2290.000000_um 1 3210 0)
+      (pin Rect[A]Pad_5080.000000x2415.000000_um 2 3210 -4255)
+      (pin Rect[A]Pad_5080.000000x2415.000000_um 3 3210 4255)
+    )
+    (image "kiwi-MCL_KK81::1"
+      (outline (path signal 10  -1550 850  1550 850))
+      (outline (path signal 10  1550 850  1550 -850))
+      (outline (path signal 10  1550 -850  -1550 -850))
+      (outline (path signal 10  -1550 -850  -1550 850))
+      (pin Rect[T]Pad_508.000000x1270.000000_um 1 -939.8 -1143)
+      (pin Rect[T]Pad_508.000000x1270.000000_um 2 0 -1140)
+      (pin Rect[T]Pad_508.000000x1270.000000_um 3 939.8 -1140)
+      (pin Rect[T]Pad_508.000000x1270.000000_um 4 939.8 1140)
+      (pin Rect[T]Pad_508.000000x1270.000000_um 5 0 1140)
+      (pin Rect[T]Pad_508.000000x1270.000000_um 6 -939.8 1140)
+    )
+    (image "kiwi-OSHW_6MM"
+    )
+    (image "kiwi-SOT223_EBEC"
+      (outline (path signal 10  -3350 1850  3350 1850))
+      (outline (path signal 10  3350 1850  3350 -1850))
+      (outline (path signal 10  3350 -1850  -3350 -1850))
+      (outline (path signal 10  -3350 -1850  -3350 1850))
+      (pin Rect[T]Pad_1200.000000x1200.000000_um E1 -2300 -3050)
+      (pin Rect[T]Pad_1200.000000x1200.000000_um B 0 -3050)
+      (pin Rect[T]Pad_1200.000000x1200.000000_um E2 2300 -3050)
+      (pin Rect[T]Pad_3500.000000x1200.000000_um C 0 3050)
+    )
+    (image "kiwi-SOT23_DGS"
+      (pin Rect[T]Pad_998.220000x1399.540000_um D -949.96 -1099.82)
+      (pin Rect[T]Pad_998.220000x1399.540000_um S 949.96 -1099.82)
+      (pin Rect[T]Pad_998.220000x1399.540000_um G 0 1099.82)
+    )
+    (image "kiwi-FIDUCIAL_2_SIDE"
+      (pin Round[A]Pad_1000.000000_um 1 0 0)
+    )
+    (image "kiwi-E_FIELD_PROBE"
+      (pin Rect[T]Pad_36000.000000x50000.000000_um 1 0 0)
+    )
+    (image "kiwi-SOT223_6"
+      (outline (path signal 10  -3175 1750  3175 1750))
+      (outline (path signal 10  3175 1750  3175 -1750))
+      (outline (path signal 10  3175 -1750  -3175 -1750))
+      (outline (path signal 10  -3175 -1750  -3175 1750))
+      (pin Rect[T]Pad_510.000000x2110.000000_um 1 -2540 -3000)
+      (pin Rect[T]Pad_510.000000x2110.000000_um 2 -1270 -3000)
+      (pin Rect[T]Pad_510.000000x2110.000000_um 3 0 -3000)
+      (pin Rect[T]Pad_510.000000x2110.000000_um 4 1270 -3000)
+      (pin Rect[T]Pad_510.000000x2110.000000_um 5 2540 -3000)
+      (pin Rect[T]Pad_4720.000000x2110.000000_um TAB 0 3000)
+    )
+    (padstack Round[A]Pad_1000.000000_um
+      (shape (circle Top 1000))
+      (shape (circle Gnd 1000))
+      (attach off)
+    )
+    (padstack Round[T]Pad_1250.000000_um
+      (shape (circle Top 1250))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle Top 1524))
+      (shape (circle Gnd 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1650.000000_um
+      (shape (circle Top 1650))
+      (shape (circle Gnd 1650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1200.000000_um
+      (shape (rect Top -1000 -600 1000 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3500.000000x1200.000000_um
+      (shape (rect Top -1750 -600 1750 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_36000.000000x50000.000000_um
+      (shape (rect Top -18000 -25000 18000 25000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_4720.000000x2110.000000_um
+      (shape (rect Top -2360 -1055 2360 1055))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_508.000000x1270.000000_um
+      (shape (rect Top -254 -635 254 635))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_5080.000000x2290.000000_um
+      (shape (rect Top -2540 -1145 2540 1145))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_5080.000000x2415.000000_um
+      (shape (rect Top -2540 -1207.5 2540 1207.5))
+      (shape (rect Gnd -2540 -1207.5 2540 1207.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_510.000000x2110.000000_um
+      (shape (rect Top -255 -1055 255 1055))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_889.000000x1397.000000_um
+      (shape (rect Top -444.5 -698.5 444.5 698.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_998.220000x1399.540000_um
+      (shape (rect Top -499.11 -699.77 499.11 699.77))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x1200.000000_um
+      (shape (rect Top -600 -600 600 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1270.000000x3180.000000_um
+      (shape (rect Top -635 -1590 635 1590))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x2000.000000_um
+      (shape (rect Top -750 -1000 750 1000))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect Top -762 -762 762 762))
+      (shape (rect Gnd -762 -762 762 762))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1550.000000x3600.000000_um
+      (shape (rect Top -775 -1800 775 1800))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1650.000000x1650.000000_um
+      (shape (rect Top -825 -825 825 825))
+      (shape (rect Gnd -825 -825 825 825))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle Top 800))
+      (shape (circle Gnd 800))
+      (attach off)
+    )
+  )
+  (network
+    (net /14.55
+      (pins TP502-1 R505-1 R508-1 R501-1 R511-1 R503-1 R515-1 R520-1 C520-1 T501-3
+        T502-4 Q504-C Q505-C U501-4)
+    )
+    (net /ANT2
+      (pins C511-2 R519-1 L501-1)
+    )
+    (net /ANT3
+      (pins R519-2 C501-1)
+    )
+    (net /ANT4
+      (pins R501-2 R512-1 C501-2 Q501-G)
+    )
+    (net /B1H
+      (pins L509-2 Q503-B)
+    )
+    (net /B1L
+      (pins L510-2 Q504-B)
+    )
+    (net /B2H
+      (pins L507-2 Q505-B)
+    )
+    (net /B2L
+      (pins L508-2 Q506-B)
+    )
+    (net /BIAS
+      (pins R502-2 R512-2 R511-2 C521-1 Q502-G)
+    )
+    (net /BIAS+
+      (pins J11-3 J11-6 J12-1 L506-2 R525-1 T503-3)
+    )
+    (net "/BIAS-"
+      (pins J11-7 J11-8 J12-2 T503-4)
+    )
+    (net /DCIN
+      (pins TP501-1 C509-1 C522-1 C510-1 T503-2 U501-1 U501-2)
+    )
+    (net /E1H
+      (pins R508-2 R517-1 L507-1 Q503-E1 Q503-E2)
+    )
+    (net /E1L
+      (pins R509-1 L508-1 Q504-E1 Q504-E2)
+    )
+    (net /E2H
+      (pins C526-1 R510-1 C506-1 Q505-E1 Q505-E2)
+    )
+    (net /E2L
+      (pins C527-1 R518-1 R510-2 C507-1 Q506-E1 Q506-E2)
+    )
+    (net /EPROBE
+      (pins C511-1 L501-2 EP501-1)
+    )
+    (net /FB1
+      (pins R515-2 T502-6 Q501-D)
+    )
+    (net /FB2
+      (pins R513-1 R516-2 T502-3 Q502-D Q507-G)
+    )
+    (net /FB3
+      (pins T501-4 Q507-D)
+    )
+    (net /JHI
+      (pins C523-1 C524-1 R514-2 C508-1 C502-1 T501-1 Q501-S)
+    )
+    (net /JLO
+      (pins C524-2 C525-1 R514-1 R513-2 C508-2 C503-1 T501-2 Q502-S)
+    )
+    (net /NF1H
+      (pins C523-2 C513-1 C512-1 L502-1 C502-2)
+    )
+    (net /NF1L
+      (pins C525-2 C516-1 L504-1 C517-1 C503-2)
+    )
+    (net /NF2H
+      (pins C515-1 C514-1 C513-2 C512-2 L503-1 L502-2)
+    )
+    (net /NF2L
+      (pins C516-2 L505-1 L504-2 C519-1 C518-1 C517-2)
+    )
+    (net /NF3H
+      (pins R505-2 R506-1 C515-2 C514-2 L503-2 R517-2 L509-1)
+    )
+    (net /NF3L
+      (pins R506-2 L505-2 L510-1 C519-2 C518-2 R507-1)
+    )
+    (net /OUT
+      (pins T504-3 L506-1 C527-2 C526-2 R525-2 R523-2 C507-2 C506-2)
+    )
+    (net /RX+
+      (pins T504-4 J11-2 J11-4 J13-1 R523-1 J10-1)
+    )
+    (net "/RX-"
+      (pins T504-6 J11-1 J11-5 J13-2 R524-1 J10-2 J10-3)
+    )
+    (net /THI
+      (pins R504-2 C505-1 T501-6)
+    )
+    (net /TLO
+      (pins R503-2 C504-2 T501-5)
+    )
+    (net /TP
+      (pins R522-1 T503-1)
+    )
+    (net /VADJ
+      (pins R521-2 R520-2 U501-5)
+    )
+    (net GND
+      (pins T504-1 R502-1 C509-2 C522-2 R524-2 R518-2 R504-1 R516-1 R522-2 R509-2
+        C510-2 R521-1 C520-2 R507-2 C521-2 C505-2 C504-1 T502-1 Q503-C Q506-C Q507-S
+        U501-3 U501-TAB)
+    )
+    (class kicad_default /14.55 /ANT2 /ANT3 /ANT4 /B1H /B1L /B2H /B2L /BIAS
+      /BIAS+ "/BIAS-" /DCIN /E1H /E1L /E2H /E2L /EPROBE /FB1 /FB2 /FB3 /JHI
+      /JLO /NF1H /NF1L /NF2H /NF2L /NF3H /NF3L /OUT /RX+ "/RX-" /THI /TLO
+      /TP /VADJ GND
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 1000)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

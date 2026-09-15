@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "IR-Transponder-ATTiny85-v2_Transponder_v2",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 59945,
+      "sha256": "4955afacfe957011096b2c2e3534e791335f49b551a42c40bc196ce3aecdc18e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 32925,
+      "sha256": "d545769f0492600e7db3ce50d538a55177219296d2dd8c1562ca321f5d696549"
+    },
+    "metadata_json": {
+      "bytes": 705,
+      "sha256": "c029dbb317a8e4a7f387f3444dd265c4a98305bb9e9f55aebe9b8fa9dbc01073"
+    },
+    "final_json": {
+      "bytes": 24597,
+      "sha256": "1bc43cba8f9f2e9bede8d24071232f4539690288bcfc8a719d8b638a3debe381"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:59:35.605476+00:00"
+  }
+}

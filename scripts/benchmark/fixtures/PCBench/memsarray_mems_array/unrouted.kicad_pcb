@@ -1,0 +1,4080 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 8)
+    (tracks 1212)
+    (zones 0)
+    (modules 61)
+    (nets 144)
+  )
+
+  (page A2)
+  (layers
+    (0 F.Cu signal)
+    (1 Ground_plane power)
+    (2 Power_plane power)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide)
+  )
+
+  (setup
+    (last_trace_width 0.254)
+    (user_trace_width 0.2032)
+    (user_trace_width 0.508)
+    (user_trace_width 1.27)
+    (trace_clearance 0.1524)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.1524)
+    (via_size 0.762)
+    (via_drill 0.508)
+    (via_min_size 0.6858)
+    (via_min_drill 0.3302)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.15)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 2.5 2.5)
+    (pad_drill 2.5)
+    (pad_to_mask_clearance 0.2)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x00030_80000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory ""))
+  )
+
+  (net 0 "")
+  (net 1 DVDD)
+  (net 2 DGND)
+  (net 3 "/Microphone set A/CLK")
+  (net 4 "Net-(MIC201-Pad3)")
+  (net 5 "Net-(MIC202-Pad3)")
+  (net 6 "Net-(MIC203-Pad3)")
+  (net 7 "Net-(MIC204-Pad3)")
+  (net 8 "Net-(MIC205-Pad3)")
+  (net 9 "Net-(MIC206-Pad3)")
+  (net 10 "Net-(MIC207-Pad3)")
+  (net 11 "Net-(MIC208-Pad3)")
+  (net 12 "/Microphone set B/CLK")
+  (net 13 "Net-(MIC301-Pad3)")
+  (net 14 "Net-(MIC302-Pad3)")
+  (net 15 "Net-(MIC303-Pad3)")
+  (net 16 "Net-(MIC304-Pad3)")
+  (net 17 "Net-(MIC305-Pad3)")
+  (net 18 "Net-(MIC306-Pad3)")
+  (net 19 "Net-(MIC307-Pad3)")
+  (net 20 "Net-(MIC308-Pad3)")
+  (net 21 "/Microphone set C/CLK")
+  (net 22 "Net-(MIC401-Pad3)")
+  (net 23 "Net-(MIC402-Pad3)")
+  (net 24 "Net-(MIC403-Pad3)")
+  (net 25 "Net-(MIC404-Pad3)")
+  (net 26 "Net-(MIC405-Pad3)")
+  (net 27 "Net-(MIC406-Pad3)")
+  (net 28 "Net-(MIC407-Pad3)")
+  (net 29 "Net-(MIC408-Pad3)")
+  (net 30 "/Microphone set D/CLK")
+  (net 31 "Net-(MIC501-Pad3)")
+  (net 32 "Net-(MIC502-Pad3)")
+  (net 33 "Net-(MIC503-Pad3)")
+  (net 34 "Net-(MIC504-Pad3)")
+  (net 35 "Net-(MIC505-Pad3)")
+  (net 36 "Net-(MIC506-Pad3)")
+  (net 37 "Net-(MIC507-Pad3)")
+  (net 38 "Net-(MIC508-Pad3)")
+  (net 39 "/Microphone set E/CLK")
+  (net 40 "Net-(MIC601-Pad3)")
+  (net 41 "Net-(MIC602-Pad3)")
+  (net 42 "Net-(MIC603-Pad3)")
+  (net 43 "Net-(MIC604-Pad3)")
+  (net 44 "Net-(MIC605-Pad3)")
+  (net 45 "Net-(MIC606-Pad3)")
+  (net 46 "Net-(MIC607-Pad3)")
+  (net 47 "Net-(MIC608-Pad3)")
+  (net 48 /PRU0_15)
+  (net 49 "Net-(U102-Pad1)")
+  (net 50 "/Microphone set A/OUT")
+  (net 51 "/Microphone set B/OUT")
+  (net 52 "/Microphone set C/OUT")
+  (net 53 "/Microphone set D/OUT")
+  (net 54 "/Microphone set E/OUT")
+  (net 55 "/Microphone set A/S0")
+  (net 56 "/Microphone set A/S1")
+  (net 57 "/Microphone set A/S2")
+  (net 58 /PRU1_7)
+  (net 59 /PRU1_6)
+  (net 60 /PRU1_5)
+  (net 61 /PRU1_4)
+  (net 62 /PRU1_3)
+  (net 63 /PRU1_2)
+  (net 64 /PRU1_1)
+  (net 65 /PRU1_0)
+  (net 66 "Net-(U102-Pad19)")
+  (net 67 "Net-(U103-Pad1)")
+  (net 68 /SYS_RESETn)
+  (net 69 "Net-(U104-PadC5)")
+  (net 70 "Net-(U104-PadC6)")
+  (net 71 "Net-(U104-PadC7)")
+  (net 72 "Net-(U104-PadC8)")
+  (net 73 "Net-(U104-PadC9)")
+  (net 74 "Net-(U104-PadC11)")
+  (net 75 "Net-(U104-PadC12)")
+  (net 76 "Net-(U104-PadC13)")
+  (net 77 "Net-(U104-PadC14)")
+  (net 78 "Net-(U104-PadC15)")
+  (net 79 "Net-(U104-PadC16)")
+  (net 80 "Net-(U104-PadC17)")
+  (net 81 "Net-(U104-PadC18)")
+  (net 82 "Net-(U104-PadC19)")
+  (net 83 "Net-(U104-PadC20)")
+  (net 84 "Net-(U104-PadC21)")
+  (net 85 "Net-(U104-PadC22)")
+  (net 86 "Net-(U104-PadC23)")
+  (net 87 "Net-(U104-PadC24)")
+  (net 88 "Net-(U104-PadC25)")
+  (net 89 "Net-(U104-PadC26)")
+  (net 90 "Net-(U104-PadC27)")
+  (net 91 "Net-(U104-PadC28)")
+  (net 92 "Net-(U104-PadC29)")
+  (net 93 "Net-(U104-PadC30)")
+  (net 94 "Net-(U104-PadC31)")
+  (net 95 "Net-(U104-PadC32)")
+  (net 96 "Net-(U104-PadC33)")
+  (net 97 "Net-(U104-PadC34)")
+  (net 98 "Net-(U104-PadC35)")
+  (net 99 "Net-(U104-PadC36)")
+  (net 100 "Net-(U104-PadC37)")
+  (net 101 "Net-(U104-PadC38)")
+  (net 102 "Net-(U104-PadC39)")
+  (net 103 "Net-(U104-PadC40)")
+  (net 104 "Net-(U104-PadC41)")
+  (net 105 "Net-(U104-PadC42)")
+  (net 106 "Net-(U104-PadB3)")
+  (net 107 "Net-(U104-PadB4)")
+  (net 108 "Net-(U104-PadB5)")
+  (net 109 "Net-(U104-PadB6)")
+  (net 110 "Net-(U104-PadB7)")
+  (net 111 "Net-(U104-PadB8)")
+  (net 112 "Net-(U104-PadB9)")
+  (net 113 "Net-(U104-PadB10)")
+  (net 114 "Net-(U104-PadB13)")
+  (net 115 "Net-(U104-PadB14)")
+  (net 116 "Net-(U104-PadB15)")
+  (net 117 "Net-(U104-PadB16)")
+  (net 118 "Net-(U104-PadB17)")
+  (net 119 "Net-(U104-PadB18)")
+  (net 120 "Net-(U104-PadB19)")
+  (net 121 "Net-(U104-PadB20)")
+  (net 122 "Net-(U104-PadB21)")
+  (net 123 "Net-(U104-PadB22)")
+  (net 124 "Net-(U104-PadB23)")
+  (net 125 "Net-(U104-PadB24)")
+  (net 126 "Net-(U104-PadB25)")
+  (net 127 "Net-(U104-PadB26)")
+  (net 128 "Net-(U104-PadB27)")
+  (net 129 "Net-(U104-PadB28)")
+  (net 130 "Net-(U104-PadB29)")
+  (net 131 "Net-(U104-PadB30)")
+  (net 132 "Net-(U104-PadB31)")
+  (net 133 "Net-(U104-PadB32)")
+  (net 134 "Net-(U104-PadB33)")
+  (net 135 "Net-(U104-PadB34)")
+  (net 136 "Net-(U104-PadB35)")
+  (net 137 "Net-(U104-PadB36)")
+  (net 138 "Net-(U104-PadB37)")
+  (net 139 "Net-(U104-PadB38)")
+  (net 140 "Net-(U101-Pad12)")
+  (net 141 "Net-(U101-Pad14)")
+  (net 142 "Net-(U101-Pad16)")
+  (net 143 "Net-(U104-PadB11)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.1524)
+    (trace_width 0.254)
+    (via_dia 0.762)
+    (via_drill 0.508)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net "/Microphone set A/CLK")
+    (add_net "/Microphone set A/OUT")
+    (add_net "/Microphone set A/S0")
+    (add_net "/Microphone set A/S1")
+    (add_net "/Microphone set A/S2")
+    (add_net "/Microphone set B/CLK")
+    (add_net "/Microphone set B/OUT")
+    (add_net "/Microphone set C/CLK")
+    (add_net "/Microphone set C/OUT")
+    (add_net "/Microphone set D/CLK")
+    (add_net "/Microphone set D/OUT")
+    (add_net "/Microphone set E/CLK")
+    (add_net "/Microphone set E/OUT")
+    (add_net /PRU0_15)
+    (add_net /PRU1_0)
+    (add_net /PRU1_1)
+    (add_net /PRU1_2)
+    (add_net /PRU1_3)
+    (add_net /PRU1_4)
+    (add_net /PRU1_5)
+    (add_net /PRU1_6)
+    (add_net /PRU1_7)
+    (add_net /SYS_RESETn)
+    (add_net DGND)
+    (add_net DVDD)
+    (add_net "Net-(MIC201-Pad3)")
+    (add_net "Net-(MIC202-Pad3)")
+    (add_net "Net-(MIC203-Pad3)")
+    (add_net "Net-(MIC204-Pad3)")
+    (add_net "Net-(MIC205-Pad3)")
+    (add_net "Net-(MIC206-Pad3)")
+    (add_net "Net-(MIC207-Pad3)")
+    (add_net "Net-(MIC208-Pad3)")
+    (add_net "Net-(MIC301-Pad3)")
+    (add_net "Net-(MIC302-Pad3)")
+    (add_net "Net-(MIC303-Pad3)")
+    (add_net "Net-(MIC304-Pad3)")
+    (add_net "Net-(MIC305-Pad3)")
+    (add_net "Net-(MIC306-Pad3)")
+    (add_net "Net-(MIC307-Pad3)")
+    (add_net "Net-(MIC308-Pad3)")
+    (add_net "Net-(MIC401-Pad3)")
+    (add_net "Net-(MIC402-Pad3)")
+    (add_net "Net-(MIC403-Pad3)")
+    (add_net "Net-(MIC404-Pad3)")
+    (add_net "Net-(MIC405-Pad3)")
+    (add_net "Net-(MIC406-Pad3)")
+    (add_net "Net-(MIC407-Pad3)")
+    (add_net "Net-(MIC408-Pad3)")
+    (add_net "Net-(MIC501-Pad3)")
+    (add_net "Net-(MIC502-Pad3)")
+    (add_net "Net-(MIC503-Pad3)")
+    (add_net "Net-(MIC504-Pad3)")
+    (add_net "Net-(MIC505-Pad3)")
+    (add_net "Net-(MIC506-Pad3)")
+    (add_net "Net-(MIC507-Pad3)")
+    (add_net "Net-(MIC508-Pad3)")
+    (add_net "Net-(MIC601-Pad3)")
+    (add_net "Net-(MIC602-Pad3)")
+    (add_net "Net-(MIC603-Pad3)")
+    (add_net "Net-(MIC604-Pad3)")
+    (add_net "Net-(MIC605-Pad3)")
+    (add_net "Net-(MIC606-Pad3)")
+    (add_net "Net-(MIC607-Pad3)")
+    (add_net "Net-(MIC608-Pad3)")
+    (add_net "Net-(U101-Pad12)")
+    (add_net "Net-(U101-Pad14)")
+    (add_net "Net-(U101-Pad16)")
+    (add_net "Net-(U102-Pad1)")
+    (add_net "Net-(U102-Pad19)")
+    (add_net "Net-(U103-Pad1)")
+    (add_net "Net-(U104-PadB10)")
+    (add_net "Net-(U104-PadB11)")
+    (add_net "Net-(U104-PadB13)")
+    (add_net "Net-(U104-PadB14)")
+    (add_net "Net-(U104-PadB15)")
+    (add_net "Net-(U104-PadB16)")
+    (add_net "Net-(U104-PadB17)")
+    (add_net "Net-(U104-PadB18)")
+    (add_net "Net-(U104-PadB19)")
+    (add_net "Net-(U104-PadB20)")
+    (add_net "Net-(U104-PadB21)")
+    (add_net "Net-(U104-PadB22)")
+    (add_net "Net-(U104-PadB23)")
+    (add_net "Net-(U104-PadB24)")
+    (add_net "Net-(U104-PadB25)")
+    (add_net "Net-(U104-PadB26)")
+    (add_net "Net-(U104-PadB27)")
+    (add_net "Net-(U104-PadB28)")
+    (add_net "Net-(U104-PadB29)")
+    (add_net "Net-(U104-PadB3)")
+    (add_net "Net-(U104-PadB30)")
+    (add_net "Net-(U104-PadB31)")
+    (add_net "Net-(U104-PadB32)")
+    (add_net "Net-(U104-PadB33)")
+    (add_net "Net-(U104-PadB34)")
+    (add_net "Net-(U104-PadB35)")
+    (add_net "Net-(U104-PadB36)")
+    (add_net "Net-(U104-PadB37)")
+    (add_net "Net-(U104-PadB38)")
+    (add_net "Net-(U104-PadB4)")
+    (add_net "Net-(U104-PadB5)")
+    (add_net "Net-(U104-PadB6)")
+    (add_net "Net-(U104-PadB7)")
+    (add_net "Net-(U104-PadB8)")
+    (add_net "Net-(U104-PadB9)")
+    (add_net "Net-(U104-PadC11)")
+    (add_net "Net-(U104-PadC12)")
+    (add_net "Net-(U104-PadC13)")
+    (add_net "Net-(U104-PadC14)")
+    (add_net "Net-(U104-PadC15)")
+    (add_net "Net-(U104-PadC16)")
+    (add_net "Net-(U104-PadC17)")
+    (add_net "Net-(U104-PadC18)")
+    (add_net "Net-(U104-PadC19)")
+    (add_net "Net-(U104-PadC20)")
+    (add_net "Net-(U104-PadC21)")
+    (add_net "Net-(U104-PadC22)")
+    (add_net "Net-(U104-PadC23)")
+    (add_net "Net-(U104-PadC24)")
+    (add_net "Net-(U104-PadC25)")
+    (add_net "Net-(U104-PadC26)")
+    (add_net "Net-(U104-PadC27)")
+    (add_net "Net-(U104-PadC28)")
+    (add_net "Net-(U104-PadC29)")
+    (add_net "Net-(U104-PadC30)")
+    (add_net "Net-(U104-PadC31)")
+    (add_net "Net-(U104-PadC32)")
+    (add_net "Net-(U104-PadC33)")
+    (add_net "Net-(U104-PadC34)")
+    (add_net "Net-(U104-PadC35)")
+    (add_net "Net-(U104-PadC36)")
+    (add_net "Net-(U104-PadC37)")
+    (add_net "Net-(U104-PadC38)")
+    (add_net "Net-(U104-PadC39)")
+    (add_net "Net-(U104-PadC40)")
+    (add_net "Net-(U104-PadC41)")
+    (add_net "Net-(U104-PadC42)")
+    (add_net "Net-(U104-PadC5)")
+    (add_net "Net-(U104-PadC6)")
+    (add_net "Net-(U104-PadC7)")
+    (add_net "Net-(U104-PadC8)")
+    (add_net "Net-(U104-PadC9)")
+  )
+
+  (module Mounting_Holes:MountingHole_2-5mm (layer F.Cu) (tedit 56788934) (tstamp 5678BE9B)
+    (at 300 40)
+    (descr "Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,")
+    (tags "Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,")
+    (fp_text reference REF**_4 (at 0 -3.50012) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole_2-5mm (at 0.09906 3.59918) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.5 0) (layer Cmts.User) (width 0.381))
+    (pad "" np_thru_hole circle (at 0 0) (size 2.5 2.5) (drill 2.5) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module Mounting_Holes:MountingHole_2-5mm (layer F.Cu) (tedit 56788934) (tstamp 5678BE97)
+    (at 40 40)
+    (descr "Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,")
+    (tags "Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,")
+    (fp_text reference REF**_3 (at 0 -3.50012) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole_2-5mm (at 0.09906 3.59918) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.5 0) (layer Cmts.User) (width 0.381))
+    (pad "" np_thru_hole circle (at 0 0) (size 2.5 2.5) (drill 2.5) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module Mounting_Holes:MountingHole_2-5mm (layer F.Cu) (tedit 56788934) (tstamp 5678BE93)
+    (at 40 210)
+    (descr "Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,")
+    (tags "Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,")
+    (fp_text reference REF**_2 (at 0 -3.50012) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole_2-5mm (at 0.09906 3.59918) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.5 0) (layer Cmts.User) (width 0.381))
+    (pad "" np_thru_hole circle (at 0 0) (size 2.5 2.5) (drill 2.5) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 56785CD4)
+    (at 285.11 116.28 180)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /567D20CD)
+    (attr smd)
+    (fp_text reference C101 (at 0 -2.1 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at -3.81 0 180) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 1.25 0 180) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:c_elec_8x10 (layer F.Cu) (tedit 55729723) (tstamp 56785CDA)
+    (at 287 162 90)
+    (descr "SMT capacitor, aluminium electrolytic, 8x10")
+    (path /5568A498)
+    (attr smd)
+    (fp_text reference C102 (at 0 -5.08 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 100uF (at 0 5.08 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 3.937 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.302 -0.381) (end 3.302 0.381) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.683 0) (end 2.921 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.429 -4.191) (end -4.191 -4.191) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.191 -3.429) (end 3.429 -4.191) (layer F.SilkS) (width 0.15))
+    (fp_line (start 4.191 3.429) (end 4.191 -3.429) (layer F.SilkS) (width 0.15))
+    (fp_line (start 3.429 4.191) (end 4.191 3.429) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.191 4.191) (end 3.429 4.191) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.191 -4.191) (end -4.191 4.191) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.175 -2.286) (end -3.175 2.286) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.302 2.032) (end -3.302 -2.032) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.429 1.905) (end -3.429 -1.905) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.556 -1.651) (end -3.556 1.651) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.683 1.397) (end -3.683 -1.397) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.81 -1.016) (end -3.81 1.016) (layer F.SilkS) (width 0.15))
+    (fp_line (start -5.35 4.55) (end -5.35 -4.55) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.35 4.55) (end -5.35 4.55) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.35 -4.55) (end 5.35 4.55) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.35 -4.55) (end 5.35 -4.55) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at 3.2512 0 90) (size 3.50012 2.4003) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at -3.2512 0 90) (size 3.50012 2.4003) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (model Capacitors_SMD.3dshapes/c_elec_8x10.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 56785CE0)
+    (at 284.856 82.752)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /55B7823A)
+    (attr smd)
+    (fp_text reference C103 (at 0 -2.1) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 3.81 0) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 1.25 0) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 56785CE6)
+    (at 144.902 53.288 90)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /56796123/567D36E6)
+    (attr smd)
+    (fp_text reference C201 (at 3.302 0 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0 1.778 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 56785CEC)
+    (at 145.664 73.334 90)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /567A20AA/567D36E6)
+    (attr smd)
+    (fp_text reference C301 (at 3.028 0) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0.488 1.778 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 56785CF2)
+    (at 145.664 102.818 90)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /567A21A8/567D36E6)
+    (attr smd)
+    (fp_text reference C401 (at 3.048 0 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0.508 1.778 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 56785CF8)
+    (at 145.156 142.696 90)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /567A2715/567D36E6)
+    (attr smd)
+    (fp_text reference C501 (at 3.048 0 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0.508 2.032 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Capacitors_SMD:C_0805_HandSoldering (layer F.Cu) (tedit 541A9B8D) (tstamp 56785CFE)
+    (at 145.41 182.32 90)
+    (descr "Capacitor SMD 0805, hand soldering")
+    (tags "capacitor 0805")
+    (path /567AC48D/567D36E6)
+    (attr smd)
+    (fp_text reference C601 (at 3.048 0 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 1uF (at 0.508 1.778 270) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -0.5 0.85) (end 0.5 0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.5 -0.85) (end -0.5 -0.85) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.3 -1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end -2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 1) (end 2.3 1) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -2.3 -1) (end 2.3 -1) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 1.25 0 90) (size 1.5 1.25) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (model Capacitors_SMD.3dshapes/C_0805_HandSoldering.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785D18)
+    (at 65 60)
+    (path /56796123/56796D8A)
+    (fp_text reference MIC201 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(MIC201-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785D32)
+    (at 76 60)
+    (path /56796123/56796E40)
+    (fp_text reference MIC202 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(MIC202-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785D4C)
+    (at 98 60)
+    (path /56796123/56796E69)
+    (fp_text reference MIC203 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(MIC203-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785D66)
+    (at 131 60)
+    (path /56796123/56796E9D)
+    (fp_text reference MIC204 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(MIC204-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785D80)
+    (at 153 60)
+    (path /56796123/56796ED0)
+    (fp_text reference MIC205 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(MIC205-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785D9A)
+    (at 197 60)
+    (path /56796123/56796F28)
+    (fp_text reference MIC206 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(MIC206-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785DB4)
+    (at 241 60)
+    (path /56796123/56796F63)
+    (fp_text reference MIC207 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(MIC207-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785DCE)
+    (at 263 60)
+    (path /56796123/56796FA1)
+    (fp_text reference MIC208 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 11 "Net-(MIC208-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785DE8)
+    (at 65 80)
+    (path /567A20AA/56796D8A)
+    (fp_text reference MIC301 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 13 "Net-(MIC301-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 5678500)
+    (at 76 80)
+    (path /567A20AA/56796E40)
+    (fp_text reference MIC302 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 14 "Net-(MIC302-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785E1C)
+    (at 98 80)
+    (path /567A20AA/56796E69)
+    (fp_text reference MIC303 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 15 "Net-(MIC303-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 5)
+    (at 131 80)
+    (path /567A20AA/56796E9D)
+    (fp_text reference MIC304 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 16 "Net-(MIC304-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 5)
+    (at 153 80)
+    (path /567A20AA/56796ED0)
+    (fp_text reference MIC305 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 17 "Net-(MIC305-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785E6A)
+    (at 197 80)
+    (path /567A20AA/56796F28)
+    (fp_text reference MIC306 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(MIC306-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 5)
+    (at 241 80)
+    (path /567A20AA/56796F63)
+    (fp_text reference MIC307 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 19 "Net-(MIC307-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785E9E)
+    (at 263 80)
+    (path /567A20AA/56796FA1)
+    (fp_text reference MIC308 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 20 "Net-(MIC308-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785EB8)
+    (at 65 110)
+    (path /567A21A8/56796D8A)
+    (fp_text reference MIC401 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(MIC401-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785ED2)
+    (at 76 110)
+    (path /567A21A8/56796E40)
+    (fp_text reference MIC402 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(MIC402-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785EEC)
+    (at 98 110)
+    (path /567A21A8/56796E69)
+    (fp_text reference MIC403 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 24 "Net-(MIC403-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785F06)
+    (at 131 110)
+    (path /567A21A8/56796E9D)
+    (fp_text reference MIC404 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 25 "Net-(MIC404-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785F20)
+    (at 153 110)
+    (path /567A21A8/56796ED0)
+    (fp_text reference MIC405 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 26 "Net-(MIC405-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785F3A)
+    (at 197 110)
+    (path /567A21A8/56796F28)
+    (fp_text reference MIC406 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 27 "Net-(MIC406-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785F54)
+    (at 241 110)
+    (path /567A21A8/56796F63)
+    (fp_text reference MIC407 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 28 "Net-(MIC407-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785F6E)
+    (at 263 110)
+    (path /567A21A8/56796FA1)
+    (fp_text reference MIC408 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 29 "Net-(MIC408-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785F88)
+    (at 65 150)
+    (path /567A2715/56796D8A)
+    (fp_text reference MIC501 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 31 "Net-(MIC501-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785FA2)
+    (at 76 150)
+    (path /567A2715/56796E40)
+    (fp_text reference MIC502 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 32 "Net-(MIC502-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785FBC)
+    (at 98 150)
+    (path /567A2715/56796E69)
+    (fp_text reference MIC503 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 33 "Net-(MIC503-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785FD6)
+    (at 131 150)
+    (path /567A2715/56796E9D)
+    (fp_text reference MIC504 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 34 "Net-(MIC504-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56785FF0)
+    (at 153 150)
+    (path /567A2715/56796ED0)
+    (fp_text reference MIC505 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 35 "Net-(MIC505-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 5678600A)
+    (at 197 150)
+    (path /567A2715/56796F28)
+    (fp_text reference MIC506 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 36 "Net-(MIC506-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56786024)
+    (at 241 150)
+    (path /567A2715/56796F63)
+    (fp_text reference MIC507 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 37 "Net-(MIC507-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 5678603E)
+    (at 263 150)
+    (path /567A2715/56796FA1)
+    (fp_text reference MIC508 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 38 "Net-(MIC508-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56786058)
+    (at 65 190)
+    (path /567AC48D/56796D8A)
+    (fp_text reference MIC601 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 40 "Net-(MIC601-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 56786072)
+    (at 76 190)
+    (path /567AC48D/56796E40)
+    (fp_text reference MIC602 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 41 "Net-(MIC602-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 5678608C)
+    (at 98 190)
+    (path /567AC48D/56796E69)
+    (fp_text reference MIC603 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 42 "Net-(MIC603-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 567860A6)
+    (at 131 190)
+    (path /567AC48D/56796E9D)
+    (fp_text reference MIC604 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 43 "Net-(MIC604-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 567860C0)
+    (at 153 190)
+    (path /567AC48D/56796ED0)
+    (fp_text reference MIC605 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 44 "Net-(MIC605-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 567860DA)
+    (at 197 190)
+    (path /567AC48D/56796F28)
+    (fp_text reference MIC606 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 45 "Net-(MIC606-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 567860F4)
+    (at 241 190)
+    (path /567AC48D/56796F63)
+    (fp_text reference MIC607 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 46 "Net-(MIC607-Pad3)"))
+  )
+
+  (module mems_array:Mems_Mic_Module (layer F.Cu) (tedit 567703B9) (tstamp 5678610E)
+    (at 263 190)
+    (path /567AC48D/56796FA1)
+    (fp_text reference MIC608 (at 0 -8.128) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MIC_MODULE (at 0 8.636) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -3.683 -6.223) (end -3.683 -6.35) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.35) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -5.334) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start -5.334 -3.302) (end -5.334 -5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.SilkS) (width 0.12))
+    (fp_line (start 5.334 5.334) (end 5.334 3.302) (layer F.SilkS) (width 0.12))
+    (fp_line (start -3.302 -6.858) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 5.334 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 6.858) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -5.334 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 -5.334) (end -3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 -5.334) (end -3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 -5.334) (end 3.302 -5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 -5.334) (end 3.302 -6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 5.334 5.334) (end 3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.302 5.334) (end 3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -5.334 5.334) (end -3.302 5.334) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.302 5.334) (end -3.302 6.858) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (pad 2 smd rect (at 2.032 -5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd rect (at -2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 3 smd rect (at 2.032 5.334) (size 1.6 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 47 "Net-(MIC608-Pad3)"))
+  )
+
+  (module Housings_SSOP:TSSOP-20_4.4x6.5mm_Pitch0.65mm (layer F.Cu) (tedit 54130A77) (tstamp 56786126)
+    (at 285 111)
+    (descr "20-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "SSOP 0.65")
+    (path /56793563)
+    (attr smd)
+    (fp_text reference U101 (at 0 -4.3) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 74AHC244 (at -0.144 -5.642) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.75 -3.375) (end 2.225 -3.375) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.225 3.375) (end 2.225 3.375) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.95 3.55) (end 3.95 3.55) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -3.55) (end 3.95 -3.55) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.95 -3.55) (end 3.95 3.55) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -3.55) (end -3.95 3.55) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.95 -2.925) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 2 smd rect (at -2.95 -2.275) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 /PRU0_15))
+    (pad 3 smd rect (at -2.95 -1.625) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 12 "/Microphone set B/CLK"))
+    (pad 4 smd rect (at -2.95 -0.975) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 /PRU0_15))
+    (pad 5 smd rect (at -2.95 -0.325) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 21 "/Microphone set C/CLK"))
+    (pad 6 smd rect (at -2.95 0.325) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 /PRU0_15))
+    (pad 7 smd rect (at -2.95 0.975) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 30 "/Microphone set D/CLK"))
+    (pad 8 smd rect (at -2.95 1.625) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 /PRU0_15))
+    (pad 9 smd rect (at -2.95 2.275) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 39 "/Microphone set E/CLK"))
+    (pad 10 smd rect (at -2.95 2.925) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 11 smd rect (at 2.95 2.925) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 /PRU0_15))
+    (pad 12 smd rect (at 2.95 2.275) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 140 "Net-(U101-Pad12)"))
+    (pad 13 smd rect (at 2.95 1.625) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 /PRU0_15))
+    (pad 14 smd rect (at 2.95 0.975) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 141 "Net-(U101-Pad14)"))
+    (pad 15 smd rect (at 2.95 0.325) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 /PRU0_15))
+    (pad 16 smd rect (at 2.95 -0.325) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 142 "Net-(U101-Pad16)"))
+    (pad 17 smd rect (at 2.95 -0.975) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 /PRU0_15))
+    (pad 18 smd rect (at 2.95 -1.625) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 3 "/Microphone set A/CLK"))
+    (pad 19 smd rect (at 2.95 -2.275) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 20 smd rect (at 2.95 -2.925) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (model Housings_SSOP.3dshapes/TSSOP-20_4.4x6.5mm_Pitch0.65mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module mems_array:SOP-20_600x175_Pitch0.635 (layer F.Cu) (tedit 55B2EC15) (tstamp 5678615A)
+    (at 285 89 270)
+    (descr "SMALL OUTLINE PKG (SOP), 0.635 MM PITCH; 20 PIN, 8.65 MM L X 3.90 MM W X 1.75 MM H BODYPCB LIBRARIES PACKAGES")
+    (tags "SMALL OUTLINE PKG (SOP), 0.635 MM PITCH; 20 PIN, 8.65 MM L X 3.90 MM W X 1.75 MM H BODYPCB LIBRARIES PACKAGES")
+    (path /55B3A4EF)
+    (attr smd)
+    (fp_text reference U102 (at 5.69 -0.11) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 743245 (at 7.468 -0.364) (layer F.Fab)
+      (effects (font (size 1.19888 1.19888) (thickness 0.127)))
+    )
+    (fp_circle (center -2.8575 3.77952) (end -2.90576 3.82778) (layer F.SilkS) (width 0.09906))
+    (fp_circle (center 0 0) (end -0.1 0.1) (layer F.CrtYd) (width 0.02286))
+    (fp_line (start 4.3 -2) (end 3.25 -2) (layer F.SilkS) (width 0.11938))
+    (fp_line (start 4.3 2) (end 4.3 -2) (layer F.SilkS) (width 0.11938))
+    (fp_line (start 3.25 2) (end 4.3 2) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -4.3 -2) (end -3.25 -2) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -4.3 2) (end -4.3 -2) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.25 2) (end -4.3 2) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -3.24358 3.39852) (end -3.24358 1.99898) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -4.62788 -2.2479) (end -4.62788 2.2479) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -3.31978 -2.2479) (end -4.62788 -2.2479) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -3.31978 -3.7084) (end -3.31978 -2.2479) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 3.31978 -3.7084) (end -3.31978 -3.7084) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 3.31978 -2.2479) (end 3.31978 -3.7084) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 4.62788 -2.2479) (end 3.31978 -2.2479) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 4.62788 2.2479) (end 4.62788 -2.2479) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 3.31978 2.2479) (end 4.62788 2.2479) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 3.31978 3.7084) (end 3.31978 2.2479) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -3.31978 3.7084) (end 3.31978 3.7084) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -3.31978 2.2479) (end -3.31978 3.7084) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -4.62788 2.2479) (end -3.31978 2.2479) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -0.35 0) (end 0.35 0) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 0 -0.35) (end 0 0.35) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -4.3 -2) (end 4.3 -2) (layer F.Fab) (width 0.15))
+    (fp_line (start -3.1 2) (end 4.3 2) (layer F.Fab) (width 0.15))
+    (fp_line (start 4.3 -2) (end 4.3 2) (layer F.Fab) (width 0.15))
+    (fp_line (start -4.3 0.8) (end -4.3 -2) (layer F.Fab) (width 0.15))
+    (fp_line (start -3.1 2) (end -4.3 0.8) (layer F.Fab) (width 0.15))
+    (pad 1 smd oval (at -2.8575 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 49 "Net-(U102-Pad1)"))
+    (pad 2 smd oval (at -2.2225 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 50 "/Microphone set A/OUT"))
+    (pad 3 smd oval (at -1.5875 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 51 "/Microphone set B/OUT"))
+    (pad 4 smd oval (at -0.9525 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 52 "/Microphone set C/OUT"))
+    (pad 5 smd oval (at -0.3175 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 53 "/Microphone set D/OUT"))
+    (pad 6 smd oval (at 0.3175 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 54 "/Microphone set E/OUT"))
+    (pad 7 smd oval (at 0.9525 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 55 "/Microphone set A/S0"))
+    (pad 8 smd oval (at 1.5875 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 56 "/Microphone set A/S1"))
+    (pad 9 smd oval (at 2.2225 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 57 "/Microphone set A/S2"))
+    (pad 10 smd oval (at 2.8575 2.6289 180) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 11 smd oval (at 2.8575 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 58 /PRU1_7))
+    (pad 12 smd oval (at 2.2225 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 60 /PRU1_5))
+    (pad 13 smd oval (at 1.5875 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 62 /PRU1_3))
+    (pad 14 smd oval (at 0.9525 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 64 /PRU1_1))
+    (pad 15 smd oval (at 0.3175 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 65 /PRU1_0))
+    (pad 16 smd oval (at -0.3175 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 63 /PRU1_2))
+    (pad 17 smd oval (at -0.9525 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 61 /PRU1_4))
+    (pad 18 smd oval (at -1.5875 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 59 /PRU1_6))
+    (pad 19 smd oval (at -2.2225 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 66 "Net-(U102-Pad19)"))
+    (pad 20 smd oval (at -2.8575 -2.6289) (size 1.65862 0.40894) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+  )
+
+  (module mems_array:SOTFL-5_160x50_Pitch0.5 (layer F.Cu) (tedit 55B2EC68) (tstamp 56786175)
+    (at 292.984 84.53 90)
+    (descr "SMALL OUTLINE TRANSISTOR FLAT LEAD (SOTFL), 0.50 MM PITCH; 5 PIN, 1.60 MM L X 1.20 MM W X 0.50 MM H BODYPCB LIBRARIES PACKAGES")
+    (tags "SMALL OUTLINE TRANSISTOR FLAT LEAD (SOTFL), 0.50 MM PITCH; 5 PIN, 1.60 MM L X 1.20 MM W X 0.50 MM H BODYPCB LIBRARIES PACKAGES")
+    (path /55B72891)
+    (attr smd)
+    (fp_text reference U103 (at -2.032 0 180) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value 741G04 (at 0 3 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center -0.49784 1.3843) (end -0.5461 1.43256) (layer F.SilkS) (width 0.09906))
+    (fp_circle (center 0 0) (end -0.1 0.1) (layer F.CrtYd) (width 0.02286))
+    (fp_line (start 0.84836 0.40386) (end 0.84836 -0.40386) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -0.84836 1.0033) (end -0.84836 -0.40386) (layer F.SilkS) (width 0.11938))
+    (fp_line (start -1 -0.8) (end -1 0.8) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -0.8 -0.8) (end -1 -0.8) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -0.8 -1.2) (end -0.8 -0.8) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 0.8 -1.2) (end -0.8 -1.2) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 0.8 -0.8) (end 0.8 -1.2) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 0.99822 -0.79756) (end 0.79756 -0.79756) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 1 0.8) (end 1 -0.8) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 0.8 0.8) (end 1 0.8) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 0.8 1.2) (end 0.8 0.8) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -0.8 1.2) (end 0.8 1.2) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -0.8 0.8) (end -0.8 1.2) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -1 0.8) (end -0.8 0.8) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start -0.35 0) (end 0.35 0) (layer F.CrtYd) (width 0.04826))
+    (fp_line (start 0 -0.35) (end 0 0.35) (layer F.CrtYd) (width 0.04826))
+    (pad 1 smd oval (at -0.49784 0.73406) (size 0.65786 0.29972) (layers F.Cu F.Paste F.Mask)
+      (net 67 "Net-(U103-Pad1)"))
+    (pad 2 smd oval (at 0 0.73406) (size 0.65786 0.29972) (layers F.Cu F.Paste F.Mask)
+      (net 68 /SYS_RESETn))
+    (pad 3 smd oval (at 0.49784 0.73406) (size 0.65786 0.29972) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 4 smd oval (at 0.49784 -0.73406 180) (size 0.65786 0.29972) (layers F.Cu F.Paste F.Mask)
+      (net 66 "Net-(U102-Pad19)"))
+    (pad 5 smd oval (at -0.49784 -0.73406 180) (size 0.65786 0.29972) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+  )
+
+  (module mems_array:beagleboneblack (layer B.Cu) (tedit 55676D96) (tstamp 7FFFFFFF)
+    (at 323 142 270)
+    (descr "BeagleBone Black hearders footprint (defaults to placing BBB in the front of PCB)")
+    (tags "beaglebone black")
+    (path /556509B5)
+    (fp_text reference U104 (at 0 2 270) (layer B.SilkS)
+      (effects (font (size 1.524 1.524) (thickness 0.3048)) (justify mirror))
+    )
+    (fp_text value BEAGLEBONEBLACK (at 0 -2 270) (layer B.Fab)
+      (effects (font (size 1.524 1.524) (thickness 0.3048)) (justify mirror))
+    )
+    (fp_line (start -43.18 -14.605) (end -43.18 14.605) (layer B.SilkS) (width 0.381))
+    (fp_line (start -30.48 -27.305) (end 36.83 -27.305) (layer B.SilkS) (width 0.381))
+    (fp_line (start 43.18 -20.955) (end 43.18 -19.685) (layer B.SilkS) (width 0.381))
+    (fp_line (start 43.18 -6.731) (end 43.18 -19.685) (layer B.SilkS) (width 0.381))
+    (fp_line (start 36.195 27.305) (end 36.195 11.811) (layer B.SilkS) (width 0.381))
+    (fp_line (start -30.48 27.305) (end 36.195 27.305) (layer B.SilkS) (width 0.381))
+    (fp_line (start 43.18 -6.35) (end 43.18 -6.731) (layer B.SilkS) (width 0.381))
+    (fp_line (start 22.86 -6.35) (end 43.18 -6.35) (layer B.SilkS) (width 0.381))
+    (fp_line (start 22.86 11.43) (end 22.86 -6.35) (layer B.SilkS) (width 0.381))
+    (fp_line (start 36.195 11.43) (end 22.86 11.43) (layer B.SilkS) (width 0.381))
+    (fp_line (start 36.195 11.811) (end 36.195 11.43) (layer B.SilkS) (width 0.381))
+    (fp_arc (start -30.48 -14.605) (end -43.18 -14.605) (angle 90) (layer B.SilkS) (width 0.381))
+    (fp_arc (start -30.48 14.605) (end -30.48 27.305) (angle 90) (layer B.SilkS) (width 0.381))
+    (fp_arc (start 36.83 -20.955) (end 36.83 -27.305) (angle 90) (layer B.SilkS) (width 0.381))
+    (pad M1 thru_hole circle (at -37.465 -20.955 270) (size 4.572 4.572) (drill 3.175) (layers *.Cu *.Mask B.SilkS))
+    (pad M2 thru_hole circle (at 28.575 -24.13 270) (size 4.572 4.572) (drill 3.175) (layers *.Cu *.Mask B.SilkS))
+    (pad M3 thru_hole circle (at 28.575 24.13 270) (size 4.572 4.572) (drill 3.175) (layers *.Cu *.Mask B.SilkS))
+    (pad M4 thru_hole circle (at -37.465 20.955 270) (size 4.572 4.572) (drill 3.175) (layers *.Cu *.Mask B.SilkS))
+    (pad C1 thru_hole rect (at 23.495 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 2 DGND))
+    (pad C2 thru_hole circle (at 23.495 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 2 DGND))
+    (pad C3 thru_hole circle (at 20.955 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 1 DVDD))
+    (pad C4 thru_hole circle (at 20.955 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 1 DVDD))
+    (pad C5 thru_hole circle (at 18.415 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 69 "Net-(U104-PadC5)"))
+    (pad C6 thru_hole circle (at 18.415 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 70 "Net-(U104-PadC6)"))
+    (pad C7 thru_hole circle (at 15.875 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 71 "Net-(U104-PadC7)"))
+    (pad C8 thru_hole circle (at 15.875 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 72 "Net-(U104-PadC8)"))
+    (pad C9 thru_hole circle (at 13.335 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 73 "Net-(U104-PadC9)"))
+    (pad C10 thru_hole circle (at 13.335 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 68 /SYS_RESETn))
+    (pad C11 thru_hole circle (at 10.795 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 74 "Net-(U104-PadC11)"))
+    (pad C12 thru_hole circle (at 10.795 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 75 "Net-(U104-PadC12)"))
+    (pad C13 thru_hole circle (at 8.255 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 76 "Net-(U104-PadC13)"))
+    (pad C14 thru_hole circle (at 8.255 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 77 "Net-(U104-PadC14)"))
+    (pad C15 thru_hole circle (at 5.715 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 78 "Net-(U104-PadC15)"))
+    (pad C16 thru_hole circle (at 5.715 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 79 "Net-(U104-PadC16)"))
+    (pad C17 thru_hole circle (at 3.175 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 80 "Net-(U104-PadC17)"))
+    (pad C18 thru_hole circle (at 3.175 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 81 "Net-(U104-PadC18)"))
+    (pad C19 thru_hole circle (at 0.635 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 82 "Net-(U104-PadC19)"))
+    (pad C20 thru_hole circle (at 0.635 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 83 "Net-(U104-PadC20)"))
+    (pad C21 thru_hole circle (at -1.905 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 84 "Net-(U104-PadC21)"))
+    (pad C22 thru_hole circle (at -1.905 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 85 "Net-(U104-PadC22)"))
+    (pad C23 thru_hole circle (at -4.445 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 86 "Net-(U104-PadC23)"))
+    (pad C24 thru_hole circle (at -4.445 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 87 "Net-(U104-PadC24)"))
+    (pad C25 thru_hole circle (at -6.985 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 88 "Net-(U104-PadC25)"))
+    (pad C26 thru_hole circle (at -6.985 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 89 "Net-(U104-PadC26)"))
+    (pad C27 thru_hole circle (at -9.525 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 90 "Net-(U104-PadC27)"))
+    (pad C28 thru_hole circle (at -9.525 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 91 "Net-(U104-PadC28)"))
+    (pad C29 thru_hole circle (at -12.065 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 92 "Net-(U104-PadC29)"))
+    (pad C30 thru_hole circle (at -12.065 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 93 "Net-(U104-PadC30)"))
+    (pad C31 thru_hole circle (at -14.605 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 94 "Net-(U104-PadC31)"))
+    (pad C32 thru_hole circle (at -14.605 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 95 "Net-(U104-PadC32)"))
+    (pad C33 thru_hole circle (at -17.145 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 96 "Net-(U104-PadC33)"))
+    (pad C34 thru_hole circle (at -17.145 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 97 "Net-(U104-PadC34)"))
+    (pad C35 thru_hole circle (at -19.685 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 98 "Net-(U104-PadC35)"))
+    (pad C36 thru_hole circle (at -19.685 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 99 "Net-(U104-PadC36)"))
+    (pad C37 thru_hole circle (at -22.225 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 100 "Net-(U104-PadC37)"))
+    (pad C38 thru_hole circle (at -22.225 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 101 "Net-(U104-PadC38)"))
+    (pad C39 thru_hole circle (at -24.765 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 102 "Net-(U104-PadC39)"))
+    (pad C40 thru_hole circle (at -24.765 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 103 "Net-(U104-PadC40)"))
+    (pad C41 thru_hole circle (at -27.305 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 104 "Net-(U104-PadC41)"))
+    (pad C42 thru_hole circle (at -27.305 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 105 "Net-(U104-PadC42)"))
+    (pad C43 thru_hole circle (at -29.845 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 2 DGND))
+    (pad C44 thru_hole circle (at -29.845 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 2 DGND))
+    (pad C45 thru_hole circle (at -32.385 -25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 2 DGND))
+    (pad C46 thru_hole circle (at -32.385 -22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 2 DGND))
+    (pad B1 thru_hole rect (at 23.495 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 2 DGND))
+    (pad B2 thru_hole circle (at 23.495 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 2 DGND))
+    (pad B3 thru_hole circle (at 20.955 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 106 "Net-(U104-PadB3)"))
+    (pad B4 thru_hole circle (at 20.955 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 107 "Net-(U104-PadB4)"))
+    (pad B5 thru_hole circle (at 18.415 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 108 "Net-(U104-PadB5)"))
+    (pad B6 thru_hole circle (at 18.415 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 109 "Net-(U104-PadB6)"))
+    (pad B7 thru_hole circle (at 15.875 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 110 "Net-(U104-PadB7)"))
+    (pad B8 thru_hole circle (at 15.875 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 111 "Net-(U104-PadB8)"))
+    (pad B9 thru_hole circle (at 13.335 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 112 "Net-(U104-PadB9)"))
+    (pad B10 thru_hole circle (at 13.335 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 113 "Net-(U104-PadB10)"))
+    (pad B11 thru_hole circle (at 10.795 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 143 "Net-(U104-PadB11)"))
+    (pad B12 thru_hole circle (at 10.795 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 48 /PRU0_15))
+    (pad B13 thru_hole circle (at 8.255 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 114 "Net-(U104-PadB13)"))
+    (pad B14 thru_hole circle (at 8.255 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 115 "Net-(U104-PadB14)"))
+    (pad B15 thru_hole circle (at 5.715 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 116 "Net-(U104-PadB15)"))
+    (pad B16 thru_hole circle (at 5.715 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 117 "Net-(U104-PadB16)"))
+    (pad B17 thru_hole circle (at 3.175 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 118 "Net-(U104-PadB17)"))
+    (pad B18 thru_hole circle (at 3.175 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 119 "Net-(U104-PadB18)"))
+    (pad B19 thru_hole circle (at 0.635 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 120 "Net-(U104-PadB19)"))
+    (pad B20 thru_hole circle (at 0.635 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 121 "Net-(U104-PadB20)"))
+    (pad B21 thru_hole circle (at -1.905 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 122 "Net-(U104-PadB21)"))
+    (pad B22 thru_hole circle (at -1.905 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 123 "Net-(U104-PadB22)"))
+    (pad B23 thru_hole circle (at -4.445 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 124 "Net-(U104-PadB23)"))
+    (pad B24 thru_hole circle (at -4.445 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 125 "Net-(U104-PadB24)"))
+    (pad B25 thru_hole circle (at -6.985 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 126 "Net-(U104-PadB25)"))
+    (pad B26 thru_hole circle (at -6.985 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 127 "Net-(U104-PadB26)"))
+    (pad B27 thru_hole circle (at -9.525 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 128 "Net-(U104-PadB27)"))
+    (pad B28 thru_hole circle (at -9.525 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 129 "Net-(U104-PadB28)"))
+    (pad B29 thru_hole circle (at -12.065 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 130 "Net-(U104-PadB29)"))
+    (pad B30 thru_hole circle (at -12.065 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 131 "Net-(U104-PadB30)"))
+    (pad B31 thru_hole circle (at -14.605 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 132 "Net-(U104-PadB31)"))
+    (pad B32 thru_hole circle (at -14.605 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 133 "Net-(U104-PadB32)"))
+    (pad B33 thru_hole circle (at -17.145 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 134 "Net-(U104-PadB33)"))
+    (pad B34 thru_hole circle (at -17.145 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 135 "Net-(U104-PadB34)"))
+    (pad B35 thru_hole circle (at -19.685 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 136 "Net-(U104-PadB35)"))
+    (pad B36 thru_hole circle (at -19.685 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 137 "Net-(U104-PadB36)"))
+    (pad B37 thru_hole circle (at -22.225 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 138 "Net-(U104-PadB37)"))
+    (pad B38 thru_hole circle (at -22.225 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 139 "Net-(U104-PadB38)"))
+    (pad B39 thru_hole circle (at -24.765 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 59 /PRU1_6))
+    (pad B40 thru_hole circle (at -24.765 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 58 /PRU1_7))
+    (pad B41 thru_hole circle (at -27.305 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 61 /PRU1_4))
+    (pad B42 thru_hole circle (at -27.305 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 60 /PRU1_5))
+    (pad B43 thru_hole circle (at -29.845 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 63 /PRU1_2))
+    (pad B44 thru_hole circle (at -29.845 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 62 /PRU1_3))
+    (pad B45 thru_hole circle (at -32.385 22.86 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 65 /PRU1_0))
+    (pad B46 thru_hole circle (at -32.385 25.4 270) (size 1.8 1.8) (drill 1.1) (layers *.Cu *.Mask B.SilkS)
+      (net 64 /PRU1_1))
+  )
+
+  (module Housings_SSOP:TSSOP-16_4.4x5mm_Pitch0.65mm (layer F.Cu) (tedit 54130A77) (tstamp 567861FB)
+    (at 142 60)
+    (descr "16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "SSOP 0.65")
+    (path /56796123/56796DB5)
+    (attr smd)
+    (fp_text reference U201 (at 0 -4) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value SN74CTBLV3251 (at 0 3.55) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.775 -2.725) (end 2.2 -2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.2 2.725) (end 2.2 2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.95 2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end 3.95 -2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.95 -2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end -3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(MIC201-Pad3)"))
+    (pad 2 smd rect (at -2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(MIC202-Pad3)"))
+    (pad 3 smd rect (at -2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(MIC203-Pad3)"))
+    (pad 4 smd rect (at -2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(MIC204-Pad3)"))
+    (pad 5 smd rect (at -2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 50 "/Microphone set A/OUT"))
+    (pad 6 smd rect (at -2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask))
+    (pad 7 smd rect (at -2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 8 smd rect (at -2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 9 smd rect (at 2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 57 "/Microphone set A/S2"))
+    (pad 10 smd rect (at 2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 56 "/Microphone set A/S1"))
+    (pad 11 smd rect (at 2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 55 "/Microphone set A/S0"))
+    (pad 12 smd rect (at 2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(MIC205-Pad3)"))
+    (pad 13 smd rect (at 2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(MIC206-Pad3)"))
+    (pad 14 smd rect (at 2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(MIC207-Pad3)"))
+    (pad 15 smd rect (at 2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 11 "Net-(MIC208-Pad3)"))
+    (pad 16 smd rect (at 2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (model Housings_SSOP.3dshapes/TSSOP-16_4.4x5mm_Pitch0.65mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Housings_SSOP:TSSOP-16_4.4x5mm_Pitch0.65mm (layer F.Cu) (tedit 54130A77) (tstamp 5678620F)
+    (at 142 80)
+    (descr "16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "SSOP 0.65")
+    (path /567A20AA/56796DB5)
+    (attr smd)
+    (fp_text reference U301 (at 0 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value SN74CTBLV3251 (at 0 3.55) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.775 -2.725) (end 2.2 -2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.2 2.725) (end 2.2 2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.95 2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end 3.95 -2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.95 -2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end -3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 13 "Net-(MIC301-Pad3)"))
+    (pad 2 smd rect (at -2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 14 "Net-(MIC302-Pad3)"))
+    (pad 3 smd rect (at -2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 15 "Net-(MIC303-Pad3)"))
+    (pad 4 smd rect (at -2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 16 "Net-(MIC304-Pad3)"))
+    (pad 5 smd rect (at -2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 51 "/Microphone set B/OUT"))
+    (pad 6 smd rect (at -2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask))
+    (pad 7 smd rect (at -2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 8 smd rect (at -2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 9 smd rect (at 2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 57 "/Microphone set A/S2"))
+    (pad 10 smd rect (at 2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 56 "/Microphone set A/S1"))
+    (pad 11 smd rect (at 2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 55 "/Microphone set A/S0"))
+    (pad 12 smd rect (at 2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 17 "Net-(MIC305-Pad3)"))
+    (pad 13 smd rect (at 2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(MIC306-Pad3)"))
+    (pad 14 smd rect (at 2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 19 "Net-(MIC307-Pad3)"))
+    (pad 15 smd rect (at 2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 20 "Net-(MIC308-Pad3)"))
+    (pad 16 smd rect (at 2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (model Housings_SSOP.3dshapes/TSSOP-16_4.4x5mm_Pitch0.65mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Housings_SSOP:TSSOP-16_4.4x5mm_Pitch0.65mm (layer F.Cu) (tedit 54130A77) (tstamp 56786223)
+    (at 142 110)
+    (descr "16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "SSOP 0.65")
+    (path /567A21A8/56796DB5)
+    (attr smd)
+    (fp_text reference U401 (at 0 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value SN74CTBLV3251 (at 0 3.55) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.775 -2.725) (end 2.2 -2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.2 2.725) (end 2.2 2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.95 2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end 3.95 -2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.95 -2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end -3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(MIC401-Pad3)"))
+    (pad 2 smd rect (at -2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(MIC402-Pad3)"))
+    (pad 3 smd rect (at -2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 24 "Net-(MIC403-Pad3)"))
+    (pad 4 smd rect (at -2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 25 "Net-(MIC404-Pad3)"))
+    (pad 5 smd rect (at -2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 52 "/Microphone set C/OUT"))
+    (pad 6 smd rect (at -2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask))
+    (pad 7 smd rect (at -2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 8 smd rect (at -2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 9 smd rect (at 2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 57 "/Microphone set A/S2"))
+    (pad 10 smd rect (at 2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 56 "/Microphone set A/S1"))
+    (pad 11 smd rect (at 2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 55 "/Microphone set A/S0"))
+    (pad 12 smd rect (at 2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 26 "Net-(MIC405-Pad3)"))
+    (pad 13 smd rect (at 2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 27 "Net-(MIC406-Pad3)"))
+    (pad 14 smd rect (at 2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 28 "Net-(MIC407-Pad3)"))
+    (pad 15 smd rect (at 2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 29 "Net-(MIC408-Pad3)"))
+    (pad 16 smd rect (at 2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (model Housings_SSOP.3dshapes/TSSOP-16_4.4x5mm_Pitch0.65mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Housings_SSOP:TSSOP-16_4.4x5mm_Pitch0.65mm (layer F.Cu) (tedit 54130A77) (tstamp 56786237)
+    (at 142 150)
+    (descr "16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "SSOP 0.65")
+    (path /567A2715/56796DB5)
+    (attr smd)
+    (fp_text reference U501 (at 0 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value SN74CTBLV3251 (at 0 3.55) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.775 -2.725) (end 2.2 -2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.2 2.725) (end 2.2 2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.95 2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end 3.95 -2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.95 -2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end -3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 31 "Net-(MIC501-Pad3)"))
+    (pad 2 smd rect (at -2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 32 "Net-(MIC502-Pad3)"))
+    (pad 3 smd rect (at -2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 33 "Net-(MIC503-Pad3)"))
+    (pad 4 smd rect (at -2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 34 "Net-(MIC504-Pad3)"))
+    (pad 5 smd rect (at -2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 53 "/Microphone set D/OUT"))
+    (pad 6 smd rect (at -2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask))
+    (pad 7 smd rect (at -2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 8 smd rect (at -2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 9 smd rect (at 2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 57 "/Microphone set A/S2"))
+    (pad 10 smd rect (at 2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 56 "/Microphone set A/S1"))
+    (pad 11 smd rect (at 2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 55 "/Microphone set A/S0"))
+    (pad 12 smd rect (at 2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 35 "Net-(MIC505-Pad3)"))
+    (pad 13 smd rect (at 2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 36 "Net-(MIC506-Pad3)"))
+    (pad 14 smd rect (at 2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 37 "Net-(MIC507-Pad3)"))
+    (pad 15 smd rect (at 2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 38 "Net-(MIC508-Pad3)"))
+    (pad 16 smd rect (at 2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (model Housings_SSOP.3dshapes/TSSOP-16_4.4x5mm_Pitch0.65mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Housings_SSOP:TSSOP-16_4.4x5mm_Pitch0.65mm (layer F.Cu) (tedit 54130A77) (tstamp 5678624B)
+    (at 142 190)
+    (descr "16-Lead Plastic Thin Shrink Small Outline (ST)-4.4 mm Body [TSSOP] (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "SSOP 0.65")
+    (path /567AC48D/56796DB5)
+    (attr smd)
+    (fp_text reference U601 (at 0 -3.55) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value SN74CTBLV3251 (at 0.616 4.004) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -3.775 -2.725) (end 2.2 -2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.2 2.725) (end 2.2 2.725) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.95 2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end 3.95 -2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 3.95 -2.8) (end 3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -3.95 -2.8) (end -3.95 2.8) (layer F.CrtYd) (width 0.05))
+    (pad 1 smd rect (at -2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 40 "Net-(MIC601-Pad3)"))
+    (pad 2 smd rect (at -2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 41 "Net-(MIC602-Pad3)"))
+    (pad 3 smd rect (at -2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 42 "Net-(MIC603-Pad3)"))
+    (pad 4 smd rect (at -2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 43 "Net-(MIC604-Pad3)"))
+    (pad 5 smd rect (at -2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 54 "/Microphone set E/OUT"))
+    (pad 6 smd rect (at -2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask))
+    (pad 7 smd rect (at -2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 8 smd rect (at -2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 DGND))
+    (pad 9 smd rect (at 2.95 2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 57 "/Microphone set A/S2"))
+    (pad 10 smd rect (at 2.95 1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 56 "/Microphone set A/S1"))
+    (pad 11 smd rect (at 2.95 0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 55 "/Microphone set A/S0"))
+    (pad 12 smd rect (at 2.95 0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 44 "Net-(MIC605-Pad3)"))
+    (pad 13 smd rect (at 2.95 -0.325) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 45 "Net-(MIC606-Pad3)"))
+    (pad 14 smd rect (at 2.95 -0.975) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 46 "Net-(MIC607-Pad3)"))
+    (pad 15 smd rect (at 2.95 -1.625) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 47 "Net-(MIC608-Pad3)"))
+    (pad 16 smd rect (at 2.95 -2.275) (size 1.5 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 DVDD))
+    (model Housings_SSOP.3dshapes/TSSOP-16_4.4x5mm_Pitch0.65mm.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module Mounting_Holes:MountingHole_2-5mm (layer F.Cu) (tedit 56788934) (tstamp 5678BE8E)
+    (at 300 210)
+    (descr "Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,")
+    (tags "Mounting hole, Befestigungsbohrung, 2,5mm, No Annular, Kein Restring,")
+    (fp_text reference REF** (at 0 -3.50012) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value MountingHole_2-5mm (at 0.09906 3.59918) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 2.5 0) (layer Cmts.User) (width 0.381))
+    (pad "" np_thru_hole circle (at 0 0) (size 2.5 2.5) (drill 2.5) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (gr_line (start 311 220) (end 30 220) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 330 185) (end 380 185) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 330 164) (end 330 185) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 311 164) (end 330 164) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 311 220) (end 311 164) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 380 30) (end 30 30) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 380 185) (end 380 30) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 30 30) (end 30 220) (layer Edge.Cuts) (width 0.15))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

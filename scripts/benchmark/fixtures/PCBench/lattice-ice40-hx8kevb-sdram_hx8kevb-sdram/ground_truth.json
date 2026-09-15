@@ -1,0 +1,29 @@
+{
+  "board": "lattice-ice40-hx8kevb-sdram_hx8kevb-sdram",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\lattice-ice40-hx8kevb-sdram_hx8kevb-sdram\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 27,
+  "segment_count": 442,
+  "approximate_track_length_mm": 1628.08,
+  "kicad_drc_violations": 106,
+  "generated_at": "2026-08-18T19:14:49.043561+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 106,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 52,
+      "lib_footprint_issues": 17,
+      "padstack": 2,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 13,
+      "starved_thermal": 8,
+      "track_dangling": 10
+    },
+    "by_severity": {
+      "error": 62,
+      "warning": 44
+    }
+  }
+}

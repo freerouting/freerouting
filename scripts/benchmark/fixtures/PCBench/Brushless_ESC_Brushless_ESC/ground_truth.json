@@ -1,0 +1,31 @@
+{
+  "board": "Brushless_ESC_Brushless_ESC",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Brushless_ESC_Brushless_ESC\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 67,
+  "segment_count": 566,
+  "approximate_track_length_mm": 1061.54,
+  "kicad_drc_violations": 614,
+  "generated_at": "2026-08-18T18:36:29.600415+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 614,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 402,
+      "copper_edge_clearance": 8,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 77,
+      "silk_edge_clearance": 9,
+      "silk_over_copper": 73,
+      "silk_overlap": 6,
+      "solder_mask_bridge": 28,
+      "starved_thermal": 1,
+      "text_height": 8
+    },
+    "by_severity": {
+      "error": 441,
+      "warning": 173
+    }
+  }
+}

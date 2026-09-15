@@ -1,0 +1,28 @@
+{
+  "board": "kitspace_gas_sensor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_gas_sensor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 57,
+  "approximate_track_length_mm": 190.76,
+  "kicad_drc_violations": 15,
+  "generated_at": "2026-08-18T19:07:04.496068+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 15,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 1,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 2,
+      "lib_footprint_mismatch": 8,
+      "silk_overlap": 1,
+      "text_height": 1,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 2,
+      "warning": 13
+    }
+  }
+}

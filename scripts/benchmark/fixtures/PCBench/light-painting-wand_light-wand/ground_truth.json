@@ -1,0 +1,29 @@
+{
+  "board": "light-painting-wand_light-wand",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\light-painting-wand_light-wand\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 25,
+  "segment_count": 213,
+  "approximate_track_length_mm": 366.11,
+  "kicad_drc_violations": 163,
+  "generated_at": "2026-08-18T19:16:47.269103+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 163,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 81,
+      "copper_edge_clearance": 1,
+      "lib_footprint_issues": 24,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 14,
+      "silk_overlap": 20,
+      "text_height": 16,
+      "text_thickness": 1
+    },
+    "by_severity": {
+      "error": 82,
+      "warning": 81
+    }
+  }
+}

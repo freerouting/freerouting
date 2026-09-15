@@ -1,0 +1,27 @@
+{
+  "board": "4N35-TTL-Serial-Optoisolator_4N35-TTL-Serial-Optoisolator",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\4N35-TTL-Serial-Optoisolator_4N35-TTL-Serial-Optoisolator\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 74,
+  "approximate_track_length_mm": 211.73,
+  "kicad_drc_violations": 89,
+  "generated_at": "2026-08-18T18:26:18.622916+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 89,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 12,
+      "copper_edge_clearance": 3,
+      "padstack": 4,
+      "silk_overlap": 28,
+      "text_height": 38
+    },
+    "by_severity": {
+      "error": 19,
+      "warning": 70
+    }
+  }
+}

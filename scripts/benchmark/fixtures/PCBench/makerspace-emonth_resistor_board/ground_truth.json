@@ -1,0 +1,28 @@
+{
+  "board": "makerspace-emonth_resistor_board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\makerspace-emonth_resistor_board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 13,
+  "segment_count": 131,
+  "approximate_track_length_mm": 841.44,
+  "kicad_drc_violations": 181,
+  "generated_at": "2026-08-18T19:19:52.868214+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 181,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 40,
+      "copper_edge_clearance": 1,
+      "lib_footprint_issues": 16,
+      "silk_edge_clearance": 28,
+      "silk_over_copper": 32,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 62
+    },
+    "by_severity": {
+      "error": 103,
+      "warning": 78
+    }
+  }
+}

@@ -1,7 +1,7 @@
 package app.freerouting.gui.interactive;
 
 import app.freerouting.geometry.planar.FloatPoint;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 
 /** Implements the functionality of the drag menu. */
 public class DragMenuState extends MenuState {

@@ -1,0 +1,33 @@
+{
+  "board": "LoRaCatKitty_NodeLoRaGroveKitty",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LoRaCatKitty_NodeLoRaGroveKitty\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 77,
+  "segment_count": 578,
+  "approximate_track_length_mm": 1315.06,
+  "kicad_drc_violations": 250,
+  "generated_at": "2026-08-18T19:17:31.979839+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 250,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 126,
+      "copper_edge_clearance": 27,
+      "lib_footprint_issues": 42,
+      "malformed_courtyard": 6,
+      "silk_over_copper": 26,
+      "silk_overlap": 1,
+      "solder_mask_bridge": 4,
+      "starved_thermal": 1,
+      "text_height": 2,
+      "text_thickness": 2,
+      "track_dangling": 12,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 164,
+      "warning": 86
+    }
+  }
+}

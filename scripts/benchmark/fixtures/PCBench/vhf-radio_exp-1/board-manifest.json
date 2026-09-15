@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "vhf-radio_exp-1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 154186,
+      "sha256": "64e160c346f3b2b2117e46b48ba068c448e2b9d4254dad0adcb4dd2f854d9770"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 189554,
+      "sha256": "0235d8957d437102c0ff89fa12969ad53e0f37df5501374c7b5b17036bcb9201"
+    },
+    "metadata_json": {
+      "bytes": 453,
+      "sha256": "4a1706933e122d2efa4b0cd4f7645928dbadee255c72ce39212dfb76592f10bd"
+    },
+    "final_json": {
+      "bytes": 154837,
+      "sha256": "52f873dc6b32094234790043a1254b002d2d84178dd47368626cd5455e6d1392"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:25:52.668779+00:00"
+  }
+}

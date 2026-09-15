@@ -1,0 +1,31 @@
+{
+  "board": "piboy-zero_piggrl_zero_baseboard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\piboy-zero_piggrl_zero_baseboard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 109,
+  "segment_count": 722,
+  "approximate_track_length_mm": 2306.82,
+  "kicad_drc_violations": 502,
+  "generated_at": "2026-08-18T19:33:34.090938+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 502,
+    "unconnected_count": 6,
+    "by_type": {
+      "clearance": 185,
+      "copper_edge_clearance": 26,
+      "courtyards_overlap": 5,
+      "lib_footprint_issues": 58,
+      "pth_inside_courtyard": 1,
+      "silk_edge_clearance": 54,
+      "silk_over_copper": 108,
+      "silk_overlap": 55,
+      "starved_thermal": 9,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 226,
+      "warning": 276
+    }
+  }
+}

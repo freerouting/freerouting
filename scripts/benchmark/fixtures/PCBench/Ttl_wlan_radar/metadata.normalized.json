@@ -1,0 +1,66 @@
+{
+  "board_id": "Ttl_wlan_radar",
+  "display_name": "Ttl_wlan_radar",
+  "pcbench_directory": "PCBs/Ttl_wlan_radar",
+  "source": "https://github.com/Ttl/fmcw",
+  "author": "",
+  "license": "",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-30T22:36:20+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 71,
+    "components": 128,
+    "dimensions_mm": {
+      "width": 54.99,
+      "height": 24.96
+    },
+    "area_cm2": 13.73,
+    "zones": 10
+  },
+  "reference": {
+    "segments": 1857,
+    "vias": 509,
+    "track_length_mm": 1527.39,
+    "kicad_drc_violations": 1321,
+    "kicad_drc_breakdown": {
+      "total_violations": 1321,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 290,
+        "copper_edge_clearance": 83,
+        "drill_out_of_range": 18,
+        "hole_to_hole": 3,
+        "lib_footprint_issues": 128,
+        "padstack": 18,
+        "shorting_items": 49,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 199,
+        "silk_overlap": 113,
+        "solder_mask_bridge": 208,
+        "starved_thermal": 6,
+        "text_height": 137,
+        "text_thickness": 65,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 654,
+        "warning": 667
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

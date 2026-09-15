@@ -1,0 +1,29 @@
+{
+  "board": "retroreflectors_SALSAFLOCK",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\retroreflectors_SALSAFLOCK\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 17,
+  "segment_count": 120,
+  "approximate_track_length_mm": 576.87,
+  "kicad_drc_violations": 112,
+  "generated_at": "2026-08-18T19:39:53.625015+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 112,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 24,
+      "copper_edge_clearance": 5,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 30,
+      "silk_overlap": 25,
+      "solder_mask_bridge": 7,
+      "starved_thermal": 1,
+      "text_height": 12
+    },
+    "by_severity": {
+      "error": 37,
+      "warning": 75
+    }
+  }
+}

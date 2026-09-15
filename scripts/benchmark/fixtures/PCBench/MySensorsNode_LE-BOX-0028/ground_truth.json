@@ -1,0 +1,34 @@
+{
+  "board": "MySensorsNode_LE-BOX-0028",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\MySensorsNode_LE-BOX-0028\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 519,
+  "segment_count": 1322,
+  "approximate_track_length_mm": 3599.58,
+  "kicad_drc_violations": 745,
+  "generated_at": "2026-08-18T19:26:09.523645+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 745,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 436,
+      "copper_edge_clearance": 11,
+      "courtyards_overlap": 15,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 66,
+      "malformed_courtyard": 2,
+      "padstack": 4,
+      "silk_over_copper": 16,
+      "silk_overlap": 120,
+      "solder_mask_bridge": 42,
+      "starved_thermal": 6,
+      "track_dangling": 22
+    },
+    "by_severity": {
+      "error": 516,
+      "warning": 229
+    }
+  }
+}

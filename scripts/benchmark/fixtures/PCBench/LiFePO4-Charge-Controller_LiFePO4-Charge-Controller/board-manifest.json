@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "LiFePO4-Charge-Controller_LiFePO4-Charge-Controller",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 121858,
+      "sha256": "c9f037829e6ecce605ce1f149a2578715016d6110998374c7ed3196d8c6d9531"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 116658,
+      "sha256": "f5d2772b7137d59398f1294887f68a6bd3fada4d3d452e3c903982f3544edef0"
+    },
+    "metadata_json": {
+      "bytes": 755,
+      "sha256": "e156b4fade2061b0ed19ac8ebdfd033aba8fb453715e3d32e943fe679c238e5b"
+    },
+    "final_json": {
+      "bytes": 95689,
+      "sha256": "e33e8e3917fa1c1935d374c10fa5570abbb7e99ce481da41d6395b46f65d6834"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:16:42.210992+00:00"
+  }
+}

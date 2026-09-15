@@ -1,0 +1,31 @@
+{
+  "board": "kitspace_Spikeling_V2.1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_Spikeling_V2.1\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 13,
+  "segment_count": 361,
+  "approximate_track_length_mm": 2710.15,
+  "kicad_drc_violations": 120,
+  "generated_at": "2026-08-18T19:11:08.728787+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 120,
+    "unconnected_count": 0,
+    "by_type": {
+      "courtyards_overlap": 2,
+      "footprint_type_mismatch": 5,
+      "lib_footprint_issues": 18,
+      "lib_footprint_mismatch": 28,
+      "malformed_courtyard": 13,
+      "silk_over_copper": 6,
+      "silk_overlap": 3,
+      "starved_thermal": 1,
+      "text_height": 43,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 21,
+      "warning": 99
+    }
+  }
+}

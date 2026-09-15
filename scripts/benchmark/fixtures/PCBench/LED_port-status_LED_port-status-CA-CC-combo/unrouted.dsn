@@ -1,0 +1,290 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\LED_port-status_LED_port-status-CA-CC-combo\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Front
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Back
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  102870 -74196.4  103014 -74243.3  103137 -74332.6  103226 -74455.5
+            103273 -74600  103276 -74676  103276 -82677  103273 -82753  103226 -82897.5
+            103137 -83020.4  103014 -83109.7  102870 -83156.6  102794 -83159.6
+            80010 -83159.6  79934 -83156.6  79789.5 -83109.7  79666.6 -83020.4
+            79577.3 -82897.5  79530.4 -82753  79527.4 -82677  79527.4 -74676
+            79530.4 -74600  79577.3 -74455.5  79666.6 -74332.6  79789.5 -74243.3
+            79934 -74196.4  80010 -74193.4  102794 -74193.4  102870 -74196.4)
+    )
+    (via "Via[0-1]_635:330.2_um")
+    (rule
+      (width 300)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component MADW__1206*4_resistor_array
+      (place RP1 97703.8 -79386 back 180 (PN 1k))
+      (place RP2 87503.8 -79386 back 180 (PN 1k))
+    )
+    (component "SIL-9"
+      (place P1 91363.8 -75946 front 0 (PN CONN_9))
+    )
+    (component "LED-0805"
+      (place D1 101524 -79756 front 90 (PN LED))
+      (place D7 86283.8 -79756 front 90 (PN LED))
+      (place D2 98983.8 -79756 front 90 (PN LED))
+      (place D3 96443.8 -79756 front 90 (PN LED))
+      (place D4 93903.8 -79756 front 90 (PN LED))
+      (place D5 91363.8 -79756 front 90 (PN LED))
+      (place D6 88823.8 -79756 front 90 (PN LED))
+      (place D8 83743.8 -79756 front 90 (PN LED))
+    )
+    (component "OSHW-logo_silkscreen_3mm"
+      (place G2_2 81407 -81432.4 back 0 (PN "OSHW-logo_silkscreen_3mm"))
+      (place G1_2 81407 -81356.2 front 180 (PN LED_smile_silkscreen_3mm))
+      (place G2 101396.8 -86918.8 back 180 (PN "OSHW-logo_silkscreen_3mm"))
+      (place G1 101396.8 -86995 front 0 (PN LED_smile_silkscreen_3mm))
+    )
+  )
+  (library
+    (image MADW__1206*4_resistor_array
+      (outline (path signal 150  1000 -800  1650 -800))
+      (outline (path signal 150  150 -800  650 -800))
+      (outline (path signal 150  -650 -800  -150 -800))
+      (outline (path signal 150  -1650 -800  -1000 -800))
+      (outline (path signal 150  1000 800  1650 800))
+      (outline (path signal 150  150 800  650 800))
+      (outline (path signal 150  -650 800  -150 800))
+      (outline (path signal 150  -1650 800  -1000 800))
+      (outline (path signal 150  650 -800  650 -600))
+      (outline (path signal 150  650 -600  1000 -600))
+      (outline (path signal 150  1000 -600  1000 -800))
+      (outline (path signal 150  -150 -800  -150 -600))
+      (outline (path signal 150  -150 -600  150 -600))
+      (outline (path signal 150  150 -600  150 -800))
+      (outline (path signal 150  -1000 -800  -1000 -600))
+      (outline (path signal 150  -1000 -600  -650 -600))
+      (outline (path signal 150  -650 -600  -650 -800))
+      (outline (path signal 150  650 800  650 600))
+      (outline (path signal 150  650 600  1000 600))
+      (outline (path signal 150  1000 600  1000 800))
+      (outline (path signal 150  -150 800  -150 600))
+      (outline (path signal 150  -150 600  150 600))
+      (outline (path signal 150  150 600  150 800))
+      (outline (path signal 150  -1000 800  -1000 600))
+      (outline (path signal 150  -1000 600  -650 600))
+      (outline (path signal 150  -650 600  -650 800))
+      (outline (path signal 150  1650 800  1650 -800))
+      (outline (path signal 150  -1650 -800  -1650 800))
+      (pin Rect[T]Pad_650.000000x1000.000000_um 8 -1325 900)
+      (pin Rect[T]Pad_500.000000x1000.000000_um 7 -400 900)
+      (pin Rect[T]Pad_500.000000x1000.000000_um 6 400 900)
+      (pin Rect[T]Pad_650.000000x1000.000000_um 5 1325 900)
+      (pin Rect[T]Pad_650.000000x1000.000000_um 1 -1325 -900)
+      (pin Rect[T]Pad_500.000000x1000.000000_um 2 -400 -900)
+      (pin Rect[T]Pad_500.000000x1000.000000_um 3 400 -900)
+      (pin Rect[T]Pad_650.000000x1000.000000_um 4 1325 -900)
+    )
+    (image "SIL-9"
+      (outline (path signal 304.8  11430 1270  11430 -1270))
+      (outline (path signal 304.8  11430 -1270  -11430 -1270))
+      (outline (path signal 304.8  -11430 -1270  -11430 1270))
+      (outline (path signal 304.8  11430 1270  -11430 1270))
+      (outline (path signal 304.8  -8890 1270  -8890 -1270))
+      (pin Rect[A]Pad_1650.000000x1650.000000_um 1 -10160 0)
+      (pin Round[A]Pad_1650.000000_um 2 -7620 0)
+      (pin Round[A]Pad_1650.000000_um 3 -5080 0)
+      (pin Round[A]Pad_1650.000000_um 4 -2540 0)
+      (pin Round[A]Pad_1650.000000_um 5 0 0)
+      (pin Round[A]Pad_1650.000000_um 6 2540 0)
+      (pin Round[A]Pad_1650.000000_um 7 5080 0)
+      (pin Round[A]Pad_1650.000000_um 8 7620 0)
+      (pin Round[A]Pad_1650.000000_um 9 10160 0)
+    )
+    (image "LED-0805"
+      (outline (path signal 66.04  497.84 -299.72  497.84 -624.84))
+      (outline (path signal 66.04  497.84 -624.84  998.22 -624.84))
+      (outline (path signal 66.04  998.22 -299.72  998.22 -624.84))
+      (outline (path signal 66.04  497.84 -299.72  998.22 -299.72))
+      (outline (path signal 66.04  497.84 322.58  497.84 172.72))
+      (outline (path signal 66.04  497.84 172.72  749.3 172.72))
+      (outline (path signal 66.04  749.3 322.58  749.3 172.72))
+      (outline (path signal 66.04  497.84 322.58  749.3 322.58))
+      (outline (path signal 66.04  497.84 -172.72  497.84 -322.58))
+      (outline (path signal 66.04  497.84 -322.58  749.3 -322.58))
+      (outline (path signal 66.04  749.3 -172.72  749.3 -322.58))
+      (outline (path signal 66.04  497.84 -172.72  749.3 -172.72))
+      (outline (path signal 66.04  497.84 198.12  497.84 -198.12))
+      (outline (path signal 66.04  497.84 -198.12  673.1 -198.12))
+      (outline (path signal 66.04  673.1 198.12  673.1 -198.12))
+      (outline (path signal 66.04  497.84 198.12  673.1 198.12))
+      (outline (path signal 66.04  -998.22 -299.72  -998.22 -624.84))
+      (outline (path signal 66.04  -998.22 -624.84  -497.84 -624.84))
+      (outline (path signal 66.04  -497.84 -299.72  -497.84 -624.84))
+      (outline (path signal 66.04  -998.22 -299.72  -497.84 -299.72))
+      (outline (path signal 66.04  -998.22 624.84  -998.22 299.72))
+      (outline (path signal 66.04  -998.22 299.72  -497.84 299.72))
+      (outline (path signal 66.04  -497.84 624.84  -497.84 299.72))
+      (outline (path signal 66.04  -998.22 624.84  -497.84 624.84))
+      (outline (path signal 66.04  -749.3 -172.72  -749.3 -322.58))
+      (outline (path signal 66.04  -749.3 -322.58  -497.84 -322.58))
+      (outline (path signal 66.04  -497.84 -172.72  -497.84 -322.58))
+      (outline (path signal 66.04  -749.3 -172.72  -497.84 -172.72))
+      (outline (path signal 66.04  -749.3 322.58  -749.3 172.72))
+      (outline (path signal 66.04  -749.3 172.72  -497.84 172.72))
+      (outline (path signal 66.04  -497.84 322.58  -497.84 172.72))
+      (outline (path signal 66.04  -749.3 322.58  -497.84 322.58))
+      (outline (path signal 66.04  -673.1 198.12  -673.1 -198.12))
+      (outline (path signal 66.04  -673.1 -198.12  -497.84 -198.12))
+      (outline (path signal 66.04  -497.84 198.12  -497.84 -198.12))
+      (outline (path signal 66.04  -673.1 198.12  -497.84 198.12))
+      (outline (path signal 66.04  0 99.06  0 -99.06))
+      (outline (path signal 66.04  0 -99.06  198.12 -99.06))
+      (outline (path signal 66.04  198.12 99.06  198.12 -99.06))
+      (outline (path signal 66.04  0 99.06  198.12 99.06))
+      (outline (path signal 66.04  497.84 599.44  497.84 299.72))
+      (outline (path signal 66.04  497.84 299.72  797.56 299.72))
+      (outline (path signal 66.04  797.56 599.44  797.56 299.72))
+      (outline (path signal 66.04  497.84 599.44  797.56 599.44))
+      (outline (path signal 66.04  924.56 624.84  924.56 398.78))
+      (outline (path signal 66.04  924.56 398.78  998.22 398.78))
+      (outline (path signal 66.04  998.22 624.84  998.22 398.78))
+      (outline (path signal 66.04  924.56 624.84  998.22 624.84))
+      (outline (path signal 101.6  523.24 -574.04  -523.24 -574.04))
+      (outline (path signal 101.6  -497.84 574.04  924.56 574.04))
+      (outline (path signal 50.8  848.36 377.738  802.181 394.546  777.609 437.105  786.143 485.501
+            823.789 517.089  872.931 517.089  910.577 485.501  919.111 437.105
+            894.539 394.546  848.36 377.738))
+      (outline (polygon signal 0  998.22 -297.18  1028.08 -306.882  1046.53 -332.282  1046.53 -363.678
+            1028.08 -389.078  998.22 -398.78  885.871 -382.627  782.623 -335.475
+            696.842 -261.145  635.477 -165.659  603.499 -56.752  603.499 56.752
+            635.477 165.659  696.842 261.145  782.623 335.475  885.871 382.627
+            998.22 398.78  1028.08 389.078  1046.53 363.678  1046.53 332.282
+            1028.08 306.882  998.22 297.18  951.151 297.18  861.622 268.09
+            785.463 212.757  730.13 136.598  701.04 47.069  701.04 -47.069
+            730.13 -136.598  785.463 -212.757  861.622 -268.09  951.151 -297.18
+            998.22 -297.18))
+      (outline (polygon signal 0  -998.22 297.18  -1028.08 306.882  -1046.53 332.282  -1046.53 363.678
+            -1028.08 389.078  -998.22 398.78  -885.871 382.627  -782.623 335.475
+            -696.842 261.145  -635.477 165.659  -603.499 56.752  -603.499 -56.752
+            -635.477 -165.659  -696.842 -261.145  -782.623 -335.475  -885.871 -382.627
+            -998.22 -398.78  -1028.08 -389.078  -1046.53 -363.678  -1046.53 -332.282
+            -1028.08 -306.882  -998.22 -297.18  -951.151 -297.18  -861.622 -268.09
+            -785.463 -212.757  -730.13 -136.598  -701.04 -47.069  -701.04 47.069
+            -730.13 136.598  -785.463 212.757  -861.622 268.09  -951.151 297.18
+            -998.22 297.18))
+      (pin Rect[T]Pad_1198.880000x1198.880000_um 1 -1049.02 0)
+      (pin Rect[T]Pad_1198.880000x1198.880000_um 2 1049.02 0)
+    )
+    (image "OSHW-logo_silkscreen_3mm"
+    )
+    (padstack Round[A]Pad_1650.000000_um
+      (shape (circle Front 1650))
+      (shape (circle Back 1650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x1000.000000_um
+      (shape (rect Front -250 -500 250 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_650.000000x1000.000000_um
+      (shape (rect Front -325 -500 325 500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1198.880000x1198.880000_um
+      (shape (rect Front -599.44 -599.44 599.44 599.44))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1650.000000x1650.000000_um
+      (shape (rect Front -825 -825 825 825))
+      (shape (rect Back -825 -825 825 825))
+      (attach off)
+    )
+    (padstack "Via[0-1]_635:330.2_um"
+      (shape (circle Front 635))
+      (shape (circle Back 635))
+      (attach off)
+    )
+  )
+  (network
+    (net "N-000001"
+      (pins RP1-4 P1-9)
+    )
+    (net "N-0000010"
+      (pins RP2-6 D6-2)
+    )
+    (net "N-0000011"
+      (pins RP2-8 D8-2)
+    )
+    (net "N-0000012"
+      (pins RP2-5 D5-2)
+    )
+    (net "N-0000013"
+      (pins RP1-8 D4-2)
+    )
+    (net "N-0000014"
+      (pins RP1-6 D2-2)
+    )
+    (net "N-0000015"
+      (pins RP2-7 D7-2)
+    )
+    (net "N-0000016"
+      (pins RP1-7 D3-2)
+    )
+    (net "N-0000017"
+      (pins P1-1 D1-1 D7-1 D2-1 D3-1 D4-1 D5-1 D6-1 D8-1)
+    )
+    (net "N-000002"
+      (pins RP1-3 P1-8)
+    )
+    (net "N-000003"
+      (pins RP1-2 P1-7)
+    )
+    (net "N-000004"
+      (pins RP1-1 P1-6)
+    )
+    (net "N-000005"
+      (pins RP2-4 P1-5)
+    )
+    (net "N-000006"
+      (pins RP2-3 P1-4)
+    )
+    (net "N-000007"
+      (pins RP2-2 P1-3)
+    )
+    (net "N-000008"
+      (pins RP2-1 P1-2)
+    )
+    (net "N-000009"
+      (pins RP1-5 D1-2)
+    )
+    (class kicad_default "N-000001" "N-0000010" "N-0000011" "N-0000012" "N-0000013"
+      "N-0000014" "N-0000015" "N-0000016" "N-0000017" "N-000002" "N-000003"
+      "N-000004" "N-000005" "N-000006" "N-000007" "N-000008" "N-000009"
+      (circuit
+        (use_via "Via[0-1]_635:330.2_um")
+      )
+      (rule
+        (width 300)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

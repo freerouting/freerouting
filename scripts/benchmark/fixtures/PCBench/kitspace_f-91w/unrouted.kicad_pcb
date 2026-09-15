@@ -1,0 +1,5415 @@
+
+(kicad_pcb
+  (version 20171130)
+  (host pcbnew "(5.1.12)-1")
+  (general
+    (thickness 0.5)
+    (drawings 454)
+    (tracks 676)
+    (zones 0)
+    (modules 37)
+    (nets 62))
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide))
+  (setup
+    (last_trace_width 0.2)
+    (user_trace_width 0.2)
+    (user_trace_width 0.3)
+    (trace_clearance 0.1524)
+    (zone_clearance 0.2)
+    (zone_45_only no)
+    (trace_min 0.1524)
+    (via_size 0.46)
+    (via_drill 0.3)
+    (via_min_size 0.46)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.2)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 0.8 0.3)
+    (pad_drill 0)
+    (pad_to_mask_clearance 0.1)
+    (solder_mask_min_width 0.1)
+    (aux_axis_origin 58.26 131.31)
+    (grid_origin 51.2555 102.891)
+    (visible_elements 7FFEFF7F)
+    (pcbplotparams
+      (layerselection 0x010f0_80000001)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.0)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "output/")))
+  (net 0 "")
+  (net 1 "Net-(C1-Pad1)")
+  (net 2 GND)
+  (net 3 "Net-(P3-Pad1)")
+  (net 4 "Net-(P4-Pad1)")
+  (net 5 /LCD_SEG2)
+  (net 6 /LCD_SEG1)
+  (net 7 /LCD_SEG3)
+  (net 8 /LCD_SEG4)
+  (net 9 /LCD_SEG6)
+  (net 10 /LCD_SEG5)
+  (net 11 /LCD_COM3)
+  (net 12 /LCD_COM2)
+  (net 13 /LCD_COM1)
+  (net 14 /LCD_SEG13)
+  (net 15 /LCD_SEG12)
+  (net 16 /LCD_SEG11)
+  (net 17 /LCD_SEG10)
+  (net 18 /LCD_SEG9)
+  (net 19 /LCD_SEG8)
+  (net 20 /LCD_SEG7)
+  (net 21 /LCD_SEG18)
+  (net 22 /LCD_SEG14)
+  (net 23 /LCD_SEG15)
+  (net 24 /LCD_SEG16)
+  (net 25 /LCD_SEG17)
+  (net 26 /LCD_SEG19)
+  (net 27 /LCD_SEG24)
+  (net 28 /LCD_SEG23)
+  (net 29 /LCD_SEG22)
+  (net 30 /LCD_SEG21)
+  (net 31 /LCD_SEG20)
+  (net 32 "Net-(Q1-Pad1)")
+  (net 33 "Net-(R2-Pad1)")
+  (net 34 /BUZ)
+  (net 35 "Net-(U1-Pad7)")
+  (net 36 "Net-(U1-Pad8)")
+  (net 37 "Net-(U1-Pad9)")
+  (net 38 "Net-(U1-Pad36)")
+  (net 39 "Net-(U1-Pad38)")
+  (net 40 "Net-(U1-Pad41)")
+  (net 41 "Net-(U1-Pad42)")
+  (net 42 "Net-(U1-Pad43)")
+  (net 43 /IR)
+  (net 44 "Net-(U1-Pad35)")
+  (net 45 "Net-(P10-Pad1)")
+  (net 46 /LED_1)
+  (net 47 "Net-(P15-Pad1)")
+  (net 48 VCC)
+  (net 49 "Net-(C6-Pad1)")
+  (net 50 "Net-(C7-Pad1)")
+  (net 51 /INT1)
+  (net 52 /SCL)
+  (net 53 /SDA)
+  (net 54 /Q-1)
+  (net 55 /Q-2)
+  (net 56 /MAG_PWR)
+  (net 57 /B_LIGHT)
+  (net 58 /B_MODE)
+  (net 59 /B_ALARM)
+  (net 60 /LED_2)
+  (net 61 /IR_PWR)
+  (net_class Default "This is the default net class."
+    (clearance 0.1524)
+    (trace_width 0.2)
+    (via_dia 0.46)
+    (via_drill 0.3)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /BUZ)
+    (add_net /B_ALARM)
+    (add_net /B_LIGHT)
+    (add_net /B_MODE)
+    (add_net /INT1)
+    (add_net /IR)
+    (add_net /IR_PWR)
+    (add_net /LCD_COM1)
+    (add_net /LCD_COM2)
+    (add_net /LCD_COM3)
+    (add_net /LCD_SEG1)
+    (add_net /LCD_SEG10)
+    (add_net /LCD_SEG11)
+    (add_net /LCD_SEG12)
+    (add_net /LCD_SEG13)
+    (add_net /LCD_SEG14)
+    (add_net /LCD_SEG15)
+    (add_net /LCD_SEG16)
+    (add_net /LCD_SEG17)
+    (add_net /LCD_SEG18)
+    (add_net /LCD_SEG19)
+    (add_net /LCD_SEG2)
+    (add_net /LCD_SEG20)
+    (add_net /LCD_SEG21)
+    (add_net /LCD_SEG22)
+    (add_net /LCD_SEG23)
+    (add_net /LCD_SEG24)
+    (add_net /LCD_SEG3)
+    (add_net /LCD_SEG4)
+    (add_net /LCD_SEG5)
+    (add_net /LCD_SEG6)
+    (add_net /LCD_SEG7)
+    (add_net /LCD_SEG8)
+    (add_net /LCD_SEG9)
+    (add_net /LED_1)
+    (add_net /LED_2)
+    (add_net /MAG_PWR)
+    (add_net /Q-1)
+    (add_net /Q-2)
+    (add_net /SCL)
+    (add_net /SDA)
+    (add_net "Net-(C1-Pad1)")
+    (add_net "Net-(C6-Pad1)")
+    (add_net "Net-(C7-Pad1)")
+    (add_net "Net-(P10-Pad1)")
+    (add_net "Net-(P15-Pad1)")
+    (add_net "Net-(P3-Pad1)")
+    (add_net "Net-(P4-Pad1)")
+    (add_net "Net-(Q1-Pad1)")
+    (add_net "Net-(R2-Pad1)")
+    (add_net "Net-(U1-Pad35)")
+    (add_net "Net-(U1-Pad36)")
+    (add_net "Net-(U1-Pad38)")
+    (add_net "Net-(U1-Pad41)")
+    (add_net "Net-(U1-Pad42)")
+    (add_net "Net-(U1-Pad43)")
+    (add_net "Net-(U1-Pad7)")
+    (add_net "Net-(U1-Pad8)")
+    (add_net "Net-(U1-Pad9)"))
+  (net_class PWR ""
+    (clearance 0.1524)
+    (trace_width 0.3)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net GND)
+    (add_net VCC))
+  (module f-91w:SOT416
+    (layer F.Cu)
+    (tedit 570BA954)
+    (tstamp 56EC9A9B)
+    (at 54.9055 104.691 180)
+    (path /56EDF910)
+    (solder_mask_margin 0.0762)
+    (solder_paste_margin -0.0254)
+    (attr smd)
+    (fp_text reference Q1
+      (at 0.5 -1.55 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 0.762 0.762)
+          (thickness 0.1524))))
+    (fp_text value BC846
+      (at 1.5 -1.8 180)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 0.762 0.762)
+          (thickness 0.1524))))
+    (fp_line
+      (start 0.5 0.45)
+      (end 0.5 0.9)
+      (layer F.SilkS)
+      (width 0.2032))
+    (fp_line
+      (start 0.5 -0.9)
+      (end 0.5 -0.45)
+      (layer F.SilkS)
+      (width 0.2032))
+    (fp_line
+      (start -0.5 -0.9)
+      (end 0.5 -0.9)
+      (layer F.SilkS)
+      (width 0.2032))
+    (fp_line
+      (start -0.5 0.05)
+      (end -0.5 -0.051314)
+      (layer F.SilkS)
+      (width 0.2032))
+    (fp_line
+      (start 0.5 0.9)
+      (end -0.5 0.9)
+      (layer F.SilkS)
+      (width 0.2032))
+    (pad 1 smd rect
+      (at -0.65 -0.5 90)
+      (size 0.5 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 32 "Net-(Q1-Pad1)"))
+    (pad 2 smd rect
+      (at -0.65 0.5 90)
+      (size 0.5 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 3 smd rect
+      (at 0.65 0 90)
+      (size 0.5 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 34 /BUZ)))
+  (module f-91w:LCD-F-91W
+    (layer F.Cu)
+    (tedit 57052C1C)
+    (tstamp 56E8A49E)
+    (at 57.25 93.34)
+    (path /56E8A641)
+    (solder_mask_margin 0.2)
+    (attr virtual)
+    (fp_text reference U2
+      (at 9.0555 -3.949)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LCD-F-91W
+      (at 0 -0.5)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd rect
+      (at -8.42 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 /LCD_SEG1))
+    (pad 2 smd rect
+      (at -7.718 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 /LCD_SEG2))
+    (pad 3 smd rect
+      (at -7.016 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 7 /LCD_SEG3))
+    (pad 4 smd rect
+      (at -6.314 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 8 /LCD_SEG4))
+    (pad 5 smd rect
+      (at -5.612 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 10 /LCD_SEG5))
+    (pad 6 smd rect
+      (at -4.91 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 9 /LCD_SEG6))
+    (pad 7 smd rect
+      (at -4.208 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 13 /LCD_COM1))
+    (pad 8 smd rect
+      (at -3.506 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 12 /LCD_COM2))
+    (pad 9 smd rect
+      (at -2.804 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 11 /LCD_COM3))
+    (pad 10 smd rect
+      (at -2.102 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 20 /LCD_SEG7))
+    (pad 11 smd rect
+      (at -1.4 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 19 /LCD_SEG8))
+    (pad 12 smd rect
+      (at -0.698 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 18 /LCD_SEG9))
+    (pad 13 smd rect
+      (at 0.004 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 17 /LCD_SEG10))
+    (pad 14 smd rect
+      (at 0.706 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 16 /LCD_SEG11))
+    (pad 15 smd rect
+      (at 1.408 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 15 /LCD_SEG12))
+    (pad 16 smd rect
+      (at 2.11 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 14 /LCD_SEG13))
+    (pad 17 smd rect
+      (at 2.812 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 22 /LCD_SEG14))
+    (pad 18 smd rect
+      (at 3.514 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 23 /LCD_SEG15))
+    (pad 19 smd rect
+      (at 4.216 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 24 /LCD_SEG16))
+    (pad 20 smd rect
+      (at 4.918 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 25 /LCD_SEG17))
+    (pad 21 smd rect
+      (at 5.62 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 21 /LCD_SEG18))
+    (pad 22 smd rect
+      (at 6.322 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 26 /LCD_SEG19))
+    (pad 23 smd rect
+      (at 7.024 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 31 /LCD_SEG20))
+    (pad 24 smd rect
+      (at 7.726 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 30 /LCD_SEG21))
+    (pad 25 smd rect
+      (at 8.428 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 29 /LCD_SEG22))
+    (pad 26 smd rect
+      (at 9.13 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 28 /LCD_SEG23))
+    (pad 27 smd rect
+      (at 9.832 -2.43)
+      (size 0.373 1.509)
+      (layers F.Cu F.Paste F.Mask)
+      (net 27 /LCD_SEG24)))
+  (module Capacitors_SMD:C_0402
+    (layer F.Cu)
+    (tedit 570B6661)
+    (tstamp 56EC9D1A)
+    (at 64.0055 102.766 135)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /56EE32A7)
+    (attr smd)
+    (fp_text reference C2
+      (at -0.212132 -1.732412 135)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 22p
+      (at 0 1.7 135)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.475)
+      (end 0.25 0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.475)
+      (end -0.25 -0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.15 -0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end -1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end 1.15 -0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.55 0 135)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 54 /Q-1))
+    (pad 2 smd rect
+      (at 0.55 0 135)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_SMD:C_0402
+    (layer F.Cu)
+    (tedit 570B6677)
+    (tstamp 5707B13E)
+    (at 67.7305 96.891)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /57057DE2)
+    (attr smd)
+    (fp_text reference C8
+      (at -1.85 -0.125)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 100n
+      (at 0 1.7)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.475)
+      (end 0.25 0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.475)
+      (end -0.25 -0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.15 -0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end -1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end 1.15 -0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.55 0)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 56 /MAG_PWR))
+    (pad 2 smd rect
+      (at 0.55 0)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_SMD:C_0402
+    (layer F.Cu)
+    (tedit 570500FA)
+    (tstamp 56E9D426)
+    (at 58.8555 105.741 180)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /56E9D6D2)
+    (attr smd)
+    (fp_text reference C1
+      (at -2.075 0.225 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 4.7u
+      (at 0 1.7 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.475)
+      (end 0.25 0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.475)
+      (end -0.25 -0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.15 -0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end -1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end 1.15 -0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.55 0 180)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 "Net-(C1-Pad1)"))
+    (pad 2 smd rect
+      (at 0.55 0 180)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Housings_DFN_QFN:QFN-64-1EP_9x9mm_Pitch0.5mm
+    (layer F.Cu)
+    (tedit 570B9EAA)
+    (tstamp 56E8D305)
+    (at 58 98.5 270)
+    (descr "64-Lead Plastic Quad Flat, No Lead Package (MR) - 9x9x0.9 mm Body [QFN]; (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "QFN 0.5")
+    (path /56E8AF3B)
+    (attr smd)
+    (fp_text reference U1
+      (at -5.659 -3.1055)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value MSP430FR6972
+      (at 0 5.875 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 4.7 -4.7)
+      (end 4.125 -4.7)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.7 4.7)
+      (end 4.125 4.7)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -4.7 4.7)
+      (end -4.125 4.7)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -4.7 -4.7)
+      (end -4.125 -4.7)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.7 4.7)
+      (end 4.7 4.125)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -4.7 4.7)
+      (end -4.7 4.125)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.7 -4.7)
+      (end 4.7 -4.125)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -5.15 5.15)
+      (end 5.15 5.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -5.15 -5.15)
+      (end 5.15 -5.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 5.15 -5.15)
+      (end 5.15 5.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -5.15 -5.15)
+      (end -5.15 5.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -4.475 -3.75 270)
+      (size 0.8 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 21 /LCD_SEG18))
+    (pad 2 smd rect
+      (at -4.45 -3.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 25 /LCD_SEG17))
+    (pad 3 smd rect
+      (at -4.45 -2.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 24 /LCD_SEG16))
+    (pad 4 smd rect
+      (at -4.45 -2.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 23 /LCD_SEG15))
+    (pad 5 smd rect
+      (at -4.45 -1.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 22 /LCD_SEG14))
+    (pad 6 smd rect
+      (at -4.45 -1.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 "Net-(C1-Pad1)"))
+    (pad 7 smd rect
+      (at -4.45 -0.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 35 "Net-(U1-Pad7)"))
+    (pad 8 smd rect
+      (at -4.45 -0.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 36 "Net-(U1-Pad8)"))
+    (pad 9 smd rect
+      (at -4.45 0.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 37 "Net-(U1-Pad9)"))
+    (pad 10 smd rect
+      (at -4.45 0.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 11 /LCD_COM3))
+    (pad 11 smd rect
+      (at -4.45 1.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 12 /LCD_COM2))
+    (pad 12 smd rect
+      (at -4.45 1.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 13 /LCD_COM1))
+    (pad 13 smd rect
+      (at -4.45 2.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 14 /LCD_SEG13))
+    (pad 14 smd rect
+      (at -4.45 2.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 15 /LCD_SEG12))
+    (pad 15 smd rect
+      (at -4.45 3.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 16 /LCD_SEG11))
+    (pad 16 smd rect
+      (at -4.475 3.75 270)
+      (size 0.8 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 17 /LCD_SEG10))
+    (pad 17 smd rect
+      (at -3.75 4.475)
+      (size 0.8 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 18 smd rect
+      (at -3.25 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 48 VCC))
+    (pad 19 smd rect
+      (at -2.75 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(P3-Pad1)"))
+    (pad 20 smd rect
+      (at -2.25 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(P4-Pad1)"))
+    (pad 21 smd rect
+      (at -1.75 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 57 /B_LIGHT))
+    (pad 22 smd rect
+      (at -1.25 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 60 /LED_2))
+    (pad 23 smd rect
+      (at -0.75 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 58 /B_MODE))
+    (pad 24 smd rect
+      (at -0.25 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 43 /IR))
+    (pad 25 smd rect
+      (at 0.25 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 18 /LCD_SEG9))
+    (pad 26 smd rect
+      (at 0.75 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 19 /LCD_SEG8))
+    (pad 27 smd rect
+      (at 1.25 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 20 /LCD_SEG7))
+    (pad 28 smd rect
+      (at 1.75 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 9 /LCD_SEG6))
+    (pad 29 smd rect
+      (at 2.25 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 10 /LCD_SEG5))
+    (pad 30 smd rect
+      (at 2.75 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 8 /LCD_SEG4))
+    (pad 31 smd rect
+      (at 3.25 4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 7 /LCD_SEG3))
+    (pad 32 smd rect
+      (at 3.75 4.475)
+      (size 0.8 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 /LCD_SEG2))
+    (pad 33 smd rect
+      (at 4.475 3.75 270)
+      (size 0.8 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 /LCD_SEG1))
+    (pad 34 smd rect
+      (at 4.45 3.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 61 /IR_PWR))
+    (pad 35 smd rect
+      (at 4.45 2.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 44 "Net-(U1-Pad35)"))
+    (pad 36 smd rect
+      (at 4.45 2.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 38 "Net-(U1-Pad36)"))
+    (pad 37 smd rect
+      (at 4.45 1.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 33 "Net-(R2-Pad1)"))
+    (pad 38 smd rect
+      (at 4.45 1.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 39 "Net-(U1-Pad38)"))
+    (pad 39 smd rect
+      (at 4.45 0.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 40 smd rect
+      (at 4.45 0.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 48 VCC))
+    (pad 41 smd rect
+      (at 4.45 -0.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 40 "Net-(U1-Pad41)"))
+    (pad 42 smd rect
+      (at 4.45 -0.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 41 "Net-(U1-Pad42)"))
+    (pad 43 smd rect
+      (at 4.45 -1.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 42 "Net-(U1-Pad43)"))
+    (pad 44 smd rect
+      (at 4.45 -1.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 46 /LED_1))
+    (pad 45 smd rect
+      (at 4.45 -2.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 59 /B_ALARM))
+    (pad 46 smd rect
+      (at 4.45 -2.75 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 47 "Net-(P15-Pad1)"))
+    (pad 47 smd rect
+      (at 4.45 -3.25 270)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 53 /SDA))
+    (pad 48 smd rect
+      (at 4.475 -3.75 270)
+      (size 0.8 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 52 /SCL))
+    (pad 49 smd rect
+      (at 3.75 -4.475)
+      (size 0.8 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 48 VCC))
+    (pad 50 smd rect
+      (at 3.25 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 51 smd rect
+      (at 2.75 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 54 /Q-1))
+    (pad 52 smd rect
+      (at 2.25 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 55 /Q-2))
+    (pad 53 smd rect
+      (at 1.75 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 54 smd rect
+      (at 1.25 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 56 /MAG_PWR))
+    (pad 55 smd rect
+      (at 0.75 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 51 /INT1))
+    (pad 56 smd rect
+      (at 0.25 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 57 smd rect
+      (at -0.25 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 27 /LCD_SEG24))
+    (pad 58 smd rect
+      (at -0.75 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 28 /LCD_SEG23))
+    (pad 59 smd rect
+      (at -1.25 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 29 /LCD_SEG22))
+    (pad 60 smd rect
+      (at -1.75 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 30 /LCD_SEG21))
+    (pad 61 smd rect
+      (at -2.25 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 31 /LCD_SEG20))
+    (pad 62 smd rect
+      (at -2.75 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 63 smd rect
+      (at -3.25 -4.45)
+      (size 0.85 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 48 VCC))
+    (pad 64 smd rect
+      (at -3.75 -4.475)
+      (size 0.8 0.3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 26 /LCD_SEG19))
+    (pad 65 smd rect
+      (at 2.75625 2.75625 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at 2.75625 0.91875 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at 2.75625 -0.91875 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at 2.75625 -2.75625 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at 0.91875 2.75625 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at 0.91875 0.91875 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at 0.91875 -0.91875 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at 0.91875 -2.75625 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at -0.91875 2.75625 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at -0.91875 0.91875 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at -0.91875 -0.91875 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at -0.91875 -2.75625 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at -2.75625 2.75625 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at -2.75625 0.91875 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at -2.75625 -0.91875 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (pad 65 smd rect
+      (at -2.75625 -2.75625 270)
+      (size 1.8375 1.8375)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)
+      (solder_paste_margin_ratio -0.2))
+    (model Housings_DFN_QFN.3dshapes/QFN-64-1EP_9x9mm_Pitch0.5mm.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD761B)
+    (tstamp 56EB52F4)
+    (at 70.2 102.1)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EB65DE)
+    (fp_text reference P7
+      (at 1.55 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 4 4)
+      (drill 2.8)
+      (layers *.Cu F.Mask)
+      (net 59 /B_ALARM)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD7599)
+    (tstamp 56E99FBF)
+    (at 64.555 104.886)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference MH5
+      (at 4.945 1.364)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 1.3 1.3)
+      (drill 1.3)
+      (layers *.Cu *.Mask)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD7263)
+    (tstamp 56FD2563)
+    (at 66.77 104.94)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56FD41E4)
+    (fp_text reference P15
+      (at 2.98 0.06)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd circle
+      (at 0 0)
+      (size 1.2 1.2)
+      (layers F.Cu F.Paste F.Mask)
+      (net 47 "Net-(P15-Pad1)")))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD724E)
+    (tstamp 56EB513D)
+    (at 64.5 106.541)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EB4C80)
+    (fp_text reference P1
+      (at 3.75 2)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd rect
+      (at 0 0)
+      (size 1.2 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 54 /Q-1)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD7254)
+    (tstamp 56EB5143)
+    (at 64.5 107.54)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EB5038)
+    (fp_text reference P2
+      (at 3.75 2.21)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd rect
+      (at 0 0)
+      (size 1.2 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 55 /Q-2)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD71EE)
+    (tstamp 56EC9B60)
+    (at 56.38 106.79)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EE14D1)
+    (fp_text reference P8
+      (at -7.88 1.21)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd rect
+      (at 0 0)
+      (size 1.1 1.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 48 VCC)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD75F6)
+    (tstamp 56FD1E26)
+    (at 55.65 108.37)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference MH7
+      (at 0.1 2.13)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 0.85 0.85)
+      (drill 0.85)
+      (layers *.Cu *.Mask)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD71A7)
+    (tstamp 56EC9B66)
+    (at 51.3 106.79)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EE0904)
+    (fp_text reference P9
+      (at -4.05 0.21)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd rect
+      (at 0 0)
+      (size 1.1 1.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 34 /BUZ)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD75A4)
+    (tstamp 56E99FD5)
+    (at 50.754 104.846)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference MH6
+      (at -9.004 -3.096)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 1.3 1.3)
+      (drill 1.3)
+      (layers *.Cu *.Mask)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD7187)
+    (tstamp 56FD2542)
+    (at 49.07 104.89)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56FD3E14)
+    (fp_text reference P14
+      (at -7.32 -4.89)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd circle
+      (at 0 0)
+      (size 1.2 1.2)
+      (layers F.Cu F.Paste F.Mask)
+      (net 48 VCC)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD7609)
+    (tstamp inf)
+    (at 50.01 95.93)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference MH2
+      (at -7.51 -7.43)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 1.1 1.1)
+      (drill 1.1)
+      (layers *.Cu *.Mask)
+      (clearance 0.2)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD7612)
+    (tstamp 56EB5263)
+    (at 45.6 101.9)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EB64B8)
+    (fp_text reference P6
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 4 4)
+      (drill 2.8)
+      (layers *.Cu F.Mask)
+      (net 58 /B_MODE)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD70E9)
+    (tstamp 56FC333D)
+    (at 46.5 98.5)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56FC3872)
+    (fp_text reference P11
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd rect
+      (at 0 0.1)
+      (size 1 2.25)
+      (layers F.Cu F.Paste F.Mask)
+      (net 46 /LED_1)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD7116)
+    (tstamp 56FBED20)
+    (at 46.5 95.5)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56FBEE31)
+    (fp_text reference P10
+      (at -6 -5)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd rect
+      (at 0 0.05)
+      (size 1 2.25)
+      (layers F.Cu F.Paste F.Mask)
+      (net 45 "Net-(P10-Pad1)")))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD760D)
+    (tstamp 56EB5236)
+    (at 45.6 92.3)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EB6141)
+    (fp_text reference P5
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 4 4)
+      (drill 2.8)
+      (layers *.Cu F.Mask)
+      (net 57 /B_LIGHT)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD75AD)
+    (tstamp 56E99F92)
+    (at 51.448 87.25)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference MH3
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 1.3 1.3)
+      (drill 1.3)
+      (layers *.Cu *.Mask)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD70A5)
+    (tstamp 56EB51D6)
+    (at 53.5 85.75)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EB559F)
+    (fp_text reference P3
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd circle
+      (at 0 0)
+      (size 1.2 1.2)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(P3-Pad1)")))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD70A7)
+    (tstamp 56EB51DC)
+    (at 55.25 85.75)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56EB5C47)
+    (fp_text reference P4
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd circle
+      (at 0 0)
+      (size 1.2 1.2)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(P4-Pad1)")))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD70AA)
+    (tstamp 56FD2483)
+    (at 57.96 88.6)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (path /56FD3464)
+    (fp_text reference P13
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_01X01
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 smd circle
+      (at 0 0)
+      (size 1.2 1.2)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD75B4)
+    (tstamp 56E99FAF)
+    (at 64.422 87.319)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference MH4
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 1.3 1.3)
+      (drill 1.3)
+      (layers *.Cu *.Mask)))
+  (module Connect:1pin
+    (layer F.Cu)
+    (tedit 56FD7603)
+    (tstamp 56E9186D)
+    (at 65.782 95.646)
+    (descr "module 1 pin (ou trou mecanique de percage)")
+    (tags DEV)
+    (fp_text reference MH1
+      (at 0 -3.048)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1pin
+      (at 0 2.794)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 1.1 1.1)
+      (drill 1.1)
+      (layers *.Cu *.Mask)
+      (clearance 0.2)))
+  (module Resistors_SMD:R_0402
+    (layer F.Cu)
+    (tedit 57066D2F)
+    (tstamp 56EC9AA7)
+    (at 56.5055 104.391 270)
+    (descr "Resistor SMD 0402, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0402")
+    (path /56EDFAA4)
+    (attr smd)
+    (fp_text reference R2
+      (at 1.175 -0.125)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 0.8 0.8)
+          (thickness 0.15))))
+    (fp_text value 47k
+      (at 0 1.8 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.525)
+      (end 0.25 0.525)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.525)
+      (end -0.25 -0.525)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.95 -0.65)
+      (end 0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 -0.65)
+      (end -0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 0.65)
+      (end 0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 -0.65)
+      (end 0.95 -0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.45 0 270)
+      (size 0.4 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 33 "Net-(R2-Pad1)"))
+    (pad 2 smd rect
+      (at 0.45 0 270)
+      (size 0.4 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 32 "Net-(Q1-Pad1)"))
+    (model Resistors_SMD.3dshapes/R_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_0402
+    (layer F.Cu)
+    (tedit 57052FE6)
+    (tstamp 56E8D512)
+    (at 49.75 93.25 180)
+    (descr "Resistor SMD 0402, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0402")
+    (path /56E8A86F)
+    (attr smd)
+    (fp_text reference R1
+      (at -1.6555 -0.091 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 10k
+      (at 0 1.8 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.525)
+      (end 0.25 0.525)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.525)
+      (end -0.25 -0.525)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.95 -0.65)
+      (end 0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 -0.65)
+      (end -0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 0.65)
+      (end 0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 -0.65)
+      (end 0.95 -0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.45 0 180)
+      (size 0.4 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 48 VCC))
+    (pad 2 smd rect
+      (at 0.45 0 180)
+      (size 0.4 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(P4-Pad1)"))
+    (model Resistors_SMD.3dshapes/R_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_SMD:C_0402
+    (layer F.Cu)
+    (tedit 57050211)
+    (tstamp 56EC9D26)
+    (at 64.5 101 135)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /56EE2C6E)
+    (attr smd)
+    (fp_text reference C3
+      (at 0.002475 1.212335 135)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 22p
+      (at 0 1.7 135)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.475)
+      (end 0.25 0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.475)
+      (end -0.25 -0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.15 -0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end -1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end 1.15 -0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.55 0 135)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 55 /Q-2))
+    (pad 2 smd rect
+      (at 0.55 0 135)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_0402
+    (layer F.Cu)
+    (tedit 57052FDA)
+    (tstamp 56F83BE2)
+    (at 49.75 94.5)
+    (descr "Resistor SMD 0402, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0402")
+    (path /56F848AB)
+    (attr smd)
+    (fp_text reference R3
+      (at -1.4445 1.041)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 10k
+      (at 0 1.8)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.525)
+      (end 0.25 0.525)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.525)
+      (end -0.25 -0.525)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.95 -0.65)
+      (end 0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 -0.65)
+      (end -0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 0.65)
+      (end 0.95 0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -0.95 -0.65)
+      (end 0.95 -0.65)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.45 0)
+      (size 0.4 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 45 "Net-(P10-Pad1)"))
+    (pad 2 smd rect
+      (at 0.45 0)
+      (size 0.4 0.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 60 /LED_2))
+    (model Resistors_SMD.3dshapes/R_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_SMD:C_0402
+    (layer F.Cu)
+    (tedit 570B6669)
+    (tstamp 56FBF00A)
+    (at 58.0555 104.691 180)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /56FBF4BC)
+    (attr smd)
+    (fp_text reference C4
+      (at -2.1 0.35)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 100n
+      (at 0 1.7 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.475)
+      (end 0.25 0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.475)
+      (end -0.25 -0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.15 -0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end -1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end 1.15 -0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.55 0 180)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 48 VCC))
+    (pad 2 smd rect
+      (at 0.55 0 180)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module f-91w:TSOP57xxx
+    (layer F.Cu)
+    (tedit 57052BBF)
+    (tstamp 56F47CC1)
+    (at 50.125 100.525 180)
+    (path /56F47D47)
+    (fp_text reference U3
+      (at 0.8695 2.834 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value TSOP57xxx
+      (at 0 3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.000156 -1.975)
+      (end 1.000105 -1.975)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.975 -1.975)
+      (end 1.975 1.975)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1 1.975)
+      (end -1 1.975)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.975 1.975)
+      (end -1.975 -1.975)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.95 1.05)
+      (end -1 1.05)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1 1.05)
+      (end -1 1.975)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 6 smd rect
+      (at -1.5 -1.775 180)
+      (size 0.35 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 6 smd rect
+      (at 1.5 -1.775 180)
+      (size 0.35 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 1 smd rect
+      (at -1.5 1.775 180)
+      (size 0.35 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 43 /IR))
+    (pad 5 smd rect
+      (at 1.5 1.775 180)
+      (size 0.35 0.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 61 /IR_PWR)))
+  (module Capacitors_SMD:C_0402
+    (layer F.Cu)
+    (tedit 570580EC)
+    (tstamp 57007A84)
+    (at 67.5305 93.266)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /5700E1C2)
+    (attr smd)
+    (fp_text reference C5
+      (at -1.75 -0.6)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 100n
+      (at 0 1.7)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.475)
+      (end 0.25 0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.475)
+      (end -0.25 -0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.15 -0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end -1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end 1.15 -0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.55 0)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 2 smd rect
+      (at 0.55 0)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 56 /MAG_PWR))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_SMD:C_0402
+    (layer F.Cu)
+    (tedit 5705030E)
+    (tstamp 57007A8A)
+    (at 69.2555 95.091 270)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /5700FED8)
+    (attr smd)
+    (fp_text reference C6
+      (at -2.3 -0.1 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 100n
+      (at 0 1.7 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.475)
+      (end 0.25 0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.475)
+      (end -0.25 -0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.15 -0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end -1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end 1.15 -0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.55 0 270)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 49 "Net-(C6-Pad1)"))
+    (pad 2 smd rect
+      (at 0.55 0 270)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_SMD:C_0402
+    (layer F.Cu)
+    (tedit 570B667B)
+    (tstamp 57007A90)
+    (at 69.2555 96.941 90)
+    (descr "Capacitor SMD 0402, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0402")
+    (path /5700FF6D)
+    (attr smd)
+    (fp_text reference C7
+      (at -1.85 0.05 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 100n
+      (at 0 1.7 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -0.25 0.475)
+      (end 0.25 0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.25 -0.475)
+      (end -0.25 -0.475)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.15 -0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end -1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 0.6)
+      (end 1.15 0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.15 -0.6)
+      (end 1.15 -0.6)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -0.55 0 90)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 50 "Net-(C7-Pad1)"))
+    (pad 2 smd rect
+      (at 0.55 0 90)
+      (size 0.6 0.5)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model Capacitors_SMD.3dshapes/C_0402.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module f-91w:DFN-10-1EP_2x2mm_Pitch0.4mm
+    (layer F.Cu)
+    (tedit 570B942A)
+    (tstamp 57007AA3)
+    (at 67.7555 95.141 90)
+    (descr "10-Lead Plastic Dual Flat, No Lead Package (MF) - 3x3x0.9 mm Body [DFN] (see Microchip Packaging Specification 00000049BS.pdf)")
+    (tags "DFN 0.5")
+    (path /57006D5B)
+    (attr smd)
+    (fp_text reference U4
+      (at 0.95 -2 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value MAG3110
+      (at 0 1.95 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1 1)
+      (end 1 1)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1 -1)
+      (end 1 -1)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1 -1)
+      (end 1 1)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1 -1)
+      (end -1 1)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_circle
+      (center -0.2 -0.75)
+      (end -0.1 -0.7)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -0.85 -0.8 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 50 "Net-(C7-Pad1)"))
+    (pad 2 smd rect
+      (at -0.85 -0.4 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 56 /MAG_PWR))
+    (pad 3 smd rect
+      (at -0.85 0 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask))
+    (pad 4 smd rect
+      (at -0.85 0.4 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 49 "Net-(C6-Pad1)"))
+    (pad 5 smd rect
+      (at -0.85 0.8 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (pad 6 smd rect
+      (at 0.85 0.8 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 53 /SDA))
+    (pad 7 smd rect
+      (at 0.85 0.4 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 52 /SCL))
+    (pad 8 smd rect
+      (at 0.85 0 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 56 /MAG_PWR))
+    (pad 9 smd rect
+      (at 0.85 -0.4 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 51 /INT1))
+    (pad 10 smd rect
+      (at 0.85 -0.8 90)
+      (size 0.8 0.24)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 GND))
+    (model ../../../../../home/steffen/electronic/KiCAD/pluto/10-pin_DFN/10-pin_2x2mm_DFN10.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.393700787402 0.393700787402 0.393700787402))
+      (rotate
+        (xyz -90 0 -90))))
+  (gr_line
+    (start 42.3655 102.891)
+    (end 48.7155 109.241)
+    (layer Edge.Cuts)
+    (width 0.2)
+    (tstamp 64632B95))
+  (gr_line
+    (start 72.8455 104.161)
+    (end 65.2255 109.241)
+    (layer Edge.Cuts)
+    (width 0.2)
+    (tstamp 64632B8D))
+  (gr_line
+    (start 66.4955 83.841)
+    (end 72.8455 92.731)
+    (layer Edge.Cuts)
+    (width 0.2)
+    (tstamp 64632B58))
+  (gr_line
+    (start 42.3655 91.461)
+    (end 49.9855 83.841)
+    (layer Edge.Cuts)
+    (width 0.2)
+    (tstamp 64632B54))
+  (gr_line
+    (start 42.3655 102.891)
+    (end 42.3655 91.461)
+    (layer Edge.Cuts)
+    (width 0.2)
+    (tstamp 64632B12))
+  (gr_line
+    (start 65.2255 109.241)
+    (end 48.7155 109.241)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_line
+    (start 72.8455 92.731)
+    (end 72.8455 104.161)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_line
+    (start 49.9855 83.841)
+    (end 66.4955 83.841)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_line
+    (start 55.781856 107.528991)
+    (end 55.781856 106.047325)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.97 106.981046)
+    (end 63.97 106.32)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.784825 106.046597)
+    (end 56.931353 106.046597)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.784825 107.528264)
+    (end 55.784825 106.046597)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.030169 106.981046)
+    (end 63.97 106.981046)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.030169 107.972619)
+    (end 63.97 107.972619)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.97 107.311572)
+    (end 63.97 107.311572)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.030169 106.32)
+    (end 65.030169 106.981046)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.931353 106.046597)
+    (end 56.931353 107.528264)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.97 107.311572)
+    (end 65.030169 107.311572)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.97 107.972619)
+    (end 63.97 107.311572)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.784825 106.046597)
+    (end 55.784825 106.046597)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.030169 107.311572)
+    (end 65.030169 107.972619)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.97 106.32)
+    (end 63.97 106.32)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.97 106.32)
+    (end 65.030169 106.32)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.080453 100.628554)
+    (end 46.242511 100.69966)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.410294 97.218392)
+    (end 58.410294 94.299156)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.849877 97.218392)
+    (end 58.410294 97.218392)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.410294 94.299156)
+    (end 58.410294 94.299156)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.410294 94.299156)
+    (end 61.849877 94.299156)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.849877 94.299156)
+    (end 61.849877 97.218392)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.046437 95.380882)
+    (end 65.517271 95.910048)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.517271 95.380882)
+    (end 66.046437 95.910048)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.781856 106.047325)
+    (end 55.781856 106.047325)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.928384 107.528991)
+    (end 55.781856 107.528991)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.633796 101.73561)
+    (end 47.649177 101.79046)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.616157 101.681372)
+    (end 47.633796 101.73561)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.719961 101.567676)
+    (end 47.616157 101.681372)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.410051 94.299825)
+    (end 61.849634 94.299825)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.885676 94.299825)
+    (end 53.885676 94.299825)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.678382 90.156252)
+    (end 62.678382 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.678382 91.665669)
+    (end 62.678382 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.051696 91.665669)
+    (end 62.678382 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.051696 90.156252)
+    (end 63.051696 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.678382 90.156252)
+    (end 63.051696 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.706838 85.554364)
+    (end 62.177671 86.083531)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.177671 85.554364)
+    (end 62.706838 86.083531)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.948711 85.50441)
+    (end 60.419544 86.033577)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.419544 85.50441)
+    (end 60.948711 86.033577)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.467463 90.156252)
+    (end 58.467463 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.467463 91.665669)
+    (end 58.467463 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.840776 91.665669)
+    (end 58.467463 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.840776 90.156252)
+    (end 58.840776 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.467463 90.156252)
+    (end 58.840776 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.049408 101.678516)
+    (end 66.253091 101.510523)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.881334 101.882134)
+    (end 66.049408 101.678516)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.754404 102.115845)
+    (end 65.881334 101.882134)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.674149 102.374121)
+    (end 65.754404 102.115845)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.646096 102.651432)
+    (end 65.674149 102.374121)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.674036 102.928828)
+    (end 65.646096 102.651432)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.822573 90.156252)
+    (end 51.822573 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.44926 90.156252)
+    (end 51.822573 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.747444 90.156252)
+    (end 50.747444 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.874186 102.512607)
+    (end 46.8119 102.641041)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.923245 102.378111)
+    (end 46.874186 102.512607)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.958523 102.239755)
+    (end 46.923245 102.378111)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.806271 107.567994)
+    (end 51.806271 107.567994)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.818742 107.624123)
+    (end 51.806271 107.567994)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.132254 103.876313)
+    (end 69.148793 103.03957)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.91673 104.199878)
+    (end 69.132254 103.876313)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.679155 104.199878)
+    (end 68.91673 104.199878)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.53548 106.682)
+    (end 68.679155 104.199878)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.53548 106.887052)
+    (end 66.53548 106.682)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.099915 107.257629)
+    (end 66.53548 106.887052)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.686854 87.054186)
+    (end 64.157688 87.583353)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.157688 87.054186)
+    (end 64.686854 87.583353)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.616304 85.660655)
+    (end 51.124377 85.946541)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.120424 85.396289)
+    (end 51.616304 85.660655)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 59.169279 90.156252)
+    (end 59.169279 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 59.169279 91.665669)
+    (end 59.169279 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 59.542593 91.665669)
+    (end 59.169279 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 59.542593 90.156252)
+    (end 59.542593 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 59.169279 90.156252)
+    (end 59.542593 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.858974 90.156252)
+    (end 65.858974 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.485661 90.156252)
+    (end 65.858974 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.783842 90.156252)
+    (end 64.783842 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.783842 91.665669)
+    (end 64.783842 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.063828 90.156252)
+    (end 57.063828 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.063828 91.665669)
+    (end 57.063828 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.437141 91.665669)
+    (end 57.063828 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.437141 90.156252)
+    (end 57.437141 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.063828 90.156252)
+    (end 57.437141 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.819138 104.621228)
+    (end 64.289971 105.150394)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.289971 104.621228)
+    (end 64.819138 105.150394)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.029011 104.675901)
+    (end 66.499845 105.205068)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.499845 104.675901)
+    (end 67.029011 105.205068)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.016548 102.115345)
+    (end 68.012766 102.172182)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.022672 102.058763)
+    (end 68.016548 102.115345)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.031111 102.002505)
+    (end 68.022672 102.058763)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.041892 101.946644)
+    (end 68.031111 102.002505)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.054959 101.891253)
+    (end 68.041892 101.946644)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.07034 101.836403)
+    (end 68.054959 101.891253)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.560217 107.949821)
+    (end 51.045854 108.266283)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.089942 107.612896)
+    (end 50.560217 107.949821)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.635545 107.256201)
+    (end 50.089942 107.612896)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.765644 90.156252)
+    (end 57.765644 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.765644 91.665669)
+    (end 57.765644 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.138957 91.665669)
+    (end 57.765644 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.138957 90.156252)
+    (end 58.138957 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.765644 90.156252)
+    (end 58.138957 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.825159 91.72698)
+    (end 46.870359 91.862579)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.76673 91.596342)
+    (end 46.825159 91.72698)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.695624 91.472316)
+    (end 46.76673 91.596342)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.83176 101.305997)
+    (end 46.890188 101.436635)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.760101 101.181974)
+    (end 46.83176 101.305997)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.677418 101.065668)
+    (end 46.760101 101.181974)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.022482 101.275602)
+    (end 67.022482 101.275602)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.745162 101.303533)
+    (end 67.022482 101.275602)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.486856 101.383687)
+    (end 66.745162 101.303533)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.253091 101.510523)
+    (end 66.486856 101.383687)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.3438 91.665669)
+    (end 49.3438 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.717113 91.665669)
+    (end 49.3438 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.717113 90.156252)
+    (end 49.717113 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.3438 90.156252)
+    (end 49.717113 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.226216 90.156252)
+    (end 53.226216 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.852903 90.156252)
+    (end 53.226216 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.151087 90.156252)
+    (end 52.151087 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.885676 97.219061)
+    (end 53.885676 94.299825)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.325259 97.219061)
+    (end 53.885676 97.219061)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.325259 94.299825)
+    (end 57.325259 97.219061)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.918854 92.144248)
+    (end 46.92272 92.24512)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.901779 92.002036)
+    (end 46.918854 92.144248)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.870359 91.862579)
+    (end 46.901779 92.002036)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.691369 102.071389)
+    (end 47.69278 102.128407)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.687588 102.014553)
+    (end 47.691369 102.071389)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.681463 101.95797)
+    (end 47.687588 102.014553)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.941537 102.767821)
+    (end 68.883106 102.637183)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.012643 102.891843)
+    (end 68.941537 102.767821)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.148793 103.03957)
+    (end 69.012643 102.891843)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.219652 108.5639)
+    (end 64.711026 108.266971)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.713562 108.838375)
+    (end 64.219652 108.5639)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.192453 109.088783)
+    (end 63.713562 108.838375)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.231791 101.250803)
+    (end 48.091874 101.308131)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.37757 101.209071)
+    (end 48.231791 101.250803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.527947 101.18353)
+    (end 48.37757 101.209071)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.681653 101.174809)
+    (end 48.527947 101.18353)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.122323 101.196856)
+    (end 69.219887 101.092126)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.035782 101.310958)
+    (end 69.122323 101.196856)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.960818 101.432777)
+    (end 69.035782 101.310958)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.096723 108.058606)
+    (end 51.567556 108.587773)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.567556 108.058606)
+    (end 52.096723 108.587773)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.913329 108.108491)
+    (end 55.384162 108.637658)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.384162 108.108491)
+    (end 55.913329 108.637658)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.157155 91.665669)
+    (end 64.783842 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.157155 90.156252)
+    (end 65.157155 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.783842 90.156252)
+    (end 65.157155 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.082026 90.156252)
+    (end 64.082026 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.257696 103.859552)
+    (end 48.465067 103.909627)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.062672 103.779026)
+    (end 48.257696 103.859552)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.883114 103.670277)
+    (end 48.062672 103.779026)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.722137 103.535538)
+    (end 47.883114 103.670277)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.187477 90.156252)
+    (end 66.187477 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.187477 91.665669)
+    (end 66.187477 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.56079 91.665669)
+    (end 66.187477 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.56079 90.156252)
+    (end 66.56079 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.837369 86.756922)
+    (end 65.353324 86.394241)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.305093 87.139686)
+    (end 65.837369 86.756922)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.756508 87.541051)
+    (end 66.305093 87.139686)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.57292 90.156252)
+    (end 60.57292 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.57292 91.665669)
+    (end 60.57292 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.946233 91.665669)
+    (end 60.57292 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.946233 90.156252)
+    (end 60.946233 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.57292 90.156252)
+    (end 60.946233 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.685154 90.335161)
+    (end 46.695624 91.472316)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.896821 90.072232)
+    (end 46.685154 90.335161)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.148727 90.072232)
+    (end 46.896821 90.072232)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.712361 85.447084)
+    (end 53.183194 85.97625)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.183194 85.447084)
+    (end 53.712361 85.97625)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.712267 86.985577)
+    (end 51.183101 87.514744)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.183101 86.985577)
+    (end 51.712267 87.514744)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.443681 100.914634)
+    (end 69.567706 100.843528)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.327374 100.997867)
+    (end 69.443681 100.914634)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.219887 101.092126)
+    (end 69.327374 100.997867)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.121269 103.477832)
+    (end 67.981998 103.636331)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.235719 103.2978)
+    (end 68.121269 103.477832)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.322231 103.098467)
+    (end 68.235719 103.2978)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.251292 103.003679)
+    (end 68.322231 103.098467)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.189085 102.903713)
+    (end 68.251292 103.003679)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.135826 102.799176)
+    (end 68.189085 102.903713)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.834693 101.467171)
+    (end 47.719961 101.567676)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.959085 101.380456)
+    (end 47.834693 101.467171)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.091874 101.308131)
+    (end 47.959085 101.380456)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.151087 91.665669)
+    (end 52.151087 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.5244 91.665669)
+    (end 52.151087 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.5244 90.156252)
+    (end 52.5244 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.151087 90.156252)
+    (end 52.5244 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.852903 90.156252)
+    (end 52.852903 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.852903 91.665669)
+    (end 52.852903 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.226216 91.665669)
+    (end 52.852903 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.554722 91.665669)
+    (end 53.554722 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.928035 91.665669)
+    (end 53.554722 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.928035 90.156252)
+    (end 53.928035 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.554722 90.156252)
+    (end 53.928035 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.336246 85.735035)
+    (end 63.803188 85.44147)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.852955 86.053119)
+    (end 64.336246 85.735035)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.353324 86.394241)
+    (end 64.852955 86.053119)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.488352 93.272036)
+    (end 46.380865 93.366293)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.585919 93.167304)
+    (end 46.488352 93.272036)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.67246 93.053204)
+    (end 46.585919 93.167304)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.641981 91.665669)
+    (end 48.641981 90.156252)
+    (layer Dwgs.User)
+    (width 0.01))
+  (gr_line
+    (start 49.015294 91.665669)
+    (end 48.641981 91.665669)
+    (layer Dwgs.User)
+    (width 0.01))
+  (gr_line
+    (start 66.889305 90.156252)
+    (end 66.889305 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.889305 91.665669)
+    (end 66.889305 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.262618 91.665669)
+    (end 66.889305 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.262618 90.156252)
+    (end 67.262618 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.889305 90.156252)
+    (end 67.262618 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.273492 95.667476)
+    (end 49.744326 96.196643)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.744326 95.667476)
+    (end 50.273492 96.196643)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.687986 84.933803)
+    (end 53.162436 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.253771 85.173898)
+    (end 62.687986 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.803188 85.44147)
+    (end 63.253771 85.173898)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.949909 103.086404)
+    (end 50.0301 102.828036)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.823008 103.320206)
+    (end 49.949909 103.086404)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.654939 103.523911)
+    (end 49.823008 103.320206)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.451234 103.69198)
+    (end 49.654939 103.523911)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.62986 90.156252)
+    (end 54.62986 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.256547 90.156252)
+    (end 54.62986 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.554722 90.156252)
+    (end 53.554722 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.091729 102.690678)
+    (end 68.135826 102.799176)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.057019 102.578822)
+    (end 68.091729 102.690678)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.031901 102.46422)
+    (end 68.057019 102.578822)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.016605 102.347476)
+    (end 68.031901 102.46422)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.011355 102.2292)
+    (end 68.016605 102.347476)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.012766 102.172182)
+    (end 68.011355 102.2292)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.340148 90.783313)
+    (end 69.03854 90.270668)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.621015 91.309322)
+    (end 69.340148 90.783313)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.878396 91.849444)
+    (end 69.621015 91.309322)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 45.709486 94.370056)
+    (end 45.709486 99.79236)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.264558 93.449526)
+    (end 45.709486 94.370056)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.380865 93.366293)
+    (end 46.264558 93.449526)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.515051 102.802921)
+    (end 47.452844 102.902887)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.568309 102.698383)
+    (end 47.515051 102.802921)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.612406 102.589885)
+    (end 47.568309 102.698383)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.647117 102.478029)
+    (end 47.612406 102.589885)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.976564 90.156252)
+    (end 61.976564 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.976564 91.665669)
+    (end 61.976564 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.349877 91.665669)
+    (end 61.976564 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.349877 90.156252)
+    (end 62.349877 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.976564 90.156252)
+    (end 62.349877 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.928384 106.047325)
+    (end 56.928384 107.528991)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.781856 106.047325)
+    (end 56.928384 106.047325)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.582866 103.37704)
+    (end 47.722137 103.535538)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.468417 103.197007)
+    (end 47.582866 103.37704)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.381904 102.997674)
+    (end 47.468417 103.197007)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.452844 102.902887)
+    (end 47.381904 102.997674)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.015294 90.156252)
+    (end 49.015294 91.665669)
+    (layer Dwgs.User)
+    (width 0.01))
+  (gr_line
+    (start 48.641981 90.156252)
+    (end 49.015294 90.156252)
+    (layer Dwgs.User)
+    (width 0.01))
+  (gr_line
+    (start 50.745954 106.047325)
+    (end 50.745954 106.047325)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.980028 102.098093)
+    (end 46.958523 102.239755)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.987197 101.955328)
+    (end 46.980028 102.098093)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.983895 101.853906)
+    (end 46.987197 101.955328)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.061123 108.835011)
+    (end 52.589711 109.085887)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.54633 108.561578)
+    (end 52.061123 108.835011)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.045854 108.266283)
+    (end 51.54633 108.561578)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.650854 107.612219)
+    (end 66.099915 107.257629)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.187993 107.949203)
+    (end 65.650854 107.612219)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.711026 108.266971)
+    (end 65.187993 107.949203)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.21728 101.282894)
+    (end 48.958973 101.20274)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.451045 101.409731)
+    (end 49.21728 101.282894)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.654727 101.577723)
+    (end 49.451045 101.409731)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.822802 101.781341)
+    (end 49.654727 101.577723)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.187477 90.156252)
+    (end 66.56079 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.485661 90.156252)
+    (end 65.485661 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.485661 91.665669)
+    (end 65.485661 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.858974 91.665669)
+    (end 65.485661 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.274745 90.156252)
+    (end 61.274745 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.274745 91.665669)
+    (end 61.274745 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.648058 91.665669)
+    (end 61.274745 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.648058 90.156252)
+    (end 61.648058 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.274745 90.156252)
+    (end 61.648058 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.292399 87.59011)
+    (end 47.148727 90.072232)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.292399 87.296861)
+    (end 49.292399 87.59011)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.718618 106.108702)
+    (end 54.718618 108.996104)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.806271 106.108702)
+    (end 54.718618 106.108702)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.681653 101.174809)
+    (end 48.681653 101.174809)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.958973 101.20274)
+    (end 48.681653 101.174809)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.754227 103.187197)
+    (end 65.674036 102.928828)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 65.881128 103.420999)
+    (end 65.754227 103.187197)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.049197 103.624704)
+    (end 65.881128 103.420999)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.252902 103.792773)
+    (end 66.049197 103.624704)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.486703 103.919674)
+    (end 66.252902 103.792773)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.745072 103.999865)
+    (end 66.486703 103.919674)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.087979 101.782165)
+    (end 68.07034 101.836403)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.984174 101.668469)
+    (end 68.087979 101.782165)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.869443 101.567964)
+    (end 67.984174 101.668469)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.74505 101.481249)
+    (end 67.869443 101.567964)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.612262 101.408923)
+    (end 67.74505 101.481249)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.472345 101.351596)
+    (end 67.612262 101.408923)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 62.656025 109.313502)
+    (end 63.192453 109.088783)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.131575 109.313502)
+    (end 62.656025 109.313502)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.589711 109.085887)
+    (end 53.131575 109.313502)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.043939 94.434374)
+    (end 46.043939 94.434374)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.043939 95.625505)
+    (end 46.043939 94.434374)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.904547 95.625505)
+    (end 46.043939 95.625505)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.904547 94.434374)
+    (end 46.904547 95.625505)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.043939 94.434374)
+    (end 46.904547 94.434374)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.197553 106.880436)
+    (end 49.635545 107.256201)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.197553 106.541439)
+    (end 49.197553 106.880436)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.05443 104.059318)
+    (end 49.197553 106.541439)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.031468 98.525372)
+    (end 46.031468 98.525372)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.031468 99.716502)
+    (end 46.031468 98.525372)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.892076 99.716502)
+    (end 46.031468 99.716502)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.892076 98.525372)
+    (end 46.892076 99.716502)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.031468 98.525372)
+    (end 46.892076 98.525372)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.022468 104.027805)
+    (end 66.745072 103.999865)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.239068 104.01042)
+    (end 67.022468 104.027805)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.446439 103.960345)
+    (end 67.239068 104.01042)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.641463 103.879819)
+    (end 67.446439 103.960345)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.821022 103.77107)
+    (end 67.641463 103.879819)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.981998 103.636331)
+    (end 67.821022 103.77107)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.747444 91.665669)
+    (end 50.747444 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.120757 91.665669)
+    (end 50.747444 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.120757 90.156252)
+    (end 51.120757 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.747444 90.156252)
+    (end 51.120757 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.958366 90.156252)
+    (end 54.958366 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.958366 91.665669)
+    (end 54.958366 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.331679 91.665669)
+    (end 54.958366 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.331679 90.156252)
+    (end 55.331679 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.747423 92.931386)
+    (end 46.67246 93.053204)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.80971 92.802402)
+    (end 46.747423 92.931386)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.858769 92.668453)
+    (end 46.80971 92.802402)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.380199 90.156252)
+    (end 63.380199 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.380199 91.665669)
+    (end 63.380199 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.753512 91.665669)
+    (end 63.380199 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.753512 90.156252)
+    (end 63.753512 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 63.380199 90.156252)
+    (end 63.753512 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.672235 102.363427)
+    (end 47.647117 102.478029)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.687531 102.246683)
+    (end 47.672235 102.363427)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.69278 102.128407)
+    (end 47.687531 102.246683)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.242511 100.69966)
+    (end 46.364329 100.774073)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 45.709486 99.79236)
+    (end 46.080453 100.628554)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.636047 85.153863)
+    (end 52.120424 85.396289)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.162481 84.933803)
+    (end 52.636047 85.153863)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.44926 90.156252)
+    (end 51.44926 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.44926 91.665669)
+    (end 51.44926 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.822573 91.665669)
+    (end 51.44926 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.792687 101.975724)
+    (end 68.814193 101.834613)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.785519 102.118489)
+    (end 68.792687 101.975724)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.789385 102.219912)
+    (end 68.785519 102.118489)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.898532 101.561211)
+    (end 68.960818 101.432777)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.849471 101.695706)
+    (end 68.898532 101.561211)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.814193 101.834613)
+    (end 68.849471 101.695706)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.582611 100.958181)
+    (end 46.677418 101.065668)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.477879 100.860616)
+    (end 46.582611 100.958181)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.364329 100.774073)
+    (end 46.477879 100.860616)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.806488 102.361573)
+    (end 68.789385 102.219912)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.837908 102.501583)
+    (end 68.806488 102.361573)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.883106 102.637183)
+    (end 68.837908 102.501583)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 66.756508 87.787996)
+    (end 66.756508 87.541051)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 68.899633 90.270668)
+    (end 66.756508 87.787996)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.03854 90.270668)
+    (end 68.899633 90.270668)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.162447 84.933803)
+    (end 53.162453 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.162442 84.933803)
+    (end 53.162447 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.162436 84.933803)
+    (end 53.162442 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.660185 90.156252)
+    (end 55.660185 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.660185 91.665669)
+    (end 55.660185 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.033498 91.665669)
+    (end 55.660185 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.033498 90.156252)
+    (end 56.033498 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.660185 90.156252)
+    (end 56.033498 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.410051 97.219061)
+    (end 58.410051 94.299825)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.849634 97.219061)
+    (end 58.410051 97.219061)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 61.849634 94.299825)
+    (end 61.849634 97.219061)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 70.10955 92.404423)
+    (end 69.878396 91.849444)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 70.10955 99.898194)
+    (end 70.10955 92.404423)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 69.567706 100.843528)
+    (end 70.10955 99.898194)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.082026 91.665669)
+    (end 64.082026 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.455339 91.665669)
+    (end 64.082026 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.455339 90.156252)
+    (end 64.455339 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 64.082026 90.156252)
+    (end 64.455339 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.966256 101.712242)
+    (end 46.983895 101.853906)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.934836 101.572234)
+    (end 46.966256 101.712242)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.890188 101.436635)
+    (end 46.934836 101.572234)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.498497 107.624123)
+    (end 51.818742 107.624123)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.498497 108.722701)
+    (end 52.498497 107.624123)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 52.960328 108.996104)
+    (end 52.498497 108.722701)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.718618 108.996104)
+    (end 52.960328 108.996104)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.645333 86.253525)
+    (end 50.179861 86.581188)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.124377 85.946541)
+    (end 50.645333 86.253525)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.326566 101.309863)
+    (end 67.472345 101.351596)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.176189 101.284322)
+    (end 67.326566 101.309863)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 67.022482 101.275602)
+    (end 67.176189 101.284322)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.418938 90.156252)
+    (end 50.418938 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.045625 90.156252)
+    (end 50.418938 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.3438 90.156252)
+    (end 49.3438 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.894046 92.529549)
+    (end 46.858769 92.668453)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.915552 92.388438)
+    (end 46.894046 92.529549)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.92272 92.24512)
+    (end 46.915552 92.388438)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.949731 102.015052)
+    (end 49.822802 101.781341)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.029987 102.273328)
+    (end 49.949731 102.015052)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.05804 102.550639)
+    (end 50.029987 102.273328)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.0301 102.828036)
+    (end 50.05804 102.550639)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.650943 102.876962)
+    (end 46.596926 102.94421)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.737486 102.76341)
+    (end 46.650943 102.876962)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.8119 102.641041)
+    (end 46.737486 102.76341)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.362001 90.156252)
+    (end 56.362001 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.362001 91.665669)
+    (end 56.362001 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.735314 91.665669)
+    (end 56.362001 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.735314 90.156252)
+    (end 56.735314 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 56.362001 90.156252)
+    (end 56.735314 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.217432 103.818881)
+    (end 49.451234 103.69198)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.959064 103.899072)
+    (end 49.217432 103.818881)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.681667 103.927012)
+    (end 48.959064 103.899072)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.465067 103.909627)
+    (end 48.681667 103.927012)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.162464 84.933803)
+    (end 53.16247 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.162459 84.933803)
+    (end 53.162464 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.162453 84.933803)
+    (end 53.162459 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 59.871107 90.156252)
+    (end 59.871107 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 59.871107 91.665669)
+    (end 59.871107 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.24442 91.665669)
+    (end 59.871107 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 60.24442 90.156252)
+    (end 60.24442 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 59.871107 90.156252)
+    (end 60.24442 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.958366 90.156252)
+    (end 55.331679 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.256547 90.156252)
+    (end 54.256547 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.256547 91.665669)
+    (end 54.256547 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 54.62986 91.665669)
+    (end 54.256547 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.331421 104.627394)
+    (end 48.802254 105.156561)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 48.802254 104.627394)
+    (end 49.331421 105.156561)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.018546 104.58154)
+    (end 50.489379 105.110707)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.489379 104.58154)
+    (end 51.018546 105.110707)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.673025 101.901712)
+    (end 47.681463 101.95797)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.662244 101.845851)
+    (end 47.673025 101.901712)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 47.649177 101.79046)
+    (end 47.662244 101.845851)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.045625 90.156252)
+    (end 50.045625 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.045625 91.665669)
+    (end 50.045625 90.156252)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.418938 91.665669)
+    (end 50.045625 91.665669)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.8819 104.059318)
+    (end 47.05443 104.059318)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.608497 103.676774)
+    (end 46.8819 104.059318)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 46.596926 102.94421)
+    (end 46.608497 103.676774)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.885676 94.299825)
+    (end 57.325259 94.299825)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.162476 84.933803)
+    (end 53.162481 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 53.16247 84.933803)
+    (end 53.162476 84.933803)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.806271 107.567994)
+    (end 51.806271 106.108702)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.410051 94.299825)
+    (end 58.410051 94.299825)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.745954 107.528991)
+    (end 50.745954 106.047325)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.892481 107.528991)
+    (end 50.745954 107.528991)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 51.892481 106.047325)
+    (end 51.892481 107.528991)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.745954 106.047325)
+    (end 51.892481 106.047325)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 49.728652 86.929109)
+    (end 49.292399 87.296861)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 50.179861 86.581188)
+    (end 49.728652 86.929109)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 58.227916 88.339861)
+    (end 57.69875 88.869028)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 57.69875 88.339861)
+    (end 58.227916 88.869028)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55.529166 85.5)
+    (end 55 86.029167)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_line
+    (start 55 85.5)
+    (end 55.529166 86.029167)
+    (layer Dwgs.User)
+    (width 0.1))
+  (gr_text "LK|SO '16"
+    (at 53.0055 88.841)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))))
+  (gr_text rev.1
+    (at 61.3055 87.641)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 1.5 1.5)
+        (thickness 0.3))))
+  (gr_text pluto
+    (at 58.9555 86.141)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 1.5 1.5)
+        (thickness 0.3))))
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  )

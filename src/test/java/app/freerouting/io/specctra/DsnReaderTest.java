@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.settings.GlobalSettings;
 import java.io.ByteArrayInputStream;
@@ -143,5 +143,18 @@ class DsnReaderTest {
           case BoardReadResult.IoError _ -> "io";
         };
     assertNotNull(label);
+  }
+
+  @Test
+  void readBoardF60Keyboard() throws Exception {
+    java.nio.file.Path path =
+        java.nio.file.Path.of("scripts/benchmark/fixtures/PCBench/f.60_keyboard/unrouted.dsn");
+    if (java.nio.file.Files.exists(path)) {
+      try (InputStream in = java.nio.file.Files.newInputStream(path)) {
+        BoardReadResult result = DsnReader.readBoard(in, null, null, "unrouted.dsn");
+        assertInstanceOf(
+            BoardReadResult.Success.class, result, "f.60_keyboard DSN must parse successfully");
+      }
+    }
   }
 }

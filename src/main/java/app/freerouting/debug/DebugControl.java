@@ -25,7 +25,7 @@ public final class DebugControl {
   private final Object lock = new Object();
   // Listeners
   private final java.util.List<DebugStateListener> listeners = new java.util.ArrayList<>();
-  private volatile int currentNetNo = -1;
+  private volatile int currentNetNumber = -1;
 
   private DebugControl() {
     // Initialize state based on settings if needed, but usually settings are loaded
@@ -65,7 +65,7 @@ public final class DebugControl {
   /** Resets the fast forward state and clears history. */
   public void resetDebugState() {
     isFastForwarding.set(false);
-    currentNetNo = -1;
+    currentNetNumber = -1;
     stepNetHistory.clear();
   }
 
@@ -115,8 +115,8 @@ public final class DebugControl {
    * @return true if the items should be processed/logged, false otherwise.
    */
   public boolean isInterested(String impactedItems) {
-    int netNo = getNetNo(impactedItems);
-    return Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, null);
+    int netNumber = getNetNumber(impactedItems);
+    return Freerouting.globalSettings.debugSettings.isNetPermitted(netNumber, null);
   }
 
   /**
@@ -125,20 +125,20 @@ public final class DebugControl {
    * @param impactedItems Description of items involved (e.g. "Net #1, Trace...")
    * @return the parsed net number, or -1 if none was found
    */
-  private int getNetNo(String impactedItems) {
-    int netNo = -1;
+  private int getNetNumber(String impactedItems) {
+    int netNumber = -1;
     // Try to parse Net #<No>
     if (impactedItems != null) {
       java.util.regex.Matcher matcher = NET_NUMBER_PATTERN.matcher(impactedItems);
       if (matcher.find()) {
         try {
-          netNo = Integer.parseInt(matcher.group(1));
+          netNumber = Integer.parseInt(matcher.group(1));
         } catch (NumberFormatException e) {
           // ignore
         }
       }
     }
-    return netNo;
+    return netNumber;
   }
 
   /**
@@ -160,30 +160,31 @@ public final class DebugControl {
       return false;
     }
 
-    int netNo = getNetNo(impactedItems);
+    int netNumber = getNetNumber(impactedItems);
 
-    if (!Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, null)) {
+    if (!Freerouting.globalSettings.debugSettings.isNetPermitted(netNumber, null)) {
       return false;
     }
 
-    return check(operation, netNo, null);
+    return check(operation, netNumber, null);
   }
 
   /**
    * Called by the engine at potential breakpoints. Handles filtering, delays, and pausing.
    *
    * @param operation The operation being performed (e.g. "insert_trace_segment")
-   * @param netNo The net number currently being processed
+   * @param netNumber The net number currently being processed
    * @param netName The net name currently being processed (optional, can be null)
    * @return true if the operation should be processed/logged, false otherwise.
    */
-  public boolean check(String operation, int netNo, String netName) {
+  public boolean check(String operation, int netNumber, String netName) {
     if (!Freerouting.globalSettings.debugSettings.singleStepExecution
         && Freerouting.globalSettings.debugSettings.traceInsertionDelay == 0) {
       return false;
     }
 
-    if (netNo >= 0 && !Freerouting.globalSettings.debugSettings.isNetPermitted(netNo, netName)) {
+    if (netNumber >= 0
+        && !Freerouting.globalSettings.debugSettings.isNetPermitted(netNumber, netName)) {
       return false;
     }
 
@@ -206,15 +207,16 @@ public final class DebugControl {
       // Logic for Fast Forwarding
       if (isFastForwarding.get()) {
         // If the net changed, pause!
-        if (currentNetNo != -1 && netNo != -1 && currentNetNo != netNo) {
-          FRLogger.debug("FastForward Stopping: Net changed from " + currentNetNo + " to " + netNo);
+        if (currentNetNumber != -1 && netNumber != -1 && currentNetNumber != netNumber) {
+          FRLogger.debug(
+              "FastForward Stopping: Net changed from " + currentNetNumber + " to " + netNumber);
           pause(); // Explicitly pause execution
           // Pause will happen below in the synchronized block logic
         } else {
-          if (netNo != -1) {
-            currentNetNo = netNo;
+          if (netNumber != -1) {
+            currentNetNumber = netNumber;
           }
-          stepNetHistory.push(netNo);
+          stepNetHistory.push(netNumber);
           return true;
         }
       }
@@ -224,8 +226,8 @@ public final class DebugControl {
         // this step
         if (shouldStep.compareAndSet(true, false)) {
           // We are taking a step
-          currentNetNo = netNo;
-          stepNetHistory.push(netNo);
+          currentNetNumber = netNumber;
+          stepNetHistory.push(netNumber);
         }
 
         while (isPaused.get()) {
@@ -234,15 +236,15 @@ public final class DebugControl {
           if (shouldStep.compareAndSet(true, false)) {
             // Step command received. Break the wait loop and proceed.
             // We stay paused for the next time.
-            currentNetNo = netNo;
-            stepNetHistory.push(netNo);
+            currentNetNumber = netNumber;
+            stepNetHistory.push(netNumber);
             break;
           }
 
           // Check if we switched to fast forward while paused
           if (isFastForwarding.get()) {
-            currentNetNo = netNo;
-            stepNetHistory.push(netNo);
+            currentNetNumber = netNumber;
+            stepNetHistory.push(netNumber);
             break;
           }
 

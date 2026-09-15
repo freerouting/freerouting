@@ -1,0 +1,25 @@
+{
+  "board": "jdy-08-board_jdy-08",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\jdy-08-board_jdy-08\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 124,
+  "approximate_track_length_mm": 417.3,
+  "kicad_drc_violations": 39,
+  "generated_at": "2026-08-18T18:59:57.602944+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 39,
+    "unconnected_count": 0,
+    "by_type": {
+      "invalid_outline": 2,
+      "lib_footprint_issues": 5,
+      "malformed_courtyard": 3,
+      "text_height": 29
+    },
+    "by_severity": {
+      "error": 5,
+      "warning": 34
+    }
+  }
+}

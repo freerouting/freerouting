@@ -1,0 +1,27 @@
+{
+  "board": "NoVo-Pi_NoVoPi",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\NoVo-Pi_NoVoPi\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 112,
+  "approximate_track_length_mm": 660.34,
+  "kicad_drc_violations": 105,
+  "generated_at": "2026-08-18T19:28:15.841278+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 105,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 63,
+      "invalid_outline": 3,
+      "lib_footprint_issues": 24,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 7,
+      "silk_overlap": 7
+    },
+    "by_severity": {
+      "error": 66,
+      "warning": 39
+    }
+  }
+}

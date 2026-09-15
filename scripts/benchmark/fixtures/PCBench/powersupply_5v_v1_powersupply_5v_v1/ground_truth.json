@@ -1,0 +1,32 @@
+{
+  "board": "powersupply_5v_v1_powersupply_5v_v1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\powersupply_5v_v1_powersupply_5v_v1\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 118,
+  "approximate_track_length_mm": 776.9,
+  "kicad_drc_violations": 302,
+  "generated_at": "2026-08-18T19:35:23.493133+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 302,
+    "unconnected_count": 2,
+    "by_type": {
+      "clearance": 119,
+      "copper_edge_clearance": 6,
+      "hole_clearance": 25,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 57,
+      "nonmirrored_text_on_back_layer": 4,
+      "shorting_items": 2,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 3,
+      "silk_overlap": 75,
+      "solder_mask_bridge": 8
+    },
+    "by_severity": {
+      "error": 161,
+      "warning": 141
+    }
+  }
+}

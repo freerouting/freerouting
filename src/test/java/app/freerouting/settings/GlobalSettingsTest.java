@@ -33,9 +33,11 @@ class GlobalSettingsTest {
 
     assertFalse(settings.logging.file.enabled);
 
-    // Should be no warnings
+    // -mp is still valid but deprecated in favour of --router.autorouter.max_passes
     assertEquals(
-        0, FRLogger.getLogEntries().getWarningCount(), "Should have no warnings for valid args");
+        1,
+        FRLogger.getLogEntries().getWarningCount(),
+        "Deprecated -mp / --router.max_passes should warn");
   }
 
   @Test
@@ -71,9 +73,11 @@ class GlobalSettingsTest {
 
     settings.applyCommandLineArguments(args);
 
-    // Expect a warning for "extraValue"
+    // Expect a deprecation warning for -mp plus a warning for "extraValue"
     assertEquals(
-        1, FRLogger.getLogEntries().getWarningCount(), "Should have 1 warning for extra value");
+        2,
+        FRLogger.getLogEntries().getWarningCount(),
+        "Should warn for deprecated -mp and the extra value");
     assertTrue(
         Arrays.stream(FRLogger.getLogEntries().get())
             .anyMatch(s -> s.contains("Unknown command line argument: extraValue")));
@@ -87,6 +91,23 @@ class GlobalSettingsTest {
     settings.applyCommandLineArguments(args);
 
     assertEquals(20, settings.getMaxPasses());
+    assertEquals(
+        1,
+        FRLogger.getLogEntries().getWarningCount(),
+        "Deprecated --router.max_passes should warn");
+  }
+
+  @Test
+  @SuppressWarnings("deprecation") // CLI flags write into the JSON/CLI routerSettings bridge.
+  void applyCommandLineArgumentsNestedAutorouterMaxThreads() {
+    GlobalSettings settings = new GlobalSettings();
+    String[] args =
+        new String[] {"--router.autorouter.max_threads=1", "--router.optimizer.max_threads=4"};
+
+    settings.applyCommandLineArguments(args);
+
+    assertEquals(1, settings.routerSettings.autorouter.maxThreads);
+    assertEquals(4, settings.routerSettings.optimizer.maxThreads);
     assertEquals(0, FRLogger.getLogEntries().getWarningCount());
   }
 

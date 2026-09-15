@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "LAUNCHXL-F28027-isolation-PCB_project1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 67654,
+      "sha256": "0c79fda98a5dd14e952d8cb059eaedbbc6976b96c6e47ae9417942d617acec49"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 48541,
+      "sha256": "f8d2cfcde6cced67190582ba3cad809a5ab00eb39478a247639ae7595bdbfcf4"
+    },
+    "metadata_json": {
+      "bytes": 700,
+      "sha256": "6258ae71216d19fb45816774581b5f4091742e51efef0edd3ec624ee4f4a13b1"
+    },
+    "final_json": {
+      "bytes": 40891,
+      "sha256": "9f9324e49bfbc6929227ead94ce4a4a5cac775b883abfd47ecef420064226f45"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:14:54.327495+00:00"
+  }
+}

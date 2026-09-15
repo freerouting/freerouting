@@ -1,0 +1,57 @@
+{
+  "board_id": "nanoTracer_nanoTracer",
+  "display_name": "nanoTracer_nanoTracer",
+  "pcbench_directory": "PCBs/nanoTracer_nanoTracer",
+  "source": "https://github.com/a-wai/nanoTracer",
+  "author": "a-wai",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:43.273948+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 17,
+    "components": 48,
+    "dimensions_mm": {
+      "width": 91.44,
+      "height": 59.94
+    },
+    "area_cm2": 54.81,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 306,
+    "vias": 12,
+    "track_length_mm": 1215.78,
+    "kicad_drc_violations": 235,
+    "kicad_drc_breakdown": {
+      "total_violations": 235,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 142,
+        "lib_footprint_issues": 48,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 38,
+        "starved_thermal": 4,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 146,
+        "warning": 89
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

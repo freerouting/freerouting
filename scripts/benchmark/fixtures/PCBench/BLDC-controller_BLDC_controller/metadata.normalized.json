@@ -1,0 +1,63 @@
+{
+  "board_id": "BLDC-controller_BLDC_controller",
+  "display_name": "BLDC-controller_BLDC_controller",
+  "pcbench_directory": "PCBs/BLDC-controller_BLDC_controller",
+  "source": "https://github.com/WarmT/BLDC-controller",
+  "author": "WarmT",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:27.889767+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 20,
+    "components": 262,
+    "dimensions_mm": {
+      "width": 49.0,
+      "height": 32.0
+    },
+    "area_cm2": 15.68,
+    "zones": 38
+  },
+  "reference": {
+    "segments": 929,
+    "vias": 75,
+    "track_length_mm": 1006.41,
+    "kicad_drc_violations": 570,
+    "kicad_drc_breakdown": {
+      "total_violations": 570,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 259,
+        "copper_edge_clearance": 29,
+        "courtyards_overlap": 6,
+        "hole_clearance": 2,
+        "items_not_allowed": 3,
+        "lib_footprint_issues": 199,
+        "nonmirrored_text_on_back_layer": 1,
+        "pth_inside_courtyard": 6,
+        "silk_over_copper": 50,
+        "silk_overlap": 10,
+        "starved_thermal": 2,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 307,
+        "warning": 263
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

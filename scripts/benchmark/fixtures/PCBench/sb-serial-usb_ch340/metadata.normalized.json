@@ -1,0 +1,68 @@
+{
+  "board_id": "sb-serial-usb_ch340",
+  "display_name": "sb-serial-usb_ch340",
+  "pcbench_directory": "PCBs/sb-serial-usb_ch340",
+  "source": "https://github.com/staticboards/sb-serial-usb",
+  "author": "staticboards",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.282184+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 20.0,
+      "height": 45.0
+    },
+    "area_cm2": 9.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 240,
+    "vias": 11,
+    "track_length_mm": 514.05,
+    "kicad_drc_violations": 97,
+    "kicad_drc_breakdown": {
+      "total_violations": 97,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 38,
+        "copper_edge_clearance": 7,
+        "lib_footprint_issues": 19,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 3,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 4,
+        "text_height": 22
+      },
+      "by_severity": {
+        "error": 49,
+        "warning": 48
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.107848+00:00",
+    "elapsed_seconds": 13.33,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

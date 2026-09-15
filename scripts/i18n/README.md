@@ -94,11 +94,11 @@ python scripts/i18n/extract-context.py --sync-translated --all
 
 **Batch mode:** keys are sent to Gemini in batches (default 15, set `LLM_BATCH_SIZE=1` to force per-key). Failed batch parses fall back to single-key calls with retry/backoff.
 
-**Setup (Gemini 3.6 Flash):**
+**Setup (Gemini 3.7 Flash):**
 
 ```bash
 export GEMINI_API_KEY=...   # AI Studio auth key (AQ.…) or legacy key (AIza…)
-export LLM_MODEL=gemini-3.6-flash   # optional; this is the default
+export LLM_MODEL=gemini-3.7-flash   # optional; this is the default
 python scripts/i18n/translate.py --locale de --bundle gui.BoardMenuFile
 ```
 
@@ -147,7 +147,7 @@ The parity test `englishBundlesDoNotContainUnusedKeys` writes `build/reports/i18
 | Variable | Default | Description |
 |---|---|---|
 | `GEMINI_API_KEY` | *(required)* | Google AI Studio API key (`AQ.…` or legacy `AIza…`); `GOOGLE_API_KEY` is accepted as an alias |
-| `LLM_MODEL` | `gemini-3.6-flash` | Gemini model id for `generateContent` |
+| `LLM_MODEL` | `gemini-3.7-flash` | Gemini model id for `generateContent` |
 | `LLM_BASE_URL` | `https://generativelanguage.googleapis.com/v1beta` | Gemini REST base URL (override only for testing) |
 | `LLM_GEMINI_THINKING_LEVEL` | `minimal` | Gemini 3.x only: `minimal`, `low`, `medium`, `high` |
 | `LLM_GEMINI_THINKING_BUDGET` | `0` | Gemini 2.5 and earlier: thinking token budget (`0` = off; `-1`/`default` = model default) |
@@ -195,32 +195,42 @@ Locale-specific PCB terms live in `scripts/i18n/glossary/`:
 
 | File | Purpose |
 |---|---|
-| `_default.json` | English definitions shared as fallback (50 Freerouting/Specctra terms) |
+| `_default.json` | English definitions shared as fallback (90 Freerouting/Specctra terms) |
 | `{locale}.json` | Locale-specific translation guidance (overrides `_default` in LLM prompts) |
 
-One `{locale}.json` exists for every shipped UI locale. `validate.py` fails if any glossary file is missing or lacks a term from `_default.json`.
+One `{locale}.json` exists for every shipped UI locale, plus glossary-only locales prepared for upcoming translations. `validate.py` fails if any file listed in `GLOSSARY_LOCALES` is missing or lacks a term from `_default.json`.
 
 | Locale | File |
 |---|---|
 | Arabic | `ar.json` |
 | Bengali | `bn.json` |
+| Catalan | `ca.json` |
 | Czech | `cs.json` |
+| Danish | `da.json` |
 | German | `de.json` |
+| Greek | `el.json` |
 | English | `en.json` |
 | Spanish | `es.json` |
+| Finnish | `fi.json` |
 | French | `fr.json` |
+| Hebrew | `he.json` |
 | Hindi | `hi.json` |
+| Croatian | `hr.json` |
 | Hungarian | `hu.json` |
 | Indonesian | `id.json` |
 | Italian | `it.json` |
 | Japanese | `ja.json` |
 | Korean | `ko.json` |
+| Lithuanian | `lt.json` |
+| Norwegian Bokmål | `nb.json` |
 | Dutch | `nl.json` |
 | Polish | `pl.json` |
 | Portuguese | `pt.json` |
 | Portuguese (Brazil) | `pt_br.json` |
 | Romanian | `ro.json` |
 | Russian | `ru.json` |
+| Slovak | `sk.json` |
+| Slovenian | `sl.json` |
 | Swedish | `sv.json` |
 | Thai | `th.json` |
 | Turkish | `tr.json` |

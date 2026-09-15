@@ -46,16 +46,18 @@ public final class ApiKeyValidationService {
     this.providers = new ArrayList<>();
 
     if (Freerouting.globalSettings == null
-        || Freerouting.globalSettings.apiServerSettings == null) {
-      this.isEnabled = false;
+        || Freerouting.globalSettings.apiServerSettings == null
+        || Freerouting.globalSettings.apiServerSettings.authentication == null) {
+      // Fail closed: require authentication by default
+      this.isEnabled = true;
       return;
     }
 
     ApiAuthenticationSettings authSettings =
         Freerouting.globalSettings.apiServerSettings.authentication;
-    this.isEnabled = authSettings != null && Boolean.TRUE.equals(authSettings.isEnabled);
+    this.isEnabled = !Boolean.FALSE.equals(authSettings.isEnabled);
 
-    if (this.isEnabled && authSettings != null && authSettings.providers != null) {
+    if (this.isEnabled && authSettings.providers != null) {
       String[] providerNames = authSettings.providers.split(",");
       for (String providerName : providerNames) {
         providerName = providerName.trim();

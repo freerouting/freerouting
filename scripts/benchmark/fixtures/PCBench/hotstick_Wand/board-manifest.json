@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "hotstick_Wand",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 105123,
+      "sha256": "b7cf65e1c207bd072b6e95b4d4bb7ee868ae394f6a45cd96ff28027c12614ed5"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 80624,
+      "sha256": "c5c46c03d0b06eee0a8e89dbae71b868af9eaedff4c4fb5cc1c3e8edd81abff7"
+    },
+    "metadata_json": {
+      "bytes": 581,
+      "sha256": "1fe0f7fd33db43caf4ba58e7346a216ac05b2e44b27ba14eb893cf37e59e47d8"
+    },
+    "final_json": {
+      "bytes": 88545,
+      "sha256": "4c2660fcd9a2e3f2330ea6d206e6a1037200842a092f8b8eb7f427a78b76547c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:16:12.419659+00:00"
+  }
+}

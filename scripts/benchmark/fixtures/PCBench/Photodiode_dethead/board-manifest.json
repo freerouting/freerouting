@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Photodiode_dethead",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 88112,
+      "sha256": "550da30b0a69c70638884251eb2083a015ecead6a5f51ad492cec592eddbdaf7"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 49828,
+      "sha256": "a44b6fc40c9fe8637bd5a75fd35df3e823c52aff29201365ceeaad35e3cb1bda"
+    },
+    "metadata_json": {
+      "bytes": 465,
+      "sha256": "c4492076bdb2c53199252cafcd8cd1aef71e084d21010ae5fa8f9f1cb780d0da"
+    },
+    "final_json": {
+      "bytes": 31981,
+      "sha256": "69162bee234d5666db0ad175a3f0e26b75db55e4d49112253e2289919d225a54"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:33:06.901579+00:00"
+  }
+}

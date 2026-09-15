@@ -1,0 +1,245 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\xwhatits-capsense-controller_model-f-3178-adaptor\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  274000 -144250  147000 -144250  147000 -144000  147000 -138250
+            147000 -137750  274000 -137750  274000 -144250)
+    )
+    (plane GND (polygon B.Cu 0  147000 -137750  147000 -144250  274000 -144250  274000 -137750
+            147000 -137750))
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 304.8)
+      (clearance 304.8)
+      (clearance 76.2 (type smd_smd))
+    )
+  )
+  (placement
+    (component "PIN_ARRAY_3_96-30X1"
+      (place PMF1 214500 -139250 back 0 (PN "Model-F-USB"))
+    )
+    (component "PIN_ARRAY_3_96-30X1_large_pads"
+      (place PMF2 206500 -142750 front 0 (PN "Kbd-3178"))
+    )
+  )
+  (library
+    (image "PIN_ARRAY_3_96-30X1"
+      (outline (path signal 150  -55440 1270  -55440 -1270))
+      (outline (path signal 150  -59400 1270  -59400 -1270))
+      (outline (path signal 150  -59400 -1270  59400 -1270))
+      (outline (path signal 150  59400 -1270  59400 1270))
+      (outline (path signal 150  59400 1270  -59400 1270))
+      (pin Rect[A]Pad_1524.000000x1524.000000_um 1 -57420 0)
+      (pin Round[A]Pad_1524.000000_um 2 -53460 0)
+      (pin Round[A]Pad_1524.000000_um 3 -49500 0)
+      (pin Round[A]Pad_1524.000000_um 4 -45540 0)
+      (pin Round[A]Pad_1524.000000_um 5 -41580 0)
+      (pin Round[A]Pad_1524.000000_um 6 -37620 0)
+      (pin Round[A]Pad_1524.000000_um 7 -33660 0)
+      (pin Round[A]Pad_1524.000000_um 8 -29700 0)
+      (pin Round[A]Pad_1524.000000_um 9 -25740 0)
+      (pin Round[A]Pad_1524.000000_um 10 -21780 0)
+      (pin Round[A]Pad_1524.000000_um 11 -17820 0)
+      (pin Round[A]Pad_1524.000000_um 12 -13860 0)
+      (pin Round[A]Pad_1524.000000_um 13 -9900 0)
+      (pin Round[A]Pad_1524.000000_um 14 -5940 0)
+      (pin Round[A]Pad_1524.000000_um 15 -1980 0)
+      (pin Round[A]Pad_1524.000000_um 16 1980 0)
+      (pin Round[A]Pad_1524.000000_um 17 5940 0)
+      (pin Round[A]Pad_1524.000000_um 18 9900 0)
+      (pin Round[A]Pad_1524.000000_um 19 13860 0)
+      (pin Round[A]Pad_1524.000000_um 20 17820 0)
+      (pin Round[A]Pad_1524.000000_um 21 21780 0)
+      (pin Round[A]Pad_1524.000000_um 22 25740 0)
+      (pin Round[A]Pad_1524.000000_um 23 29700 0)
+      (pin Round[A]Pad_1524.000000_um 24 33660 0)
+      (pin Round[A]Pad_1524.000000_um 25 37620 0)
+      (pin Round[A]Pad_1524.000000_um 26 41580 0)
+      (pin Round[A]Pad_1524.000000_um 27 45540 0)
+      (pin Round[A]Pad_1524.000000_um 28 49500 0)
+      (pin Round[A]Pad_1524.000000_um 29 53460 0)
+      (pin Round[A]Pad_1524.000000_um 30 57420 0)
+    )
+    (image "PIN_ARRAY_3_96-30X1_large_pads"
+      (outline (path signal 150  -55440 1270  -55440 -1270))
+      (outline (path signal 150  -59400 1270  -59400 -1270))
+      (outline (path signal 150  -59400 -1270  59400 -1270))
+      (outline (path signal 150  59400 -1270  59400 1270))
+      (outline (path signal 150  59400 1270  -59400 1270))
+      (pin Rect[A]Pad_2100.000000x2100.000000_um 1 -57420 0)
+      (pin Round[A]Pad_2100.000000_um 2 -53460 0)
+      (pin Round[A]Pad_2100.000000_um 3 -49500 0)
+      (pin Round[A]Pad_2100.000000_um 4 -45540 0)
+      (pin Round[A]Pad_2100.000000_um 5 -41580 0)
+      (pin Round[A]Pad_2100.000000_um 6 -37620 0)
+      (pin Round[A]Pad_2100.000000_um 7 -33660 0)
+      (pin Round[A]Pad_2100.000000_um 8 -29700 0)
+      (pin Round[A]Pad_2100.000000_um 9 -25740 0)
+      (pin Round[A]Pad_2100.000000_um 10 -21780 0)
+      (pin Round[A]Pad_2100.000000_um 11 -17820 0)
+      (pin Round[A]Pad_2100.000000_um 12 -13860 0)
+      (pin Round[A]Pad_2100.000000_um 13 -9900 0)
+      (pin Round[A]Pad_2100.000000_um 14 -5940 0)
+      (pin Round[A]Pad_2100.000000_um 15 -1980 0)
+      (pin Round[A]Pad_2100.000000_um 16 1980 0)
+      (pin Round[A]Pad_2100.000000_um 17 5940 0)
+      (pin Round[A]Pad_2100.000000_um 18 9900 0)
+      (pin Round[A]Pad_2100.000000_um 19 13860 0)
+      (pin Round[A]Pad_2100.000000_um 20 17820 0)
+      (pin Round[A]Pad_2100.000000_um 21 21780 0)
+      (pin Round[A]Pad_2100.000000_um 22 25740 0)
+      (pin Round[A]Pad_2100.000000_um 23 29700 0)
+      (pin Round[A]Pad_2100.000000_um 24 33660 0)
+      (pin Round[A]Pad_2100.000000_um 25 37620 0)
+      (pin Round[A]Pad_2100.000000_um 26 41580 0)
+      (pin Round[A]Pad_2100.000000_um 27 45540 0)
+      (pin Round[A]Pad_2100.000000_um 28 49500 0)
+      (pin Round[A]Pad_2100.000000_um 29 53460 0)
+      (pin Round[A]Pad_2100.000000_um 30 57420 0)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2100.000000_um
+      (shape (circle F.Cu 2100))
+      (shape (circle B.Cu 2100))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2100.000000x2100.000000_um
+      (shape (rect F.Cu -1050 -1050 1050 1050))
+      (shape (rect B.Cu -1050 -1050 1050 1050))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1524.000000x1524.000000_um
+      (shape (rect F.Cu -762 -762 762 762))
+      (shape (rect B.Cu -762 -762 762 762))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins PMF1-1 PMF1-2 PMF1-11 PMF1-12 PMF1-29 PMF1-30 PMF2-1 PMF2-2 PMF2-3 PMF2-4
+        PMF2-5 PMF2-6 PMF2-7 PMF2-8 PMF2-9 PMF2-22)
+    )
+    (net "N-000001"
+      (pins PMF1-17 PMF2-17)
+    )
+    (net "N-0000013"
+      (pins PMF1-13 PMF2-21)
+    )
+    (net "N-0000014"
+      (pins PMF1-9 PMF2-24)
+    )
+    (net "N-0000015"
+      (pins PMF1-8 PMF2-25)
+    )
+    (net "N-0000016"
+      (pins PMF1-7 PMF2-26)
+    )
+    (net "N-0000017"
+      (pins PMF1-6 PMF2-27)
+    )
+    (net "N-0000018"
+      (pins PMF1-5 PMF2-28)
+    )
+    (net "N-0000019"
+      (pins PMF1-4 PMF2-29)
+    )
+    (net "N-000002"
+      (pins PMF1-14 PMF2-20)
+    )
+    (net "N-0000020"
+      (pins PMF1-3 PMF2-30)
+    )
+    (net "N-0000021"
+      (pins PMF1-24 PMF2-10)
+    )
+    (net "N-0000022"
+      (pins PMF1-21 PMF2-13)
+    )
+    (net "N-0000023"
+      (pins PMF1-22 PMF2-12)
+    )
+    (net "N-0000024"
+      (pins PMF1-23 PMF2-11)
+    )
+    (net "N-0000025"
+      (pins PMF1-10 PMF2-23)
+    )
+    (net "N-000003"
+      (pins PMF1-15 PMF2-19)
+    )
+    (net "N-000004"
+      (pins PMF1-16 PMF2-18)
+    )
+    (net "N-000005"
+      (pins PMF1-18 PMF2-16)
+    )
+    (net "N-000006"
+      (pins PMF1-19 PMF2-15)
+    )
+    (net "N-000007"
+      (pins PMF1-20 PMF2-14)
+    )
+    (class kicad_default GND "N-000001" "N-0000013" "N-0000014" "N-0000015"
+      "N-0000016" "N-0000017" "N-0000018" "N-0000019" "N-000002" "N-0000020"
+      "N-0000021" "N-0000022" "N-0000023" "N-0000024" "N-0000025" "N-000003"
+      "N-000004" "N-000005" "N-000006" "N-000007"
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 304.8)
+        (clearance 304.8)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 304.8  212440 -142750  212060 -142750  208560 -139250)(net "N-000001")(type route))
+    (wire (path F.Cu 304.8  228280 -142750  227900 -142750  224400 -139250)(net "N-0000013")(type route))
+    (wire (path F.Cu 304.8  240160 -142750  240160 -139330  240240 -139250)(net "N-0000014")(type route))
+    (wire (path F.Cu 304.8  244120 -142750  244120 -139330  244200 -139250)(net "N-0000015")(type route))
+    (wire (path F.Cu 304.8  248080 -142750  248080 -139330  248160 -139250)(net "N-0000016")(type route))
+    (wire (path F.Cu 304.8  252040 -142750  252040 -139330  252120 -139250)(net "N-0000017")(type route))
+    (wire (path F.Cu 304.8  256000 -142750  256000 -139330  256080 -139250)(net "N-0000018")(type route))
+    (wire (path F.Cu 304.8  259960 -142750  259960 -139330  260040 -139250)(net "N-0000019")(type route))
+    (wire (path F.Cu 304.8  224320 -142750  223940 -142750  220440 -139250)(net "N-000002")(type route))
+    (wire (path F.Cu 304.8  263920 -142750  263920 -139330  264000 -139250)(net "N-0000020")(type route))
+    (wire (path F.Cu 304.8  184720 -142750  184340 -142750  180840 -139250)(net "N-0000021")(type route))
+    (wire (path F.Cu 304.8  196600 -142750  196220 -142750  192720 -139250)(net "N-0000022")(type route))
+    (wire (path F.Cu 304.8  192640 -142750  192260 -142750  188760 -139250)(net "N-0000023")(type route))
+    (wire (path F.Cu 304.8  188680 -142750  188300 -142750  184800 -139250)(net "N-0000024")(type route))
+    (wire (path F.Cu 304.8  236200 -142750  236200 -139330  236280 -139250)(net "N-0000025")(type route))
+    (wire (path F.Cu 304.8  220360 -142750  219980 -142750  216480 -139250)(net "N-000003")(type route))
+    (wire (path F.Cu 304.8  216400 -142750  216020 -142750  212520 -139250)(net "N-000004")(type route))
+    (wire (path F.Cu 304.8  208480 -142750  208100 -142750  204600 -139250)(net "N-000005")(type route))
+    (wire (path F.Cu 304.8  204520 -142750  204140 -142750  200640 -139250)(net "N-000006")(type route))
+    (wire (path F.Cu 304.8  200560 -142750  200180 -142750  196680 -139250)(net "N-000007")(type route))
+  )
+)

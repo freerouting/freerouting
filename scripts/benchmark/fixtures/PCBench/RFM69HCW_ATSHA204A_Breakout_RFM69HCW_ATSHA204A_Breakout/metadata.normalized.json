@@ -1,0 +1,66 @@
+{
+  "board_id": "RFM69HCW_ATSHA204A_Breakout_RFM69HCW_ATSHA204A_Breakout",
+  "display_name": "RFM69HCW_ATSHA204A_Breakout_RFM69HCW_ATSHA204A_Breakout",
+  "pcbench_directory": "PCBs/RFM69HCW_ATSHA204A_Breakout_RFM69HCW_ATSHA204A_Breakout",
+  "source": "https://github.com/kvoit/RFM69HCW_ATSHA204A_Breakout",
+  "author": "kvoit",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:55.046087+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 29.21,
+      "height": 24.77
+    },
+    "area_cm2": 7.24,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 109,
+    "vias": 2,
+    "track_length_mm": 206.16,
+    "kicad_drc_violations": 104,
+    "kicad_drc_breakdown": {
+      "total_violations": 104,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 45,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 9,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 3,
+        "silk_overlap": 7,
+        "solder_mask_bridge": 31,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 81,
+        "warning": 23
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.093542+00:00",
+    "elapsed_seconds": 18.15,
+    "unrouted_nets": 1,
+    "clearance_violations": 2,
+    "quality_score": 957.57
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "board_id": "FMCW_RADAR_Radar RF",
+  "display_name": "FMCW_RADAR_Radar RF",
+  "pcbench_directory": "PCBs/FMCW_RADAR_Radar RF",
+  "source": "https://github.com/ckflight/FMCW_RADAR",
+  "author": "ckflight",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:42.293937+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 72,
+    "components": 143,
+    "dimensions_mm": {
+      "width": 42.93,
+      "height": 24.46
+    },
+    "area_cm2": 10.5,
+    "zones": 30
+  },
+  "reference": {
+    "segments": 1042,
+    "vias": 619,
+    "track_length_mm": 867.7,
+    "kicad_drc_violations": 827,
+    "kicad_drc_breakdown": {
+      "total_violations": 827,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 13,
+        "copper_edge_clearance": 111,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 143,
+        "shorting_items": 30,
+        "silk_over_copper": 199,
+        "silk_overlap": 2,
+        "text_height": 173,
+        "text_thickness": 151,
+        "track_dangling": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 156,
+        "warning": 671
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

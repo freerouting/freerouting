@@ -1,0 +1,60 @@
+{
+  "board_id": "RC2014_RC2014 Tandy Sound Card",
+  "display_name": "RC2014_RC2014 Tandy Sound Card",
+  "pcbench_directory": "PCBs/RC2014_RC2014 Tandy Sound Card",
+  "source": "https://github.com/tebl/RC2014",
+  "author": "tebl",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:31.873814+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 32,
+    "dimensions_mm": {
+      "width": 99.06,
+      "height": 49.53
+    },
+    "area_cm2": 49.06,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 567,
+    "vias": 89,
+    "track_length_mm": 2325.36,
+    "kicad_drc_violations": 465,
+    "kicad_drc_breakdown": {
+      "total_violations": 465,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 139,
+        "copper_edge_clearance": 46,
+        "courtyards_overlap": 12,
+        "lib_footprint_issues": 32,
+        "silk_edge_clearance": 117,
+        "silk_over_copper": 15,
+        "silk_overlap": 102,
+        "starved_thermal": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 198,
+        "warning": 267
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

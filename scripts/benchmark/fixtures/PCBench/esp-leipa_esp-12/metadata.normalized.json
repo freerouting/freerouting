@@ -1,0 +1,69 @@
+{
+  "board_id": "esp-leipa_esp-12",
+  "display_name": "esp-leipa_esp-12",
+  "pcbench_directory": "PCBs/esp-leipa_esp-12",
+  "source": "https://github.com/sisuware/esp-leipa",
+  "author": "sisuware",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:47.161994+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 9,
+    "dimensions_mm": {
+      "width": 26.67,
+      "height": 44.45
+    },
+    "area_cm2": 11.85,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 190,
+    "vias": 18,
+    "track_length_mm": 415.85,
+    "kicad_drc_violations": 161,
+    "kicad_drc_breakdown": {
+      "total_violations": 161,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 61,
+        "lib_footprint_issues": 9,
+        "malformed_courtyard": 8,
+        "silk_edge_clearance": 27,
+        "silk_over_copper": 16,
+        "silk_overlap": 21,
+        "starved_thermal": 1,
+        "text_height": 17,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 70,
+        "warning": 91
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.905610+00:00",
+    "elapsed_seconds": 8.35,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

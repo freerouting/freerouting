@@ -1,0 +1,27 @@
+{
+  "board": "kicad-workshop_fancyboard",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kicad-workshop_fancyboard\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 8,
+  "segment_count": 143,
+  "approximate_track_length_mm": 390.2,
+  "kicad_drc_violations": 155,
+  "generated_at": "2026-08-18T19:02:22.516363+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 155,
+    "unconnected_count": 1,
+    "by_type": {
+      "clearance": 68,
+      "lib_footprint_issues": 18,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 10,
+      "silk_overlap": 7,
+      "solder_mask_bridge": 49
+    },
+    "by_severity": {
+      "error": 117,
+      "warning": 38
+    }
+  }
+}

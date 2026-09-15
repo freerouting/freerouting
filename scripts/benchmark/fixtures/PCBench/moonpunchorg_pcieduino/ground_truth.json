@@ -1,0 +1,28 @@
+{
+  "board": "moonpunchorg_pcieduino",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\moonpunchorg_pcieduino\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 57,
+  "segment_count": 500,
+  "approximate_track_length_mm": 999.73,
+  "kicad_drc_violations": 332,
+  "generated_at": "2026-08-18T19:25:17.664952+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 332,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 119,
+      "copper_edge_clearance": 54,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 76,
+      "silk_overlap": 41,
+      "starved_thermal": 9,
+      "text_height": 31
+    },
+    "by_severity": {
+      "error": 182,
+      "warning": 150
+    }
+  }
+}

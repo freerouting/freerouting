@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "SmartLaserMiniShield_SmartLaserMiniShield",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 184034,
+      "sha256": "f25be1be474025d2433853aebe9a9277b9b8347ee9418c6214469ba5d122d6be"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 88356,
+      "sha256": "d3e263ae6ffc42797165245c89d46b72796c6b9d8da50625ea005013341c2ef5"
+    },
+    "metadata_json": {
+      "bytes": 538,
+      "sha256": "1895d25bc5cc824bdd12b385430daaf2962e1232d39af85b6577df220d700e3b"
+    },
+    "final_json": {
+      "bytes": 85042,
+      "sha256": "7318c5ec11c499e1986e7dd5a14f986454373b25bedcd66fec1a1dd0574cc020"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:45:39.020607+00:00"
+  }
+}

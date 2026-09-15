@@ -1,0 +1,28 @@
+{
+  "board": "bmw-ibus-bluetooth_bmw_bt_cdcemu_analog",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\bmw-ibus-bluetooth_bmw_bt_cdcemu_analog\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 181,
+  "approximate_track_length_mm": 308.95,
+  "kicad_drc_violations": 320,
+  "generated_at": "2026-08-18T18:34:49.890260+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 320,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 100,
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 51,
+      "silk_over_copper": 36,
+      "silk_overlap": 128,
+      "starved_thermal": 2
+    },
+    "by_severity": {
+      "error": 105,
+      "warning": 215
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "board": "prog-cc-100mA_prog-cc-100mA",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\prog-cc-100mA_prog-cc-100mA\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 158,
+  "approximate_track_length_mm": 516.89,
+  "kicad_drc_violations": 225,
+  "generated_at": "2026-08-18T19:36:08.908600+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 225,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 52,
+      "lib_footprint_issues": 40,
+      "nonmirrored_text_on_back_layer": 6,
+      "silk_edge_clearance": 4,
+      "silk_overlap": 30,
+      "text_height": 93
+    },
+    "by_severity": {
+      "error": 52,
+      "warning": 173
+    }
+  }
+}

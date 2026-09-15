@@ -1,0 +1,27 @@
+{
+  "board": "HES-V2__autosave-hes",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\HES-V2__autosave-hes\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 46,
+  "approximate_track_length_mm": 304.74,
+  "kicad_drc_violations": 73,
+  "generated_at": "2026-08-18T18:56:24.851250+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 73,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 52,
+      "copper_edge_clearance": 1,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 16,
+      "malformed_courtyard": 2,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 57,
+      "warning": 16
+    }
+  }
+}

@@ -1,6 +1,6 @@
 package app.freerouting.io;
 
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
 import java.io.IOException;
 import java.util.List;
 

@@ -1,0 +1,277 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\yamsek.kicad_matrix_attiny861a\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  56000 -49000  58000 -49000  58000 -65000  56000 -65000
+            56000 -69000  58000 -69000  58000 -74000  42000 -74000  42000 -69000
+            44000 -69000  44000 -65000  42000 -65000  42000 -49000  44000 -49000
+            44000 -45000  56000 -45000  56000 -49000)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Housings_SOIC:SOIC-20W_7.5x12.8mm_Pitch1.27mm"
+      (place IC1 50000 -58215 back 180 (PN "ATTINY861A-S"))
+    )
+    (component myComponents:solderPads_4_Grove_I2C
+      (place I2C1 50000 -47000 front 180 (PN CONN_01X04))
+    )
+    (component Resistors_SMD:R_0805
+      (place R1 47800 -49750 back 90 (PN 10K))
+    )
+    (component myComponents:solderPads_6
+      (place Col1 50000 -64107 front 90 (PN CONN_01X06))
+    )
+    (component myComponents:ICSP_BIG_pads
+      (place ICSP1 50000 -53730 front 90 (PN CONN_02X03))
+    )
+    (component myComponents:solderPads_3
+      (place Row1 50000 -58392 front 90 (PN CONN_01X03))
+    )
+    (component "myComponents:microMatch-12_90_THT"
+      (place Expansion1 50000 -71600 front 0 (PN CONN_01X12))
+    )
+    (component Capacitors_SMD:C_0805
+      (place C1 52600 -49800 back 270 (PN 10µF))
+      (place C2 50600 -49800 back 270 (PN 0.1µF))
+    )
+  )
+  (library
+    (image "Housings_SOIC:SOIC-20W_7.5x12.8mm_Pitch1.27mm"
+      (outline (polygon signal 0  5945 -6745  -5945 -6745  -5945 6745  5945 6745))
+      (outline (path signal 150  -3875 6325  -5675 6325))
+      (outline (path signal 150  -3875 -6575  3875 -6575))
+      (outline (path signal 150  -3875 6575  3875 6575))
+      (outline (path signal 150  -3875 -6575  -3875 -6240))
+      (outline (path signal 150  3875 -6575  3875 -6240))
+      (outline (path signal 150  3875 6575  3875 6240))
+      (outline (path signal 150  -3875 6575  -3875 6325))
+      (outline (path signal 150  -3750 5400  -2750 6400))
+      (outline (path signal 150  -3750 -6400  -3750 5400))
+      (outline (path signal 150  3750 -6400  -3750 -6400))
+      (outline (path signal 150  3750 6400  3750 -6400))
+      (outline (path signal 150  -2750 6400  3750 6400))
+      (pin Rect[T]Pad_1950.000000x600.000000_um 1 -4700 5715)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 2 -4700 4445)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 3 -4700 3175)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 4 -4700 1905)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 5 -4700 635)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 6 -4700 -635)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 7 -4700 -1905)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 8 -4700 -3175)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 9 -4700 -4445)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 10 -4700 -5715)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 11 4700 -5715)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 12 4700 -4445)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 13 4700 -3175)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 14 4700 -1905)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 15 4700 -635)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 16 4700 635)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 17 4700 1905)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 18 4700 3175)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 19 4700 4445)
+      (pin Rect[T]Pad_1950.000000x600.000000_um 20 4700 5715)
+    )
+    (image myComponents:solderPads_4_Grove_I2C
+      (pin Rect[T]Pad_900.000000x3000.000000_um 1 -1905 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 2 -635 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 3 635 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 4 1905 0)
+    )
+    (image Resistors_SMD:R_0805
+      (outline (polygon signal 0  -1595 -995  -1595 995  1595 995  1595 -995))
+      (outline (path signal 150  -600 875  600 875))
+      (outline (path signal 150  600 -875  -600 -875))
+      (outline (path signal 100  -1000 625  1000 625))
+      (outline (path signal 100  1000 625  1000 -625))
+      (outline (path signal 100  1000 -625  -1000 -625))
+      (outline (path signal 100  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_700.000000x1300.000000_um 1 -950 0)
+      (pin Rect[T]Pad_700.000000x1300.000000_um 2 950 0)
+    )
+    (image myComponents:solderPads_6
+      (pin Rect[T]Pad_900.000000x3000.000000_um 1 -3175 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 2 -1905 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 3 -635 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 4 635 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 5 1905 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 6 3175 0)
+    )
+    (image myComponents:ICSP_BIG_pads
+      (pin Rect[T]Pad_1524.000000x1524.000000_um 1 -1270 2540)
+      (pin Round[T]Pad_1524.000000_um 2 1270 2540)
+      (pin Round[T]Pad_1524.000000_um 3 -1270 0)
+      (pin Round[T]Pad_1524.000000_um 4 1270 0)
+      (pin Round[T]Pad_1524.000000_um 5 -1270 -2540)
+      (pin Round[T]Pad_1524.000000_um 6 1270 -2540)
+    )
+    (image myComponents:solderPads_3
+      (outline (path signal 300  -1270 -2880  -1380.4 -2861.58  -1478.83 -2808.31  -1554.64 -2725.96
+            -1599.6 -2623.47  -1608.84 -2511.92  -1581.36 -2403.42  -1520.15 -2309.72
+            -1431.82 -2240.98  -1325.96 -2204.64  -1214.04 -2204.64  -1108.18 -2240.98
+            -1019.85 -2309.72  -958.637 -2403.42  -931.161 -2511.92  -940.404 -2623.47
+            -985.363 -2725.96  -1061.17 -2808.31  -1159.6 -2861.58  -1270 -2880))
+      (pin Rect[T]Pad_900.000000x3000.000000_um 1 -1270 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 2 0 0)
+      (pin Rect[T]Pad_900.000000x3000.000000_um 3 1270 0)
+    )
+    (image "myComponents:microMatch-12_90_THT"
+      (outline (path signal 150  8650 2600  8650 -2600))
+      (outline (path signal 150  -8650 -2600  8650 -2600))
+      (outline (path signal 150  -8650 -2600  -8650 2600))
+      (outline (path signal 150  8650 2600  -8650 2600))
+      (outline (path signal 150  -8255 0  -7620 -2540))
+      (outline (path signal 150  8255 0  7620 -2540))
+      (pin Round[A]Pad_1524.000000_um 1 -6985 -1270)
+      (pin Round[A]Pad_1524.000000_um 2 -5715 1270)
+      (pin Round[A]Pad_1524.000000_um 3 -4445 -1270)
+      (pin Round[A]Pad_1524.000000_um 4 -3175 1270)
+      (pin Round[A]Pad_1524.000000_um 5 -1905 -1270)
+      (pin Round[A]Pad_1524.000000_um 6 -635 1270)
+      (pin Round[A]Pad_1524.000000_um 7 635 -1270)
+      (pin Round[A]Pad_1524.000000_um 8 1905 1270)
+      (pin Round[A]Pad_1524.000000_um 9 3175 -1270)
+      (pin Round[A]Pad_1524.000000_um 10 4445 1270)
+      (pin Round[A]Pad_1524.000000_um 11 5715 -1270)
+      (pin Round[A]Pad_1524.000000_um 12 6985 1270)
+    )
+    (image Capacitors_SMD:C_0805
+      (outline (polygon signal 0  1795 995  1795 -995  -1795 -995  -1795 995))
+      (outline (path signal 150  -500 -850  500 -850))
+      (outline (path signal 150  500 850  -500 850))
+      (outline (path signal 150  -1000 625  1000 625))
+      (outline (path signal 150  1000 625  1000 -625))
+      (outline (path signal 150  1000 -625  -1000 -625))
+      (outline (path signal 150  -1000 -625  -1000 625))
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 1 -1000 0)
+      (pin Rect[T]Pad_1000.000000x1250.000000_um 2 1000 0)
+    )
+    (padstack Round[T]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1524.000000_um
+      (shape (circle F.Cu 1524))
+      (shape (circle B.Cu 1524))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_700.000000x1300.000000_um
+      (shape (rect F.Cu -350 -650 350 650))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_900.000000x3000.000000_um
+      (shape (rect F.Cu -450 -1500 450 1500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1250.000000_um
+      (shape (rect F.Cu -500 -625 500 625))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1524.000000x1524.000000_um
+      (shape (rect F.Cu -762 -762 762 762))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1950.000000x600.000000_um
+      (shape (rect F.Cu -975 -300 975 300))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(Col1-Pad1)"
+      (pins IC1-19 Col1-1 Expansion1-1)
+    )
+    (net "Net-(Col1-Pad2)"
+      (pins IC1-17 Col1-2 Expansion1-2)
+    )
+    (net "Net-(Col1-Pad3)"
+      (pins IC1-14 Col1-3 Expansion1-3)
+    )
+    (net "Net-(Col1-Pad4)"
+      (pins IC1-13 Col1-4 Expansion1-4)
+    )
+    (net "Net-(Col1-Pad5)"
+      (pins IC1-12 Col1-5 Expansion1-5)
+    )
+    (net "Net-(Col1-Pad6)"
+      (pins IC1-11 Col1-6 Expansion1-6)
+    )
+    (net /MiSo
+      (pins IC1-2 ICSP1-1 Row1-1)
+    )
+    (net +5V
+      (pins IC1-5 IC1-15 I2C1-3 R1-2 ICSP1-2 Expansion1-11 C1-1 C2-1)
+    )
+    (net /SCL_2
+      (pins IC1-3 ICSP1-3 Expansion1-10)
+    )
+    (net /MoSi
+      (pins IC1-1 ICSP1-4 Expansion1-9)
+    )
+    (net /Rst
+      (pins IC1-10 R1-1 ICSP1-5)
+    )
+    (net GND
+      (pins IC1-6 IC1-16 I2C1-4 ICSP1-6 Expansion1-12 C1-2 C2-2)
+    )
+    (net "Net-(IC1-Pad4)"
+      (pins IC1-4 Row1-2)
+    )
+    (net "Net-(IC1-Pad7)"
+      (pins IC1-7 Row1-3)
+    )
+    (net /SCL
+      (pins IC1-18 I2C1-1)
+    )
+    (net /SDA
+      (pins IC1-20 I2C1-2)
+    )
+    (net /ADC_V
+      (pins IC1-8 Expansion1-7)
+    )
+    (net /ADC_H+int0
+      (pins IC1-9 Expansion1-8)
+    )
+    (class kicad_default +5V /ADC_H+int0 /ADC_V /MiSo /MoSi /Rst /SCL /SCL_2
+      /SDA GND "Net-(Col1-Pad1)" "Net-(Col1-Pad2)" "Net-(Col1-Pad3)" "Net-(Col1-Pad4)"
+      "Net-(Col1-Pad5)" "Net-(Col1-Pad6)" "Net-(IC1-Pad4)" "Net-(IC1-Pad7)"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,0 +1,519 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\phone_amp_phone_amp\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  145510 -135535  133890 -135535  133890 -79385  145510 -79385
+            145510 -135535)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 200)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "footprints:USB-MICRO-TH-NO-SILK"
+      (place J1 139700 -82385 front 180 (PN M_USB_B))
+    )
+    (component footprints:OSH_LOGO
+      (place G*** 139700 -124500 front 180 (PN LOGO))
+    )
+    (component "footprints:RJ9-4P4C-NO-SILK"
+      (place J5 139700 -89450 back 180 (PN RJ9_4P4C))
+    )
+    (component "footprints:JACK-3.5MM-NO-SILK"
+      (place J2 139700 -102950 back 270 (PN PJ313D))
+      (place J3 139700 -112950 back 270 (PN PJ313D))
+    )
+    (component "footprints:SWITCH-SPDT-NO-SILK"
+      (place SW1 139700 -133735 front 0 (PN SWITCH_INV))
+    )
+    (component "footprints:RJ9-4P4C-NO-SILK::1"
+      (place J4 139700 -126450 back 0 (PN RJ9_4P4C))
+    )
+    (component "footprints:CHIP-0603-NO-SILK"
+      (place C12 143970 -93300 front 180 (PN 1u))
+      (place C15 143970 -94870 front 180 (PN 1u))
+      (place R4 143970 -96410 front 0 (PN 18k))
+      (place R3 143970 -97950 front 0 (PN 18k))
+      (place C7 143970 -99490 front 180 (PN 220n))
+      (place R7 143970 -101030 front 0 (PN 2.4k))
+      (place R15 135430 -93300 front 180 (PN 2.2k))
+      (place C1 135430 -94870 front 0 (PN 220n))
+      (place R2 135430 -96410 front 180 (PN 2.4k))
+      (place C5 135430 -97950 front 180 (PN 2.2n))
+      (place R5 135430 -99490 front 180 (PN 18k))
+      (place R13 135430 -101030 front 0 (PN 100k))
+      (place C6 143970 -104870 front 180 (PN 220n))
+      (place R6 143970 -106410 front 0 (PN 2.4k))
+      (place R10 143970 -107950 front 0 (PN 2.4k))
+      (place C13 143970 -109490 front 0 (PN 22n))
+      (place R9 143970 -111030 front 180 (PN 2.4k))
+      (place C14 135430 -104870 front 180 (PN 1u))
+      (place R14 135430 -106410 front 180 (PN 100k))
+      (place C16 135430 -107950 front 0 (PN 1u))
+      (place C10 135430 -109490 front 0 (PN 1u))
+      (place C3 135430 -111030 front 180 (PN 1u))
+      (place C11 135430 -114870 front 0 (PN 1u))
+      (place R1 135430 -116410 front 180 (PN 27.3k))
+      (place C8 135430 -117950 front 0 (PN 220n))
+      (place R8 135430 -119490 front 180 (PN 4.3k))
+      (place C9 143970 -114870 front 0 (PN 22n))
+      (place C4 143970 -116410 front 0 (PN 22n))
+      (place C2 143970 -117950 front 0 (PN 22n))
+      (place R12 143970 -119490 front 180 (PN 43k))
+      (place R11 143970 -121030 front 0 (PN 100k))
+    )
+    (component "footprints:FUSE-1206-NO-SILK"
+      (place F1 139700 -88300 front -90 (PN 200mA))
+    )
+    (component "footprints:TSSOP-14-NO-SILK"
+      (place U2 139700 -102950 front 0 (PN MCP6024))
+    )
+    (component "footprints:SC-70-NO-SILK"
+      (place U3 139700 -92200 front -90 (PN TC1017))
+    )
+    (component "footprints:TSSOP-14-NO-SILK::1"
+      (place U1 139700 -112950 front 180 (PN TPA6139A2))
+    )
+  )
+  (library
+    (image "footprints:USB-MICRO-TH-NO-SILK"
+      (outline (path signal 120  -3575 -3600  3575 -3600))
+      (outline (path signal 120  -3575 3000  3575 3000))
+      (outline (path signal 120  3575 -3600  3575 3000))
+      (outline (path signal 120  -3575 -3000  3575 -3000))
+      (outline (path signal 120  -3575 -3600  -3575 3000))
+      (outline (path signal 200  -1400 3420  -1384.12 3474.06  -1341.54 3510.96  -1285.77 3518.98
+            -1234.51 3495.57  -1204.05 3448.17  -1204.05 3391.83  -1234.51 3344.43
+            -1285.77 3321.02  -1341.54 3329.04  -1384.12 3365.94  -1400 3420))
+      (pin Rect[T]Pad_400.000000x1850.000000_um 1 -1300 2175)
+      (pin Rect[T]Pad_400.000000x1850.000000_um 2 -650 2175)
+      (pin Rect[T]Pad_400.000000x1850.000000_um 3 0 2175)
+      (pin Rect[T]Pad_400.000000x1850.000000_um 4 650 2175)
+      (pin Rect[T]Pad_400.000000x1850.000000_um 5 1300 2175)
+      (pin Oval[A]Pad_1050.000000x2250.000000_um 6 3575 2600)
+      (pin Oval[A]Pad_1050.000000x2250.000000_um 8 -3575 2600)
+      (pin Oval[A]Pad_1050.000000x2250.000000_um 9 -3575 -850)
+      (pin Oval[A]Pad_1050.000000x2250.000000_um 7 3575 -850)
+      (keepout "" (circle F.Cu 1300 2000 1450))
+      (keepout "" (circle B.Cu 1300 2000 1450))
+      (keepout "" (circle F.Cu 1300 -2000 1450))
+      (keepout "" (circle B.Cu 1300 -2000 1450))
+    )
+    (image footprints:OSH_LOGO
+    )
+    (image "footprints:RJ9-4P4C-NO-SILK"
+      (outline (polygon signal 0  -3398.16 743.188  -3132.93 665.308  -2881.47 550.473
+            -2648.92 401.023  -2440.01 219.995  -2258.98 11.079  -2109.53 -221.47
+            -1994.69 -472.926  -1916.81 -738.16  -1877.46 -1011.83  -1875 -1150
+            -1877.46 -1288.17  -1916.81 -1561.84  -1994.69 -1827.07  -2109.53 -2078.53
+            -2258.98 -2311.08  -2440.01 -2519.99  -2648.92 -2701.02  -2881.47 -2850.47
+            -3132.93 -2965.31  -3398.16 -3043.19  -3671.78 -3082.53  -3948.22 -3082.53
+            -4221.84 -3043.19  -4487.07 -2965.31  -4738.53 -2850.47  -4971.08 -2701.02
+            -5179.99 -2519.99  -5361.02 -2311.08  -5510.47 -2078.53  -5625.31 -1827.07
+            -5703.19 -1561.84  -5742.53 -1288.22  -5742.53 -1011.78  -5703.19 -738.16
+            -5625.31 -472.926  -5510.47 -221.47  -5361.02 11.079  -5179.99 219.995
+            -4971.08 401.023  -4738.53 550.473  -4487.07 665.308  -4221.84 743.188
+            -3948.22 782.529  -3671.78 782.529))
+      (outline (polygon signal 0  4221.84 743.188  4487.07 665.308  4738.53 550.473  4971.08 401.023
+            5179.99 219.995  5361.02 11.079  5510.47 -221.47  5625.31 -472.926
+            5703.19 -738.16  5742.53 -1011.83  5745 -1150  5742.53 -1288.17
+            5703.19 -1561.84  5625.31 -1827.07  5510.47 -2078.53  5361.02 -2311.08
+            5179.99 -2519.99  4971.08 -2701.02  4738.53 -2850.47  4487.07 -2965.31
+            4221.84 -3043.19  3948.22 -3082.53  3671.78 -3082.53  3398.16 -3043.19
+            3132.93 -2965.31  2881.47 -2850.47  2648.92 -2701.02  2440.01 -2519.99
+            2258.98 -2311.08  2109.53 -2078.53  1994.69 -1827.07  1916.81 -1561.84
+            1877.47 -1288.22  1877.47 -1011.78  1916.81 -738.16  1994.69 -472.926
+            2109.53 -221.47  2258.98 11.079  2440.01 219.995  2648.92 401.023
+            2881.47 550.473  3132.93 665.308  3398.16 743.188  3671.78 782.529
+            3948.22 782.529))
+      (outline (path signal 120  -5590 -9000  -5590 9000))
+      (outline (path signal 120  -5590 9000  5590 9000))
+      (outline (path signal 120  5590 9000  5590 -9000))
+      (outline (path signal 120  5590 -9000  -5590 -9000))
+      (outline (path signal 200  -1805 6120  -1820.88 6065.94  -1863.46 6029.04  -1919.23 6021.02
+            -1970.49 6044.43  -2000.95 6091.83  -2000.95 6148.17  -1970.49 6195.57
+            -1919.23 6218.98  -1863.46 6210.96  -1820.88 6174.06  -1805 6120))
+      (pin Round[A]Pad_1200.000000_um 1 -1905 5200)
+      (pin Round[A]Pad_1200.000000_um 2 -635 7740)
+      (pin Round[A]Pad_1200.000000_um 3 635 5200)
+      (pin Round[A]Pad_1200.000000_um 4 1905 7740)
+      (keepout "" (circle F.Cu 3700 -3810 -1150))
+      (keepout "" (circle B.Cu 3700 -3810 -1150))
+      (keepout "" (circle F.Cu 3700 3810 -1150))
+      (keepout "" (circle B.Cu 3700 3810 -1150))
+    )
+    (image "footprints:JACK-3.5MM-NO-SILK"
+      (outline (path signal 200  -4320 2850  -4265.94 2834.12  -4229.04 2791.54  -4221.02 2735.77
+            -4244.43 2684.51  -4291.83 2654.05  -4348.17 2654.05  -4395.57 2684.51
+            -4418.98 2735.77  -4410.96 2791.54  -4374.06 2834.12  -4320 2850))
+      (outline (path signal 120  -2500 -8250  -2500 -5750))
+      (outline (path signal 120  -2500 -8250  2500 -8250))
+      (outline (path signal 120  2500 -8250  2500 -5750))
+      (outline (path signal 120  -3000 -5750  -3000 5750))
+      (outline (path signal 120  3000 -5750  -3000 -5750))
+      (outline (path signal 120  3000 5750  3000 -5750))
+      (outline (path signal 120  -3000 5750  3000 5750))
+      (pin Rect[T]Pad_1500.000000x1500.000000_um 1 -3250 2750)
+      (pin Rect[T]Pad_1500.000000x1500.000000_um 2 -3250 -750)
+      (pin Rect[T]Pad_1500.000000x1500.000000_um 3 -3250 -3950)
+      (pin Rect[T]Pad_1500.000000x1500.000000_um 4 3250 -3950)
+      (pin Rect[T]Pad_1500.000000x1500.000000_um 5 3250 -750)
+      (pin Rect[T]Pad_1500.000000x1500.000000_um 6 3250 2750)
+      (keepout "" (circle F.Cu 1750 0 -3250))
+      (keepout "" (circle B.Cu 1750 0 -3250))
+      (keepout "" (circle F.Cu 1750 0 2750))
+      (keepout "" (circle B.Cu 1750 0 2750))
+    )
+    (image "footprints:SWITCH-SPDT-NO-SILK"
+      (outline (path signal 200  -2400 4320  -2415.88 4265.94  -2458.46 4229.04  -2514.23 4221.02
+            -2565.49 4244.43  -2595.95 4291.83  -2595.95 4348.17  -2565.49 4395.57
+            -2514.23 4418.98  -2458.46 4410.96  -2415.88 4374.06  -2400 4320))
+      (outline (path signal 120  250 -1800  250 -3800))
+      (outline (path signal 120  250 -3800  1750 -3800))
+      (outline (path signal 120  1750 -3800  1750 -1800))
+      (outline (path signal 120  -1750 -1800  -1750 -3800))
+      (outline (path signal 120  -1750 -3800  -250 -3800))
+      (outline (path signal 120  -250 -3800  -250 -1800))
+      (outline (path signal 120  -4250 1800  4250 1800))
+      (outline (path signal 120  4250 1800  4250 -1800))
+      (outline (path signal 120  4250 -1800  -4250 -1800))
+      (outline (path signal 120  -4250 -1800  -4250 1800))
+      (pin Rect[T]Pad_1200.000000x2500.000000_um 1 -2500 2750)
+      (pin Rect[T]Pad_1200.000000x2500.000000_um 2 0 2750)
+      (pin Rect[T]Pad_1200.000000x2500.000000_um 3 2500 2750)
+      (keepout "" (circle F.Cu 1400 3400 0))
+      (keepout "" (circle B.Cu 1400 3400 0))
+      (keepout "" (circle F.Cu 1400 -3400 0))
+      (keepout "" (circle B.Cu 1400 -3400 0))
+    )
+    (image "footprints:RJ9-4P4C-NO-SILK::1"
+      (outline (polygon signal 0  3398.16 -3043.19  3132.93 -2965.31  2881.47 -2850.47
+            2648.92 -2701.02  2440.01 -2519.99  2258.98 -2311.08  2109.53 -2078.53
+            1994.69 -1827.07  1916.81 -1561.84  1877.46 -1288.17  1875 -1150
+            1877.46 -1011.83  1916.81 -738.161  1994.69 -472.927  2109.53 -221.471
+            2258.98 11.078  2440.01 219.994  2648.92 401.022  2881.47 550.472
+            3132.93 665.307  3398.16 743.187  3671.78 782.529  3948.22 782.529
+            4221.84 743.187  4487.07 665.307  4738.53 550.472  4971.08 401.022
+            5179.99 219.994  5361.02 11.078  5510.47 -221.471  5625.31 -472.927
+            5703.19 -738.161  5742.53 -1011.78  5742.53 -1288.22  5703.19 -1561.84
+            5625.31 -1827.07  5510.47 -2078.53  5361.02 -2311.08  5179.99 -2519.99
+            4971.08 -2701.02  4738.53 -2850.47  4487.07 -2965.31  4221.84 -3043.19
+            3948.22 -3082.53  3671.78 -3082.53))
+      (outline (polygon signal 0  -4221.84 -3043.19  -4487.07 -2965.31  -4738.53 -2850.47
+            -4971.08 -2701.02  -5179.99 -2519.99  -5361.02 -2311.08  -5510.47 -2078.53
+            -5625.31 -1827.07  -5703.19 -1561.84  -5742.53 -1288.17  -5745 -1150
+            -5742.53 -1011.83  -5703.19 -738.161  -5625.31 -472.927  -5510.47 -221.471
+            -5361.02 11.078  -5179.99 219.994  -4971.08 401.022  -4738.53 550.472
+            -4487.07 665.307  -4221.84 743.187  -3948.22 782.529  -3671.78 782.529
+            -3398.16 743.187  -3132.93 665.307  -2881.47 550.472  -2648.92 401.022
+            -2440.01 219.994  -2258.98 11.078  -2109.53 -221.471  -1994.69 -472.927
+            -1916.81 -738.161  -1877.47 -1011.78  -1877.47 -1288.22  -1916.81 -1561.84
+            -1994.69 -1827.07  -2109.53 -2078.53  -2258.98 -2311.08  -2440.01 -2519.99
+            -2648.92 -2701.02  -2881.47 -2850.47  -3132.93 -2965.31  -3398.16 -3043.19
+            -3671.78 -3082.53  -3948.22 -3082.53))
+      (outline (path signal 120  -5590 -9000  -5590 9000))
+      (outline (path signal 120  -5590 9000  5590 9000))
+      (outline (path signal 120  5590 9000  5590 -9000))
+      (outline (path signal 120  5590 -9000  -5590 -9000))
+      (outline (path signal 200  -2005 6120  -1989.12 6174.06  -1946.54 6210.96  -1890.77 6218.98
+            -1839.51 6195.57  -1809.05 6148.17  -1809.05 6091.83  -1839.51 6044.43
+            -1890.77 6021.02  -1946.54 6029.04  -1989.12 6065.94  -2005 6120))
+      (pin Round[A]Pad_1200.000000_um 1 -1905 5200)
+      (pin Round[A]Pad_1200.000000_um 2 -635 7740)
+      (pin Round[A]Pad_1200.000000_um 3 635 5200)
+      (pin Round[A]Pad_1200.000000_um 4 1905 7740)
+      (keepout "" (circle F.Cu 3700 -3810 -1150))
+      (keepout "" (circle B.Cu 3700 -3810 -1150))
+      (keepout "" (circle F.Cu 3700 3810 -1150))
+      (keepout "" (circle B.Cu 3700 3810 -1150))
+    )
+    (image "footprints:CHIP-0603-NO-SILK"
+      (outline (path signal 120  850 450  -850 450))
+      (outline (path signal 120  850 -450  850 450))
+      (outline (path signal 120  -850 -450  850 -450))
+      (outline (path signal 120  -850 450  -850 -450))
+      (pin Rect[T]Pad_840.000000x930.000000_um 1 -795 0)
+      (pin Rect[T]Pad_840.000000x930.000000_um 2 795 0)
+    )
+    (image "footprints:FUSE-1206-NO-SILK"
+      (outline (path signal 120  -1750 -900  1750 -900))
+      (outline (path signal 120  -1750 900  -1750 -900))
+      (outline (path signal 120  1750 900  -1750 900))
+      (outline (path signal 120  1750 -900  1750 900))
+      (pin Rect[T]Pad_1820.000000x1170.000000_um (rotate 90) 1 -1520 0)
+      (pin Rect[T]Pad_1820.000000x1170.000000_um (rotate 90) 2 1520 0)
+    )
+    (image "footprints:TSSOP-14-NO-SILK"
+      (outline (path signal 200  -1850 -3925  -1865.88 -3979.06  -1908.46 -4015.96  -1964.23 -4023.98
+            -2015.49 -4000.57  -2045.95 -3953.17  -2045.95 -3896.83  -2015.49 -3849.43
+            -1964.23 -3826.02  -1908.46 -3834.04  -1865.88 -3870.94  -1850 -3925))
+      (outline (path signal 120  -2550 2250  2550 2250))
+      (outline (path signal 120  2550 2250  2550 -2250))
+      (outline (path signal 120  2550 -2250  -1280 -2250))
+      (outline (path signal 120  -1280 -2250  -2550 -980))
+      (outline (path signal 120  -2550 -980  -2550 2250))
+      (pin Rect[T]Pad_410.000000x1470.000000_um 1 -1950 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 2 -1300 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 3 -650 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 4 0 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 5 650 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 6 1300 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 7 1950 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 8 1950 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 9 1300 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 10 650 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 11 0 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 12 -650 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 13 -1300 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 14 -1950 2870)
+    )
+    (image "footprints:SC-70-NO-SILK"
+      (outline (path signal 120  -1100 -227  -1100 680))
+      (outline (path signal 120  1100 680  1100 -680))
+      (outline (path signal 120  -647 -680  -1100 -227))
+      (outline (path signal 120  1100 -680  -647 -680))
+      (outline (path signal 120  -1100 680  1100 680))
+      (outline (path signal 200  -650 -1775  -595.936 -1790.88  -559.037 -1833.46  -551.018 -1889.23
+            -574.425 -1940.49  -621.827 -1970.95  -678.173 -1970.95  -725.575 -1940.49
+            -748.982 -1889.23  -740.963 -1833.46  -704.064 -1790.88  -650 -1775))
+      (pin Rect[T]Pad_400.000000x1230.000000_um 1 -650 -940)
+      (pin Rect[T]Pad_400.000000x1230.000000_um 2 0 -940)
+      (pin Rect[T]Pad_400.000000x1230.000000_um 3 650 -940)
+      (pin Rect[T]Pad_400.000000x1230.000000_um 4 650 940)
+      (pin Rect[T]Pad_400.000000x1230.000000_um 5 -650 940)
+    )
+    (image "footprints:TSSOP-14-NO-SILK::1"
+      (outline (path signal 200  -2050 -3925  -2034.12 -3870.94  -1991.54 -3834.04  -1935.77 -3826.02
+            -1884.51 -3849.43  -1854.05 -3896.83  -1854.05 -3953.17  -1884.51 -4000.57
+            -1935.77 -4023.98  -1991.54 -4015.96  -2034.12 -3979.06  -2050 -3925))
+      (outline (path signal 120  -2550 2250  2550 2250))
+      (outline (path signal 120  2550 2250  2550 -2250))
+      (outline (path signal 120  2550 -2250  -1280 -2250))
+      (outline (path signal 120  -1280 -2250  -2550 -980))
+      (outline (path signal 120  -2550 -980  -2550 2250))
+      (pin Rect[T]Pad_410.000000x1470.000000_um 1 -1950 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 2 -1300 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 3 -650 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 4 0 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 5 650 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 6 1300 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 7 1950 -2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 8 1950 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 9 1300 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 10 650 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 11 0 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 12 -650 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 13 -1300 2870)
+      (pin Rect[T]Pad_410.000000x1470.000000_um 14 -1950 2870)
+    )
+    (padstack Round[A]Pad_1200.000000_um
+      (shape (circle F.Cu 1200))
+      (shape (circle B.Cu 1200))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1050.000000x2250.000000_um
+      (shape (path F.Cu 1050  0 -600  0 600))
+      (shape (path B.Cu 1050  0 -600  0 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x1230.000000_um
+      (shape (rect F.Cu -200 -615 200 615))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x1850.000000_um
+      (shape (rect F.Cu -200 -925 200 925))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_410.000000x1470.000000_um
+      (shape (rect F.Cu -205 -735 205 735))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_840.000000x930.000000_um
+      (shape (rect F.Cu -420 -465 420 465))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x2500.000000_um
+      (shape (rect F.Cu -600 -1250 600 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x1500.000000_um
+      (shape (rect F.Cu -750 -750 750 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1820.000000x1170.000000_um
+      (shape (rect F.Cu -910 -585 910 585))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(C1-Pad1)"
+      (pins C1-1 R2-2)
+    )
+    (net HP_MIC
+      (pins J2-6 C1-2)
+    )
+    (net "Net-(C2-Pad1)"
+      (pins U1-14 C2-1)
+    )
+    (net HP_SPK_PRE
+      (pins U2-7 R10-1 C13-1 C4-2 C2-2)
+    )
+    (net "Net-(C3-Pad1)"
+      (pins U1-6 C3-1)
+    )
+    (net "Net-(C3-Pad2)"
+      (pins U1-9 C3-2)
+    )
+    (net "Net-(C4-Pad1)"
+      (pins U1-1 C4-1)
+    )
+    (net "Net-(C5-Pad1)"
+      (pins U2-14 C5-1 R5-1 C8-2)
+    )
+    (net "Net-(C5-Pad2)"
+      (pins U2-13 R2-1 C5-2 R5-2)
+    )
+    (net "Net-(C6-Pad1)"
+      (pins C6-1 R6-2)
+    )
+    (net HS_SPK_N
+      (pins J5-3 J4-3 R4-1 C6-2)
+    )
+    (net "Net-(C7-Pad1)"
+      (pins C7-1 R7-2)
+    )
+    (net HS_SPK_P
+      (pins J5-2 J4-2 R3-1 C7-2)
+    )
+    (net HP_MIC_OUT
+      (pins SW1-1 C8-1 R8-2)
+    )
+    (net "Net-(C9-Pad1)"
+      (pins U2-5 R7-1 R9-2 C9-1)
+    )
+    (net VGND
+      (pins U2-1 U2-2 U2-10 U2-12 R9-1 C9-2)
+    )
+    (net GND
+      (pins J1-5 J1-6 J1-8 J1-9 J1-7 J5-4 J2-3 J2-4 J3-3 J3-4 J4-4 C12-1 U2-11 C15-1
+        R4-2 R3-2 U3-3 U1-3 U1-11 C14-2 R14-2 C16-1 C10-1 C11-1 R1-2 R8-1 R12-2)
+    )
+    (net "Net-(C10-Pad2)"
+      (pins U1-5 C10-2)
+    )
+    (net +3V3
+      (pins U2-4 C15-2 U3-4 R15-2 R13-1 U1-10 C16-2 C11-2 R11-1)
+    )
+    (net "Net-(C12-Pad2)"
+      (pins C12-2 F1-2 U3-1 U3-5)
+    )
+    (net "Net-(C13-Pad2)"
+      (pins U2-6 R6-1 R10-2 C13-2)
+    )
+    (net "Net-(C14-Pad1)"
+      (pins U2-3 R13-2 C14-1 R14-1)
+    )
+    (net "Net-(F1-Pad1)"
+      (pins J1-1 F1-1)
+    )
+    (net HP_MIC_BIAS
+      (pins J2-5 R15-1)
+    )
+    (net HP_SPK_L
+      (pins J3-5 U1-2)
+    )
+    (net HP_SPK_R
+      (pins J3-1 U1-13)
+    )
+    (net HS_MIC_P
+      (pins SW1-3 J4-1)
+    )
+    (net PHONE_MIC_P
+      (pins J5-1 SW1-2)
+    )
+    (net "Net-(R1-Pad1)"
+      (pins U1-12 R1-1)
+    )
+    (net "Net-(R11-Pad2)"
+      (pins U2-9 R12-1 R11-2)
+    )
+    (net HP_MUTE
+      (pins U2-8 U1-4)
+    )
+    (net "Net-(J1-Pad2)"
+      (pins J1-2)
+    )
+    (net "Net-(J1-Pad3)"
+      (pins J1-3)
+    )
+    (net "Net-(J1-Pad4)"
+      (pins J1-4)
+    )
+    (net "Net-(J2-Pad1)"
+      (pins J2-1)
+    )
+    (net "Net-(J2-Pad2)"
+      (pins J2-2)
+    )
+    (net "Net-(J3-Pad2)"
+      (pins J3-2)
+    )
+    (net "Net-(J3-Pad6)"
+      (pins J3-6)
+    )
+    (net "Net-(U1-Pad7)"
+      (pins U1-7)
+    )
+    (net "Net-(U1-Pad8)"
+      (pins U1-8)
+    )
+    (net "Net-(U3-Pad2)"
+      (pins U3-2)
+    )
+    (class kicad_default +3V3 GND HP_MIC HP_MIC_BIAS HP_MIC_OUT HP_MUTE HP_SPK_L
+      HP_SPK_PRE HP_SPK_R HS_MIC_P HS_SPK_N HS_SPK_P "Net-(C1-Pad1)" "Net-(C10-Pad2)"
+      "Net-(C12-Pad2)" "Net-(C13-Pad2)" "Net-(C14-Pad1)" "Net-(C2-Pad1)" "Net-(C3-Pad1)"
+      "Net-(C3-Pad2)" "Net-(C4-Pad1)" "Net-(C5-Pad1)" "Net-(C5-Pad2)" "Net-(C6-Pad1)"
+      "Net-(C7-Pad1)" "Net-(C9-Pad1)" "Net-(F1-Pad1)" "Net-(J1-Pad2)" "Net-(J1-Pad3)"
+      "Net-(J1-Pad4)" "Net-(J2-Pad1)" "Net-(J2-Pad2)" "Net-(J3-Pad2)" "Net-(J3-Pad6)"
+      "Net-(R1-Pad1)" "Net-(R11-Pad2)" "Net-(U1-Pad7)" "Net-(U1-Pad8)" "Net-(U3-Pad2)"
+      PHONE_MIC_P VGND
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 200)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

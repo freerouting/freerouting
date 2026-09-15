@@ -1,0 +1,69 @@
+{
+  "board_id": "blink-errr_blink-errr",
+  "display_name": "blink-errr_blink-errr",
+  "pcbench_directory": "PCBs/blink-errr_blink-errr",
+  "source": "https://github.com/valerionew/blink-errr",
+  "author": "valerionew",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:22:49.226018+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 10,
+    "dimensions_mm": {
+      "width": 17.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 31,
+    "vias": 1,
+    "track_length_mm": 81.52,
+    "kicad_drc_violations": 28,
+    "kicad_drc_breakdown": {
+      "total_violations": 28,
+      "unconnected_count": 1,
+      "by_type": {
+        "clearance": 8,
+        "copper_edge_clearance": 2,
+        "drill_out_of_range": 1,
+        "lib_footprint_issues": 5,
+        "lib_footprint_mismatch": 4,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 3,
+        "silk_overlap": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 11,
+        "warning": 17
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.843604+00:00",
+    "elapsed_seconds": 5.72,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

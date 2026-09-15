@@ -1,0 +1,66 @@
+{
+  "board_id": "kicad_bbb-melzi",
+  "display_name": "kicad_bbb-melzi",
+  "pcbench_directory": "PCBs/kicad_bbb-melzi",
+  "source": "https://github.com/mtu-most/kicad",
+  "author": "mtu-most",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.090182+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 72.39,
+      "height": 20.35
+    },
+    "area_cm2": 14.73,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 69,
+    "vias": 0,
+    "track_length_mm": 397.41,
+    "kicad_drc_violations": 45,
+    "kicad_drc_breakdown": {
+      "total_violations": 45,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 29,
+        "lib_footprint_issues": 7,
+        "silk_over_copper": 1,
+        "silk_overlap": 5,
+        "starved_thermal": 1,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 30,
+        "warning": 15
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.972380+00:00",
+    "elapsed_seconds": 11.81,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

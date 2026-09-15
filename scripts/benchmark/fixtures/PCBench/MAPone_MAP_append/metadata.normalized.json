@@ -1,0 +1,57 @@
+{
+  "board_id": "MAPone_MAP_append",
+  "display_name": "MAPone_MAP_append",
+  "pcbench_directory": "PCBs/MAPone_MAP_append",
+  "source": "https://github.com/MakersAsylumIndia/MAPone",
+  "author": "MakersAsylumIndia",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.538163+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 6,
+    "components": 37,
+    "dimensions_mm": {
+      "width": 70.0,
+      "height": 30.0
+    },
+    "area_cm2": 21.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 430,
+    "vias": 0,
+    "track_length_mm": 1183.18,
+    "kicad_drc_violations": 229,
+    "kicad_drc_breakdown": {
+      "total_violations": 229,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 77,
+        "copper_edge_clearance": 14,
+        "lib_footprint_issues": 37,
+        "silk_edge_clearance": 12,
+        "silk_over_copper": 4,
+        "silk_overlap": 85
+      },
+      "by_severity": {
+        "error": 91,
+        "warning": 138
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

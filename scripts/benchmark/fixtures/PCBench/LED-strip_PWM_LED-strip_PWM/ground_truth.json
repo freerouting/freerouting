@@ -1,0 +1,25 @@
+{
+  "board": "LED-strip_PWM_LED-strip_PWM",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\LED-strip_PWM_LED-strip_PWM\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 158,
+  "approximate_track_length_mm": 222.91,
+  "kicad_drc_violations": 134,
+  "generated_at": "2026-08-18T19:15:19.368158+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 134,
+    "unconnected_count": 0,
+    "by_type": {
+      "copper_edge_clearance": 6,
+      "shorting_items": 9,
+      "silk_over_copper": 99,
+      "silk_overlap": 20
+    },
+    "by_severity": {
+      "error": 15,
+      "warning": 119
+    }
+  }
+}

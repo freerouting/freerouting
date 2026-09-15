@@ -1,0 +1,25 @@
+{
+  "board": "ESP32-Module-Breakout_ESP32S-breakout",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\ESP32-Module-Breakout_ESP32S-breakout\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 22,
+  "segment_count": 255,
+  "approximate_track_length_mm": 743.52,
+  "kicad_drc_violations": 87,
+  "generated_at": "2026-08-18T18:46:20.935856+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 87,
+    "unconnected_count": 0,
+    "by_type": {
+      "lib_footprint_issues": 9,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 42,
+      "solder_mask_bridge": 34
+    },
+    "by_severity": {
+      "error": 34,
+      "warning": 53
+    }
+  }
+}

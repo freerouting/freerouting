@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "AnalogThermometer_AnalogThermometer",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 81515,
+      "sha256": "43a124b380a8ad1794b1a7f350d9c2ef855ca4575af9551e1c2401a97d4b4ab7"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 44656,
+      "sha256": "ef29f22656b22f58e2a373170445c2c007ec7997d00cbea20f2c316a8c3c0757"
+    },
+    "metadata_json": {
+      "bytes": 692,
+      "sha256": "71e27a6a8d47bee8e48743321651f5082969c49a9877b71f065fce14049625af"
+    },
+    "final_json": {
+      "bytes": 30856,
+      "sha256": "dee9ea55c56413926ac18442e170a762a390a557b285be203fa7947a2220936e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:28:06.539732+00:00"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "board_id": "mac-pro-conversion_front-panel-power-adapter",
+  "display_name": "mac-pro-conversion_front-panel-power-adapter",
+  "pcbench_directory": "PCBs/mac-pro-conversion_front-panel-power-adapter",
+  "source": "https://github.com/carlossless/mac-pro-conversion",
+  "author": "carlossless",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.325949+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 5,
+    "dimensions_mm": {
+      "width": 55.88,
+      "height": 36.83
+    },
+    "area_cm2": 20.58,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 29,
+    "vias": 3,
+    "track_length_mm": 182.46,
+    "kicad_drc_violations": 155,
+    "kicad_drc_breakdown": {
+      "total_violations": 155,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 38,
+        "courtyards_overlap": 1,
+        "holes_co_located": 24,
+        "lib_footprint_issues": 5,
+        "pth_inside_courtyard": 48,
+        "silk_overlap": 39
+      },
+      "by_severity": {
+        "error": 87,
+        "warning": 68
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.025072+00:00",
+    "elapsed_seconds": 7.0,
+    "unrouted_nets": 0,
+    "clearance_violations": 48,
+    "quality_score": 680.0
+  }
+}

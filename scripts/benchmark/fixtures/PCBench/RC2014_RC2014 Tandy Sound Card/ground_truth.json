@@ -1,0 +1,30 @@
+{
+  "board": "RC2014_RC2014 Tandy Sound Card",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RC2014_RC2014 Tandy Sound Card\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 89,
+  "segment_count": 567,
+  "approximate_track_length_mm": 2325.36,
+  "kicad_drc_violations": 465,
+  "generated_at": "2026-08-18T19:38:32.967073+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 465,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 139,
+      "copper_edge_clearance": 46,
+      "courtyards_overlap": 12,
+      "lib_footprint_issues": 32,
+      "silk_edge_clearance": 117,
+      "silk_over_copper": 15,
+      "silk_overlap": 102,
+      "starved_thermal": 1,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 198,
+      "warning": 267
+    }
+  }
+}

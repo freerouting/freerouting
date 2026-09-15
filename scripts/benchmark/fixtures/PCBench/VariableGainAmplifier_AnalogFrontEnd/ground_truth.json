@@ -1,0 +1,35 @@
+{
+  "board": "VariableGainAmplifier_AnalogFrontEnd",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\VariableGainAmplifier_AnalogFrontEnd\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 57,
+  "segment_count": 476,
+  "approximate_track_length_mm": 1114.15,
+  "kicad_drc_violations": 289,
+  "generated_at": "2026-08-18T19:55:42.822607+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 289,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 3,
+      "copper_edge_clearance": 1,
+      "courtyards_overlap": 1,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 57,
+      "shorting_items": 3,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 138,
+      "silk_overlap": 60,
+      "solder_mask_bridge": 5,
+      "text_height": 2,
+      "text_thickness": 2,
+      "track_dangling": 2,
+      "via_dangling": 10
+    },
+    "by_severity": {
+      "error": 14,
+      "warning": 275
+    }
+  }
+}

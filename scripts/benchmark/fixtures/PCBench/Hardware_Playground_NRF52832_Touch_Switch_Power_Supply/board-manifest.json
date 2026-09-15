@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Hardware_Playground_NRF52832_Touch_Switch_Power_Supply",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 164328,
+      "sha256": "5d10cd9bd8f972a6fc596b42cf09dc142ac67c879263a55531bd6c8ec2f0729a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 146239,
+      "sha256": "607aeeabdc466e20f3d8d54924e8b2396135c8d350bf2a508b83503e0db42c62"
+    },
+    "metadata_json": {
+      "bytes": 577,
+      "sha256": "cec23d9d2e036c17eb0ec719ad6df23250fb92993b88e5c5cabd1ec8c3923920"
+    },
+    "final_json": {
+      "bytes": 120695,
+      "sha256": "e518cccc3740e4f8d722d057fef0f0d3475a645ec07f165168038efeb92c012c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:54:29.144914+00:00"
+  }
+}

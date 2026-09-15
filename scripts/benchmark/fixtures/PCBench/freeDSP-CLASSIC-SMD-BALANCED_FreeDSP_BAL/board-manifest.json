@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "freeDSP-CLASSIC-SMD-BALANCED_FreeDSP_BAL",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1323519,
+      "sha256": "dafb4c35bd9ca274296f3aadd8f598b6dc769cba1f7b827039b068d3a1979de2"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 588610,
+      "sha256": "6718a519d5e0cfd9bc16bf557f5dad306bb5cca840217d7c532c6a70250b42bd"
+    },
+    "metadata_json": {
+      "bytes": 537,
+      "sha256": "3506ca3d510a9beb21f70282deb9e92ba34023116eca8de99e25bd0f926975e8"
+    },
+    "final_json": {
+      "bytes": 457422,
+      "sha256": "0e23c1027958d4352990dfb6b8dbb1d9cb0315b5a8c712c482b24fac54d46650"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:50:21.191420+00:00"
+  }
+}

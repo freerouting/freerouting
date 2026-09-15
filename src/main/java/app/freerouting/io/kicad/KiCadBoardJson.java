@@ -6,6 +6,8 @@ import java.util.List;
 /** Data Transfer Object for KiCad board data serialized as JSON. */
 public class KiCadBoardJson {
   public String designName;
+  public String hostCad;
+  public String hostVersion;
   public UnitJson unit = UnitJson.MM; // Default unit.
   public double resolution = 1.0; // Default resolution factor.
 

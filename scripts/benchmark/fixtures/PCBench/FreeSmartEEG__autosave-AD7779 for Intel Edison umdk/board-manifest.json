@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "FreeSmartEEG__autosave-AD7779 for Intel Edison umdk",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 200923,
+      "sha256": "1a9ab6110fdd9ba4bdb848795433d0c2d1e2fa51721c14e92b63e52460c4f835"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 208874,
+      "sha256": "97396b3e27facac52f13e48f0647e868de8cbce6909b8542a49b6e9d3bcdb272"
+    },
+    "metadata_json": {
+      "bytes": 757,
+      "sha256": "119ca544ee0597fcb9a685a5fcf93799d66e2e1b8170eddd5fb174740aa448af"
+    },
+    "final_json": {
+      "bytes": 180106,
+      "sha256": "73793015870f4feb1a27985449e4fec34a7fc84832c00094760fde400f06d3d1"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:50:31.402021+00:00"
+  }
+}

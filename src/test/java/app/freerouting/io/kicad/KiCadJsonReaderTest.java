@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.Freerouting;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.rules.NetClass;
@@ -134,8 +134,8 @@ class KiCadJsonReaderTest {
 
     assertNotNull(board);
     assertEquals(2, board.getLayerCount());
-    assertEquals("F.Cu", board.layerStructure.arr[0].name);
-    assertEquals(2, board.rules.nets.maxNetNo());
+    assertEquals("F.Cu", board.layerStructure.layers[0].name);
+    assertEquals(2, board.rules.nets.maxNetNumber());
     assertEquals("VCC", board.rules.nets.get(1).name);
     assertEquals("GND", board.rules.nets.get(2).name);
     assertTrue(board.rules.nets.get(2).containsPlane());
@@ -191,7 +191,7 @@ class KiCadJsonReaderTest {
     RoutingBoard board = (RoutingBoard) success.board();
 
     assertNotNull(board);
-    assertEquals(1, board.rules.nets.maxNetNo());
+    assertEquals(1, board.rules.nets.maxNetNumber());
     assertEquals("Net-(R1-Pad1)", board.rules.nets.get(1).name);
   }
 
@@ -444,5 +444,38 @@ class KiCadJsonReaderTest {
     assertEquals(35000, bounds.ur.x);
     assertEquals(-45000, bounds.ll.y);
     assertEquals(-15000, bounds.ur.y);
+  }
+
+  @Test
+  void testHostCadAndHostVersionParsed() {
+    String json =
+        """
+        {
+          "designName": "CustomHostBoard",
+          "hostCad": "KiCadNightly",
+          "hostVersion": "11.0.0-rc1",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"}
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 10.0, "y": 0.0},
+              {"x": 10.0, "y": 10.0},
+              {"x": 0.0, "y": 10.0}
+            ]
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertEquals("KiCadNightly", board.communication.specctraParserInfo.hostCad);
+    assertEquals("11.0.0-rc1", board.communication.specctraParserInfo.hostVersion);
   }
 }

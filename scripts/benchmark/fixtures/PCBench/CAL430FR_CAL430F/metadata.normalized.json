@@ -1,0 +1,60 @@
+{
+  "board_id": "CAL430FR_CAL430F",
+  "display_name": "CAL430FR_CAL430F",
+  "pcbench_directory": "PCBs/CAL430FR_CAL430F",
+  "source": "https://github.com/kentN/CAL430FR",
+  "author": "kentN",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:42.669941+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 30,
+    "dimensions_mm": {
+      "width": 36.0,
+      "height": 36.0
+    },
+    "area_cm2": 12.96,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 774,
+    "vias": 92,
+    "track_length_mm": 1284.65,
+    "kicad_drc_violations": 209,
+    "kicad_drc_breakdown": {
+      "total_violations": 209,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 99,
+        "lib_footprint_issues": 30,
+        "padstack": 5,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 4,
+        "silk_overlap": 64,
+        "starved_thermal": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 104,
+        "warning": 105
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

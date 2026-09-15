@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "kitspace_trans_switch_volt_amp",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 312008,
+      "sha256": "9b5965080de86cdefcd132c928bc2bfb63a2b5df1464bad9c10a300b19dc0d43"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 107727,
+      "sha256": "cbf23822ce851014a270aed2d7f97c64718f2c936cf0e109aded941ffb566986"
+    },
+    "metadata_json": {
+      "bytes": 603,
+      "sha256": "dc583ad51e96a2458a9576d8387141b89e446997ae8b06553eac9062921c552c"
+    },
+    "final_json": {
+      "bytes": 53651,
+      "sha256": "99b1b8760623c5531c6e5deefd384f7b92a554baaca712daceb90e1be327179a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:12:38.121557+00:00"
+  }
+}

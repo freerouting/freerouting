@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Horticulture_Light_EQ_3-Band_light",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 390472,
+      "sha256": "5b8b0f8b9e2c5f29548e21cdd81b4dd8c9a1cb40d8bdc859fa4c8d7021a60a4f"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 360671,
+      "sha256": "c1f23871ee90f5dd7436cba75522942093b2b6bff9139cf3f862938df3310e19"
+    },
+    "metadata_json": {
+      "bytes": 737,
+      "sha256": "ccec4c992c84704bdd22bf21f45746f15cd9b8685a5c53e4f04eb996de44bc82"
+    },
+    "final_json": {
+      "bytes": 316606,
+      "sha256": "58168182bb9543209b87466b950abbf837df7152cd068528125867d58356f303"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:57:15.570392+00:00"
+  }
+}

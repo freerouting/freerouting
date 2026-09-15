@@ -1,0 +1,29 @@
+{
+  "board": "Hardware_Playground_NRF52832_Touch_Switch_Power_Supply",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_NRF52832_Touch_Switch_Power_Supply\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 85,
+  "segment_count": 296,
+  "approximate_track_length_mm": 543.11,
+  "kicad_drc_violations": 153,
+  "generated_at": "2026-08-18T18:54:29.131889+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 153,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 3,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 56,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 10,
+      "silk_overlap": 11,
+      "text_height": 58,
+      "text_thickness": 10
+    },
+    "by_severity": {
+      "error": 5,
+      "warning": 148
+    }
+  }
+}

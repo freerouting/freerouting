@@ -1,0 +1,28 @@
+{
+  "board": "Mini-Ultra-8-MHz_RS-MINI-ULTRA-8M",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Mini-Ultra-8-MHz_RS-MINI-ULTRA-8M\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 45,
+  "segment_count": 322,
+  "approximate_track_length_mm": 507.25,
+  "kicad_drc_violations": 161,
+  "generated_at": "2026-08-18T19:23:28.415147+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 161,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 123,
+      "copper_edge_clearance": 2,
+      "courtyards_overlap": 8,
+      "lib_footprint_issues": 24,
+      "silk_overlap": 2,
+      "solder_mask_bridge": 1,
+      "starved_thermal": 1
+    },
+    "by_severity": {
+      "error": 135,
+      "warning": 26
+    }
+  }
+}

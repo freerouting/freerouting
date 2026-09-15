@@ -1,0 +1,58 @@
+{
+  "board_id": "headstage-adapter_headstage adapter",
+  "display_name": "headstage-adapter_headstage adapter",
+  "pcbench_directory": "PCBs/headstage-adapter_headstage adapter",
+  "source": "https://github.com/bburan/headstage-adapter",
+  "author": "bburan",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:23:00.302149+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 0,
+    "components": 12,
+    "dimensions_mm": {
+      "width": 21.45,
+      "height": 52.85
+    },
+    "area_cm2": 11.34,
+    "zones": 5
+  },
+  "reference": {
+    "segments": 407,
+    "vias": 8,
+    "track_length_mm": 1737.33,
+    "kicad_drc_violations": 273,
+    "kicad_drc_breakdown": {
+      "total_violations": 273,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 8,
+        "clearance": 2,
+        "copper_edge_clearance": 37,
+        "hole_clearance": 12,
+        "lib_footprint_issues": 12,
+        "silk_edge_clearance": 1,
+        "solder_mask_bridge": 201
+      },
+      "by_severity": {
+        "error": 260,
+        "warning": 13
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

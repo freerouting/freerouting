@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Inkjet__autosave-InkjetDriver",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 201529,
+      "sha256": "e400cb60f04bfc283fafcbe985620abad11d68fd4c6c795add1ba64e3b4739b2"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 86289,
+      "sha256": "4bcbbd49e736e31f3263630ff7b4e43e436db497b4777c777fce28e4dac4e2f3"
+    },
+    "metadata_json": {
+      "bytes": 494,
+      "sha256": "1f5ca943f12cf602e6f75457046446fd362f111147e30ad5124ef7d3e713deed"
+    },
+    "final_json": {
+      "bytes": 92830,
+      "sha256": "0bb77e3611a9aeb13ad573918c43f0816c2c93cf84c2024ec0e8a52aad63aac4"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:59:18.158566+00:00"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "board_id": "polearm-weapon_rod",
+  "display_name": "polearm-weapon_rod",
+  "pcbench_directory": "PCBs/polearm-weapon_rod",
+  "source": "https://github.com/moonbeaminteractive/polearm-weapon",
+  "author": "moonbeaminteractive",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.038157+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 5,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 34.29,
+      "height": 124.46
+    },
+    "area_cm2": 42.68,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 169,
+    "vias": 0,
+    "track_length_mm": 1093.45,
+    "kicad_drc_violations": 85,
+    "kicad_drc_breakdown": {
+      "total_violations": 85,
+      "unconnected_count": 12,
+      "by_type": {
+        "annular_width": 6,
+        "copper_edge_clearance": 9,
+        "lib_footprint_issues": 29,
+        "padstack": 6,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 24,
+        "silk_overlap": 5
+      },
+      "by_severity": {
+        "error": 15,
+        "warning": 70
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

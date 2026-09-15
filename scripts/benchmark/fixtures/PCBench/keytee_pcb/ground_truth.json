@@ -1,0 +1,30 @@
+{
+  "board": "keytee_pcb",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\keytee_pcb\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 36,
+  "segment_count": 416,
+  "approximate_track_length_mm": 387.54,
+  "kicad_drc_violations": 352,
+  "generated_at": "2026-08-18T19:01:25.259336+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 352,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 2,
+      "copper_edge_clearance": 83,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 38,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 21,
+      "silk_overlap": 5,
+      "solder_mask_bridge": 155,
+      "text_height": 42
+    },
+    "by_severity": {
+      "error": 243,
+      "warning": 109
+    }
+  }
+}

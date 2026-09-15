@@ -1,0 +1,30 @@
+{
+  "board": "OvenController_Oven",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\OvenController_Oven\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 488,
+  "approximate_track_length_mm": 2041.17,
+  "kicad_drc_violations": 298,
+  "generated_at": "2026-08-18T19:31:05.341300+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 298,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 62,
+      "copper_edge_clearance": 3,
+      "lib_footprint_issues": 83,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 39,
+      "silk_overlap": 72,
+      "text_height": 20,
+      "text_thickness": 14,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 65,
+      "warning": 233
+    }
+  }
+}

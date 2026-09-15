@@ -1,0 +1,26 @@
+{
+  "board": "blinky-badge_blinky",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\blinky-badge_blinky\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 9,
+  "segment_count": 91,
+  "approximate_track_length_mm": 412.79,
+  "kicad_drc_violations": 90,
+  "generated_at": "2026-08-18T18:34:21.300391+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 90,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 51,
+      "copper_edge_clearance": 1,
+      "lib_footprint_issues": 18,
+      "starved_thermal": 13,
+      "text_height": 7
+    },
+    "by_severity": {
+      "error": 65,
+      "warning": 25
+    }
+  }
+}

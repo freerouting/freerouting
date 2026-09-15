@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "anima_MotorDrive",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 167189,
+      "sha256": "9f7098b9d02bc7c21fa5b9efe7e5f0b78763090bad9dc3af40b5bf2c0bd23e9e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 207529,
+      "sha256": "f0066106a79165bf77ddbf5410502875e935b0893700ceaede26cbdf5c5057e6"
+    },
+    "metadata_json": {
+      "bytes": 452,
+      "sha256": "5a156125e29049b3d5dfe322a8e58764c0362c877d21af5f23a2965a386af00d"
+    },
+    "final_json": {
+      "bytes": 135504,
+      "sha256": "188071775f8c04d6c157ffcd13e5f59add86d66974426486a295bb9f7a55cfa1"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:28:27.125846+00:00"
+  }
+}

@@ -30,7 +30,7 @@ public class Component extends ScopeKeyword {
     ComponentPlacement component_placement = new ComponentPlacement(name);
     Object prev_token = next_token;
     next_token = p_scanner.next_token();
-    while (next_token != CLOSED_BRACKET) {
+    while (next_token != null && next_token != CLOSED_BRACKET) {
       if (prev_token == OPEN_BRACKET && next_token == PLACE) {
         ComponentPlacement.ComponentLocation next_location = read_place_scope(p_scanner);
         if (next_location != null) {
@@ -260,6 +260,8 @@ public class Component extends ScopeKeyword {
             return null;
           }
           place_keepout_infos.put(curr_keepout_info.name, curr_keepout_info);
+        } else if (next_token instanceof String && "PN".equalsIgnoreCase((String) next_token)) {
+          DsnFile.read_string_scope(p_scanner);
         } else {
           skip_scope(p_scanner);
         }

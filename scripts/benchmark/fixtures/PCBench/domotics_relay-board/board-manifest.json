@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "domotics_relay-board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 80183,
+      "sha256": "8331a023805fd48ed9490c87a9eb991ea3348a347f02ef9e95d3c3fc31ed5164"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 100579,
+      "sha256": "3162776312bb8cd8b5f24cd2d8c52077378be453bb57ddbc41123c4f79f99b58"
+    },
+    "metadata_json": {
+      "bytes": 460,
+      "sha256": "e9be96ff709d547e555accb11865924c9936390991c9452f04e2c6ffd88cc118"
+    },
+    "final_json": {
+      "bytes": 55928,
+      "sha256": "876fc4942fbc144543508ed0600f07fb51b68236fc07ae238ff86320ba48ac8c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:42:41.536493+00:00"
+  }
+}

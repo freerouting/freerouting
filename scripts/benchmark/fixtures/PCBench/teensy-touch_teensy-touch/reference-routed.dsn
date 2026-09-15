@@ -1,0 +1,476 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\teensy-touch_teensy-touch\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  173083 -146162  106834 -146162  106834 -85984.9  173083 -85984.9
+            173083 -146162)
+    )
+    (plane /GND (polygon B.Cu 0  164973 -86868  111125 -86868  109093 -87503  107823 -89027
+            107823 -143891  108204 -144526  108966 -145161  109347 -145415
+            166878 -145415  167132 -145415  167386 -145415  169672 -145034
+            171196 -144526  171831 -143129  171831 -87757  170688 -86995
+            169672 -86868  167894 -86868  166878 -86868  164973 -86868))
+    (via "Via[0-1]_685.8:330.2_um" "Via[0-1]_762:330.2_um")
+    (rule
+      (width 152.4)
+      (clearance 152.4)
+      (clearance 38.1 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Wickerlib:TEENSY-LC"
+      (place J1 151511 -105918 front 0 (PN "TEENSY-LC"))
+    )
+    (component "Wickerlib:Symbol_OSHW-Logo_SilkScreen"
+      (place REF** 167767 -133985 front -90 (PN "Symbol_OSHW-Logo_SilkScreen"))
+    )
+    (component Wickerlib:Pin_Header_Straight_1x08
+      (place J2 168910 -108077 front 0 (PN OLED_128x64))
+    )
+    (component Wickerlib:CAPSENSE_CIRCLE_D10
+      (place CAP0 114300 -97155 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP1 128905 -93472 front 90 (PN CAPSENSE_CIRCLE))
+      (place CAP3 114427 -111379 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP4 128524 -107061 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP15 115062 -125476 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP16 128524 -121412 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP17 115570 -139573 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP18 128778 -136144 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP19 142367 -139827 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP22 157480 -139954 front 0 (PN CAPSENSE_CIRCLE))
+      (place CAP23 165227 -99695 front 0 (PN CAPSENSE_CIRCLE))
+    )
+    (component "teensy-big-oled:oshpark-silk-dpi72"
+      (place G*** 140843 -116967 back 180 (PN LOGO))
+    )
+  )
+  (library
+    (image "Wickerlib:TEENSY-LC"
+      (outline (polygon signal 0  6345 -24125  -11425 -24125  -11425 11425  6345 11425))
+      (pin Round[A]Pad_1727.200000_um G1 -10160 10160)
+      (pin Round[A]Pad_1727.200000_um 0 -10160 7620)
+      (pin Round[A]Pad_1727.200000_um 1 -10160 5080)
+      (pin Round[A]Pad_1727.200000_um 2 -10160 2540)
+      (pin Round[A]Pad_1727.200000_um 3 -10160 0)
+      (pin Round[A]Pad_1727.200000_um 4 -10160 -2540)
+      (pin Round[A]Pad_1727.200000_um 5 -10160 -5080)
+      (pin Round[A]Pad_1727.200000_um 6 -10160 -7620)
+      (pin Round[A]Pad_1727.200000_um 7 -10160 -10160)
+      (pin Round[A]Pad_1727.200000_um 8 -10160 -12700)
+      (pin Round[A]Pad_1727.200000_um 9 -10160 -15240)
+      (pin Round[A]Pad_1727.200000_um 10 -10160 -17780)
+      (pin Round[A]Pad_1727.200000_um 11 -10160 -20320)
+      (pin Round[A]Pad_1727.200000_um 12 -10160 -22860)
+      (pin Round[A]Pad_1727.200000_um 17A -7620 -22860)
+      (pin Round[A]Pad_1727.200000_um 3V1 -5080 -22860)
+      (pin Round[A]Pad_1727.200000_um G2 -2540 -22860)
+      (pin Round[A]Pad_1727.200000_um PGM 0 -22860)
+      (pin Round[A]Pad_1727.200000_um DAC 2540 -22860)
+      (pin Round[A]Pad_1727.200000_um 13 5080 -22860)
+      (pin Round[A]Pad_1727.200000_um 16 5080 -15240)
+      (pin Round[A]Pad_1727.200000_um 3V2 5080 5080)
+      (pin Round[A]Pad_1727.200000_um 18 5080 -10160)
+      (pin Round[A]Pad_1727.200000_um 17 5080 -12700)
+      (pin Round[A]Pad_1727.200000_um G3 5080 7620)
+      (pin Round[A]Pad_1727.200000_um 22 5080 0)
+      (pin Round[A]Pad_1727.200000_um VIN 5080 10160)
+      (pin Round[A]Pad_1727.200000_um 21 5080 -2540)
+      (pin Round[A]Pad_1727.200000_um 20 5080 -5080)
+      (pin Round[A]Pad_1727.200000_um 19 5080 -7620)
+      (pin Round[A]Pad_1727.200000_um 23 5080 2540)
+      (pin Round[A]Pad_1727.200000_um 14 5080 -20320)
+      (pin Round[A]Pad_1727.200000_um 15 5080 -17780)
+    )
+    (image "Wickerlib:Symbol_OSHW-Logo_SilkScreen"
+      (outline (path signal 150  1668.78 -2689.86  2029.46 -4160.52))
+      (outline (path signal 150  2029.46 -4160.52  2308.86 -3098.8))
+      (outline (path signal 150  2308.86 -3098.8  2618.74 -4170.68))
+      (outline (path signal 150  2618.74 -4170.68  2959.1 -2720.34))
+      (outline (path signal 150  248.92 -3380.74  1038.86 -3370.58))
+      (outline (path signal 150  1038.86 -3370.58  1049.02 -3380.74))
+      (outline (path signal 150  1049.02 -3380.74  1049.02 -3370.58))
+      (outline (path signal 150  1089.66 -2659.38  1089.66 -4201.16))
+      (outline (path signal 150  200.66 -2649.22  200.66 -4218.94))
+      (outline (path signal 150  200.66 -4218.94  210.82 -4208.78))
+      (outline (path signal 150  -350.52 -2750.82  -701.04 -2669.54))
+      (outline (path signal 150  -701.04 -2669.54  -1021.08 -2659.38))
+      (outline (path signal 150  -1021.08 -2659.38  -1259.84 -2860.04))
+      (outline (path signal 150  -1259.84 -2860.04  -1290.32 -3129.28))
+      (outline (path signal 150  -1290.32 -3129.28  -1049.02 -3370.58))
+      (outline (path signal 150  -1049.02 -3370.58  -660.4 -3500.12))
+      (outline (path signal 150  -660.4 -3500.12  -480.06 -3660.14))
+      (outline (path signal 150  -480.06 -3660.14  -439.42 -3959.86))
+      (outline (path signal 150  -439.42 -3959.86  -670.56 -4180.84))
+      (outline (path signal 150  -670.56 -4180.84  -990.6 -4208.78))
+      (outline (path signal 150  -990.6 -4208.78  -1341.12 -4099.56))
+      (outline (path signal 150  -2379.98 -2649.22  -2628.9 -2669.54))
+      (outline (path signal 150  -2628.9 -2669.54  -2870.2 -2910.84))
+      (outline (path signal 150  -2870.2 -2910.84  -2959.1 -3401.06))
+      (outline (path signal 150  -2959.1 -3401.06  -2931.16 -3749.04))
+      (outline (path signal 150  -2931.16 -3749.04  -2730.5 -4069.08))
+      (outline (path signal 150  -2730.5 -4069.08  -2479.04 -4191))
+      (outline (path signal 150  -2479.04 -4191  -2169.16 -4119.88))
+      (outline (path signal 150  -2169.16 -4119.88  -1950.72 -3939.54))
+      (outline (path signal 150  -1950.72 -3939.54  -1879.6 -3479.8))
+      (outline (path signal 150  -1879.6 -3479.8  -1930.4 -3070.86))
+      (outline (path signal 150  -1930.4 -3070.86  -2039.62 -2788.92))
+      (outline (path signal 150  -2039.62 -2788.92  -2400.3 -2659.38))
+      (outline (path signal 150  -1780.54 -929.64  -2039.62 -1490.98))
+      (outline (path signal 150  -2039.62 -1490.98  -1501.14 -2009.14))
+      (outline (path signal 150  -1501.14 -2009.14  -980.44 -1739.9))
+      (outline (path signal 150  -980.44 -1739.9  -701.04 -1899.92))
+      (outline (path signal 150  739.14 -1879.6  1069.34 -1689.1))
+      (outline (path signal 150  1069.34 -1689.1  1508.76 -2019.3))
+      (outline (path signal 150  1508.76 -2019.3  1981.2 -1529.08))
+      (outline (path signal 150  1981.2 -1529.08  1699.26 -1049.02))
+      (outline (path signal 150  1699.26 -1049.02  1889.76 -579.12))
+      (outline (path signal 150  1889.76 -579.12  2499.36 -391.16))
+      (outline (path signal 150  2499.36 -391.16  2499.36 289.56))
+      (outline (path signal 150  2499.36 289.56  1940.56 429.26))
+      (outline (path signal 150  1940.56 429.26  1739.9 1000.76))
+      (outline (path signal 150  1739.9 1000.76  2009.14 1470.66))
+      (outline (path signal 150  2009.14 1470.66  1539.24 1981.2))
+      (outline (path signal 150  1539.24 1981.2  1021.08 1719.58))
+      (outline (path signal 150  1021.08 1719.58  551.18 1920.24))
+      (outline (path signal 150  551.18 1920.24  381 2461.26))
+      (outline (path signal 150  381 2461.26  -309.88 2479.04))
+      (outline (path signal 150  -309.88 2479.04  -520.7 1930.4))
+      (outline (path signal 150  -520.7 1930.4  -939.8 1760.22))
+      (outline (path signal 150  -939.8 1760.22  -1490.98 2029.46))
+      (outline (path signal 150  -1490.98 2029.46  -2009.14 1501.14))
+      (outline (path signal 150  -2009.14 1501.14  -1760.22 960.12))
+      (outline (path signal 150  -1760.22 960.12  -1930.4 480.06))
+      (outline (path signal 150  -1930.4 480.06  -2479.04 381))
+      (outline (path signal 150  -2479.04 381  -2489.2 -320.04))
+      (outline (path signal 150  -2489.2 -320.04  -1930.4 -520.7))
+      (outline (path signal 150  -1930.4 -520.7  -1790.7 -919.48))
+      (outline (path signal 150  350.52 -899.16  650.24 -749.3))
+      (outline (path signal 150  650.24 -749.3  850.9 -551.18))
+      (outline (path signal 150  850.9 -551.18  1000.76 -149.86))
+      (outline (path signal 150  1000.76 -149.86  1000.76 248.92))
+      (outline (path signal 150  1000.76 248.92  850.9 599.44))
+      (outline (path signal 150  850.9 599.44  398.78 949.96))
+      (outline (path signal 150  398.78 949.96  -50.8 1000.76))
+      (outline (path signal 150  -50.8 1000.76  -449.58 899.16))
+      (outline (path signal 150  -449.58 899.16  -850.9 551.18))
+      (outline (path signal 150  -850.9 551.18  -1000.76 99.06))
+      (outline (path signal 150  -1000.76 99.06  -949.96 -398.78))
+      (outline (path signal 150  -949.96 -398.78  -701.04 -701.04))
+      (outline (path signal 150  -701.04 -701.04  -350.52 -899.16))
+      (outline (path signal 150  -350.52 -899.16  -701.04 -1899.92))
+      (outline (path signal 150  350.52 -899.16  749.3 -1899.92))
+    )
+    (image Wickerlib:Pin_Header_Straight_1x08
+      (outline (polygon signal 0  1745 -19545  -1745 -19545  -1745 1745  1745 1745))
+      (outline (path signal 150  1270 -1270  1270 -19050))
+      (outline (path signal 150  1270 -19050  -1270 -19050))
+      (outline (path signal 150  -1270 -19050  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 7 0 -15240)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 8 0 -17780)
+    )
+    (image Wickerlib:CAPSENSE_CIRCLE_D10
+      (pin Round[T]Pad_10160.000000_um 1 0 0)
+    )
+    (image "teensy-big-oled:oshpark-silk-dpi72"
+    )
+    (padstack Round[T]Pad_10160.000000_um
+      (shape (circle F.Cu 10160))
+      (attach off)
+    )
+    (padstack Round[A]Pad_1727.200000_um
+      (shape (circle F.Cu 1727.2))
+      (shape (circle B.Cu 1727.2))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_685.8:330.2_um"
+      (shape (circle F.Cu 685.8))
+      (shape (circle B.Cu 685.8))
+      (attach off)
+    )
+    (padstack "Via[0-1]_762:330.2_um"
+      (shape (circle F.Cu 762))
+      (shape (circle B.Cu 762))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(J1-Pad2)"
+      (pins J1-2)
+    )
+    (net "Net-(J1-Pad5)"
+      (pins J1-5)
+    )
+    (net "Net-(J1-Pad6)"
+      (pins J1-6)
+    )
+    (net "Net-(J1-Pad7)"
+      (pins J1-7)
+    )
+    (net "Net-(J1-Pad8)"
+      (pins J1-8)
+    )
+    (net "Net-(J1-Pad17A)"
+      (pins J1-17A)
+    )
+    (net "Net-(J1-Pad3V1)"
+      (pins J1-3V1)
+    )
+    (net "Net-(J1-PadG2)"
+      (pins J1-G2)
+    )
+    (net "Net-(J1-PadPGM)"
+      (pins J1-PGM)
+    )
+    (net "Net-(J1-PadDAC)"
+      (pins J1-DAC)
+    )
+    (net "Net-(J1-PadG3)"
+      (pins J1-G3)
+    )
+    (net "Net-(J1-PadVIN)"
+      (pins J1-VIN)
+    )
+    (net "Net-(J1-Pad21)"
+      (pins J1-21)
+    )
+    (net "Net-(J1-Pad20)"
+      (pins J1-20)
+    )
+    (net "Net-(J1-Pad14)"
+      (pins J1-14)
+    )
+    (net /CS
+      (pins J1-12 J2-4)
+    )
+    (net /RST
+      (pins J1-13 J2-5)
+    )
+    (net /GND
+      (pins J1-G1 J2-1)
+    )
+    (net /VIN
+      (pins J1-3V2 J2-2)
+    )
+    (net /Data
+      (pins J1-9 J2-8)
+    )
+    (net /CLK
+      (pins J1-10 J2-7)
+    )
+    (net /DC
+      (pins J1-11 J2-6)
+    )
+    (net "Net-(J2-Pad3)"
+      (pins J2-3)
+    )
+    (net "Net-(CAP0-Pad1)"
+      (pins J1-0 CAP0-1)
+    )
+    (net "Net-(CAP1-Pad1)"
+      (pins J1-1 CAP1-1)
+    )
+    (net "Net-(CAP3-Pad1)"
+      (pins J1-3 CAP3-1)
+    )
+    (net "Net-(CAP4-Pad1)"
+      (pins J1-4 CAP4-1)
+    )
+    (net /CAP16
+      (pins J1-16 CAP16-1)
+    )
+    (net /CAP18
+      (pins J1-18 CAP18-1)
+    )
+    (net /CAP17
+      (pins J1-17 CAP17-1)
+    )
+    (net /CAP22
+      (pins J1-22 CAP22-1)
+    )
+    (net /CAP19
+      (pins J1-19 CAP19-1)
+    )
+    (net /CAP23
+      (pins J1-23 CAP23-1)
+    )
+    (net /CAP15
+      (pins J1-15 CAP15-1)
+    )
+    (class kicad_default /CAP15 /CAP16 /CAP17 /CAP18 /CAP19 /CAP22 /CAP23
+      /CLK /CS /DC /Data /GND /RST /VIN "Net-(CAP0-Pad1)" "Net-(CAP1-Pad1)"
+      "Net-(CAP3-Pad1)" "Net-(CAP4-Pad1)" "Net-(J1-Pad14)" "Net-(J1-Pad17A)"
+      "Net-(J1-Pad2)" "Net-(J1-Pad20)" "Net-(J1-Pad21)" "Net-(J1-Pad3V1)"
+      "Net-(J1-Pad5)" "Net-(J1-Pad6)" "Net-(J1-Pad7)" "Net-(J1-Pad8)" "Net-(J1-PadDAC)"
+      "Net-(J1-PadG2)" "Net-(J1-PadG3)" "Net-(J1-PadPGM)" "Net-(J1-PadVIN)"
+      "Net-(J2-Pad3)"
+      (circuit
+        (use_via "Via[0-1]_685.8:330.2_um")
+      )
+      (rule
+        (width 152.4)
+        (clearance 152.4)
+      )
+    )
+  )
+  (wiring
+    (wire (path F.Cu 508  168910 -115697  169418 -115697  170434 -116713  170561 -116713
+            170561 -127381  169418 -128524)(net /CS)(type route))
+    (wire (path B.Cu 508  169418 -128524  161290 -136652  149225 -136652)(net /CS)(type route))
+    (wire (path F.Cu 508  149225 -136652  141351 -128778)(net /CS)(type route))
+    (wire (path B.Cu 508  168910 -118237  167894 -119253  167259 -119253  165862 -120650
+            165227 -120650)(net /RST)(type route))
+    (wire (path F.Cu 508  165227 -120650  161036 -124841)(net /RST)(type route))
+    (wire (path B.Cu 508  161036 -124841  157099 -128778  156591 -128778)(net /RST)(type route))
+    (wire (path F.Cu 508  168910 -108077  168910 -105537  170116 -104330)(net /GND)(type route))
+    (wire (path F.Cu 508  156591 -100838  159639 -103886  159639 -104013  160274 -104648)(net /VIN)(type route))
+    (wire (path B.Cu 508  160274 -104648  166243 -110617  168910 -110617)(net /VIN)(type route))
+    (wire (path B.Cu 508  168910 -125857  161417 -133350  142113 -133350)(net /Data)(type route))
+    (wire (path F.Cu 508  142113 -133350  138938 -130175  138938 -125730  139065 -125603
+            139065 -125349  139192 -125222  139192 -125095  139319 -124968
+            139319 -124714  139573 -124460  139573 -124333  139827 -124079
+            139827 -123317  139954 -123190  139954 -122936  140208 -122682
+            140208 -122555  141351 -121412  141351 -121158)(net /Data)(type route))
+    (wire (path B.Cu 508  168910 -123317  167894 -124333  167259 -124333  160528 -131064
+            141351 -131064)(net /CLK)(type route))
+    (wire (path F.Cu 508  141351 -131064  139827 -129540  139827 -125857  139954 -125730
+            139954 -125476  140208 -125222  140208 -125095  141351 -123952
+            141351 -123698)(net /CLK)(type route))
+    (wire (path B.Cu 508  168910 -120777  167894 -121793  167259 -121793  166243 -122809)(net /DC)(type route))
+    (wire (path F.Cu 508  166243 -122809  160147 -128905  160147 -132207)(net /DC)(type route))
+    (wire (path B.Cu 508  160147 -132207  157353 -132207)(net /DC)(type route))
+    (wire (path F.Cu 508  157353 -132207  155067 -134493)(net /DC)(type route))
+    (wire (path B.Cu 508  155067 -134493  154940 -134366  141732 -134366  141605 -134239
+            141478 -134239  140589 -133350  140462 -133350)(net /DC)(type route))
+    (wire (path F.Cu 508  140462 -133350  137795 -130683  137795 -129032)(net /DC)(type route))
+    (wire (path B.Cu 508  137795 -129032  140589 -126238  141351 -126238)(net /DC)(type route))
+    (wire (path B.Cu 508  141351 -98298  120142 -98298)(net "Net-(CAP0-Pad1)")(type route))
+    (wire (path F.Cu 508  120142 -98298  115443 -98298  114300 -97155)(net "Net-(CAP0-Pad1)")(type route))
+    (wire (path B.Cu 508  141351 -100838  139954 -99441  134874 -99441)(net "Net-(CAP1-Pad1)")(type route))
+    (wire (path F.Cu 508  134874 -99441  128905 -93472)(net "Net-(CAP1-Pad1)")(type route))
+    (wire (path B.Cu 508  141351 -105918  140208 -107061  118745 -107061)(net "Net-(CAP3-Pad1)")(type route))
+    (wire (path F.Cu 508  118745 -107061  114427 -111379)(net "Net-(CAP3-Pad1)")(type route))
+    (wire (path B.Cu 508  141351 -108458  134366 -108458)(net "Net-(CAP4-Pad1)")(type route))
+    (wire (path F.Cu 508  134366 -108458  129921 -108458  128524 -107061)(net "Net-(CAP4-Pad1)")(type route))
+    (wire (path F.Cu 508  128524 -121412  132842 -125730)(net /CAP16)(type route))
+    (wire (path B.Cu 508  132842 -125730  139319 -132207  155448 -132207)(net /CAP16)(type route))
+    (wire (path F.Cu 508  155448 -132207  158115 -129540  158115 -123317  157988 -123190
+            157988 -122936  157734 -122682  157734 -122555  156591 -121412
+            156591 -121158)(net /CAP16)(type route))
+    (wire (path F.Cu 508  155448 -114681  156591 -115824  156591 -116078)(net /CAP18)(type route))
+    (wire (path F.Cu 508  128778 -136144  138049 -126873  138049 -125603  138176 -125476
+            138176 -125222  138303 -125095  138303 -124968  138430 -124841
+            138430 -124587  138557 -124460  138557 -124333  138684 -124206
+            138684 -123952  138938 -123698  138938 -123190  139065 -123063
+            139065 -95758)(net /CAP18)(type route))
+    (wire (path B.Cu 508  139065 -95758  140589 -94234  141732 -94234  141859 -94361
+            142113 -94361  142367 -94615  142494 -94615  143383 -95504)(net /CAP18)(type route))
+    (wire (path F.Cu 508  143383 -95504  155067 -107188  155067 -113919  155194 -114046
+            155194 -114300  155448 -114554  155448 -114681)(net /CAP18)(type route))
+    (wire (path F.Cu 508  115570 -139573  123190 -131953)(net /CAP17)(type route))
+    (wire (path B.Cu 508  123190 -131953  134493 -120650)(net /CAP17)(type route))
+    (wire (path F.Cu 508  134493 -120650  137795 -117348  137795 -95504)(net /CAP17)(type route))
+    (wire (path B.Cu 508  137795 -95504  139954 -93345  141859 -93345  141986 -93472
+            142240 -93472  142367 -93599  142494 -93599  142621 -93726  142875 -93726
+            143129 -93980  143256 -93980  143891 -94615  144018 -94615  144272 -94869
+            144272 -94996  144399 -95123  144399 -98171)(net /CAP17)(type route))
+    (wire (path F.Cu 508  144399 -98171  154178 -107950  154178 -114046  154305 -114173
+            154305 -114427  154432 -114554  154432 -114681  154559 -114808
+            154559 -115062  154813 -115316  154813 -115443  155067 -115697
+            155067 -116459  155194 -116586  155194 -116840  155448 -117094
+            155448 -117221  156591 -118364  156591 -118618)(net /CAP17)(type route))
+    (wire (path F.Cu 508  157480 -139954  159004 -138430  159004 -123190  158877 -123063
+            158877 -122809  158750 -122682  158750 -122555  158623 -122428
+            158623 -122174  158369 -121920  158369 -121793  158115 -121539
+            158115 -108077  157988 -107950  157988 -107696  157734 -107442
+            157734 -107315  156591 -106172  156591 -105918)(net /CAP22)(type route))
+    (wire (path B.Cu 508  156591 -113538  161925 -108204  162179 -108204)(net /CAP19)(type route))
+    (wire (path F.Cu 508  162179 -108204  163830 -106553)(net /CAP19)(type route))
+    (wire (path B.Cu 508  163830 -106553  170561 -106553  171577 -107569)(net /CAP19)(type route))
+    (wire (path F.Cu 508  171577 -107569  171704 -107696  171704 -127762)(net /CAP19)(type route))
+    (wire (path B.Cu 508  171704 -127762  161798 -137668  147955 -137668)(net /CAP19)(type route))
+    (wire (path F.Cu 508  147955 -137668  144526 -137668  142367 -139827)(net /CAP19)(type route))
+    (wire (path F.Cu 508  165227 -99695  164211 -99695  160528 -103378)(net /CAP23)(type route))
+    (wire (path B.Cu 508  160528 -103378  156591 -103378)(net /CAP23)(type route))
+    (wire (path F.Cu 508  115062 -125476  119380 -129794)(net /CAP15)(type route))
+    (wire (path B.Cu 508  119380 -129794  125095 -135509  155448 -135509  155575 -135382
+            155702 -135382  156591 -134493  160147 -134493)(net /CAP15)(type route))
+    (wire (path F.Cu 508  160147 -134493  167259 -127381  167259 -122428  167132 -122301
+            167132 -122174  166878 -121920  166751 -121920  166624 -121793
+            165608 -121793  164973 -122428)(net /CAP15)(type route))
+    (wire (path B.Cu 508  164973 -122428  163703 -123698  156591 -123698)(net /CAP15)(type route))
+    (via "Via[0-1]_762:330.2_um"  169418 -128524 (net /CS)(type route))
+    (via "Via[0-1]_762:330.2_um"  149225 -136652 (net /CS)(type route))
+    (via "Via[0-1]_762:330.2_um"  165227 -120650 (net /RST)(type route))
+    (via "Via[0-1]_762:330.2_um"  161036 -124841 (net /RST)(type route))
+    (via "Via[0-1]_685.8:330.2_um"  170116 -104330 (net /GND)(type route))
+    (via "Via[0-1]_762:330.2_um"  160274 -104648 (net /VIN)(type route))
+    (via "Via[0-1]_762:330.2_um"  142113 -133350 (net /Data)(type route))
+    (via "Via[0-1]_762:330.2_um"  141351 -131064 (net /CLK)(type route))
+    (via "Via[0-1]_762:330.2_um"  166243 -122809 (net /DC)(type route))
+    (via "Via[0-1]_762:330.2_um"  160147 -132207 (net /DC)(type route))
+    (via "Via[0-1]_762:330.2_um"  157353 -132207 (net /DC)(type route))
+    (via "Via[0-1]_762:330.2_um"  155067 -134493 (net /DC)(type route))
+    (via "Via[0-1]_762:330.2_um"  140462 -133350 (net /DC)(type route))
+    (via "Via[0-1]_762:330.2_um"  137795 -129032 (net /DC)(type route))
+    (via "Via[0-1]_762:330.2_um"  120142 -98298 (net "Net-(CAP0-Pad1)")(type route))
+    (via "Via[0-1]_762:330.2_um"  134874 -99441 (net "Net-(CAP1-Pad1)")(type route))
+    (via "Via[0-1]_762:330.2_um"  118745 -107061 (net "Net-(CAP3-Pad1)")(type route))
+    (via "Via[0-1]_762:330.2_um"  134366 -108458 (net "Net-(CAP4-Pad1)")(type route))
+    (via "Via[0-1]_762:330.2_um"  132842 -125730 (net /CAP16)(type route))
+    (via "Via[0-1]_762:330.2_um"  155448 -132207 (net /CAP16)(type route))
+    (via "Via[0-1]_762:330.2_um"  139065 -95758 (net /CAP18)(type route))
+    (via "Via[0-1]_762:330.2_um"  143383 -95504 (net /CAP18)(type route))
+    (via "Via[0-1]_762:330.2_um"  123190 -131953 (net /CAP17)(type route))
+    (via "Via[0-1]_762:330.2_um"  134493 -120650 (net /CAP17)(type route))
+    (via "Via[0-1]_762:330.2_um"  137795 -95504 (net /CAP17)(type route))
+    (via "Via[0-1]_762:330.2_um"  144399 -98171 (net /CAP17)(type route))
+    (via "Via[0-1]_762:330.2_um"  162179 -108204 (net /CAP19)(type route))
+    (via "Via[0-1]_762:330.2_um"  163830 -106553 (net /CAP19)(type route))
+    (via "Via[0-1]_762:330.2_um"  171577 -107569 (net /CAP19)(type route))
+    (via "Via[0-1]_762:330.2_um"  171704 -127762 (net /CAP19)(type route))
+    (via "Via[0-1]_762:330.2_um"  147955 -137668 (net /CAP19)(type route))
+    (via "Via[0-1]_762:330.2_um"  160528 -103378 (net /CAP23)(type route))
+    (via "Via[0-1]_762:330.2_um"  119380 -129794 (net /CAP15)(type route))
+    (via "Via[0-1]_762:330.2_um"  160147 -134493 (net /CAP15)(type route))
+    (via "Via[0-1]_762:330.2_um"  164973 -122428 (net /CAP15)(type route))
+  )
+)

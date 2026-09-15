@@ -13,9 +13,9 @@ public class Circle extends Shape {
   public final double[] coor;
 
   /**
-   * Creates a new circle from the input parameters. p_coor is an array of dimension 3. p_coor[0] is
-   * the radius of the circle, p_coor[1] is the x coordinate of the circle, p_coor[2] is the y
-   * coordinate of the circle.
+   * Creates a new circle from the input parameters. coor is an array of dimension 3. coor[0] is the
+   * radius of the circle, coor[1] is the x coordinate of the circle, coor[2] is the y coordinate of
+   * the circle.
    */
   public Circle(Layer layer, double[] coor) {
     super(layer);
@@ -83,8 +83,8 @@ public class Circle extends Shape {
     identifierType.write(this.layer.name, file);
     for (int i = 0; i < coor.length; i++) {
       file.write(" ");
-      int currCoor = (int) Math.round(coor[i]);
-      file.write(String.valueOf(currCoor));
+      int currentCoor = (int) Math.round(coor[i]);
+      file.write(String.valueOf(currentCoor));
     }
     file.write(")");
   }

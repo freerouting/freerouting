@@ -1,0 +1,37 @@
+{
+  "board": "kitspace_XassetteAsterisk",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_XassetteAsterisk\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 265,
+  "segment_count": 2044,
+  "approximate_track_length_mm": 3196.27,
+  "kicad_drc_violations": 472,
+  "generated_at": "2026-08-18T19:13:21.274378+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 472,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 118,
+      "copper_edge_clearance": 4,
+      "courtyards_overlap": 31,
+      "hole_clearance": 96,
+      "hole_to_hole": 2,
+      "lib_footprint_issues": 6,
+      "lib_footprint_mismatch": 130,
+      "malformed_courtyard": 2,
+      "npth_inside_courtyard": 2,
+      "silk_edge_clearance": 18,
+      "silk_over_copper": 22,
+      "silk_overlap": 17,
+      "text_height": 6,
+      "text_thickness": 2,
+      "track_dangling": 5,
+      "tracks_crossing": 11
+    },
+    "by_severity": {
+      "error": 264,
+      "warning": 208
+    }
+  }
+}

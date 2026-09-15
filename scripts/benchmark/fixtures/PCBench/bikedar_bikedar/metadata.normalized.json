@@ -1,0 +1,57 @@
+{
+  "board_id": "bikedar_bikedar",
+  "display_name": "bikedar_bikedar",
+  "pcbench_directory": "PCBs/bikedar_bikedar",
+  "source": "https://github.com/adamgreig/bikedar",
+  "author": "adamgreig",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:47.569999+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 17,
+    "components": 52,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 21
+  },
+  "reference": {
+    "segments": 714,
+    "vias": 153,
+    "track_length_mm": 945.19,
+    "kicad_drc_violations": 229,
+    "kicad_drc_breakdown": {
+      "total_violations": 229,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 30,
+        "copper_edge_clearance": 141,
+        "courtyards_overlap": 4,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 50,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 178,
+        "warning": 51
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

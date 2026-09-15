@@ -1,0 +1,28 @@
+{
+  "board": "DSP-ADAU1452_DSP-ADAU1452",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\DSP-ADAU1452_DSP-ADAU1452\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 355,
+  "segment_count": 1992,
+  "approximate_track_length_mm": 4113.52,
+  "kicad_drc_violations": 802,
+  "generated_at": "2026-08-18T18:14:38.180158+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 802,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 504,
+      "items_not_allowed": 4,
+      "lib_footprint_issues": 199,
+      "silk_over_copper": 52,
+      "silk_overlap": 3,
+      "starved_thermal": 6,
+      "track_dangling": 34
+    },
+    "by_severity": {
+      "error": 514,
+      "warning": 288
+    }
+  }
+}

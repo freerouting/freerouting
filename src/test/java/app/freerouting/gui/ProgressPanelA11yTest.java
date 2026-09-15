@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
+import app.freerouting.gui.controls.ProgressLabels;
+import app.freerouting.gui.controls.ProgressPanel;
+import app.freerouting.gui.support.ProgressSnapshot;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -1,0 +1,30 @@
+{
+  "board": "typec-charger_TypeC-DC-Charger",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\typec-charger_TypeC-DC-Charger\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 201,
+  "segment_count": 860,
+  "approximate_track_length_mm": 1232.18,
+  "kicad_drc_violations": 818,
+  "generated_at": "2026-08-18T18:25:35.859055+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 818,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 137,
+      "copper_edge_clearance": 26,
+      "items_not_allowed": 199,
+      "lib_footprint_issues": 99,
+      "malformed_courtyard": 186,
+      "silk_edge_clearance": 15,
+      "silk_over_copper": 2,
+      "solder_mask_bridge": 149,
+      "starved_thermal": 5
+    },
+    "by_severity": {
+      "error": 702,
+      "warning": 116
+    }
+  }
+}

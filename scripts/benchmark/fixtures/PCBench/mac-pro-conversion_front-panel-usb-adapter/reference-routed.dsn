@@ -1,0 +1,207 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\mac-pro-conversion_front-panel-usb-adapter\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  155339 -101603  155626 -101644  155905 -101726  156169 -101846
+            156413 -102003  156633 -102193  156823 -102413  156980 -102657
+            157100 -102921  157182 -103200  157223 -103487  157226 -103632
+            157226 -120396  157223 -120541  157182 -120828  157100 -121107
+            156980 -121371  156823 -121615  156633 -121835  156413 -122025
+            156169 -122182  155905 -122302  155626 -122384  155339 -122425
+            155194 -122428  141732 -122428  141587 -122425  141300 -122384
+            141021 -122302  140757 -122182  140513 -122025  140293 -121835
+            140103 -121615  139946 -121371  139826 -121107  139744 -120828
+            139703 -120541  139700 -120396  139700 -103632  139703 -103487
+            139744 -103200  139826 -102921  139946 -102657  140103 -102413
+            140293 -102193  140513 -102003  140757 -101846  141021 -101726
+            141300 -101644  141587 -101603  141732 -101600  155194 -101600
+            155339 -101603)
+    )
+    (plane @:no_net_0 (polygon B.Cu 0  139954 -103632  139954 -120650  141732 -122174  155448 -122174
+            156972 -120396  156972 -103378  155194 -101854  141478 -101854
+            139954 -103632))
+    (plane @:no_net_1 (polygon F.Cu 0  156972 -103378  156972 -120396  155448 -122174  141732 -122174
+            139954 -120650  139954 -103632  141478 -101854  155194 -101854
+            156972 -103378))
+    (via "Via[0-1]_1000:400_um" "Via[0-1]_600:400_um")
+    (rule
+      (width 600)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Connect:SATA-7_THT_VERT_1"
+      (place P1 148501.1 -105003.6 front 0 (PN CONN_01X07))
+    )
+    (component Pin_Headers:Pin_Header_Straight_2x05
+      (place P2 149783.8 -120294.4 front 180 (PN CONN_02X05))
+    )
+    (component "Symbols:OSHW-Logo_5.7x6mm_SilkScreen"
+      (place REF*** 142875 -117221 front 0 (PN "OSHW-Logo_5.7x6mm_SilkScreen"))
+    )
+  )
+  (library
+    (image "Connect:SATA-7_THT_VERT_1"
+      (outline (path signal 150  -8450 3225  8450 3225))
+      (outline (path signal 150  8450 3225  8450 -3225))
+      (outline (path signal 150  8450 -3225  -8450 -3225))
+      (outline (path signal 150  -8450 -3225  -8450 3225))
+      (pin Round[A]Pad_2500.000000_um 9 6480 0)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 2 2540 500)
+      (pin Round[A]Pad_2500.000000_um 8 -6480 0)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 3 1270 500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 5 -1270 500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 6 -2540 500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 7 -3810 -500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 4 0 -500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 1 3810 -500)
+    )
+    (image Pin_Headers:Pin_Header_Straight_2x05
+      (outline (polygon signal 0  -1745 1745  4295 1745  4295 -11945  -1745 -11945))
+      (outline (path signal 150  3810 1270  3810 -11430))
+      (outline (path signal 150  3810 -11430  -1270 -11430))
+      (outline (path signal 150  -1270 -11430  -1270 -1270))
+      (outline (path signal 150  3810 1270  1270 1270))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  1270 1270  1270 -1270))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 1550  -1550 0))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 0 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 2540 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 0 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 2540 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 7 0 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 8 2540 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 9 0 -10160)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 10 2540 -10160)
+    )
+    (image "Symbols:OSHW-Logo_5.7x6mm_SilkScreen"
+    )
+    (padstack Round[A]Pad_2500.000000_um
+      (shape (circle F.Cu 2500))
+      (shape (circle B.Cu 2500))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1100.000000x1300.000000_um
+      (shape (path F.Cu 1100  0 -100  0 100))
+      (shape (path B.Cu 1100  0 -100  0 100))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_1000:400_um"
+      (shape (circle F.Cu 1000))
+      (shape (circle B.Cu 1000))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net @:no_net_0
+    )
+    (net @:no_net_1
+    )
+    (net USB1_D+
+      (pins P1-2 P2-5)
+    )
+    (net "USB1_D-"
+      (pins P1-3 P2-3)
+    )
+    (net USB2_D+
+      (pins P1-5 P2-6)
+    )
+    (net "USB2_D-"
+      (pins P1-6 P2-4)
+    )
+    (net USB2_GND
+      (pins P1-7 P2-8)
+    )
+    (net USBB_GND
+      (pins P1-4 P2-10)
+    )
+    (net USB1_GND
+      (pins P1-1 P2-7)
+    )
+    (net "Net-(P2-Pad1)"
+      (pins P2-1)
+    )
+    (net "Net-(P2-Pad2)"
+      (pins P2-2)
+    )
+    (net "Net-(P2-Pad9)"
+      (pins P2-9)
+    )
+    (class kicad_default "Net-(P2-Pad1)" "Net-(P2-Pad2)" "Net-(P2-Pad9)" USB1_D+
+      "USB1_D-" USB1_GND USB2_D+ "USB2_D-" USB2_GND USBB_GND
+      (circuit
+        (use_via "Via[0-1]_1000:400_um")
+      )
+      (rule
+        (width 600)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+    (wire (path B.Cu 600  151041 -104504  151041 -107988)(net USB1_D+)(type route))
+    (wire (path B.Cu 600  151257 -113665  149784 -115138)(net USB1_D+)(type route))
+    (wire (path F.Cu 600  151257 -108204  151257 -113665)(net USB1_D+)(type route))
+    (wire (path B.Cu 600  151041 -107988  151257 -108204)(net USB1_D+)(type route))
+    (wire (path B.Cu 600  149784 -115138  149784 -115214)(net USB1_D+)(type route))
+    (wire (path B.Cu 400  149784 -115214  149962 -115214)(net USB1_D+)(type route))
+    (wire (path F.Cu 400  149784 -117754  149962 -117754)(net "USB1_D-")(type route))
+    (wire (path F.Cu 600  149962 -117754  152400 -115316  152400 -107696  149771 -105067)(net "USB1_D-")(type route))
+    (wire (path F.Cu 400  149771 -105067  149771 -104504)(net "USB1_D-")(type route))
+    (wire (path B.Cu 600  147244 -115214  147218 -115214  145796 -113792)(net USB2_D+)(type route))
+    (wire (path B.Cu 600  147231 -106769  147231 -104504)(net USB2_D+)(type route))
+    (wire (path B.Cu 600  145796 -108204  147231 -106769)(net USB2_D+)(type route))
+    (wire (path F.Cu 600  145796 -113792  145796 -108204)(net USB2_D+)(type route))
+    (wire (path F.Cu 600  147244 -117754  144780 -115291  144780 -107696  145961 -106515
+            145961 -104504)(net "USB2_D-")(type route))
+    (wire (path B.Cu 600  147244 -112674  144691 -110122  144691 -105504)(net USB2_GND)(type route))
+    (wire (path B.Cu 600  147244 -108280  148501 -107023)(net USBB_GND)(type route))
+    (wire (path B.Cu 600  147244 -110134  147244 -108280)(net USBB_GND)(type route))
+    (wire (path B.Cu 600  148501 -107023  148501 -105504)(net USBB_GND)(type route))
+    (wire (path B.Cu 600  149784 -112674  152311 -110147  152311 -105504)(net USB1_GND)(type route))
+    (via "Via[0-1]_1000:400_um"  151257 -113665 (net USB1_D+)(type route))
+    (via "Via[0-1]_1000:400_um"  151257 -108204 (net USB1_D+)(type route))
+    (via "Via[0-1]_1000:400_um"  145796 -108204 (net USB2_D+)(type route))
+    (via "Via[0-1]_1000:400_um"  145796 -113792 (net USB2_D+)(type route))
+    (via "Via[0-1]_600:400_um"  147244 -115214 (net USB2_D+)(type route))
+    (via "Via[0-1]_600:400_um"  147244 -117754 (net "USB2_D-")(type route))
+  )
+)

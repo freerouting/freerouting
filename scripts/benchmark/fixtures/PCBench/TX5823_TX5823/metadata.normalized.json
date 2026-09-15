@@ -1,0 +1,61 @@
+{
+  "board_id": "TX5823_TX5823",
+  "display_name": "TX5823_TX5823",
+  "pcbench_directory": "PCBs/TX5823_TX5823",
+  "source": "https://github.com/ep092/TX5823",
+  "author": "ep092",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:28.049769+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 90,
+    "components": 98,
+    "dimensions_mm": {
+      "width": 50.0,
+      "height": 50.0
+    },
+    "area_cm2": 25.0,
+    "zones": 19
+  },
+  "reference": {
+    "segments": 1069,
+    "vias": 138,
+    "track_length_mm": 1525.21,
+    "kicad_drc_violations": 419,
+    "kicad_drc_breakdown": {
+      "total_violations": 419,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 40,
+        "copper_edge_clearance": 7,
+        "courtyards_overlap": 8,
+        "lib_footprint_issues": 98,
+        "silk_over_copper": 73,
+        "silk_overlap": 48,
+        "solder_mask_bridge": 128,
+        "text_height": 7,
+        "text_thickness": 4,
+        "track_dangling": 6
+      },
+      "by_severity": {
+        "error": 183,
+        "warning": 236
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

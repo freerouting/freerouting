@@ -1,0 +1,59 @@
+{
+  "board_id": "constant-current-h-bridge_constant_current_source",
+  "display_name": "constant-current-h-bridge_constant_current_source",
+  "pcbench_directory": "PCBs/constant-current-h-bridge_constant_current_source",
+  "source": "https://github.com/alibenpeng/constant-current-h-bridge",
+  "author": "alibenpeng",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:48.234007+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 25,
+    "components": 46,
+    "dimensions_mm": {
+      "width": 0.0,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 7
+  },
+  "reference": {
+    "segments": 358,
+    "vias": 18,
+    "track_length_mm": 2113.01,
+    "kicad_drc_violations": 321,
+    "kicad_drc_breakdown": {
+      "total_violations": 321,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 219,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 44,
+        "shorting_items": 2,
+        "silk_over_copper": 17,
+        "silk_overlap": 29,
+        "starved_thermal": 5,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 227,
+        "warning": 94
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

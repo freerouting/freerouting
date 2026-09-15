@@ -1,0 +1,30 @@
+{
+  "board": "rfcx-sentinel-pcb_MPPT",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\rfcx-sentinel-pcb_MPPT\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 17,
+  "segment_count": 342,
+  "approximate_track_length_mm": 783.77,
+  "kicad_drc_violations": 307,
+  "generated_at": "2026-08-18T19:40:14.186004+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 307,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 126,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 88,
+      "padstack": 4,
+      "silk_over_copper": 34,
+      "silk_overlap": 15,
+      "solder_mask_bridge": 31,
+      "starved_thermal": 4
+    },
+    "by_severity": {
+      "error": 166,
+      "warning": 141
+    }
+  }
+}

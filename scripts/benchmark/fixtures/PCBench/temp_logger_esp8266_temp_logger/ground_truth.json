@@ -1,0 +1,26 @@
+{
+  "board": "temp_logger_esp8266_temp_logger",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\temp_logger_esp8266_temp_logger\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 86,
+  "approximate_track_length_mm": 324.15,
+  "kicad_drc_violations": 23,
+  "generated_at": "2026-08-18T19:51:18.356463+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 23,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 3,
+      "invalid_outline": 1,
+      "silk_edge_clearance": 9,
+      "silk_overlap": 9,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 4,
+      "warning": 19
+    }
+  }
+}

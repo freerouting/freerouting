@@ -1,0 +1,36 @@
+{
+  "board": "karabas-nano_karabas-nano-revG",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\karabas-nano_karabas-nano-revG\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 776,
+  "segment_count": 4082,
+  "approximate_track_length_mm": 10188.67,
+  "kicad_drc_violations": 875,
+  "generated_at": "2026-08-18T19:00:36.850694+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 875,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 257,
+      "copper_edge_clearance": 1,
+      "copper_sliver": 1,
+      "courtyards_overlap": 2,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 53,
+      "lib_footprint_mismatch": 89,
+      "silk_edge_clearance": 12,
+      "silk_over_copper": 199,
+      "silk_overlap": 8,
+      "solder_mask_bridge": 199,
+      "starved_thermal": 10,
+      "text_height": 30,
+      "track_dangling": 10,
+      "via_dangling": 3
+    },
+    "by_severity": {
+      "error": 470,
+      "warning": 405
+    }
+  }
+}

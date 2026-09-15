@@ -1,0 +1,76 @@
+{
+  "length_violation_max_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowLengthViolations"
+    ],
+    "english_hash": "0d59c1bca849665ccc49356836f8fe7a306f05ed133968f07c8fa55adef70ced",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{allowed_length}}",
+      "{{length}}",
+      "{{net}}"
+    ],
+    "related_keys": [
+      "length_violation_min_message"
+    ],
+    "ui_role": "message"
+  },
+  "length_violation_min_message": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowLengthViolations"
+    ],
+    "english_hash": "6ef92707bf5f8af9cb138f772a79749c91dc51b04d5ceb6b886643f872a59736",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": true,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [
+      "{{allowed_length}}",
+      "{{length}}",
+      "{{net}}"
+    ],
+    "related_keys": [
+      "length_violation_max_message"
+    ],
+    "ui_role": "message"
+  },
+  "list_empty": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [],
+    "english_hash": "acf21af7082ee48be2d90756641246efdc8a768b1c11339bf6e128e10e6ab09f",
+    "grammatical_role": "full_sentence",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
+    "max_length_hint": null,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "label"
+  },
+  "title": {
+    "bundle_desc": "GUI (graphical user interface)",
+    "code_references": [
+      "app.freerouting.gui.windows.routing.WindowLengthViolations"
+    ],
+    "english_hash": "7220f459018febe04732f76d1de1d0f1bae13b5bc42a750e29e1e0cd6163cb01",
+    "grammatical_role": "noun_phrase",
+    "has_placeholders": false,
+    "is_html": false,
+    "java_class": "app.freerouting.gui.windows.routing.WindowLengthViolations",
+    "max_length_hint": 30,
+    "needs_retranslation": false,
+    "placeholders": [],
+    "related_keys": [],
+    "ui_role": "dialog_title"
+  }
+}

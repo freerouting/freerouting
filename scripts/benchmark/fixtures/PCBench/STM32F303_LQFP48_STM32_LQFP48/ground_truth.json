@@ -1,0 +1,30 @@
+{
+  "board": "STM32F303_LQFP48_STM32_LQFP48",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\STM32F303_LQFP48_STM32_LQFP48\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 40,
+  "segment_count": 516,
+  "approximate_track_length_mm": 1092.41,
+  "kicad_drc_violations": 705,
+  "generated_at": "2026-08-18T19:48:37.435070+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 705,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 149,
+      "copper_edge_clearance": 44,
+      "lib_footprint_issues": 19,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 199,
+      "silk_overlap": 199,
+      "solder_mask_bridge": 76,
+      "text_thickness": 10,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 269,
+      "warning": 436
+    }
+  }
+}

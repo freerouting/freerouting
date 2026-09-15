@@ -1,0 +1,36 @@
+{
+  "board": "VB-IoT1_VB-IoT1_v1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\VB-IoT1_VB-IoT1_v1\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 533,
+  "segment_count": 5166,
+  "approximate_track_length_mm": 8490.25,
+  "kicad_drc_violations": 1652,
+  "generated_at": "2026-08-18T18:25:42.737079+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1652,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 505,
+      "copper_edge_clearance": 2,
+      "hole_clearance": 199,
+      "lib_footprint_issues": 178,
+      "nonmirrored_text_on_back_layer": 86,
+      "silk_edge_clearance": 14,
+      "silk_over_copper": 199,
+      "silk_overlap": 199,
+      "solder_mask_bridge": 2,
+      "starved_thermal": 10,
+      "text_height": 189,
+      "text_thickness": 8,
+      "track_dangling": 59,
+      "via_dangling": 1,
+      "zones_intersect": 1
+    },
+    "by_severity": {
+      "error": 719,
+      "warning": 933
+    }
+  }
+}

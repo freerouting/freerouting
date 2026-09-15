@@ -1,0 +1,35 @@
+{
+  "board": "Vento_Vento",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Vento_Vento\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 269,
+  "segment_count": 1223,
+  "approximate_track_length_mm": 1541.2,
+  "kicad_drc_violations": 579,
+  "generated_at": "2026-08-18T18:25:47.976992+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 579,
+    "unconnected_count": 4,
+    "by_type": {
+      "clearance": 173,
+      "copper_edge_clearance": 25,
+      "courtyards_overlap": 1,
+      "hole_clearance": 5,
+      "hole_to_hole": 1,
+      "holes_co_located": 1,
+      "lib_footprint_issues": 97,
+      "shorting_items": 6,
+      "silk_edge_clearance": 8,
+      "silk_over_copper": 26,
+      "silk_overlap": 10,
+      "solder_mask_bridge": 125,
+      "text_height": 96,
+      "track_dangling": 5
+    },
+    "by_severity": {
+      "error": 335,
+      "warning": 244
+    }
+  }
+}

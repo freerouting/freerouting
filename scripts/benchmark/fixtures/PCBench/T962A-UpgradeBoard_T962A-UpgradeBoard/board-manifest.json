@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "T962A-UpgradeBoard_T962A-UpgradeBoard",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 210986,
+      "sha256": "4b4e41f31b14ef1fc4dac92ed7a1e1eb9cfbb3fa75af3264c9b0ff4cf35f1768"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 139363,
+      "sha256": "ad6616179120b3f55f9a8748513f3c62c68939623c5b50873278fcf1d327eede"
+    },
+    "metadata_json": {
+      "bytes": 524,
+      "sha256": "95d9ac91607fb0d05992fdc8b826169c700b9e02bde09c3c35907fca4f2c9951"
+    },
+    "final_json": {
+      "bytes": 125279,
+      "sha256": "e42596258882b8231fa2365afe7cdb2e4d7e4bf5bcb5804d64f2c15b4fcf4485"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:49:36.807998+00:00"
+  }
+}

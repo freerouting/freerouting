@@ -1,0 +1,31 @@
+{
+  "board": "hamityanik_ULP-Weather-Logger",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\hamityanik_ULP-Weather-Logger\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 34,
+  "segment_count": 358,
+  "approximate_track_length_mm": 739.73,
+  "kicad_drc_violations": 529,
+  "generated_at": "2026-08-18T18:52:01.711700+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 529,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 275,
+      "copper_edge_clearance": 6,
+      "courtyards_overlap": 1,
+      "hole_clearance": 4,
+      "items_not_allowed": 37,
+      "lib_footprint_issues": 94,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 49,
+      "solder_mask_bridge": 59,
+      "starved_thermal": 2
+    },
+    "by_severity": {
+      "error": 384,
+      "warning": 145
+    }
+  }
+}

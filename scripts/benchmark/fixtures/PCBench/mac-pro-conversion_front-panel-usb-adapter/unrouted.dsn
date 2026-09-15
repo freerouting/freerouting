@@ -1,0 +1,166 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\mac-pro-conversion_front-panel-usb-adapter\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  155339 -101603  155626 -101644  155905 -101726  156169 -101846
+            156413 -102003  156633 -102193  156823 -102413  156980 -102657
+            157100 -102921  157182 -103200  157223 -103487  157226 -103632
+            157226 -120396  157223 -120541  157182 -120828  157100 -121107
+            156980 -121371  156823 -121615  156633 -121835  156413 -122025
+            156169 -122182  155905 -122302  155626 -122384  155339 -122425
+            155194 -122428  141732 -122428  141587 -122425  141300 -122384
+            141021 -122302  140757 -122182  140513 -122025  140293 -121835
+            140103 -121615  139946 -121371  139826 -121107  139744 -120828
+            139703 -120541  139700 -120396  139700 -103632  139703 -103487
+            139744 -103200  139826 -102921  139946 -102657  140103 -102413
+            140293 -102193  140513 -102003  140757 -101846  141021 -101726
+            141300 -101644  141587 -101603  141732 -101600  155194 -101600
+            155339 -101603)
+    )
+    (via "Via[0-1]_1000:400_um")
+    (rule
+      (width 600)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "Connect:SATA-7_THT_VERT_1"
+      (place P1 148501.1 -105003.6 front 0 (PN CONN_01X07))
+    )
+    (component Pin_Headers:Pin_Header_Straight_2x05
+      (place P2 149783.8 -120294.4 front 180 (PN CONN_02X05))
+    )
+    (component "Symbols:OSHW-Logo_5.7x6mm_SilkScreen"
+      (place REF*** 142875 -117221 front 0 (PN "OSHW-Logo_5.7x6mm_SilkScreen"))
+    )
+  )
+  (library
+    (image "Connect:SATA-7_THT_VERT_1"
+      (outline (path signal 150  -8450 3225  8450 3225))
+      (outline (path signal 150  8450 3225  8450 -3225))
+      (outline (path signal 150  8450 -3225  -8450 -3225))
+      (outline (path signal 150  -8450 -3225  -8450 3225))
+      (pin Round[A]Pad_2500.000000_um 9 6480 0)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 2 2540 500)
+      (pin Round[A]Pad_2500.000000_um 8 -6480 0)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 3 1270 500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 5 -1270 500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 6 -2540 500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 7 -3810 -500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 4 0 -500)
+      (pin Oval[A]Pad_1100.000000x1300.000000_um 1 3810 -500)
+    )
+    (image Pin_Headers:Pin_Header_Straight_2x05
+      (outline (polygon signal 0  -1745 1745  4295 1745  4295 -11945  -1745 -11945))
+      (outline (path signal 150  3810 1270  3810 -11430))
+      (outline (path signal 150  3810 -11430  -1270 -11430))
+      (outline (path signal 150  -1270 -11430  -1270 -1270))
+      (outline (path signal 150  3810 1270  1270 1270))
+      (outline (path signal 150  0 1550  -1550 1550))
+      (outline (path signal 150  1270 1270  1270 -1270))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 1550  -1550 0))
+      (pin Rect[A]Pad_1727.200000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 2 2540 0)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 3 0 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 4 2540 -2540)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 5 0 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 6 2540 -5080)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 7 0 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 8 2540 -7620)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 9 0 -10160)
+      (pin Oval[A]Pad_1727.200000x1727.200000_um 10 2540 -10160)
+    )
+    (image "Symbols:OSHW-Logo_5.7x6mm_SilkScreen"
+    )
+    (padstack Round[A]Pad_2500.000000_um
+      (shape (circle F.Cu 2500))
+      (shape (circle B.Cu 2500))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1100.000000x1300.000000_um
+      (shape (path F.Cu 1100  0 -100  0 100))
+      (shape (path B.Cu 1100  0 -100  0 100))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1727.200000x1727.200000_um
+      (shape (path F.Cu 1727.2  0 0  0 0))
+      (shape (path B.Cu 1727.2  0 0  0 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1727.200000x1727.200000_um
+      (shape (rect F.Cu -863.6 -863.6 863.6 863.6))
+      (shape (rect B.Cu -863.6 -863.6 863.6 863.6))
+      (attach off)
+    )
+    (padstack "Via[0-1]_1000:400_um"
+      (shape (circle F.Cu 1000))
+      (shape (circle B.Cu 1000))
+      (attach off)
+    )
+  )
+  (network
+    (net USB1_D+
+      (pins P1-2 P2-5)
+    )
+    (net "USB1_D-"
+      (pins P1-3 P2-3)
+    )
+    (net USB2_D+
+      (pins P1-5 P2-6)
+    )
+    (net "USB2_D-"
+      (pins P1-6 P2-4)
+    )
+    (net USB2_GND
+      (pins P1-7 P2-8)
+    )
+    (net USBB_GND
+      (pins P1-4 P2-10)
+    )
+    (net USB1_GND
+      (pins P1-1 P2-7)
+    )
+    (net "Net-(P2-Pad1)"
+      (pins P2-1)
+    )
+    (net "Net-(P2-Pad2)"
+      (pins P2-2)
+    )
+    (net "Net-(P2-Pad9)"
+      (pins P2-9)
+    )
+    (class kicad_default "Net-(P2-Pad1)" "Net-(P2-Pad2)" "Net-(P2-Pad9)" USB1_D+
+      "USB1_D-" USB1_GND USB2_D+ "USB2_D-" USB2_GND USBB_GND
+      (circuit
+        (use_via "Via[0-1]_1000:400_um")
+      )
+      (rule
+        (width 600)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

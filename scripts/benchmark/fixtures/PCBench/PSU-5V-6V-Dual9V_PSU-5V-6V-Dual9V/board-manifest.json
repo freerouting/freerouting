@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "PSU-5V-6V-Dual9V_PSU-5V-6V-Dual9V",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 371437,
+      "sha256": "3e3bdfa140efe8cddba30ee68c33c0e2024434311a91ff2dcba34b2e269b7946"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 157231,
+      "sha256": "6cf678a09a288467bbcbe45dd65db6b0fd591653de4896e60eaf58052f1b5d26"
+    },
+    "metadata_json": {
+      "bytes": 627,
+      "sha256": "39bbb75c1ff6f032b6021324a4ba50af00b78eaf7b7b45c908a336fcb2536c27"
+    },
+    "final_json": {
+      "bytes": 110729,
+      "sha256": "aea1e61bb62853a4f49766512014fe88e228b05cc095c4d5695aa1bac08ea41c"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:36:34.726602+00:00"
+  }
+}

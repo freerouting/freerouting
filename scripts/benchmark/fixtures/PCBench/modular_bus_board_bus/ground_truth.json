@@ -1,0 +1,31 @@
+{
+  "board": "modular_bus_board_bus",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\modular_bus_board_bus\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 53,
+  "approximate_track_length_mm": 259.68,
+  "kicad_drc_violations": 514,
+  "generated_at": "2026-08-18T19:24:44.477934+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 514,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 32,
+      "clearance": 32,
+      "courtyards_overlap": 2,
+      "holes_co_located": 32,
+      "lib_footprint_issues": 26,
+      "pth_inside_courtyard": 64,
+      "silk_edge_clearance": 54,
+      "silk_overlap": 199,
+      "solder_mask_bridge": 64,
+      "text_height": 9
+    },
+    "by_severity": {
+      "error": 194,
+      "warning": 320
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "board": "Paperino_HW_paperino_module",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Paperino_HW_paperino_module\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 33,
+  "segment_count": 256,
+  "approximate_track_length_mm": 421.65,
+  "kicad_drc_violations": 166,
+  "generated_at": "2026-08-18T19:31:26.151672+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 166,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 101,
+      "copper_edge_clearance": 36,
+      "courtyards_overlap": 2,
+      "items_not_allowed": 1,
+      "lib_footprint_issues": 20,
+      "silk_over_copper": 3,
+      "silk_overlap": 2,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 140,
+      "warning": 26
+    }
+  }
+}

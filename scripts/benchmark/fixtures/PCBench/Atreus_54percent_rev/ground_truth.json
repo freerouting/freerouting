@@ -1,0 +1,32 @@
+{
+  "board": "Atreus_54percent_rev",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Atreus_54percent_rev\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 70,
+  "segment_count": 2766,
+  "approximate_track_length_mm": 9004.87,
+  "kicad_drc_violations": 1363,
+  "generated_at": "2026-08-18T18:30:11.956879+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 1363,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 417,
+      "copper_edge_clearance": 21,
+      "hole_clearance": 3,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 191,
+      "shorting_items": 202,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 199,
+      "silk_overlap": 120,
+      "solder_mask_bridge": 200,
+      "track_dangling": 8
+    },
+    "by_severity": {
+      "error": 844,
+      "warning": 519
+    }
+  }
+}

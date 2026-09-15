@@ -1,0 +1,25 @@
+{
+  "board": "BUF-DiffToSE-ADAU1966_BUF-DiffToSE-ADAU1966",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BUF-DiffToSE-ADAU1966_BUF-DiffToSE-ADAU1966\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 175,
+  "segment_count": 725,
+  "approximate_track_length_mm": 2383.44,
+  "kicad_drc_violations": 570,
+  "generated_at": "2026-08-18T18:36:45.707428+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 570,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 309,
+      "lib_footprint_issues": 165,
+      "silk_over_copper": 72,
+      "silk_overlap": 24
+    },
+    "by_severity": {
+      "error": 309,
+      "warning": 261
+    }
+  }
+}

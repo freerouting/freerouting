@@ -1,0 +1,877 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 38)
+    (tracks 190)
+    (zones 0)
+    (modules 11)
+    (nets 32)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide)
+  )
+
+  (setup
+    (last_trace_width 0.25)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.6)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.15)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.524 1.524)
+    (pad_drill 0.762)
+    (pad_to_mask_clearance -0.0762)
+    (pad_to_paste_clearance -0.0762)
+    (aux_axis_origin 0 0)
+    (grid_origin 57.785 102.235)
+    (visible_elements 7FFFEFFF)
+    (pcbplotparams
+      (layerselection 0x010c0_80000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "GPIO to motor gerb/"))
+  )
+
+  (net 0 "")
+  (net 1 "Net-(A1-Pad1)")
+  (net 2 "Net-(A1-Pad2)")
+  (net 3 "Net-(B1-Pad1)")
+  (net 4 "Net-(B1-Pad2)")
+  (net 5 "Net-(C1-Pad1)")
+  (net 6 "Net-(C1-Pad2)")
+  (net 7 "Net-(D1-Pad1)")
+  (net 8 "Net-(D1-Pad2)")
+  (net 9 "Net-(GPIO1-Pad2)")
+  (net 10 "Net-(GPIO1-Pad3)")
+  (net 11 "Net-(GPIO1-Pad4)")
+  (net 12 "Net-(GPIO1-Pad5)")
+  (net 13 "Net-(GPIO1-Pad6)")
+  (net 14 "Net-(GPIO1-Pad7)")
+  (net 15 "Net-(GPIO1-Pad8)")
+  (net 16 "Net-(GPIO1-Pad9)")
+  (net 17 "Net-(GPIO1-Pad10)")
+  (net 18 "Net-(PWM1-Pad2)")
+  (net 19 "Net-(PWM1-Pad3)")
+  (net 20 "Net-(PWM1-Pad4)")
+  (net 21 "Net-(PWM1-Pad5)")
+  (net 22 "Net-(PWM1-Pad6)")
+  (net 23 "Net-(MaL2-Pad7)")
+  (net 24 "Net-(MaR1-Pad3)")
+  (net 25 "Net-(MaR1-Pad5)")
+  (net 26 "Net-(MbL2-Pad7)")
+  (net 27 "Net-(MbR1-Pad3)")
+  (net 28 "Net-(MbR1-Pad5)")
+  (net 29 GND)
+  (net 30 +BATT)
+  (net 31 +3V3)
+
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+  )
+
+  (net_class +3.3V ""
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +3V3)
+  )
+
+  (net_class +Batt ""
+    (clearance 0.2)
+    (trace_width 1.5)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +BATT)
+  )
+
+  (net_class GND ""
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net GND)
+  )
+
+  (net_class Motors ""
+    (clearance 0.2)
+    (trace_width 0.75)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net "Net-(A1-Pad1)")
+    (add_net "Net-(A1-Pad2)")
+    (add_net "Net-(B1-Pad1)")
+    (add_net "Net-(B1-Pad2)")
+    (add_net "Net-(C1-Pad1)")
+    (add_net "Net-(C1-Pad2)")
+    (add_net "Net-(D1-Pad1)")
+    (add_net "Net-(D1-Pad2)")
+  )
+
+  (net_class Signal ""
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net "Net-(GPIO1-Pad10)")
+    (add_net "Net-(GPIO1-Pad2)")
+    (add_net "Net-(GPIO1-Pad3)")
+    (add_net "Net-(GPIO1-Pad4)")
+    (add_net "Net-(GPIO1-Pad5)")
+    (add_net "Net-(GPIO1-Pad6)")
+    (add_net "Net-(GPIO1-Pad7)")
+    (add_net "Net-(GPIO1-Pad8)")
+    (add_net "Net-(GPIO1-Pad9)")
+    (add_net "Net-(MaL2-Pad7)")
+    (add_net "Net-(MaR1-Pad3)")
+    (add_net "Net-(MaR1-Pad5)")
+    (add_net "Net-(MbL2-Pad7)")
+    (add_net "Net-(MbR1-Pad3)")
+    (add_net "Net-(MbR1-Pad5)")
+    (add_net "Net-(PWM1-Pad2)")
+    (add_net "Net-(PWM1-Pad3)")
+    (add_net "Net-(PWM1-Pad4)")
+    (add_net "Net-(PWM1-Pad5)")
+    (add_net "Net-(PWM1-Pad6)")
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x07 (layer F.Cu) (tedit 56A276F2) (tstamp 56A1B505)
+    (at 85.725 86.995 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A14DE8)
+    (fp_text reference MaR1 (at 8.89 -63.5 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X07 (at 40.005 -89.535 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 16.51) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 16.51) (end -1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 17) (end 1.75 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 17) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 29 GND))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 31 +3V3))
+    (pad 3 thru_hole oval (at 0 5.08 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(MaR1-Pad3)"))
+    (pad 4 thru_hole oval (at 0 7.62 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 16 "Net-(GPIO1-Pad9)"))
+    (pad 5 thru_hole oval (at 0 10.16 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 25 "Net-(MaR1-Pad5)"))
+    (pad 6 thru_hole oval (at 0 12.7 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 17 "Net-(GPIO1-Pad10)"))
+    (pad 7 thru_hole oval (at 0 15.24 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 13 "Net-(GPIO1-Pad6)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x07.wrl
+      (offset (xyz 0 -7.619999885559082 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x10 (layer F.Cu) (tedit 56A276E8) (tstamp 56A1B55B)
+    (at 59.69 77.47)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A14C5A)
+    (fp_text reference PWM1 (at -30.48 -3.81) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X10 (at -63.5 -33.02) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 24.13) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 24.13) (end -1.27 24.13) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 24.13) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 24.65) (end 1.75 24.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 24.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 24.65) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 31 +3V3))
+    (pad 2 thru_hole oval (at 0 2.54) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 18 "Net-(PWM1-Pad2)"))
+    (pad 3 thru_hole oval (at 0 5.08) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 19 "Net-(PWM1-Pad3)"))
+    (pad 4 thru_hole oval (at 0 7.62) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 20 "Net-(PWM1-Pad4)"))
+    (pad 5 thru_hole oval (at 0 10.16) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 21 "Net-(PWM1-Pad5)"))
+    (pad 6 thru_hole oval (at 0 12.7) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(PWM1-Pad6)"))
+    (pad 7 thru_hole oval (at 0 15.24) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 27 "Net-(MbR1-Pad3)"))
+    (pad 8 thru_hole oval (at 0 17.78) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(MbR1-Pad5)"))
+    (pad 9 thru_hole oval (at 0 20.32) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(MaR1-Pad3)"))
+    (pad 10 thru_hole oval (at 0 22.86) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 25 "Net-(MaR1-Pad5)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x10.wrl
+      (offset (xyz 0 -11.42999982833862 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x02 (layer F.Cu) (tedit 56A1EBB2) (tstamp 56A1B48D)
+    (at 107.315 80.645 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A15AE3)
+    (fp_text reference A1 (at -2.54 1.27 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X02 (at 38.1 -110.49 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.27 3.81) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 1 "Net-(A1-Pad1)"))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 "Net-(A1-Pad2)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x02.wrl
+      (offset (xyz 0 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x02 (layer F.Cu) (tedit 56A1EBBF) (tstamp 56A1B49E)
+    (at 107.315 75.565 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A15BA7)
+    (fp_text reference B1 (at 2.54 1.27 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X02 (at 29.21 -111.76 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.27 3.81) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 "Net-(B1-Pad1)"))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 4 "Net-(B1-Pad2)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x02.wrl
+      (offset (xyz 0 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x02 (layer F.Cu) (tedit 56A1EBC8) (tstamp 56A1B4AF)
+    (at 107.315 93.345 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A15C0A)
+    (fp_text reference C1 (at -2.54 1.27 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X02 (at 47.625 -110.49 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.27 3.81) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 5 "Net-(C1-Pad1)"))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 6 "Net-(C1-Pad2)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x02.wrl
+      (offset (xyz 0 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x02 (layer F.Cu) (tedit 56A1EBB5) (tstamp 56A1B4C0)
+    (at 107.315 88.265 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A15C58)
+    (fp_text reference D1 (at 2.54 1.27 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X02 (at 45.72 -106.68 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.27 3.81) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 7 "Net-(D1-Pad1)"))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 8 "Net-(D1-Pad2)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x02.wrl
+      (offset (xyz 0 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x10 (layer F.Cu) (tedit 56A276EA) (tstamp 56A1B4D9)
+    (at 69.85 77.47)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A14A47)
+    (fp_text reference GPIO1 (at -41.91 -1.27) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X10 (at -74.93 -34.29) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 24.13) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 24.13) (end -1.27 24.13) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 24.13) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 24.65) (end 1.75 24.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 24.65) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 24.65) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 29 GND))
+    (pad 2 thru_hole oval (at 0 2.54) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 9 "Net-(GPIO1-Pad2)"))
+    (pad 3 thru_hole oval (at 0 5.08) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 10 "Net-(GPIO1-Pad3)"))
+    (pad 4 thru_hole oval (at 0 7.62) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 11 "Net-(GPIO1-Pad4)"))
+    (pad 5 thru_hole oval (at 0 10.16) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 12 "Net-(GPIO1-Pad5)"))
+    (pad 6 thru_hole oval (at 0 12.7) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 13 "Net-(GPIO1-Pad6)"))
+    (pad 7 thru_hole oval (at 0 15.24) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 14 "Net-(GPIO1-Pad7)"))
+    (pad 8 thru_hole oval (at 0 17.78) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 15 "Net-(GPIO1-Pad8)"))
+    (pad 9 thru_hole oval (at 0 20.32) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 16 "Net-(GPIO1-Pad9)"))
+    (pad 10 thru_hole oval (at 0 22.86) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 17 "Net-(GPIO1-Pad10)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x10.wrl
+      (offset (xyz 0 -11.42999982833862 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x07 (layer F.Cu) (tedit 56A276F0) (tstamp 56A1B4EF)
+    (at 85.725 94.615 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A1532E)
+    (fp_text reference MaL2 (at 8.89 -60.96 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X07 (at 43.815 -85.09 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 16.51) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 16.51) (end -1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 17) (end 1.75 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 17) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 29 GND))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 30 +BATT))
+    (pad 3 thru_hole oval (at 0 5.08 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 5 "Net-(C1-Pad1)"))
+    (pad 4 thru_hole oval (at 0 7.62 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 6 "Net-(C1-Pad2)"))
+    (pad 5 thru_hole oval (at 0 10.16 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 7 "Net-(D1-Pad1)"))
+    (pad 6 thru_hole oval (at 0 12.7 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 8 "Net-(D1-Pad2)"))
+    (pad 7 thru_hole oval (at 0 15.24 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 23 "Net-(MaL2-Pad7)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x07.wrl
+      (offset (xyz 0 -7.619999885559082 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x07 (layer F.Cu) (tedit 56A276EE) (tstamp 56A1B51B)
+    (at 85.725 81.915 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A152E5)
+    (fp_text reference MbL2 (at -3.175 -62.865 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X07 (at 12.065 -89.535 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 16.51) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 16.51) (end -1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 17) (end 1.75 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 17) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 29 GND))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 30 +BATT))
+    (pad 3 thru_hole oval (at 0 5.08 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 1 "Net-(A1-Pad1)"))
+    (pad 4 thru_hole oval (at 0 7.62 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 2 "Net-(A1-Pad2)"))
+    (pad 5 thru_hole oval (at 0 10.16 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 3 "Net-(B1-Pad1)"))
+    (pad 6 thru_hole oval (at 0 12.7 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 4 "Net-(B1-Pad2)"))
+    (pad 7 thru_hole oval (at 0 15.24 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 26 "Net-(MbL2-Pad7)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x07.wrl
+      (offset (xyz 0 -7.619999885559082 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x07 (layer F.Cu) (tedit 56A276EC) (tstamp 56A1B531)
+    (at 85.725 74.295 90)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A14D21)
+    (fp_text reference MbR1 (at -5.08 -59.055 90) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X07 (at 13.97 -89.535 90) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 16.51) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 16.51) (end -1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 16.51) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 17) (end 1.75 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 17) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 17) (layer F.CrtYd) (width 0.05))
+    (pad 1 thru_hole rect (at 0 0 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 29 GND))
+    (pad 2 thru_hole oval (at 0 2.54 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 31 +3V3))
+    (pad 3 thru_hole oval (at 0 5.08 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 27 "Net-(MbR1-Pad3)"))
+    (pad 4 thru_hole oval (at 0 7.62 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 14 "Net-(GPIO1-Pad7)"))
+    (pad 5 thru_hole oval (at 0 10.16 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(MbR1-Pad5)"))
+    (pad 6 thru_hole oval (at 0 12.7 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 15 "Net-(GPIO1-Pad8)"))
+    (pad 7 thru_hole oval (at 0 15.24 90) (size 2.032 1.7272) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 13 "Net-(GPIO1-Pad6)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x07.wrl
+      (offset (xyz 0 -7.619999885559082 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (module Pin_Headers:Pin_Header_Straight_1x02 (layer F.Cu) (tedit 56A1EBB7) (tstamp 56A1B542)
+    (at 104.14 68.58)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /56A166F4)
+    (fp_text reference M_pwr1 (at -5.08 -0.635) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value CONN_01X02 (at -106.68 -16.51) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_line (start -1.27 3.81) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.27 1.27) (end -1.27 3.81) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 -1.55) (end 1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.55 0) (end -1.55 -1.55) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end -1.27 1.27) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.75 4.3) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end 1.75 -1.75) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.75 -1.75) (end 1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start -1.75 -1.75) (end -1.75 4.3) (layer F.CrtYd) (width 0.05))
+    (fp_line (start 1.55 -1.55) (end 1.55 0) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.27 1.27) (end 1.27 3.81) (layer F.SilkS) (width 0.15))
+    (pad 1 thru_hole rect (at 0 0) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 29 GND))
+    (pad 2 thru_hole oval (at 0 2.54) (size 2.032 2.032) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 30 +BATT))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x02.wrl
+      (offset (xyz 0 -1.269999980926514 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 90))
+    )
+  )
+
+  (gr_line (start 104.14 66.675) (end 109.855 66.675) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 111.76 75.565) (end 111.76 68.58) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 111.76 100.33) (end 111.76 95.885) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 78.105 102.235) (end 81.915 102.235) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 78.74 75.565) (end 59.69 75.565) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 57.785 100.33) (end 57.785 77.47) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 78.105 102.235) (end 59.69 102.235) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 58.42 101.6) (end 58.42 74.93) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 109.855 102.235) (end 81.915 102.235) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 111.76 93.98) (end 111.76 95.885) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 111.76 75.565) (end 111.76 93.98) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 80.645 68.58) (end 80.645 69.215) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 104.14 66.675) (end 84.455 66.675) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 82.55 66.675) (end 84.455 66.675) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 80.645 73.66) (end 80.645 69.215) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 80.01 73.025) (end 80.01 28.575) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 84.455 73.025) (end 84.455 83.185) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 102.235 73.025) (end 84.455 73.025) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 102.235 83.185) (end 102.235 73.025) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 84.455 83.185) (end 102.235 83.185) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 102.235 85.725) (end 84.455 85.725) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 102.235 95.885) (end 102.235 85.725) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 84.455 95.885) (end 102.235 95.885) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 84.455 85.725) (end 84.455 95.885) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 78.74 30.48) (end 80.01 30.48) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 49.53 30.48) (end 80.01 30.48) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 49.53 74.93) (end 49.53 30.48) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 58.42 74.93) (end 49.53 74.93) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 69.215 74.93) (end 78.105 74.93) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 71.12 101.6) (end 71.12 74.93) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_line (start 58.42 101.6) (end 71.12 101.6) (angle 90) (layer Eco1.User) (width 0.2))
+  (gr_arc (start 109.855 68.58) (end 109.855 66.675) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 59.69 100.33) (end 59.69 102.235) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 59.69 77.47) (end 57.785 77.47) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 109.855 100.33) (end 111.76 100.33) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 82.55 68.58) (end 80.645 68.58) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 78.74 73.66) (end 80.645 73.66) (angle 90) (layer Edge.Cuts) (width 0.15))
+  (gr_arc (start 78.105 73.025) (end 80.01 73.025) (angle 90) (layer Eco1.User) (width 0.2))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

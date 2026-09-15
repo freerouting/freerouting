@@ -1,8 +1,7 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.Communication;
-import app.freerouting.board.LayerStructure;
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.state.Communication;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
@@ -29,7 +28,7 @@ interface BoardParserCallback {
    */
   void createBoard(
       IntBox boundingBox,
-      LayerStructure layerStructure,
+      app.freerouting.board.model.structure.LayerStructure layerStructure,
       PolylineShape[] outlineShapes,
       String outlineClearanceClassName,
       BoardRules rules,

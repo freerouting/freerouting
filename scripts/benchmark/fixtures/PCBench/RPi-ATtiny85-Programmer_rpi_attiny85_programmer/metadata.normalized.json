@@ -1,0 +1,68 @@
+{
+  "board_id": "RPi-ATtiny85-Programmer_rpi_attiny85_programmer",
+  "display_name": "RPi-ATtiny85-Programmer_rpi_attiny85_programmer",
+  "pcbench_directory": "PCBs/RPi-ATtiny85-Programmer_rpi_attiny85_programmer",
+  "source": "https://github.com/IoT-Open/RPi-ATtiny85-Programmer",
+  "author": "IoT-Open",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.673953+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 13,
+    "components": 11,
+    "dimensions_mm": {
+      "width": 39.62,
+      "height": 22.35
+    },
+    "area_cm2": 8.86,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 66,
+    "vias": 0,
+    "track_length_mm": 211.02,
+    "kicad_drc_violations": 115,
+    "kicad_drc_breakdown": {
+      "total_violations": 115,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 64,
+        "copper_edge_clearance": 5,
+        "isolated_copper": 2,
+        "lib_footprint_issues": 11,
+        "silk_over_copper": 10,
+        "silk_overlap": 13,
+        "text_height": 9,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 70,
+        "warning": 45
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.101616+00:00",
+    "elapsed_seconds": 5.55,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

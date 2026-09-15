@@ -1,0 +1,61 @@
+{
+  "board_id": "DA_Lamp_attiny44a_servo_i2c",
+  "display_name": "DA_Lamp_attiny44a_servo_i2c",
+  "pcbench_directory": "PCBs/DA_Lamp_attiny44a_servo_i2c",
+  "source": "https://github.com/kevinphys/DA_Lamp",
+  "author": "kevinphys",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:51.822049+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 22.05,
+      "height": 31.38
+    },
+    "area_cm2": 6.92,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 95,
+    "vias": 0,
+    "track_length_mm": 230.57,
+    "kicad_drc_violations": 102,
+    "kicad_drc_breakdown": {
+      "total_violations": 102,
+      "unconnected_count": 1,
+      "by_type": {
+        "lib_footprint_issues": 7,
+        "silk_over_copper": 80,
+        "silk_overlap": 15
+      },
+      "by_severity": {
+        "warning": 102
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.890960+00:00",
+    "elapsed_seconds": 7.05,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

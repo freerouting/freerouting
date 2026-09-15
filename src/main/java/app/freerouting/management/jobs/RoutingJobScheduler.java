@@ -1,0 +1,600 @@
+package app.freerouting.management.jobs;
+
+import static app.freerouting.Freerouting.globalSettings;
+
+import app.freerouting.board.actions.ItemIdGenerator;
+import app.freerouting.core.RoutingJob;
+import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.Session;
+import app.freerouting.core.StoppableThread;
+import app.freerouting.io.FileFormat;
+import app.freerouting.io.specctra.RulesReader;
+import app.freerouting.io.specctra.SesImportSummary;
+import app.freerouting.io.specctra.SesReader;
+import app.freerouting.logger.FRLogger;
+import app.freerouting.management.HeadlessBoardManager;
+import app.freerouting.management.sessions.SessionManager;
+import app.freerouting.settings.GlobalSettings;
+import app.freerouting.settings.sources.ApiSettings;
+import app.freerouting.settings.sources.DsnFileSettings;
+import app.freerouting.settings.sources.RulesFileSettings;
+import app.freerouting.util.TextManager;
+import app.freerouting.util.gson.GsonProvider;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+/**
+ * This singleton class is responsible for managing the jobs that will be processed by the router.
+ * The jobs are stored in a priority queue where the jobs with the highest priority are processed
+ * first. There is only one instance of this class in the Freerouting process.
+ */
+public final class RoutingJobScheduler {
+
+  private static final int MAX_QUEUED_JOBS = 5_000;
+  private static final RoutingJobScheduler instance = new RoutingJobScheduler();
+  public final LinkedList<RoutingJob> jobs = new LinkedList<>();
+  private final int maxParallelJobs = 5;
+
+  // Private constructor to prevent instantiation
+  private RoutingJobScheduler() {
+    // start a loop to process the jobs on another thread
+    Thread loopThread =
+        new Thread(
+            () -> {
+              while (true) {
+                try {
+                  // loop through jobs with the READY_TO_START state, order them according to
+                  // their priority and start them up to the maximum number of parallel jobs
+                  while (jobs.stream().count() > 0) {
+                    RoutingJob[] jobsArray;
+                    synchronized (jobs) {
+                      // Remove any null entries that could have been introduced by concurrent
+                      // access
+                      jobs.removeIf(Objects::isNull);
+                      // sort the jobs by priority
+                      Collections.sort(jobs);
+
+                      jobsArray = jobs.toArray(RoutingJob[]::new);
+                    }
+
+                    boolean startedAny = false;
+                    // start the jobs up to the maximum number of parallel jobs (and make a copy of
+                    // the list to avoid concurrent modification)
+                    for (RoutingJob job : jobsArray) {
+                      if (job.state == RoutingJobState.READY_TO_START) {
+                        int parallelJobs =
+                            (int)
+                                jobs.stream()
+                                    .filter(j -> j.state == RoutingJobState.RUNNING)
+                                    .count();
+
+                        if (parallelJobs < maxParallelJobs) {
+                          if ((job.input == null) || (job.input.getData() == null)) {
+                            FRLogger.warn("RoutingJob input is null, it is skipped.");
+                            job.state = RoutingJobState.INVALID;
+                            continue;
+                          }
+
+                          boolean isDsn = job.input.format == FileFormat.DSN;
+                          boolean isJson = job.input.format == FileFormat.KICAD_DESIGN_JSON;
+
+                          // load the board from the input into a RoutingBoard object
+                          if (isDsn || isJson) {
+                            try {
+                              HeadlessBoardManager boardManager = new HeadlessBoardManager(job);
+                              if (isDsn) {
+                                boardManager.loadFromSpecctraDsn(
+                                    job.input.getData(), null, new ItemIdGenerator());
+                              } else {
+                                boardManager.loadFromKiCadJson(
+                                    job.input.getData(), null, new ItemIdGenerator());
+                              }
+                              job.board = boardManager.getRoutingBoard();
+
+                              var settingsMerger = globalSettings.settingsMergerProtype.clone();
+
+                              if (isDsn) {
+                                settingsMerger.addOrReplaceSources(
+                                    new DsnFileSettings(
+                                        job.input.getData(), job.input.getFilename()));
+                              }
+
+                              // Rules file from job.rules, CLI initialRulesFile, or adjacent
+                              // <designName>.rules
+                              byte[] rulesData = null;
+                              String rulesFilename = null;
+                              if (job.rules != null && job.rules.getData() != null) {
+                                rulesData = job.rules.getData().readAllBytes();
+                                rulesFilename = job.rules.getFilename();
+                              } else if (globalSettings.initialRulesFile != null) {
+                                java.io.File rf = new java.io.File(globalSettings.initialRulesFile);
+                                if (rf.exists()) {
+                                  try {
+                                    rulesData = Files.readAllBytes(rf.toPath());
+                                    rulesFilename = rf.getName();
+                                  } catch (IOException e) {
+                                    FRLogger.warn(
+                                        "Failed to read rules file: "
+                                            + rf.getPath()
+                                            + ": "
+                                            + e.getMessage());
+                                  }
+                                }
+                              } else if (isDsn && job.input.getDirectoryPath() != null) {
+                                String baseName = job.input.getFilename();
+                                if (baseName.lastIndexOf('.') > 0) {
+                                  baseName = baseName.substring(0, baseName.lastIndexOf('.'));
+                                }
+                                java.io.File autoRules =
+                                    new java.io.File(
+                                        job.input.getDirectoryPath(), baseName + ".rules");
+                                if (autoRules.exists()) {
+                                  try {
+                                    rulesData = Files.readAllBytes(autoRules.toPath());
+                                    rulesFilename = autoRules.getName();
+                                  } catch (IOException e) {
+                                    FRLogger.warn(
+                                        "Failed to read adjacent rules file: "
+                                            + autoRules.getPath()
+                                            + ": "
+                                            + e.getMessage());
+                                  }
+                                }
+                              }
+
+                              if (rulesData != null) {
+                                settingsMerger.addOrReplaceSources(
+                                    new RulesFileSettings(
+                                        new ByteArrayInputStream(rulesData), rulesFilename));
+                              }
+
+                              // Keep per-job overrides (e.g. tests toggling fanout/optimizer) by
+                              // applying the job's current settings as highest-priority API
+                              // settings.
+                              if (job.routerSettings != null) {
+                                settingsMerger.addOrReplaceSources(
+                                    new ApiSettings(job.routerSettings));
+                              }
+
+                              // Apply the final merged settings to the job and optimize them for
+                              // the board
+                              job.routerSettings = settingsMerger.merge();
+
+                              // Apply rules from rules file onto the board and routerSettings
+                              if (rulesData != null && job.board != null) {
+                                try {
+                                  String designName = job.name != null ? job.name : "board";
+                                  RulesReader.read(
+                                      new ByteArrayInputStream(rulesData),
+                                      designName,
+                                      job.board,
+                                      job.routerSettings);
+                                } catch (Exception e) {
+                                  FRLogger.error("Failed to apply rules from rules file", e);
+                                }
+                              }
+
+                              job.routerSettings.applyBoardSpecificOptimizations(job.board);
+
+                              // Load session file if specified in job or globally
+                              byte[] sessionBytesToLoad = null;
+                              String sessionFilenameToLoad = null;
+
+                              if (job.initialSession != null
+                                  && job.initialSession.getData() != null) {
+                                sessionBytesToLoad = job.initialSession.getData().readAllBytes();
+                                sessionFilenameToLoad = job.initialSession.getFilename();
+                              } else if (globalSettings.designSessionFilename != null) {
+                                java.io.File sessionFile =
+                                    new java.io.File(globalSettings.designSessionFilename);
+                                if (sessionFile.exists()) {
+                                  try {
+                                    sessionBytesToLoad = Files.readAllBytes(sessionFile.toPath());
+                                    sessionFilenameToLoad = sessionFile.getName();
+                                  } catch (IOException e) {
+                                    FRLogger.warn(
+                                        "Failed to read session file: " + sessionFile.getPath());
+                                  }
+                                } else {
+                                  FRLogger.warn(
+                                      "Session file not found: "
+                                          + globalSettings.designSessionFilename);
+                                }
+                              }
+
+                              if (sessionBytesToLoad != null && job.board != null) {
+                                try {
+                                  boolean isJsonSession =
+                                      (sessionFilenameToLoad != null
+                                              && sessionFilenameToLoad
+                                                  .toLowerCase()
+                                                  .endsWith(".json"))
+                                          || RoutingJob.getFileFormat(sessionBytesToLoad)
+                                              == FileFormat.KICAD_DESIGN_JSON;
+
+                                  if (isJsonSession) {
+                                    FRLogger.info(
+                                        "Loading KiCad JSON session data: "
+                                            + sessionFilenameToLoad);
+                                    try (java.io.Reader jsonReader =
+                                        new java.io.InputStreamReader(
+                                            new ByteArrayInputStream(sessionBytesToLoad),
+                                            StandardCharsets.UTF_8)) {
+                                      app.freerouting.io.kicad.KiCadJsonReader.importSession(
+                                          jsonReader, job.board);
+                                      FRLogger.info("KiCad JSON session loaded successfully");
+                                    }
+                                  } else {
+                                    FRLogger.info(
+                                        "Loading SES session data: " + sessionFilenameToLoad);
+                                    SesImportSummary summary =
+                                        SesReader.read(
+                                            new ByteArrayInputStream(sessionBytesToLoad),
+                                            job.board);
+                                    FRLogger.info(
+                                        "SES session loaded: "
+                                            + summary.wiresImported()
+                                            + " wires, "
+                                            + summary.viasImported()
+                                            + " vias imported"
+                                            + (summary.errorsEncountered() > 0
+                                                ? " (" + summary.errorsEncountered() + " errors)"
+                                                : ""));
+                                  }
+                                } catch (Exception e) {
+                                  FRLogger.error("Failed to load session data", e);
+                                }
+                              }
+
+                              // All pre-checks look fine, start the routing process on a new thread
+                              StoppableThread routerThread =
+                                  new RoutingJobSchedulerActionThread(job);
+                              job.thread = routerThread;
+                              job.state = RoutingJobState.RUNNING;
+                              job.thread.start();
+                              startedAny = true;
+                            } catch (Exception e) {
+                              FRLogger.error(
+                                  "Failed to set up routing job '"
+                                      + job.id
+                                      + "', it will be terminated.",
+                                  e);
+                              job.state = RoutingJobState.TERMINATED;
+                            }
+                          } else {
+                            FRLogger.warn("Only DSN and JSON formats are supported as an input.");
+                            job.state = RoutingJobState.INVALID;
+                            continue;
+                          }
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+
+                    if (!startedAny) {
+                      break;
+                    }
+                  }
+
+                  // wait for a short time before checking the queue again
+                  Thread.sleep(250);
+                } catch (InterruptedException e) {
+                  FRLogger.error("RoutingJobScheduler thread was interrupted.", e);
+                } catch (Exception e) {
+                  FRLogger.error(
+                      "RoutingJobScheduler thread encountered an unexpected error and will "
+                          + "continue.",
+                      e);
+                }
+              }
+            });
+
+    loopThread.setDaemon(true);
+    loopThread.start();
+  }
+
+  /**
+   * Returns the singleton instance of the RoutingJobScheduler.
+   *
+   * @return The singleton instance.
+   */
+  public static RoutingJobScheduler getInstance() {
+    return instance;
+  }
+
+  private String uuidToShortCode(UUID uuid) {
+    return uuid.toString().substring(0, 6).toUpperCase();
+  }
+
+  /**
+   * Enqueues a job to be processed by the router.
+   *
+   * @param job The job to enqueue.
+   * @return the job that was enqueued
+   */
+  public RoutingJob enqueueJob(RoutingJob job) {
+    // Get the session object from the SessionManager and user ID from the job
+    UUID sessionId = job.sessionId;
+    if (sessionId == null) {
+      throw new IllegalArgumentException("The job must have a session ID.");
+    }
+
+    var session = SessionManager.getInstance().getSession(sessionId.toString());
+    if (session == null) {
+      throw new IllegalArgumentException("The session does not exist.");
+    }
+
+    UUID userId = session.userId;
+    if (userId == null) {
+      throw new IllegalArgumentException("The session must have a user ID.");
+    }
+
+    job.state = RoutingJobState.QUEUED;
+
+    synchronized (jobs) {
+      if (this.jobs.size() >= MAX_QUEUED_JOBS) {
+        // Evict finished/terminal jobs first
+        this.jobs.removeIf(
+            j ->
+                j.state == RoutingJobState.COMPLETED
+                    || j.state == RoutingJobState.CANCELLED
+                    || j.state == RoutingJobState.INVALID
+                    || j.state == RoutingJobState.TIMED_OUT
+                    || j.state == RoutingJobState.TERMINATED);
+      }
+      if (this.jobs.size() >= MAX_QUEUED_JOBS) {
+        throw new IllegalStateException(
+            "Maximum job queue capacity reached (" + MAX_QUEUED_JOBS + ").");
+      }
+      this.jobs.add(job);
+    }
+
+    globalSettings.statistics.incrementJobsStarted();
+
+    return job;
+  }
+
+  /**
+   * Saves a job and its associated files when job persistence is enabled.
+   *
+   * @param job the job to save
+   */
+  public void saveJob(RoutingJob job) {
+    if (globalSettings.featureFlags.saveJobs) {
+      String sessionIdString = "null";
+      String userIdString = "null";
+
+      try {
+        Session session = SessionManager.getInstance().getSession(job.sessionId.toString());
+
+        if (session == null) {
+          FRLogger.error(
+              "Failed to save job in session '%s' to disk, because the session does not exist."
+                  .formatted(job.sessionId),
+              null);
+        }
+
+        sessionIdString = session.id.toString();
+        userIdString = session.userId.toString();
+
+        saveJobToDisk(
+            "U-" + uuidToShortCode(session.userId), "S-" + uuidToShortCode(session.id), job);
+      } catch (IOException e) {
+        FRLogger.error(
+            "Failed to save job for user '%s' in session '%s' to disk."
+                .formatted(userIdString, sessionIdString),
+            e);
+      }
+    }
+  }
+
+  private void saveJobToDisk(String userFolder, String sessionFolder, RoutingJob job)
+      throws IOException {
+    // Create the user's folder if it doesn't exist
+    Path userFolderPath = GlobalSettings.getUserDataPath().resolve("data").resolve(userFolder);
+
+    // Make sure that we have the directory structure in place, and create it if it
+    // doesn't exist
+    Files.createDirectories(userFolderPath);
+
+    // Check if we already have a directory that has a name with the ending of
+    // sessionFolder
+    Path sessionFolderPath =
+        Files.list(userFolderPath)
+            .filter(Files::isDirectory)
+            .filter(p -> p.getFileName().toString().endsWith(sessionFolder))
+            .findFirst()
+            .orElse(null);
+
+    if (sessionFolderPath == null) {
+      // List all directories in the user folder and check if they start with a number
+      // If they do, then they are job folders, and we can get the highest number and
+      // increment it
+      int jobFolderCount =
+          Files.list(userFolderPath)
+              .filter(Files::isDirectory)
+              .map(Path::getFileName)
+              .map(Path::toString)
+              .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
+              .filter(s -> s.matches("\\d+")) // Ensure it is numeric
+              .mapToInt(Integer::parseInt)
+              .max()
+              .orElse(0);
+
+      sessionFolderPath =
+          userFolderPath.resolve("%04d".formatted(jobFolderCount + 1) + "_" + sessionFolder);
+    }
+
+    // Create the session's folder if it doesn't exist
+    Files.createDirectories(sessionFolderPath);
+
+    // Save the job to the session's folder using ISO standard date and time format
+    String jobFilename =
+        "FRJ_"
+            + TextManager.convertInstantToString(job.createdAt)
+            + "__J-"
+            + uuidToShortCode(job.id)
+            + ".json";
+    Path jobFilePath = sessionFolderPath.resolve(jobFilename);
+
+    try (Writer writer = Files.newBufferedWriter(jobFilePath, StandardCharsets.UTF_8)) {
+      GsonProvider.GSON.toJson(job, writer);
+    } catch (Exception e) {
+      FRLogger.error("Failed to save job '%s' to disk.".formatted(job.id), e);
+    }
+
+    // Save the input file if the filename is defined and there is data stored in it
+    if (job.input != null
+        && job.input.getFilename() != null
+        && !job.input.getFilename().isEmpty()
+        && job.input.getData() != null) {
+      Path inputFilePath = sessionFolderPath.resolve(job.input.getFilename());
+      Files.write(inputFilePath, job.input.getData().readAllBytes());
+    }
+
+    // Save the output file if the filename is defined and there is data stored in
+    // it
+    if (job.output != null
+        && job.output.getFilename() != null
+        && !job.output.getFilename().isEmpty()
+        && job.output.getData() != null) {
+      Path outputFilePath = sessionFolderPath.resolve(job.output.getFilename());
+      Files.write(outputFilePath, job.output.getData().readAllBytes());
+    }
+  }
+
+  /**
+   * Returns the position of the job in the queue.
+   *
+   * @param job The job to get the position of.
+   * @return The position of the job in the queue or -1 if the job is not in the queue. 0 means the
+   *     job is next in line.
+   */
+  public int getQueuePosition(RoutingJob job) {
+    synchronized (jobs) {
+      return this.jobs.indexOf(job);
+    }
+  }
+
+  /** Returns a snapshot of all jobs currently in the scheduler queue. */
+  public RoutingJob[] listJobs() {
+    synchronized (jobs) {
+      return this.jobs.toArray(RoutingJob[]::new);
+    }
+  }
+
+  /**
+   * Returns jobs belonging to one session.
+   *
+   * @param sessionId the session identifier
+   * @return a snapshot of the session's jobs
+   */
+  public RoutingJob[] listJobs(String sessionId) {
+    synchronized (jobs) {
+      return this.jobs.stream()
+          .filter(j -> j.sessionId.toString().equals(sessionId))
+          .toArray(RoutingJob[]::new);
+    }
+  }
+
+  /**
+   * Returns jobs visible to a user, optionally restricted to one session.
+   *
+   * @param sessionId a session identifier, or {@code null} for all sessions owned by the user
+   * @param userId the session owner's identifier
+   * @return a snapshot of the matching jobs
+   */
+  public RoutingJob[] listJobs(String sessionId, UUID userId) {
+    SessionManager sessionManager = SessionManager.getInstance();
+
+    if (sessionId == null) {
+      // Get all sessions that belong to the user
+      Session[] sessions = sessionManager.getSessions(null, userId);
+
+      // Iterate through the sessions and list all jobs belonging to them
+      List<RoutingJob> result = new LinkedList<>();
+      for (Session session : sessions) {
+        // List all jobs belonging to the user in the session
+        result.addAll(List.of(listJobs(session.id.toString())));
+      }
+
+      return result.toArray(RoutingJob[]::new);
+    } else {
+      Session session = sessionManager.getSession(sessionId, userId);
+
+      if (session != null) {
+        // List all jobs belonging to the user in the session
+        return listJobs(session.id.toString());
+      }
+    }
+
+    return new RoutingJob[0];
+  }
+
+  /**
+   * Finds a queued job by identifier.
+   *
+   * @param jobId the job identifier
+   * @return the matching job, or {@code null} when it is not queued
+   */
+  public RoutingJob getJob(String jobId) {
+    synchronized (jobs) {
+      return this.jobs.stream().filter(j -> j.id.toString().equals(jobId)).findFirst().orElse(null);
+    }
+  }
+
+  /**
+   * Removes all queued jobs belonging to a session.
+   *
+   * @param sessionId the session identifier
+   */
+  public void clearJobs(String sessionId) {
+    synchronized (jobs) {
+      this.jobs.removeIf(j -> j.sessionId.toString().equals(sessionId));
+    }
+  }
+
+  /**
+   * Cancels a job.
+   *
+   * @param job The job to cancel.
+   */
+  public void cancelJob(RoutingJob job) {
+    if (job == null) {
+      return;
+    }
+
+    synchronized (jobs) {
+      if (job.state == RoutingJobState.QUEUED || job.state == RoutingJobState.READY_TO_START) {
+        job.state = RoutingJobState.CANCELLED;
+        job.setCancelledByUser(true);
+        saveJob(job);
+      } else if (job.state == RoutingJobState.RUNNING) {
+        job.state = RoutingJobState.STOPPING;
+        job.setCancelledByUser(true);
+        if (job.thread != null) {
+          job.thread.requestStop();
+        }
+        saveJob(job);
+      } else if (!job.isCancelledByUser()
+          && (job.state != RoutingJobState.COMPLETED)
+          && (job.state != RoutingJobState.TIMED_OUT)
+          && (job.state != RoutingJobState.TERMINATED)) {
+        // If the job is in another state (e.g. PAUSED), we can still cancel it
+        job.state = RoutingJobState.CANCELLED;
+        job.setCancelledByUser(true);
+        saveJob(job);
+      }
+    }
+  }
+}

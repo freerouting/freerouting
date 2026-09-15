@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "radio_antenna-iridium",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 91659,
+      "sha256": "c83684ef12ad21d2b7a46519483f9b87633d95940351535f78b2760bca84e85c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 65802,
+      "sha256": "77a18cd25b43274093e05ff1bc1247f2165491ce590ea5e03f08cd0f96868dd1"
+    },
+    "metadata_json": {
+      "bytes": 638,
+      "sha256": "55f2848da0c03866acaf549c4f24060118b2fd9eb4854712be83cff4633d6711"
+    },
+    "final_json": {
+      "bytes": 51115,
+      "sha256": "c6e92c5bbecea5f231760f7732abb7fa172202e401cfa36b7ef076bfa6afc40a"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:23:48.342377+00:00"
+  }
+}

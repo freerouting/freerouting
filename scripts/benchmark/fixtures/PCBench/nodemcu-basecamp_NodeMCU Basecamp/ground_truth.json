@@ -1,0 +1,27 @@
+{
+  "board": "nodemcu-basecamp_NodeMCU Basecamp",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\nodemcu-basecamp_NodeMCU Basecamp\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 41,
+  "segment_count": 387,
+  "approximate_track_length_mm": 1019.0,
+  "kicad_drc_violations": 162,
+  "generated_at": "2026-08-18T19:28:04.135000+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 162,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 52,
+      "lib_footprint_issues": 47,
+      "silk_over_copper": 28,
+      "silk_overlap": 33,
+      "starved_thermal": 1,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 53,
+      "warning": 109
+    }
+  }
+}

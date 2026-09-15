@@ -27,7 +27,7 @@ public abstract class Shape {
   }
 
   /**
-   * Reads shape scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB and
+   * Reads shape scope from a Specctra dsn file. If layerStructure == null, only Layer.PCB and
    * Layer.Signal are expected, no individual layers.
    */
   public static Shape readScope(IJFlexScanner scanner, LayerStructure layerStructure) {
@@ -84,19 +84,19 @@ public abstract class Shape {
       layer = Layer.SIGNAL;
     } else {
       if (layerStructure == null) {
-        FRLogger.warn("Shape.read_circle_scope: p_layer_structure != null expected");
+        FRLogger.warn("Shape.read_circle_scope: layerStructure != null expected");
         return null;
       }
 
-      int layerNo = layerStructure.getNo(layerName);
-      if (layerNo < 0 || layerNo >= layerStructure.arr.length) {
+      int layerIndex = layerStructure.getNo(layerName);
+      if (layerIndex < 0 || layerIndex >= layerStructure.layers.length) {
         FRLogger.warn(
             "Shape.read_circle_scope: layer with name '"
                 + layerName
                 + "' not found in layer structure.");
         return null;
       } else {
-        layer = layerStructure.arr[layerNo];
+        layer = layerStructure.layers[layerIndex];
       }
     }
 
@@ -139,13 +139,13 @@ public abstract class Shape {
             "PolylinePath.read_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
         return null;
       }
-      double[] cornerArr = new double[cornerList.size() - 1];
-      for (int i = 0; i < cornerArr.length; i++) {
+      double[] corners = new double[cornerList.size() - 1];
+      for (int i = 0; i < corners.length; i++) {
         nextObject = it.next();
         if (nextObject instanceof Double double1) {
-          cornerArr[i] = double1;
+          corners[i] = double1;
         } else if (nextObject instanceof Integer integer) {
-          cornerArr[i] = integer;
+          corners[i] = integer;
         } else {
           FRLogger.warn(
               "Shape.read_polygon_path_scope: number expected at '"
@@ -154,7 +154,7 @@ public abstract class Shape {
           return null;
         }
       }
-      return new PolylinePath(layer, width, cornerArr);
+      return new PolylinePath(layer, width, corners);
     } catch (IOException e) {
       FRLogger.error("PolylinePath.read_scope: IO error scanning file", e);
       return null;
@@ -182,19 +182,19 @@ public abstract class Shape {
               + "'");
       return null;
     }
-    if (nextToken instanceof String currName) {
-      scanner.setScopeIdentifier(currName);
-      if (!currName.isEmpty()) {
-        areaName = currName;
+    if (nextToken instanceof String currentName) {
+      scanner.setScopeIdentifier(currentName);
+      if (!currentName.isEmpty()) {
+        areaName = currentName;
       }
     }
-    Shape currShape = Shape.readScope(scanner, layerStructure);
-    if (currShape == null) {
+    Shape currentShape = Shape.readScope(scanner, layerStructure);
+    if (currentShape == null) {
       FRLogger.warn(
           "Shape.read_area_scope: could not read shape at '" + scanner.getScopeIdentifier() + "'");
       resultOk = false;
     }
-    shapeList.add(currShape);
+    shapeList.add(currentShape);
     nextToken = null;
     for (; ; ) {
       Object prevToken = nextToken;
@@ -251,8 +251,8 @@ public abstract class Shape {
   }
 
   /**
-   * Reads a rectangle scope from a Specctra dsn file. If p_layer_structure == null, only Layer.PCB
-   * and Layer.Signal are expected, no individual layers.
+   * Reads a rectangle scope from a Specctra dsn file. If layerStructure == null, only Layer.PCB and
+   * Layer.Signal are expected, no individual layers.
    */
   public static Rectangle readRectangleScope(IJFlexScanner scanner, LayerStructure layerStructure) {
     try {
@@ -298,7 +298,7 @@ public abstract class Shape {
   }
 
   /**
-   * Reads a closed polygon scope from a Specctra dsn file. If p_layer_structure == null, only
+   * Reads a closed polygon scope from a Specctra dsn file. If layerStructure == null, only
    * Layer.PCB and Layer.Signal are expected, no individual layers.
    */
   public static Polygon readPolygonScope(IJFlexScanner scanner, LayerStructure layerStructure) {
@@ -325,8 +325,8 @@ public abstract class Shape {
                   + "'");
           return null;
         }
-        int layerNo = layerStructure.getNo((String) nextToken);
-        if (layerNo < 0 || layerNo >= layerStructure.arr.length) {
+        int layerIndex = layerStructure.getNo((String) nextToken);
+        if (layerIndex < 0 || layerIndex >= layerStructure.layers.length) {
           FRLogger.warn(
               "Shape.read_polygon_scope: layer name '"
                   + nextToken
@@ -335,7 +335,7 @@ public abstract class Shape {
                   + "'");
           layerOk = false;
         } else {
-          polygonLayer = layerStructure.arr[layerNo];
+          polygonLayer = layerStructure.layers[layerIndex];
         }
       }
 
@@ -408,13 +408,13 @@ public abstract class Shape {
       // fill the coordinates
       Object nextToken;
       double[] circleCoor = new double[3];
-      int currIndex = 0;
+      int currentIndex = 0;
       for (; ; ) {
         nextToken = scanner.nextToken();
         if (nextToken == Keyword.CLOSED_BRACKET) {
           break;
         }
-        if (currIndex > 2) {
+        if (currentIndex > 2) {
           FRLogger.warn(
               "Shape.read_circle_scope: closed bracket expected at '"
                   + scanner.getScopeIdentifier()
@@ -422,15 +422,15 @@ public abstract class Shape {
           return null;
         }
         if (nextToken instanceof Double double1) {
-          circleCoor[currIndex] = double1;
+          circleCoor[currentIndex] = double1;
         } else if (nextToken instanceof Integer integer) {
-          circleCoor[currIndex] = integer;
+          circleCoor[currentIndex] = integer;
         } else {
           FRLogger.warn(
               "Shape.read_circle_scope: number expected at '" + scanner.getScopeIdentifier() + "'");
           return null;
         }
-        ++currIndex;
+        ++currentIndex;
       }
 
       if (circleLayer == null) {
@@ -517,13 +517,13 @@ public abstract class Shape {
 
   /**
    * Transforms a shape with holes to the board coordinate system. The first shape in the Collection
-   * p_area is the border, the other shapes are holes of the area.
+   * area is the border, the other shapes are holes of the area.
    */
   public static Area transformAreaToBoard(
       Collection<Shape> area, CoordinateTransform coordinateTransform) {
     int holeCount = area.size() - 1;
     if (holeCount <= -1) {
-      FRLogger.warn("Shape.transform_area_to_board: p_area.size() > 0 expected");
+      FRLogger.warn("Shape.transform_area_to_board: area.size() > 0 expected");
       return null;
     }
     Iterator<Shape> it = area.iterator();
@@ -556,13 +556,13 @@ public abstract class Shape {
 
   /**
    * Transforms the relative coordinates of a shape with holes to the board coordinate system. The
-   * first shape in the Collection p_area is the border, the other shapes are holes of the area.
+   * first shape in the Collection area is the border, the other shapes are holes of the area.
    */
   public static Area transformAreaToBoardRel(
       Collection<Shape> area, CoordinateTransform coordinateTransform) {
     int holeCount = area.size() - 1;
     if (holeCount <= -1) {
-      FRLogger.warn("Shape.transform_area_to_board_rel: p_area.size() > 0 expected");
+      FRLogger.warn("Shape.transform_area_to_board_rel: area.size() > 0 expected");
       return null;
     }
     Iterator<Shape> it = area.iterator();

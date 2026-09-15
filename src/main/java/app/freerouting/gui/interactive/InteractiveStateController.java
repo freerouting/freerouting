@@ -1,13 +1,13 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Item;
 import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.geometry.planar.IntBox;
-import app.freerouting.gui.session.EditorEvent;
-import app.freerouting.gui.session.EditorStateController;
-import app.freerouting.gui.session.EditorStateHandle;
-import app.freerouting.gui.session.GuiBoardManager;
-import app.freerouting.gui.session.InteractiveCommand;
+import app.freerouting.gui.workspace.GuiBoardManager;
+import app.freerouting.gui.workspace.controllers.EditorStateController;
+import app.freerouting.gui.workspace.progress.InteractiveCommand;
+import app.freerouting.gui.workspace.session.EditorEvent;
+import app.freerouting.gui.workspace.session.EditorStateHandle;
 import app.freerouting.util.TextManager;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;

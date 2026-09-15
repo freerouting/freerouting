@@ -1,0 +1,36 @@
+{
+  "board": "kitspace_USB-C-Screen-Adapter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_USB-C-Screen-Adapter\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 175,
+  "segment_count": 746,
+  "approximate_track_length_mm": 952.62,
+  "kicad_drc_violations": 394,
+  "generated_at": "2026-08-18T18:19:33.364461+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 394,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 72,
+      "copper_edge_clearance": 34,
+      "courtyards_overlap": 13,
+      "hole_clearance": 53,
+      "lib_footprint_issues": 5,
+      "lib_footprint_mismatch": 54,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 3,
+      "silk_overlap": 5,
+      "solder_mask_bridge": 83,
+      "starved_thermal": 5,
+      "text_height": 55,
+      "track_dangling": 5,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 264,
+      "warning": 130
+    }
+  }
+}

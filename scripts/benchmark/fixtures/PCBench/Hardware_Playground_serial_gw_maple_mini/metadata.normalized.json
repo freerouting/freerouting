@@ -1,0 +1,58 @@
+{
+  "board_id": "Hardware_Playground_serial_gw_maple_mini",
+  "display_name": "Hardware_Playground_serial_gw_maple_mini",
+  "pcbench_directory": "PCBs/Hardware_Playground_serial_gw_maple_mini",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 33,
+    "components": 189,
+    "dimensions_mm": {
+      "width": 70.01,
+      "height": 50.0
+    },
+    "area_cm2": 35.01,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 88,
+    "vias": 2,
+    "track_length_mm": 485.65,
+    "kicad_drc_violations": 307,
+    "kicad_drc_breakdown": {
+      "total_violations": 307,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 170,
+        "clearance": 107,
+        "copper_edge_clearance": 1,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 19,
+        "pth_inside_courtyard": 6,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 288,
+        "warning": 19
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

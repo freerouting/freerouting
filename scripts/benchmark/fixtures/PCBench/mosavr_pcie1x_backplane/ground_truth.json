@@ -1,0 +1,25 @@
+{
+  "board": "mosavr_pcie1x_backplane",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mosavr_pcie1x_backplane\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 175,
+  "approximate_track_length_mm": 1108.8,
+  "kicad_drc_violations": 59,
+  "generated_at": "2026-08-18T19:25:23.113504+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 59,
+    "unconnected_count": 8,
+    "by_type": {
+      "clearance": 27,
+      "hole_clearance": 8,
+      "lib_footprint_issues": 8,
+      "solder_mask_bridge": 16
+    },
+    "by_severity": {
+      "error": 51,
+      "warning": 8
+    }
+  }
+}

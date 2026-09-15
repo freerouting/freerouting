@@ -1,0 +1,28 @@
+{
+  "board": "KiCad-Like-a-Pro-Tutorial_rf24-breakout-v1",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\KiCad-Like-a-Pro-Tutorial_rf24-breakout-v1\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 42,
+  "approximate_track_length_mm": 229.11,
+  "kicad_drc_violations": 46,
+  "generated_at": "2026-08-18T19:01:58.428087+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 46,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 17,
+      "copper_edge_clearance": 1,
+      "lib_footprint_issues": 3,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 12,
+      "silk_overlap": 1,
+      "text_height": 8
+    },
+    "by_severity": {
+      "error": 18,
+      "warning": 28
+    }
+  }
+}

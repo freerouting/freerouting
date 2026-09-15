@@ -1,0 +1,23 @@
+{
+  "board": "sms-cart-32k_cart",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\sms-cart-32k_cart\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 4,
+  "segment_count": 207,
+  "approximate_track_length_mm": 1077.08,
+  "kicad_drc_violations": 84,
+  "generated_at": "2026-08-18T19:45:52.314659+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 84,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 77,
+      "lib_footprint_issues": 7
+    },
+    "by_severity": {
+      "error": 77,
+      "warning": 7
+    }
+  }
+}

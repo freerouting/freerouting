@@ -1,0 +1,4024 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 15)
+    (tracks 688)
+    (zones 0)
+    (modules 142)
+    (nets 94)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide)
+  )
+
+  (setup
+    (last_trace_width 0.25)
+    (trace_clearance 0.2)
+    (zone_clearance 0.5)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.8)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.05)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.12)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 0.7 1.8)
+    (pad_drill 0)
+    (pad_to_mask_clearance 0.051)
+    (solder_mask_min_width 0.25)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x010fc_ffffffff)
+      (usegerberextensions false)
+      (usegerberattributes false)
+      (usegerberadvancedattributes false)
+      (creategerberjobfile false)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory ""))
+  )
+
+  (net 0 "")
+  (net 1 A)
+  (net 2 K)
+  (net 3 LED10_1)
+  (net 4 LED11_1)
+  (net 5 LED12_1)
+  (net 6 LED13_1)
+  (net 7 LED14_1)
+  (net 8 LED15_1)
+  (net 9 LED16_1)
+  (net 10 LED17_1)
+  (net 11 LED18_1)
+  (net 12 LED19_1)
+  (net 13 LED1_1)
+  (net 14 LED20_1)
+  (net 15 LED21_1)
+  (net 16 LED22_1)
+  (net 17 LED23_1)
+  (net 18 LED24_1)
+  (net 19 LED25_1)
+  (net 20 LED26_1)
+  (net 21 LED27_1)
+  (net 22 LED28_1)
+  (net 23 LED29_1)
+  (net 24 LED2_1)
+  (net 25 LED30_1)
+  (net 26 LED31_1)
+  (net 27 LED32_1)
+  (net 28 LED33_1)
+  (net 29 LED34_1)
+  (net 30 LED35_1)
+  (net 31 LED36_1)
+  (net 32 LED37_1)
+  (net 33 LED38_1)
+  (net 34 LED39_1)
+  (net 35 LED3_1)
+  (net 36 LED40_1)
+  (net 37 LED41_1)
+  (net 38 LED42_1)
+  (net 39 LED43_1)
+  (net 40 LED44_1)
+  (net 41 LED45_1)
+  (net 42 LED46_1)
+  (net 43 LED47_1)
+  (net 44 LED48_1)
+  (net 45 LED49_1)
+  (net 46 LED4_1)
+  (net 47 LED50_1)
+  (net 48 LED51_1)
+  (net 49 LED52_1)
+  (net 50 LED53_1)
+  (net 51 LED54_1)
+  (net 52 LED55_1)
+  (net 53 LED56_1)
+  (net 54 LED57_1)
+  (net 55 LED58_1)
+  (net 56 LED59_1)
+  (net 57 LED5_1)
+  (net 58 LED60_1)
+  (net 59 LED61_1)
+  (net 60 LED62_1)
+  (net 61 LED63_1)
+  (net 62 LED64_1)
+  (net 63 LED65_1)
+  (net 64 LED66_1)
+  (net 65 LED67_1)
+  (net 66 LED68_1)
+  (net 67 LED69_1)
+  (net 68 LED6_1)
+  (net 69 LED70_1)
+  (net 70 LED71_1)
+  (net 71 LED72_1)
+  (net 72 LED73_1)
+  (net 73 LED74_1)
+  (net 74 LED75_1)
+  (net 75 LED76_1)
+  (net 76 LED77_1)
+  (net 77 LED78_1)
+  (net 78 LED79_1)
+  (net 79 LED7_1)
+  (net 80 LED80_1)
+  (net 81 LED81_1)
+  (net 82 LED82_1)
+  (net 83 LED83_1)
+  (net 84 LED84_1)
+  (net 85 LED85_1)
+  (net 86 LED86_1)
+  (net 87 LED87_1)
+  (net 88 LED88_1)
+  (net 89 LED89_1)
+  (net 90 LED8_1)
+  (net 91 LED90_1)
+  (net 92 LED9_1)
+  (net 93 GND)
+
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.8)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net A)
+    (add_net GND)
+    (add_net K)
+    (add_net LED10_1)
+    (add_net LED11_1)
+    (add_net LED12_1)
+    (add_net LED13_1)
+    (add_net LED14_1)
+    (add_net LED15_1)
+    (add_net LED16_1)
+    (add_net LED17_1)
+    (add_net LED18_1)
+    (add_net LED19_1)
+    (add_net LED1_1)
+    (add_net LED20_1)
+    (add_net LED21_1)
+    (add_net LED22_1)
+    (add_net LED23_1)
+    (add_net LED24_1)
+    (add_net LED25_1)
+    (add_net LED26_1)
+    (add_net LED27_1)
+    (add_net LED28_1)
+    (add_net LED29_1)
+    (add_net LED2_1)
+    (add_net LED30_1)
+    (add_net LED31_1)
+    (add_net LED32_1)
+    (add_net LED33_1)
+    (add_net LED34_1)
+    (add_net LED35_1)
+    (add_net LED36_1)
+    (add_net LED37_1)
+    (add_net LED38_1)
+    (add_net LED39_1)
+    (add_net LED3_1)
+    (add_net LED40_1)
+    (add_net LED41_1)
+    (add_net LED42_1)
+    (add_net LED43_1)
+    (add_net LED44_1)
+    (add_net LED45_1)
+    (add_net LED46_1)
+    (add_net LED47_1)
+    (add_net LED48_1)
+    (add_net LED49_1)
+    (add_net LED4_1)
+    (add_net LED50_1)
+    (add_net LED51_1)
+    (add_net LED52_1)
+    (add_net LED53_1)
+    (add_net LED54_1)
+    (add_net LED55_1)
+    (add_net LED56_1)
+    (add_net LED57_1)
+    (add_net LED58_1)
+    (add_net LED59_1)
+    (add_net LED5_1)
+    (add_net LED60_1)
+    (add_net LED61_1)
+    (add_net LED62_1)
+    (add_net LED63_1)
+    (add_net LED64_1)
+    (add_net LED65_1)
+    (add_net LED66_1)
+    (add_net LED67_1)
+    (add_net LED68_1)
+    (add_net LED69_1)
+    (add_net LED6_1)
+    (add_net LED70_1)
+    (add_net LED71_1)
+    (add_net LED72_1)
+    (add_net LED73_1)
+    (add_net LED74_1)
+    (add_net LED75_1)
+    (add_net LED76_1)
+    (add_net LED77_1)
+    (add_net LED78_1)
+    (add_net LED79_1)
+    (add_net LED7_1)
+    (add_net LED80_1)
+    (add_net LED81_1)
+    (add_net LED82_1)
+    (add_net LED83_1)
+    (add_net LED84_1)
+    (add_net LED85_1)
+    (add_net LED86_1)
+    (add_net LED87_1)
+    (add_net LED88_1)
+    (add_net LED89_1)
+    (add_net LED8_1)
+    (add_net LED90_1)
+    (add_net LED9_1)
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 24.918 270)
+    (attr smd)
+    (fp_text reference U1 (at -0.661 -1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start -1.346 0.787) (end -1.346 -0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start 1.346 0.787) (end 1.346 -0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge174 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.628 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.623 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 35 LED3_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 32.441 90)
+    (attr smd)
+    (fp_text reference U2 (at 0.914 1.841 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge187 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 68 LED6_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 39.961 90)
+    (attr smd)
+    (fp_text reference U3 (at 0.845 2.032 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge200 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.627 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 92 LED9_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 47.482 90)
+    (attr smd)
+    (fp_text reference U4 (at 0.619 2.032 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge213 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 5 LED12_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 55.003 90)
+    (attr smd)
+    (fp_text reference U5 (at 0.774 2.032 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge226 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 8 LED15_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 62.524 90)
+    (attr smd)
+    (fp_text reference U6 (at 0.675 2.032 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge239 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 11 LED18_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 70.045 90)
+    (attr smd)
+    (fp_text reference U7 (at 0.703 1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge252 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 15 LED21_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 77.566 90)
+    (attr smd)
+    (fp_text reference U8 (at 0.732 1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge265 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 18 LED24_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 85.087 90)
+    (attr smd)
+    (fp_text reference U9 (at 0.633 1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge278 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 21 LED27_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 46.101 92.609 90)
+    (attr smd)
+    (fp_text reference U10 (at 1.042 2.032 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge291 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 25 LED30_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 25.299 270)
+    (attr smd)
+    (fp_text reference U11 (at -0.889 -1.892 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 270) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge304 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 90) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 90) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 28 LED33_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 32.721 90)
+    (attr smd)
+    (fp_text reference U12 (at 1.143 1.765 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge317 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 31 LED36_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 40.143 90)
+    (attr smd)
+    (fp_text reference U13 (at 1.016 1.892 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge330 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.627 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.624 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 34 LED39_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 47.566 90)
+    (attr smd)
+    (fp_text reference U14 (at 1.016 1.892 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge343 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 38 LED42_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 54.988 90)
+    (attr smd)
+    (fp_text reference U15 (at 1.143 2.019 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge356 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 41 LED45_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 62.411 90)
+    (attr smd)
+    (fp_text reference U16 (at 1.143 2.146 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge369 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 44 LED48_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 69.833 90)
+    (attr smd)
+    (fp_text reference U17 (at 0.889 2.019 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge382 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.627 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 48 LED51_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 77.256 90)
+    (attr smd)
+    (fp_text reference U18 (at 0.889 2.019 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge395 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.627 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 51 LED54_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 84.678 90)
+    (attr smd)
+    (fp_text reference U19 (at 1.016 1.892 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge408 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 54 LED57_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 68.453 92.101 90)
+    (attr smd)
+    (fp_text reference U20 (at 1.27 1.765 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge421 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 58 LED60_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 25.172 270)
+    (attr smd)
+    (fp_text reference U21 (at 0.101 -2.032 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 270) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge434 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 90) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 90) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 61 LED63_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 32.636 90)
+    (attr smd)
+    (fp_text reference U22 (at 1.27 1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge447 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 64 LED66_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 40.101 90)
+    (attr smd)
+    (fp_text reference U23 (at 1.397 1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge460 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 67 LED69_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 47.566 90)
+    (attr smd)
+    (fp_text reference U24 (at 1.27 1.778 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge473 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 71 LED72_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 55.031 90)
+    (attr smd)
+    (fp_text reference U25 (at 1.27 1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge486 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.627 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 74 LED75_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 62.495 90)
+    (attr smd)
+    (fp_text reference U26 (at 1.27 1.778 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge499 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.627 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.624 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 77 LED78_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 69.96 90)
+    (attr smd)
+    (fp_text reference U27 (at 1.524 1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge512 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.627 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 81 LED81_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 77.425 90)
+    (attr smd)
+    (fp_text reference U28 (at 1.143 1.778 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge525 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 84 LED84_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 84.89 90)
+    (attr smd)
+    (fp_text reference U29 (at 1.397 1.651 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.101 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge538 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 87 LED87_1))
+  )
+
+  (module easyeda:SOD-123F (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.805 92.355 90)
+    (attr smd)
+    (fp_text reference U30 (at 2.947 1.905 90) (layer B.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_text value NSI45020T1G (at 0.102 -1.509 90) (layer B.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left mirror))
+    )
+    (fp_line (start 1.346 -0.787) (end 1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -1.346 -0.787) (end -1.346 0.787) (layer Cmts.User) (width 0.254))
+    (fp_line (start -0.406 0.508) (end -0.406 -0.508) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.346 -0.787) (end -1.346 -0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.346 0.787) (end 1.346 0.787) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 -0.406) (end -0.178 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.406 0.406) (end 0.406 -0.406) (layer B.SilkS) (width 0.254))
+    (fp_line (start -0.178 0) (end 0.406 0.406) (layer B.SilkS) (width 0.254))
+    (fp_text user gge551 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 1.626 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at -1.625 0 270) (size 0.909 1.219) (layers B.Cu B.Paste B.Mask)
+      (net 91 LED90_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 25.02 270)
+    (fp_text reference LED1 (at -4.178 1.745) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge564 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 13 LED1_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 25.02 90)
+    (fp_text reference LED2 (at 3.67 -1.752) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge572 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 -0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 24 LED2_1))
+    (pad 2 thru_hole rect (at 1.269 -0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 13 LED1_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 25.02 270)
+    (fp_text reference LED3 (at -4.178 1.759) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge580 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 35 LED3_1))
+    (pad 2 thru_hole rect (at 1.271 0 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 24 LED2_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 32.519 90)
+    (fp_text reference LED4 (at 3.55 -1.872) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge588 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 -0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 46 LED4_1))
+    (pad 2 thru_hole rect (at 1.271 -0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 32.519 270)
+    (fp_text reference LED5 (at 3.562 1.879) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge596 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 -0.002 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 57 LED5_1))
+    (pad 2 thru_hole rect (at 1.269 -0.002 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 46 LED4_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 32.519 90)
+    (fp_text reference LED6 (at 3.55 -1.632) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge604 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 68 LED6_1))
+    (pad 2 thru_hole rect (at 1.271 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 57 LED5_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 40.02 90)
+    (fp_text reference LED7 (at 3.303 -1.491) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge612 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 79 LED7_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 40.02 270)
+    (fp_text reference LED8 (at 3.682 1.752) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge620 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 90 LED8_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 79 LED7_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 40.02 90)
+    (fp_text reference LED9 (at 3.43 -1.886) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge628 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 92 LED9_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 90 LED8_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 47.52 90)
+    (fp_text reference LED10 (at 3.437 -2.126) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge636 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 3 LED10_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 47.52 270)
+    (fp_text reference LED11 (at 3.548 1.879) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge644 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 4 LED11_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 3 LED10_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 47.52 90)
+    (fp_text reference LED12 (at 3.437 -2.013) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge652 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 5 LED12_1))
+    (pad 2 thru_hole rect (at 1.272 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 4 LED11_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 55.019 90)
+    (fp_text reference LED13 (at 3.317 -1.999) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge660 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 6 LED13_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 55.019 270)
+    (fp_text reference LED14 (at 3.541 2.26) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge668 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 7 LED14_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 6 LED13_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 55.019 90)
+    (fp_text reference LED15 (at 3.444 -2.013) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge676 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 8 LED15_1))
+    (pad 2 thru_hole rect (at 1.272 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 7 LED14_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 62.52 90)
+    (fp_text reference LED16 (at 3.451 -1.999) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge684 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 9 LED16_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 62.52 270)
+    (fp_text reference LED17 (at 3.534 2.133) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge692 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 10 LED17_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 9 LED16_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 62.52 90)
+    (fp_text reference LED18 (at 3.324 -2.013) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge700 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 11 LED18_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 10 LED17_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 70.019 90)
+    (fp_text reference LED19 (at 3.458 -1.872) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge708 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 12 LED19_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 70.019 270)
+    (fp_text reference LED20 (at 3.527 2.387) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge716 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 14 LED20_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 12 LED19_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 70.019 90)
+    (fp_text reference LED21 (at 3.458 -1.886) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge724 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 15 LED21_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 14 LED20_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 77.52 90)
+    (fp_text reference LED22 (at 3.338 -2.253) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge732 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.267 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 16 LED22_1))
+    (pad 2 thru_hole rect (at 1.273 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 77.52 270)
+    (fp_text reference LED23 (at 3.52 2.387) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge740 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 17 LED23_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 16 LED22_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 77.52 90)
+    (fp_text reference LED24 (at 3.465 -2.14) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge748 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.267 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 18 LED24_1))
+    (pad 2 thru_hole rect (at 1.273 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 17 LED23_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 85.019 90)
+    (fp_text reference LED25 (at 3.472 -2.253) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge756 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 19 LED25_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 85.019 270)
+    (fp_text reference LED26 (at 3.513 2.133) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge764 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 20 LED26_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 19 LED25_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 85.019 90)
+    (fp_text reference LED27 (at 3.472 -2.14) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge772 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 21 LED27_1))
+    (pad 2 thru_hole rect (at 1.272 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 20 LED26_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 28.796 92.52 90)
+    (fp_text reference LED28 (at 3.352 -2.253) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge780 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 22 LED28_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 36.296 92.52 270)
+    (fp_text reference LED29 (at 3.76 2.387) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge788 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 23 LED29_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 22 LED28_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 43.796 92.52 90)
+    (fp_text reference LED30 (at 3.479 -2.267) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge796 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 25 LED30_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 23 LED29_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 25.045 270)
+    (fp_text reference LED31 (at -4.203 2.159) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge804 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 26 LED31_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 25.045 90)
+    (fp_text reference LED32 (at 3.568 -2.166) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge812 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 27 LED32_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 26 LED31_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 25.045 270)
+    (fp_text reference LED33 (at -3.949 2.427) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge820 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 28 LED33_1))
+    (pad 2 thru_hole rect (at 1.271 0 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 27 LED32_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 32.544 90)
+    (fp_text reference LED34 (at 3.575 -2.159) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge828 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 29 LED34_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 32.544 270)
+    (fp_text reference LED35 (at 3.664 2.674) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge836 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 30 LED35_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 29 LED34_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 32.544 90)
+    (fp_text reference LED36 (at 3.321 -2.046) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge844 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 31 LED36_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 30 LED35_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 40.044 90)
+    (fp_text reference LED37 (at 3.455 -1.905) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge852 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 32 LED37_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 40.044 270)
+    (fp_text reference LED38 (at 3.403 2.42) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge860 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 33 LED38_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 32 LED37_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 40.044 90)
+    (fp_text reference LED39 (at 3.328 -2.173) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge868 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 34 LED39_1))
+    (pad 2 thru_hole rect (at 1.27 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 33 LED38_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 47.545 90)
+    (fp_text reference LED40 (at 3.462 -2.159) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge876 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 36 LED40_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 47.545 270)
+    (fp_text reference LED41 (at 3.65 2.166) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge884 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 37 LED41_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 36 LED40_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 47.545 90)
+    (fp_text reference LED42 (at 3.335 -2.3) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge892 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 38 LED42_1))
+    (pad 2 thru_hole rect (at 1.272 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 37 LED41_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 55.044 90)
+    (fp_text reference LED43 (at 3.469 -2.413) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge900 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 39 LED43_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 55.044 270)
+    (fp_text reference LED44 (at 3.516 2.547) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge908 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 40 LED44_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 39 LED43_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 55.044 90)
+    (fp_text reference LED45 (at 3.469 -2.3) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge916 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 41 LED45_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 40 LED44_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 62.545 90)
+    (fp_text reference LED46 (at 3.476 -2.54) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge924 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 42 LED46_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 62.545 270)
+    (fp_text reference LED47 (at 3.636 2.293) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge932 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 43 LED47_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 42 LED46_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 62.545 90)
+    (fp_text reference LED48 (at 3.476 -2.173) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge940 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 44 LED48_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 43 LED47_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 70.044 90)
+    (fp_text reference LED49 (at 3.356 -2.413) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge948 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 45 LED49_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 70.044 270)
+    (fp_text reference LED50 (at 3.502 2.42) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge956 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 47 LED50_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 45 LED49_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 70.044 90)
+    (fp_text reference LED51 (at 3.356 -2.173) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge964 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 48 LED51_1))
+    (pad 2 thru_hole rect (at 1.27 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 47 LED50_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 77.544 90)
+    (fp_text reference LED52 (at 3.49 -2.286) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge972 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 49 LED52_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 77.544 270)
+    (fp_text reference LED53 (at 3.622 2.42) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge980 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 50 LED53_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 49 LED52_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 77.544 90)
+    (fp_text reference LED54 (at 3.363 -2.3) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge988 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 51 LED54_1))
+    (pad 2 thru_hole rect (at 1.272 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 50 LED53_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 85.044 90)
+    (fp_text reference LED55 (at 3.37 -2.159) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge996 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 52 LED55_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 85.044 270)
+    (fp_text reference LED56 (at 3.615 2.547) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1004 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 53 LED56_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 52 LED55_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 85.044 90)
+    (fp_text reference LED57 (at 3.497 -2.173) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1012 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 54 LED57_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 53 LED56_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 51.181 92.544 90)
+    (fp_text reference LED58 (at 3.377 -2.413) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1020 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 55 LED58_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 58.681 92.544 270)
+    (fp_text reference LED59 (at 3.735 2.293) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1028 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.268 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 56 LED59_1))
+    (pad 2 thru_hole rect (at 1.272 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 55 LED58_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 66.181 92.544 90)
+    (fp_text reference LED60 (at 3.377 -2.046) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1036 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 58 LED60_1))
+    (pad 2 thru_hole rect (at 1.271 0.002 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 56 LED59_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 25.045 270)
+    (fp_text reference LED61 (at -4.076 2.286) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1044 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 -0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 59 LED61_1))
+    (pad 2 thru_hole rect (at 1.271 -0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 25.045 90)
+    (fp_text reference LED62 (at 3.441 -2.293) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1052 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 -0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 60 LED62_1))
+    (pad 2 thru_hole rect (at 1.269 -0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 59 LED61_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 25.045 270)
+    (fp_text reference LED63 (at -4.076 2.427) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1060 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 61 LED63_1))
+    (pad 2 thru_hole rect (at 1.271 0 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 60 LED62_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 32.544 90)
+    (fp_text reference LED64 (at 3.448 -2.032) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1068 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 62 LED64_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 32.544 270)
+    (fp_text reference LED65 (at 3.41 2.293) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1076 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 63 LED65_1))
+    (pad 2 thru_hole rect (at 1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 62 LED64_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 32.544 90)
+    (fp_text reference LED66 (at 3.575 -2.3) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1084 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 64 LED66_1))
+    (pad 2 thru_hole rect (at 1.271 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 63 LED65_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 40.044 90)
+    (fp_text reference LED67 (at 3.455 -2.032) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1092 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 65 LED67_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 40.044 270)
+    (fp_text reference LED68 (at 3.53 2.293) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1100 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 66 LED68_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 65 LED67_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 40.044 90)
+    (fp_text reference LED69 (at 3.328 -2.3) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1108 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 67 LED69_1))
+    (pad 2 thru_hole rect (at 1.27 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 66 LED68_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 47.545 90)
+    (fp_text reference LED70 (at 3.462 -2.413) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1116 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 69 LED70_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 47.545 270)
+    (fp_text reference LED71 (at 3.523 2.039) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1124 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 70 LED71_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 69 LED70_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 47.545 90)
+    (fp_text reference LED72 (at 3.335 -2.427) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1132 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 71 LED72_1))
+    (pad 2 thru_hole rect (at 1.27 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 70 LED71_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 55.044 90)
+    (fp_text reference LED73 (at 3.342 -2.54) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1140 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 72 LED73_1))
+    (pad 2 thru_hole rect (at 1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 55.044 270)
+    (fp_text reference LED74 (at 3.516 2.166) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1148 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 73 LED74_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 72 LED73_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 55.044 90)
+    (fp_text reference LED75 (at 3.469 -2.173) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1156 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 74 LED75_1))
+    (pad 2 thru_hole rect (at 1.269 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 73 LED74_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 62.545 90)
+    (fp_text reference LED76 (at 3.349 -2.159) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1164 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 75 LED76_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 62.545 270)
+    (fp_text reference LED77 (at 3.509 2.42) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1172 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 76 LED77_1))
+    (pad 2 thru_hole rect (at 1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 75 LED76_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 62.545 90)
+    (fp_text reference LED78 (at 3.349 -2.554) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1180 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 77 LED78_1))
+    (pad 2 thru_hole rect (at 1.271 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 76 LED77_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 70.044 90)
+    (fp_text reference LED79 (at -2.34 -23.368 90) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1188 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 78 LED79_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 70.044 270)
+    (fp_text reference LED80 (at 3.502 2.547) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1196 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 80 LED80_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 78 LED79_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 70.044 90)
+    (fp_text reference LED81 (at 3.483 -2.173) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1204 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 81 LED81_1))
+    (pad 2 thru_hole rect (at 1.27 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 80 LED80_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 77.544 90)
+    (fp_text reference LED82 (at 3.363 -2.413) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1212 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 82 LED82_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 77.544 270)
+    (fp_text reference LED83 (at 3.495 2.42) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1220 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 83 LED83_1))
+    (pad 2 thru_hole rect (at 1.27 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 82 LED82_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 77.544 90)
+    (fp_text reference LED84 (at 3.49 -2.3) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1228 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.27 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 84 LED84_1))
+    (pad 2 thru_hole rect (at 1.27 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 83 LED83_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 85.044 90)
+    (fp_text reference LED85 (at 3.497 -2.413) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1236 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 85 LED85_1))
+    (pad 2 thru_hole rect (at 1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 85.044 270)
+    (fp_text reference LED86 (at 3.488 2.293) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1244 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 86 LED86_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 85 LED85_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 85.044 90)
+    (fp_text reference LED87 (at 3.37 -2.173) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1252 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 87 LED87_1))
+    (pad 2 thru_hole rect (at 1.269 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 86 LED86_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 73.533 92.544 90)
+    (fp_text reference LED88 (at 3.377 -2.413) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1260 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 88 LED88_1))
+    (pad 2 thru_hole rect (at 1.271 0.001 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 81.033 92.544 270)
+    (fp_text reference LED89 (at 3.608 2.42) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1268 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.271 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 89 LED89_1))
+    (pad 2 thru_hole rect (at 1.269 0.001 270) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 88 LED88_1))
+  )
+
+  (module easyeda:LED-5MM (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 88.533 92.544 90)
+    (fp_text reference LED90 (at 3.377 -2.173) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value "5AG3HT01 280-450" (at -0.508 -4.457 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center 0 0) (end 2.54 0) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.54 1.905) (end 2.54 -1.905) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1276 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 0 0) (end 2.54 1.905) (angle 286.26) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -1.269 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 91 LED90_1))
+    (pad 2 thru_hole rect (at 1.271 0 90) (size 1.212 1.212) (drill 0.813) (layers *.Cu *.Paste *.Mask)
+      (net 89 LED89_1))
+  )
+
+  (module easyeda:TO-252-2 (layer F.Cu) (tedit 5E46BABA) (tstamp 0)
+    (at 18.542 43.434)
+    (attr smd)
+    (fp_text reference Q1 (at -0.762 -8.774) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value IRLR024NTRPBF (at -0.127 -8.467) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start 2.623 1.605) (end 2.623 0.305) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.122 1.605) (end 2.623 1.605) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.122 0.305) (end 2.122 1.605) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2.1 1.609) (end -2.1 0.309) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2.6 1.609) (end -2.1 1.609) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2.6 0.309) (end -2.6 1.609) (layer F.SilkS) (width 0.254))
+    (fp_line (start 3.573 -7.641) (end -3.573 -7.641) (layer F.SilkS) (width 0.254))
+    (fp_line (start 3.573 0.309) (end 3.573 -7.641) (layer F.SilkS) (width 0.254))
+    (fp_line (start -3.573 0.309) (end 3.573 0.309) (layer F.SilkS) (width 0.254))
+    (fp_line (start -3.573 -7.641) (end -3.573 0.309) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1284 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start -3.299 1.21) (end -3.099 1.212) (angle 359.272) (layer F.SilkS) (width 0.4))
+    (pad 3 smd rect (at 2.362 3.871 180) (size 1.2 2.2) (layers F.Cu F.Paste F.Mask)
+      (net 93 GND))
+    (pad 1 smd rect (at -2.362 3.876) (size 1.2 2.2) (layers F.Cu F.Paste F.Mask))
+    (pad 4 smd rect (at 0 -3.875) (size 6 6.5) (layers F.Cu F.Paste F.Mask)
+      (net 2 K))
+  )
+
+  (module easyeda:0805 (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 16.637 51.562 270)
+    (attr smd)
+    (fp_text reference R2 (at 0.655 1.916 90) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 100 (at -0.254 -1.757 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start -1.897 -1.035) (end -0.577 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.897 1.035) (end -1.897 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.577 1.035) (end -1.897 1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.875 -1.035) (end 0.555 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.875 1.035) (end 1.875 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.555 1.035) (end 1.875 1.035) (layer F.SilkS) (width 0.2))
+    (fp_text user gge1294 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at -1.016 0 270) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd rect (at 1.016 0 270) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask))
+  )
+
+  (module easyeda:HDR-3X1_2.54 (layer F.Cu) (tedit 5E46BA7E) (tstamp 0)
+    (at 19.431 56.515)
+    (fp_text reference P1 (at 4.318 0.114) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value Header-Female-2.54_1x3 (at 0 -1.61) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start 3.81 -1.27) (end -1.905 -1.27) (layer F.SilkS) (width 0.203))
+    (fp_line (start 3.81 1.27) (end 3.81 -1.27) (layer F.SilkS) (width 0.203))
+    (fp_line (start -3.81 1.27) (end 3.81 1.27) (layer F.SilkS) (width 0.203))
+    (fp_line (start -3.81 -1.27) (end -3.81 1.27) (layer F.SilkS) (width 0.203))
+    (fp_line (start -1.905 -1.27) (end -3.81 -1.27) (layer F.SilkS) (width 0.203))
+    (fp_text user gge1301 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 3 thru_hole circle (at 2.54 0) (size 1.575 1.575) (drill 0.889) (layers *.Cu *.Paste *.Mask)
+      (net 93 GND))
+    (pad 2 thru_hole circle (at 0 0) (size 1.575 1.575) (drill 0.889) (layers *.Cu *.Paste *.Mask)
+      (net 1 A))
+    (pad 1 thru_hole rect (at -2.54 0) (size 1.575 1.575) (drill 0.889) (layers *.Cu *.Paste *.Mask))
+  )
+
+  (module easyeda:0805 (layer F.Cu) (tedit 5E46BA75) (tstamp 0)
+    (at 24.257 68.326 90)
+    (attr smd)
+    (fp_text reference C1 (at -3.556 0.116 90) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 100n (at 0.762 -1.756 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start -0.881 -1.035) (end 0.439 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.881 1.035) (end -0.881 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.439 1.035) (end -0.881 1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 -1.035) (end 1.571 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 1.035) (end 2.891 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.571 1.035) (end 2.891 1.035) (layer F.SilkS) (width 0.2))
+    (fp_text user gge1309 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 0 0 90) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask)
+      (net 93 GND))
+    (pad 2 smd rect (at 2.032 0 90) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask))
+  )
+
+  (module easyeda:0805 (layer F.Cu) (tedit 5E46BA95) (tstamp 0)
+    (at 24.257 62.865 90)
+    (attr smd)
+    (fp_text reference C2 (at 3.358 -0.011 90) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 100n (at 0.762 -1.756 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start -0.881 -1.035) (end 0.439 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.881 1.035) (end -0.881 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.439 1.035) (end -0.881 1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 -1.035) (end 1.571 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 1.035) (end 2.891 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.571 1.035) (end 2.891 1.035) (layer F.SilkS) (width 0.2))
+    (fp_text user gge1326 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 0 0 90) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (pad 2 smd rect (at 2.032 0 90) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask)
+      (net 93 GND))
+  )
+
+  (module easyeda:DO-35 (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 14.859 76.581 90)
+    (fp_text reference D1 (at 3.114 -0.013 90) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 1N4148TA (at 3.81 -1.864 90) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start 5.715 -1.143) (end 5.715 1.143) (layer F.SilkS) (width 0.229))
+    (fp_line (start 1.27 1.143) (end 1.27 -1.143) (layer F.SilkS) (width 0.229))
+    (fp_line (start 6.35 1.143) (end 1.27 1.143) (layer F.SilkS) (width 0.229))
+    (fp_line (start 6.35 -1.143) (end 6.35 1.143) (layer F.SilkS) (width 0.229))
+    (fp_line (start 1.27 -1.143) (end 6.35 -1.143) (layer F.SilkS) (width 0.229))
+    (fp_text user gge1343 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0 90) (size 1.905 1.905) (drill 0.9) (layers *.Cu *.Paste *.Mask))
+    (pad 2 thru_hole circle (at 7.62 0 90) (size 1.905 1.905) (drill 0.9) (layers *.Cu *.Paste *.Mask))
+  )
+
+  (module easyeda:DO-35 (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 21.844 68.834 270)
+    (fp_text reference D2 (at 4.338 0.013 90) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 1N4148TA (at 3.81 -1.864 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start 5.715 -1.143) (end 5.715 1.143) (layer F.SilkS) (width 0.229))
+    (fp_line (start 1.27 1.143) (end 1.27 -1.143) (layer F.SilkS) (width 0.229))
+    (fp_line (start 6.35 1.143) (end 1.27 1.143) (layer F.SilkS) (width 0.229))
+    (fp_line (start 6.35 -1.143) (end 6.35 1.143) (layer F.SilkS) (width 0.229))
+    (fp_line (start 1.27 -1.143) (end 6.35 -1.143) (layer F.SilkS) (width 0.229))
+    (fp_text user gge1360 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0 270) (size 1.905 1.905) (drill 0.9) (layers *.Cu *.Paste *.Mask))
+    (pad 2 thru_hole circle (at 7.62 0 270) (size 1.905 1.905) (drill 0.9) (layers *.Cu *.Paste *.Mask))
+  )
+
+  (module easyeda:0805 (layer F.Cu) (tedit 5E46BA69) (tstamp 0)
+    (at 18.415 72.517 270)
+    (attr smd)
+    (fp_text reference C5 (at 3.926 1.016) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 1n (at 0.762 -1.756 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start -0.881 -1.035) (end 0.439 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.881 1.035) (end -0.881 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.439 1.035) (end -0.881 1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 -1.035) (end 1.571 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 1.035) (end 2.891 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.571 1.035) (end 2.891 1.035) (layer F.SilkS) (width 0.2))
+    (fp_text user gge1377 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 0 0 270) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask)
+      (net 93 GND))
+    (pad 2 smd rect (at 2.032 0 270) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask))
+  )
+
+  (module easyeda:0805 (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 19.431 60.325 180)
+    (attr smd)
+    (fp_text reference R5 (at -2.021 -0.782 90) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 1K (at 0.762 -1.756 180) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start -0.881 -1.035) (end 0.439 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.881 1.035) (end -0.881 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.439 1.035) (end -0.881 1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 -1.035) (end 1.571 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 1.035) (end 2.891 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.571 1.035) (end 2.891 1.035) (layer F.SilkS) (width 0.2))
+    (fp_text user gge1394 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 0 0 180) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd rect (at 2.032 0 180) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+  )
+
+  (module easyeda:0805 (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 19.431 68.961 180)
+    (attr smd)
+    (fp_text reference R6 (at 1.905 -2.021) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 1K (at 0.762 -1.756 180) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start -0.881 -1.035) (end 0.439 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.881 1.035) (end -0.881 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.439 1.035) (end -0.881 1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 -1.035) (end 1.571 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.891 1.035) (end 2.891 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.571 1.035) (end 2.891 1.035) (layer F.SilkS) (width 0.2))
+    (fp_text user gge1411 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at 0 0 180) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd rect (at 2.032 0 180) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask))
+  )
+
+  (module easyeda:SOP-8_150MIL (layer F.Cu) (tedit 5E46BACC) (tstamp 0)
+    (at 20.955 66.802)
+    (attr smd)
+    (fp_text reference U31 (at -3.81 -3.313) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value NE555G-S08-R (at -2.54 -5.62) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start -0.635 -4.305) (end -1.14 -4.305) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.635 0.495) (end -0.635 -4.305) (layer F.SilkS) (width 0.254))
+    (fp_line (start -4.445 0.495) (end -0.635 0.495) (layer F.SilkS) (width 0.254))
+    (fp_line (start -4.445 -4.305) (end -4.445 0.495) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.14 -4.305) (end -4.445 -4.305) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1428 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start -5.051 -4.698) (end -4.851 -4.696) (angle 359.272) (layer F.SilkS) (width 0.4))
+    (pad 5 smd oval (at 0.559 0 90) (size 0.7 1.8) (layers F.Cu F.Paste F.Mask))
+    (pad 6 smd oval (at 0.559 -1.27 90) (size 0.7 1.8) (layers F.Cu F.Paste F.Mask))
+    (pad 7 smd oval (at 0.559 -2.54 90) (size 0.7 1.8) (layers F.Cu F.Paste F.Mask))
+    (pad 8 smd oval (at 0.559 -3.81 90) (size 0.7 1.8) (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (pad 4 smd oval (at -5.639 0 90) (size 0.7 1.8) (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (pad 3 smd oval (at -5.639 -1.27 90) (size 0.7 1.8) (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd oval (at -5.639 -2.54 90) (size 0.7 1.8) (layers F.Cu F.Paste F.Mask))
+    (pad 1 smd oval (at -5.639 -3.81 90) (size 0.7 1.8) (layers F.Cu F.Paste F.Mask)
+      (net 93 GND))
+  )
+
+  (module easyeda:SJ (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 14.097 55.88 270)
+    (attr smd)
+    (fp_text reference PWM_SEL (at 6.899 0.29 90) (layer F.SilkS)
+      (effects (font (size 0.635 0.635) (thickness 0.127)) (justify left))
+    )
+    (fp_text value SJ (at 0.762 -1.737 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_poly (pts (xy 0.686 0.914) (xy 0.838 0.914) (xy 0.838 -0.914) (xy 0.686 -0.914)) (layer Cmts.User) (width 0))
+    (fp_line (start -0.254 0) (end -0.762 0) (layer Cmts.User) (width 0.152))
+    (fp_line (start 1.778 0) (end 2.286 0) (layer Cmts.User) (width 0.152))
+    (fp_line (start -0.635 -1.016) (end 2.159 -1.016) (layer F.SilkS) (width 0.152))
+    (fp_line (start -0.889 0.762) (end -0.889 -0.762) (layer F.SilkS) (width 0.152))
+    (fp_line (start 2.413 0.762) (end 2.413 -0.762) (layer F.SilkS) (width 0.152))
+    (fp_line (start 2.159 1.016) (end -0.635 1.016) (layer F.SilkS) (width 0.152))
+    (fp_text user gge1475 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_arc (start 2.159 -0.762) (end 2.159 -1.016) (angle 90) (layer F.SilkS) (width 0.152))
+    (fp_arc (start -0.635 -0.762) (end -0.889 -0.762) (angle 90) (layer F.SilkS) (width 0.152))
+    (fp_arc (start -0.635 0.762) (end -0.635 1.016) (angle 90) (layer F.SilkS) (width 0.152))
+    (fp_arc (start 2.159 0.762) (end 2.413 0.762) (angle 90) (layer F.SilkS) (width 0.152))
+    (fp_arc (start 0.508 0) (end 0.508 0.127) (angle 180) (layer Cmts.User) (width 1.27))
+    (fp_arc (start 1.016 0) (end 1.016 -0.127) (angle 180) (layer Cmts.User) (width 1.27))
+    (pad 1 smd custom (at 0 0 270) (size 1.6 1.168) (layers F.Cu F.Paste F.Mask)
+      (options (clearance outline) (anchor circle))
+      (primitives
+      ))
+    (pad 2 smd custom (at 1.524 0 270) (size 1.6 1.168) (layers F.Cu F.Paste F.Mask)
+      (options (clearance outline) (anchor circle))
+      (primitives
+      ))
+  )
+
+  (module easyeda:0805 (layer F.Cu) (tedit 5E46BAB4) (tstamp 0)
+    (at 20.574 51.181 270)
+    (attr smd)
+    (fp_text reference R1 (at 0.569 -2.02 90) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 10K (at -0.255 -1.756 270) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_line (start -1.897 -1.035) (end -0.577 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.897 1.035) (end -1.897 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.577 1.035) (end -1.897 1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.875 -1.035) (end 0.555 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.875 1.035) (end 1.875 -1.035) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.555 1.035) (end 1.875 1.035) (layer F.SilkS) (width 0.2))
+    (fp_text user gge1503 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 smd rect (at -1.016 0 270) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask)
+      (net 93 GND))
+    (pad 2 smd rect (at 1.016 0 270) (size 1.16 1.47) (layers F.Cu F.Paste F.Mask))
+  )
+
+  (module easyeda:RM065-V1 (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 18.161 83.058 180)
+    (fp_text reference R4 (at 0.762 -5.323) (layer F.SilkS)
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_text value 10K (at -0.254 -4.622 180) (layer F.Fab) hide
+      (effects (font (size 1.143 1.143) (thickness 0.152)) (justify left))
+    )
+    (fp_circle (center -0.06 0.073) (end 3.54 0.073) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2.5 0.499) (end -2.5 -1.001) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.6 0.499) (end -2.5 0.499) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.6 -1.001) (end 2.6 0.499) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2.5 -1.001) (end 2.6 -1.001) (layer F.SilkS) (width 0.254))
+    (fp_line (start 3.9 -1.901) (end 3.9 2.599) (layer F.SilkS) (width 0.254))
+    (fp_line (start 1.9 -3.901) (end 3.9 -1.901) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2.1 -3.901) (end 1.9 -3.901) (layer F.SilkS) (width 0.254))
+    (fp_line (start -4 -2) (end -2.1 -3.901) (layer F.SilkS) (width 0.254))
+    (fp_line (start -4 3.899) (end -4 -2) (layer F.SilkS) (width 0.254))
+    (fp_line (start 3.9 3.899) (end -4 3.899) (layer F.SilkS) (width 0.254))
+    (fp_line (start 3.9 2.599) (end 3.9 3.899) (layer F.SilkS) (width 0.254))
+    (fp_text user gge1518 (at 0 0) (layer Cmts.User)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (pad 1 thru_hole rect (at -2.499 2.5 180) (size 2.2 2.1) (drill 1.199) (layers *.Cu *.Paste *.Mask))
+    (pad 3 thru_hole circle (at 2.499 2.499 180) (size 2.2 2.2) (drill 1.199) (layers *.Cu *.Paste *.Mask))
+    (pad 2 thru_hole circle (at 0 -2.5 180) (size 2.2 2.2) (drill 1.199) (layers *.Cu *.Paste *.Mask))
+  )
+
+  (module AutoGenerated:MountingHole_3.50mm (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 27.559 102.426)
+    (attr virtual)
+    (fp_text reference Noname_8 (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
+  )
+
+  (module AutoGenerated:MountingHole_3.50mm (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.297 102.426)
+    (attr virtual)
+    (fp_text reference Noname_7 (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
+  )
+
+  (module AutoGenerated:MountingHole_3.50mm (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 27.305 15.24)
+    (attr virtual)
+    (fp_text reference Noname_6 (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
+  )
+
+  (module AutoGenerated:MountingHole_3.50mm (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 90.17 15.24)
+    (attr virtual)
+    (fp_text reference Noname_5 (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
+  )
+
+  (module AutoGenerated:MountingHole_3.50mm (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 102.362 90.043)
+    (attr virtual)
+    (fp_text reference Noname_4 (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
+  )
+
+  (module AutoGenerated:MountingHole_3.50mm (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 102.362 27.305)
+    (attr virtual)
+    (fp_text reference Noname_3 (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
+  )
+
+  (module AutoGenerated:MountingHole_3.50mm (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 15.24 90.17)
+    (attr virtual)
+    (fp_text reference Noname_2 (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
+  )
+
+  (module AutoGenerated:MountingHole_3.50mm (layer F.Cu) (tedit 0) (tstamp 0)
+    (at 15.24 27.432)
+    (attr virtual)
+    (fp_text reference Noname_1 (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 0) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    )
+    (pad "" np_thru_hole circle (at 0 0) (size 3.5 3.5) (drill 3.5) (layers *.Cu *.Mask))
+  )
+
+  (gr_line (start 24.765 12.7) (end 24.765 24.892) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 24.765 24.892) (end 12.7 24.892) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 104.902 24.765) (end 92.71 24.765) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 92.71 24.765) (end 92.71 12.7) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 92.837 105.029) (end 92.837 92.837) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 92.837 92.837) (end 104.902 92.837) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 12.7 92.964) (end 24.892 92.964) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 24.892 92.964) (end 24.892 105.029) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 12.7 24.892) (end 12.7 92.964) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 24.892 105.029) (end 92.837 105.029) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 104.902 92.837) (end 104.902 24.765) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 92.71 12.7) (end 24.765 12.7) (layer Edge.Cuts) (width 0.254))
+  (gr_text + (at 19.05 54.483) (layer F.SilkS)
+    (effects (font (size 1.016 1.016) (thickness 0.102)) (justify left))
+  )
+  (gr_text - (at 21.717 54.574) (layer F.SilkS)
+    (effects (font (size 1.016 1.016) (thickness 0.102)) (justify left))
+  )
+  (gr_text PWM (at 15.621 54.493) (layer F.SilkS)
+    (effects (font (size 1.016 1.016) (thickness 0.102)) (justify left))
+  )
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

@@ -1,0 +1,63 @@
+{
+  "board_id": "RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD_negative",
+  "display_name": "RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD_negative",
+  "pcbench_directory": "PCBs/RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD_negative",
+  "source": "https://github.com/ReclaimerLabs/RGBMatrixPanelCPLD-PhotonBackpack",
+  "author": "ReclaimerLabs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.033957+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 21,
+    "components": 28,
+    "dimensions_mm": {
+      "width": 71.12,
+      "height": 50.8
+    },
+    "area_cm2": 36.13,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 374,
+    "vias": 57,
+    "track_length_mm": 984.52,
+    "kicad_drc_violations": 321,
+    "kicad_drc_breakdown": {
+      "total_violations": 321,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 24,
+        "clearance": 147,
+        "courtyards_overlap": 2,
+        "hole_clearance": 2,
+        "lib_footprint_issues": 28,
+        "npth_inside_courtyard": 1,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 62,
+        "silk_overlap": 4,
+        "solder_mask_bridge": 40,
+        "starved_thermal": 8,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 224,
+        "warning": 97
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

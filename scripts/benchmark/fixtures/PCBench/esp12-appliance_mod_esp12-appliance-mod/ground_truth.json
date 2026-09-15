@@ -1,0 +1,27 @@
+{
+  "board": "esp12-appliance_mod_esp12-appliance-mod",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\esp12-appliance_mod_esp12-appliance-mod\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 26,
+  "segment_count": 182,
+  "approximate_track_length_mm": 627.66,
+  "kicad_drc_violations": 143,
+  "generated_at": "2026-08-18T18:45:48.790822+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 143,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 8,
+      "clearance": 46,
+      "padstack": 8,
+      "silk_over_copper": 30,
+      "silk_overlap": 35,
+      "text_height": 16
+    },
+    "by_severity": {
+      "error": 54,
+      "warning": 89
+    }
+  }
+}

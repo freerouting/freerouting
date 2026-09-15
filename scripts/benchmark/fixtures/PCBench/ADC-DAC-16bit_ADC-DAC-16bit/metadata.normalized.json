@@ -1,0 +1,68 @@
+{
+  "board_id": "ADC-DAC-16bit_ADC-DAC-16bit",
+  "display_name": "ADC-DAC-16bit_ADC-DAC-16bit",
+  "pcbench_directory": "PCBs/ADC-DAC-16bit_ADC-DAC-16bit",
+  "source": "https://github.com/valerionew/ADC-DAC-16bit",
+  "author": "valerionew",
+  "license": "Creative Commons Attribution Share Alike 4.0 International",
+  "license_spdx": "CC-BY-SA-4.0",
+  "retrieved_at": "2023-08-17T17:22:49.458021+00:00",
+  "cad": {
+    "source_version": "KiCad 20170123",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 23.7,
+      "height": 22.0
+    },
+    "area_cm2": 5.21,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 77,
+    "vias": 13,
+    "track_length_mm": 112.71,
+    "kicad_drc_violations": 71,
+    "kicad_drc_breakdown": {
+      "total_violations": 71,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 39,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 17,
+        "silk_over_copper": 1,
+        "silk_overlap": 6,
+        "solder_mask_bridge": 1,
+        "starved_thermal": 2,
+        "text_height": 2
+      },
+      "by_severity": {
+        "error": 45,
+        "warning": 26
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.820735+00:00",
+    "elapsed_seconds": 11.19,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

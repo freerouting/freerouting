@@ -148,6 +148,9 @@ class DsnRouter:
             str(self.plugin.module_output),
             "-host",
             str(self.plugin.host),
+            "--gui.enabled=false",
+            "--api_server.enabled=false",
+            "--mcp_server.enabled=false",
             f"--logging.file.location={LOG_DIR}",
         ]
         logger.info(f"Built DSN routing command: {' '.join(self.plugin.module_command)}")
@@ -161,9 +164,8 @@ class DsnRouter:
         dialog = ProcessDialog(
             None,
             textwrap.dedent("""
-                Complete or Terminate Freerouting:
-                * to complete, close Java window
-                * to terminate, press Terminate here
+                Routing board with Freerouting...
+                Press Terminate to cancel.
             """),
         )
 

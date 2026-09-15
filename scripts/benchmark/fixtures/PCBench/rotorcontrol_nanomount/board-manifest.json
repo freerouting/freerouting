@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "rotorcontrol_nanomount",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 24929,
+      "sha256": "98e50b4dd47fe468075e1f3c49c121f02c65b010ed0cca758ca6c4cd5679ddc7"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 24458,
+      "sha256": "8a8dd02ff217a335f265a0b6b8eef21f20a8a574a5cb32fdfbe6e5be11befa67"
+    },
+    "metadata_json": {
+      "bytes": 468,
+      "sha256": "b4c5d2bff15da0c925080972efbdf0bdd95a5d860887b51449af39c510e8ce62"
+    },
+    "final_json": {
+      "bytes": 26439,
+      "sha256": "2bc9c82e747bc5dfe726d451670b53a0d29bb8b487fd9adbd119a00cdbf98fbb"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:41:51.943775+00:00"
+  }
+}

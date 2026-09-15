@@ -1,0 +1,69 @@
+{
+  "board_id": "LongPixel_AnalogDriverMini",
+  "display_name": "LongPixel_AnalogDriverMini",
+  "pcbench_directory": "PCBs/LongPixel_AnalogDriverMini",
+  "source": "https://github.com/ManiacalLabs/LongPixel",
+  "author": "ManiacalLabs",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:59.822143+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 49.1,
+      "height": 28.5
+    },
+    "area_cm2": 13.99,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 152,
+    "vias": 26,
+    "track_length_mm": 313.53,
+    "kicad_drc_violations": 155,
+    "kicad_drc_breakdown": {
+      "total_violations": 155,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 8,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "holes_co_located": 1,
+        "items_not_allowed": 1,
+        "lib_footprint_issues": 20,
+        "padstack": 1,
+        "silk_over_copper": 67,
+        "silk_overlap": 24,
+        "text_height": 23,
+        "text_thickness": 6
+      },
+      "by_severity": {
+        "error": 13,
+        "warning": 142
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.019968+00:00",
+    "elapsed_seconds": 9.53,
+    "unrouted_nets": 0,
+    "clearance_violations": 2,
+    "quality_score": 991.1
+  }
+}

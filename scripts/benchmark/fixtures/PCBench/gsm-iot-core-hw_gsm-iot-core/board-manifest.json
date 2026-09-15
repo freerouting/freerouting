@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "gsm-iot-core-hw_gsm-iot-core",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 366111,
+      "sha256": "c687f76a8ad022b6f646f448b4c9ccf29be34fbfef81ae988f2f9c18929cd5f6"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 293041,
+      "sha256": "b3cbac0aedaf611b21423d2137dacf0ae0a4a07c22622a36aa836c96917a1191"
+    },
+    "metadata_json": {
+      "bytes": 504,
+      "sha256": "967cabbaeecdaab46939af7b012c92120cb8e34e4f95a08b50cdfbefbc770cc7"
+    },
+    "final_json": {
+      "bytes": 307319,
+      "sha256": "98cba277529651a6188d69fdfda622d149ed4143412dcbbb8d145e1967a5d104"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:51:27.647261+00:00"
+  }
+}

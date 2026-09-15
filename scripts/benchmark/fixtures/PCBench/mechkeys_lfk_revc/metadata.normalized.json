@@ -1,0 +1,67 @@
+{
+  "board_id": "mechkeys_lfk_revc",
+  "display_name": "mechkeys_lfk_revc",
+  "pcbench_directory": "PCBs/mechkeys_lfk_revc",
+  "source": "https://github.com/BalzGuenat/mechkeys",
+  "author": "BalzGuenat",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:38.641894+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 109,
+    "components": 319,
+    "dimensions_mm": {
+      "width": 367.75,
+      "height": 93.25
+    },
+    "area_cm2": 342.93,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 3310,
+    "vias": 283,
+    "track_length_mm": 18953.51,
+    "kicad_drc_violations": 1331,
+    "kicad_drc_breakdown": {
+      "total_violations": 1331,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 508,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 9,
+        "drill_out_of_range": 79,
+        "hole_clearance": 139,
+        "hole_to_hole": 20,
+        "holes_co_located": 1,
+        "lib_footprint_issues": 199,
+        "pth_inside_courtyard": 6,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 199,
+        "silk_overlap": 108,
+        "solder_mask_bridge": 46,
+        "starved_thermal": 4,
+        "track_dangling": 5,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 795,
+        "warning": 536
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

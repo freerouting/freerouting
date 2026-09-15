@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Arduino-Theremin_arduino-theremin-v1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 109861,
+      "sha256": "09ee13c3b03e16d569b8fab2fb4ef5c7940b4301528abf30ecc06de3c00ee33c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 48749,
+      "sha256": "e7a684db011ba094bd0a5587d200c612fb22b85c9f916df71ba8f19f4446dbbe"
+    },
+    "metadata_json": {
+      "bytes": 648,
+      "sha256": "a9c8acbfe7deb84060141775e0d3f4ad6c3ca1db293234343545dab651208499"
+    },
+    "final_json": {
+      "bytes": 38148,
+      "sha256": "f97cdc37758b24c1ded54b83613c3c8116523fb62003e6555731545c7b2b20a9"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:07.279959+00:00"
+  }
+}

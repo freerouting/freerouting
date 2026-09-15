@@ -1,8 +1,9 @@
 package app.freerouting.io.specctra;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.BasicBoard;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.structure.AngleRestriction;
 import app.freerouting.io.CoordinateTransform;
+import app.freerouting.io.specctra.parser.AutorouteSettings;
 import app.freerouting.io.specctra.parser.IJFlexScanner;
 import app.freerouting.io.specctra.parser.Keyword;
 import app.freerouting.io.specctra.parser.LayerStructure;
@@ -15,16 +16,17 @@ import app.freerouting.io.specctra.parser.SpecctraDsnStreamReader;
 import app.freerouting.io.specctra.parser.Structure;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.ViaInfo;
+import app.freerouting.settings.RouterSettings;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
 /**
  * Reads a Specctra {@code .rules} file and applies the parsed rules directly to a {@link
- * BasicBoard}, without any dependency on {@link app.freerouting.gui.session.GuiBoardManager}.
+ * BasicBoard}, without any dependency on {@link app.freerouting.gui.workspace.GuiBoardManager}.
  *
- * <p>Replaces the read path previously found in {@link
- * app.freerouting.io.specctra.parser.RulesFile} (now an empty shell).
+ * <p>This class is the public read entry point for Specctra rules files.
  */
 public final class RulesReader {
 
@@ -43,6 +45,25 @@ public final class RulesReader {
    *     parse or I/O error
    */
   public static boolean read(InputStream in, String designName, BasicBoard board) {
+    return read(in, designName, board, null);
+  }
+
+  /**
+   * Reads the rules from {@code in} and applies them to {@code board} and optional {@code
+   * targetSettings}.
+   *
+   * <p>The stream is closed by this method on return (success or failure).
+   *
+   * @param in source — closed by this method on completion
+   * @param designName expected PCB design name in the rules header (mismatch is logged but does not
+   *     abort the read)
+   * @param board the board to which parsed rules are applied
+   * @param targetSettings optional router settings to update with parsed autoroute_settings
+   * @return {@code true} if the rules were parsed and applied successfully; {@code false} on any
+   *     parse or I/O error
+   */
+  public static boolean read(
+      InputStream in, String designName, BasicBoard board, RouterSettings targetSettings) {
     if (in == null) {
       FRLogger.warn("RulesReader.read: input stream is null");
       return false;
@@ -56,34 +77,34 @@ public final class RulesReader {
     IJFlexScanner scanner = new SpecctraDsnStreamReader(in);
     try {
       // Validate the "(rules PCB <name>" header
-      Object currToken = scanner.nextToken();
-      if (currToken != Keyword.OPEN_BRACKET) {
+      Object currentToken = scanner.nextToken();
+      if (currentToken != Keyword.OPEN_BRACKET) {
         FRLogger.warn(
             "RulesReader.read: open bracket expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
-      currToken = scanner.nextToken();
-      if (currToken != Keyword.RULES) {
+      currentToken = scanner.nextToken();
+      if (currentToken != Keyword.RULES) {
         FRLogger.warn(
             "RulesReader.read: keyword 'rules' expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
-      currToken = scanner.nextToken();
-      if (currToken != Keyword.PCB_SCOPE) {
+      currentToken = scanner.nextToken();
+      if (currentToken != Keyword.PCB_SCOPE) {
         FRLogger.warn(
             "RulesReader.read: keyword 'pcb' expected at '" + scanner.getScopeIdentifier() + "'");
         return false;
       }
       scanner.yybegin(SpecctraDsnStreamReader.NAME);
-      currToken = scanner.nextToken();
-      if (!(currToken instanceof String) || !currToken.equals(designName)) {
+      currentToken = scanner.nextToken();
+      if (!(currentToken instanceof String) || !currentToken.equals(designName)) {
         FRLogger.warn(
             "RulesReader.read: designName not matching at '"
                 + scanner.getScopeIdentifier()
                 + "' (expected '"
                 + designName
                 + "', got '"
-                + currToken
+                + currentToken
                 + "')");
         // non-fatal: continue reading
       }
@@ -129,6 +150,11 @@ public final class RulesReader {
             if (snapAngle != null) {
               board.rules.setTraceAngleRestriction(snapAngle);
             }
+          } else if (nextToken == Keyword.AUTOROUTE_SETTINGS) {
+            RouterSettings parsedSettings = AutorouteSettings.readScope(scanner, layerStructure);
+            if (targetSettings != null && parsedSettings != null) {
+              targetSettings.applyNewValuesFrom(parsedSettings);
+            }
           } else {
             ScopeKeyword.skipScope(scanner);
           }
@@ -143,18 +169,122 @@ public final class RulesReader {
     }
   }
 
+  /**
+   * Reads only the {@link RouterSettings} from a rules file stream.
+   *
+   * <p>The stream is closed by this method on return.
+   *
+   * @param in source stream
+   * @return extracted {@link RouterSettings}, or {@code null} if not found or on error
+   */
+  public static RouterSettings readRouterSettings(InputStream in) {
+    if (in == null) {
+      return null;
+    }
+    byte[] data;
+    try {
+      data = in.readAllBytes();
+    } catch (IOException e) {
+      FRLogger.error("RulesReader.readRouterSettings: error reading stream", e);
+      return null;
+    } finally {
+      closeQuietly(in);
+    }
+
+    if (data.length == 0) {
+      return null;
+    }
+
+    LayerStructure layerStructure = discoverLayerStructure(data);
+    IJFlexScanner scanner = new SpecctraDsnStreamReader(new ByteArrayInputStream(data));
+    try {
+      // Validate header
+      Object currentToken = scanner.nextToken();
+      if (currentToken != Keyword.OPEN_BRACKET) {
+        return null;
+      }
+      currentToken = scanner.nextToken();
+      if (currentToken != Keyword.RULES) {
+        return null;
+      }
+      currentToken = scanner.nextToken();
+      if (currentToken != Keyword.PCB_SCOPE) {
+        return null;
+      }
+      scanner.yybegin(SpecctraDsnStreamReader.NAME);
+      scanner.nextToken(); // designName
+
+      Object nextToken = null;
+      for (; ; ) {
+        final Object prevToken = nextToken;
+        nextToken = scanner.nextToken();
+        if (nextToken == null || nextToken == Keyword.CLOSED_BRACKET) {
+          break;
+        }
+        if (prevToken == Keyword.OPEN_BRACKET) {
+          if (nextToken == Keyword.AUTOROUTE_SETTINGS) {
+            return AutorouteSettings.readScope(scanner, layerStructure);
+          } else {
+            ScopeKeyword.skipScope(scanner);
+          }
+        }
+      }
+    } catch (IOException e) {
+      FRLogger.error("RulesReader.readRouterSettings: IO error scanning file", e);
+    }
+    return null;
+  }
+
+  private static LayerStructure discoverLayerStructure(byte[] data) {
+    java.util.LinkedHashSet<String> layerNames = new java.util.LinkedHashSet<>();
+    IJFlexScanner scanner = new SpecctraDsnStreamReader(new java.io.ByteArrayInputStream(data));
+    try {
+      Object token = null;
+      for (; ; ) {
+        Object prev = token;
+        token = scanner.nextToken();
+        if (token == null) {
+          break;
+        }
+        if (prev == Keyword.OPEN_BRACKET) {
+          if (token == Keyword.LAYER_RULE || token == Keyword.LAYER) {
+            scanner.yybegin(SpecctraDsnStreamReader.NAME);
+            Object nameToken = scanner.nextToken();
+            if (nameToken instanceof String s && !s.isBlank()) {
+              layerNames.add(s);
+            }
+          }
+        }
+      }
+    } catch (IOException _) {
+      // ignore
+    }
+
+    if (layerNames.isEmpty()) {
+      layerNames.add("F.Cu");
+      layerNames.add("B.Cu");
+    }
+
+    java.util.List<app.freerouting.io.specctra.parser.Layer> list = new java.util.ArrayList<>();
+    int idx = 0;
+    for (String name : layerNames) {
+      list.add(new app.freerouting.io.specctra.parser.Layer(name, idx++, true));
+    }
+    return new LayerStructure(list);
+  }
+
   // -------------------------------------------------------------------------
-  // Private helpers (migrated from RulesFile)
+  // Private helpers for rules-file parsing.
   // -------------------------------------------------------------------------
 
   private static void applyRules(Collection<Rule> rules, BasicBoard board, String layerName) {
     if (rules == null) {
       return;
     }
-    int layerNo = -1;
+    int layerIndex = -1;
     if (layerName != null) {
-      layerNo = board.layerStructure.getNo(layerName);
-      if (layerNo < 0) {
+      layerIndex = board.layerStructure.getNo(layerName);
+      if (layerIndex < 0) {
         FRLogger.warn("RulesReader.applyRules: layer not found: '" + layerName + "'");
       }
     }
@@ -163,14 +293,14 @@ public final class RulesReader {
     for (Rule rule : rules) {
       if (rule instanceof Rule.WidthRule widthRule) {
         int traceHalfwidth = (int) Math.round(coordinateTransform.dsnToBoard(widthRule.value) / 2);
-        if (layerNo < 0) {
+        if (layerIndex < 0) {
           board.rules.setDefaultTraceHalfWidths(traceHalfwidth);
         } else {
-          board.rules.setDefaultTraceHalfWidth(layerNo, traceHalfwidth);
+          board.rules.setDefaultTraceHalfWidth(layerIndex, traceHalfwidth);
         }
       } else if (rule instanceof Rule.ClearanceRule clearanceRule) {
         Structure.setClearanceRule(
-            clearanceRule, layerNo, coordinateTransform, board.rules, stringQuote);
+            clearanceRule, layerIndex, coordinateTransform, board.rules, stringQuote);
       }
     }
   }

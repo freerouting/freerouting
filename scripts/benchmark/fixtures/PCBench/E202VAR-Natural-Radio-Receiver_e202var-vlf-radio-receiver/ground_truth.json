@@ -1,0 +1,29 @@
+{
+  "board": "E202VAR-Natural-Radio-Receiver_e202var-vlf-radio-receiver",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\E202VAR-Natural-Radio-Receiver_e202var-vlf-radio-receiver\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 9,
+  "segment_count": 234,
+  "approximate_track_length_mm": 680.39,
+  "kicad_drc_violations": 430,
+  "generated_at": "2026-08-18T18:43:35.862425+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 430,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 186,
+      "lib_footprint_issues": 51,
+      "malformed_courtyard": 6,
+      "silk_edge_clearance": 13,
+      "silk_over_copper": 159,
+      "silk_overlap": 11,
+      "starved_thermal": 2,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 194,
+      "warning": 236
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ATMEGA328-Motor-Board_ATMEGA328_Motor_Board",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1314639,
+      "sha256": "2ac0bfde908bd0b7324fee9950abf6793a7b8393f2ec32ed01044c57d7a93252"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 899101,
+      "sha256": "81ec795916d5f84244fcaf5c6ffea98db5c83612727adc2102aedf21938f8db5"
+    },
+    "metadata_json": {
+      "bytes": 545,
+      "sha256": "31a4a0f730bf5f9f570a73a16cd38d5a92db425ff37896b84f8d606856f07b17"
+    },
+    "final_json": {
+      "bytes": 921305,
+      "sha256": "e5d42913a5c3a2a32718fba82c94e857a0fe7a2ac51b700790af0ac3d2a193e7"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:29:33.344095+00:00"
+  }
+}

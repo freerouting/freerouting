@@ -314,10 +314,20 @@ public class DsnFile {
   public static String read_string_scope(IJFlexScanner p_scanner) {
     try {
       p_scanner.yybegin(SpecctraDsnFileReader.NAME);
-      String result = p_scanner.next_string();
+      Object token = p_scanner.next_token();
+      if (token == null) {
+        return null;
+      }
+      String result = token.toString();
       Object next_token = p_scanner.next_token();
       if (next_token != Keyword.CLOSED_BRACKET) {
-        FRLogger.warn("DsnFile.read_string_scope: closing bracket expected at '" + p_scanner.get_scope_identifier() + "'");
+        FRLogger.warn(
+            "DsnFile.read_string_scope: closing bracket expected at '"
+                + p_scanner.get_scope_identifier()
+                + "'");
+        while (next_token != null && next_token != Keyword.CLOSED_BRACKET) {
+          next_token = p_scanner.next_token();
+        }
       }
       return result;
     } catch (IOException e) {

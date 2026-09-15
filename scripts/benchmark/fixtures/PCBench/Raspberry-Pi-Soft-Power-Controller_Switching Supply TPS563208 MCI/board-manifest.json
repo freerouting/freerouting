@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 143272,
+      "sha256": "77605aca9b495ae22f2c1f3521b14aeaeb014194bbf6cee0a1ca50e936f8d92a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 25810,
+      "sha256": "6711686bedaef8ab779898a61faa8860e92c13feddc5e23f1f333a9d2924c082"
+    },
+    "metadata_json": {
+      "bytes": 633,
+      "sha256": "ca7947cec9860e13232f8838b98be857863997904b5a9640698d8f2e5e8b2dc2"
+    },
+    "final_json": {
+      "bytes": 14562,
+      "sha256": "b567a6180984011484438fb676368fa0c8f953ac26f84d1a15b5b2061e5a875d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:37:36.535386+00:00"
+  }
+}

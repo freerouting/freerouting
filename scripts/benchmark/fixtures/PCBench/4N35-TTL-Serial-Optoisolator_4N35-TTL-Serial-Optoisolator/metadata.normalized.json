@@ -1,0 +1,66 @@
+{
+  "board_id": "4N35-TTL-Serial-Optoisolator_4N35-TTL-Serial-Optoisolator",
+  "display_name": "4N35-TTL-Serial-Optoisolator_4N35-TTL-Serial-Optoisolator",
+  "pcbench_directory": "PCBs/4N35-TTL-Serial-Optoisolator_4N35-TTL-Serial-Optoisolator",
+  "source": "https://github.com/pepaslabs/4N35-TTL-Serial-Optoisolator",
+  "author": "pepaslabs",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:48.622011+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 40.64,
+      "height": 22.86
+    },
+    "area_cm2": 9.29,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 74,
+    "vias": 0,
+    "track_length_mm": 211.73,
+    "kicad_drc_violations": 89,
+    "kicad_drc_breakdown": {
+      "total_violations": 89,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 12,
+        "copper_edge_clearance": 3,
+        "padstack": 4,
+        "silk_overlap": 28,
+        "text_height": 38
+      },
+      "by_severity": {
+        "error": 19,
+        "warning": 70
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.815656+00:00",
+    "elapsed_seconds": 7.9,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "board_id": "BUF-DiffToSE-ADAU1966_BUF-DiffToSE-ADAU1966",
+  "display_name": "BUF-DiffToSE-ADAU1966_BUF-DiffToSE-ADAU1966",
+  "pcbench_directory": "PCBs/BUF-DiffToSE-ADAU1966_BUF-DiffToSE-ADAU1966",
+  "source": "https://github.com/ohdsp/BUF-DiffToSE-ADAU1966",
+  "author": "ohdsp",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:45.661977+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 64,
+    "components": 165,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 100.0
+    },
+    "area_cm2": 100.0,
+    "zones": 14
+  },
+  "reference": {
+    "segments": 725,
+    "vias": 175,
+    "track_length_mm": 2383.44,
+    "kicad_drc_violations": 570,
+    "kicad_drc_breakdown": {
+      "total_violations": 570,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 309,
+        "lib_footprint_issues": 165,
+        "silk_over_copper": 72,
+        "silk_overlap": 24
+      },
+      "by_severity": {
+        "error": 309,
+        "warning": 261
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

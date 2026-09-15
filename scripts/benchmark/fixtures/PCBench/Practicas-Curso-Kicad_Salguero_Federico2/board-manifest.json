@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Practicas-Curso-Kicad_Salguero_Federico2",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 182172,
+      "sha256": "c02dfcab1afd602e1f07789d7712183a7b19a15fa646a545f65ed1cc142f8b18"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 84367,
+      "sha256": "406d4f0213619183fc34f554bc3838324f8dba767a17cf5d7f5522246f856cf5"
+    },
+    "metadata_json": {
+      "bytes": 536,
+      "sha256": "72fb112747ba589864347f754a7c84b5dbc23485c8a2ae271b9e26ad904320d9"
+    },
+    "final_json": {
+      "bytes": 72948,
+      "sha256": "0e153efdeb97a107300402c690d3bcf533886ef5e57579d8ec3ee8745a560069"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:36:04.103640+00:00"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "board_id": "piboy-zero_piggrl_zero_baseboard",
+  "display_name": "piboy-zero_piggrl_zero_baseboard",
+  "pcbench_directory": "PCBs/piboy-zero_piggrl_zero_baseboard",
+  "source": "https://github.com/JohSchneider/piboy-zero",
+  "author": "JohSchneider",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:21.941697+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 35,
+    "components": 62,
+    "dimensions_mm": {
+      "width": 101.0,
+      "height": 43.9
+    },
+    "area_cm2": 44.34,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 722,
+    "vias": 109,
+    "track_length_mm": 2306.82,
+    "kicad_drc_violations": 502,
+    "kicad_drc_breakdown": {
+      "total_violations": 502,
+      "unconnected_count": 6,
+      "by_type": {
+        "clearance": 185,
+        "copper_edge_clearance": 26,
+        "courtyards_overlap": 5,
+        "lib_footprint_issues": 58,
+        "pth_inside_courtyard": 1,
+        "silk_edge_clearance": 54,
+        "silk_over_copper": 108,
+        "silk_overlap": 55,
+        "starved_thermal": 9,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 226,
+        "warning": 276
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

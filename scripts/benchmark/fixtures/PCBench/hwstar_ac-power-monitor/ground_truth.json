@@ -1,0 +1,29 @@
+{
+  "board": "hwstar_ac-power-monitor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\hwstar_ac-power-monitor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 40,
+  "segment_count": 336,
+  "approximate_track_length_mm": 976.55,
+  "kicad_drc_violations": 419,
+  "generated_at": "2026-08-18T18:57:37.480099+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 419,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 114,
+      "lib_footprint_issues": 62,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 10,
+      "silk_overlap": 131,
+      "starved_thermal": 1,
+      "text_height": 99,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 115,
+      "warning": 304
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "TB6600StepperDriver_DEW_TB6600-V1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 229988,
+      "sha256": "e91bbd6368b4c27832792c71b165419ae268700c7d477e54ff4f0c7e6b0c680a"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 286574,
+      "sha256": "b2d629057d8c0c33d516119a3c2c487652212237e75f072232068d47ef92c730"
+    },
+    "metadata_json": {
+      "bytes": 510,
+      "sha256": "4262676f55f4412c8b9566ce1b7b76b33c3b7007a11cc0ce92cf733b5d5f6292"
+    },
+    "final_json": {
+      "bytes": 146781,
+      "sha256": "125d500a1050e15dcd7eca04b5fb40f7d34548e031bb32335a338d3750cfe338"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:49:41.812136+00:00"
+  }
+}

@@ -18,6 +18,7 @@ import java.io.Writer;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
@@ -25,7 +26,7 @@ import java.util.Objects;
 /** Aggregates persisted, runtime, and source-specific Freerouting settings. */
 public class GlobalSettings implements Serializable {
 
-  private static Path userDataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
+  private static Path userDataPath = AppPaths.getDefaultUserDataPath();
   private static Path configurationFilePath = userDataPath.resolve("freerouting.json");
   private static Boolean isUserDataPathLocked = false;
   public final transient RuntimeEnvironment runtimeEnvironment = new RuntimeEnvironment();
@@ -34,7 +35,7 @@ public class GlobalSettings implements Serializable {
   public final UserProfileSettings userProfileSettings = new UserProfileSettings();
 
   @SerializedName("gui")
-  public final GuiSettings guiSettings = new GuiSettings();
+  public final GuiApplicationSettings guiSettings = new GuiApplicationSettings();
 
   /**
    * Legacy router settings bridge retained for JSON serialization and compatibility.
@@ -73,12 +74,16 @@ public class GlobalSettings implements Serializable {
   @SerializedName("logging")
   public final LoggingSettings logging = new LoggingSettings();
 
+  @SerializedName("network")
+  public final NetworkSettings networkSettings = new NetworkSettings();
+
   @SerializedName("debug")
   public final transient DebugSettings debugSettings = new DebugSettings();
 
   private final transient String[] supportedLanguages = {
-    "en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "ja", "ko", "pl",
-    "nl", "tr", "vi", "id", "uk", "cs", "hu", "th", "sv", "ro"
+    "en", "de", "zh", "zh_TW", "hi", "es", "it", "fr", "ar", "bn", "ru", "pt", "pt_BR", "ja", "ko",
+    "pl", "nl", "tr", "vi", "id", "uk", "cs", "hu", "th", "sv", "ro", "ca", "da", "el", "fi", "he",
+    "hr", "lt", "nb", "sk", "sl"
   };
 
   @SerializedName("version")
@@ -103,6 +108,12 @@ public class GlobalSettings implements Serializable {
   public transient String initialOutputFile;
 
   /**
+   * Additional output file paths provided via command line arguments (-do file1+file2 or -do file1
+   * -do file2).
+   */
+  public transient java.util.List<String> additionalOutputFiles = new java.util.ArrayList<>();
+
+  /**
    * The initial rules file path provided via command line arguments. This is used for
    * initialization.
    */
@@ -113,6 +124,18 @@ public class GlobalSettings implements Serializable {
    * via the -de command line argument.
    */
   public transient String designSessionFilename;
+
+  /** Exit code from the most recent headless CLI routing run (for harness consumption). */
+  public transient int cliExitCode = 0;
+
+  /** If true, recalculates benchmark scores from a benchmark JSON file and exits. */
+  public transient boolean calculateBenchmarkScores = false;
+
+  /** Input benchmark JSON file for score calculation. */
+  public transient String benchmarkScoresInput;
+
+  /** Output JSON file for recalculated benchmark scores. */
+  public transient String benchmarkScoresOutput;
 
   /**
    * The current locale for the application. It is initialized based on the system default locale,
@@ -131,7 +154,14 @@ public class GlobalSettings implements Serializable {
   /** Creates global settings with the supported system locale and default source merger. */
   public GlobalSettings() {
     // validate and set the current locale
-    if (Arrays.stream(supportedLanguages).noneMatch(currentLocale.getLanguage()::equals)) {
+    boolean isSupported =
+        Arrays.stream(supportedLanguages)
+            .anyMatch(
+                lang ->
+                    lang.equalsIgnoreCase(currentLocale.getLanguage())
+                        || lang.equalsIgnoreCase(currentLocale.toString())
+                        || lang.equalsIgnoreCase(currentLocale.toLanguageTag().replace("-", "_")));
+    if (!isSupported) {
       // the fallback language is English
       currentLocale = Locale.ENGLISH;
     }
@@ -150,17 +180,6 @@ public class GlobalSettings implements Serializable {
   }
 
   /**
-   * Returns the resolved absolute path of the {@code freerouting.json} configuration file.
-   *
-   * <p>This path is derived from {@link #getUserDataPath()} and is updated atomically whenever
-   * {@link #setUserDataPath(Path)} is called (before the lock is engaged). Use this accessor for
-   * logging, diagnostics, or tests that need to verify where the configuration file is written.
-   */
-  public static Path getConfigurationFilePath() {
-    return configurationFilePath;
-  }
-
-  /**
    * Sets the persistent user-data directory unless the path has already been locked.
    *
    * @param userDataPath directory to use for persistent settings
@@ -173,6 +192,17 @@ public class GlobalSettings implements Serializable {
   }
 
   /**
+   * Returns the resolved absolute path of the {@code freerouting.json} configuration file.
+   *
+   * <p>This path is derived from {@link #getUserDataPath()} and is updated atomically whenever
+   * {@link #setUserDataPath(Path)} is called (before the lock is engaged). Use this accessor for
+   * logging, diagnostics, or tests that need to verify where the configuration file is written.
+   */
+  public static Path getConfigurationFilePath() {
+    return configurationFilePath;
+  }
+
+  /**
    * Resets the user-data-path lock and path to their initial defaults.
    *
    * <p><strong>For testing only.</strong> Must never be called from production code. Resets both
@@ -181,7 +211,7 @@ public class GlobalSettings implements Serializable {
    */
   static void resetForTesting() {
     isUserDataPathLocked = false;
-    userDataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
+    userDataPath = AppPaths.getDefaultUserDataPath();
     configurationFilePath = userDataPath.resolve("freerouting.json");
   }
 
@@ -258,6 +288,10 @@ public class GlobalSettings implements Serializable {
    * regardless of how the caller handles the return value.
    */
   public static GlobalSettings load() throws IOException {
+    if (!Files.exists(configurationFilePath)
+        && userDataPath.equals(AppPaths.getDefaultUserDataPath())) {
+      AppPaths.migrateLegacyDirectory(AppPaths.getLegacyTempDirectory(), userDataPath);
+    }
     GlobalSettings loadedSettings = null;
     try (Reader reader = Files.newBufferedReader(configurationFilePath)) {
       loadedSettings = GsonProvider.GSON.fromJson(reader, GlobalSettings.class);
@@ -301,8 +335,7 @@ public class GlobalSettings implements Serializable {
       } else {
         int cmp = compareVersionStrings(fileVersion, currentVersion);
         if (cmp < 0) {
-          // File was written by an older version — the most common case after an
-          // upgrade.  Migration logic is not yet implemented, so warn the user.
+          // File was written by an older version — the most common case after an upgrade.
           FRLogger.warn(
               "freerouting.json at '"
                   + configurationFilePath
@@ -310,11 +343,7 @@ public class GlobalSettings implements Serializable {
                   + fileVersion
                   + ", current: "
                   + currentVersion
-                  + "). "
-                  + "No migration logic is implemented for this version transition, so some "
-                  + "settings "
-                  + "may have been reset to their defaults. "
-                  + "The file will be re-saved with the updated version string.");
+                  + ") - re-saving configuration with the updated version string.");
         } else if (cmp > 0) {
           // File was written by a newer version — downgrade scenario.
           FRLogger.warn(
@@ -325,9 +354,8 @@ public class GlobalSettings implements Serializable {
                   + ", current: "
                   + currentVersion
                   + "). "
-                  + "Some settings from the newer version may not be understood or may be ignored. "
-                  + "Consider upgrading Freerouting to the version that originally wrote this "
-                  + "file.");
+                  + "Some settings from the newer version may not be understood or may be"
+                  + " ignored.");
         }
       }
 
@@ -343,12 +371,6 @@ public class GlobalSettings implements Serializable {
       if (isSaveNeeded) {
         // TODO: insert per-version migration steps here when needed, e.g.:
         //   migrateSettings(fileVersion, currentVersion, defaultSettings);
-        FRLogger.info(
-            "freerouting.json config version changed from '"
-                + fileVersion
-                + "' to '"
-                + currentVersion
-                + "' – re-saving configuration.");
         saveAsJson(defaultSettings);
       }
       loadedSettings = defaultSettings;
@@ -374,6 +396,18 @@ public class GlobalSettings implements Serializable {
     // doesn't exist
     try {
       Files.createDirectories(configurationFilePath.getParent());
+      try {
+        if (configurationFilePath
+            .getParent()
+            .getFileSystem()
+            .supportedFileAttributeViews()
+            .contains("posix")) {
+          Files.setPosixFilePermissions(
+              configurationFilePath.getParent(), PosixFilePermissions.fromString("rwx------"));
+        }
+      } catch (Exception _) {
+        // Ignored on non-POSIX or restricted environments
+      }
     } catch (AccessDeniedException e) {
       throw new AccessDeniedException(
           configurationFilePath.getParent().toString(),
@@ -417,6 +451,16 @@ public class GlobalSettings implements Serializable {
               + e.getMessage()
               + ". Settings won't be persisted.",
           e);
+    }
+
+    // Enforce owner-only permissions on the settings file if supported
+    try {
+      if (configurationFilePath.getFileSystem().supportedFileAttributeViews().contains("posix")) {
+        Files.setPosixFilePermissions(
+            configurationFilePath, PosixFilePermissions.fromString("rw-------"));
+      }
+    } catch (Exception _) {
+      // Ignored on non-POSIX or restricted environments
     }
   }
 
@@ -464,6 +508,15 @@ public class GlobalSettings implements Serializable {
    */
   public Boolean setValue(String propertyName, String newValue) {
     try {
+      if (propertyName.startsWith("router.")) {
+        String relative = propertyName.substring("router.".length());
+        String canonical = LegacyRouterSettingsBridge.canonicalCliPath(relative);
+        if (LegacyRouterSettingsBridge.isDeprecatedFlatAutorouterPath(relative)) {
+          LegacyRouterSettingsBridge.warnDeprecatedPath(
+              "router." + relative, "router." + canonical);
+        }
+        propertyName = "router." + canonical;
+      }
       ReflectionUtil.setFieldValue(this, propertyName, newValue);
       return true;
     } catch (NoSuchFieldException e) {
@@ -492,6 +545,30 @@ public class GlobalSettings implements Serializable {
             || "--help".equalsIgnoreCase(args[i])
             || "-h".equalsIgnoreCase(args[i])) {
           showHelpOption = true;
+          continue;
+        }
+        if ("--calculate-benchmark-scores".equalsIgnoreCase(args[i])) {
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--calculate-benchmark-scores.input=")) {
+          benchmarkScoresInput =
+              args[i].substring("--calculate-benchmark-scores.input=".length()).trim();
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--calculate-benchmark-scores.output=")) {
+          benchmarkScoresOutput =
+              args[i].substring("--calculate-benchmark-scores.output=".length()).trim();
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--input=")) {
+          benchmarkScoresInput = args[i].substring("--input=".length()).trim();
+          continue;
+        }
+        if (args[i].startsWith("--output=")) {
+          benchmarkScoresOutput = args[i].substring("--output=".length()).trim();
           continue;
         }
         if (args[i].startsWith("--compare-boards=")) {
@@ -534,11 +611,20 @@ public class GlobalSettings implements Serializable {
             java.util.List<String> files = new java.util.ArrayList<>();
             int j = i + 1;
             while (j < args.length && !args[j].startsWith("-")) {
-              // Split each argument by '+' to support legacy concatenation (e.g.
-              // file1.dsn+file2.rules)
-              String[] parts = args[j].split("\\+");
-              for (String part : parts) {
-                files.add(part.trim());
+              String rawArg = args[j].trim();
+              if (new java.io.File(rawArg).exists()) {
+                files.add(rawArg);
+              } else if (rawArg.contains("+")) {
+                // Split each argument by '+' to support legacy concatenation (e.g.
+                // file1.dsn+file2.rules)
+                String[] parts = rawArg.split("\\+");
+                for (String part : parts) {
+                  if (!part.trim().isEmpty()) {
+                    files.add(part.trim());
+                  }
+                }
+              } else {
+                files.add(rawArg);
               }
               j++;
             }
@@ -612,12 +698,37 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-do")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            initialOutputFile = args[i + 1];
-            i++;
+            java.util.List<String> outFiles = new java.util.ArrayList<>();
+            int j = i + 1;
+            while (j < args.length && !args[j].startsWith("-")) {
+              String rawArg = args[j].trim();
+              if (rawArg.contains("+")) {
+                String[] parts = rawArg.split("\\+");
+                for (String part : parts) {
+                  if (!part.trim().isEmpty()) {
+                    outFiles.add(part.trim());
+                  }
+                }
+              } else if (!rawArg.isEmpty()) {
+                outFiles.add(rawArg);
+              }
+              j++;
+            }
+            if (!outFiles.isEmpty()) {
+              if (initialOutputFile == null) {
+                initialOutputFile = outFiles.get(0);
+                for (int k = 1; k < outFiles.size(); k++) {
+                  additionalOutputFiles.add(outFiles.get(k));
+                }
+              } else {
+                additionalOutputFiles.addAll(outFiles);
+              }
+            }
+            i = j - 1;
           }
         } else if (args[i].startsWith("-drc")) {
           // DRC-only mode (must be checked before -dr)
-          routerSettings.enabled = false;
+          routerSettings.autorouter.enabled = false;
           drcSettings.enabled = true;
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             drcReportFile = new BoardFileDetails();
@@ -632,13 +743,15 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-mp")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.maxPasses = Integer.decode(args[i + 1]);
+            LegacyRouterSettingsBridge.warnDeprecatedPath(
+                "-mp / --router.max_passes", "--router.autorouter.max_passes");
+            routerSettings.autorouter.maxPasses = Integer.decode(args[i + 1]);
 
-            if (routerSettings.maxPasses < 0) {
-              routerSettings.maxPasses = 1;
+            if (routerSettings.autorouter.maxPasses < 0) {
+              routerSettings.autorouter.maxPasses = 0;
             }
-            if (routerSettings.maxPasses > 9999) {
-              routerSettings.maxPasses = 9999;
+            if (routerSettings.autorouter.maxPasses > 9999) {
+              routerSettings.autorouter.maxPasses = 9999;
             }
             // Note: 0 is allowed and means no limit
             i++;
@@ -657,39 +770,27 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-oit")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.optimizationImprovementThreshold =
-                Float.parseFloat(args[i + 1]) / 100;
-
-            if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
-              routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
+            try {
+              float val = Float.parseFloat(args[i + 1]);
+              routerSettings.optimizer.optimizationImprovementThreshold =
+                  (val > 0.0f && val < 1.0f) ? val * 100.0f : val;
+            } catch (NumberFormatException ignored) {
+              // Fall back to existing settings if parsing fails
             }
             i++;
           }
         } else if (args[i].startsWith("-us")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            String op = args[i + 1].toLowerCase().trim();
-            routerSettings.optimizer.boardUpdateStrategy =
-                "global".equals(op)
-                    ? BoardUpdateStrategy.GLOBAL_OPTIMAL
-                    : ("hybrid".equals(op)
-                        ? BoardUpdateStrategy.HYBRID
-                        : BoardUpdateStrategy.GREEDY);
+            routerSettings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
             i++;
           }
         } else if (args[i].startsWith("-is")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             String op = args[i + 1].toLowerCase().trim();
             routerSettings.optimizer.itemSelectionStrategy =
-                op.indexOf("seq") == 0
-                    ? ItemSelectionStrategy.SEQUENTIAL
-                    : (op.indexOf("rand") == 0
-                        ? ItemSelectionStrategy.RANDOM
-                        : ItemSelectionStrategy.PRIORITIZED);
-            i++;
-          }
-        } else if (args[i].startsWith("-hr")) { // hybrid ratio
-          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.hybridRatio = args[i + 1].trim();
+                op.startsWith("prio")
+                    ? ItemSelectionStrategy.PRIORITIZED
+                    : ItemSelectionStrategy.SEQUENTIAL;
             i++;
           }
         } else if ("-l".equals(args[i])) {
@@ -752,6 +853,26 @@ public class GlobalSettings implements Serializable {
             currentLocale = Locale.forLanguageTag("sv-SE");
           } else if (localeString.startsWith("ro")) {
             currentLocale = Locale.forLanguageTag("ro-RO");
+          } else if (localeString.startsWith("ca")) {
+            currentLocale = Locale.forLanguageTag("ca-ES");
+          } else if (localeString.startsWith("da")) {
+            currentLocale = Locale.forLanguageTag("da-DK");
+          } else if (localeString.startsWith("el")) {
+            currentLocale = Locale.forLanguageTag("el-GR");
+          } else if (localeString.startsWith("fi")) {
+            currentLocale = Locale.forLanguageTag("fi-FI");
+          } else if (localeString.startsWith("he")) {
+            currentLocale = Locale.forLanguageTag("he-IL");
+          } else if (localeString.startsWith("hr")) {
+            currentLocale = Locale.forLanguageTag("hr-HR");
+          } else if (localeString.startsWith("lt")) {
+            currentLocale = Locale.forLanguageTag("lt-LT");
+          } else if (localeString.startsWith("nb")) {
+            currentLocale = Locale.forLanguageTag("nb-NO");
+          } else if (localeString.startsWith("sk")) {
+            currentLocale = Locale.forLanguageTag("sk-SK");
+          } else if (localeString.startsWith("sl")) {
+            currentLocale = Locale.forLanguageTag("sl-SI");
           }
 
         } else if (args[i].startsWith("-dl")) {
@@ -768,7 +889,9 @@ public class GlobalSettings implements Serializable {
         } else if (args[i].startsWith("-inc")) {
           // ignore net class(es)
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.ignoreNetClasses = args[i + 1].split(",");
+            LegacyRouterSettingsBridge.warnDeprecatedPath(
+                "-inc / --router.ignore_net_classes", "--router.autorouter.ignore_net_classes");
+            routerSettings.autorouter.ignoreNetClasses = args[i + 1].split(",");
             i++;
           }
         } else if (args[i].startsWith("-dct")) {
@@ -803,17 +926,14 @@ public class GlobalSettings implements Serializable {
 
   /** Returns the configured maximum router passes. */
   public int getMaxPasses() {
-    return routerSettings.maxPasses;
+    Integer maxPasses =
+        routerSettings.autorouter != null ? routerSettings.autorouter.maxPasses : null;
+    return maxPasses != null ? maxPasses : 0;
   }
 
   /** Returns the configured optimizer thread count. */
   public int getNumThreads() {
     return routerSettings.optimizer.maxThreads;
-  }
-
-  /** Returns the configured optimizer hybrid ratio. */
-  public String getHybridRatio() {
-    return routerSettings.optimizer.hybridRatio;
   }
 
   /** Returns the configured optimizer board-update strategy. */

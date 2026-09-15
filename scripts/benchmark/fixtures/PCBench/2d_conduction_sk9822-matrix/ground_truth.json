@@ -1,0 +1,25 @@
+{
+  "board": "2d_conduction_sk9822-matrix",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\2d_conduction_sk9822-matrix\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 36,
+  "segment_count": 406,
+  "approximate_track_length_mm": 1388.91,
+  "kicad_drc_violations": 195,
+  "generated_at": "2026-08-18T18:26:09.140074+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 195,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 53,
+      "lib_footprint_issues": 133,
+      "silk_over_copper": 1,
+      "starved_thermal": 8
+    },
+    "by_severity": {
+      "error": 61,
+      "warning": 134
+    }
+  }
+}

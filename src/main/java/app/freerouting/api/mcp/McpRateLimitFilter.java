@@ -72,12 +72,22 @@ public class McpRateLimitFilter implements ContainerRequestFilter {
   }
 
   private static String buildKey(ContainerRequestContext requestContext) {
-    String profileId = requestContext.getHeaderString("Freerouting-Profile-ID");
-    String profileEmail = requestContext.getHeaderString("Freerouting-Profile-Email");
-    String identity =
-        profileId != null && !profileId.isBlank()
-            ? profileId
-            : (profileEmail != null && !profileEmail.isBlank() ? profileEmail : "anonymous");
+    String identity = null;
+    if (requestContext.getSecurityContext() != null
+        && requestContext.getSecurityContext().getUserPrincipal() != null
+        && requestContext.getSecurityContext().getUserPrincipal().getName() != null
+        && !requestContext.getSecurityContext().getUserPrincipal().getName().isBlank()) {
+      identity = requestContext.getSecurityContext().getUserPrincipal().getName();
+    }
+
+    if (identity == null || identity.isBlank()) {
+      String profileId = requestContext.getHeaderString("Freerouting-Profile-ID");
+      String profileEmail = requestContext.getHeaderString("Freerouting-Profile-Email");
+      identity =
+          profileId != null && !profileId.isBlank()
+              ? profileId
+              : (profileEmail != null && !profileEmail.isBlank() ? profileEmail : "anonymous");
+    }
 
     return requestContext.getMethod() + ":" + identity;
   }

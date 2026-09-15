@@ -1,0 +1,31 @@
+{
+  "board": "6volt-5W-solar-cc_6vleadacidsolar",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\6volt-5W-solar-cc_6vleadacidsolar\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 85,
+  "segment_count": 350,
+  "approximate_track_length_mm": 761.78,
+  "kicad_drc_violations": 535,
+  "generated_at": "2026-08-18T18:26:38.691067+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 535,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 4,
+      "clearance": 142,
+      "copper_edge_clearance": 3,
+      "padstack": 4,
+      "silk_edge_clearance": 1,
+      "silk_over_copper": 58,
+      "silk_overlap": 194,
+      "starved_thermal": 1,
+      "text_height": 127,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 150,
+      "warning": 385
+    }
+  }
+}

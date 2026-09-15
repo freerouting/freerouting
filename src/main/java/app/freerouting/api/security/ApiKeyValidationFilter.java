@@ -145,7 +145,35 @@ public class ApiKeyValidationFilter implements ContainerRequestFilter {
       return;
     }
 
-    // API key is valid, allow the request to proceed
+    // API key is valid, attach the authenticated principal to the SecurityContext
+    final String authenticatedPrincipal = apiKey;
+    final boolean isSecure =
+        requestContext.getSecurityContext() != null
+            && requestContext.getSecurityContext().isSecure();
+    requestContext.setProperty("app.freerouting.authenticatedApiKey", authenticatedPrincipal);
+    requestContext.setSecurityContext(
+        new jakarta.ws.rs.core.SecurityContext() {
+          @Override
+          public java.security.Principal getUserPrincipal() {
+            return () -> authenticatedPrincipal;
+          }
+
+          @Override
+          public boolean isUserInRole(String role) {
+            return true;
+          }
+
+          @Override
+          public boolean isSecure() {
+            return isSecure;
+          }
+
+          @Override
+          public String getAuthenticationScheme() {
+            return "BEARER";
+          }
+        });
+
     FRLogger.debug("API key validation successful for path: " + path);
   }
 

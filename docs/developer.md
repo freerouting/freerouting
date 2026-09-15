@@ -158,67 +158,133 @@ Creating a release takes about half an hour if everything goes according to the 
 
 Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 
-* Run the `gradlew wrapper --gradle-version latest` command to update the Gradle wrapper to the latest version.
-* Run the `./gradlew dependencyUpdates useLatestVersions` command to check if there are any dependencies that need to be updated. Update them manually if necessary and commit the changes.
-* Check if there are any [outstanding pull requests](https://github.com/freerouting/freerouting/pulls) and merge them as well
-* Change `ext.publishing.versionId` in `\gradle\project-info.gradle` to `2.3.4`
-* Push it to GitHub
-* Check if it was built successfully on GitHub Actions
-* Create a new draft release
-* Run `gradlew.bat executableJar` -> this will generate the files in `\build\libs\freerouting*.jar`
-* Rename to `freerouting-current-executable.jar` to `freerouting-2.3.4.jar`
-* Update the `integrations\KiCad`
-    * Copy `freerouting-2.3.4.jar` into `\integrations\KiCad\kicad-freerouting\plugins\jar\`
-    * Update `\integrations\KiCad\kicad-freerouting\plugins\plugin.ini` with the new filename
-    * Update `\integrations\KiCad\kicad-freerouting\metadata.json`
-    * Create a ZIP file from the `kicad-freerouting` folder
-    * Copy this `kicad-freerouting.zip` file to `kicad-freerouting-2.3.4.zip`
-    * Use KiCad Packager
-      from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools)
-      to get hash and file sizes
-    * Update `\integrations\KiCad\metadata.json` with these values
-    * Push these changes to GitHub
-        * Run the "Run KiCad repository validation" command in KiCad Packager
-    * Delete previous fork at https://gitlab.com/freeroutingapp/metadata
-      (Settings / General / Delete this project)
-    * Fork https://gitlab.com/kicad/addons/metadata again
-    * Create a new branch, named `freerouting-2.3.4`
-    * Replace https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json
-      with the new one
-    * Create a merge request at https://gitlab.com/kicad/addons/metadata / Merge request / ...
-* Update README.md, integrations.md, self-hosting.md and settings.md
-* Publish the release
-* Check if Windows, Linux and macOS installers were added to the release [in GitHub Actions](https://github.com/freerouting/freerouting/actions) and if the Docker image was updated on [GHCR.io](https://github.com/freerouting/freerouting/pkgs/container/freerouting)
-* Publish the library to Maven Central
-    * Use the [Gradle Maven plugin]([url](https://github.com/vanniktech/gradle-maven-publish-plugin)) and set the properties in `/.gradle/gradle.properties`
+### 1. Pre-Release (Clean & Ready `master`)
+
+* Check if there are any [outstanding pull requests](https://github.com/freerouting/freerouting/pulls) and merge them into `master` first.
+* Fetch the latest `master` branch and ensure your local repo is up to date:
+  ```bash
+  git checkout master
+  git pull origin master
+  ```
+
+### 2. Prepare Release Branch (`release/v2.3.4`)
+
+* Create a new release branch:
+  ```bash
+  git checkout -b release/v2.3.4
+  ```
+* Run `gradlew wrapper --gradle-version latest` (or pass `--gradle-distribution-sha256-sum <hash>` if checksum verification is configured) to update the Gradle wrapper.
+* Run `./gradlew dependencyUpdates useLatestVersions` to check and apply dependency updates. Verify changes manually if necessary.
+* Change `ext.publishInfo.versionId` in `gradle/project-info.gradle` to `2.3.4`.
+* Set the package version in `integrations/mcp-server/package.json` to `2.3.4` (`npm version 2.3.4 --no-git-tag-version`).
+* Build the executable JAR:
+  ```powershell
+  gradlew executableJar
+  ```
+* Copy and rename `build/libs/freerouting-current-executable.jar` to `freerouting-2.3.4.jar`.
+* Update the KiCad integration (`integrations/KiCad/`):
+    * Copy `freerouting-2.3.4.jar` into `integrations/KiCad/kicad-freerouting/plugins/jar/` (and remove the previous version JAR).
+    * Update `integrations/KiCad/kicad-freerouting/plugins/plugin.ini` with the new filename (`location = jar/freerouting-2.3.4.jar`).
+    * Update `integrations/KiCad/kicad-freerouting/metadata.json` with the new version and download URL.
+    * Create a ZIP file from the `kicad-freerouting` folder and save it as both `kicad-freerouting.zip` and `kicad-freerouting-2.3.4.zip`.
+    * Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to compute SHA-256 and file sizes.
+    * Update `integrations/KiCad/metadata.json` with the new version entry, SHA-256, download size, and install size.
+    * Run a full routing session from KiCad after manually installing the plugin ZIP, to make sure that the router executes properly in CLI mode and the resulting SES file imports without corruption or parser errors.
+* Update documentation version references (`README.md`, `integrations.md`, `self-hosting.md`, `settings.md`, and `scoring.md` if the score formulas or defaults changed).
+* Run verification quality checks:
+  ```bash
+  ./gradlew spotlessCheck checkstyleMain checkstyleTest
+  ```
+* Commit the release changes and push to GitHub:
+  ```bash
+  git add -A
+  git commit -m "Prepare release v2.3.4"
+  git push -u origin release/v2.3.4
+  ```
+
+### 3. Pull Request & Verification
+
+* Create a PR from `release/v2.3.4` → `master`.
+* Check if it builds successfully on GitHub Actions CI.
+* Merge the PR into `master`.
+
+### 4. Publish Release & Artifacts
+
+* Update your local `master` branch:
+  ```bash
+  git checkout master
+  git pull origin master
+  ```
+* Create and publish the new release on GitHub:
+  * Draft a release for tag `v2.3.4` targeting the latest commit on `master`.
+  * You do not need to manually attach artifacts. Publishing the release automatically triggers GitHub Actions (`create-release.yml` and `docker-release.yml`) to build and attach:
+    * Universal executable JAR (`freerouting-2.3.4.jar`).
+    * Windows x64 installer (`freerouting-2.3.4-windows-x64.msi`).
+    * Linux x64 distribution package (`freerouting-2.3.4-linux-x64.zip`).
+    * macOS Apple Silicon ARM64 disk image (`freerouting-2.3.4-macos-arm64.dmg`).
+    * Multi-architecture Docker image automatically published to GitHub Container Registry ([`ghcr.io/freerouting/freerouting`](https://github.com/freerouting/freerouting/pkgs/container/freerouting)).
+  * *Note on Intel macOS (x86_64):* Intel-based macOS DMG installers are no longer generated because GitHub Actions has deprecated and retired x86_64 macOS runners (`macos-12`/`macos-13`) in favor of Apple Silicon ARM64 runners (`macos-14`/`macos-latest`). Native macOS DMG packages cannot be cross-compiled for x86_64 without dedicated Intel hardware; Intel Mac users can run the universal `freerouting-2.3.4.jar` directly with Java 25.
+  * *Note on KiCad plugin ZIP:* We do not attach `kicad-freerouting-2.3.4.zip` directly to the GitHub release; it is hosted in the repository under `integrations/KiCad/kicad-freerouting-2.3.4.zip` and distributed directly to users through KiCad's Plugin and Content Manager (PCM).
+* Publish the library to Maven Central:
+    * Use the [Gradle Maven plugin](https://github.com/vanniktech/gradle-maven-publish-plugin) and verify properties in `~/.gradle/gradle.properties`:
       <img width="896" height="293" alt="image" src="https://github.com/user-attachments/assets/fa85332d-91d8-4715-924d-aa8b6f86c64c" />
-    * Run the `./gradlew publishToMavenCentral --no-configuration-cache` command in the root folder to publish it to Maven Central
-    * Publish the deployment [on Maven Central Repository](https://central.sonatype.com/publishing)
-
-* Update the Docker image on Azure
-    1. build docker image locally for Linux x64 (~2 mins)
-       ```
-       docker build -t freerouting:latest .
-         ```
-    3. tag the docker image
-       ```
-       docker tag freerouting:latest freerouting.azurecr.io/freerouting/api:latest
-         ```
-    5. push image to Azure as freerouting.azurecr.io/freerouting/api:latest
-       ```
-         az login
-       az acr login --name freerouting
-       docker push freerouting.azurecr.io/freerouting/api:latest
-       ```
-* Change `ext.publishing.versionId` in `\gradle\project-info.gradle` again to `2.3.5-SNAPSHOT`
-
-* Test and publish a new version of the Python Freerouting Client on PyPI (in the separate `freerouting-python-client` repository). **Keep the PyPI package version in sync with the Freerouting GA release** (same semver as `ext.publishing.versionId`).
-* Bump and publish `@freerouting/freerouting-mcp-server` on [npm](https://www.npmjs.com/package/@freerouting/freerouting-mcp-server) (`integrations/mcp-server`). **Use the same semver as the Freerouting GA release.**
+    * Run `./gradlew publishToMavenCentral --no-configuration-cache` in the root folder to publish it to Maven Central.
+    * Publish the deployment on [Maven Central Repository (Sonatype)](https://central.sonatype.com/publishing).
+* Publish the MCP Server NPM package:
+  ```bash
+  cd integrations/mcp-server
+  npm pkg fix
+  npm publish
+  cd ../..
+  ```
+* Test and publish a new version of the Python Freerouting Client on PyPI (in the separate `freerouting-python-client` repository). Keep the PyPI package version in sync with the Freerouting GA release (`2.3.4`).
+* Submit KiCad Addon Repository update:
+    * You can perform this update directly on GitLab's website without cloning the repository locally:
+    * Go to your GitLab fork of the official repository: [`https://gitlab.com/freeroutingapp/metadata`](https://gitlab.com/freeroutingapp/metadata) (or fork [`https://gitlab.com/kicad/addons/metadata`](https://gitlab.com/kicad/addons/metadata) if not already done, and click **Update fork** to bring it up to date).
+    * Navigate to [`packages/app.freerouting.kicad-plugin/metadata.json`](https://gitlab.com/freeroutingapp/metadata/-/blob/main/packages/app.freerouting.kicad-plugin/metadata.json).
+    * Click **Edit** -> **Edit single file**.
+    * Paste the updated version entry or content from `integrations/KiCad/metadata.json` into the editor.
+    * In the **Commit changes** section:
+      * Set **Commit message**: `Update Freerouting Addon to 2.3.4`
+      * Set **Commit to a new branch**: enter a new branch name (e.g. `freerouting-2.3.4`). *Do not commit to `main`*, as GitLab CI package validation requires a dedicated branch.
+      * Ensure **Create a merge request for this change** is checked.
+      * Click **Commit changes**.
+    * On the Merge [Request page](https://gitlab.com/kicad/addons/metadata/-/merge_requests), the GitLab CI pipeline will automatically start and run the `validate` and `build` stages:
+      * Click the **Pipelines** tab on the MR to view progress.
+      * Once the `build` job finishes, open its log: it outputs a link to a temporary PCM repository containing only the updated package.
+      * In KiCad, open **Plugin and Content Manager (PCM)** -> **Manage** -> **Repository**, add that temporary repository URL, and test installing and running the plugin to verify everything works end-to-end.
+    * *Note:* After the merge request is approved and merged, a scheduled job syncs updates to the official KiCad PCM repository within ~24 hours.
+* **Docker Image Updates (GHCR & Azure):**
+    * **Automated (Primary):** The multi-architecture Docker image is automatically built and published to GitHub Container Registry ([`ghcr.io/freerouting/freerouting`](https://github.com/freerouting/freerouting/pkgs/container/freerouting)) via `.github/workflows/docker-release.yml` whenever a release is published on GitHub. No manual build or push is required.
+    * **Azure Container Registry (Legacy / Currently Not Used):** Direct publishing to Azure Container Registry (`freerouting.azurecr.io`) is currently not used in standard releases. If an Azure deployment is ever needed manually:
+        1. Build docker image locally for Linux x64 (~2 mins):
+           ```bash
+           docker build -t freerouting:latest .
+           ```
+        2. Tag the docker image:
+           ```bash
+           docker tag freerouting:latest freerouting.azurecr.io/freerouting/api:latest
+           ```
+        3. Push image to Azure:
+           ```bash
+           az login
+           az acr login --name freerouting
+           docker push freerouting.azurecr.io/freerouting/api:latest
+           ```
 * Optionally regenerate non-official SDK scaffolds from this repository before preparing SDK PRs:
     * `./scripts/sdk/regenerate-all.ps1 -SharedVersion 2.3.4`
     * `./scripts/sdk/generate-javascript-client.ps1`
     * `./scripts/sdk/generate-csharp-client.ps1`
     * `./scripts/sdk/generate-cpp-client.ps1`
+
+### 5. Next Development Cycle
+
+* Create a branch for the next development snapshot:
+  ```bash
+  git checkout -b chore/bump-to-2.3.5-snapshot
+  ```
+* Change `ext.publishInfo.versionId` in `gradle/project-info.gradle` to `2.3.5-SNAPSHOT`.
+* Commit, push, open a PR from `chore/bump-to-2.3.5-snapshot` → `master`, and merge it into `master`.
 
 ## How to update the MCP Server NPM package
 

@@ -1,0 +1,66 @@
+{
+  "board_id": "SPEX_HAB_Mainboard_Hardware_Spex-Mainboard-Hardware_rev1",
+  "display_name": "SPEX_HAB_Mainboard_Hardware_Spex-Mainboard-Hardware_rev1",
+  "pcbench_directory": "PCBs/SPEX_HAB_Mainboard_Hardware_Spex-Mainboard-Hardware_rev1",
+  "source": "https://github.com/rit-spex/SPEX_HAB_Mainboard_Hardware",
+  "author": "rit-spex",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:43.265948+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 93,
+    "components": 134,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 80.0
+    },
+    "area_cm2": 80.0,
+    "zones": 13
+  },
+  "reference": {
+    "segments": 1215,
+    "vias": 191,
+    "track_length_mm": 2610.17,
+    "kicad_drc_violations": 980,
+    "kicad_drc_breakdown": {
+      "total_violations": 980,
+      "unconnected_count": 4,
+      "by_type": {
+        "annular_width": 189,
+        "clearance": 160,
+        "courtyards_overlap": 1,
+        "hole_clearance": 50,
+        "items_not_allowed": 48,
+        "lib_footprint_issues": 134,
+        "silk_edge_clearance": 16,
+        "silk_over_copper": 45,
+        "silk_overlap": 49,
+        "solder_mask_bridge": 200,
+        "starved_thermal": 3,
+        "text_height": 75,
+        "text_thickness": 2,
+        "track_dangling": 3,
+        "via_dangling": 5
+      },
+      "by_severity": {
+        "error": 651,
+        "warning": 329
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

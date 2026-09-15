@@ -1,0 +1,63 @@
+{
+  "board_id": "kitspace_CO2",
+  "display_name": "kitspace_CO2",
+  "pcbench_directory": "PCBs/kitspace_CO2",
+  "source": "https://github.com/nerdyscout/NodeMCU",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/nerdyscout/NodeMCU/master/lib/LICENSE.md'}, {'name': 'CERN', 'link': 'https://raw.githubusercontent.com/nerdyscout/NodeMCU/master/CO2/LICENSE.TXT'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:13:39.318151+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 12,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 26.67,
+      "height": 48.89
+    },
+    "area_cm2": 13.04,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 195,
+    "vias": 35,
+    "track_length_mm": 534.43,
+    "kicad_drc_violations": 373,
+    "kicad_drc_breakdown": {
+      "total_violations": 373,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 40,
+        "copper_edge_clearance": 4,
+        "courtyards_overlap": 19,
+        "hole_clearance": 8,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 30,
+        "pth_inside_courtyard": 4,
+        "silk_over_copper": 59,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 201,
+        "starved_thermal": 5,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 281,
+        "warning": 92
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

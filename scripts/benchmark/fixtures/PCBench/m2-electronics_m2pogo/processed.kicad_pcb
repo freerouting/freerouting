@@ -1,0 +1,501 @@
+
+(kicad_pcb
+  (version 4)
+  (host pcbnew "(2014-jul-16 BZR unknown)-product")
+  (general
+    (links 4)
+    (no_connects 0)
+    (area 17.899999 46.825 182.100001 212.100001)
+    (thickness 1.6)
+    (drawings 4)
+    (tracks 9)
+    (zones 0)
+    (modules 8)
+    (nets 5))
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user))
+  (setup
+    (last_trace_width 0.4)
+    (user_trace_width 0.2)
+    (user_trace_width 0.3)
+    (user_trace_width 0.4)
+    (user_trace_width 0.5)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (segment_width 0.2)
+    (edge_width 0.1)
+    (via_size 0.889)
+    (via_drill 0.635)
+    (via_min_size 0.8)
+    (via_min_drill 0.4)
+    (uvia_size 0.508)
+    (uvia_drill 0.127)
+    (uvias_allowed no)
+    (uvia_min_size 0.508)
+    (uvia_min_drill 0.127)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 2.8 2.8)
+    (pad_drill 1.2)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 0 0)
+    (visible_elements FFFFFF7F)
+    (pcbplotparams
+      (layerselection 0x00030_80000001)
+      (usegerberextensions false)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15)
+      (hpglpenoverlay 2)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory "")))
+  (net 0 "")
+  (net 1 "Net-(P1-Pad1)")
+  (net 2 "Net-(P1-Pad2)")
+  (net 3 "Net-(P2-Pad1)")
+  (net 4 "Net-(P2-Pad2)")
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.2)
+    (via_dia 0.889)
+    (via_drill 0.635)
+    (uvia_dia 0.508)
+    (uvia_drill 0.127)
+    (add_net "Net-(P1-Pad1)")
+    (add_net "Net-(P1-Pad2)")
+    (add_net "Net-(P2-Pad1)")
+    (add_net "Net-(P2-Pad2)"))
+  (module m2pogo:POGO
+    (layer F.Cu)
+    (tedit 53EC980C)
+    (tstamp 53EB844B)
+    (at 117.25 55.25)
+    (path /53EB8289)
+    (fp_text reference P3
+      (at 0 3.05)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_1
+      (at 0 -3.05)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 2.8 2.8)
+      (drill 1.2)
+      (layers *.Cu *.Mask)
+      (net 2 "Net-(P1-Pad2)")))
+  (module m2pogo:POGO
+    (layer F.Cu)
+    (tedit 53EC9809)
+    (tstamp 53EB844F)
+    (at 117.75 51.75)
+    (path /53EB82D8)
+    (fp_text reference P4
+      (at 0 3.05)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_1
+      (at 0 -3.05)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 2.8 2.8)
+      (drill 1.2)
+      (layers *.Cu *.Mask)
+      (net 1 "Net-(P1-Pad1)")))
+  (module m2pogo:POGO
+    (layer F.Cu)
+    (tedit 53EC9803)
+    (tstamp 53EB8453)
+    (at 114.25 51)
+    (path /53EB82F4)
+    (fp_text reference P5
+      (at 0 3.05)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_1
+      (at 0 -3.05)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 2.8 2.8)
+      (drill 1.2)
+      (layers *.Cu *.Mask)
+      (net 4 "Net-(P2-Pad2)")))
+  (module m2pogo:POGO
+    (layer F.Cu)
+    (tedit 53EC9807)
+    (tstamp 53EB8457)
+    (at 113.75 54.5)
+    (path /53EB8311)
+    (fp_text reference P6
+      (at 0 3.05)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_1
+      (at 0 -3.05)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (pad 1 thru_hole circle
+      (at 0 0)
+      (size 2.8 2.8)
+      (drill 1.2)
+      (layers *.Cu *.Mask)
+      (net 3 "Net-(P2-Pad1)")))
+  (module m2pogo:S02B-PASK-2
+    (layer F.Cu)
+    (tedit 53DA5B66)
+    (tstamp 53EB8D76)
+    (at 129.75 56.25 246)
+    (path /53EB8CF0)
+    (fp_text reference P1
+      (at 0.64 4.38 246)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_2
+      (at 0.41 -7.21 246)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 4 -8.2)
+      (end -2 -8.2)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 4 -3)
+      (end 4 -8.2)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 4 3.5)
+      (end 4 -1.2)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -2 3.5)
+      (end 4 3.5)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -2 -1.2)
+      (end -2 3.5)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -2 -8.2)
+      (end -2 -3)
+      (layer F.SilkS)
+      (width 0.2))
+    (pad 1 thru_hole circle
+      (at 0 0 246)
+      (size 1.5 1.5)
+      (drill 0.7)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 "Net-(P1-Pad1)"))
+    (pad 2 thru_hole circle
+      (at 2 0 246)
+      (size 1.5 1.5)
+      (drill 0.7)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 2 "Net-(P1-Pad2)"))
+    (pad "" np_thru_hole circle
+      (at -1.5 -2.1 246)
+      (size 1.1 1.1)
+      (drill 1.1)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad "" np_thru_hole circle
+      (at 3.5 -2.1 246)
+      (size 1.1 1.1)
+      (drill 1.1)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module m2pogo:S02B-PASK-2
+    (layer F.Cu)
+    (tedit 53DA5B66)
+    (tstamp 53EB8D84)
+    (at 102 52.5 90)
+    (path /53EB8DCE)
+    (fp_text reference P2
+      (at 0.64 4.38 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value CONN_2
+      (at 0.41 -7.21 90)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 4 -8.2)
+      (end -2 -8.2)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 4 -3)
+      (end 4 -8.2)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start 4 3.5)
+      (end 4 -1.2)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -2 3.5)
+      (end 4 3.5)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -2 -1.2)
+      (end -2 3.5)
+      (layer F.SilkS)
+      (width 0.2))
+    (fp_line
+      (start -2 -8.2)
+      (end -2 -3)
+      (layer F.SilkS)
+      (width 0.2))
+    (pad 1 thru_hole circle
+      (at 0 0 90)
+      (size 1.5 1.5)
+      (drill 0.7)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 3 "Net-(P2-Pad1)"))
+    (pad 2 thru_hole circle
+      (at 2 0 90)
+      (size 1.5 1.5)
+      (drill 0.7)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 4 "Net-(P2-Pad2)"))
+    (pad "" np_thru_hole circle
+      (at -1.5 -2.1 90)
+      (size 1.1 1.1)
+      (drill 1.1)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad "" np_thru_hole circle
+      (at 3.5 -2.1 90)
+      (size 1.1 1.1)
+      (drill 1.1)
+      (layers *.Cu *.Mask F.SilkS)))
+  (module m2pogo:M3_MOUNT
+    (layer F.Cu)
+    (tedit 53DC15F0)
+    (tstamp 53EB93A2)
+    (at 122.5 54.75 67.5)
+    (path /53EBB6E5)
+    (fp_text reference X4
+      (at 0 -4 67.5)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value MOUNT
+      (at 0 4 67.5)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center 0 0)
+      (end 3.3 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad "" np_thru_hole circle
+      (at 0 0 67.5)
+      (size 3.3 3.3)
+      (drill 3.3)
+      (layers *.Cu *.Mask F.Paste F.SilkS)))
+  (module m2pogo:M3_MOUNT
+    (layer F.Cu)
+    (tedit 53DC15F0)
+    (tstamp 53EB93BD)
+    (at 109.25 52)
+    (path /53EB83E7)
+    (fp_text reference X3
+      (at 0 -4)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value MOUNT
+      (at 0 4)
+      (layer F.SilkS) hide
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_circle
+      (center 0 0)
+      (end 3.3 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad "" np_thru_hole circle
+      (at 0 0)
+      (size 3.3 3.3)
+      (drill 3.3)
+      (layers *.Cu *.Mask F.Paste F.SilkS)))
+  (gr_line
+    (start 93.8 48.2)
+    (end 93.8 55.2)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_line
+    (start 135.4 63.8)
+    (end 138.2 57.4)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_arc
+    (start 100 130)
+    (end 93.8 48.2)
+    (angle 32.08645929)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_arc
+    (start 100 130)
+    (end 93.8 55.2)
+    (angle 32.87362473)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (segment
+    (start 117.75 51.75)
+    (end 123.25 52.25)
+    (width 0.4)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 53EBA94B))
+  (segment
+    (start 123.25 52.25)
+    (end 129.75 56.25)
+    (width 0.4)
+    (layer F.Cu)
+    (net 1)
+    (tstamp 53EBA94D))
+  (segment
+    (start 117.25 55.25)
+    (end 122 57.25)
+    (width 0.4)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 53EBA951))
+  (segment
+    (start 122 57.25)
+    (end 129 58)
+    (width 0.4)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 53EBA952))
+  (segment
+    (start 129 58)
+    (end 128.936527 58.077091)
+    (width 0.4)
+    (layer F.Cu)
+    (net 2)
+    (tstamp 53EBA955))
+  (segment
+    (start 102 52.5)
+    (end 109.25 54.75)
+    (width 0.4)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 53EBA944))
+  (segment
+    (start 109.25 54.75)
+    (end 113.75 54.5)
+    (width 0.4)
+    (layer F.Cu)
+    (net 3)
+    (tstamp 53EBA947))
+  (segment
+    (start 102 50.5)
+    (end 109.25 49.5)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4)
+    (tstamp 53EBA93E))
+  (segment
+    (start 109.25 49.5)
+    (end 114.25 51)
+    (width 0.4)
+    (layer F.Cu)
+    (net 4)
+    (tstamp 53EBA940)))

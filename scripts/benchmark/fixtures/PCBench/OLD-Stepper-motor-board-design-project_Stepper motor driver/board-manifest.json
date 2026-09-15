@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "OLD-Stepper-motor-board-design-project_Stepper motor driver",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 119400,
+      "sha256": "fbd5432509c0157c8e8da3b3db8a12f7cb10d740e934f6e5214664d52a1ddced"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 74252,
+      "sha256": "5e553b6862f0cd252320b8b4b049488c44abda923b754eca1e1e93dd85a479ce"
+    },
+    "metadata_json": {
+      "bytes": 617,
+      "sha256": "83505bb847ce5d7c70b6dccc13bfeeea50aab07a846aa132e48793a830a56d47"
+    },
+    "final_json": {
+      "bytes": 63550,
+      "sha256": "f252c2a65507428bce4f888c0eab5b8d68ae84a52a9e908d88397aa9e93f22f6"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:28:59.030309+00:00"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "board_id": "APM-RPi-Shield_APM-RPi-Shield",
+  "display_name": "APM-RPi-Shield_APM-RPi-Shield",
+  "pcbench_directory": "PCBs/APM-RPi-Shield_APM-RPi-Shield",
+  "source": "https://github.com/DimonSE/APM-RPi-Shield",
+  "author": "DimonSE",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:42.613941+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 36,
+    "components": 29,
+    "dimensions_mm": {
+      "width": 37.25,
+      "height": 56.2
+    },
+    "area_cm2": 20.93,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 727,
+    "vias": 12,
+    "track_length_mm": 1397.43,
+    "kicad_drc_violations": 127,
+    "kicad_drc_breakdown": {
+      "total_violations": 127,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 15,
+        "courtyards_overlap": 9,
+        "invalid_outline": 1,
+        "lib_footprint_issues": 28,
+        "silk_edge_clearance": 13,
+        "silk_over_copper": 30,
+        "silk_overlap": 28,
+        "track_dangling": 3
+      },
+      "by_severity": {
+        "error": 25,
+        "warning": 102
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

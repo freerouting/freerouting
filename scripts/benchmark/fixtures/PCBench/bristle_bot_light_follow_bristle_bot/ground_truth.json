@@ -1,0 +1,25 @@
+{
+  "board": "bristle_bot_light_follow_bristle_bot",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\bristle_bot_light_follow_bristle_bot\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 43,
+  "approximate_track_length_mm": 224.39,
+  "kicad_drc_violations": 83,
+  "generated_at": "2026-08-18T18:36:18.077667+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 83,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 48,
+      "copper_edge_clearance": 6,
+      "silk_overlap": 27,
+      "text_height": 2
+    },
+    "by_severity": {
+      "error": 54,
+      "warning": 29
+    }
+  }
+}

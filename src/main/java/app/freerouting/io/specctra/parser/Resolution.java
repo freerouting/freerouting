@@ -1,7 +1,6 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.Communication;
-import app.freerouting.board.Unit;
+import app.freerouting.board.state.Communication;
 import app.freerouting.datastructures.IndentFileWriter;
 import app.freerouting.logger.FRLogger;
 import java.io.IOException;
@@ -26,39 +25,42 @@ public class Resolution extends ScopeKeyword {
   }
 
   @Override
-  public boolean readScope(ReadScopeParameter par) {
+  public boolean readScope(ReadScopeParameter scopeParameter) {
     try {
       // read the unit
-      Object nextToken = par.scanner.nextToken();
+      Object nextToken = scopeParameter.scanner.nextToken();
       if (!(nextToken instanceof String)) {
         FRLogger.warn(
-            "Resolution.read_scope: string expected at '" + par.scanner.getScopeIdentifier() + "'");
+            "Resolution.read_scope: string expected at '"
+                + scopeParameter.scanner.getScopeIdentifier()
+                + "'");
         return false;
       }
-      par.unit = Unit.fromString((String) nextToken);
-      if (par.unit == null) {
+      scopeParameter.unit =
+          app.freerouting.board.model.structure.Unit.fromString((String) nextToken);
+      if (scopeParameter.unit == null) {
         FRLogger.warn(
             "Resolution.read_scope: unit mil, inch or mm expected at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
       // read the scale factor
-      nextToken = par.scanner.nextToken();
+      nextToken = scopeParameter.scanner.nextToken();
       if (!(nextToken instanceof Integer)) {
         FRLogger.warn(
             "Resolution.read_scope: integer expected at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }
-      par.resolution = (Integer) nextToken;
+      scopeParameter.resolution = (Integer) nextToken;
       // overread the closing bracket
-      nextToken = par.scanner.nextToken();
+      nextToken = scopeParameter.scanner.nextToken();
       if (nextToken != CLOSED_BRACKET) {
         FRLogger.warn(
             "Resolution.read_scope: closing bracket expected at '"
-                + par.scanner.getScopeIdentifier()
+                + scopeParameter.scanner.getScopeIdentifier()
                 + "'");
         return false;
       }

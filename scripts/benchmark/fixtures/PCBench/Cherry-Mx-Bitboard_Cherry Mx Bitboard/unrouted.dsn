@@ -1,0 +1,142 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Cherry-Mx-Bitboard_Cherry Mx Bitboard\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  124460 -118110  105410 -118110  105410 -99060  124460 -99060
+            124460 -118110)
+    )
+    (via "Via[0-1]_800:400_um")
+    (rule
+      (width 400)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component footprint:diode
+      (place D1 115570 -100965 back 180 (PN D))
+    )
+    (component footprint:wirepad
+      (place P11 112395 -101600 front 180 (PN CONN_01X01))
+      (place P12 107950 -101600 front 180 (PN CONN_01X01))
+      (place P13 112395 -115570 front 0 (PN CONN_01X01))
+      (place P14 107950 -115570 front 0 (PN CONN_01X01))
+      (place P15 121920 -115570 front 0 (PN CONN_01X01))
+      (place P16 117475 -115570 front 0 (PN CONN_01X01))
+      (place P21 121920 -111125 front 90 (PN CONN_01X01))
+      (place P22 121920 -106045 front 90 (PN CONN_01X01))
+      (place P23 107950 -106045 front -90 (PN CONN_01X01))
+      (place P24 107950 -111125 front -90 (PN CONN_01X01))
+    )
+    (component footprint:switch
+      (place SW1 114935 -108585 front 0 (PN SW_PUSH))
+    )
+  )
+  (library
+    (image footprint:diode
+      (outline (path signal 200  1400 -800  1400 800))
+      (outline (path signal 200  4900 -800  1400 -800))
+      (outline (path signal 200  4900 800  4900 -800))
+      (outline (path signal 200  1400 800  4900 800))
+      (outline (path signal 200  1900 800  1900 -800))
+      (outline (path signal 200  1400 0  1000 0))
+      (outline (path signal 200  4900 0  5300 0))
+      (outline (path signal 200  1399.2 0  999.2 0))
+      (outline (path signal 200  4899.2 0  5299.2 0))
+      (outline (path signal 200  1899.84 800  1899.84 -800))
+      (outline (path signal 200  4899.2 800  1399.2 800))
+      (outline (path signal 200  1399.2 800  1399.2 -800))
+      (outline (path signal 200  1399.2 -800  4899.2 -800))
+      (outline (path signal 200  4899.2 -800  4899.2 800))
+      (pin Round[A]Pad_1400.000000_um 2 6350 0)
+      (pin Rect[A]Pad_1400.000000x1400.000000_um 1 0 0)
+    )
+    (image footprint:wirepad
+      (pin "Oval[A][0.000000,-200.000000]Pad_1800.000000x1600.000000_um" 1 0 0)
+    )
+    (image footprint:switch
+      (outline (path signal 150  -6500 -6500  -6500 6500))
+      (outline (path signal 150  6500 -6500  -6500 -6500))
+      (outline (path signal 150  6500 6500  6500 -6500))
+      (outline (path signal 150  -6500 6500  6500 6500))
+      (pin Round[A]Pad_2500.000000_um 2 2540 5080)
+      (pin Round[A]Pad_2500.000000_um 1 -3810 2540)
+      (keepout "" (circle F.Cu 2210 5080 0))
+      (keepout "" (circle B.Cu 2210 5080 0))
+      (keepout "" (circle F.Cu 4500))
+      (keepout "" (circle B.Cu 4500))
+      (keepout "" (circle F.Cu 2210 -5080 0))
+      (keepout "" (circle B.Cu 2210 -5080 0))
+      (keepout "" (circle F.Cu 1300 1270 -5080))
+      (keepout "" (circle B.Cu 1300 1270 -5080))
+      (keepout "" (circle F.Cu 1300 -1270 -5080))
+      (keepout "" (circle B.Cu 1300 -1270 -5080))
+    )
+    (padstack Round[A]Pad_1400.000000_um
+      (shape (circle F.Cu 1400))
+      (shape (circle B.Cu 1400))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2500.000000_um
+      (shape (circle F.Cu 2500))
+      (shape (circle B.Cu 2500))
+      (attach off)
+    )
+    (padstack "Oval[A][0.000000,-200.000000]Pad_1800.000000x1600.000000_um"
+      (shape (path F.Cu 1600  -100 -200  100 -200))
+      (shape (path B.Cu 1600  -100 -200  100 -200))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1400.000000x1400.000000_um
+      (shape (rect F.Cu -700 -700 700 700))
+      (shape (rect B.Cu -700 -700 700 700))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(D1-Pad2)"
+      (pins D1-2 SW1-2)
+    )
+    (net /2
+      (pins D1-1 P21-1 P22-1 P23-1 P24-1)
+    )
+    (net /1
+      (pins P11-1 P12-1 P13-1 P14-1 P15-1 P16-1 SW1-1)
+    )
+    (class kicad_default /1 /2 "Net-(D1-Pad2)"
+      (circuit
+        (use_via "Via[0-1]_800:400_um")
+      )
+      (rule
+        (width 400)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

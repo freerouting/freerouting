@@ -1,0 +1,27 @@
+{
+  "board": "Hardware_Playground_rpi_zero_ws2812",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Hardware_Playground_rpi_zero_ws2812\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 65,
+  "segment_count": 94,
+  "approximate_track_length_mm": 289.68,
+  "kicad_drc_violations": 70,
+  "generated_at": "2026-08-18T18:55:04.432688+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 70,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 2,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 40,
+      "silk_edge_clearance": 3,
+      "solder_mask_bridge": 10,
+      "starved_thermal": 12
+    },
+    "by_severity": {
+      "error": 27,
+      "warning": 43
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "board": "Inkjet_PiezoDriver",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Inkjet_PiezoDriver\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 0,
+  "approximate_track_length_mm": 0.0,
+  "kicad_drc_violations": 73,
+  "generated_at": "2026-08-18T18:59:13.214341+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 73,
+    "unconnected_count": 21,
+    "by_type": {
+      "clearance": 48,
+      "courtyards_overlap": 1,
+      "lib_footprint_issues": 11,
+      "silk_over_copper": 10,
+      "starved_thermal": 3
+    },
+    "by_severity": {
+      "error": 52,
+      "warning": 21
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "board_id": "sweet-sixteen_sweet-sixteen",
+  "display_name": "sweet-sixteen_sweet-sixteen",
+  "pcbench_directory": "PCBs/sweet-sixteen_sweet-sixteen",
+  "source": "https://github.com/MaZderMind/sweet-sixteen",
+  "author": "MaZderMind",
+  "license": "BSD 2-Clause \"Simplified\" License",
+  "license_spdx": "BSD-2-Clause",
+  "retrieved_at": "2023-08-17T17:23:03.254184+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 164,
+    "components": 87,
+    "dimensions_mm": {
+      "width": 116.0,
+      "height": 105.0
+    },
+    "area_cm2": 121.8,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 1465,
+    "vias": 167,
+    "track_length_mm": 5357.64,
+    "kicad_drc_violations": 848,
+    "kicad_drc_breakdown": {
+      "total_violations": 848,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 501,
+        "copper_edge_clearance": 24,
+        "holes_co_located": 3,
+        "lib_footprint_issues": 87,
+        "silk_over_copper": 199,
+        "silk_overlap": 1,
+        "solder_mask_bridge": 28,
+        "starved_thermal": 4,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 557,
+        "warning": 291
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

@@ -1,0 +1,172 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\hardware-designs_spsgrf-board\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  177500 -123000  157000 -123000  157000 -98500  177500 -98500
+            177500 -123000)
+    )
+    (via "Via[0-1]_889:635_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component SPSGRF
+      (place U1 173700 -110750 back 270 (PN SPSGRF))
+    )
+    (component SM0603_Resistor
+      (place R1 165700 -106500 front -90 (PN 100k))
+    )
+    (component RB_CN10_2mm
+      (place CN1 167130 -110750 front 0 (PN "RB-CN10"))
+    )
+    (component LOGO_SNOWCAP_FRONT_SMALL
+      (place Noname_1 172000 -110950 front -90)
+    )
+  )
+  (library
+    (image SPSGRF
+      (outline (path signal 150  -6800 3200  -6800 3400))
+      (outline (path signal 150  -6800 3400  6800 3400))
+      (outline (path signal 150  6800 3400  6800 3200))
+      (outline (path signal 150  -2000 -3600  6800 -3600))
+      (outline (path signal 150  6800 -3600  6800 -3200))
+      (outline (path signal 150  -3500 -3600  -6800 -3600))
+      (outline (path signal 150  -6800 -3600  -6800 -3200))
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 1 -6750 2540)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 2 -6750 1270)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 3 -6750 0)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 4 -6750 -1270)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 5 -6750 -2540)
+      (pin Rect[T]Pad_1000.000000x1600.000000_um 6 -2750 -3540)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 7 6750 -2540)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 8 6750 -1270)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 9 6750 0)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 10 6750 1270)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 11 6750 2540)
+    )
+    (image SM0603_Resistor
+      (outline (path signal 127  -500.38 698.5  -1206.5 698.5))
+      (outline (path signal 127  -1206.5 698.5  -1206.5 -698.5))
+      (outline (path signal 127  -1206.5 -698.5  -500.38 -698.5))
+      (outline (path signal 127  1206.5 698.5  500.38 698.5))
+      (outline (path signal 127  1206.5 698.5  1206.5 -698.5))
+      (outline (path signal 127  1206.5 -698.5  500.38 -698.5))
+      (pin Rect[T]Pad_635.000000x1143.000000_um 1 -762 0)
+      (pin Rect[T]Pad_635.000000x1143.000000_um 2 762 0)
+    )
+    (image RB_CN10_2mm
+      (outline (path signal 150  -10000 -10000  10000 -10000))
+      (outline (path signal 150  10000 -10000  10000 -12000))
+      (outline (path signal 150  10000 -12000  -10000 -12000))
+      (outline (path signal 150  -10000 -12000  -10000 -10000))
+      (outline (path signal 150  -10000 12000  10000 12000))
+      (outline (path signal 150  10000 12000  10000 10000))
+      (outline (path signal 150  10000 10000  -10000 10000))
+      (outline (path signal 150  -10000 10000  -10000 12000))
+      (pin Round[A]Pad_1150.000000_um 1 9000 11000)
+      (pin Round[A]Pad_1150.000000_um 2 7000 11000)
+      (pin Round[A]Pad_1150.000000_um 3 5000 11000)
+      (pin Round[A]Pad_1150.000000_um 4 3000 11000)
+      (pin Round[A]Pad_1150.000000_um 5 1000 11000)
+      (pin Round[A]Pad_1150.000000_um 6 -1000 11000)
+      (pin Round[A]Pad_1150.000000_um 7 -3000 11000)
+      (pin Round[A]Pad_1150.000000_um 8 -5000 11000)
+      (pin Round[A]Pad_1150.000000_um 9 -7000 11000)
+      (pin Round[A]Pad_1150.000000_um 10 -9000 11000)
+      (pin Round[A]Pad_1150.000000_um 11 9000 -11000)
+      (pin Round[A]Pad_1150.000000_um 12 7000 -11000)
+      (pin Round[A]Pad_1150.000000_um 13 5000 -11000)
+      (pin Round[A]Pad_1150.000000_um 14 3000 -11000)
+      (pin Round[A]Pad_1150.000000_um 15 1000 -11000)
+      (pin Round[A]Pad_1150.000000_um 16 -1000 -11000)
+      (pin Round[A]Pad_1150.000000_um 17 -3000 -11000)
+      (pin Round[A]Pad_1150.000000_um 18 -5000 -11000)
+      (pin Round[A]Pad_1150.000000_um 19 -7000 -11000)
+      (pin Round[A]Pad_1150.000000_um 20 -9000 -11000)
+    )
+    (image LOGO_SNOWCAP_FRONT_SMALL
+    )
+    (padstack Round[A]Pad_1150.000000_um
+      (shape (circle F.Cu 1150))
+      (shape (circle B.Cu 1150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_635.000000x1143.000000_um
+      (shape (rect F.Cu -317.5 -571.5 317.5 571.5))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x1600.000000_um
+      (shape (rect F.Cu -500 -800 500 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x1000.000000_um
+      (shape (rect F.Cu -800 -500 800 500))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:635_um"
+      (shape (circle F.Cu 889))
+      (shape (circle B.Cu 889))
+      (attach off)
+    )
+  )
+  (network
+    (net GND
+      (pins U1-6 CN1-10)
+    )
+    (net "N-000001"
+      (pins U1-1 CN1-6)
+    )
+    (net "N-0000012"
+      (pins U1-9 CN1-12)
+    )
+    (net "N-0000022"
+      (pins U1-10 CN1-14)
+    )
+    (net "N-0000023"
+      (pins U1-7 CN1-13)
+    )
+    (net "N-000008"
+      (pins U1-11 R1-2 CN1-5)
+    )
+    (net "N-000009"
+      (pins U1-8 CN1-11)
+    )
+    (net VCC
+      (pins U1-5 R1-1 CN1-1)
+    )
+    (class kicad_default GND "N-000001" "N-0000012" "N-0000022" "N-0000023"
+      "N-000008" "N-000009" VCC
+      (circuit
+        (use_via "Via[0-1]_889:635_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+  )
+)

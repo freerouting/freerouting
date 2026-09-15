@@ -1,0 +1,5056 @@
+
+(kicad_pcb
+  (version 20171130)
+  (host pcbnew "(5.1.12)-1")
+  (general
+    (thickness 1.6)
+    (drawings 621)
+    (tracks 245)
+    (zones 0)
+    (modules 15)
+    (nets 20))
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+    (45 Margin user hide)
+    (46 B.CrtYd user hide)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide))
+  (setup
+    (last_trace_width 0.25)
+    (trace_clearance 0.2)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.6)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.1)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.5 1.5)
+    (pad_drill 0.6)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 109.855 101.473)
+    (grid_origin 110.109 101.6)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x010f0_80000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.0)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "gerbers/")))
+  (net 0 "")
+  (net 1 GND)
+  (net 2 +5V)
+  (net 3 +3V3)
+  (net 4 "Net-(C4-Pad1)")
+  (net 5 /gpio0)
+  (net 6 /reset)
+  (net 7 /rx)
+  (net 8 /tx)
+  (net 9 /gpio5)
+  (net 10 /gpio4)
+  (net 11 /gpio2)
+  (net 12 /gpio15)
+  (net 13 /gpio13)
+  (net 14 /gpio12)
+  (net 15 /gpio14)
+  (net 16 /gpio16)
+  (net 17 /adc)
+  (net 18 "Net-(D1-Pad1)")
+  (net 19 /ch_pd)
+  (net_class Default "This is the default net class."
+    (clearance 0.2)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /adc)
+    (add_net /ch_pd)
+    (add_net /gpio0)
+    (add_net /gpio12)
+    (add_net /gpio13)
+    (add_net /gpio14)
+    (add_net /gpio15)
+    (add_net /gpio16)
+    (add_net /gpio2)
+    (add_net /gpio4)
+    (add_net /gpio5)
+    (add_net /reset)
+    (add_net /rx)
+    (add_net /tx)
+    (add_net "Net-(C4-Pad1)")
+    (add_net "Net-(D1-Pad1)"))
+  (net_class etch ""
+    (clearance 0.4)
+    (trace_width 0.5)
+    (via_dia 1.5)
+    (via_drill 0.8)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +3V3)
+    (add_net +5V)
+    (add_net GND))
+  (module LEDs:LED-1206
+    (layer F.Cu)
+    (tedit 5538B1FB)
+    (tstamp 55B376F4)
+    (at 138.43 107.188 180)
+    (descr "LED 1206 smd package")
+    (tags "LED1206 SMD")
+    (path /55B2ABC8)
+    (attr smd)
+    (fp_text reference D1
+      (at 0.14986 -1.778 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.65 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.5494 -0.7493)
+      (end -1.5494 0.7493)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.5494 -0.7493)
+      (end -1.5494 -0.7493)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.5494 0.7493)
+      (end 1.5494 -0.7493)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.5494 0.7493)
+      (end 1.5494 0.7493)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.44958 0.6985)
+      (end -0.44958 0.44958)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.44958 0.44958)
+      (end -0.59944 0.44958)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.59944 0.6985)
+      (end -0.59944 0.44958)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.44958 0.6985)
+      (end -0.59944 0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.89916 -0.54864)
+      (end 0.89916 -0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.89916 -0.6985)
+      (end 0.79756 -0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.79756 -0.54864)
+      (end 0.79756 -0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.89916 -0.54864)
+      (end 0.79756 -0.54864)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.89916 0.6985)
+      (end 0.89916 -0.49784)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.89916 -0.49784)
+      (end 0.79756 -0.49784)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.79756 0.6985)
+      (end 0.79756 -0.49784)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.89916 0.6985)
+      (end 0.79756 0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.79756 -0.54864)
+      (end -0.79756 -0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.79756 -0.6985)
+      (end -0.89916 -0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.89916 -0.54864)
+      (end -0.89916 -0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.79756 -0.54864)
+      (end -0.89916 -0.54864)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.79756 0.6985)
+      (end -0.79756 -0.49784)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.79756 -0.49784)
+      (end -0.89916 -0.49784)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.89916 0.6985)
+      (end -0.89916 -0.49784)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.79756 0.6985)
+      (end -0.89916 0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.44958 0.6985)
+      (end -0.44958 0.44958)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.44958 0.44958)
+      (end -0.79756 0.44958)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.79756 0.6985)
+      (end -0.79756 0.44958)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.44958 0.6985)
+      (end -0.79756 0.6985)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.09906 0.09906)
+      (end 0.09906 -0.09906)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.09906 -0.09906)
+      (end -0.09906 -0.09906)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.09906 0.09906)
+      (end -0.09906 -0.09906)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0.09906 0.09906)
+      (end -0.09906 0.09906)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_arc
+      (start 0 0)
+      (end -0.54864 0.49784)
+      (angle -95.4)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_arc
+      (start 0 0)
+      (end 0.54864 0.49784)
+      (angle -84.5)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_arc
+      (start 0 0)
+      (end 0.54864 -0.49784)
+      (angle -95.4)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_arc
+      (start 0 0)
+      (end -0.54864 -0.49784)
+      (angle -84.5)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 1.41986 0)
+      (size 1.59766 1.80086)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3))
+    (pad 1 smd rect
+      (at -1.41986 0)
+      (size 1.59766 1.80086)
+      (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(D1-Pad1)")))
+  (module Pin_Headers:Pin_Header_Straight_1x06
+    (layer F.Cu)
+    (tedit 0)
+    (tstamp 55AD31BD)
+    (at 135.359 137.85 270)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /55AD3AED)
+    (fp_text reference P1
+      (at 1.85 16.106 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value ftdi
+      (at 0 -3.1 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.55 -1.55)
+      (end 1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 -1.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.55 -1.55)
+      (end 1.55 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 13.97)
+      (end -1.27 1.27)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 13.97)
+      (end -1.27 13.97)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 1.27)
+      (end 1.27 13.97)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 14.45)
+      (end 1.75 14.45)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end 1.75 -1.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 -1.75)
+      (end 1.75 14.45)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 -1.75)
+      (end -1.75 14.45)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 thru_hole rect
+      (at 0 0 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 1 GND))
+    (pad 2 thru_hole oval
+      (at 0 2.54 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS))
+    (pad 3 thru_hole oval
+      (at 0 5.08 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 3 +3V3))
+    (pad 4 thru_hole oval
+      (at 0 7.62 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 7 /rx))
+    (pad 5 thru_hole oval
+      (at 0 10.16 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 8 /tx))
+    (pad 6 thru_hole oval
+      (at 0 12.7 270)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask F.SilkS)
+      (net 4 "Net-(C4-Pad1)"))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x06.wrl
+      (offset
+        (xyz 0 -6.349999904632568 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Pin_Headers:Pin_Header_Straight_1x14
+    (layer B.Cu)
+    (tedit 0)
+    (tstamp 55B263AC)
+    (at 112.395 105.41 180)
+    (descr "Through hole pin header")
+    (tags "pin header")
+    (path /55AD4557)
+    (fp_text reference P2
+      (at 0.127 2.54 180)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text value CONN_01X14
+      (at -3.175 8.255 180)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_line
+      (start -1.55 1.55)
+      (end 1.55 1.55)
+      (layer B.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.55 0)
+      (end -1.55 1.55)
+      (layer B.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 -1.27)
+      (end -1.27 -1.27)
+      (layer B.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.55 1.55)
+      (end 1.55 0)
+      (layer B.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.27 -34.29)
+      (end 1.27 -1.27)
+      (layer B.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 -34.29)
+      (end 1.27 -34.29)
+      (layer B.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.27 -1.27)
+      (end -1.27 -34.29)
+      (layer B.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.75 -34.8)
+      (end 1.75 -34.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 1.75)
+      (end 1.75 1.75)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.75 1.75)
+      (end 1.75 -34.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.75 1.75)
+      (end -1.75 -34.8)
+      (layer B.CrtYd)
+      (width 0.05))
+    (pad 1 thru_hole rect
+      (at 0 0 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 1 GND))
+    (pad 2 thru_hole oval
+      (at 0 -2.54 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 2 +5V))
+    (pad 3 thru_hole oval
+      (at 0 -5.08 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 3 +3V3))
+    (pad 4 thru_hole oval
+      (at 0 -7.62 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 6 /reset))
+    (pad 5 thru_hole oval
+      (at 0 -10.16 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 9 /gpio5))
+    (pad 6 thru_hole oval
+      (at 0 -12.7 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 10 /gpio4))
+    (pad 7 thru_hole oval
+      (at 0 -15.24 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 5 /gpio0))
+    (pad 8 thru_hole oval
+      (at 0 -17.78 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 11 /gpio2))
+    (pad 9 thru_hole oval
+      (at 0 -20.32 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 12 /gpio15))
+    (pad 10 thru_hole oval
+      (at 0 -22.86 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 13 /gpio13))
+    (pad 11 thru_hole oval
+      (at 0 -25.4 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 14 /gpio12))
+    (pad 12 thru_hole oval
+      (at 0 -27.94 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 15 /gpio14))
+    (pad 13 thru_hole oval
+      (at 0 -30.48 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 16 /gpio16))
+    (pad 14 thru_hole oval
+      (at 0 -33.02 180)
+      (size 2.032 1.7272)
+      (drill 1.016)
+      (layers *.Cu *.Mask B.SilkS)
+      (net 17 /adc))
+    (model Pin_Headers.3dshapes/Pin_Header_Straight_1x14.wrl
+      (offset
+        (xyz 0 -16.50999975204468 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 90))))
+  (module Capacitors_Tantalum_SMD:TantalC_SizeA_EIA-3216_HandSoldering
+    (layer F.Cu)
+    (tedit 0)
+    (tstamp 55B28615)
+    (at 117.094 106.45902 90)
+    (descr "Tantal Cap. , Size A, EIA-3216, Hand Soldering,")
+    (tags "Tantal Cap. , Size A, EIA-3216, Hand Soldering,")
+    (path /55AD3174)
+    (attr smd)
+    (fp_text reference C1
+      (at 3.58902 -2.032 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 10uf
+      (at -0.09906 3.0988 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user +
+      (at -2.20218 19.3548 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.99542 -1.19888)
+      (end -3.99542 1.19888)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -5.19938 -1.79832)
+      (end -4.0005 -1.79832)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -4.59994 -2.2987)
+      (end -4.59994 -1.19888)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.60096 -1.19888)
+      (end -2.60096 -1.19888)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -2.60096 1.19888)
+      (end 2.60096 1.19888)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 1.99898 0 90)
+      (size 2.99974 1.50114)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 1 smd rect
+      (at -1.99898 0 90)
+      (size 2.99974 1.50114)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 +5V))
+    (model Capacitors_Tantalum_SMD.3dshapes/TantalC_SizeA_EIA-3216_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module Capacitors_Tantalum_SMD:TantalC_SizeA_EIA-3216_HandSoldering
+    (layer F.Cu)
+    (tedit 0)
+    (tstamp 55B2861A)
+    (at 130.81 106.172 90)
+    (descr "Tantal Cap. , Size A, EIA-3216, Hand Soldering,")
+    (tags "Tantal Cap. , Size A, EIA-3216, Hand Soldering,")
+    (path /55AD317B)
+    (attr smd)
+    (fp_text reference C2
+      (at 3.81 1.778 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 10uf
+      (at -0.09906 3.0988 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text user +
+      (at -3.5306 -12.446 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -3.99542 -1.19888)
+      (end -3.99542 1.19888)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -5.19938 -1.79832)
+      (end -4.0005 -1.79832)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -4.59994 -2.2987)
+      (end -4.59994 -1.19888)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.60096 -1.19888)
+      (end -2.60096 -1.19888)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -2.60096 1.19888)
+      (end 2.60096 1.19888)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 1.99898 0 90)
+      (size 2.99974 1.50114)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 1 smd rect
+      (at -1.99898 0 90)
+      (size 2.99974 1.50114)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3))
+    (model Capacitors_Tantalum_SMD.3dshapes/TantalC_SizeA_EIA-3216_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module Capacitors_SMD:C_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 541A9C03)
+    (tstamp 55B2861F)
+    (at 134.112 106.172 90)
+    (descr "Capacitor SMD 1206, hand soldering")
+    (tags "capacitor 1206")
+    (path /55AD318E)
+    (attr smd)
+    (fp_text reference C3
+      (at -4.064 0.254)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 0.1uf
+      (at 0 2.3 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1 1.025)
+      (end 1 1.025)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1 -1.025)
+      (end -1 -1.025)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.3 -1.15)
+      (end 3.3 1.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.15)
+      (end -3.3 1.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.15)
+      (end 3.3 1.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.15)
+      (end 3.3 -1.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -2 0 90)
+      (size 2 1.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3))
+    (pad 2 smd rect
+      (at 2 0 90)
+      (size 2 1.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model Capacitors_SMD.3dshapes/C_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Capacitors_SMD:C_1206_HandSoldering
+    (layer F.Cu)
+    (tedit 541A9C03)
+    (tstamp 55B28624)
+    (at 118.618 135.382 90)
+    (descr "Capacitor SMD 1206, hand soldering")
+    (tags "capacitor 1206")
+    (path /55AD3B1B)
+    (attr smd)
+    (fp_text reference C4
+      (at 4.318 -1.016 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 1uf
+      (at 0 2.3 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1 1.025)
+      (end 1 1.025)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1 -1.025)
+      (end -1 -1.025)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.3 -1.15)
+      (end 3.3 1.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.15)
+      (end -3.3 1.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 1.15)
+      (end 3.3 1.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.15)
+      (end 3.3 -1.15)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -2 0 90)
+      (size 2 1.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(C4-Pad1)"))
+    (pad 2 smd rect
+      (at 2 0 90)
+      (size 2 1.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 /reset))
+    (model Capacitors_SMD.3dshapes/C_1206_HandSoldering.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206
+    (layer F.Cu)
+    (tedit 5415CFA7)
+    (tstamp 55B28629)
+    (at 122.859 133.6 90)
+    (descr "Resistor SMD 1206, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 1206")
+    (path /55ACED8E)
+    (attr smd)
+    (fp_text reference R1
+      (at 0.1 -0.109 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 10k
+      (at 0 2.3 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.2 -1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end -2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end 2.2 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -1.45 0 90)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3))
+    (pad 2 smd rect
+      (at 1.45 0 90)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 /reset))
+    (model Resistors_SMD.3dshapes/R_1206.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module SMD_Packages:SOT-223
+    (layer F.Cu)
+    (tedit 0)
+    (tstamp 55B288E3)
+    (at 123.571 106.299 270)
+    (descr "module CMS SOT223 4 pins")
+    (tags "CMS SOT")
+    (path /55AD3145)
+    (attr smd)
+    (fp_text reference U1
+      (at -3.429 -4.953)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value AP1117D33
+      (at 0 0.762 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 3.556 -2.286)
+      (end 3.556 -1.524)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.032 -4.572)
+      (end 3.556 -2.286)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -2.032 -4.572)
+      (end 2.032 -4.572)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -3.556 -2.286)
+      (end -2.032 -4.572)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -3.556 -1.524)
+      (end -3.556 -2.286)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.556 4.572)
+      (end 3.556 1.524)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -3.556 4.572)
+      (end 3.556 4.572)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -3.556 1.524)
+      (end -3.556 4.572)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 4 smd rect
+      (at 0 -3.302 270)
+      (size 3.6576 2.032)
+      (layers F.Cu F.Paste F.Mask))
+    (pad 2 smd rect
+      (at 0 3.302 270)
+      (size 1.016 2.032)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3))
+    (pad 3 smd rect
+      (at 2.286 3.302 270)
+      (size 1.016 2.032)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 +5V))
+    (pad 1 smd rect
+      (at -2.286 3.302 270)
+      (size 1.016 2.032)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model SMD_Packages.3dshapes/SOT-223.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 0.4 0.4 0.4))
+      (rotate
+        (xyz 0 0 0))))
+  (module esp8266-12:esp8266-12
+    (layer F.Cu)
+    (tedit 55ACE67C)
+    (tstamp 55B298D2)
+    (at 118.714 112.622)
+    (path /55ACECFB)
+    (fp_text reference esp8266
+      (at 18.954 -1.116)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value U2
+      (at 6.2 5.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 22.2 -0.1)
+      (end -1.8 -0.1)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 22.2 15.9)
+      (end 22.2 -0.1)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.8 15.9)
+      (end 22.2 15.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.8 -0.1)
+      (end -1.8 15.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 21.2 10.9)
+      (end 21.2 13.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 16.2 10.9)
+      (end 21.2 10.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 16.2 8.9)
+      (end 16.2 10.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 21.2 8.9)
+      (end 16.2 8.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 21.2 6.9)
+      (end 21.2 8.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 16.2 6.9)
+      (end 21.2 6.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 16.2 3.9)
+      (end 16.2 6.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 21.2 3.9)
+      (end 16.2 3.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 21.2 1.9)
+      (end 21.2 3.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 16.2 1.9)
+      (end 21.2 1.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 8 smd oval
+      (at 0 -0.1)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3))
+    (pad 7 smd oval
+      (at 2 -0.1)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 13 /gpio13))
+    (pad 6 smd oval
+      (at 4 -0.1)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 14 /gpio12))
+    (pad 5 smd oval
+      (at 6 -0.1)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 15 /gpio14))
+    (pad 4 smd oval
+      (at 8 -0.1)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 16 /gpio16))
+    (pad 3 smd oval
+      (at 10 -0.1)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 19 /ch_pd))
+    (pad 2 smd oval
+      (at 12 -0.1)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 17 /adc))
+    (pad 1 smd oval
+      (at 14 -0.1)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 /reset))
+    (pad 9 smd oval
+      (at 0 15.9)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (pad 10 smd oval
+      (at 2 15.9)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 12 /gpio15))
+    (pad 11 smd oval
+      (at 4 15.9)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 11 /gpio2))
+    (pad 12 smd oval
+      (at 6 15.9)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 /gpio0))
+    (pad 13 smd oval
+      (at 8 15.9)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 10 /gpio4))
+    (pad 14 smd oval
+      (at 10 15.9)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 9 /gpio5))
+    (pad 15 smd oval
+      (at 12 15.9)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 7 /rx))
+    (pad 16 smd oval
+      (at 14 15.9)
+      (size 1.524 3)
+      (layers F.Cu F.Paste F.Mask)
+      (net 8 /tx)))
+  (module Resistors_SMD:R_1206
+    (layer F.Cu)
+    (tedit 5415CFA7)
+    (tstamp 55B376FA)
+    (at 138.43 104.648 180)
+    (descr "Resistor SMD 1206, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 1206")
+    (path /55B2AC55)
+    (attr smd)
+    (fp_text reference R3
+      (at 0 2.032 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 68r
+      (at 0 2.3 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.2 -1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end -2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end 2.2 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -1.45 0 180)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(D1-Pad1)"))
+    (pad 2 smd rect
+      (at 1.45 0 180)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model Resistors_SMD.3dshapes/R_1206.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module matt:SW_SPST_FSMSM
+    (layer F.Cu)
+    (tedit 55B3776E)
+    (tstamp 55B37936)
+    (at 139.192 134.366 270)
+    (descr http://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1437566-3&DocType=Customer+Drawing&DocLang=English)
+    (tags "SPST button tactile switch")
+    (path /55AD3B14)
+    (attr smd)
+    (fp_text reference SW1
+      (at -1.366 2.942 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value SW_PUSH
+      (at 0.2 2.7 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -4.3 -2)
+      (end 4.3 -2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -4.3 -2)
+      (end -4.3 1.95)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -3.3 -1.9)
+      (end 2.7 -1.9)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -2.98989 1.74978)
+      (end 3.01011 1.74978)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 4.3 -2)
+      (end 4.3 1.95)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -4.3 1.9)
+      (end 4.3 1.9)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.48989 -0.80022)
+      (end -1.48989 0.79978)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.51011 -0.80022)
+      (end 1.51011 0.79978)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.48989 -0.80022)
+      (end 1.51011 -0.80022)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.48989 0.79978)
+      (end 1.51011 0.79978)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.23989 0.54978)
+      (end -1.23989 -0.55022)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.26011 0.54978)
+      (end -1.23989 0.54978)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.26011 -0.55022)
+      (end 1.26011 0.54978)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.23989 -0.55022)
+      (end 1.26011 -0.55022)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 1 smd rect
+      (at -2.9 -0.00232 270)
+      (size 2.18 1.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 /gpio0))
+    (pad 2 smd rect
+      (at 2.9 0.00232 270)
+      (size 2.18 1.6)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND)))
+  (module Resistors_SMD:R_1206
+    (layer F.Cu)
+    (tedit 5415CFA7)
+    (tstamp 5715F669)
+    (at 128.859 133.6 90)
+    (descr "Resistor SMD 1206, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 1206")
+    (path /5715F6B6)
+    (attr smd)
+    (fp_text reference R4
+      (at 0.123 -2.875 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 10k
+      (at 0 2.3 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.2 -1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end -2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end 2.2 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -1.45 0 90)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3))
+    (pad 2 smd rect
+      (at 1.45 0 90)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 11 /gpio2))
+    (model Resistors_SMD.3dshapes/R_1206.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206
+    (layer F.Cu)
+    (tedit 5415CFA7)
+    (tstamp 5715F66F)
+    (at 131.859 133.6 90)
+    (descr "Resistor SMD 1206, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 1206")
+    (path /5715F72C)
+    (attr smd)
+    (fp_text reference R5
+      (at -0.004 0.094 90)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 10k
+      (at 0 2.3 90)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.2 -1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end -2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end 2.2 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -1.45 0 90)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3))
+    (pad 2 smd rect
+      (at 1.45 0 90)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 19 /ch_pd))
+    (model Resistors_SMD.3dshapes/R_1206.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module Resistors_SMD:R_1206
+    (layer F.Cu)
+    (tedit 5415CFA7)
+    (tstamp 5715F675)
+    (at 125.859 133.6 270)
+    (descr "Resistor SMD 1206, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 1206")
+    (path /5715F783)
+    (attr smd)
+    (fp_text reference R6
+      (at 0.004 -3.046 270)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 10k
+      (at 0 2.3 270)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1 -1.075)
+      (end 1 -1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1 1.075)
+      (end -1 1.075)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 2.2 -1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end -2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 1.2)
+      (end 2.2 1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -2.2 -1.2)
+      (end 2.2 -1.2)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 1 smd rect
+      (at -1.45 0 270)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 12 /gpio15))
+    (pad 2 smd rect
+      (at 1.45 0 270)
+      (size 0.9 1.7)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 GND))
+    (model Resistors_SMD.3dshapes/R_1206.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (gr_text "dtr rx  tx  vcc cts gnd"
+    (at 128.8542 140)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 1 0.9)
+        (thickness 0.2))))
+  (gr_text "3.3v serial usb cable"
+    (at 128.75 140)
+    (layer B.SilkS)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify mirror)))
+  (gr_text rst
+    (at 114.4524 113.1062)
+    (layer F.SilkS)
+    (tstamp 55B51C99)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text "esp8266-12 v3\nbreakout board\nMatt Venn 2016"
+    (at 137.668 123 270)
+    (layer B.SilkS)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left mirror)))
+  (gr_text gnd
+    (at 114.808 104.14 270)
+    (layer F.SilkS)
+    (tstamp 55B29334)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 5v
+    (at 114.046 108.204)
+    (layer F.SilkS)
+    (tstamp 55B29321)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 3.3v
+    (at 113.7412 110.5662)
+    (layer F.SilkS)
+    (tstamp 55B29320)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 5
+    (at 114.3 115.5954)
+    (layer F.SilkS)
+    (tstamp 55B2931D)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 4
+    (at 114.3 118.11)
+    (layer F.SilkS)
+    (tstamp 55B2931A)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 0
+    (at 114.3 120.5)
+    (layer F.SilkS)
+    (tstamp 55B29319)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 2
+    (at 114.3 123)
+    (layer F.SilkS)
+    (tstamp 55B29317)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 15
+    (at 114.3 125.73)
+    (layer F.SilkS)
+    (tstamp 55B29315)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 13
+    (at 114.3 128.27)
+    (layer F.SilkS)
+    (tstamp 55B29311)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 12
+    (at 114.3 130.81)
+    (layer F.SilkS)
+    (tstamp 55B29310)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 14
+    (at 114.3 133.35)
+    (layer F.SilkS)
+    (tstamp 55B2930D)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text 16
+    (at 114.3 135.89)
+    (layer F.SilkS)
+    (tstamp 55B29308)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_text adc
+    (at 114.3 138.176)
+    (layer F.SilkS)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.2))
+      (justify left)))
+  (gr_line
+    (start 139.1955 103.457907)
+    (end 139.40623 103.585675)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.49445 105.16543)
+    (end 139.41703 105.06223)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.41703 105.06223)
+    (end 139.33478 104.97483)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.77146 104.80953)
+    (end 138.73745 104.8099)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.13203 104.8526)
+    (end 138.9996 104.82048)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.83852 104.80953)
+    (end 138.77146 104.80953)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.9996 104.82048)
+    (end 138.83852 104.80953)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.24178 104.90453)
+    (end 139.13203 104.8526)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.33478 104.97483)
+    (end 139.24178 104.90453)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.54431 104.82618)
+    (end 138.53513 104.82521)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.36066 104.95596)
+    (end 138.30934 105.01021)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.39609 104.88944)
+    (end 138.36066 104.95596)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.41236 104.81371)
+    (end 138.39609 104.88944)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.50888 104.8226)
+    (end 138.46732 104.81869)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.46732 104.81869)
+    (end 138.41236 104.81371)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.53513 104.82521)
+    (end 138.50888 104.8226)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.46721 106.67932)
+    (end 138.54431 106.67932)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.54431 104.82618)
+    (end 138.54431 104.82618)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24499 105.29287)
+    (end 137.57832 105.95954)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.54431 106.49285)
+    (end 138.54431 104.82618)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.30934 105.01021)
+    (end 138.24499 105.04911)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24499 105.04911)
+    (end 138.24499 105.29287)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.46721 106.49285)
+    (end 138.54431 106.49285)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.49927 105.6651)
+    (end 139.51093 105.58519)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.52114 105.77323)
+    (end 139.49927 105.6651)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.98067 104.82905)
+    (end 137.99661 104.85846)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.28372 104.85846)
+    (end 138.29961 104.82905)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.07289 104.92107)
+    (end 138.10539 104.93117)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.17516 104.93117)
+    (end 138.20766 104.92107)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.20766 104.92107)
+    (end 138.23702 104.90518)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.26261 104.88407)
+    (end 138.28372 104.85846)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.23702 104.90518)
+    (end 138.26261 104.88407)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.076475 108.15811)
+    (end 135.11315 108.21626)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.983539 108.90035)
+    (end 134.855771 108.68962)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.130403 109.09701)
+    (end 134.983539 108.90035)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.295171 109.27833)
+    (end 135.130403 109.09701)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.169519 108.25554)
+    (end 135.234243 108.26971)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.67315 109.58996)
+    (end 135.476486 109.4431)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.10745 109.8251)
+    (end 135.88387 109.71772)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24499 107.87929)
+    (end 137.57832 107.21262)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.065299 108.09268)
+    (end 135.076475 108.15811)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.5481 107.4693)
+    (end 134.5481 105.70639)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.599858 107.98568)
+    (end 134.561284 107.73135)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.662683 108.23103)
+    (end 134.599858 107.98568)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.855771 108.68962)
+    (end 134.748404 108.46604)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.561284 107.73135)
+    (end 134.5481 107.4693)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.748404 108.46604)
+    (end 134.662683 108.23103)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.20056 107.87929)
+    (end 137.00052 107.67932)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.299565 108.25853)
+    (end 135.357617 108.22179)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.11315 108.21626)
+    (end 135.169519 108.25554)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.41111 108.102)
+    (end 135.83819 107.69401)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.396679 108.16608)
+    (end 135.41111 108.102)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.357617 108.22179)
+    (end 135.396679 108.16608)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.118737 107.97147)
+    (end 135.079458 108.02785)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.079458 108.02785)
+    (end 135.065299 108.09268)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.88387 109.71772)
+    (end 135.67315 109.58996)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.5481 105.70639)
+    (end 134.561284 105.44429)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.476486 109.4431)
+    (end 135.295171 109.27833)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.234243 108.26971)
+    (end 135.299565 108.25853)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.97193 103.35054)
+    (end 139.1955 103.457907)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.97513 103.15029)
+    (end 138.23723 103.163419)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24792 104.036032)
+    (end 138.28449 103.981344)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.49157 103.201994)
+    (end 138.73691 103.264819)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.23723 103.163419)
+    (end 138.49157 103.201994)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.73691 103.264819)
+    (end 138.97193 103.35054)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.29788 103.914504)
+    (end 138.29441 103.879565)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.28449 103.981344)
+    (end 138.29788 103.914504)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.29441 103.879565)
+    (end 138.28427 103.847068)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.28427 103.847068)
+    (end 138.26831 103.817662)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.855771 104.48601)
+    (end 134.983539 104.27529)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.983539 104.27529)
+    (end 135.130403 104.078621)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.748404 104.7096)
+    (end 134.855771 104.48601)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.58781 103.201994)
+    (end 136.84216 103.163419)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.599858 105.18994)
+    (end 134.662683 104.94461)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.662683 104.94461)
+    (end 134.748404 104.7096)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.34248 103.264819)
+    (end 136.58781 103.201994)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.2955 104.68533)
+    (end 138.27493 104.65311)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.30863 104.72185)
+    (end 138.2955 104.68533)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24792 104.6263)
+    (end 138.24792 104.036032)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.27493 104.65311)
+    (end 138.24792 104.6263)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.31318 104.76172)
+    (end 138.30863 104.72185)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.29961 104.82905)
+    (end 138.30971 104.79661)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.31318 104.76172)
+    (end 138.31318 104.76172)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 134.561284 105.44429)
+    (end 134.599858 105.18994)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.1042 103.15029)
+    (end 137.97513 103.15029)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.84216 103.163419)
+    (end 137.1042 103.15029)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.57534 103.807246)
+    (end 136.54045 103.810718)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.40204 103.980476)
+    (end 136.40736 104.022957)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.40736 104.022957)
+    (end 136.42228 104.061586)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.10745 103.35054)
+    (end 136.34248 103.264819)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.61023 103.810718)
+    (end 136.57534 103.807246)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.295171 103.897307)
+    (end 135.476486 103.732539)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.88387 103.457907)
+    (end 136.10745 103.35054)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.130403 104.078621)
+    (end 135.295171 103.897307)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.67315 103.585675)
+    (end 135.88387 103.457907)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.476486 103.732539)
+    (end 135.67315 103.585675)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.065299 105.07939)
+    (end 135.079458 105.14422)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.231639 105.24833)
+    (end 135.272221 105.24507)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.076475 105.01396)
+    (end 135.065299 105.07939)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.11315 104.95585)
+    (end 135.076475 105.01396)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.153135 105.22619)
+    (end 135.191329 105.24208)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.118737 105.20064)
+    (end 135.153135 105.22619)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.191329 105.24208)
+    (end 135.231639 105.24833)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.079458 105.14422)
+    (end 135.118737 105.20064)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.51295 107.73493)
+    (end 139.48642 107.67021)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.48642 107.67021)
+    (end 139.47703 107.59843)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.47703 107.59843)
+    (end 139.49889 107.49025)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.54431 106.67932)
+    (end 138.54431 108.34598)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.73745 104.8099)
+    (end 138.73745 108.36579)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.30971 104.79661)
+    (end 138.31318 104.76172)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.21786 105.01732)
+    (end 136.12389 105.123)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.32343 104.93664)
+    (end 136.32209 104.93729)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.12389 105.123)
+    (end 136.03979 105.24908)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.41991 105.06901)
+    (end 136.37932 105.0318)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.37932 105.0318)
+    (end 136.34677 104.98726)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.34677 104.98726)
+    (end 136.32343 104.93664)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.32209 104.93729)
+    (end 136.21786 105.01732)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.13388 105.95954)
+    (end 136.83385 105.65951)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.24499 106.18176)
+    (end 136.80054 106.18176)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.80054 106.18176)
+    (end 136.80054 105.95954)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.80054 105.95954)
+    (end 137.13388 105.95954)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.24499 106.18176)
+    (end 137.24499 106.18176)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.91166 105.95954)
+    (end 137.91166 106.18176)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.24499 106.49285)
+    (end 137.24499 106.18176)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.46721 106.18176)
+    (end 137.46721 106.49285)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.91166 106.18176)
+    (end 137.46721 106.18176)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.57832 105.95954)
+    (end 137.91166 105.95954)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.90216 104.94776)
+    (end 137.86771 104.87533)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.3561 105.84843)
+    (end 138.02277 105.18176)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.02277 105.04878)
+    (end 138.02277 105.04878)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.00052 105.49285)
+    (end 137.3561 105.84843)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.02277 105.18176)
+    (end 138.02277 105.04878)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.02277 105.04878)
+    (end 137.95506 105.00673)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.95506 105.00673)
+    (end 137.90216 104.94776)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.76061 105.06451)
+    (end 136.68943 105.10569)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.85279 104.93083)
+    (end 136.81638 105.00489)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.81638 105.00489)
+    (end 136.76061 105.06451)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.46721 105.09772)
+    (end 136.41991 105.06901)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.68943 105.10569)
+    (end 136.68943 105.18176)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.46721 105.29287)
+    (end 136.46721 105.09772)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.68943 105.18176)
+    (end 136.80054 105.29287)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.80054 105.29287)
+    (end 137.20056 105.29287)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.20056 105.29287)
+    (end 137.00052 105.49285)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.645 105.84843)
+    (end 136.645 105.47065)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.645 105.47065)
+    (end 136.46721 105.29287)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.83385 105.65951)
+    (end 136.645 105.84843)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.35784 104.76889)
+    (end 137.10403 104.77691)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.10403 104.77691)
+    (end 136.86131 104.79635)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.85577 104.77725)
+    (end 137.61202 104.7698)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.85539 104.79319)
+    (end 137.85577 104.77725)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.61202 104.7698)
+    (end 137.35784 104.76889)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.41735 104.82769)
+    (end 136.42088 104.86258)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.86131 104.79635)
+    (end 136.86581 104.84636)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.86581 104.84636)
+    (end 136.85279 104.93083)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.00231 103.792)
+    (end 137.98121 103.817662)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.08977 103.744746)
+    (end 138.05732 103.754891)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.02792 103.770841)
+    (end 138.00231 103.792)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.05732 103.754891)
+    (end 138.02792 103.770841)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.96531 103.847068)
+    (end 137.95523 103.879565)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.98121 103.817662)
+    (end 137.96531 103.847068)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.26831 103.817662)
+    (end 138.24716 103.792)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24716 103.792)
+    (end 138.22149 103.770841)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.15959 103.744746)
+    (end 138.12466 103.741273)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.22149 103.770841)
+    (end 138.19209 103.754891)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.19209 103.754891)
+    (end 138.15959 103.744746)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.12466 103.741273)
+    (end 138.08977 103.744746)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.04343 104.90518)
+    (end 138.07289 104.92107)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.10539 104.93117)
+    (end 138.14028 104.93469)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.14028 104.93469)
+    (end 138.17516 104.93117)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.01777 104.88407)
+    (end 138.04343 104.90518)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.97117 104.72418)
+    (end 137.96699 104.76172)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.99661 104.85846)
+    (end 138.01777 104.88407)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.97052 104.79661)
+    (end 137.98067 104.82905)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.86771 104.87533)
+    (end 137.85539 104.79319)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.96699 104.76172)
+    (end 137.97052 104.79661)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.00145 104.6586)
+    (end 137.98295 104.68951)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.0257 104.63222)
+    (end 138.00145 104.6586)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.0257 104.056215)
+    (end 138.0257 104.63222)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.98295 104.68951)
+    (end 137.97117 104.72418)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.99531 104.029087)
+    (end 138.0257 104.056215)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.957 103.956984)
+    (end 137.97193 103.995614)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.9517 103.914504)
+    (end 137.957 103.956984)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.97193 103.995614)
+    (end 137.99531 104.029087)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.95523 103.879565)
+    (end 137.9517 103.914504)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.68851 105.64303)
+    (end 135.70039 105.71355)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.03438 105.64579)
+    (end 136.03438 105.64579)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.0232 105.71122)
+    (end 136.03438 105.64579)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.98642 105.76937)
+    (end 136.0232 105.71122)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.70039 105.71355)
+    (end 135.74162 105.77497)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.03438 105.64579)
+    (end 136.02021 105.58096)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.13246 105.64633)
+    (end 136.1106 105.75483)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.74162 105.77497)
+    (end 135.79978 105.81164)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.96221 105.90322)
+    (end 135.85366 105.92514)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.79978 105.81164)
+    (end 135.86521 105.82282)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.77694 105.9144)
+    (end 135.74699 106.02953)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.86521 105.82282)
+    (end 135.93004 105.80865)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.74699 106.02953)
+    (end 135.72166 106.13743)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.98088 105.52458)
+    (end 135.91344 105.4845)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.08581 105.49154)
+    (end 136.1202 105.56408)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.96514 105.39042)
+    (end 136.03291 105.43242)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.91344 105.4845)
+    (end 135.83781 105.4781)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.03291 105.43242)
+    (end 136.08581 105.49154)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.02021 105.58096)
+    (end 135.98088 105.52458)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.1106 105.75483)
+    (end 136.05081 105.84343)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.85366 105.92514)
+    (end 135.77694 105.9144)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.93004 105.80865)
+    (end 135.98642 105.76937)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.05081 105.84343)
+    (end 135.96221 105.90322)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.6839 106.32151)
+    (end 135.6712 106.39269)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.65715 106.48086)
+    (end 135.65541 106.49285)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.72166 106.13743)
+    (end 135.70066 106.23564)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.6623 106.44668)
+    (end 135.65715 106.48086)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.6712 106.39269)
+    (end 135.6623 106.44668)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.70066 106.23564)
+    (end 135.6839 106.32151)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.67207 103.836814)
+    (end 136.64273 103.820864)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.71878 103.883634)
+    (end 136.69768 103.857972)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.73468 103.91304)
+    (end 136.71878 103.883634)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.69768 103.857972)
+    (end 136.67207 103.836814)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.64273 103.820864)
+    (end 136.61023 103.810718)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.74824 103.980476)
+    (end 136.74477 103.945537)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.74477 103.945537)
+    (end 136.73468 103.91304)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.73484 104.047316)
+    (end 136.74824 103.980476)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.72524 104.71908)
+    (end 136.69823 104.69228)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.43329 104.75548)
+    (end 136.42153 104.79015)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.74585 104.7513)
+    (end 136.72524 104.71908)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.42153 104.79015)
+    (end 136.41735 104.82769)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.75899 104.78782)
+    (end 136.74585 104.7513)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.476 104.69819)
+    (end 136.45179 104.72457)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.43173 103.883634)
+    (end 136.41572 103.91304)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.54045 103.810718)
+    (end 136.50795 103.820864)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.40557 103.945537)
+    (end 136.40204 103.980476)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.50795 103.820864)
+    (end 136.47854 103.836814)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.47854 103.836814)
+    (end 136.45289 103.857972)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.45289 103.857972)
+    (end 136.43173 103.883634)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.41572 103.91304)
+    (end 136.40557 103.945537)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.476 104.122187)
+    (end 136.476 104.69819)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.45179 104.72457)
+    (end 136.43329 104.75548)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.42228 104.061586)
+    (end 136.44561 104.095059)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.44561 104.095059)
+    (end 136.476 104.122187)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.69823 104.69228)
+    (end 136.69823 104.102004)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.69823 104.102004)
+    (end 136.73484 104.047316)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.1106 107.41728)
+    (end 136.05081 107.32868)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.645 107.32373)
+    (end 136.645 107.70155)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.80054 107.21262)
+    (end 137.13388 107.21262)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.83385 107.51265)
+    (end 136.645 107.32373)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.645 107.70155)
+    (end 136.46721 107.87929)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.272547 107.92704)
+    (end 135.231911 107.92368)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.68851 107.52908)
+    (end 135.272547 107.92704)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.191492 107.92991)
+    (end 135.153189 107.9458)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.70044 107.45855)
+    (end 135.68851 107.52908)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.231911 107.92368)
+    (end 135.191492 107.92991)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.74162 107.39714)
+    (end 135.70044 107.45855)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.153189 107.9458)
+    (end 135.118737 107.97147)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.03438 107.52632)
+    (end 136.03438 107.52632)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.13246 107.52583)
+    (end 136.1106 107.41728)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.03438 107.52632)
+    (end 136.0232 107.46083)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.1202 107.60803)
+    (end 136.13246 107.52583)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.02021 107.59115)
+    (end 136.03438 107.52632)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.08581 107.68057)
+    (end 136.1202 107.60803)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.91361 107.68751)
+    (end 135.98088 107.64753)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.98088 107.64753)
+    (end 136.02021 107.59115)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.03291 107.73971)
+    (end 136.08581 107.68057)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.83819 107.69401)
+    (end 135.91361 107.68751)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.3561 107.32373)
+    (end 138.02277 107.9904)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.57832 107.21262)
+    (end 137.91166 107.21262)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.91166 107.21262)
+    (end 137.91166 106.9904)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.91166 106.9904)
+    (end 137.46721 106.9904)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.93004 107.3634)
+    (end 135.86521 107.34923)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.0232 107.46083)
+    (end 135.98642 107.40273)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.98642 107.40273)
+    (end 135.93004 107.3634)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.79978 107.36042)
+    (end 135.74162 107.39714)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.86521 107.34923)
+    (end 135.79978 107.36042)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.13388 107.21262)
+    (end 136.83385 107.51265)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.24499 106.9904)
+    (end 136.80054 106.9904)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.24499 106.9904)
+    (end 137.24499 106.9904)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.46721 106.9904)
+    (end 137.46721 106.67932)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.00052 107.67932)
+    (end 137.3561 107.32373)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.24499 106.67932)
+    (end 137.24499 106.99046)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.80054 106.9904)
+    (end 136.80054 107.21262)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.65541 106.67932)
+    (end 137.24499 106.67932)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.24499 106.99046)
+    (end 137.24499 106.9904)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.65541 106.49285)
+    (end 137.24499 106.49285)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.44697 104.92443)
+    (end 136.46813 104.95004)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.49379 104.97115)
+    (end 136.5232 104.98704)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.42088 104.86258)
+    (end 136.43102 104.89503)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.5557 104.99714)
+    (end 136.59059 105.00067)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.5232 104.98704)
+    (end 136.5557 104.99714)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.46813 104.95004)
+    (end 136.49379 104.97115)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.43102 104.89503)
+    (end 136.44697 104.92443)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.76354 104.82769)
+    (end 136.76354 104.82769)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.76007 104.86258)
+    (end 136.76354 104.82769)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.74998 104.89503)
+    (end 136.76007 104.86258)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.76354 104.82769)
+    (end 136.75899 104.78782)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.62552 104.99714)
+    (end 136.65796 104.98704)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.59059 105.00067)
+    (end 136.62552 104.99714)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.71298 104.95004)
+    (end 136.73409 104.92443)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.68736 104.97115)
+    (end 136.71298 104.95004)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.73409 104.92443)
+    (end 136.74998 104.89503)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.65796 104.98704)
+    (end 136.68736 104.97115)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.234243 104.90235)
+    (end 135.169519 104.91651)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.169519 104.91651)
+    (end 135.11315 104.95585)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.396679 105.00597)
+    (end 135.357617 104.95032)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.357617 104.95032)
+    (end 135.299565 104.91353)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.299565 104.91353)
+    (end 135.234243 104.90235)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.41111 105.07011)
+    (end 135.396679 105.00597)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.272221 105.24507)
+    (end 135.68851 105.64303)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.83781 105.4781)
+    (end 135.41111 105.07011)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.03979 105.24908)
+    (end 135.96514 105.39042)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.1202 105.56408)
+    (end 136.13246 105.64633)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.70066 106.93653)
+    (end 135.6839 106.8506)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.6839 106.8506)
+    (end 135.6712 106.77941)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.6712 106.77941)
+    (end 135.6623 106.72543)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.65715 106.69125)
+    (end 135.65541 106.67932)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.6623 106.72543)
+    (end 135.65715 106.69125)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.72166 107.03468)
+    (end 135.70066 106.93653)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.96221 107.26889)
+    (end 135.85366 107.24703)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.05081 107.32868)
+    (end 135.96221 107.26889)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.85366 107.24703)
+    (end 135.77694 107.25782)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.74699 107.14264)
+    (end 135.72166 107.03468)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.77694 107.25782)
+    (end 135.74699 107.14264)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.11006 108.32846)
+    (end 139.21048 108.28311)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.73745 108.36579)
+    (end 138.77146 108.36611)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.2956 108.22147)
+    (end 139.37167 108.14465)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.21048 108.28311)
+    (end 139.2956 108.22147)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.98816 108.35651)
+    (end 139.11006 108.32846)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.77146 108.36611)
+    (end 138.83852 108.36611)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.83852 108.36611)
+    (end 138.98816 108.35651)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.41236 108.35846)
+    (end 138.39609 108.28272)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24499 108.12305)
+    (end 138.24499 107.87929)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.54431 108.34598)
+    (end 138.54431 108.34598)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.46732 108.35342)
+    (end 138.41236 108.35846)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.53513 108.3469)
+    (end 138.50888 108.34951)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.54431 108.34598)
+    (end 138.53513 108.3469)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.50888 108.34951)
+    (end 138.46732 108.35342)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.37167 108.14465)
+    (end 139.44491 108.05367)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.44491 108.05367)
+    (end 139.52152 107.94972)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.75899 108.38423)
+    (end 136.76354 108.34441)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.86131 108.37582)
+    (end 136.86581 108.32586)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.76354 108.34441)
+    (end 136.76007 108.30947)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.76354 108.34441)
+    (end 136.76354 108.34441)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.10403 108.39519)
+    (end 136.86131 108.37582)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.80054 107.87929)
+    (end 137.20056 107.87929)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.86581 108.32586)
+    (end 136.85279 108.24133)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.85577 108.39492)
+    (end 137.61202 108.4023)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.86771 108.29683)
+    (end 137.85539 108.37897)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.61202 108.4023)
+    (end 137.35784 108.40322)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.35784 108.40322)
+    (end 137.10403 108.39519)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.85539 108.37897)
+    (end 137.85577 108.39492)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.46721 108.07444)
+    (end 136.41991 108.10314)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.68943 108.06647)
+    (end 136.68943 107.9904)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.81638 108.16728)
+    (end 136.76061 108.1076)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.46721 107.87929)
+    (end 136.46721 108.07444)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.68943 107.9904)
+    (end 136.80054 107.87929)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.41991 108.10314)
+    (end 136.37932 108.14036)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.76061 108.1076)
+    (end 136.68943 108.06647)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.42088 108.30947)
+    (end 136.41735 108.34441)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.41735 108.34441)
+    (end 136.42153 108.3819)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.44697 108.24762)
+    (end 136.43102 108.27703)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.43102 108.27703)
+    (end 136.42088 108.30947)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.46813 108.22201)
+    (end 136.44697 108.24762)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.34677 108.18485)
+    (end 136.32343 108.23558)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.32209 108.23487)
+    (end 136.21786 108.15479)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.37932 108.14036)
+    (end 136.34677 108.18485)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.21786 108.15479)
+    (end 136.12389 108.04916)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.32343 108.23558)
+    (end 136.32209 108.23487)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 135.96514 107.78175)
+    (end 136.03291 107.73971)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.03979 107.92303)
+    (end 135.96514 107.78175)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.12389 108.04916)
+    (end 136.03979 107.92303)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.65796 108.18501)
+    (end 136.62552 108.17492)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.5557 108.17492)
+    (end 136.5232 108.18501)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.5232 108.18501)
+    (end 136.49379 108.20091)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.49379 108.20091)
+    (end 136.46813 108.22201)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.59059 108.17144)
+    (end 136.5557 108.17492)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.62552 108.17492)
+    (end 136.59059 108.17144)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.85279 108.24133)
+    (end 136.81638 108.16728)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.68736 108.20091)
+    (end 136.65796 108.18501)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.73409 108.24762)
+    (end 136.71298 108.22201)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.74998 108.27703)
+    (end 136.73409 108.24762)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.71298 108.22201)
+    (end 136.68736 108.20091)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.76007 108.30947)
+    (end 136.74998 108.27703)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.54045 109.36133)
+    (end 136.57534 109.36486)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.57534 109.36486)
+    (end 136.61023 109.36133)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.47854 109.33523)
+    (end 136.50795 109.35119)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.34248 109.91082)
+    (end 136.10745 109.8251)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.50795 109.35119)
+    (end 136.54045 109.36133)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.72524 108.45297)
+    (end 136.74585 108.42075)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.42153 108.3819)
+    (end 136.43329 108.41657)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.43329 108.41657)
+    (end 136.45179 108.44748)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.69823 108.47983)
+    (end 136.72524 108.45297)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.45179 108.44748)
+    (end 136.476 108.47391)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.74585 108.42075)
+    (end 136.75899 108.38423)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.95523 109.29276)
+    (end 137.96531 109.32526)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.64273 109.35119)
+    (end 136.67207 109.33523)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.61023 109.36133)
+    (end 136.64273 109.35119)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.9517 109.25793)
+    (end 137.95523 109.29276)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.73468 109.25901)
+    (end 136.74477 109.22651)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.74824 109.19164)
+    (end 136.73484 109.12473)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.67207 109.33523)
+    (end 136.69768 109.31408)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.71878 109.28842)
+    (end 136.73468 109.25901)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.74477 109.22651)
+    (end 136.74824 109.19164)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.69768 109.31408)
+    (end 136.71878 109.28842)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.44561 109.077)
+    (end 136.42228 109.11047)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.73484 109.12473)
+    (end 136.69823 109.07011)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.42228 109.11047)
+    (end 136.40736 109.1491)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.476 109.04992)
+    (end 136.44561 109.077)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.69823 109.07011)
+    (end 136.69823 108.47983)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.476 108.47391)
+    (end 136.476 109.04992)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.45289 109.31408)
+    (end 136.47854 109.33523)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.43173 109.28842)
+    (end 136.45289 109.31408)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.41572 109.25901)
+    (end 136.43173 109.28842)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.40204 109.19164)
+    (end 136.40557 109.22651)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.40557 109.22651)
+    (end 136.41572 109.25901)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.40736 109.1491)
+    (end 136.40204 109.19164)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.29961 108.34328)
+    (end 138.28372 108.31386)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.30971 108.37576)
+    (end 138.29961 108.34328)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.28372 108.31386)
+    (end 138.26261 108.28821)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.30934 108.1619)
+    (end 138.24499 108.12305)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.39609 108.28272)
+    (end 138.36066 108.21615)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.36066 108.21615)
+    (end 138.30934 108.1619)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.31318 108.41071)
+    (end 138.31318 108.41071)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.27493 108.519)
+    (end 138.2955 108.48687)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.2955 108.48687)
+    (end 138.30863 108.45047)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.30863 108.45047)
+    (end 138.31318 108.41071)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.31318 108.41071)
+    (end 138.30971 108.37576)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.99661 108.31386)
+    (end 137.98067 108.34328)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.97052 108.37576)
+    (end 137.96699 108.41071)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.96699 108.41071)
+    (end 137.98295 108.48271)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.98067 108.34328)
+    (end 137.97052 108.37576)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.26261 108.28821)
+    (end 138.23702 108.26704)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.23702 108.26704)
+    (end 138.20766 108.25104)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.14028 108.23742)
+    (end 138.10539 108.24089)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.17516 108.24089)
+    (end 138.14028 108.23742)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.20766 108.25104)
+    (end 138.17516 108.24089)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.10539 108.24089)
+    (end 138.07289 108.25104)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.04343 108.26704)
+    (end 138.01777 108.28821)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.90216 108.2244)
+    (end 137.86771 108.29683)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.02277 107.9904)
+    (end 138.02277 108.12343)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.02277 108.12343)
+    (end 138.02277 108.12343)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.07289 108.25104)
+    (end 138.04343 108.26704)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.95506 108.16537)
+    (end 137.90216 108.2244)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.02277 108.12343)
+    (end 137.95506 108.16537)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.01777 108.28821)
+    (end 137.99661 108.31386)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.40623 109.58996)
+    (end 139.1955 109.71772)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.1955 109.71772)
+    (end 138.97193 109.8251)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.97193 109.8251)
+    (end 138.73691 109.91082)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.00231 109.38022)
+    (end 138.02792 109.40132)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.02792 109.40132)
+    (end 138.05732 109.41722)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.98121 109.35461)
+    (end 138.00231 109.38022)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24716 109.38022)
+    (end 138.26831 109.35461)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.15959 109.4273)
+    (end 138.19209 109.41722)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.05732 109.41722)
+    (end 138.08977 109.4273)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.0257 109.11589)
+    (end 137.99531 109.14303)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.98295 108.48271)
+    (end 138.0257 108.53989)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.0257 108.53989)
+    (end 138.0257 109.11589)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.99531 109.14303)
+    (end 137.97193 109.17661)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24792 109.13608)
+    (end 138.24792 108.5458)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.24792 108.5458)
+    (end 138.27493 108.519)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.28449 109.19087)
+    (end 138.24792 109.13608)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.26831 109.35461)
+    (end 138.28427 109.32526)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.96531 109.32526)
+    (end 137.98121 109.35461)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.29441 109.29276)
+    (end 138.29788 109.25793)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.29788 109.25793)
+    (end 138.28449 109.19087)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.28427 109.32526)
+    (end 138.29441 109.29276)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.957 109.21535)
+    (end 137.9517 109.25793)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.97193 109.17661)
+    (end 137.957 109.21535)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.19209 109.41722)
+    (end 138.22149 109.40132)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.22149 109.40132)
+    (end 138.24716 109.38022)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.08977 109.4273)
+    (end 138.12466 109.43083)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.12466 109.43083)
+    (end 138.15959 109.4273)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 113.5098 111.4806)
+    (end 116.5098 111.4806)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 113.538 112.014)
+    (end 116.538 112.014)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 113.705 108.915)
+    (end 113.205 108.915)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 113.205 103.915)
+    (end 113.705 103.915)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 110.705 139.415)
+    (end 111.205 139.415)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 110.6932 112.1918)
+    (end 110.705 139.415)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 111.252 112.141)
+    (end 110.752 112.141)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 110.705 103.915)
+    (end 111.205 103.915)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 110.6932 111.506)
+    (end 111.1932 111.506)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 110.705 103.915)
+    (end 110.6678 111.4806)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 133.705 123.915)
+    (end 133.705 102.415)
+    (layer B.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 134.705 123.915)
+    (end 133.705 123.915)
+    (layer B.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 141.205 123.915)
+    (end 134.705 123.915)
+    (layer B.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 141.205 102.415)
+    (end 141.205 123.915)
+    (layer B.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 133.705 102.415)
+    (end 141.205 102.415)
+    (layer B.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 139.68027 107.73678)
+    (end 139.65466 107.71561)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.09585 104.27529)
+    (end 140.22361 104.48601)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.86559 105.92829)
+    (end 139.77704 105.94287)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.4167 104.94461)
+    (end 140.47953 105.18994)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.33098 108.46604)
+    (end 140.22361 108.68962)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.58066 105.8615)
+    (end 139.52114 105.77323)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.61754 107.52583)
+    (end 139.63349 107.49643)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.89945 107.47082)
+    (end 139.9206 107.49643)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.77704 107.42015)
+    (end 139.81193 107.42362)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.87384 107.73678)
+    (end 139.84443 107.75272)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.09585 108.90035)
+    (end 139.94898 109.09701)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.79924 105.83301)
+    (end 139.79924 105.83301)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.60745 107.55833)
+    (end 139.61754 107.52583)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.89603 105.80339)
+    (end 139.86663 105.8194)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.84649 107.33628)
+    (end 139.87623 107.17492)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.23723 110.01222)
+    (end 137.97513 110.0254)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.96889 105.69478)
+    (end 139.95879 105.72722)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.81193 107.42362)
+    (end 139.84443 107.43371)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.94898 109.09701)
+    (end 139.78421 109.27833)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.60761 107.83383)
+    (end 139.55418 107.79026)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.47953 105.18994)
+    (end 140.5181 105.44429)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.40623 103.585675)
+    (end 139.60289 103.732539)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.5181 107.73135)
+    (end 140.47953 107.98568)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.67685 105.53744)
+    (end 139.7025 105.51633)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.78421 109.27833)
+    (end 139.60289 109.4431)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.88642 107.00744)
+    (end 139.88642 106.16857)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.95011 107.59322)
+    (end 139.94664 107.6281)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.77704 107.76633)
+    (end 139.77704 107.76633)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.63349 107.69)
+    (end 139.61754 107.6606)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.70967 107.43371)
+    (end 139.74217 107.42362)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.87623 107.17492)
+    (end 139.88642 107.00744)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.87384 107.44966)
+    (end 139.89945 107.47082)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.67685 105.78229)
+    (end 139.65574 105.75662)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.83413 105.82948)
+    (end 139.79924 105.83301)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.86663 105.8194)
+    (end 139.83413 105.82948)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.95879 105.59251)
+    (end 139.96889 105.62501)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.94898 104.078621)
+    (end 140.09585 104.27529)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.74217 107.76282)
+    (end 139.70967 107.75272)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.76435 105.82948)
+    (end 139.73191 105.8194)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.63349 107.49643)
+    (end 139.65466 107.47082)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.62964 105.69478)
+    (end 139.62611 105.65989)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.60289 103.732539)
+    (end 139.78421 103.897307)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.95879 105.72722)
+    (end 139.94279 105.75662)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.84443 107.75272)
+    (end 139.81193 107.76282)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.97513 110.0254)
+    (end 137.1042 110.0254)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.70967 107.75272)
+    (end 139.68027 107.73678)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.81193 107.76282)
+    (end 139.77704 107.76633)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.9206 107.49643)
+    (end 139.93656 107.52583)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.97236 105.65989)
+    (end 139.96889 105.69478)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.77704 107.76633)
+    (end 139.74217 107.76282)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.89945 107.71561)
+    (end 139.87384 107.73678)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.55841 107.40197)
+    (end 139.64668 107.34246)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.65861 105.41369)
+    (end 139.573 105.283)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.84443 107.43371)
+    (end 139.87384 107.44966)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.94664 107.6281)
+    (end 139.93656 107.6606)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.54366 105.51439)
+    (end 139.594 105.45607)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.94279 105.75662)
+    (end 139.92168 105.78229)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.93656 107.6606)
+    (end 139.9206 107.69)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.61754 107.6606)
+    (end 139.60745 107.6281)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.93656 107.52583)
+    (end 139.94664 107.55833)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.89603 105.51633)
+    (end 139.92168 105.53744)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.53123 105.70639)
+    (end 140.53123 105.70639)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.9206 107.69)
+    (end 139.89945 107.71561)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.74217 107.42362)
+    (end 139.77704 107.42015)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.47953 107.98568)
+    (end 140.4167 108.23103)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.86663 105.50033)
+    (end 139.89603 105.51633)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.22361 104.48601)
+    (end 140.33098 104.7096)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.78421 103.897307)
+    (end 139.94898 104.078621)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.63974 105.59251)
+    (end 139.65574 105.56311)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.60393 107.59322)
+    (end 139.60745 107.55833)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.92168 105.53744)
+    (end 139.94279 105.56311)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.92168 105.78229)
+    (end 139.89603 105.80339)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.79924 105.48678)
+    (end 139.83413 105.49025)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.60289 109.4431)
+    (end 139.40623 109.58996)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.84216 110.01222)
+    (end 136.58781 109.97364)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.65466 107.71561)
+    (end 139.63349 107.69)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.60745 107.6281)
+    (end 139.60393 107.59322)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.66892 105.92101)
+    (end 139.58066 105.8615)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.65466 107.47082)
+    (end 139.68027 107.44966)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.62964 105.62501)
+    (end 139.63974 105.59251)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.75481 107.32065)
+    (end 139.84649 107.33628)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.55418 107.79026)
+    (end 139.51295 107.73493)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.68027 107.44966)
+    (end 139.70967 107.43371)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.73691 109.91082)
+    (end 138.49157 109.97364)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.4167 108.23103)
+    (end 140.33098 108.46604)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.51093 105.58519)
+    (end 139.54366 105.51439)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 137.1042 110.0254)
+    (end 136.84216 110.01222)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 136.58781 109.97364)
+    (end 136.34248 109.91082)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.49889 107.49025)
+    (end 139.55841 107.40197)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.53123 105.70639)
+    (end 140.53123 107.4693)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.79924 105.83301)
+    (end 139.76435 105.82948)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.65574 105.56311)
+    (end 139.67685 105.53744)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.77704 105.94287)
+    (end 139.66892 105.92101)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.7025 105.51633)
+    (end 139.73191 105.50033)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 138.49157 109.97364)
+    (end 138.23723 110.01222)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.96889 105.62501)
+    (end 139.97236 105.65989)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.76435 105.49025)
+    (end 139.79924 105.48678)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.5181 105.44429)
+    (end 140.53123 105.70639)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.88642 106.16857)
+    (end 139.86559 105.92829)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.62611 105.65989)
+    (end 139.62964 105.62501)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.73191 105.8194)
+    (end 139.7025 105.80339)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.22361 108.68962)
+    (end 140.09585 108.90035)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.94279 105.56311)
+    (end 139.95879 105.59251)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.63974 105.72722)
+    (end 139.62964 105.69478)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.73191 105.50033)
+    (end 139.76435 105.49025)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.94664 107.55833)
+    (end 139.95011 107.59322)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.7025 105.80339)
+    (end 139.67685 105.78229)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.88642 106.16857)
+    (end 139.88642 106.16857)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.83413 105.49025)
+    (end 139.86663 105.50033)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.52152 107.94972)
+    (end 139.60761 107.83383)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.33098 104.7096)
+    (end 140.4167 104.94461)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.64668 107.34246)
+    (end 139.75481 107.32065)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.594 105.45607)
+    (end 139.65861 105.41369)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 140.53123 107.4693)
+    (end 140.5181 107.73135)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.65574 105.75662)
+    (end 139.63974 105.72722)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 139.573 105.283)
+    (end 139.49445 105.16543)
+    (layer B.SilkS)
+    (width 0.1))
+  (gr_line
+    (start 113.705 109)
+    (end 113.705 104)
+    (layer F.SilkS)
+    (width 0.2))
+  (gr_line
+    (start 142.24 101.6)
+    (end 109.855 101.6)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 142.25 140.97)
+    (end 142.24 101.6)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 109.855 140.97)
+    (end 142.24 140.97)
+    (layer Edge.Cuts)
+    (width 0.1))
+  (gr_line
+    (start 109.855 101.6)
+    (end 109.855 140.97)
+    (layer Edge.Cuts)
+    (width 0.1))
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  )

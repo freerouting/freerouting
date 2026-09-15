@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "induction-hob_temperature-sender",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 144558,
+      "sha256": "98316803a83beb4ea559c8a6228766a36a8e65f18af772cd29e3b1a685c92f2b"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 104484,
+      "sha256": "54afd3fc33916970e7389a936c8dfb384fa77fb722ec2eac4ab9abf6cb31b9f0"
+    },
+    "metadata_json": {
+      "bytes": 504,
+      "sha256": "5bdb51b6fcfe411d256be6abe05e995372ebb9d6ac17bb870722ff058a7feb9a"
+    },
+    "final_json": {
+      "bytes": 77922,
+      "sha256": "d89c97043a40ce56ff9fc55f4d5c91988316cefd5d8c93077494902afd28c3c0"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:58:43.663639+00:00"
+  }
+}

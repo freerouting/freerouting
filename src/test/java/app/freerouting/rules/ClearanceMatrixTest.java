@@ -2,8 +2,8 @@ package app.freerouting.rules;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import app.freerouting.board.Layer;
-import app.freerouting.board.LayerStructure;
+import app.freerouting.board.model.structure.Layer;
+import app.freerouting.board.model.structure.LayerStructure;
 import org.junit.jupiter.api.Test;
 
 class ClearanceMatrixTest {
@@ -12,8 +12,8 @@ class ClearanceMatrixTest {
   void setValue() {
     Layer[] layers = new Layer[] {new Layer("Top", true), new Layer("Bottom", true)};
     LayerStructure layerStructure = new LayerStructure(layers);
-    String[] nameArr = new String[] {"default"};
-    ClearanceMatrix matrix = new ClearanceMatrix(1, layerStructure, nameArr);
+    String[] names = new String[] {"default"};
+    ClearanceMatrix matrix = new ClearanceMatrix(1, layerStructure, names);
 
     // Test with an odd value
     matrix.setValue(0, 0, 0, 5);

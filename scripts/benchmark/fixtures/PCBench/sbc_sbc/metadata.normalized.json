@@ -1,0 +1,63 @@
+{
+  "board_id": "sbc_sbc",
+  "display_name": "sbc_sbc",
+  "pcbench_directory": "PCBs/sbc_sbc",
+  "source": "https://github.com/rithvikp1998/sbc",
+  "author": "rithvikp1998",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:03.198183+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 51,
+    "components": 91,
+    "dimensions_mm": {
+      "width": 67.9,
+      "height": 30.4
+    },
+    "area_cm2": 20.64,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 2020,
+    "vias": 213,
+    "track_length_mm": 2521.02,
+    "kicad_drc_violations": 806,
+    "kicad_drc_breakdown": {
+      "total_violations": 806,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 77,
+        "copper_edge_clearance": 5,
+        "courtyards_overlap": 8,
+        "hole_clearance": 199,
+        "lib_footprint_issues": 91,
+        "shorting_items": 1,
+        "silk_edge_clearance": 2,
+        "silk_over_copper": 124,
+        "silk_overlap": 96,
+        "solder_mask_bridge": 199,
+        "track_dangling": 2,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 489,
+        "warning": 317
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

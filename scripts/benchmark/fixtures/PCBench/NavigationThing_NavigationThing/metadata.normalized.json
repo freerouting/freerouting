@@ -1,0 +1,58 @@
+{
+  "board_id": "NavigationThing_NavigationThing",
+  "display_name": "NavigationThing_NavigationThing",
+  "pcbench_directory": "PCBs/NavigationThing_NavigationThing",
+  "source": "https://github.com/yaqwsx/NavigationThing",
+  "author": "yaqwsx",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:28.057769+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 24,
+    "components": 39,
+    "dimensions_mm": {
+      "width": 64.0,
+      "height": 58.0
+    },
+    "area_cm2": 37.12,
+    "zones": 3
+  },
+  "reference": {
+    "segments": 240,
+    "vias": 0,
+    "track_length_mm": 642.73,
+    "kicad_drc_violations": 152,
+    "kicad_drc_breakdown": {
+      "total_violations": 152,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 88,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 39,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 7,
+        "silk_overlap": 13,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 90,
+        "warning": 62
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

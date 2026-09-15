@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "filament_extruder_extruder",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 113042,
+      "sha256": "fa2a41591f6f14fc34abc6da907678fc355fe6e5ccf974b9966aa931410798c5"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 96581,
+      "sha256": "eadaa88781dc4ddb6d9d95eb5bfba160494fecc91ac70764e23e1134ebe14313"
+    },
+    "metadata_json": {
+      "bytes": 687,
+      "sha256": "ff006b02a543497ff683043be0968a76530586a004e1d337b3dcca66eb27f0eb"
+    },
+    "final_json": {
+      "bytes": 77561,
+      "sha256": "e1abacc581766ca477f43fa1be556d4bccd5f49aeb550e9a31d59f50fec3351b"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:49:20.178791+00:00"
+  }
+}

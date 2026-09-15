@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "marlin-neopixel-bridge_ATtiny85_Marneo",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 29456,
+      "sha256": "4b042b9f7a7ae5d903bd95015ebe0a2084d5c87734ddbd5471aee61300713a4c"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 24576,
+      "sha256": "684caed9b787361efb2fee815af0c6971f41673e2caf6cb29f31194f721739e8"
+    },
+    "metadata_json": {
+      "bytes": 700,
+      "sha256": "c7d3a63645aaff4b9ea17c5b0b2aa75621dddc3838de2d223a031584744bf946"
+    },
+    "final_json": {
+      "bytes": 14903,
+      "sha256": "d562962470b246daf6dfd4a0224cba89271f0360bcf59e802cbc90ae8b9dec00"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:20:08.131799+00:00"
+  }
+}

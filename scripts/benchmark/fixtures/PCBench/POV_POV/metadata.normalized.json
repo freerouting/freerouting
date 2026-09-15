@@ -1,0 +1,62 @@
+{
+  "board_id": "POV_POV",
+  "display_name": "POV_POV",
+  "pcbench_directory": "PCBs/POV_POV",
+  "source": "https://github.com/hemalchevli/POV",
+  "author": "hemalchevli",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:44.801966+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 16,
+    "dimensions_mm": {
+      "width": 69.5,
+      "height": 23.5
+    },
+    "area_cm2": 16.33,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 91,
+    "vias": 0,
+    "track_length_mm": 335.0,
+    "kicad_drc_violations": 39,
+    "kicad_drc_breakdown": {
+      "total_violations": 39,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 23,
+        "lib_footprint_issues": 16
+      },
+      "by_severity": {
+        "error": 23,
+        "warning": 16
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.071924+00:00",
+    "elapsed_seconds": 7.32,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

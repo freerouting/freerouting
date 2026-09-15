@@ -1,0 +1,66 @@
+{
+  "board_id": "kitspace_4_switch_array",
+  "display_name": "kitspace_4_switch_array",
+  "pcbench_directory": "PCBs/kitspace_4_switch_array",
+  "source": "https://github.com/BeeHive-org/BeeHive",
+  "author": "",
+  "license": "[{'name': 'MIT', 'link': 'https://raw.githubusercontent.com/BeeHive-org/BeeHive/master/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:07:32.598149+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 10,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 45.5,
+      "height": 48.5
+    },
+    "area_cm2": 22.07,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 50,
+    "vias": 0,
+    "track_length_mm": 238.71,
+    "kicad_drc_violations": 35,
+    "kicad_drc_breakdown": {
+      "total_violations": 35,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 8,
+        "lib_footprint_issues": 1,
+        "lib_footprint_mismatch": 16,
+        "silk_edge_clearance": 2,
+        "silk_overlap": 7,
+        "text_height": 1
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 27
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.977403+00:00",
+    "elapsed_seconds": 6.09,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "board": "OpenMPPT_OpenMPPT",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\OpenMPPT_OpenMPPT\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 136,
+  "segment_count": 460,
+  "approximate_track_length_mm": 1073.31,
+  "kicad_drc_violations": 280,
+  "generated_at": "2026-08-18T19:30:12.636354+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 280,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 41,
+      "lib_footprint_issues": 42,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 30,
+      "solder_mask_bridge": 33,
+      "via_diameter": 130
+    },
+    "by_severity": {
+      "error": 204,
+      "warning": 76
+    }
+  }
+}

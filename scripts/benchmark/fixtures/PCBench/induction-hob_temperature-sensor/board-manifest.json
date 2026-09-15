@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "induction-hob_temperature-sensor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 20596,
+      "sha256": "065ac5a4adc701eef8ca12c77a57896e3407e99bf19c4a48cacdd920ed3817c3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 17767,
+      "sha256": "3fdefbc820d61db908cf26b71491aa3347b3de4c1c02f3247b0c7d980c0d100d"
+    },
+    "metadata_json": {
+      "bytes": 504,
+      "sha256": "4b46ea89c1586b46502bc29575fc10b58beeb70cbfe045cb6d234f7c9f58fd57"
+    },
+    "final_json": {
+      "bytes": 15028,
+      "sha256": "ae6d4926eac2addf551e3d149c02f7397a17f6ca96add09552e2dee4301bfdf2"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:58:47.776973+00:00"
+  }
+}

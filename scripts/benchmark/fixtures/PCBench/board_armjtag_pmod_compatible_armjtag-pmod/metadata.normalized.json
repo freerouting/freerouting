@@ -1,0 +1,64 @@
+{
+  "board_id": "board_armjtag_pmod_compatible_armjtag-pmod",
+  "display_name": "board_armjtag_pmod_compatible_armjtag-pmod",
+  "pcbench_directory": "PCBs/board_armjtag_pmod_compatible_armjtag-pmod",
+  "source": "https://github.com/wallento/board_armjtag_pmod_compatible",
+  "author": "wallento",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.542093+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 3,
+    "components": 4,
+    "dimensions_mm": {
+      "width": 39.88,
+      "height": 20.32
+    },
+    "area_cm2": 8.1,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 58,
+    "vias": 0,
+    "track_length_mm": 235.18,
+    "kicad_drc_violations": 54,
+    "kicad_drc_breakdown": {
+      "total_violations": 54,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 47,
+        "invalid_outline": 2,
+        "lib_footprint_issues": 4,
+        "starved_thermal": 1
+      },
+      "by_severity": {
+        "error": 50,
+        "warning": 4
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.847122+00:00",
+    "elapsed_seconds": 6.45,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

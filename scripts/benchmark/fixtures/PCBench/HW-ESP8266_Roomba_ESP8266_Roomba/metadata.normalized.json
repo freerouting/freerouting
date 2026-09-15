@@ -1,0 +1,68 @@
+{
+  "board_id": "HW-ESP8266_Roomba_ESP8266_Roomba",
+  "display_name": "HW-ESP8266_Roomba_ESP8266_Roomba",
+  "pcbench_directory": "PCBs/HW-ESP8266_Roomba_ESP8266_Roomba",
+  "source": "https://github.com/linlun/HW-ESP8266_Roomba",
+  "author": "linlun",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:58.658129+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 31,
+    "components": 68,
+    "dimensions_mm": {
+      "width": 100.0,
+      "height": 30.01
+    },
+    "area_cm2": 30.01,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 844,
+    "vias": 101,
+    "track_length_mm": 1711.4,
+    "kicad_drc_violations": 779,
+    "kicad_drc_breakdown": {
+      "total_violations": 779,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 319,
+        "copper_edge_clearance": 79,
+        "courtyards_overlap": 2,
+        "items_not_allowed": 102,
+        "lib_footprint_issues": 68,
+        "malformed_courtyard": 8,
+        "npth_inside_courtyard": 2,
+        "shorting_items": 1,
+        "silk_edge_clearance": 39,
+        "silk_over_copper": 7,
+        "silk_overlap": 28,
+        "solder_mask_bridge": 114,
+        "starved_thermal": 3,
+        "text_height": 2,
+        "text_thickness": 1,
+        "track_dangling": 3,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 630,
+        "warning": 149
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

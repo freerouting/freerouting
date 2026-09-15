@@ -1,0 +1,28 @@
+{
+  "board": "Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Raspberry-Pi-Soft-Power-Controller_Switching Supply TPS563208 MCI\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 18,
+  "segment_count": 59,
+  "approximate_track_length_mm": 107.07,
+  "kicad_drc_violations": 48,
+  "generated_at": "2026-08-18T19:37:36.525089+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 48,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 22,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 10,
+      "silk_over_copper": 2,
+      "starved_thermal": 1,
+      "text_height": 10,
+      "text_thickness": 1
+    },
+    "by_severity": {
+      "error": 25,
+      "warning": 23
+    }
+  }
+}

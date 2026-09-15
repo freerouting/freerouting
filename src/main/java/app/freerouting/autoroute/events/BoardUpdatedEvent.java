@@ -1,6 +1,6 @@
 package app.freerouting.autoroute.events;
 
-import app.freerouting.board.RoutingBoard;
+import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.core.RouterCounters;
 import app.freerouting.core.scoring.BoardStatistics;
 import java.util.EventObject;

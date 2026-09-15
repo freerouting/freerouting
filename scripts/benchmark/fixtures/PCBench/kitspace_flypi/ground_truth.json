@@ -1,0 +1,28 @@
+{
+  "board": "kitspace_flypi",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_flypi\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 76,
+  "segment_count": 502,
+  "approximate_track_length_mm": 2226.65,
+  "kicad_drc_violations": 239,
+  "generated_at": "2026-08-18T19:06:53.656381+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 239,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 170,
+      "lib_footprint_issues": 53,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 3,
+      "silk_overlap": 7,
+      "starved_thermal": 2,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 172,
+      "warning": 67
+    }
+  }
+}

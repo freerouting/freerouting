@@ -1,0 +1,26 @@
+{
+  "board": "JLink-SWD_JLink-SWD",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\JLink-SWD_JLink-SWD\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 18,
+  "segment_count": 91,
+  "approximate_track_length_mm": 235.37,
+  "kicad_drc_violations": 97,
+  "generated_at": "2026-08-18T19:00:02.411887+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 97,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 74,
+      "copper_edge_clearance": 2,
+      "lib_footprint_issues": 16,
+      "silk_edge_clearance": 3,
+      "silk_over_copper": 2
+    },
+    "by_severity": {
+      "error": 76,
+      "warning": 21
+    }
+  }
+}

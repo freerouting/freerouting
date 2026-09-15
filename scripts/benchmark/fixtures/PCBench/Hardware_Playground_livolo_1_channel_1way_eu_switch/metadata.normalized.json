@@ -1,0 +1,59 @@
+{
+  "board_id": "Hardware_Playground_livolo_1_channel_1way_eu_switch",
+  "display_name": "Hardware_Playground_livolo_1_channel_1way_eu_switch",
+  "pcbench_directory": "PCBs/Hardware_Playground_livolo_1_channel_1way_eu_switch",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 15,
+    "components": 31,
+    "dimensions_mm": {
+      "width": 43.0,
+      "height": 43.4
+    },
+    "area_cm2": 18.66,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 204,
+    "vias": 17,
+    "track_length_mm": 522.72,
+    "kicad_drc_violations": 152,
+    "kicad_drc_breakdown": {
+      "total_violations": 152,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 6,
+        "copper_edge_clearance": 35,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 31,
+        "shorting_items": 10,
+        "silk_over_copper": 7,
+        "starved_thermal": 1,
+        "text_height": 61
+      },
+      "by_severity": {
+        "error": 53,
+        "warning": 99
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

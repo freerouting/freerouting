@@ -1,0 +1,2506 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6002)
+    (drawings 60)
+    (tracks 543)
+    (zones 0)
+    (modules 61)
+    (nets 44)
+  )
+
+  (page A4)
+  (title_block
+    (title "Keyboard Protocol Converter")
+    (date 2016/07)
+    (rev 2.4)
+    (company TMK)
+  )
+
+  (layers
+    (0 Front signal)
+    (31 Back signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+  )
+
+  (setup
+    (last_trace_width 0.254)
+    (user_trace_width 0.1524)
+    (user_trace_width 0.2032)
+    (user_trace_width 0.254)
+    (user_trace_width 0.381)
+    (trace_clearance 0.254)
+    (zone_clearance 0.254)
+    (zone_45_only yes)
+    (trace_min 0.1524)
+    (via_size 0.889)
+    (via_drill 0.508)
+    (via_min_size 0.762)
+    (via_min_drill 0.3048)
+    (uvia_size 0.635)
+    (uvia_drill 0.3048)
+    (uvias_allowed no)
+    (uvia_min_size 0.635)
+    (uvia_min_drill 0.127)
+    (edge_width 0.381)
+    (segment_width 0.381)
+    (pcb_text_width 0.1524)
+    (pcb_text_size 0.6096 0.6096)
+    (mod_edge_width 0.2)
+    (mod_text_size 0.6096 0.6096)
+    (mod_text_width 0.1524)
+    (pad_size 0.6 1.2)
+    (pad_drill 0)
+    (pad_to_mask_clearance 0.075)
+    (solder_mask_min_width 0.15)
+    (pad_to_paste_clearance -0.08)
+    (aux_axis_origin 100 100)
+    (visible_elements 7FFFFF7F)
+    (pcbplotparams
+      (layerselection 0x010fc_80000001)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.150000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin true)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "plot/rev2_3/"))
+  )
+
+  (net 0 "")
+  (net 1 +5V)
+  (net 2 /D+)
+  (net 3 /D-)
+  (net 4 /DIN1)
+  (net 5 /DIN2)
+  (net 6 /DIN3)
+  (net 7 /DIN4)
+  (net 8 /DIN5)
+  (net 9 /DIN6)
+  (net 10 /DIN7)
+  (net 11 /DIN8)
+  (net 12 /PB0)
+  (net 13 /PB1)
+  (net 14 /PB2)
+  (net 15 /PB3)
+  (net 16 /PB4)
+  (net 17 /PB5)
+  (net 18 /PB6)
+  (net 19 /PB7)
+  (net 20 /PC6)
+  (net 21 /PC7)
+  (net 22 /PD0)
+  (net 23 /PD1)
+  (net 24 /PD2)
+  (net 25 /PD3)
+  (net 26 /PD4)
+  (net 27 /PD5)
+  (net 28 /PD6)
+  (net 29 /PD7)
+  (net 30 /~RESET)
+  (net 31 GND)
+  (net 32 "Net-(C2-Pad1)")
+  (net 33 "Net-(C5-Pad1)")
+  (net 34 "Net-(C6-Pad1)")
+  (net 35 "Net-(D1-Pad2)")
+  (net 36 "Net-(R1-Pad1)")
+  (net 37 "Net-(R2-Pad1)")
+  (net 38 /PC2)
+  (net 39 /PC4)
+  (net 40 /PC5)
+  (net 41 "Net-(J1-Pad4)")
+  (net 42 "Net-(CN1-Pad9)")
+  (net 43 "Net-(J1-Pad6)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.254)
+    (trace_width 0.254)
+    (via_dia 0.889)
+    (via_drill 0.508)
+    (uvia_dia 0.635)
+    (uvia_drill 0.3048)
+    (add_net /D+)
+    (add_net /D-)
+    (add_net /DIN1)
+    (add_net /DIN2)
+    (add_net /DIN3)
+    (add_net /DIN4)
+    (add_net /DIN5)
+    (add_net /DIN6)
+    (add_net /DIN7)
+    (add_net /DIN8)
+    (add_net /PB0)
+    (add_net /PB1)
+    (add_net /PB2)
+    (add_net /PB3)
+    (add_net /PB4)
+    (add_net /PB5)
+    (add_net /PB6)
+    (add_net /PB7)
+    (add_net /PC2)
+    (add_net /PC4)
+    (add_net /PC5)
+    (add_net /PC6)
+    (add_net /PC7)
+    (add_net /PD0)
+    (add_net /PD1)
+    (add_net /PD2)
+    (add_net /PD3)
+    (add_net /PD4)
+    (add_net /PD5)
+    (add_net /PD6)
+    (add_net /PD7)
+    (add_net /~RESET)
+    (add_net "Net-(C2-Pad1)")
+    (add_net "Net-(C5-Pad1)")
+    (add_net "Net-(C6-Pad1)")
+    (add_net "Net-(CN1-Pad9)")
+    (add_net "Net-(D1-Pad2)")
+    (add_net "Net-(J1-Pad4)")
+    (add_net "Net-(J1-Pad6)")
+    (add_net "Net-(R1-Pad1)")
+    (add_net "Net-(R2-Pad1)")
+  )
+
+  (net_class Min6mil ""
+    (clearance 0.1524)
+    (trace_width 0.1524)
+    (via_dia 0.889)
+    (via_drill 0.508)
+    (uvia_dia 0.635)
+    (uvia_drill 0.3048)
+  )
+
+  (net_class Min8mil ""
+    (clearance 0.2032)
+    (trace_width 0.2032)
+    (via_dia 0.889)
+    (via_drill 0.508)
+    (uvia_dia 0.635)
+    (uvia_drill 0.3048)
+  )
+
+  (net_class Power ""
+    (clearance 0.254)
+    (trace_width 0.381)
+    (via_dia 0.889)
+    (via_drill 0.508)
+    (uvia_dia 0.635)
+    (uvia_drill 0.3048)
+    (add_net +5V)
+    (add_net GND)
+  )
+
+  (module keyboard_parts:USB_microB (layer Front) (tedit 5778B02C) (tstamp 532D9F6C)
+    (at 113 135.55)
+    (descr "USB microB hirose ZX62R-B-5P")
+    (tags "USB micorB hirose")
+    (path /532D9CEB)
+    (fp_text reference J1 (at 0 -0.6985) (layer F.SilkS)
+      (effects (font (size 0.8128 0.8128) (thickness 0.2032)))
+    )
+    (fp_text value USB_mini_micro_B (at 0 0.22606) (layer F.SilkS) hide
+      (effects (font (size 0.6 0.6) (thickness 0.15)))
+    )
+    (fp_line (start 3.75 2.15) (end 4.25 2.75) (layer Dwgs.User) (width 0.2))
+    (fp_line (start -3.75 2.15) (end -4.25 2.675) (layer Dwgs.User) (width 0.2))
+    (fp_line (start -3 1.45) (end 3 1.45) (layer Dwgs.User) (width 0.2))
+    (fp_line (start -3.75 2.15) (end -3.75 1.35) (layer Dwgs.User) (width 0.2))
+    (fp_line (start -3.75 2.15) (end 3.75 2.15) (layer Dwgs.User) (width 0.2))
+    (fp_line (start 3.75 2.15) (end 3.75 1.35) (layer Dwgs.User) (width 0.2))
+    (fp_text user "PCB edge" (at -0.05 1.45) (layer F.SilkS) hide
+      (effects (font (size 0.5 0.5) (thickness 0.125)))
+    )
+    (pad 6 smd rect (at 0.85 0) (size 1.2 1.9) (layers Front F.Paste F.Mask))
+    (pad 1 smd rect (at 1.29794 -2.67462 180) (size 0.4 1.35) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (pad 6 smd rect (at -3.0988 -2.3495) (size 2.1 2) (layers Front F.Paste F.Mask)
+      (net 43 "Net-(J1-Pad6)"))
+    (pad 6 smd rect (at 3.0988 -2.3495) (size 2.1 2) (layers Front F.Paste F.Mask))
+    (pad 6 smd rect (at -4.09956 0) (size 1.6 1.9) (layers Front F.Paste F.Mask))
+    (pad 6 smd rect (at 4.09956 0) (size 1.6 1.9) (layers Front F.Paste F.Mask))
+    (pad 2 smd rect (at 0.65024 -2.67462 180) (size 0.4 1.35) (layers Front F.Paste F.Mask)
+      (net 3 /D-) (clearance 0.1))
+    (pad 3 smd rect (at 0 -2.67462 180) (size 0.4 1.35) (layers Front F.Paste F.Mask)
+      (net 2 /D+) (clearance 0.1))
+    (pad 4 smd rect (at -0.65024 -2.67462 180) (size 0.4 1.35) (layers Front F.Paste F.Mask)
+      (net 41 "Net-(J1-Pad4)") (clearance 0.1))
+    (pad 5 smd rect (at -1.30048 -2.67462 180) (size 0.4 1.35) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 6 smd rect (at -0.85 0) (size 1.2 1.9) (layers Front F.Paste F.Mask))
+  )
+
+  (module keyboard_parts:LED_3020_REFLOW (layer Front) (tedit 5609AB77) (tstamp 532BA075)
+    (at 102 103.375 270)
+    (descr "LED 0805 smd package")
+    (tags "LED 0805 SMD")
+    (path /51863503)
+    (attr smd)
+    (fp_text reference D1 (at 0 -2 270) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value LED (at 0.05 -0.025) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.127)))
+    )
+    (fp_line (start 2.9 -1.2) (end 2.9 1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.8 1.2) (end 2.8 -1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.7 -1.2) (end 2.7 1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.4 -1.2) (end -2.6 -1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.6 -1.2) (end -2.6 1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.6 1.2) (end -1.4 1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.6 -1.2) (end 2.6 1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.4 -1.2) (end 3 -1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 3 -1.2) (end 3 1.2) (layer F.SilkS) (width 0.2))
+    (fp_line (start 3 1.2) (end 1.4 1.2) (layer F.SilkS) (width 0.2))
+    (pad 1 smd rect (at -1.475 0 270) (size 1.45 1.6) (layers Front F.Paste F.Mask)
+      (net 28 /PD6))
+    (pad 2 smd rect (at 1.475 0 270) (size 1.45 1.6) (layers Front F.Paste F.Mask)
+      (net 35 "Net-(D1-Pad2)"))
+  )
+
+  (module keyboard_parts:FA-238 (layer Front) (tedit 5778AAC5) (tstamp 532B9DB2)
+    (at 122.375 126)
+    (path /532E55A0)
+    (fp_text reference X1 (at 0 2.55) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 16M (at -3.075 0 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -2.375 1.875) (end -2.375 -1.875) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.375 -1.875) (end 2.375 -1.875) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.375 -1.875) (end 2.375 1.875) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.375 1.875) (end -2.375 1.875) (layer F.SilkS) (width 0.2))
+    (pad 3 smd rect (at -1.1 -0.8) (size 1.4 1.2) (drill (offset -0.1 -0.05)) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.2))
+    (pad 2 smd rect (at 1.1 -0.8) (size 1.4 1.2) (drill (offset 0.1 -0.05)) (layers Front F.Paste F.Mask)
+      (net 34 "Net-(C6-Pad1)") (clearance 0.2))
+    (pad 1 smd rect (at -1.1 0.8) (size 1.4 1.2) (drill (offset -0.1 0.05)) (layers Front F.Paste F.Mask)
+      (net 33 "Net-(C5-Pad1)") (clearance 0.2))
+    (pad 3 smd rect (at 1.1 0.8) (size 1.4 1.2) (drill (offset 0.1 0.05)) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.2))
+  )
+
+  (module 000NewKeyboard_parts:QFP32 (layer Front) (tedit 53A6EB97) (tstamp 53A6C73E)
+    (at 108.5 118.725 180)
+    (path /53285BD5)
+    (fp_text reference U1 (at 0 -0.95 180) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value ATMEGA32U2 (at 0 0.45 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.15)))
+    )
+    (fp_circle (center -2.4 -2.4) (end -2.175 -2.225) (layer F.SilkS) (width 0.2))
+    (fp_line (start 3.05 -3.05) (end 3.05 3.025) (layer F.SilkS) (width 0.2))
+    (fp_line (start 3.05 3.025) (end -3.075 3.025) (layer F.SilkS) (width 0.2))
+    (fp_line (start -3.075 3.025) (end -3.075 -2.425) (layer F.SilkS) (width 0.2))
+    (fp_line (start -3.075 -2.425) (end -2.425 -3.075) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.425 -3.075) (end 3.05 -3.075) (layer F.SilkS) (width 0.2))
+    (pad 8 smd rect (at -4.25 2.8 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 24 /PD2))
+    (pad 7 smd rect (at -4.25 2 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 23 /PD1))
+    (pad 6 smd rect (at -4.25 1.2 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 22 /PD0))
+    (pad 5 smd rect (at -4.25 0.4 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 38 /PC2))
+    (pad 4 smd rect (at -4.25 -0.4 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 1 +5V))
+    (pad 3 smd rect (at -4.25 -1.2 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 31 GND))
+    (pad 2 smd rect (at -4.25 -2 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 34 "Net-(C6-Pad1)"))
+    (pad 1 smd rect (at -4.25 -2.8 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 33 "Net-(C5-Pad1)"))
+    (pad 24 smd rect (at 4.25 -2.8 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 30 /~RESET))
+    (pad 17 smd rect (at 4.25 2.8 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 15 /PB3))
+    (pad 18 smd rect (at 4.25 2 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 16 /PB4))
+    (pad 19 smd rect (at 4.25 1.2 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 17 /PB5))
+    (pad 20 smd rect (at 4.25 0.4 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 18 /PB6))
+    (pad 21 smd rect (at 4.25 -0.4 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 19 /PB7))
+    (pad 22 smd rect (at 4.25 -1.2 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 21 /PC7))
+    (pad 23 smd rect (at 4.25 -2 180) (size 1.5 0.45) (layers Front F.Paste F.Mask)
+      (net 20 /PC6))
+    (pad 32 smd rect (at -2.8 -4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 1 +5V))
+    (pad 31 smd rect (at -2 -4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 1 +5V))
+    (pad 30 smd rect (at -1.2 -4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 36 "Net-(R1-Pad1)"))
+    (pad 29 smd rect (at -0.4 -4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 37 "Net-(R2-Pad1)"))
+    (pad 28 smd rect (at 0.4 -4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 31 GND))
+    (pad 27 smd rect (at 1.2 -4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 32 "Net-(C2-Pad1)"))
+    (pad 26 smd rect (at 2 -4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 39 /PC4))
+    (pad 25 smd rect (at 2.8 -4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 40 /PC5))
+    (pad 9 smd rect (at -2.8 4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 25 /PD3))
+    (pad 10 smd rect (at -2 4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 26 /PD4))
+    (pad 11 smd rect (at -1.2 4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 27 /PD5))
+    (pad 12 smd rect (at -0.4 4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 28 /PD6))
+    (pad 13 smd rect (at 0.4 4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 29 /PD7))
+    (pad 14 smd rect (at 1.2 4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 12 /PB0))
+    (pad 15 smd rect (at 2 4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 13 /PB1))
+    (pad 16 smd rect (at 2.8 4.25 180) (size 0.45 1.5) (layers Front F.Paste F.Mask)
+      (net 14 /PB2))
+  )
+
+  (module 000NewKeyboard_parts:SW_ALPS_SKRP (layer Front) (tedit 53A6D673) (tstamp 53A6E337)
+    (at 103.8 128.58 90)
+    (path /4EB8BB5F)
+    (fp_text reference SW1 (at 0.08 0 90) (layer F.SilkS)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (fp_text value SW_PUSH (at 0.03 0.25 90) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.1524)))
+    )
+    (fp_line (start -2.95 -1.75) (end 2.95 -1.75) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.95 -1.75) (end 2.95 1.75) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.95 1.75) (end -2.95 1.75) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.95 1.75) (end -2.95 -1.65) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.95 -1.65) (end -2.95 -1.75) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 2.1 1.1 90) (size 1.1 0.7) (layers Front F.Paste F.Mask)
+      (net 31 GND))
+    (pad 2 smd rect (at -2.1 1.1 90) (size 1.1 0.7) (layers Front F.Paste F.Mask)
+      (net 31 GND))
+    (pad 1 smd rect (at -2.1 -1.1 90) (size 1.1 0.7) (layers Front F.Paste F.Mask)
+      (net 30 /~RESET))
+    (pad 1 smd rect (at 2.1 -1.1 90) (size 1.1 0.7) (layers Front F.Paste F.Mask)
+      (net 30 /~RESET))
+  )
+
+  (module 000NewKeyboard_parts:C_1608 (layer Front) (tedit 5678DEC4) (tstamp 532BA0C3)
+    (at 119.35 131.155 270)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /4EB8BB66)
+    (fp_text reference C1 (at 0 -1.45 270) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 4.7u (at 2.395 0) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 270) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 270) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6D0F4) (tstamp 532B9FDF)
+    (at 120.725 113.8 180)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /517F6DFA)
+    (fp_text reference R13 (at 0.025 -1.575 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1K (at 2.8 -0.025 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 25 /PD3) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6D12B) (tstamp 532BA020)
+    (at 102.475 113.505 180)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /4EB8BB60)
+    (fp_text reference R3 (at 0.025 -1.575 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1k (at -2.825 -0.045 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 29 /PD7) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6EBB3) (tstamp 532D6E3A)
+    (at 102.475 111.28)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /51863512)
+    (fp_text reference R4 (at 0.025 -1.575) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value R_LED (at -0.075 -1.43) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 35 "Net-(D1-Pad2)") (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6D103) (tstamp 532BA006)
+    (at 122.275 119.65 180)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /517F6E00)
+    (fp_text reference R10 (at 0.025 -1.575 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1K (at 2.8 -0.025 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 22 /PD0) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6D0FE) (tstamp 532B9FF9)
+    (at 120.725 117.7 180)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /517F6DE2)
+    (fp_text reference R11 (at 0.025 -1.575 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1K (at 2.8 -0.025 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 23 /PD1) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6D0F9) (tstamp 532B9FEC)
+    (at 122.275 115.75 180)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /517F6DF4)
+    (fp_text reference R12 (at 0.025 -1.575 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1K (at 2.8 -0.025 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 24 /PD2) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6CFF9) (tstamp 533026C7)
+    (at 114.275 127.005 270)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /4EB8BB62)
+    (fp_text reference R1 (at 0.025 -1.575 270) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 22 (at -2.405 0.025) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 270) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 3 /D-) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 270) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 36 "Net-(R1-Pad1)") (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6CFFF) (tstamp 533026BA)
+    (at 111.725 127 270)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /4EB8BB61)
+    (fp_text reference R2 (at 0.025 -1.575 270) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 22 (at -2.4 0.025) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 270) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 2 /D+) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 270) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 37 "Net-(R2-Pad1)") (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:R_1608 (layer Front) (tedit 53A6D0EE) (tstamp 532B9FD2)
+    (at 122.275 111.85 180)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /53293C8E)
+    (fp_text reference R14 (at 0.025 -1.575 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1K (at 2.8 -0.025 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 26 /PD4) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E14) (tstamp 53301EC6)
+    (at 123.625 127.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292BEF)
+    (attr virtual)
+    (fp_text reference SJ30 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 11 /DIN8) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E0E) (tstamp 53301ED5)
+    (at 123.625 124.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292BD4)
+    (attr virtual)
+    (fp_text reference SJ29 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 11 /DIN8) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DF4) (tstamp 53301EE4)
+    (at 123.625 118.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292BC7)
+    (attr virtual)
+    (fp_text reference SJ28 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 11 /DIN8) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DC0) (tstamp 53301EF3)
+    (at 123.625 115.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292BC1)
+    (attr virtual)
+    (fp_text reference SJ27 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 11 /DIN8) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DBB) (tstamp 53301F02)
+    (at 123.625 112.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53293470)
+    (attr virtual)
+    (fp_text reference SJ26 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 11 /DIN8) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DB1) (tstamp 53301F11)
+    (at 120.625 112.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53293466)
+    (attr virtual)
+    (fp_text reference SJ25 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 10 /DIN7) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E17) (tstamp 53301F20)
+    (at 117.625 127.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292BA7)
+    (attr virtual)
+    (fp_text reference SJ24 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 9 /DIN6) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E1D) (tstamp 53301F2F)
+    (at 117.625 124.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B8C)
+    (attr virtual)
+    (fp_text reference SJ23 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 26 /PD4) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 9 /DIN6) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E05) (tstamp 53301F3E)
+    (at 117.625 121.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B85)
+    (attr virtual)
+    (fp_text reference SJ22 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 23 /PD1) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 9 /DIN6) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DAD) (tstamp 53301F4D)
+    (at 117.625 112.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /5329345C)
+    (attr virtual)
+    (fp_text reference SJ21 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 24 /PD2) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 9 /DIN6) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E2A) (tstamp 53301F5C)
+    (at 114.625 127.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B68)
+    (attr virtual)
+    (fp_text reference SJ20 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 23 /PD1) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 8 /DIN5) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E25) (tstamp 53301F6B)
+    (at 114.625 124.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B4D)
+    (attr virtual)
+    (fp_text reference SJ19 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 22 /PD0) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 8 /DIN5) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E02) (tstamp 53301F7A)
+    (at 114.625 121.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B46)
+    (attr virtual)
+    (fp_text reference SJ18 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 8 /DIN5) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DEF) (tstamp 53301F89)
+    (at 114.625 118.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B40)
+    (attr virtual)
+    (fp_text reference SJ17 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 25 /PD3) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 8 /DIN5) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DC4) (tstamp 53301F98)
+    (at 114.625 115.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B3A)
+    (attr virtual)
+    (fp_text reference SJ16 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 23 /PD1) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 8 /DIN5) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DA9) (tstamp 53301FA7)
+    (at 114.625 112.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53293452)
+    (attr virtual)
+    (fp_text reference SJ15 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 25 /PD3) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 8 /DIN5) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DC9) (tstamp 53301FB6)
+    (at 111.625 115.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B2C)
+    (attr virtual)
+    (fp_text reference SJ14 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 24 /PD2) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 7 /DIN4) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E35) (tstamp 532D6AA4)
+    (at 108.625 127.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292B1A)
+    (attr virtual)
+    (fp_text reference SJ13 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 22 /PD0) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 6 /DIN3) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E2F) (tstamp 53301FD4)
+    (at 108.625 124.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292AFF)
+    (attr virtual)
+    (fp_text reference SJ12 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 23 /PD1) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 6 /DIN3) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DFE) (tstamp 53301FE3)
+    (at 108.625 121.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292AF8)
+    (attr virtual)
+    (fp_text reference SJ11 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 6 /DIN3) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DEC) (tstamp 53301FF2)
+    (at 108.625 118.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292AF2)
+    (attr virtual)
+    (fp_text reference SJ10 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 24 /PD2) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 6 /DIN3) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DD1) (tstamp 53302001)
+    (at 108.625 115.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292AEC)
+    (attr virtual)
+    (fp_text reference SJ9 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 26 /PD4) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 6 /DIN3) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DA2) (tstamp 53302010)
+    (at 108.625 112.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /5329343E)
+    (attr virtual)
+    (fp_text reference SJ8 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 6 /DIN3) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DD5) (tstamp 53302098)
+    (at 105.625 115.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292662)
+    (attr virtual)
+    (fp_text reference SJ7 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 5 /DIN2) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8D9E) (tstamp 5330202E)
+    (at 105.625 112.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53293434)
+    (attr virtual)
+    (fp_text reference SJ6 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 5 /DIN2) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8E39) (tstamp 5330203D)
+    (at 102.625 124.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /532922BD)
+    (attr virtual)
+    (fp_text reference SJ5 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 4 /DIN1) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DF9) (tstamp 5330204C)
+    (at 102.625 121.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /5329224B)
+    (attr virtual)
+    (fp_text reference SJ4 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 22 /PD0) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 4 /DIN1) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DE5) (tstamp 5330205B)
+    (at 102.625 118.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292245)
+    (attr virtual)
+    (fp_text reference SJ3 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 4 /DIN1) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8DDC) (tstamp 5330206A)
+    (at 102.625 115.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /53292224)
+    (attr virtual)
+    (fp_text reference SJ2 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 25 /PD3) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 4 /DIN1) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Back) (tedit 532C8D97) (tstamp 53302079)
+    (at 102.625 112.7 270)
+    (tags "solder jumper bridge configuration")
+    (path /5329342A)
+    (attr virtual)
+    (fp_text reference SJ1 (at 0 0 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 -1.65 270) (layer B.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 0.95 0.6) (end 0.95 -0.55) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.7 0.85) (end 0.7 0.85) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.95 -0.6) (end -0.95 0.6) (layer B.SilkS) (width 0.2))
+    (fp_line (start -0.65 -0.85) (end 0.65 -0.85) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.7 -0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.95 0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.7 0.85) (angle -90) (layer B.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.95 -0.6) (angle -90) (layer B.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0 270) (size 0.6 1.2) (layers Back B.Paste B.Mask)
+      (net 4 /DIN1) (clearance 0.1))
+  )
+
+  (module HOLE_M2.6 (layer Front) (tedit 532E58E7) (tstamp 532B9DA7)
+    (at 122.962 133.987)
+    (fp_text reference HOLE_M2.6_4 (at 0 -4.5) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (fp_text value VAL** (at 0.05 -7.25) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (pad 1 thru_hole circle (at -0.4625 0.013) (size 2.8 2.8) (drill 2.8) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module HOLE_M2.6 (layer Front) (tedit 532E57EC) (tstamp 0)
+    (at 103.432 107.716)
+    (fp_text reference HOLE_M2.6_3 (at 0 -4.5) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (fp_text value VAL** (at 0.05 -7.25) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (pad 1 thru_hole circle (at 0.0685 -0.0155) (size 2.8 2.8) (drill 2.8) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module HOLE_M2.6 (layer Front) (tedit 0) (tstamp 532B9D9B)
+    (at 122.862 107.716)
+    (fp_text reference HOLE_M2.6_2 (at 0 -4.5) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (fp_text value VAL** (at 0.05 -7.25) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (pad 1 thru_hole circle (at -0.3625 -0.0155) (size 2.8 2.8) (drill 2.8) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module HOLE_M2.6 (layer Front) (tedit 532E58DF) (tstamp 532B9D95)
+    (at 103.532 133.987)
+    (fp_text reference HOLE_M2.6 (at 0 -4.5) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (fp_text value VAL** (at 0.05 -7.25) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (pad 1 thru_hole circle (at -0.0315 0.013) (size 2.8 2.8) (drill 2.8) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module 000NewKeyboard_parts:PIN_1 locked (layer Front) (tedit 53A6E260) (tstamp 532BA064)
+    (at 116.825 130.3)
+    (tags "CONN pin 1 circle")
+    (path /517F625F)
+    (fp_text reference P1 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0.8128 0.8128) (thickness 0.1524)))
+    )
+    (fp_text value CONN_1 (at 1.3 1.075) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 +5V))
+  )
+
+  (module 000NewKeyboard_parts:PIN_1 locked (layer Front) (tedit 53A6E252) (tstamp 532BA7B2)
+    (at 114.275 130.3)
+    (tags "CONN pin 1 circle")
+    (path /517F6275)
+    (fp_text reference P2 (at 0 -0.025) (layer F.SilkS) hide
+      (effects (font (size 0.8128 0.8128) (thickness 0.1524)))
+    )
+    (fp_text value CONN_1 (at 1.05 0.975) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 3 /D-))
+  )
+
+  (module 000NewKeyboard_parts:PIN_1 locked (layer Front) (tedit 53A6E247) (tstamp 532BA058)
+    (at 111.725 130.3)
+    (tags "CONN pin 1 circle")
+    (path /517F6290)
+    (fp_text reference P3 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0.8128 0.8128) (thickness 0.1524)))
+    )
+    (fp_text value CONN_1 (at 1.025 0.975) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 2 /D+))
+  )
+
+  (module 000NewKeyboard_parts:PIN_1 locked (layer Front) (tedit 53A6E232) (tstamp 532BA052)
+    (at 109.175 130.3)
+    (tags "CONN pin 1 circle")
+    (path /517F629F)
+    (fp_text reference P4 (at 0 0) (layer F.SilkS) hide
+      (effects (font (size 0.8128 0.8128) (thickness 0.1524)))
+    )
+    (fp_text value CONN_1 (at 1.1 1.1) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (pad 1 thru_hole circle (at 0 0) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 31 GND))
+  )
+
+  (module 000NewKeyboard_parts:C_1608 (layer Front) (tedit 5678DEBF) (tstamp 532BA082)
+    (at 122.375 122.6 180)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /4EB8BB58)
+    (fp_text reference C6 (at 0 -1.45 180) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10p (at -2.375 0.05 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0 180) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 34 "Net-(C6-Pad1)") (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:C_1608 (layer Front) (tedit 5678DEBB) (tstamp 532BA08F)
+    (at 122.375 129.405)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /4EB8BB59)
+    (fp_text reference C5 (at 0 -1.45) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 10p (at 2.375 -0.005 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 33 "Net-(C5-Pad1)") (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:C_1608 (layer Front) (tedit 53A6D518) (tstamp 532BA0B6)
+    (at 108.325 126.43)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /4EB8BB67)
+    (fp_text reference C2 (at 0 -1.45) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 1u (at 0 1.45) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 32 "Net-(C2-Pad1)") (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:C_1608 (layer Front) (tedit 53A6D518) (tstamp 532BA0A9)
+    (at 116.775 119.13)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /4EB8BB57)
+    (fp_text reference C3 (at 0 -1.45) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 0.1u (at 0 1.45) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:C_1608 (layer Front) (tedit 53A6D589) (tstamp 532BA09C)
+    (at 115.925 122.93)
+    (descr "SMT, 1608, 0603")
+    (tags "SMT, 1608, 0603")
+    (path /53287BEF)
+    (fp_text reference C4 (at 0 -1.45) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value 0.1u (at 1.475 1.52) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start -1.65 -0.8) (end 1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 -0.8) (end 1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.65 0.8) (end -1.65 0.8) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.65 0.8) (end -1.65 -0.8) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.85 0) (size 1.1 1.1) (layers Front F.Paste F.Mask)
+      (net 1 +5V) (clearance 0.1))
+    (model smd/capacitors/c_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Front) (tedit 5778B10D) (tstamp 53A6C624)
+    (at 107.075 133.205)
+    (tags "solder jumper bridge configuration")
+    (path /53A52524)
+    (attr virtual)
+    (fp_text reference SJ98 (at 0 -1.7) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 1.65) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start 0.95 -0.6) (end 0.95 0.55) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.7 -0.85) (end 0.7 -0.85) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.95 0.6) (end -0.95 -0.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.65 0.85) (end 0.65 0.85) (layer F.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.7 0.85) (angle 90) (layer F.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.95 -0.6) (angle 90) (layer F.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.7 -0.85) (angle 90) (layer F.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.95 0.6) (angle 90) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0) (size 0.6 1.2) (layers Front F.Mask)
+      (net 43 "Net-(J1-Pad6)") (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0) (size 0.6 1.2) (layers Front F.Mask)
+      (net 31 GND) (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:SOLDER_JUMPER_2 (layer Front) (tedit 5778B11C) (tstamp 53A6C713)
+    (at 123.475 103.555)
+    (tags "solder jumper bridge configuration")
+    (path /53A52D85)
+    (attr virtual)
+    (fp_text reference SJ99 (at 0 -1.7) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_text value SOLDER_JUMPER (at 0 1.65) (layer F.SilkS) hide
+      (effects (font (size 0.8 0.8) (thickness 0.15)))
+    )
+    (fp_line (start 0.95 -0.6) (end 0.95 0.55) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.7 -0.85) (end 0.7 -0.85) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.95 0.6) (end -0.95 -0.6) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.65 0.85) (end 0.65 0.85) (layer F.SilkS) (width 0.2))
+    (fp_arc (start -0.7 0.6) (end -0.7 0.85) (angle 90) (layer F.SilkS) (width 0.2))
+    (fp_arc (start -0.7 -0.6) (end -0.95 -0.6) (angle 90) (layer F.SilkS) (width 0.2))
+    (fp_arc (start 0.7 -0.6) (end 0.7 -0.85) (angle 90) (layer F.SilkS) (width 0.2))
+    (fp_arc (start 0.7 0.6) (end 0.95 0.6) (angle 90) (layer F.SilkS) (width 0.2))
+    (pad 2 smd rect (at 0.4 0) (size 0.6 1.2) (layers Front F.Mask)
+      (net 31 GND) (clearance 0.1))
+    (pad 1 smd rect (at -0.4 0) (size 0.6 1.2) (layers Front F.Mask)
+      (net 42 "Net-(CN1-Pad9)") (clearance 0.1))
+  )
+
+  (module 000NewKeyboard_parts:MINI_DIN_8 (layer Front) (tedit 5609C959) (tstamp 532B9B84)
+    (at 113 102.762)
+    (path /53293114)
+    (fp_text reference CN1 (at 3.175 0.8875) (layer F.SilkS) hide
+      (effects (font (size 0.8128 0.8128) (thickness 0.2032)))
+    )
+    (fp_text value MINI_DIN_8P_JACK (at 0 -6.10108) (layer F.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.3048)))
+    )
+    (fp_line (start -6.75 0.8) (end -6.75 8.15) (layer F.SilkS) (width 0.381))
+    (fp_line (start 6.75 0.8) (end 6.75 8.15) (layer F.SilkS) (width 0.381))
+    (fp_line (start -6.75 8.15) (end 6.75 8.15) (layer F.SilkS) (width 0.381))
+    (pad 3 thru_hole circle (at -3.4 3.8 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 6 /DIN3))
+    (pad 5 thru_hole circle (at 3.4 3.8 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 8 /DIN5))
+    (pad 6 thru_hole circle (at -3.4 6.3 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 9 /DIN6))
+    (pad 8 thru_hole circle (at 3.4 6.3 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 11 /DIN8))
+    (pad 9 thru_hole circle (at 0 0 180) (size 3.2 3.2) (drill 2.29) (layers *.Cu *.Mask F.SilkS))
+    (pad 9 thru_hole circle (at -6.75 0.8 180) (size 3.2 3.2) (drill 2.29) (layers *.Cu *.Mask F.SilkS))
+    (pad 9 thru_hole circle (at 6.75 0.8 180) (size 3.2 3.2) (drill 2.29) (layers *.Cu *.Mask F.SilkS)
+      (net 42 "Net-(CN1-Pad9)") (zone_connect 0) (thermal_gap 0.254))
+    (pad 1 thru_hole circle (at -1.3 3.8 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 4 /DIN1))
+    (pad 2 thru_hole circle (at 1.3 3.8 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 5 /DIN2))
+    (pad 4 thru_hole circle (at -1.3 6.3 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 7 /DIN4))
+    (pad 7 thru_hole circle (at 0.9 6.3 180) (size 1.6 1.6) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 10 /DIN7))
+  )
+
+  (dimension 7.7 (width 0.1524) (layer Dwgs.User)
+    (gr_text "7.700 mm" (at 135.2096 103.85 90) (layer Dwgs.User)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (feature1 (pts (xy 122.5 100) (xy 135.8192 100)))
+    (feature2 (pts (xy 122.5 107.7) (xy 135.8192 107.7)))
+    (crossbar (pts (xy 134.6 107.7) (xy 134.6 100)))
+    (arrow1a (pts (xy 134.6 100) (xy 135.186421 101.126504)))
+    (arrow1b (pts (xy 134.6 100) (xy 134.013579 101.126504)))
+    (arrow2a (pts (xy 134.6 107.7) (xy 135.186421 106.573496)))
+    (arrow2b (pts (xy 134.6 107.7) (xy 134.013579 106.573496)))
+  )
+  (dimension 3.5 (width 0.1524) (layer Dwgs.User)
+    (gr_text "3.500 mm" (at 124.25 139.8096) (layer Dwgs.User)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (feature1 (pts (xy 126 134) (xy 126 140.4192)))
+    (feature2 (pts (xy 122.5 134) (xy 122.5 140.4192)))
+    (crossbar (pts (xy 122.5 139.2) (xy 126 139.2)))
+    (arrow1a (pts (xy 126 139.2) (xy 124.873496 139.786421)))
+    (arrow1b (pts (xy 126 139.2) (xy 124.873496 138.613579)))
+    (arrow2a (pts (xy 122.5 139.2) (xy 123.626504 139.786421)))
+    (arrow2b (pts (xy 122.5 139.2) (xy 123.626504 138.613579)))
+  )
+  (dimension 19 (width 0.1524) (layer Dwgs.User)
+    (gr_text "19.000 mm" (at 113 141.8096) (layer Dwgs.User)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (feature1 (pts (xy 122.5 134) (xy 122.5 142.4192)))
+    (feature2 (pts (xy 103.5 134) (xy 103.5 142.4192)))
+    (crossbar (pts (xy 103.5 141.2) (xy 122.5 141.2)))
+    (arrow1a (pts (xy 122.5 141.2) (xy 121.373496 141.786421)))
+    (arrow1b (pts (xy 122.5 141.2) (xy 121.373496 140.613579)))
+    (arrow2a (pts (xy 103.5 141.2) (xy 104.626504 141.786421)))
+    (arrow2b (pts (xy 103.5 141.2) (xy 104.626504 140.613579)))
+  )
+  (dimension 3 (width 0.1524) (layer Dwgs.User)
+    (gr_text "3.000 mm" (at 134.6096 135.5 270) (layer Dwgs.User)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (feature1 (pts (xy 122.5 137) (xy 135.2192 137)))
+    (feature2 (pts (xy 122.5 134) (xy 135.2192 134)))
+    (crossbar (pts (xy 134 134) (xy 134 137)))
+    (arrow1a (pts (xy 134 137) (xy 133.413579 135.873496)))
+    (arrow1b (pts (xy 134 137) (xy 134.586421 135.873496)))
+    (arrow2a (pts (xy 134 134) (xy 133.413579 135.126504)))
+    (arrow2b (pts (xy 134 134) (xy 134.586421 135.126504)))
+  )
+  (dimension 26.3 (width 0.1524) (layer Dwgs.User)
+    (gr_text "26.300 mm" (at 130.9096 120.85 270) (layer Dwgs.User)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (feature1 (pts (xy 122.5 134) (xy 131.5192 134)))
+    (feature2 (pts (xy 122.5 107.7) (xy 131.5192 107.7)))
+    (crossbar (pts (xy 130.3 107.7) (xy 130.3 134)))
+    (arrow1a (pts (xy 130.3 134) (xy 129.713579 132.873496)))
+    (arrow1b (pts (xy 130.3 134) (xy 130.886421 132.873496)))
+    (arrow2a (pts (xy 130.3 107.7) (xy 129.713579 108.826504)))
+    (arrow2b (pts (xy 130.3 107.7) (xy 130.886421 108.826504)))
+  )
+  (dimension 19 (width 0.1524) (layer Dwgs.User)
+    (gr_text "19.000 mm" (at 113 90.4904) (layer Dwgs.User)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (feature1 (pts (xy 103.5 107.7) (xy 103.5 89.8808)))
+    (feature2 (pts (xy 122.5 107.7) (xy 122.5 89.8808)))
+    (crossbar (pts (xy 122.5 91.1) (xy 103.5 91.1)))
+    (arrow1a (pts (xy 103.5 91.1) (xy 104.626504 90.513579)))
+    (arrow1b (pts (xy 103.5 91.1) (xy 104.626504 91.686421)))
+    (arrow2a (pts (xy 122.5 91.1) (xy 121.373496 90.513579)))
+    (arrow2b (pts (xy 122.5 91.1) (xy 121.373496 91.686421)))
+  )
+  (dimension 37 (width 0.1524) (layer Dwgs.User)
+    (gr_text "37.000 mm" (at 97.0154 118.5 90) (layer Dwgs.User)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (feature1 (pts (xy 100 100) (xy 96.4058 100)))
+    (feature2 (pts (xy 100 137) (xy 96.4058 137)))
+    (crossbar (pts (xy 97.625 137) (xy 97.625 100)))
+    (arrow1a (pts (xy 97.625 100) (xy 98.211421 101.126504)))
+    (arrow1b (pts (xy 97.625 100) (xy 97.038579 101.126504)))
+    (arrow2a (pts (xy 97.625 137) (xy 98.211421 135.873496)))
+    (arrow2b (pts (xy 97.625 137) (xy 97.038579 135.873496)))
+  )
+  (dimension 26 (width 0.1524) (layer Dwgs.User)
+    (gr_text "26.000 mm" (at 113 95.4904) (layer Dwgs.User)
+      (effects (font (size 0.6096 0.6096) (thickness 0.1524)))
+    )
+    (feature1 (pts (xy 126 100) (xy 126 94.8808)))
+    (feature2 (pts (xy 100 100) (xy 100 94.8808)))
+    (crossbar (pts (xy 100 96.1) (xy 126 96.1)))
+    (arrow1a (pts (xy 126 96.1) (xy 124.873496 96.686421)))
+    (arrow1b (pts (xy 126 96.1) (xy 124.873496 95.513579)))
+    (arrow2a (pts (xy 100 96.1) (xy 101.126504 96.686421)))
+    (arrow2b (pts (xy 100 96.1) (xy 101.126504 95.513579)))
+  )
+  (gr_text "TMK Rev.2.4" (at 101.775 119.625 90) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text 5 (at 117.55 105.05) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text 2 (at 115.375 105.05) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text 3 (at 108.775 105.05) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text 8 (at 117.725 110) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text 7 (at 115.15 110.075) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text 6 (at 108.475 110.15) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text 4 (at 110.675 110.15) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text 1 (at 110.925 105.05) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text HWB (at 102.475 115) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.15)))
+  )
+  (gr_text V (at 115.675 131.4) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text - (at 113.125 131.4) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text + (at 110.575 131.425) (layer F.SilkS) (tstamp 532EFBBE)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text G (at 108.025 131.4) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text FG (at 107.05 134.85) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text FG (at 123.475 105.25) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text D1 (at 123.15 117.7 90) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text D3 (at 123.15 113.8 90) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text D4 (at 124.7 111.85 90) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text D2 (at 124.7 115.75 90) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text D0 (at 124.75 119.7 90) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.15)))
+  )
+  (gr_text ADB (at 101.025 127.8 90) (layer B.SilkS) (tstamp 5330213A)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text NEXT (at 101.125 124.7 90) (layer B.SilkS) (tstamp 5330213B)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text PS/2 (at 101.125 121.7 90) (layer B.SilkS) (tstamp 5330213C)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text X68K (at 101.125 118.7 90) (layer B.SilkS) (tstamp 5330213D)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text PC98 (at 101.125 115.7 90) (layer B.SilkS) (tstamp 532CB97F)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text SUN (at 101.125 112.7 90) (layer B.SilkS) (tstamp 532CB8B7)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text 8 (at 123.625 111 90) (layer B.SilkS) (tstamp 5330212B)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text 7 (at 120.625 111 90) (layer B.SilkS) (tstamp 5330212C)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text 6 (at 117.625 111 90) (layer B.SilkS) (tstamp 5330212D)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text 5 (at 114.625 111 90) (layer B.SilkS) (tstamp 532CB8D1)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text 4 (at 111.625 111 90) (layer B.SilkS) (tstamp 532CB97B)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text 3 (at 108.625 111 90) (layer B.SilkS) (tstamp 53302130)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text 2 (at 105.625 111 90) (layer B.SilkS) (tstamp 53302131)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_text 1 (at 102.625 111 90) (layer B.SilkS) (tstamp 532C8C8E)
+    (effects (font (size 0.6096 0.6096) (thickness 0.1524)) (justify mirror))
+  )
+  (gr_line (start 102.625 121.725) (end 123.625 121.725) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 123.625 127.725) (end 102.625 127.725) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 102.625 124.7) (end 102.625 124.725) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 123.625 124.7) (end 102.625 124.7) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 102.625 118.675) (end 102.625 118.7) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 123.625 118.675) (end 102.625 118.675) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 102.625 115.7) (end 123.625 115.7) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 102.63 112.69) (end 123.62 112.69) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 124.58 112.71) (end 124.58 112.72) (angle 90) (layer B.SilkS) (width 0.381))
+  (gr_line (start 126 101) (end 126 136) (angle 90) (layer Edge.Cuts) (width 0.381) (tstamp 533020DD))
+  (gr_line (start 100 136) (end 100 101) (angle 90) (layer Edge.Cuts) (width 0.381))
+  (gr_line (start 125 137) (end 101 137) (angle 90) (layer Edge.Cuts) (width 0.381))
+  (gr_line (start 101 100) (end 125 100) (angle 90) (layer Edge.Cuts) (width 0.381))
+  (gr_arc (start 125 101) (end 125 100) (angle 90) (layer Edge.Cuts) (width 0.381))
+  (gr_arc (start 101 101) (end 100 101) (angle 90) (layer Edge.Cuts) (width 0.381))
+  (gr_arc (start 125 136) (end 126 136) (angle 90) (layer Edge.Cuts) (width 0.381) (tstamp 532CE3F3))
+  (gr_arc (start 101 136) (end 101 137) (angle 90) (layer Edge.Cuts) (width 0.381))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

@@ -1,0 +1,33 @@
+{
+  "board": "BLDC-controller_BLDC_controller",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\BLDC-controller_BLDC_controller\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 75,
+  "segment_count": 929,
+  "approximate_track_length_mm": 1006.41,
+  "kicad_drc_violations": 570,
+  "generated_at": "2026-08-18T18:13:33.276163+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 570,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 259,
+      "copper_edge_clearance": 29,
+      "courtyards_overlap": 6,
+      "hole_clearance": 2,
+      "items_not_allowed": 3,
+      "lib_footprint_issues": 199,
+      "nonmirrored_text_on_back_layer": 1,
+      "pth_inside_courtyard": 6,
+      "silk_over_copper": 50,
+      "silk_overlap": 10,
+      "starved_thermal": 2,
+      "track_dangling": 3
+    },
+    "by_severity": {
+      "error": 307,
+      "warning": 263
+    }
+  }
+}

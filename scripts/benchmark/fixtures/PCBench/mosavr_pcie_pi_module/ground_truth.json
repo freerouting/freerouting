@@ -1,0 +1,29 @@
+{
+  "board": "mosavr_pcie_pi_module",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\mosavr_pcie_pi_module\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 75,
+  "segment_count": 400,
+  "approximate_track_length_mm": 1940.53,
+  "kicad_drc_violations": 322,
+  "generated_at": "2026-08-18T19:25:27.530809+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 322,
+    "unconnected_count": 2,
+    "by_type": {
+      "clearance": 115,
+      "copper_edge_clearance": 6,
+      "invalid_outline": 1,
+      "lib_footprint_issues": 15,
+      "silk_edge_clearance": 11,
+      "silk_overlap": 1,
+      "solder_mask_bridge": 167,
+      "starved_thermal": 6
+    },
+    "by_severity": {
+      "error": 295,
+      "warning": 27
+    }
+  }
+}

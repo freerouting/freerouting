@@ -13,7 +13,7 @@ import java.math.BigInteger;
  * in addition to the affine plane with rational coordinates the so-called line at infinity, which
  * consist of all projective points (x, y, z) with z = 0.
  */
-public class RationalPoint extends Point implements Serializable {
+public final class RationalPoint extends Point implements Serializable {
 
   @SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
   final BigInteger x;
@@ -25,16 +25,16 @@ public class RationalPoint extends Point implements Serializable {
   final BigInteger z;
 
   /**
-   * Creates a RationalPoint from 3 BigIntegers p_x, p_y and p_z. They represent the 2-dimensional
-   * point with the rational number Tuple ( p_x / p_z , p_y / p_z). Throws IllegalArgumentException
-   * if denominator p_z is <= 0
+   * Creates a RationalPoint from 3 BigIntegers x, y and z. They represent the 2-dimensional point
+   * with the rational number Tuple ( x / z , y / z). Throws IllegalArgumentException if denominator
+   * z is <= 0
    */
   RationalPoint(BigInteger x, BigInteger y, BigInteger z) {
     this.x = x;
     this.y = y;
     this.z = z;
     if (z.signum() < 0) {
-      throw new IllegalArgumentException("RationalPoint: p_z is expected to be >= 0");
+      throw new IllegalArgumentException("RationalPoint: z is expected to be >= 0");
     }
   }
 
@@ -62,33 +62,50 @@ public class RationalPoint extends Point implements Serializable {
     return new FloatPoint(xd, yd);
   }
 
-  /** Returns true, if this RationalPoint is equal to p_ob. */
   @Override
-  public int getIdNo() {
+  public int getId() {
     int result = x.hashCode();
     result = 31 * result + y.hashCode();
     return 31 * result + z.hashCode();
   }
 
   @Override
-  public final boolean equals(Object ob) {
-    if (this == ob) {
+  public final boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (ob == null) {
+    if (other == null) {
       return false;
     }
-    if (getClass() != ob.getClass()) {
+    if (getClass() != other.getClass()) {
       return false;
     }
-    RationalPoint other = (RationalPoint) ob;
-    BigInteger det = BigIntAux.determinant(x, other.x, z, other.z);
+    RationalPoint otherPoint = (RationalPoint) other;
+    BigInteger det = BigIntAux.determinant(x, otherPoint.x, z, otherPoint.z);
     if (det.signum() != 0) {
       return false;
     }
-    det = BigIntAux.determinant(y, other.y, z, other.z);
-
+    det = BigIntAux.determinant(y, otherPoint.y, z, otherPoint.z);
     return det.signum() == 0;
+  }
+
+  @Override
+  public int hashCode() {
+    if (z.signum() == 0) {
+      return 0;
+    }
+    BigInteger gcd = x.abs().gcd(y.abs()).gcd(z);
+    BigInteger rx = x;
+    BigInteger ry = y;
+    BigInteger rz = z;
+    if (gcd.compareTo(BigInteger.ONE) > 0) {
+      rx = x.divide(gcd);
+      ry = y.divide(gcd);
+      rz = z.divide(gcd);
+    }
+    int result = rx.hashCode();
+    result = 31 * result + ry.hashCode();
+    return 31 * result + rz.hashCode();
   }
 
   @Override
@@ -142,7 +159,7 @@ public class RationalPoint extends Point implements Serializable {
     return y.compareTo(tmp) <= 0;
   }
 
-  /** Returns the translation of this point by p_vector. */
+  /** Returns the translation of this point by vector. */
   @Override
   public Point translateBy(Vector vector) {
     if (vector.equals(Vector.ZERO)) {
@@ -172,7 +189,7 @@ public class RationalPoint extends Point implements Serializable {
     return new RationalPoint(result[0], result[1], result[2]);
   }
 
-  /** Returns the difference vector of this point and p_other. */
+  /** Returns the difference vector of this point and other. */
   @Override
   public Vector differenceBy(Point other) {
     Vector tmp = other.differenceBy(this);
@@ -201,9 +218,9 @@ public class RationalPoint extends Point implements Serializable {
   }
 
   /**
-   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to
-   * p_2; Side.ON_THE_RIGHT, if this Point is on the right f the line from p_1 to p_2; and
-   * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
+   * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from 1 to 2;
+   * Side.ON_THE_RIGHT, if this Point is on the right f the line from 1 to 2; and Side.COLLINEAR, if
+   * this Point is collinear with 1 and 2.
    */
   @Override
   public Side sideOf(Point p1, Point p2) {

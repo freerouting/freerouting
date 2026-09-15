@@ -1,0 +1,68 @@
+{
+  "board_id": "kitspace_firefly",
+  "display_name": "kitspace_firefly",
+  "pcbench_directory": "PCBs/kitspace_firefly",
+  "source": "https://github.com/intergalaktik/firefly",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/intergalaktik/firefly/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:24:33.788052+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 21,
+    "components": 80,
+    "dimensions_mm": {
+      "width": 85.0,
+      "height": 70.5
+    },
+    "area_cm2": 59.92,
+    "zones": 15
+  },
+  "reference": {
+    "segments": 611,
+    "vias": 350,
+    "track_length_mm": 1560.37,
+    "kicad_drc_violations": 439,
+    "kicad_drc_breakdown": {
+      "total_violations": 439,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 42,
+        "copper_edge_clearance": 113,
+        "courtyards_overlap": 4,
+        "hole_clearance": 13,
+        "items_not_allowed": 5,
+        "lib_footprint_issues": 4,
+        "lib_footprint_mismatch": 55,
+        "nonmirrored_text_on_back_layer": 2,
+        "shorting_items": 4,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 28,
+        "silk_overlap": 55,
+        "solder_mask_bridge": 4,
+        "starved_thermal": 12,
+        "text_height": 85,
+        "track_dangling": 2,
+        "via_dangling": 2
+      },
+      "by_severity": {
+        "error": 197,
+        "warning": 242
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

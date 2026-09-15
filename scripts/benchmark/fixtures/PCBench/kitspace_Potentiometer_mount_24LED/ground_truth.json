@@ -1,0 +1,27 @@
+{
+  "board": "kitspace_Potentiometer_mount_24LED",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_Potentiometer_mount_24LED\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 1,
+  "segment_count": 482,
+  "approximate_track_length_mm": 3690.62,
+  "kicad_drc_violations": 83,
+  "generated_at": "2026-08-18T19:10:13.254479+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 83,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 1,
+      "isolated_copper": 1,
+      "lib_footprint_issues": 1,
+      "lib_footprint_mismatch": 26,
+      "silk_edge_clearance": 48,
+      "track_dangling": 6
+    },
+    "by_severity": {
+      "error": 1,
+      "warning": 82
+    }
+  }
+}

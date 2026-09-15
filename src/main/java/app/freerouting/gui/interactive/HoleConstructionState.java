@@ -1,9 +1,9 @@
 package app.freerouting.gui.interactive;
 
-import app.freerouting.board.FixedState;
-import app.freerouting.board.Item;
-import app.freerouting.board.ItemSelectionFilter;
-import app.freerouting.board.ObstacleArea;
+import app.freerouting.board.actions.ItemSelectionFilter;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -12,7 +12,7 @@ import app.freerouting.geometry.planar.PolygonShape;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.Shape;
-import app.freerouting.gui.session.GuiBoardManager;
+import app.freerouting.gui.workspace.GuiBoardManager;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -50,7 +50,7 @@ public final class HoleConstructionState extends CornerItemConstructionState {
     ItemSelectionFilter selectionFilter = new ItemSelectionFilter(selectableChoices);
     Collection<Item> foundItems =
         hdlg.getRoutingBoard()
-            .pickItems(pickLocation, hdlg.getInteractiveSettings().getLayer(), selectionFilter);
+            .pickItems(pickLocation, hdlg.getWorkspaceSettings().getLayer(), selectionFilter);
     if (foundItems.size() != 1) {
       hdlg.screenMessages.setStatusMessage(tm.getText("no_item_found_for_adding_hole"));
       return false;
@@ -140,7 +140,7 @@ public final class HoleConstructionState extends CornerItemConstructionState {
             .insertObstacle(
                 newObsArea,
                 itemToModify.getLayer(),
-                itemToModify.clearanceClassNo(),
+                itemToModify.clearanceClassIndex(),
                 FixedState.UNFIXED);
         if (this.observersActivated) {
           hdlg.getRoutingBoard().endNotifyObservers();

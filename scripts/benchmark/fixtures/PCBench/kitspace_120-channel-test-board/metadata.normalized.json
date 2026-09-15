@@ -1,0 +1,54 @@
+{
+  "board_id": "kitspace_120-channel-test-board",
+  "display_name": "kitspace_120-channel-test-board",
+  "pcbench_directory": "PCBs/kitspace_120-channel-test-board",
+  "source": "https://github.com/sci-bots/dropbot-120-channel-test-board.kicad",
+  "author": "",
+  "license": "[{'name': 'Creative Commons', 'link': 'https://raw.githubusercontent.com/sci-bots/dropbot-120-channel-test-board.kicad/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:21:21.113259+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 128,
+    "components": 258,
+    "dimensions_mm": {
+      "width": 76.01,
+      "height": 50.79
+    },
+    "area_cm2": 38.61,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 1125,
+    "vias": 285,
+    "track_length_mm": 2806.62,
+    "kicad_drc_violations": 570,
+    "kicad_drc_breakdown": {
+      "total_violations": 570,
+      "unconnected_count": 0,
+      "by_type": {
+        "holes_co_located": 60,
+        "lib_footprint_issues": 199,
+        "silk_over_copper": 199,
+        "silk_overlap": 112
+      },
+      "by_severity": {
+        "warning": 570
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "tier-c",
+    "zone"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

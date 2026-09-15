@@ -1,0 +1,30 @@
+{
+  "board": "OpenVNAVI_driver unit",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\OpenVNAVI_driver unit\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 45,
+  "segment_count": 1270,
+  "approximate_track_length_mm": 2684.98,
+  "kicad_drc_violations": 739,
+  "generated_at": "2026-08-18T19:30:33.606708+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 739,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 7,
+      "clearance": 499,
+      "invalid_outline": 8,
+      "lib_footprint_issues": 78,
+      "padstack": 6,
+      "silk_over_copper": 10,
+      "silk_overlap": 50,
+      "text_height": 66,
+      "track_dangling": 15
+    },
+    "by_severity": {
+      "error": 514,
+      "warning": 225
+    }
+  }
+}

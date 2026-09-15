@@ -40,3 +40,14 @@ gha-creds-*.json
 /scripts/benchmark/results/comparison-*/
 /scripts/benchmark/binaries/freerouting-current-*.jar
 /scripts/i18n/__pycache__
+/scripts/i18n/.*progress.json
+
+# Autopilot loop artifacts
+/.worktrees/
+/external/PCBench/
+/experiments/*/
+!/experiments/REPORT.md
+!/experiments/experiments.jsonl
+/scripts/pcbench/cache/
+/scripts/pcbench/__pycache__/
+scripts/benchmark/results/.benchmark.lock

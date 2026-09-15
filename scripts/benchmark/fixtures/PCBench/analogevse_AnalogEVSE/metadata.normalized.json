@@ -1,0 +1,62 @@
+{
+  "board_id": "analogevse_AnalogEVSE",
+  "display_name": "analogevse_AnalogEVSE",
+  "pcbench_directory": "PCBs/analogevse_AnalogEVSE",
+  "source": "https://github.com/helmutheinz2002/analogevse",
+  "author": "helmutheinz2002",
+  "license": "BSD 2-Clause \"Simplified\" License",
+  "license_spdx": "BSD-2-Clause",
+  "retrieved_at": "2023-08-17T17:22:34.409844+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 42,
+    "components": 80,
+    "dimensions_mm": {
+      "width": 101.71,
+      "height": 84.69
+    },
+    "area_cm2": 86.14,
+    "zones": 9
+  },
+  "reference": {
+    "segments": 475,
+    "vias": 4,
+    "track_length_mm": 1896.31,
+    "kicad_drc_violations": 516,
+    "kicad_drc_breakdown": {
+      "total_violations": 516,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 4,
+        "clearance": 198,
+        "copper_edge_clearance": 4,
+        "hole_to_hole": 2,
+        "holes_co_located": 8,
+        "lib_footprint_issues": 79,
+        "padstack": 4,
+        "silk_over_copper": 14,
+        "silk_overlap": 199,
+        "track_dangling": 3,
+        "zones_intersect": 1
+      },
+      "by_severity": {
+        "error": 207,
+        "warning": 309
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,3102 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 54)
+    (tracks 624)
+    (zones 0)
+    (modules 43)
+    (nets 53)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user hide)
+    (48 B.Fab user hide)
+    (49 F.Fab user hide)
+  )
+
+  (setup
+    (last_trace_width 0.2032)
+    (user_trace_width 0.2032)
+    (user_trace_width 0.508)
+    (user_trace_width 0.762)
+    (user_trace_width 1.016)
+    (user_trace_width 1.27)
+    (user_trace_width 1.524)
+    (user_trace_width 1.778)
+    (user_trace_width 2.032)
+    (trace_clearance 0.2032)
+    (zone_clearance 0.254)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.6)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (user_via 0.5 0.3)
+    (user_via 0.6 0.4)
+    (user_via 0.8 0.5)
+    (user_via 1 0.6)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0)
+    (uvia_min_drill 0)
+    (edge_width 0.254)
+    (segment_width 0.254)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.254)
+    (mod_text_size 1 1)
+    (mod_text_width 0.254)
+    (pad_size 1 1)
+    (pad_drill 0)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 125 120)
+    (visible_elements 7FFEFE7F)
+    (pcbplotparams
+      (layerselection 0x00030_80000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory ""))
+  )
+
+  (net 0 "")
+  (net 1 GND)
+  (net 2 +5V)
+  (net 3 +3V3)
+  (net 4 /EXTCLK)
+  (net 5 "Net-(C1-Pad2)")
+  (net 6 "Net-(C4-Pad2)")
+  (net 7 "Net-(IrDA1-Pad1)")
+  (net 8 "Net-(IrDA1-Pad2)")
+  (net 9 "Net-(IrDA1-Pad5)")
+  (net 10 "Net-(IRDA_LS_E1-Pad1)")
+  (net 11 "Net-(PS2_KEYBOARD1-Pad1)")
+  (net 12 "Net-(PS2_KEYBOARD1-Pad2)")
+  (net 13 "Net-(PS2_KEYBOARD1-Pad5)")
+  (net 14 "Net-(PS2_KEYBOARD1-Pad6)")
+  (net 15 "Net-(PS2_KEYBOARD1-Pad7)")
+  (net 16 "Net-(PS2_KEYBOARD1-Pad8)")
+  (net 17 "Net-(R12-Pad2)")
+  (net 18 "Net-(VGA1-Pad4)")
+  (net 19 "Net-(VGA1-Pad11)")
+  (net 20 "Net-(VGA1-Pad12)")
+  (net 21 "Net-(VGA1-Pad15)")
+  (net 22 "Net-(IrDA1-Pad4)")
+  (net 23 "Net-(R13-Pad2)")
+  (net 24 "Net-(R17-Pad2)")
+  (net 25 /GPIO_Pin<5>)
+  (net 26 /GPIO_Pin<7>)
+  (net 27 /GPIO_Pin<9>)
+  (net 28 /IrDA_SC)
+  (net 29 /IrDA_Rx)
+  (net 30 /GPIO_Pin<11>)
+  (net 31 /PS2_CLK)
+  (net 32 /GPIO_Pin<13>)
+  (net 33 /PS2_DATA)
+  (net 34 /GPIO_Pin<15>)
+  (net 35 /VGA_VSYNC)
+  (net 36 /GPIO_Pin<17>)
+  (net 37 /VGA_HSYNC)
+  (net 38 /GPIO_Pin<19>)
+  (net 39 /VGA_BLUE1)
+  (net 40 /GPIO_Pin<25>)
+  (net 41 /VGA_RED3)
+  (net 42 /GPIO_Pin<31>)
+  (net 43 /VGA_GREEN1)
+  (net 44 /IrDA_Tx)
+  (net 45 /VGA_RED2)
+  (net 46 /VGA_GREEN3)
+  (net 47 /VGA_GREEN2)
+  (net 48 /VGA_RED1)
+  (net 49 /VGA_BLUE3)
+  (net 50 /VGA_BLUE2)
+  (net 51 /GPIO_Pin<23>)
+  (net 52 /GPIO_Pin<21>)
+
+  (net_class Default "This is the default net class."
+    (clearance 0.2032)
+    (trace_width 0.2032)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +3V3)
+    (add_net +5V)
+    (add_net /EXTCLK)
+    (add_net /GPIO_Pin<11>)
+    (add_net /GPIO_Pin<13>)
+    (add_net /GPIO_Pin<15>)
+    (add_net /GPIO_Pin<17>)
+    (add_net /GPIO_Pin<19>)
+    (add_net /GPIO_Pin<21>)
+    (add_net /GPIO_Pin<23>)
+    (add_net /GPIO_Pin<25>)
+    (add_net /GPIO_Pin<31>)
+    (add_net /GPIO_Pin<5>)
+    (add_net /GPIO_Pin<7>)
+    (add_net /GPIO_Pin<9>)
+    (add_net /IrDA_Rx)
+    (add_net /IrDA_SC)
+    (add_net /IrDA_Tx)
+    (add_net /PS2_CLK)
+    (add_net /PS2_DATA)
+    (add_net /VGA_BLUE1)
+    (add_net /VGA_BLUE2)
+    (add_net /VGA_BLUE3)
+    (add_net /VGA_GREEN1)
+    (add_net /VGA_GREEN2)
+    (add_net /VGA_GREEN3)
+    (add_net /VGA_HSYNC)
+    (add_net /VGA_RED1)
+    (add_net /VGA_RED2)
+    (add_net /VGA_RED3)
+    (add_net /VGA_VSYNC)
+    (add_net GND)
+    (add_net "Net-(C1-Pad2)")
+    (add_net "Net-(C4-Pad2)")
+    (add_net "Net-(IRDA_LS_E1-Pad1)")
+    (add_net "Net-(IrDA1-Pad1)")
+    (add_net "Net-(IrDA1-Pad2)")
+    (add_net "Net-(IrDA1-Pad4)")
+    (add_net "Net-(IrDA1-Pad5)")
+    (add_net "Net-(PS2_KEYBOARD1-Pad1)")
+    (add_net "Net-(PS2_KEYBOARD1-Pad2)")
+    (add_net "Net-(PS2_KEYBOARD1-Pad5)")
+    (add_net "Net-(PS2_KEYBOARD1-Pad6)")
+    (add_net "Net-(PS2_KEYBOARD1-Pad7)")
+    (add_net "Net-(PS2_KEYBOARD1-Pad8)")
+    (add_net "Net-(R12-Pad2)")
+    (add_net "Net-(R13-Pad2)")
+    (add_net "Net-(R17-Pad2)")
+    (add_net "Net-(VGA1-Pad11)")
+    (add_net "Net-(VGA1-Pad12)")
+    (add_net "Net-(VGA1-Pad15)")
+    (add_net "Net-(VGA1-Pad4)")
+  )
+
+  (module OLIMEX_LOGOs-FP:LOGO_OPENHARDWARE_8x8 (layer B.Cu) (tedit 55534E4A) (tstamp 56F5539A)
+    (at 147.828 89.9795 180)
+    (fp_text reference Noname_8 (at 0 -0.5 180) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value "" (at 0 0.5 180) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start -1.22682 -2.46126) (end -0.67564 -1.03886) (layer B.SilkS) (width 0.42))
+    (fp_line (start -1.57226 -2.27584) (end -1.25476 -2.48158) (layer B.SilkS) (width 0.37))
+    (fp_line (start -2.3622 -2.82448) (end -1.58242 -2.29362) (layer B.SilkS) (width 0.4))
+    (fp_line (start -2.93878 -2.286) (end -2.3749 -2.82448) (layer B.SilkS) (width 0.38))
+    (fp_line (start -2.92354 -2.286) (end -2.39014 -1.45288) (layer B.SilkS) (width 0.37))
+    (fp_line (start -2.74828 -0.52578) (end -2.39014 -1.4097) (layer B.SilkS) (width 0.37))
+    (fp_line (start -3.72618 -0.28448) (end -2.77622 -0.50292) (layer B.SilkS) (width 0.37))
+    (fp_line (start -3.71602 0.49276) (end -3.7211 -0.29464) (layer B.SilkS) (width 0.38))
+    (fp_line (start -3.72872 0.50546) (end -2.71018 0.6858) (layer B.SilkS) (width 0.37))
+    (fp_line (start -2.6797 0.72136) (end -2.33172 1.5875) (layer B.SilkS) (width 0.37))
+    (fp_line (start -2.9083 2.4892) (end -2.35204 1.6383) (layer B.SilkS) (width 0.37))
+    (fp_line (start -2.91846 2.51206) (end -2.41808 3.04546) (layer B.SilkS) (width 0.38))
+    (fp_line (start -2.36982 3.07086) (end -1.54178 2.41808) (layer B.SilkS) (width 0.37))
+    (fp_line (start -1.48082 2.42824) (end -0.635 2.83464) (layer B.SilkS) (width 0.37))
+    (fp_line (start -0.37592 3.86842) (end -0.58166 2.85496) (layer B.SilkS) (width 0.37))
+    (fp_line (start -0.38354 3.88112) (end 0.40132 3.88112) (layer B.SilkS) (width 0.37))
+    (fp_line (start 0.38354 3.8608) (end 0.5969 2.84226) (layer B.SilkS) (width 0.37))
+    (fp_line (start 0.5969 2.84226) (end 1.4986 2.39268) (layer B.SilkS) (width 0.37))
+    (fp_line (start 1.5113 2.39776) (end 2.41554 3.0322) (layer B.SilkS) (width 0.37))
+    (fp_line (start 2.41554 3.03022) (end 2.96926 2.48412) (layer B.SilkS) (width 0.37))
+    (fp_line (start 2.96926 2.48158) (end 2.35204 1.69164) (layer B.SilkS) (width 0.37))
+    (fp_line (start 2.35204 1.69164) (end 2.6924 0.75438) (layer B.SilkS) (width 0.37))
+    (fp_line (start 2.6924 0.75438) (end 3.77444 0.52578) (layer B.SilkS) (width 0.37))
+    (fp_line (start 3.77444 0.52578) (end 3.77444 -0.30988) (layer B.SilkS) (width 0.37))
+    (fp_line (start 3.77444 -0.30988) (end 2.76098 -0.48006) (layer B.SilkS) (width 0.37))
+    (fp_line (start 2.76098 -0.48006) (end 2.35458 -1.39192) (layer B.SilkS) (width 0.37))
+    (fp_line (start 2.40538 -2.83972) (end 1.56972 -2.2733) (layer B.SilkS) (width 0.37))
+    (fp_line (start 1.56972 -2.2733) (end 1.2319 -2.45872) (layer B.SilkS) (width 0.37))
+    (fp_line (start 1.2319 -2.45872) (end 0.65786 -1.01854) (layer B.SilkS) (width 0.37))
+    (fp_line (start 2.35458 -1.39192) (end 2.97434 -2.27838) (layer B.SilkS) (width 0.37))
+    (fp_line (start 2.42062 -2.8321) (end 2.97434 -2.286) (layer B.SilkS) (width 0.37))
+    (fp_line (start -1.14554 -2.6416) (end -0.4953 -0.97282) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.52908 -2.4384) (end -1.18364 -2.65938) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.54178 -2.42824) (end -2.36728 -2.99212) (layer B.SilkS) (width 0.15))
+    (fp_line (start -2.3749 -2.99974) (end -3.09626 -2.30632) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.10388 -2.30378) (end -2.50698 -1.44018) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.86588 -0.39624) (end -2.794 -0.59182) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.86588 0.5969) (end -3.86588 -0.38862) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.86842 0.59944) (end -2.69748 0.80264) (layer B.SilkS) (width 0.15))
+    (fp_line (start -2.79908 0.79756) (end -2.4638 1.63068) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.0607 2.48158) (end -2.46634 1.62814) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.08102 2.51714) (end -2.40792 3.23088) (layer B.SilkS) (width 0.15))
+    (fp_line (start -2.39522 3.23342) (end -1.42494 2.51714) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.4605 2.58572) (end -0.55626 2.96418) (layer B.SilkS) (width 0.15))
+    (fp_line (start -0.47244 3.98018) (end -0.6731 2.95402) (layer B.SilkS) (width 0.15))
+    (fp_line (start -0.46228 3.9878) (end 0.50292 3.9878) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.50292 3.9878) (end 0.72898 2.81686) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.71882 2.89814) (end 1.524 2.56032) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.40462 2.51206) (end 2.41554 3.18516) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.42062 3.1877) (end 3.11404 2.49682) (layer B.SilkS) (width 0.15))
+    (fp_line (start 3.11912 2.4892) (end 2.41554 1.4986) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.50444 1.60782) (end 2.8702 0.73914) (layer B.SilkS) (width 0.15))
+    (fp_line (start 3.80746 -0.16256) (end 2.70002 -0.38608) (layer B.SilkS) (width 0.15))
+    (fp_line (start 3.89128 0.57912) (end 3.88874 -0.37846) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.75336 -0.6096) (end 3.87604 -0.39878) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.8575 -0.57658) (end 2.4765 -1.55702) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.82448 -2.21234) (end 2.33934 -2.7432) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.42824 -2.98704) (end 3.1115 -2.29616) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.54178 -2.37236) (end 2.41808 -2.99212) (layer B.SilkS) (width 0.15))
+    (fp_line (start 2.40538 -2.67716) (end 1.58496 -2.14884) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.72212 -2.34442) (end 1.1938 -2.67208) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.1938 -2.67208) (end 0.80772 -1.69164) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.80264 -0.99314) (end 1.33096 -2.3749) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.57378 0.40894) (end -3.57378 -0.2413) (layer B.SilkS) (width 0.15))
+    (fp_line (start -3.71602 0.35306) (end -2.60096 0.59944) (layer B.SilkS) (width 0.15))
+    (fp_line (start -2.18694 1.62052) (end -2.57302 0.6223) (layer B.SilkS) (width 0.15))
+    (fp_line (start -2.18186 1.61544) (end -2.78384 2.52476) (layer B.SilkS) (width 0.15))
+    (fp_line (start -2.4257 2.96926) (end -1.54178 2.2479) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.84582 -1.05156) (end 1.02362 -0.92964) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.02362 -0.92964) (end 1.39954 -0.21844) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.39954 -0.21844) (end 1.39954 0.29972) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.40462 0.28702) (end 1.17094 0.96012) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.17094 0.96012) (end 0.6604 1.38938) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.6604 1.38938) (end -0.15494 1.5494) (layer B.SilkS) (width 0.15))
+    (fp_line (start -0.15494 1.55702) (end -1.02616 1.12776) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.02616 1.12776) (end -1.44526 0.39624) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.45034 0.39116) (end -1.31826 -0.4318) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.31318 -0.46228) (end -1.2192 -0.63246) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.31318 -0.46228) (end -1.2192 -0.63246) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.08966 -0.68326) (end -0.83058 -1.02108) (layer B.SilkS) (width 0.15))
+    (fp_line (start -0.72136 -0.79756) (end -0.4953 -0.97282) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.77978 -0.8001) (end 0.52578 -0.9652) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.64262 -1.25476) (end 0.5207 -0.97028) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.5367 2.25044) (end -0.55372 2.7432) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.2065 -0.66294) (end -0.89916 -0.92964) (layer B.SilkS) (width 0.15))
+    (fp_line (start -2.2225 -2.09296) (end -1.36906 -1.07188) (layer B.SilkS) (width 1))
+    (fp_line (start -3.25882 0.11176) (end -1.8415 0.17272) (layer B.SilkS) (width 1))
+    (fp_line (start -2.2733 2.39776) (end -1.21158 1.29032) (layer B.SilkS) (width 1))
+    (fp_line (start -0.0127 3.37312) (end -0.00762 1.85928) (layer B.SilkS) (width 1))
+    (fp_line (start 2.25298 2.31648) (end 1.14046 1.24968) (layer B.SilkS) (width 1))
+    (fp_line (start 3.24358 0.13208) (end 1.77546 0.04572) (layer B.SilkS) (width 1))
+    (fp_line (start -1.54686 -1.92024) (end -1.1811 -1.15824) (layer B.SilkS) (width 1))
+    (fp_line (start -2.21234 -1.02108) (end -1.64846 -0.54102) (layer B.SilkS) (width 1))
+    (fp_line (start -2.46126 -0.37592) (end -1.75514 -0.24892) (layer B.SilkS) (width 1))
+    (fp_line (start -2.13614 0.86868) (end -1.69418 0.70866) (layer B.SilkS) (width 1))
+    (fp_line (start -1.96088 1.34874) (end -1.50368 1.05918) (layer B.SilkS) (width 1))
+    (fp_line (start -0.96266 2.12598) (end -0.7874 1.76784) (layer B.SilkS) (width 1))
+    (fp_line (start -0.52832 2.38506) (end -0.36068 1.77546) (layer B.SilkS) (width 1))
+    (fp_line (start 0.7366 2.36982) (end 0.51562 1.68402) (layer B.SilkS) (width 1))
+    (fp_line (start 1.32334 2.11836) (end 0.90424 1.53162) (layer B.SilkS) (width 1))
+    (fp_line (start 2.19202 1.24968) (end 1.5367 0.88392) (layer B.SilkS) (width 1))
+    (fp_line (start 2.43332 0.55626) (end 1.71196 0.40894) (layer B.SilkS) (width 1))
+    (fp_line (start 1.59766 -0.60198) (end 2.20726 -0.70866) (layer B.SilkS) (width 1))
+    (fp_line (start 1.27762 -1.02108) (end 1.89484 -1.34874) (layer B.SilkS) (width 1))
+    (fp_line (start 1.16332 -1.15824) (end 2.34442 -2.1717) (layer B.SilkS) (width 1))
+    (fp_line (start 1.16332 -1.0668) (end 1.49606 -1.79832) (layer B.SilkS) (width 1))
+    (fp_text user hardware (at 2.51206 -4.2672 180) (layer B.SilkS)
+      (effects (font (size 1 1) (thickness 0.18)) (justify mirror))
+    )
+    (fp_text user open (at -3.40106 -4.17576 180) (layer B.SilkS)
+      (effects (font (size 1.1 1.1) (thickness 0.254)) (justify mirror))
+    )
+    (fp_arc (start 0.0635 0.11684) (end -0.8255 -0.84836) (angle -90) (layer B.SilkS) (width 0.37))
+    (fp_arc (start -0.0127 -0.03048) (end -0.8763 1.03124) (angle -90) (layer B.SilkS) (width 0.37))
+    (fp_arc (start -0.07874 0.1016) (end 1.03886 0.84836) (angle -90) (layer B.SilkS) (width 0.37))
+  )
+
+  (module "OLIMEX_Connectors-FP:VGA15-F(CD0515S21J0)" (layer F.Cu) (tedit 56FA2333) (tstamp 56D9FAC7)
+    (at 147.5 78 180)
+    (path /56D6B31F)
+    (attr smd)
+    (fp_text reference VGA1 (at -11.758 -9.757 180) (layer F.SilkS)
+      (effects (font (size 1.1 1.1) (thickness 0.254)))
+    )
+    (fp_text value "VGA15-F(CD0515S21J0)" (at -2.233 9.293 180) (layer F.Fab)
+      (effects (font (size 1.1 1.1) (thickness 0.254)))
+    )
+    (fp_line (start 15.47368 4.2418) (end -15.494 4.2418) (layer F.SilkS) (width 0.254))
+    (fp_line (start 15.47368 7.91464) (end -15.3797 7.91464) (layer F.SilkS) (width 0.254))
+    (fp_line (start 7.62 13.54074) (end -7.62 13.54074) (layer F.SilkS) (width 0.254))
+    (fp_line (start -8.128 8.53948) (end -8.128 13.03274) (layer F.SilkS) (width 0.254))
+    (fp_line (start 8.128 8.53948) (end 8.128 13.03274) (layer F.SilkS) (width 0.254))
+    (fp_line (start -15.494 -7.747) (end -15.494 4.2418) (layer F.SilkS) (width 0.254))
+    (fp_line (start -14.986 -8.255) (end -15.494 -7.747) (layer F.SilkS) (width 0.254))
+    (fp_line (start -10.033 -8.255) (end -14.986 -8.255) (layer F.SilkS) (width 0.254))
+    (fp_line (start -9.525 -7.747) (end -10.033 -8.255) (layer F.SilkS) (width 0.254))
+    (fp_line (start -9.525 -7.747) (end -9.525 4.2418) (layer F.SilkS) (width 0.254))
+    (fp_line (start 9.525 -7.747) (end 9.525 4.2418) (layer F.SilkS) (width 0.254))
+    (fp_line (start 10.033 -8.255) (end 9.525 -7.747) (layer F.SilkS) (width 0.254))
+    (fp_line (start 10.033 -8.255) (end 14.859 -8.255) (layer F.SilkS) (width 0.254))
+    (fp_line (start 15.494 -7.62) (end 15.494 7.89686) (layer F.SilkS) (width 0.254))
+    (fp_line (start 14.859 -8.255) (end 15.494 -7.62) (layer F.SilkS) (width 0.254))
+    (fp_line (start -9.4869 6.98754) (end -9.6139 6.98754) (layer F.SilkS) (width 0.254))
+    (fp_line (start -9.4869 4.8768) (end -9.4869 6.98754) (layer F.SilkS) (width 0.254))
+    (fp_line (start -9.6139 6.98754) (end -9.6139 7.89686) (layer F.SilkS) (width 0.254))
+    (fp_line (start 9.4869 4.8768) (end 9.4869 6.98754) (layer F.SilkS) (width 0.254))
+    (fp_line (start 9.4869 6.98754) (end -9.4869 6.98754) (layer F.SilkS) (width 0.254))
+    (fp_line (start 9.6139 6.98754) (end 9.4869 6.98754) (layer F.SilkS) (width 0.254))
+    (fp_line (start 9.6139 6.98754) (end 9.6139 7.89686) (layer F.SilkS) (width 0.254))
+    (fp_line (start -15.494 7.89686) (end -15.494 4.2418) (layer F.SilkS) (width 0.254))
+    (fp_line (start 4.1275 -2.2098) (end 4.1275 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 4.1275 -5.3086) (end 4.52882 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 4.52882 -2.2098) (end 4.52882 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 4.1275 -2.2098) (end 4.52882 -2.2098) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 1.8415 -2.2098) (end 1.8415 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 1.8415 -5.3086) (end 2.24282 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 2.24282 -2.2098) (end 2.24282 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 1.8415 -2.2098) (end 2.24282 -2.2098) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.44196 -2.2098) (end -0.44196 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.44196 -5.3086) (end -0.04064 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.04064 -2.2098) (end -0.04064 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.44196 -2.2098) (end -0.04064 -2.2098) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -2.72796 -2.2098) (end -2.72796 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -2.72796 -5.3086) (end -2.32664 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -2.32664 -2.2098) (end -2.32664 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -2.72796 -2.2098) (end -2.32664 -2.2098) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -5.01396 -2.2098) (end -5.01396 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -5.01396 -5.3086) (end -4.61264 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -4.61264 -2.2098) (end -4.61264 -5.3086) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -5.01396 -2.2098) (end -4.61264 -2.2098) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 4.1275 4.2418) (end 4.1275 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 4.1275 -0.2667) (end 4.52882 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 4.52882 4.2418) (end 4.52882 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 4.1275 4.2418) (end 4.52882 4.2418) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 1.8415 4.2418) (end 1.8415 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 1.8415 -0.2667) (end 2.24282 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 2.24282 4.2418) (end 2.24282 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 1.8415 4.2418) (end 2.24282 4.2418) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -5.01396 4.2418) (end -5.01396 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -5.01396 -0.2667) (end -4.61264 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -4.61264 4.2418) (end -4.61264 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -5.01396 4.2418) (end -4.61264 4.2418) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -2.72796 4.2418) (end -2.72796 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -2.72796 -0.2667) (end -2.32664 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -2.32664 4.2418) (end -2.32664 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -2.72796 4.2418) (end -2.32664 4.2418) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.44196 4.2418) (end -0.44196 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.44196 -0.2667) (end -0.04064 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.04064 4.2418) (end -0.04064 -0.2667) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -0.44196 4.2418) (end -0.04064 4.2418) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 5.2705 4.22148) (end 5.2705 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 5.2705 -1.87706) (end 5.67182 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 5.67182 4.22148) (end 5.67182 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 5.2705 4.22148) (end 5.67182 4.22148) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 2.9845 4.22148) (end 2.9845 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 2.9845 -1.87706) (end 3.38582 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 3.38582 4.22148) (end 3.38582 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 2.9845 4.22148) (end 3.38582 4.22148) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -3.87096 4.22148) (end -3.87096 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -3.87096 -1.87706) (end -3.46964 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -3.46964 4.22148) (end -3.46964 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -3.87096 4.22148) (end -3.46964 4.22148) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -1.58496 4.22148) (end -1.58496 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -1.58496 -1.87706) (end -1.18364 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -1.18364 4.22148) (end -1.18364 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -1.58496 4.22148) (end -1.18364 4.22148) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.6985 4.22148) (end 0.6985 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.6985 -1.87706) (end 1.09982 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 1.09982 4.22148) (end 1.09982 -1.87706) (layer F.SilkS) (width 0.06604))
+    (fp_line (start 0.6985 4.22148) (end 1.09982 4.22148) (layer F.SilkS) (width 0.06604))
+    (fp_line (start -4.8133 -5.1181) (end -4.8133 -2.3876) (layer F.SilkS) (width 0.4))
+    (fp_line (start -2.5273 -5.1308) (end -2.5273 -2.4003) (layer F.SilkS) (width 0.4))
+    (fp_line (start -0.2413 -5.1308) (end -0.2413 -2.4003) (layer F.SilkS) (width 0.4))
+    (fp_line (start 2.0447 -5.1308) (end 2.0447 -2.4003) (layer F.SilkS) (width 0.4))
+    (fp_line (start 4.318 -5.1308) (end 4.318 -2.4003) (layer F.SilkS) (width 0.4))
+    (fp_line (start -4.8133 -0.0635) (end -4.8133 4.0513) (layer F.SilkS) (width 0.4))
+    (fp_line (start -2.5273 -0.0635) (end -2.5273 4.0513) (layer F.SilkS) (width 0.4))
+    (fp_line (start -0.2413 -0.0889) (end -0.2413 4.0259) (layer F.SilkS) (width 0.4))
+    (fp_line (start 2.032 -0.0762) (end 2.032 4.0386) (layer F.SilkS) (width 0.4))
+    (fp_line (start 4.318 -0.0762) (end 4.318 4.0386) (layer F.SilkS) (width 0.4))
+    (fp_line (start -3.683 -1.7018) (end -3.683 4.0767) (layer F.SilkS) (width 0.4))
+    (fp_line (start -1.397 -1.7018) (end -1.397 4.0767) (layer F.SilkS) (width 0.4))
+    (fp_line (start 0.889 -1.7018) (end 0.889 4.0767) (layer F.SilkS) (width 0.4))
+    (fp_line (start 3.175 -1.7018) (end 3.175 4.0767) (layer F.SilkS) (width 0.4))
+    (fp_line (start 5.461 -1.7018) (end 5.461 4.0767) (layer F.SilkS) (width 0.4))
+    (fp_line (start -4.9276 -5.2324) (end -4.699 -5.2324) (layer F.SilkS) (width 0.2))
+    (fp_line (start -4.9276 -2.286) (end -4.699 -2.286) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.6416 -5.2324) (end -2.413 -5.2324) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.6416 -2.2987) (end -2.413 -2.2987) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.3556 -5.2324) (end -0.127 -5.2324) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.3556 -2.286) (end -0.127 -2.286) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.9304 -5.2324) (end 2.159 -5.2324) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.9304 -2.286) (end 2.159 -2.286) (layer F.SilkS) (width 0.2))
+    (fp_line (start 4.2037 -5.2324) (end 4.4323 -5.2324) (layer F.SilkS) (width 0.2))
+    (fp_line (start 4.2164 -2.286) (end 4.445 -2.286) (layer F.SilkS) (width 0.2))
+    (fp_line (start 5.3594 -1.8034) (end 5.588 -1.8034) (layer F.SilkS) (width 0.2))
+    (fp_line (start 4.2164 -0.1778) (end 4.445 -0.1778) (layer F.SilkS) (width 0.2))
+    (fp_line (start 3.0734 -1.7907) (end 3.302 -1.7907) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.9177 -0.1905) (end 2.1463 -0.1905) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.7747 -1.8034) (end 1.0033 -1.8034) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.3556 -0.1905) (end -0.127 -0.1905) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.4986 -1.8034) (end -1.27 -1.8034) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.6416 -0.1905) (end -2.413 -0.1905) (layer F.SilkS) (width 0.2))
+    (fp_line (start -3.7846 -1.8034) (end -3.556 -1.8034) (layer F.SilkS) (width 0.2))
+    (fp_line (start -4.9276 -0.1905) (end -4.699 -0.1905) (layer F.SilkS) (width 0.2))
+    (fp_text user 6 (at 7.239 -3.683 180) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.254)))
+    )
+    (fp_text user 10 (at -7.239 -3.81 180) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.254)))
+    )
+    (fp_text user 15 (at -7.366 -1.27 180) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.254)))
+    )
+    (fp_text user 11 (at 7.366 -1.27 180) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.254)))
+    )
+    (fp_text user "HDF15 CONEC" (at 0.3556 10.6934 180) (layer F.Fab)
+      (effects (font (size 1.4 1.3) (thickness 0.254)))
+    )
+    (fp_text user Female (at 5.4864 5.5372 180) (layer F.SilkS)
+      (effects (font (size 1.4 1.3) (thickness 0.254)))
+    )
+    (fp_text user 1 (at 7.239 -6.223 180) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.254)))
+    )
+    (fp_text user 5 (at -7.239 -6.35 180) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.254)))
+    )
+    (fp_arc (start 7.62 13.03274) (end 8.128 13.03274) (angle 90) (layer F.SilkS) (width 0.254))
+    (fp_arc (start -7.62 13.03274) (end -7.62 13.54074) (angle 90) (layer F.SilkS) (width 0.254))
+    (fp_arc (start 8.8519 4.8768) (end 8.8519 4.2418) (angle 90) (layer F.SilkS) (width 0.254))
+    (fp_arc (start -8.8519 4.8768) (end -9.4869 4.8768) (angle 90) (layer F.SilkS) (width 0.254))
+    (fp_arc (start 8.76046 8.53948) (end 8.128 8.53948) (angle 90) (layer F.SilkS) (width 0.254))
+    (fp_arc (start -8.76046 8.53948) (end -8.76046 7.90448) (angle 90) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole circle (at 4.329 -6.35 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 17 "Net-(R12-Pad2)"))
+    (pad 2 thru_hole circle (at 2.043 -6.35 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 23 "Net-(R13-Pad2)"))
+    (pad 3 thru_hole circle (at -0.243 -6.35 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 24 "Net-(R17-Pad2)"))
+    (pad 4 thru_hole circle (at -2.529 -6.35 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 18 "Net-(VGA1-Pad4)"))
+    (pad 5 thru_hole circle (at -4.815 -6.35 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 6 thru_hole circle (at 5.472 -3.81 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 7 thru_hole circle (at 3.186 -3.81 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 8 thru_hole circle (at 0.9 -3.81 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 9 thru_hole circle (at -1.386 -3.81 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 10 thru_hole circle (at -3.672 -3.81 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 11 thru_hole circle (at 4.329 -1.27 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 19 "Net-(VGA1-Pad11)"))
+    (pad 12 thru_hole circle (at 2.043 -1.27 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 20 "Net-(VGA1-Pad12)"))
+    (pad 13 thru_hole circle (at -0.243 -1.27 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 37 /VGA_HSYNC))
+    (pad 14 thru_hole circle (at -2.529 -1.27 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 35 /VGA_VSYNC))
+    (pad 15 thru_hole circle (at -4.815 -1.27 180) (size 1.4 1.4) (drill 0.9) (layers *.Cu *.Mask)
+      (net 21 "Net-(VGA1-Pad15)"))
+    (pad 16 thru_hole circle (at -12.497 -3.81 180) (size 5.1 5.1) (drill 3.3) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 17 thru_hole circle (at 12.497 -3.81 180) (size 5.1 5.1) (drill 3.3) (layers *.Cu *.Mask)
+      (net 1 GND))
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52BC0) (tstamp 56E6CCB6)
+    (at 156.591 112.014 90)
+    (tags C0402)
+    (path /56DFFA94)
+    (attr smd)
+    (fp_text reference R23 (at -2.286 0.127 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.2)))
+    )
+    (fp_text value NA (at 1.397 0 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(IrDA1-Pad5)") (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(IRDA_LS_E1-Pad1)") (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52BB1) (tstamp 56BB22CC)
+    (at 158.75 112.014 270)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D9DEE3)
+    (attr smd)
+    (fp_text reference C1 (at 2.667 0 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.2)))
+    )
+    (fp_text value 22uF/6.3V (at 0.635 -0.889 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 270) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 270) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C1-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52BCB) (tstamp 56BB23FF)
+    (at 161.925 112.014 270)
+    (tags C0402)
+    (path /56DBED65)
+    (attr smd)
+    (fp_text reference R1 (at 2.667 -0.254 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.2)))
+    )
+    (fp_text value NA (at -1.397 -0.0635 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 28 /IrDA_SC) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(IRDA_LS_E1-Pad1)") (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52BC5) (tstamp 56BB2405)
+    (at 160.909 112.014 90)
+    (tags C0402)
+    (path /56DA17C4)
+    (attr smd)
+    (fp_text reference R2 (at -2.667 0.254 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.2)))
+    )
+    (fp_text value 10k (at 1.5875 0 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(IRDA_LS_E1-Pad1)") (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52BD2) (tstamp 56BB240B)
+    (at 154.305 112.014 90)
+    (tags C0402)
+    (path /56DA0253)
+    (attr smd)
+    (fp_text reference R3 (at -2.667 0 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.2)))
+    )
+    (fp_text value "NA(10k)" (at 2.667 -0.127 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 29 /IrDA_Rx) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52BB8) (tstamp 56BB2411)
+    (at 155.575 112.014 90)
+    (tags C0402)
+    (path /56DA7B08)
+    (attr smd)
+    (fp_text reference R4 (at -2.667 0 90) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.2)))
+    )
+    (fp_text value NA (at 1.397 0 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(IrDA1-Pad4)") (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0402_5MIL_DWS (layer F.Cu) (tedit 56F52BAA) (tstamp 56CF147B)
+    (at 160.02 112.014 270)
+    (tags C0402)
+    (path /56D9D995)
+    (attr smd)
+    (fp_text reference C2 (at 2.667 -0.127 270) (layer F.SilkS)
+      (effects (font (size 0.8 0.8) (thickness 0.2)))
+    )
+    (fp_text value 100nF (at -2.2225 -0.0635 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C1-Pad2)") (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0402_5MIL_DWS (layer F.Cu) (tedit 56F52E59) (tstamp 56D58F02)
+    (at 137.287 104.775 270)
+    (tags C0402)
+    (path /56D55FE3)
+    (attr smd)
+    (fp_text reference C3 (at -1.651 0 270) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value 100nF (at 2.3114 0.0254 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 2 +5V) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52E7D) (tstamp 56D5A72C)
+    (at 142.875 104.775 90)
+    (tags C0402)
+    (path /56D89EA8)
+    (attr smd)
+    (fp_text reference R10 (at 1.905 -0.127 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value 5.6k (at -1.9558 -0.0254 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 2 +5V) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 31 /PS2_CLK) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0402_5MIL_DWS (layer F.Cu) (tedit 56F52E83) (tstamp 56D9F8B3)
+    (at 146.812 104.775 270)
+    (tags C0402)
+    (path /56D57986)
+    (attr smd)
+    (fp_text reference C4 (at -1.524 0 270) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value 10nF (at 2.0574 -0.0508 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(C4-Pad2)") (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_IC-FP:TFDU4100_PACK (layer F.Cu) (tedit 56FB73F5) (tstamp 56D9F8DE)
+    (at 157.75 118 180)
+    (path /56D9CBBC)
+    (attr smd)
+    (fp_text reference IrDA1 (at -7.35 -0.237 180) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.254)))
+    )
+    (fp_text value TFDU4100 (at -0.111 1.795 180) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start 5 -2) (end 5 1.5) (layer F.SilkS) (width 0.254))
+    (fp_line (start 4.75 -2) (end 5 -2) (layer F.SilkS) (width 0.254))
+    (fp_line (start 1.25 -2) (end 4.75 -2) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.25 -2) (end 1.25 -2) (layer F.SilkS) (width 0.254))
+    (fp_line (start -5 -2) (end -1.25 -2) (layer F.SilkS) (width 0.254))
+    (fp_line (start -5 1.5) (end -5 -2) (layer F.SilkS) (width 0.254))
+    (fp_line (start -4.25 1.5) (end -5 1.5) (layer F.SilkS) (width 0.254))
+    (fp_line (start 5 1.5) (end 4.25 1.5) (layer F.SilkS) (width 0.254))
+    (fp_text user E (at 3.1 -2.7 180) (layer F.SilkS)
+      (effects (font (size 0.9 0.9) (thickness 0.2)))
+    )
+    (fp_text user DET (at -3.1 -2.7 180) (layer F.SilkS)
+      (effects (font (size 0.9 0.9) (thickness 0.2)))
+    )
+    (fp_text user 1 (at 4.4 0.6 180) (layer F.SilkS)
+      (effects (font (size 0.9 0.9) (thickness 0.2)))
+    )
+    (fp_arc (start 3 -2) (end 1.25 -2) (angle 180) (layer F.SilkS) (width 0.254))
+    (fp_arc (start -3 -2) (end -4.75 -2) (angle 180) (layer F.SilkS) (width 0.254))
+    (pad 1 smd rect (at 3.5 0) (size 0.6 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(IrDA1-Pad1)") (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 2.5 0) (size 0.6 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(IrDA1-Pad2)") (solder_mask_margin 0.0508))
+    (pad 3 smd rect (at 1.5 0) (size 0.6 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 29 /IrDA_Rx) (solder_mask_margin 0.0508))
+    (pad 4 smd rect (at 0.5 0) (size 0.6 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(IrDA1-Pad4)") (solder_mask_margin 0.0508))
+    (pad 5 smd rect (at -0.5 0) (size 0.6 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(IrDA1-Pad5)") (solder_mask_margin 0.0508))
+    (pad 6 smd rect (at -1.5 0) (size 0.6 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C1-Pad2)") (solder_mask_margin 0.0508))
+    (pad 7 smd rect (at -2.5 0) (size 0.6 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(IRDA_LS_E1-Pad1)") (solder_mask_margin 0.0508))
+    (pad 8 smd rect (at -3.5 0) (size 0.6 2.5) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_Jumpers-FP:SJ (layer F.Cu) (tedit 56F4DCD3) (tstamp 56D9F901)
+    (at 161.29 108.204 90)
+    (descr "SOLDER JUMPER")
+    (tags "SOLDER JUMPER")
+    (path /56D4F8DF)
+    (attr smd)
+    (fp_text reference IRDA_LS_E1 (at 4.826 0 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value Opened (at -0.127 1.397 90) (layer F.Fab)
+      (effects (font (size 0.127 0.127) (thickness 0.02)))
+    )
+    (fp_line (start 0 -0.889) (end 0 0.889) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.016 0) (end -1.524 0) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.016 0) (end 1.524 0) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.397 -1.016) (end 1.397 -1.016) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -1.651 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 1.651 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start 1.397 1.016) (end -1.397 1.016) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.3556 0.6604) (end -0.6604 0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.3556 -0.6604) (end -0.3556 0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.6604 -0.6604) (end -0.3556 -0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.5588 0.6604) (end -0.5588 -0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.7112 0.5588) (end -0.7112 -0.4572) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.7112 0.5588) (end -0.7112 -0.4572) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.5588 0.6604) (end -0.5588 -0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.6604 -0.6604) (end -0.3556 -0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.3556 -0.6604) (end -0.3556 0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.3556 0.6604) (end -0.6604 0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.3556 -0.6604) (end 0.3556 0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.3556 -0.6604) (end 0.6604 -0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.3556 0.6604) (end 0.6604 0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.5588 -0.6604) (end 0.5588 0.6604) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.7366 0.508) (end 0.7366 -0.508) (layer Dwgs.User) (width 0.254))
+    (fp_arc (start 0 0) (end 0.6604 -0.6604) (angle 90) (layer Dwgs.User) (width 0.254))
+    (fp_arc (start 0 0) (end -0.6604 0.6604) (angle 90) (layer Dwgs.User) (width 0.254))
+    (fp_arc (start 1.397 -0.762) (end 1.397 -1.016) (angle 90) (layer F.SilkS) (width 0.254))
+    (fp_arc (start -1.397 -0.762) (end -1.651 -0.762) (angle 90) (layer F.SilkS) (width 0.254))
+    (fp_arc (start -1.397 0.762) (end -1.397 1.016) (angle 90) (layer F.SilkS) (width 0.254))
+    (fp_arc (start 1.397 0.762) (end 1.651 0.762) (angle 90) (layer F.SilkS) (width 0.254))
+    (pad 1 smd rect (at -0.762 0 90) (size 1.1684 1.6002) (layers F.Cu F.Mask)
+      (net 10 "Net-(IRDA_LS_E1-Pad1)") (solder_mask_margin 0.0508) (solder_paste_margin -0.0508) (clearance 0.0508))
+    (pad 1 smd rect (at -0.762 0 90) (size 1.1684 1.6002) (layers F.Cu F.Mask)
+      (net 10 "Net-(IRDA_LS_E1-Pad1)") (solder_mask_margin 0.0508) (solder_paste_margin -0.0508))
+    (pad 2 smd rect (at 0.762 0 90) (size 1.1684 1.6002) (layers F.Cu F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508) (solder_paste_margin -0.0508) (clearance 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52CE7) (tstamp 56D9F94A)
+    (at 139 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D70BD0)
+    (attr smd)
+    (fp_text reference R8 (at -2.313 -0.062 270) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 470R (at -2.821 0.065 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 48 /VGA_RED1) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 17 "Net-(R12-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52CF4) (tstamp 56D9F96E)
+    (at 142 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D71AF1)
+    (attr smd)
+    (fp_text reference R12 (at -2.567 -0.014 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 1.8k (at -2.694 0.0495 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 41 /VGA_RED3) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 17 "Net-(R12-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52D02) (tstamp 56D9F9B9)
+    (at 145.5 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D73DC7)
+    (attr smd)
+    (fp_text reference R15 (at -2.567 0.042 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 1k (at -2.186 0.042 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 47 /VGA_GREEN2) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(R13-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52D08) (tstamp 56D9F9CC)
+    (at 147 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D73DCD)
+    (attr smd)
+    (fp_text reference R16 (at -2.567 0.066 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 1.8k (at -2.5924 0.066 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 46 /VGA_GREEN3) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(R13-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52D14) (tstamp 56D9FA06)
+    (at 150.5 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D74931)
+    (attr smd)
+    (fp_text reference R19 (at -2.44 -0.005 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 1k (at -2.186 0.0204 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 50 /VGA_BLUE2) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 24 "Net-(R17-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52E77) (tstamp 56D9FA2E)
+    (at 144.653 104.775 270)
+    (tags C0402)
+    (path /56D047AA)
+    (attr smd)
+    (fp_text reference R21 (at -1.905 -0.127 270) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value 10k (at 1.8034 -0.127 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 31 /PS2_CLK) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52E60) (tstamp 56D7E5E2)
+    (at 139.573 104.775 270)
+    (tags C0402)
+    (path /56D86C04)
+    (attr smd)
+    (fp_text reference R22 (at -1.905 0.127 270) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value 10k (at 1.8542 0.0254 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 33 /PS2_DATA) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:R_0805_5MIL_DWS (layer F.Cu) (tedit 56FB7492) (tstamp 56D7E66F)
+    (at 155.575 108.204 270)
+    (path /56D7F79F)
+    (attr smd)
+    (fp_text reference R5 (at -2.794 -0.635 270) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.1905)))
+    )
+    (fp_text value 47R (at -3.2385 -1.143 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -1.016) (end 0.508 -1.016) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 1.016) (end 0.508 1.016) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.905 -1.016) (end -1.905 1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.905 -1.016) (end 1.905 1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -1.016) (end -1.905 -1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 1.016) (end -1.905 1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.905 -1.016) (end 0.508 -1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.905 1.016) (end 0.508 1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.635) (end -1.016 -0.635) (layer F.Fab) (width 0.127))
+    (fp_line (start -1.016 -0.635) (end -1.016 0.635) (layer F.Fab) (width 0.127))
+    (fp_line (start -1.016 0.635) (end 1.016 0.635) (layer F.Fab) (width 0.127))
+    (fp_line (start 1.016 0.635) (end 1.016 -0.635) (layer F.Fab) (width 0.127))
+    (fp_line (start 1.016 -0.635) (end 0 -0.635) (layer F.Fab) (width 0.127))
+    (pad 1 smd rect (at -1.016 0) (size 1.524 1.27) (layers F.Cu F.Paste F.Mask)
+      (net 44 /IrDA_Tx) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 1.016 0) (size 1.524 1.27) (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(IrDA1-Pad4)") (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:R_1206_5MIL_DWS (layer F.Cu) (tedit 56FB7489) (tstamp 56D7E674)
+    (at 152.527 112.014 90)
+    (path /56D9F4DE)
+    (attr smd)
+    (fp_text reference R6 (at 3.556 0 90) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.1905)))
+    )
+    (fp_text value 15R (at -3.302 0 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start 0.762 -1.143) (end -0.762 -1.143) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0.762 1.143) (end -0.762 1.143) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.6 0.8) (end -1.6 -0.8) (layer F.Fab) (width 0.15))
+    (fp_line (start 1.6 0.8) (end -1.6 0.8) (layer F.Fab) (width 0.15))
+    (fp_line (start 1.6 -0.8) (end 1.6 0.8) (layer F.Fab) (width 0.15))
+    (fp_line (start -1.6 -0.8) (end 1.6 -0.8) (layer F.Fab) (width 0.15))
+    (fp_line (start -2.25 1.15) (end -2.25 -1.15) (layer F.CrtYd) (width 0.15))
+    (fp_line (start 2.25 1.15) (end -2.25 1.15) (layer F.CrtYd) (width 0.15))
+    (fp_line (start 2.25 -1.15) (end 2.25 1.15) (layer F.CrtYd) (width 0.15))
+    (fp_line (start -2.25 -1.15) (end 2.25 -1.15) (layer F.CrtYd) (width 0.15))
+    (pad 1 smd rect (at -1.397 0 90) (size 1.524 1.778) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(IrDA1-Pad1)") (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 1.397 0 90) (size 1.524 1.778) (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:R_0805_5MIL_DWS (layer F.Cu) (tedit 56FB7496) (tstamp 56D7E679)
+    (at 158.242 108.204 90)
+    (path /56D9E753)
+    (attr smd)
+    (fp_text reference R7 (at 2.794 0 90) (layer F.SilkS)
+      (effects (font (size 0.762 0.762) (thickness 0.1905)))
+    )
+    (fp_text value 47R (at 3.175 1.5875 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -1.016) (end 0.508 -1.016) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 1.016) (end 0.508 1.016) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.905 -1.016) (end -1.905 1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.905 -1.016) (end 1.905 1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -1.016) (end -1.905 -1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 1.016) (end -1.905 1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.905 -1.016) (end 0.508 -1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.905 1.016) (end 0.508 1.016) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.635) (end -1.016 -0.635) (layer F.Fab) (width 0.127))
+    (fp_line (start -1.016 -0.635) (end -1.016 0.635) (layer F.Fab) (width 0.127))
+    (fp_line (start -1.016 0.635) (end 1.016 0.635) (layer F.Fab) (width 0.127))
+    (fp_line (start 1.016 0.635) (end 1.016 -0.635) (layer F.Fab) (width 0.127))
+    (fp_line (start 1.016 -0.635) (end 0 -0.635) (layer F.Fab) (width 0.127))
+    (pad 1 smd rect (at -1.016 0 180) (size 1.524 1.27) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C1-Pad2)") (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 1.016 0 180) (size 1.524 1.27) (layers F.Cu F.Paste F.Mask)
+      (net 3 +3V3) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52CEE) (tstamp 56D7E67E)
+    (at 140.5 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D719A3)
+    (attr smd)
+    (fp_text reference R9 (at -2.313 -0.038 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 1k (at -2.2495 0.0255 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 45 /VGA_RED2) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 17 "Net-(R12-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52E6B) (tstamp 56D7E683)
+    (at 141.351 104.775 90)
+    (tags C0402)
+    (path /56D89F6F)
+    (attr smd)
+    (fp_text reference R11 (at 1.905 0.127 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value 5.6k (at -2.0066 0.0254 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 2 +5V) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 33 /PS2_DATA) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52CFA) (tstamp 56D7E688)
+    (at 144 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D73DC1)
+    (attr smd)
+    (fp_text reference R13 (at -2.567 0.018 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 470R (at -2.7956 0.0688 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 43 /VGA_GREEN1) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(R13-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52E66) (tstamp 56D7E68D)
+    (at 140.462 104.775 270)
+    (tags C0402)
+    (path /56D71A03)
+    (attr smd)
+    (fp_text reference R14 (at -1.905 0 270) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value 200R (at 2.1082 0 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 33 /PS2_DATA) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 11 "Net-(PS2_KEYBOARD1-Pad1)") (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52D0E) (tstamp 56D7E692)
+    (at 149 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D7492B)
+    (attr smd)
+    (fp_text reference R17 (at -2.44 0.098 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 470R (at -2.7448 0.0472 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 39 /VGA_BLUE1) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 24 "Net-(R17-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_RLC-FP:R_0402_5MIL_DWS (layer F.Cu) (tedit 56F52E71) (tstamp 56D7E697)
+    (at 143.764 104.775 270)
+    (tags C0402)
+    (path /56D832AC)
+    (attr smd)
+    (fp_text reference R18 (at -1.905 0 270) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
+    )
+    (fp_text value 200R (at 2.0574 -0.0508 270) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.49784 0.24892) (end -0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 -0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0.49784 0.24892) (end 0.49784 -0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start -0.49784 0.24892) (end 0.49784 0.24892) (layer F.Fab) (width 0.06604))
+    (fp_line (start 0 0.4445) (end -0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 0.4445) (end 0.254 0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end 0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0 -0.4445) (end -0.254 -0.4445) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.254 -0.4445) (end -0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 -0.4445) (end -0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.889 0.4445) (end -0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.254 -0.4445) (end 0.889 -0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 -0.4445) (end 0.889 0.4445) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.889 0.4445) (end 0.254 0.4445) (layer Dwgs.User) (width 0.254))
+    (pad 1 smd rect (at -0.508 0 90) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 31 /PS2_CLK) (solder_mask_margin 0.0508))
+    (pad 2 smd rect (at 0.508 0 270) (size 0.5 0.55) (layers F.Cu F.Paste F.Mask)
+      (net 13 "Net-(PS2_KEYBOARD1-Pad5)") (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_RLC-FP:C_0603_5MIL_DWS (layer F.Cu) (tedit 56F52D1C) (tstamp 56D7E69C)
+    (at 152 89 90)
+    (descr "Resistor SMD 0603, reflow soldering, Vishay (see dcrcw.pdf)")
+    (tags "resistor 0603")
+    (path /56D74937)
+    (attr smd)
+    (fp_text reference R20 (at -2.44 0.019 90) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.15875)))
+    )
+    (fp_text value 1.8k (at -2.6432 0.0444 90) (layer F.Fab)
+      (effects (font (size 0.635 0.635) (thickness 0.15875)))
+    )
+    (fp_line (start -0.508 -0.762) (end 0.508 -0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.508 0.762) (end 0.508 0.762) (layer F.SilkS) (width 0.254))
+    (fp_line (start -1.651 0.762) (end -0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -1.651 -0.762) (end -1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start -0.508 -0.762) (end -1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 0.762) (end 0.508 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 1.651 -0.762) (end 1.651 0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0.508 -0.762) (end 1.651 -0.762) (layer Dwgs.User) (width 0.254))
+    (fp_line (start 0 -0.381) (end -0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 -0.381) (end -0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start -0.762 0.381) (end 0.762 0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 0.381) (end 0.762 -0.381) (layer F.Fab) (width 0.15))
+    (fp_line (start 0.762 -0.381) (end 0 -0.381) (layer F.Fab) (width 0.15))
+    (pad 1 smd rect (at -0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 49 /VGA_BLUE3) (solder_mask_margin 0.0508) (clearance 0.0508))
+    (pad 2 smd rect (at 0.889 0 90) (size 1.016 1.016) (layers F.Cu F.Paste F.Mask)
+      (net 24 "Net-(R17-Pad2)") (solder_mask_margin 0.0508) (clearance 0.0508))
+    (model Resistors_SMD/R_0603.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
+  )
+
+  (module OLIMEX_Other-FP:Fiducial1x3 locked (layer F.Cu) (tedit 5540CDCA) (tstamp 56E34F2E)
+    (at 128.27 118.11)
+    (attr smd)
+    (fp_text reference Noname_7 (at 0 3) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 -3) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 1.5 0) (layer Dwgs.User) (width 0.254))
+    (pad Fid1 connect circle (at 0 0) (size 1 1) (layers F.Cu F.Mask)
+      (solder_mask_margin 0.127) (clearance 1.016) (zone_connect 0))
+  )
+
+  (module OLIMEX_Other-FP:Fiducial1x3 locked (layer F.Cu) (tedit 56DFD7FF) (tstamp 56E34F39)
+    (at 128.27 71.755)
+    (attr smd)
+    (fp_text reference Noname_6 (at 0 3) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 -3) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 1.5 0) (layer Dwgs.User) (width 0.254))
+    (pad Fid2 connect circle (at 0 0) (size 1 1) (layers F.Cu F.Mask)
+      (solder_mask_margin 0.127) (clearance 1.016) (zone_connect 0))
+  )
+
+  (module OLIMEX_Other-FP:Fiducial1x3 locked (layer F.Cu) (tedit 56DFD80C) (tstamp 56E34F44)
+    (at 167.005 71.755)
+    (attr smd)
+    (fp_text reference Noname_5 (at 0 3) (layer F.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "" (at 0 -3) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_circle (center 0 0) (end 1.5 0) (layer Dwgs.User) (width 0.254))
+    (pad Fid3 connect circle (at 0 0) (size 1 1) (layers F.Cu F.Mask)
+      (solder_mask_margin 0.127) (clearance 1.016) (zone_connect 0))
+  )
+
+  (module OLIMEX_LOGOs-FP:OLIMEX_LOGO_TB (layer B.Cu) (tedit 5530FAE4) (tstamp 56F52656)
+    (at 147.574 73.406 180)
+    (fp_text reference Noname_4 (at -2.4003 3.0607 180) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value "" (at -1.6637 -3.7084 180) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_circle (center -7.9883 0.127) (end -7.6708 0.2413) (layer B.SilkS) (width 0.4))
+    (fp_circle (center -2.667 -1.651) (end -2.4638 -1.3462) (layer B.SilkS) (width 0.4))
+    (fp_circle (center -2.6543 1.5748) (end -2.54 1.9304) (layer B.SilkS) (width 0.4))
+    (fp_circle (center -1.4351 -1.6256) (end -1.1938 -1.3589) (layer B.SilkS) (width 0.4))
+    (fp_circle (center 0.1016 -0.3556) (end 0.3302 -0.0635) (layer B.SilkS) (width 0.4))
+    (fp_circle (center 1.7145 -1.6383) (end 1.9304 -1.3462) (layer B.SilkS) (width 0.4))
+    (fp_circle (center 7.5438 -1.7272) (end 7.8359 -1.5748) (layer B.SilkS) (width 0.4))
+    (fp_circle (center 7.6327 1.6637) (end 7.9375 1.8542) (layer B.SilkS) (width 0.4))
+    (fp_circle (center 4.699 -0.0762) (end 4.9657 0.1651) (layer B.SilkS) (width 0.4))
+    (fp_line (start -8.001 0.9017) (end -7.493 1.4097) (layer B.SilkS) (width 0.7))
+    (fp_line (start -6.4008 1.4859) (end -5.7658 0.8763) (layer B.SilkS) (width 0.7))
+    (fp_line (start -5.7912 -1.0795) (end -6.35 -1.6637) (layer B.SilkS) (width 0.7))
+    (fp_line (start -4.1656 -1.6764) (end -4.6228 -1.2192) (layer B.SilkS) (width 0.7))
+    (fp_line (start -3.1798 -1.6764) (end -4.1656 -1.6764) (layer B.SilkS) (width 0.7))
+    (fp_line (start -2.667 1.0414) (end -2.667 -0.5588) (layer B.SilkS) (width 0.7))
+    (fp_line (start -1.4478 -1.1176) (end -1.4478 1.4732) (layer B.SilkS) (width 0.7))
+    (fp_line (start -1.4478 1.4732) (end -0.6096 1.4732) (layer B.SilkS) (width 0.7))
+    (fp_line (start -0.6096 1.4732) (end 0 0.9652) (layer B.SilkS) (width 0.7))
+    (fp_line (start 0.1016 0.1778) (end 0.1016 0.889) (layer B.SilkS) (width 0.7))
+    (fp_line (start 0.1778 0.9652) (end 0.8128 1.4732) (layer B.SilkS) (width 0.7))
+    (fp_line (start 0.8128 1.4732) (end 1.7018 1.4732) (layer B.SilkS) (width 0.7))
+    (fp_line (start 7.2136 -1.3716) (end 6.3754 -0.5588) (layer B.SilkS) (width 0.7))
+    (fp_line (start 5.8674 -0.4572) (end 6.4008 -0.4572) (layer B.SilkS) (width 0.5))
+    (fp_line (start 4.7244 -1.6764) (end 5.8674 -0.5588) (layer B.SilkS) (width 0.7))
+    (fp_line (start 3.4036 -1.6764) (end 4.7244 -1.6764) (layer B.SilkS) (width 0.7))
+    (fp_line (start 2.9718 -1.2446) (end 3.4036 -1.6764) (layer B.SilkS) (width 0.7))
+    (fp_line (start 2.9718 0.9906) (end 2.9718 -1.2446) (layer B.SilkS) (width 0.7))
+    (fp_line (start 2.9718 1.016) (end 3.4544 1.524) (layer B.SilkS) (width 0.7))
+    (fp_line (start 3.5025 1.4986) (end 4.7244 1.4986) (layer B.SilkS) (width 0.7))
+    (fp_line (start 4.7244 1.4986) (end 5.8166 0.4318) (layer B.SilkS) (width 0.7))
+    (fp_line (start 5.842 0.3175) (end 6.4008 0.3175) (layer B.SilkS) (width 0.5))
+    (fp_line (start 7.2644 1.3081) (end 6.4008 0.4144) (layer B.SilkS) (width 0.7))
+    (fp_line (start 4.191 -0.0762) (end 2.9718 -0.0762) (layer B.SilkS) (width 0.7))
+    (fp_line (start -7.4295 -1.6891) (end -6.3881 -1.6891) (layer B.SilkS) (width 0.7))
+    (fp_line (start -7.9883 -1.1303) (end -7.9883 -0.3683) (layer B.SilkS) (width 0.7))
+    (fp_line (start -8.001 -1.1176) (end -7.4168 -1.6891) (layer B.SilkS) (width 0.7))
+    (fp_line (start -8.001 0.8509) (end -8.001 0.6096) (layer B.SilkS) (width 0.7))
+    (fp_line (start -5.7785 0.889) (end -5.7785 -1.0414) (layer B.SilkS) (width 0.7))
+    (fp_line (start -6.4008 1.4986) (end -7.4041 1.4986) (layer B.SilkS) (width 0.7))
+    (fp_line (start 1.7145 1.4859) (end 1.7145 -1.1176) (layer B.SilkS) (width 0.7))
+    (fp_line (start -4.6228 -1.2319) (end -4.6228 1.4986) (layer B.SilkS) (width 0.7))
+    (fp_line (start -4.6228 1.8415) (end -4.9022 1.8415) (layer B.SilkS) (width 0.1))
+    (fp_line (start -4.9276 1.8415) (end -4.9276 -1.3081) (layer B.SilkS) (width 0.1))
+    (fp_line (start -4.9149 1.8415) (end -4.9276 1.8415) (layer B.SilkS) (width 0.1))
+    (fp_line (start -4.9022 1.8415) (end -4.9149 1.8415) (layer B.SilkS) (width 0.1))
+    (fp_line (start -4.7879 1.7526) (end -4.8514 1.7653) (layer B.SilkS) (width 0.1))
+    (fp_line (start -4.3053 1.8415) (end -4.3053 -1.1938) (layer B.SilkS) (width 0.1))
+    (fp_line (start -4.6101 1.8415) (end -4.3053 1.8415) (layer B.SilkS) (width 0.1))
+    (fp_line (start -4.4831 1.7653) (end -4.3688 1.7653) (layer B.SilkS) (width 0.1))
+    (fp_line (start -2.9845 1.1557) (end -2.9845 -0.8636) (layer B.SilkS) (width 0.1))
+    (fp_line (start -2.3495 -0.8636) (end -2.3495 1.1557) (layer B.SilkS) (width 0.1))
+    (fp_line (start -2.3749 -0.8636) (end -2.3495 -0.8636) (layer B.SilkS) (width 0.1))
+    (fp_line (start -2.9845 -0.8636) (end -2.3749 -0.8636) (layer B.SilkS) (width 0.1))
+    (fp_line (start -2.8448 -0.8001) (end -2.9083 -0.8001) (layer B.SilkS) (width 0.1))
+    (fp_line (start -2.5019 -0.8001) (end -2.413 -0.8001) (layer B.SilkS) (width 0.1))
+    (fp_line (start -1.7653 -1.2065) (end -1.7653 1.778) (layer B.SilkS) (width 0.1))
+    (fp_line (start -0.5207 1.7907) (end 0.0635 1.3081) (layer B.SilkS) (width 0.1))
+    (fp_line (start -1.7653 1.7907) (end -0.5207 1.7907) (layer B.SilkS) (width 0.1))
+    (fp_line (start -1.6129 1.7272) (end -1.6891 1.7272) (layer B.SilkS) (width 0.1))
+    (fp_line (start 2.0447 -1.2319) (end 2.0447 1.778) (layer B.SilkS) (width 0.1))
+    (fp_line (start 0.7239 1.7907) (end 0.1016 1.2954) (layer B.SilkS) (width 0.1))
+    (fp_line (start 0.7493 1.7907) (end 0.7239 1.7907) (layer B.SilkS) (width 0.1))
+    (fp_line (start 2.0447 1.7907) (end 0.7493 1.7907) (layer B.SilkS) (width 0.1))
+    (fp_line (start 2.0447 1.778) (end 2.0447 1.7907) (layer B.SilkS) (width 0.1))
+    (fp_line (start 1.8923 1.7145) (end 1.9939 1.7145) (layer B.SilkS) (width 0.1))
+    (fp_line (start 4.8387 1.8288) (end 6.096 0.5842) (layer B.SilkS) (width 0.1))
+    (fp_line (start 4.7879 1.8288) (end 4.8387 1.8288) (layer B.SilkS) (width 0.1))
+    (fp_line (start 3.4163 1.8288) (end 4.7879 1.8288) (layer B.SilkS) (width 0.1))
+  )
+
+  (module OLIMEX_LOGOs-FP:OLIMEX_LOGO_SMALL_TB (layer F.Cu) (tedit 5539E04C) (tstamp 56F52ACE)
+    (at 146.685 99.314)
+    (fp_text reference Noname_3 (at -1.2827 -14.4145) (layer F.SilkS)
+      (effects (font (size 1.1 1.1) (thickness 0.254)))
+    )
+    (fp_text value "" (at -0.0254 13.4112) (layer F.Fab)
+      (effects (font (size 1.1 1.1) (thickness 0.254)))
+    )
+    (fp_circle (center -2.9464 -0.1524) (end -2.8448 -0.2921) (layer F.SilkS) (width 0.15))
+    (fp_circle (center -1.1176 0.6858) (end -1.016 0.5461) (layer F.SilkS) (width 0.15))
+    (fp_circle (center -1.1176 -0.6858) (end -1.016 -0.8255) (layer F.SilkS) (width 0.15))
+    (fp_circle (center -0.5461 0.6858) (end -0.4445 0.5461) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0.127 0.1778) (end 0.2286 0.0381) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 0.8255 0.6858) (end 0.9271 0.5461) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 2.9591 0.6985) (end 3.0607 0.5588) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 2.9718 -0.6096) (end 3.0734 -0.7493) (layer F.SilkS) (width 0.15))
+    (fp_circle (center 1.9304 0) (end 2.032 -0.1397) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.3114 -0.6713) (end -2.159 -0.5207) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.159 -0.4826) (end -2.159 0.5207) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.2987 0.6858) (end -2.159 0.5461) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.9464 0.0762) (end -2.9464 0.5207) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.8034 -0.6731) (end -1.8034 0.508) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.8034 0.508) (end -1.6256 0.6731) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.6256 0.6731) (end -1.3462 0.6731) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.1176 -0.4572) (end -1.1176 0.254) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.5461 0.4699) (end -0.5461 -0.6985) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.5461 -0.6985) (end -0.3175 -0.6985) (layer F.SilkS) (width 0.2))
+    (fp_line (start -0.3175 -0.6985) (end 0.127 -0.254) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.127 -0.254) (end 0.127 -0.0508) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.127 -0.2286) (end 0.6096 -0.6985) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.6096 -0.6985) (end 0.8255 -0.6985) (layer F.SilkS) (width 0.2))
+    (fp_line (start 0.8255 -0.6985) (end 0.8255 0.4318) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.8448 0.5334) (end 2.5527 0.2413) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.5527 0.2413) (end 2.3622 0.2413) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.3622 0.2413) (end 1.8542 0.7493) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.8542 0.7493) (end 1.4605 0.7493) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.4605 0.7493) (end 1.2954 0.5715) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.2954 0.5715) (end 1.2954 0) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.2954 -0.4953) (end 1.4732 -0.6731) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.2954 0.0127) (end 1.2954 -0.4953) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.4732 -0.6731) (end 1.8669 -0.6731) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.8669 -0.6731) (end 2.3622 -0.1778) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.3622 -0.1778) (end 2.5654 -0.1778) (layer F.SilkS) (width 0.2))
+    (fp_line (start 2.5654 -0.1778) (end 2.8194 -0.4318) (layer F.SilkS) (width 0.2))
+    (fp_line (start 1.7272 0) (end 1.2954 0) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.794 -0.6731) (end -2.3114 -0.6731) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.9464 -0.5207) (end -2.794 -0.6731) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.9464 -0.3556) (end -2.9464 -0.5207) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.794 0.6858) (end -2.9464 0.5461) (layer F.SilkS) (width 0.2))
+    (fp_line (start -2.2987 0.6858) (end -2.794 0.6858) (layer F.SilkS) (width 0.2))
+    (fp_line (start -1.905 -0.7747) (end -1.905 0.5207) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.8034 -0.7747) (end -1.905 -0.7747) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.905 0.5461) (end -1.6637 0.7747) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.905 0.5334) (end -1.905 0.5461) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.905 0.5207) (end -1.905 0.5334) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.8923 0.5588) (end -1.905 0.5334) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.6637 0.7747) (end -1.3462 0.7747) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.651 0.7747) (end -1.6637 0.762) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.7018 -0.7747) (end -1.7018 0.4826) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.8034 -0.7747) (end -1.7018 -0.7747) (layer F.SilkS) (width 0.01))
+    (fp_line (start -1.87706 -0.74422) (end -1.8288 -0.74422) (layer F.SilkS) (width 0.0625))
+    (fp_line (start -1.78054 -0.74168) (end -1.73228 -0.74168) (layer F.SilkS) (width 0.0625))
+    (fp_line (start -1.89738 -0.77216) (end -1.89738 -0.6985) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -1.71196 -0.77216) (end -1.71196 -0.69342) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -1.02362 0.35306) (end -1.21412 0.35306) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -1.02362 0.25654) (end -1.02362 0.35306) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -1.21412 0.35306) (end -1.21412 -0.4699) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -1.20904 0.34036) (end -1.02616 0.34036) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -1.21158 0.32766) (end -1.0287 0.32766) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -1.21158 0.31496) (end -1.0287 0.31496) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -1.21158 0.30226) (end -1.02616 0.30226) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -0.64008 -0.79248) (end -0.31242 -0.79248) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -0.64008 -0.69596) (end -0.64008 -0.79248) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -0.58674 -0.77978) (end -0.63246 -0.77978) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -0.62992 -0.7874) (end -0.62992 -0.74676) (layer F.SilkS) (width 0.0127))
+    (fp_line (start -0.62738 -0.76708) (end -0.61214 -0.76708) (layer F.SilkS) (width 0.0127))
+    (fp_line (start 0.91948 -0.79248) (end 0.91948 -0.69596) (layer F.SilkS) (width 0.0127))
+    (fp_line (start 0.83312 -0.79248) (end 0.91948 -0.79248) (layer F.SilkS) (width 0.0127))
+    (fp_line (start 0.87376 -0.78232) (end 0.91186 -0.78232) (layer F.SilkS) (width 0.0127))
+    (fp_line (start 0.90932 -0.77724) (end 0.90932 -0.74676) (layer F.SilkS) (width 0.0127))
+    (fp_line (start 0.88646 -0.77216) (end 0.90678 -0.77216) (layer F.SilkS) (width 0.0127))
+    (fp_line (start 0.9017 -0.7747) (end 0.9017 -0.75946) (layer F.SilkS) (width 0.0127))
+  )
+
+  (module OLIMEX_LOGOs-FP:LOGO_PBFREE (layer B.Cu) (tedit 553A2F23) (tstamp 56F53BC4)
+    (at 136.398 105.41 180)
+    (fp_text reference Noname_2 (at -0.2794 3.52552 180) (layer B.SilkS)
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value "" (at 0.05588 -3.15214 180) (layer B.Fab)
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_circle (center -0.2032 0.31496) (end 0.90678 1.73482) (layer B.SilkS) (width 0.254))
+    (fp_line (start -1.36398 1.47828) (end 1.06934 -0.94234) (layer B.SilkS) (width 0.2))
+    (fp_text user Pb (at -0.08636 0.33528 180) (layer B.SilkS)
+      (effects (font (size 1.7 1.5) (thickness 0.254)) (justify mirror))
+    )
+  )
+
+  (module OLIMEX_LOGOs-FP:LOGO_ROHS_1 (layer B.Cu) (tedit 553E19D4) (tstamp 56F5415B)
+    (at 161.671 111.252 180)
+    (fp_text reference Ref**_2 (at 3.29692 7.10184 180) (layer Dwgs.User) hide
+      (effects (font (size 2 2) (thickness 0.5)))
+    )
+    (fp_text value Val** (at 6.29158 -2.07264 180) (layer Dwgs.User) hide
+      (effects (font (size 1.778 1.778) (thickness 0.35)))
+    )
+    (fp_line (start 15.875 2.794) (end 16.383 2.794) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.002 2.921) (end 16.637 2.921) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.129 3.048) (end 16.764 3.048) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.129 3.175) (end 16.891 3.175) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.1798 3.302) (end 17.018 3.302) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.256 3.429) (end 17.018 3.429) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.256 3.556) (end 17.018 3.556) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.256 3.683) (end 17.018 3.683) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.256 3.81) (end 17.018 3.81) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.256 3.937) (end 17.018 3.937) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.256 4.064) (end 17.018 4.064) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.256 4.191) (end 16.891 4.191) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.383 4.318) (end 16.891 4.318) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.383 4.445) (end 16.891 4.445) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.764 4.953) (end 16.764 4.445) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.637 4.953) (end 16.637 4.445) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.51 5.334) (end 17.018 5.334) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.383 5.207) (end 17.018 5.207) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.129 5.08) (end 16.891 5.08) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.637 4.953) (end 15.748 4.953) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.764 4.953) (end 16.637 4.953) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.891 4.953) (end 16.764 4.953) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.129 4.826) (end 15.621 4.826) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.002 4.699) (end 15.367 4.699) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.002 4.572) (end 15.24 4.572) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.875 4.445) (end 15.113 4.445) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.875 4.318) (end 14.986 4.318) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.748 4.191) (end 14.986 4.191) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.748 4.064) (end 14.986 4.064) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.748 3.937) (end 14.859 3.937) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.748 3.81) (end 14.859 3.81) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.986 3.048) (end 15.494 3.048) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.986 3.175) (end 15.621 3.175) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.859 3.302) (end 15.621 3.302) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.859 3.429) (end 15.621 3.429) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.986 3.556) (end 15.621 3.556) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.494 3.683) (end 15.494 3.175) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.748 3.683) (end 15.24 2.794) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.494 3.683) (end 15.748 3.683) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.113 3.683) (end 15.494 3.683) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.986 3.048) (end 14.986 2.921) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.986 3.175) (end 14.986 3.048) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.986 3.556) (end 14.986 3.175) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.986 3.683) (end 14.986 3.556) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.113 3.683) (end 15.113 3.048) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.986 3.683) (end 15.113 3.683) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.859 3.683) (end 14.986 3.683) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.859 3.429) (end 14.859 3.683) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.859 3.40614) (end 14.859 3.429) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.7988 3.8608) (end 15.7988 3.86842) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.41526 2.79146) (end 15.38732 2.76352) (layer B.SilkS) (width 0.254))
+    (fp_line (start 12.065 4.191) (end 10.795 4.445) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.446 4.064) (end 12.065 4.191) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.573 4.191) (end 12.446 4.064) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.573 4.318) (end 12.573 4.191) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.065 4.572) (end 12.573 4.318) (layer B.SilkS) (width 0.508))
+    (fp_line (start 11.811 4.572) (end 12.065 4.572) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.795 4.826) (end 11.811 4.572) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.287 4.826) (end 10.795 4.826) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.16 4.699) (end 10.287 4.826) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.287 4.572) (end 10.16 4.699) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.922 4.064) (end 10.287 4.572) (layer B.SilkS) (width 0.508))
+    (fp_line (start 11.43 3.937) (end 10.922 4.064) (layer B.SilkS) (width 0.508))
+    (fp_line (start 11.811 3.81) (end 11.43 3.937) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.446 3.81) (end 11.811 3.81) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.827 3.937) (end 12.446 3.81) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.081 3.937) (end 12.827 3.937) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.208 4.191) (end 13.081 3.937) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.081 4.318) (end 13.208 4.191) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.446 4.826) (end 13.081 4.318) (layer B.SilkS) (width 0.508))
+    (fp_line (start 11.43 5.08) (end 12.446 4.826) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.287 5.207) (end 11.43 5.08) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.16 5.207) (end 10.287 5.207) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.033 5.08) (end 10.16 5.207) (layer B.SilkS) (width 0.508))
+    (fp_line (start 9.271 5.715) (end 10.033 5.08) (layer B.SilkS) (width 0.508))
+    (fp_line (start 9.906 5.715) (end 9.144 6.096) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.6426 5.461) (end 9.906 5.715) (layer B.SilkS) (width 0.508))
+    (fp_line (start 11.2522 5.461) (end 10.6426 5.461) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.6492 4.9784) (end 11.2522 5.461) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.335 4.572) (end 12.6492 4.9784) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.843 4.064) (end 13.335 4.572) (layer B.SilkS) (width 0.508))
+    (fp_line (start 14.097 3.556) (end 13.843 4.064) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.843 3.81) (end 14.097 3.556) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.462 3.937) (end 13.843 3.81) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.7 3.429) (end 13.462 3.937) (layer B.SilkS) (width 0.508))
+    (fp_line (start 11.811 3.429) (end 12.7 3.429) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.922 3.683) (end 11.811 3.429) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.414 4.064) (end 10.922 3.683) (layer B.SilkS) (width 0.508))
+    (fp_line (start 9.525 4.953) (end 10.414 4.064) (layer B.SilkS) (width 0.508))
+    (fp_line (start 9.271 5.334) (end 9.525 4.953) (layer B.SilkS) (width 0.508))
+    (fp_line (start 8.89 5.842) (end 9.271 5.334) (layer B.SilkS) (width 0.508))
+    (fp_line (start 8.76046 6.35) (end 8.382 7.23646) (layer B.SilkS) (width 0.508))
+    (fp_line (start 8.76046 5.969) (end 8.76046 6.35) (layer B.SilkS) (width 0.508))
+    (fp_line (start 8.382 6.477) (end 8.76046 5.969) (layer B.SilkS) (width 0.508))
+    (fp_line (start 8.255 6.985) (end 8.382 6.477) (layer B.SilkS) (width 0.508))
+    (fp_line (start 7.747 7.874) (end 8.255 6.985) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.335 6.35) (end 11.684 6.35) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.208 6.731) (end 8.255 6.8072) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.208 6.477) (end 13.208 6.731) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.208 6.985) (end 13.208 6.731) (layer B.SilkS) (width 0.508))
+    (fp_line (start 8.636 6.985) (end 13.208 6.985) (layer B.SilkS) (width 0.508))
+    (fp_line (start 9.144 6.858) (end 8.636 6.985) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.414 6.477) (end 9.144 6.858) (layer B.SilkS) (width 0.508))
+    (fp_line (start 11.557 6.35) (end 10.414 6.477) (layer B.SilkS) (width 0.508))
+    (fp_line (start 11.684 6.35) (end 11.557 6.35) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.192 6.35) (end 11.684 6.35) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.827 5.969) (end 12.192 6.35) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.208 6.477) (end 13.589 5.969) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.954 5.969) (end 13.208 6.477) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.589 5.588) (end 12.954 5.969) (layer B.SilkS) (width 0.508))
+    (fp_line (start 14.097 4.953) (end 13.589 5.588) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.97 5.969) (end 14.097 4.953) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.716 6.477) (end 13.97 5.969) (layer B.SilkS) (width 0.508))
+    (fp_line (start 13.208 6.985) (end 13.716 6.477) (layer B.SilkS) (width 0.508))
+    (fp_line (start 12.573 7.366) (end 13.208 6.985) (layer B.SilkS) (width 0.508))
+    (fp_line (start 10.922 7.366) (end 12.573 7.366) (layer B.SilkS) (width 0.508))
+    (fp_line (start 9.906 7.23646) (end 10.922 7.366) (layer B.SilkS) (width 0.508))
+    (fp_line (start 8.76046 7.23646) (end 9.906 7.23646) (layer B.SilkS) (width 0.508))
+    (fp_line (start 7.747 7.874) (end 8.76046 7.23646) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.2052 3.85826) (end 16.1798 3.4671) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.1257 2.667) (end 15.113 2.667) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.0274 2.667) (end 15.6718 2.667) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.83004 2.98704) (end 16.80718 2.96418) (layer B.SilkS) (width 0.254))
+    (fp_line (start 17.145 5.588) (end 17.01038 5.04952) (layer B.SilkS) (width 0.254))
+    (fp_line (start 16.129 5.207) (end 17.145 5.588) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.70736 5.02666) (end 16.129 5.207) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.93266 4.28752) (end 14.986 4.3815) (layer B.SilkS) (width 0.254))
+    (fp_line (start 15.113 2.667) (end 14.81582 3.0861) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.97838 2.53238) (end 15.113 2.667) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.224 2.667) (end 14.32814 2.56032) (layer B.SilkS) (width 0.254))
+    (fp_line (start 13.462 1.905) (end 13.95222 2.39522) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.224 3.00228) (end 14.224 3.048) (layer B.SilkS) (width 0.254))
+    (fp_line (start 13.589 1.778) (end 14.097 2.54) (layer B.SilkS) (width 0.254))
+    (fp_line (start 10.1473 6.31698) (end 8.76046 6.731) (layer B.SilkS) (width 0.254))
+    (fp_line (start 12.0142 6.02742) (end 11.49604 6.10108) (layer B.SilkS) (width 0.254))
+    (fp_line (start 13.28928 5.51942) (end 13.28166 5.5245) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.34846 4.445) (end 14.34592 4.44754) (layer B.SilkS) (width 0.254))
+    (fp_line (start 13.93444 4.30022) (end 14.10462 4.11226) (layer B.SilkS) (width 0.254))
+    (fp_line (start 11.06932 5.63118) (end 11.3792 5.57022) (layer B.SilkS) (width 0.254))
+    (fp_line (start 8.76046 6.731) (end 9.0424 6.38302) (layer B.SilkS) (width 0.254))
+    (fp_line (start 13.589 1.905) (end 13.77442 2.09042) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.24686 3.22072) (end 14.224 3.175) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.34846 4.826) (end 14.34846 4.445) (layer B.SilkS) (width 0.254))
+    (fp_line (start 14.14272 6.10362) (end 14.29004 5.50418) (layer B.SilkS) (width 0.254))
+    (fp_line (start 9.9441 7.42442) (end 12.09294 7.62) (layer B.SilkS) (width 0.254))
+    (fp_line (start 7.366 8.382) (end 8.22706 7.76224) (layer B.SilkS) (width 0.254))
+    (fp_line (start 12.12088 3.175) (end 12.6365 3.175) (layer B.SilkS) (width 0.254))
+    (fp_line (start 10.21588 3.87858) (end 10.25144 3.84302) (layer B.SilkS) (width 0.254))
+    (fp_line (start 7.366 8.382) (end 8.23214 6.26618) (layer B.SilkS) (width 0.254))
+    (fp_line (start 13.94714 3.44932) (end 14.224 3.175) (layer B.SilkS) (width 0.254))
+    (fp_line (start 13.17498 3.39598) (end 13.22832 3.44932) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.508 -0.635) (end 12.319 -0.635) (layer B.SilkS) (width 0.254))
+    (fp_line (start 12.319 2.413) (end 0.508 2.413) (layer B.SilkS) (width 0.254))
+    (fp_text user RoHS (at 3.81508 4.04368 180) (layer B.SilkS)
+      (effects (font (size 2 2) (thickness 0.5)) (justify mirror))
+    )
+    (fp_text user Compliant (at 6.20014 0.8382 180) (layer B.SilkS)
+      (effects (font (size 1.778 1.778) (thickness 0.35)) (justify mirror))
+    )
+    (fp_arc (start 12.319 0.889) (end 12.319 2.413) (angle -90) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 0.508 0.889) (end -1.016 0.889) (angle -90) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 0.508 0.889) (end 0.508 -0.635) (angle -90) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 12.319 0.889) (end 13.843 0.889) (angle -90) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 12.6365 3.93446) (end 13.17498 3.39598) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 13.589 3.09118) (end 13.22832 3.44932) (angle -90) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 16.57858 11.18616) (end 10.21588 3.87858) (angle -18.4) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 11.99388 5.7658) (end 12.12088 3.175) (angle -44.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 9.49706 9.6647) (end 9.9441 7.42442) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 11.99896 5.3467) (end 12.09294 7.62) (angle -68.1) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 11.30046 4.89712) (end 14.29004 5.50418) (angle -12.8) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 12.68984 3.17246) (end 14.224 3.175) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 11.67384 10.37844) (end 11.06932 5.63118) (angle -26.1) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 10.27938 0.1524) (end 11.3792 5.57022) (angle -29.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 13.462 3.55346) (end 14.10462 4.11226) (angle -67.4) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 10.51306 1.7272) (end 13.28928 5.51942) (angle -18.4) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 11.14298 1.9812) (end 12.0142 6.02742) (angle -18.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 11.96594 13.3096) (end 11.49604 6.10108) (angle -10.8) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 12.48918 3.00228) (end 14.224 3.00228) (angle -44.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 13.30198 3.04546) (end 14.224 3.048) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 14.68628 2.91846) (end 14.68628 2.413) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 14.68628 2.82448) (end 14.97838 2.53238) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 15.9258 3.5306) (end 14.81582 3.0861) (angle -21.8) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 16.256 3.5306) (end 14.732 3.5306) (angle -29.7) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 16.30934 3.62458) (end 14.986 4.3815) (angle -37) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 18.48866 4.67868) (end 17.07388 4.11226) (angle -35.8) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 16.15186 3.74396) (end 17.07388 4.11226) (angle -21.8) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 16.07312 3.74396) (end 17.145 3.74396) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 16.02232 3.87604) (end 16.80718 2.96418) (angle -30.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 16.0274 3.48996) (end 16.22552 2.68986) (angle -14) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 17.96796 3.74396) (end 16.2052 3.81508) (angle -34.7) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 14.96822 3.67538) (end 16.1798 3.4671) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 15.11046 3.09626) (end 15.41526 2.79146) (angle -44.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 14.26972 3.80746) (end 15.7988 3.8608) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 17.2974 3.7719) (end 15.7988 3.86842) (angle -45) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 15.72514 3.40614) (end 15.113 2.794) (angle -44.9) (layer B.SilkS) (width 0.254))
+  )
+
+  (module OLIMEX_LOGOs-FP:LOGO_RECYCLEBIN_1 (layer B.Cu) (tedit 552CE91B) (tstamp 56F547DB)
+    (at 161.417 92.964 180)
+    (fp_text reference Noname_1 (at 2.11 7.12 180) (layer B.SilkS) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value "" (at 2.85 -1.56 180) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 4.62 0.812) (end 4.62 0.05) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.048 0.812) (end 4.62 0.812) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.048 0.05) (end 0.048 0.812) (layer B.SilkS) (width 0.15))
+    (fp_line (start 4.62 0.05) (end 0.048 0.05) (layer B.SilkS) (width 0.15))
+    (fp_line (start 4.5692 0.7612) (end 0.1496 0.7612) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.0988 0.6596) (end 4.5692 0.6596) (layer B.SilkS) (width 0.15))
+    (fp_line (start 4.5692 0.5072) (end 0.1496 0.5072) (layer B.SilkS) (width 0.15))
+    (fp_line (start 4.5692 0.3548) (end 0.1496 0.3548) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.0988 0.6088) (end 4.5184 0.6088) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.0988 0.4564) (end 4.5692 0.4564) (layer B.SilkS) (width 0.15))
+    (fp_line (start 4.5184 0.2532) (end 0.1496 0.2532) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.0988 0.1516) (end 4.5184 0.1516) (layer B.SilkS) (width 0.15))
+    (fp_line (start 0.254 5.588) (end 4.445 1.397) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.381 1.524) (end 4.445 5.461) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.397 1.905) (end 2.794 1.905) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.397 1.905) (end 1.143 4.953) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0.889 5.08) (end 3.81 5.08) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.905 1.524) (end 1.905 1.778) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.397 1.524) (end 1.905 1.524) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.397 1.905) (end 1.397 1.524) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.302 2.413) (end 3.429 4.445) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.524 5.715) (end 1.524 5.207) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.397 5.715) (end 1.524 5.715) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.397 5.207) (end 1.397 5.715) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.81 4.572) (end 3.81 5.08) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.429 4.572) (end 3.81 4.572) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.429 5.08) (end 3.429 4.572) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.556 4.953) (end 3.556 4.826) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.556 5.08) (end 3.683 4.699) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.556 4.953) (end 3.556 4.826) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.683 4.953) (end 3.683 4.572) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.556 4.953) (end 3.683 4.953) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.556 4.572) (end 3.556 4.953) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.159 4.191) (end 2.159 4.572) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.048 4.191) (end 2.159 4.191) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.048 4.572) (end 3.048 4.191) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.159 4.572) (end 3.048 4.572) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.286 4.445) (end 2.921 4.445) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.54 5.969) (end 2.159 5.969) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.54 5.842) (end 2.54 5.969) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.159 5.842) (end 2.54 5.842) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.159 5.969) (end 2.159 5.842) (layer B.SilkS) (width 0.254))
+    (fp_circle (center 3.302 1.905) (end 3.683 2.032) (layer B.SilkS) (width 0.254))
+    (fp_circle (center 3.302 1.905) (end 3.429 1.905) (layer B.SilkS) (width 0.127))
+    (fp_arc (start 2.286 4.064) (end 1.143 5.207) (angle -90) (layer B.SilkS) (width 0.254))
+  )
+
+  (module OLIMEX_Connectors-FP:IDC34R_PCB locked (layer F.Cu) (tedit 56FB7321) (tstamp 56CF151A)
+    (at 129.54 94.996 90)
+    (path /56CFB0E4)
+    (attr smd)
+    (fp_text reference GPIO_In1 (at 0.762 3.429 90) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.254)))
+    )
+    (fp_text value IDC34R (at 20.447 -5.715 90) (layer F.Fab)
+      (effects (font (size 1.1 1.1) (thickness 0.254)))
+    )
+    (fp_line (start 17.78 -3.0861) (end 17.78 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 15.24 -3.0861) (end 15.24 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 12.7 -3.0861) (end 12.7 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 10.16 -3.0861) (end 10.16 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 7.62 -3.0861) (end 7.62 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 5.08 -3.0861) (end 5.08 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 7.6454 -0.1016) (end 7.6454 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 5.08 -0.1016) (end 5.08 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 12.7254 -0.1016) (end 12.7254 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 15.2527 -0.1016) (end 15.2527 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 20.3327 -0.1016) (end 20.3327 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 17.8054 -0.1016) (end 17.8054 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 10.1727 -0.1016) (end 10.1727 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 2.54 -0.1016) (end 2.54 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 0.0127 -0.1016) (end 0.0127 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -2.5146 -0.1016) (end -2.5146 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -5.0673 -0.1016) (end -5.0673 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -7.5946 -0.1016) (end -7.5946 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -17.78 -3.0861) (end -17.78 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -15.24 -3.0861) (end -15.24 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -12.7 -3.0861) (end -12.7 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -10.16 -3.0861) (end -10.16 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -7.62 -3.0861) (end -7.62 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -5.08 -3.0861) (end -5.08 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -24 -3.2258) (end 24 -3.2258) (layer F.SilkS) (width 0.254))
+    (fp_line (start -24 -11) (end 24 -11) (layer F.SilkS) (width 0.254))
+    (fp_line (start -24 -3.2258) (end -24 -11) (layer F.SilkS) (width 0.254))
+    (fp_line (start 24 -3.2258) (end 24 -11) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2 -5) (end -2 -5) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2 -5) (end -2 -11) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2 -5) (end 2 -11) (layer F.SilkS) (width 0.254))
+    (fp_line (start 19.21002 -8.8646) (end 19.1643 -8.9408) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.33778 -7.05104) (end 19.21002 -8.8646) (layer F.SilkS) (width 0.15))
+    (fp_line (start 21.34362 -8.9408) (end 20.33778 -7.05104) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.34718 -8.9408) (end 21.34362 -8.9408) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.38274 -8.93572) (end 19.1897 -8.9408) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.28444 -8.35406) (end 20.29206 -8.34644) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.39112 -8.42264) (end 20.28444 -8.35406) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.21586 -8.52932) (end 20.39112 -8.42264) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.4978 -8.57504) (end 20.21586 -8.52932) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.35302 -8.12546) (end 20.4978 -8.57504) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.06346 -8.56742) (end 20.35302 -8.12546) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.6502 -8.65124) (end 20.06346 -8.56742) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.36064 -7.9121) (end 20.6502 -8.65124) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.83486 -8.65886) (end 20.36064 -7.9121) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.86356 -8.7122) (end 19.83486 -8.65886) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.32254 -7.73684) (end 20.86356 -8.7122) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.6215 -8.76554) (end 20.32254 -7.73684) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.9931 -8.78078) (end 19.6215 -8.76554) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.32254 -7.52348) (end 20.9931 -8.78078) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.49196 -8.8646) (end 20.32254 -7.52348) (layer F.SilkS) (width 0.15))
+    (fp_line (start 21.15312 -8.85698) (end 19.49196 -8.8646) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.33778 -7.31012) (end 21.15312 -8.85698) (layer F.SilkS) (width 0.15))
+    (fp_line (start 19.36242 -8.85698) (end 20.33778 -7.31012) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.39874 -7.50062) (end 20.33778 -7.20344) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.79498 -8.763) (end 20.6883 -8.56742) (layer F.SilkS) (width 0.15))
+    (fp_line (start 20.08124 -8.4455) (end 19.75866 -8.70966) (layer F.SilkS) (width 0.15))
+    (fp_line (start -22.99716 -9.17448) (end -22.99716 -5.1689) (layer F.SilkS) (width 0.254))
+    (fp_line (start -20.193 -9.17702) (end -22.99716 -9.17448) (layer F.SilkS) (width 0.254))
+    (fp_line (start -20.19808 -5.17144) (end -20.193 -9.17702) (layer F.SilkS) (width 0.254))
+    (fp_line (start -22.99716 -5.16636) (end -20.19808 -5.17144) (layer F.SilkS) (width 0.254))
+    (fp_line (start -20.32 -3.0607) (end -20.32 -2.5654) (layer F.SilkS) (width 0.5))
+    (fp_line (start -2.54 -3.0861) (end -2.54 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 0 -3.0861) (end 0 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 2.5654 -3.0861) (end 2.5654 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 20.3327 -3.0861) (end 20.3327 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -20.32 -0.1016) (end -20.32 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -17.78 -0.1016) (end -17.78 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -15.24 -0.1016) (end -15.24 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -12.6746 -0.1016) (end -12.6746 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -10.1473 -0.1016) (end -10.1473 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_text user 34 (at -21.463 -7.366 180) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.254)))
+    )
+    (pad 1 thru_hole rect (at 20.32 1.27 270) (size 1.75 1.75) (drill 1) (layers *.Cu *.Mask)
+      (net 2 +5V) (solder_mask_margin 0.0508))
+    (pad 2 thru_hole circle (at 20.32 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 3 thru_hole circle (at 17.78 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 3 +3V3) (solder_mask_margin 0.0508))
+    (pad 4 thru_hole circle (at 17.78 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 5 thru_hole circle (at 15.24 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 25 /GPIO_Pin<5>) (solder_mask_margin 0.0508))
+    (pad 6 thru_hole circle (at 15.24 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 4 /EXTCLK) (solder_mask_margin 0.0508))
+    (pad 7 thru_hole circle (at 12.7 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 26 /GPIO_Pin<7>) (solder_mask_margin 0.0508))
+    (pad 8 thru_hole circle (at 12.7 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 9 thru_hole circle (at 10.16 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 27 /GPIO_Pin<9>) (solder_mask_margin 0.0508))
+    (pad 10 thru_hole circle (at 10.16 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 28 /IrDA_SC) (solder_mask_margin 0.0508))
+    (pad 12 thru_hole circle (at 7.62 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 29 /IrDA_Rx) (solder_mask_margin 0.0508))
+    (pad 11 thru_hole circle (at 7.62 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 30 /GPIO_Pin<11>) (solder_mask_margin 0.0508))
+    (pad 14 thru_hole circle (at 5.08 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 31 /PS2_CLK) (solder_mask_margin 0.0508))
+    (pad 13 thru_hole circle (at 5.08 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 32 /GPIO_Pin<13>) (solder_mask_margin 0.0508))
+    (pad 16 thru_hole circle (at 2.54 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 33 /PS2_DATA) (solder_mask_margin 0.0508))
+    (pad 15 thru_hole circle (at 2.54 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 34 /GPIO_Pin<15>) (solder_mask_margin 0.0508))
+    (pad 18 thru_hole circle (at 0 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 35 /VGA_VSYNC) (solder_mask_margin 0.0508))
+    (pad 17 thru_hole circle (at 0 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 36 /GPIO_Pin<17>) (solder_mask_margin 0.0508))
+    (pad 20 thru_hole circle (at -2.54 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 37 /VGA_HSYNC) (solder_mask_margin 0.0508))
+    (pad 19 thru_hole circle (at -2.54 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 38 /GPIO_Pin<19>) (solder_mask_margin 0.0508))
+    (pad 26 thru_hole circle (at -10.16 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 39 /VGA_BLUE1) (solder_mask_margin 0.0508))
+    (pad 25 thru_hole circle (at -10.16 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 40 /GPIO_Pin<25>) (solder_mask_margin 0.0508))
+    (pad 34 thru_hole circle (at -20.32 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 41 /VGA_RED3) (solder_mask_margin 0.0508))
+    (pad 31 thru_hole circle (at -17.78 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 42 /GPIO_Pin<31>) (solder_mask_margin 0.0508))
+    (pad 32 thru_hole circle (at -17.78 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 43 /VGA_GREEN1) (solder_mask_margin 0.0508))
+    (pad 33 thru_hole circle (at -20.32 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 44 /IrDA_Tx) (solder_mask_margin 0.0508))
+    (pad 29 thru_hole circle (at -15.24 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 45 /VGA_RED2) (solder_mask_margin 0.0508))
+    (pad 28 thru_hole circle (at -12.7 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 46 /VGA_GREEN3) (solder_mask_margin 0.0508))
+    (pad 30 thru_hole circle (at -15.24 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 47 /VGA_GREEN2) (solder_mask_margin 0.0508))
+    (pad 27 thru_hole circle (at -12.7 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 48 /VGA_RED1) (solder_mask_margin 0.0508))
+    (pad 22 thru_hole circle (at -5.08 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 49 /VGA_BLUE3) (solder_mask_margin 0.0508))
+    (pad 24 thru_hole circle (at -7.62 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 50 /VGA_BLUE2) (solder_mask_margin 0.0508))
+    (pad 23 thru_hole circle (at -7.62 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 51 /GPIO_Pin<23>) (solder_mask_margin 0.0508))
+    (pad 21 thru_hole circle (at -5.08 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 52 /GPIO_Pin<21>) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_Connectors-FP:BH34R locked (layer F.Cu) (tedit 56FB732C) (tstamp 56CF15A7)
+    (at 165.735 94.996 270)
+    (path /56BAE4C1)
+    (attr smd)
+    (fp_text reference GPIO_Out1 (at -1.016 3.556 270) (layer F.SilkS)
+      (effects (font (size 1.27 1.27) (thickness 0.254)))
+    )
+    (fp_text value BH34R (at -21.209 -7.62 90) (layer F.Fab)
+      (effects (font (size 1.1 1.1) (thickness 0.254)))
+    )
+    (fp_line (start 17.78 -3.0861) (end 17.78 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 15.24 -3.0861) (end 15.24 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 12.7 -3.0861) (end 12.7 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 10.16 -3.0861) (end 10.16 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 7.62 -3.0861) (end 7.62 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 5.08 -3.0861) (end 5.08 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 7.6454 -0.1016) (end 7.6454 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 5.08 -0.1016) (end 5.08 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 12.7254 -0.1016) (end 12.7254 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 15.2527 -0.1016) (end 15.2527 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 20.3327 -0.1016) (end 20.3327 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 17.8054 -0.1016) (end 17.8054 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 10.1727 -0.1016) (end 10.1727 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 2.54 -0.1016) (end 2.54 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start 0.0127 -0.1016) (end 0.0127 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -2.5146 -0.1016) (end -2.5146 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -5.0673 -0.1016) (end -5.0673 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -7.5946 -0.1016) (end -7.5946 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -17.78 -3.0861) (end -17.78 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -15.24 -3.0861) (end -15.24 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -12.7 -3.0861) (end -12.7 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -10.16 -3.0861) (end -10.16 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -7.62 -3.0861) (end -7.62 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -5.08 -3.0861) (end -5.08 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -25.4 -3.2258) (end 25.4 -3.2258) (layer F.SilkS) (width 0.254))
+    (fp_line (start -25.4 -11.938) (end 25.4 -11.938) (layer F.SilkS) (width 0.254))
+    (fp_line (start -25.4 -3.2258) (end -25.4 -11.938) (layer F.SilkS) (width 0.254))
+    (fp_line (start 25.4 -3.2258) (end 25.4 -11.938) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.159 -4.46786) (end -2.159 -4.46786) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2.159 -4.4704) (end -2.159 -11.938) (layer F.SilkS) (width 0.254))
+    (fp_line (start 2.159 -4.4704) (end 2.159 -11.938) (layer F.SilkS) (width 0.254))
+    (fp_line (start 17.4244 -4.59232) (end 17.4244 -3.25882) (layer F.SilkS) (width 0.254))
+    (fp_line (start -2.14122 -5.49402) (end 2.159 -5.49402) (layer F.SilkS) (width 0.254))
+    (fp_line (start 0.3556 -11.05916) (end 0.3556 -5.5118) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.3556 -11.05916) (end 0.3556 -11.05916) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.3556 -5.50164) (end -0.3556 -11.05916) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.2159 -11.05916) (end -0.2159 -5.588) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.07874 -11.01344) (end -0.0635 -5.63372) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.04318 -11.01344) (end 0.02794 -5.61848) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.1651 -11.01344) (end 0.14986 -5.64896) (layer F.SilkS) (width 0.15))
+    (fp_line (start 0.28702 -11.02868) (end 0.2413 -5.64896) (layer F.SilkS) (width 0.15))
+    (fp_line (start -21.42998 -10.7696) (end -21.4757 -10.8458) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.30222 -8.95604) (end -21.42998 -10.7696) (layer F.SilkS) (width 0.15))
+    (fp_line (start -19.29638 -10.8458) (end -20.30222 -8.95604) (layer F.SilkS) (width 0.15))
+    (fp_line (start -21.29282 -10.8458) (end -19.29638 -10.8458) (layer F.SilkS) (width 0.15))
+    (fp_line (start -21.25726 -10.84072) (end -21.4503 -10.8458) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.35556 -10.25906) (end -20.34794 -10.25144) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.24888 -10.32764) (end -20.35556 -10.25906) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.42414 -10.43432) (end -20.24888 -10.32764) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.1422 -10.48004) (end -20.42414 -10.43432) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.28698 -10.03046) (end -20.1422 -10.48004) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.57654 -10.47242) (end -20.28698 -10.03046) (layer F.SilkS) (width 0.15))
+    (fp_line (start -19.9898 -10.55624) (end -20.57654 -10.47242) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.27936 -9.8171) (end -19.9898 -10.55624) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.80514 -10.56386) (end -20.27936 -9.8171) (layer F.SilkS) (width 0.15))
+    (fp_line (start -19.77644 -10.6172) (end -20.80514 -10.56386) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.31746 -9.64184) (end -19.77644 -10.6172) (layer F.SilkS) (width 0.15))
+    (fp_line (start -21.0185 -10.67054) (end -20.31746 -9.64184) (layer F.SilkS) (width 0.15))
+    (fp_line (start -19.6469 -10.68578) (end -21.0185 -10.67054) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.31746 -9.42848) (end -19.6469 -10.68578) (layer F.SilkS) (width 0.15))
+    (fp_line (start -21.14804 -10.7696) (end -20.31746 -9.42848) (layer F.SilkS) (width 0.15))
+    (fp_line (start -19.48688 -10.76198) (end -21.14804 -10.7696) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.30222 -9.21512) (end -19.48688 -10.76198) (layer F.SilkS) (width 0.15))
+    (fp_line (start -21.27758 -10.76198) (end -20.30222 -9.21512) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.24126 -9.40562) (end -20.30222 -9.10844) (layer F.SilkS) (width 0.15))
+    (fp_line (start -19.84502 -10.668) (end -19.9517 -10.47242) (layer F.SilkS) (width 0.15))
+    (fp_line (start -20.55876 -10.3505) (end -20.88134 -10.61466) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.13716 -5.59562) (end 0.254 -5.59816) (layer F.SilkS) (width 0.15))
+    (fp_line (start -0.12446 -6.37032) (end -0.13716 -5.59562) (layer F.SilkS) (width 0.15))
+    (fp_line (start 21.25218 -11.938) (end 21.25218 -3.2258) (layer F.SilkS) (width 0.254))
+    (fp_line (start -0.11176 -8.41502) (end -0.1397 -6.17982) (layer F.SilkS) (width 0.15))
+    (fp_line (start 17.4244 -4.59232) (end 18.31594 -4.59232) (layer F.SilkS) (width 0.254))
+    (fp_line (start 21.2344 -4.60502) (end 19.87804 -4.60502) (layer F.SilkS) (width 0.254))
+    (fp_line (start 19.88058 -5.53212) (end 19.88058 -4.60248) (layer F.SilkS) (width 0.254))
+    (fp_line (start 18.32102 -5.53212) (end 19.88058 -5.53212) (layer F.SilkS) (width 0.254))
+    (fp_line (start 18.31594 -4.59232) (end 18.32102 -5.53212) (layer F.SilkS) (width 0.254))
+    (fp_line (start 18.32102 -5.50672) (end 18.3261 -7.10184) (layer F.SilkS) (width 0.254))
+    (fp_line (start 19.87042 -5.52704) (end 19.87042 -7.10184) (layer F.SilkS) (width 0.254))
+    (fp_line (start 18.034 -11.938) (end 18.034 -10.93724) (layer F.SilkS) (width 0.254))
+    (fp_line (start 20.066 -10.92708) (end 20.066 -11.938) (layer F.SilkS) (width 0.254))
+    (fp_line (start 18.034 -10.922) (end 20.066 -10.922) (layer F.SilkS) (width 0.254))
+    (fp_line (start 22.08784 -9.17448) (end 22.08784 -5.1689) (layer F.SilkS) (width 0.254))
+    (fp_line (start 24.892 -9.17702) (end 22.08784 -9.17448) (layer F.SilkS) (width 0.254))
+    (fp_line (start 24.88692 -5.17144) (end 24.892 -9.17702) (layer F.SilkS) (width 0.254))
+    (fp_line (start 22.08784 -5.16636) (end 24.88692 -5.17144) (layer F.SilkS) (width 0.254))
+    (fp_line (start -23.241 -2.4003) (end -23.241 -3.0734) (layer F.SilkS) (width 0.254))
+    (fp_line (start -24.2443 -2.4003) (end -23.241 -2.4003) (layer F.SilkS) (width 0.254))
+    (fp_line (start -24.2443 -3.0607) (end -24.2443 -2.4003) (layer F.SilkS) (width 0.254))
+    (fp_line (start 24.2443 -2.4003) (end 24.2443 -3.0734) (layer F.SilkS) (width 0.254))
+    (fp_line (start 23.241 -2.4003) (end 24.2443 -2.4003) (layer F.SilkS) (width 0.254))
+    (fp_line (start 23.241 -3.0734) (end 23.241 -2.4003) (layer F.SilkS) (width 0.254))
+    (fp_line (start -20.32 -3.0607) (end -20.32 -2.5654) (layer F.SilkS) (width 0.5))
+    (fp_line (start -2.54 -3.0861) (end -2.54 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 0 -3.0861) (end 0 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 2.5654 -3.0861) (end 2.5654 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start 20.3327 -3.0861) (end 20.3327 -2.5908) (layer F.SilkS) (width 0.5))
+    (fp_line (start -20.32 -0.1016) (end -20.32 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -17.78 -0.1016) (end -17.78 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -15.24 -0.1016) (end -15.24 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -12.6746 -0.1016) (end -12.6746 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_line (start -10.1473 -0.1016) (end -10.1473 0.1016) (layer F.SilkS) (width 0.5))
+    (fp_text user 34 (at 23.749 -6.9088) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.254)))
+    )
+    (fp_arc (start 19.10842 -6.45668) (end 18.3769 -7.1882) (angle 90) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole rect (at -20.32 1.27 270) (size 1.75 1.75) (drill 1) (layers *.Cu *.Mask)
+      (net 2 +5V) (solder_mask_margin 0.0508))
+    (pad 2 thru_hole circle (at -20.32 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 3 thru_hole circle (at -17.78 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 3 +3V3) (solder_mask_margin 0.0508))
+    (pad 4 thru_hole circle (at -17.78 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 5 thru_hole circle (at -15.24 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 25 /GPIO_Pin<5>) (solder_mask_margin 0.0508))
+    (pad 6 thru_hole circle (at -15.24 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 4 /EXTCLK) (solder_mask_margin 0.0508))
+    (pad 7 thru_hole circle (at -12.7 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 26 /GPIO_Pin<7>) (solder_mask_margin 0.0508))
+    (pad 8 thru_hole circle (at -12.7 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 1 GND) (solder_mask_margin 0.0508))
+    (pad 9 thru_hole circle (at -10.16 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 27 /GPIO_Pin<9>) (solder_mask_margin 0.0508))
+    (pad 10 thru_hole circle (at -10.16 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 28 /IrDA_SC) (solder_mask_margin 0.0508))
+    (pad 12 thru_hole circle (at -7.62 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 29 /IrDA_Rx) (solder_mask_margin 0.0508))
+    (pad 11 thru_hole circle (at -7.62 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 30 /GPIO_Pin<11>) (solder_mask_margin 0.0508))
+    (pad 14 thru_hole circle (at -5.08 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 31 /PS2_CLK) (solder_mask_margin 0.0508))
+    (pad 13 thru_hole circle (at -5.08 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 32 /GPIO_Pin<13>) (solder_mask_margin 0.0508))
+    (pad 16 thru_hole circle (at -2.54 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 33 /PS2_DATA) (solder_mask_margin 0.0508))
+    (pad 15 thru_hole circle (at -2.54 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 34 /GPIO_Pin<15>) (solder_mask_margin 0.0508))
+    (pad 18 thru_hole circle (at 0 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 35 /VGA_VSYNC) (solder_mask_margin 0.0508))
+    (pad 17 thru_hole circle (at 0 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 36 /GPIO_Pin<17>) (solder_mask_margin 0.0508))
+    (pad 20 thru_hole circle (at 2.54 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 37 /VGA_HSYNC) (solder_mask_margin 0.0508))
+    (pad 19 thru_hole circle (at 2.54 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 38 /GPIO_Pin<19>) (solder_mask_margin 0.0508))
+    (pad 26 thru_hole circle (at 10.16 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 39 /VGA_BLUE1) (solder_mask_margin 0.0508))
+    (pad 25 thru_hole circle (at 10.16 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 40 /GPIO_Pin<25>) (solder_mask_margin 0.0508))
+    (pad 34 thru_hole circle (at 20.32 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 41 /VGA_RED3) (solder_mask_margin 0.0508))
+    (pad 31 thru_hole circle (at 17.78 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 42 /GPIO_Pin<31>) (solder_mask_margin 0.0508))
+    (pad 32 thru_hole circle (at 17.78 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 43 /VGA_GREEN1) (solder_mask_margin 0.0508))
+    (pad 33 thru_hole circle (at 20.32 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 44 /IrDA_Tx) (solder_mask_margin 0.0508))
+    (pad 29 thru_hole circle (at 15.24 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 45 /VGA_RED2) (solder_mask_margin 0.0508))
+    (pad 28 thru_hole circle (at 12.7 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 46 /VGA_GREEN3) (solder_mask_margin 0.0508))
+    (pad 30 thru_hole circle (at 15.24 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 47 /VGA_GREEN2) (solder_mask_margin 0.0508))
+    (pad 27 thru_hole circle (at 12.7 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 48 /VGA_RED1) (solder_mask_margin 0.0508))
+    (pad 22 thru_hole circle (at 5.08 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 49 /VGA_BLUE3) (solder_mask_margin 0.0508))
+    (pad 24 thru_hole circle (at 7.62 -1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 50 /VGA_BLUE2) (solder_mask_margin 0.0508))
+    (pad 23 thru_hole circle (at 7.62 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 51 /GPIO_Pin<23>) (solder_mask_margin 0.0508))
+    (pad 21 thru_hole circle (at 5.08 1.27 270) (size 1.8 1.8) (drill 1) (layers *.Cu *.Mask)
+      (net 52 /GPIO_Pin<21>) (solder_mask_margin 0.0508))
+  )
+
+  (module OLIMEX_Connectors-FP:PS2_MDR6_MINI-DIN (layer F.Cu) (tedit 56FB740C) (tstamp 56D9F916)
+    (at 140.5 113.5)
+    (path /56D6BA64)
+    (attr smd)
+    (fp_text reference PS2_KEYBOARD1 (at 8.979 -0.216 90) (layer F.SilkS)
+      (effects (font (size 1.016 1.016) (thickness 0.254)))
+    )
+    (fp_text value MDR6_MINI-DIN (at -0.038 5.245) (layer F.Fab)
+      (effects (font (size 1.1 1.1) (thickness 0.254)))
+    )
+    (fp_line (start -6.9977 -0.99822) (end -6.9977 -6.49986) (layer F.SilkS) (width 0.254))
+    (fp_line (start -6.9977 6.49986) (end -6.9977 2.99974) (layer F.SilkS) (width 0.254))
+    (fp_line (start 6.9977 6.49986) (end -6.9977 6.49986) (layer F.SilkS) (width 0.254))
+    (fp_line (start 6.9977 2.99974) (end 6.9977 6.49986) (layer F.SilkS) (width 0.254))
+    (fp_line (start 6.9977 -6.49986) (end 6.9977 -0.99822) (layer F.SilkS) (width 0.254))
+    (fp_line (start -6.9977 -6.49986) (end 6.9977 -6.49986) (layer F.SilkS) (width 0.254))
+    (pad 1 thru_hole circle (at 1.27 -1.77) (size 1.41 1.41) (drill 0.9) (layers *.Cu *.Mask)
+      (net 11 "Net-(PS2_KEYBOARD1-Pad1)"))
+    (pad 2 thru_hole circle (at -1.27 -1.77) (size 1.41 1.41) (drill 0.9) (layers *.Cu *.Mask)
+      (net 12 "Net-(PS2_KEYBOARD1-Pad2)"))
+    (pad 3 thru_hole circle (at 3.26 -1.77) (size 1.41 1.41) (drill 0.9) (layers *.Cu *.Mask)
+      (net 1 GND))
+    (pad 4 thru_hole circle (at -3.26 -1.77) (size 1.41 1.41) (drill 0.9) (layers *.Cu *.Mask)
+      (net 2 +5V))
+    (pad 5 thru_hole circle (at 3.26 -4.31) (size 1.41 1.41) (drill 0.9) (layers *.Cu *.Mask)
+      (net 13 "Net-(PS2_KEYBOARD1-Pad5)"))
+    (pad 6 thru_hole circle (at -3.26 -4.31) (size 1.41 1.41) (drill 0.9) (layers *.Cu *.Mask)
+      (net 14 "Net-(PS2_KEYBOARD1-Pad6)"))
+    (pad 7 thru_hole circle (at -1.27 -4.31) (size 1.41 1.41) (drill 0.9) (layers *.Cu *.Mask)
+      (net 15 "Net-(PS2_KEYBOARD1-Pad7)"))
+    (pad 8 thru_hole circle (at 1.27 -4.31) (size 1.41 1.41) (drill 0.9) (layers *.Cu *.Mask)
+      (net 16 "Net-(PS2_KEYBOARD1-Pad8)"))
+    (pad 9 thru_hole circle (at -6.3 1) (size 3.5 3.5) (drill 2.5) (layers *.Cu *.Mask)
+      (net 6 "Net-(C4-Pad2)"))
+    (pad 9 thru_hole circle (at 0 1.8) (size 3.5 3.5) (drill 2.5) (layers *.Cu *.Mask)
+      (net 6 "Net-(C4-Pad2)"))
+    (pad 9 thru_hole circle (at 6.3 1) (size 3.5 3.5) (drill 2.5) (layers *.Cu *.Mask)
+      (net 6 "Net-(C4-Pad2)"))
+  )
+
+  (module OLIMEX_LOGOs-FP:LOGO_ANTISTATIC_1 (layer B.Cu) (tedit 552E49BF) (tstamp 56FB7434)
+    (at 140.208 93.726 180)
+    (fp_text reference Ref** (at 0 0 180) (layer B.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.15)) (justify mirror))
+    )
+    (fp_text value Val** (at 0 0 180) (layer B.SilkS) hide
+      (effects (font (size 1.524 1.524) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 2.2225 1.27) (end 2.159 1.27) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.2225 1.27) (end 2.2225 2.286) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.286 1.0795) (end 2.286 1.2065) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.8415 2.4765) (end 1.8415 1.397) (layer B.SilkS) (width 0.254))
+    (fp_line (start 2.794 1.0795) (end 2.9464 1.0795) (layer B.SilkS) (width 0.254))
+    (fp_line (start 5.7785 2.667) (end 5.461 2.667) (layer B.SilkS) (width 0.254))
+    (fp_line (start 4.1529 3.556) (end 5.334 3.556) (layer B.SilkS) (width 0.254))
+    (fp_line (start 1.778 3.4925) (end 7.112 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 5.334 3.556) (end 3.556 7.112) (layer B.SilkS) (width 0.254))
+    (fp_line (start 5.7785 2.667) (end 5.334 3.556) (layer B.SilkS) (width 0.254))
+    (fp_line (start 7.112 0) (end 5.7785 2.667) (layer B.SilkS) (width 0.254))
+    (fp_line (start 0 0) (end 7.112 0) (layer B.SilkS) (width 0.254))
+    (fp_line (start 3.556 7.112) (end 0 0) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 3.46964 2.34442) (end 2.3495 3.1115) (angle -75.7) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 4.11988 3.8481) (end 4.1529 3.556) (angle -44.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 5.3975 2.06248) (end 4.953 2.4765) (angle -53.1) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 3.98272 3.28422) (end 4.953 2.4765) (angle -43.5) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 3.90398 0.9525) (end 2.667 1.524) (angle -53.1) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 3.84048 1.03124) (end 2.9845 1.0795) (angle -67.4) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 4.82092 -1.74244) (end 3.556 1.8415) (angle -6.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 2.8575 1.27) (end 2.794 1.0795) (angle -53.1) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 2.9845 1.36398) (end 2.667 1.2065) (angle -53.1) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 2.0701 3.29184) (end 2.921 2.7305) (angle -47.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 1.55448 3.58648) (end 2.3495 3.1115) (angle -28) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 2.19964 2.4765) (end 1.8415 2.4765) (angle -61.9) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 2.2225 1.397) (end 2.2225 1.016) (angle -90) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 2.2225 1.07696) (end 2.286 1.0795) (angle -90.1) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 2.2225 1.2065) (end 2.2225 1.27) (angle -90) (layer B.SilkS) (width 0.254))
+    (fp_arc (start 2.159 1.143) (end 2.032 1.143) (angle -90) (layer B.SilkS) (width 0.254))
+  )
+
+  (gr_line (start 147.447 107.315) (end 147.193 107.061) (layer F.SilkS) (width 0.254))
+  (gr_line (start 162.56 70.485) (end 162.179 70.104) (layer F.SilkS) (width 0.254))
+  (gr_line (start 162.56 70.485) (end 162.941 70.866) (layer F.SilkS) (width 0.254))
+  (gr_line (start 162.814 70.104) (end 162.814 70.485) (layer F.SilkS) (width 0.254))
+  (gr_line (start 162.687 70.104) (end 162.687 70.485) (layer F.SilkS) (width 0.254))
+  (gr_line (start 162.56 70.485) (end 162.941 70.485) (layer F.SilkS) (width 0.254))
+  (gr_line (start 162.56 70.104) (end 162.56 70.485) (layer F.SilkS) (width 0.254))
+  (gr_line (start 163.576 75.946) (end 167.894 75.946) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA514B))
+  (gr_line (start 163.576 78.486) (end 167.894 78.486) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5149))
+  (gr_line (start 163.576 81.026) (end 167.894 81.026) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5147))
+  (gr_line (start 163.576 83.566) (end 167.894 83.566) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5145))
+  (gr_line (start 163.576 86.106) (end 167.894 86.106) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5143))
+  (gr_line (start 163.576 88.646) (end 167.894 88.646) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5141))
+  (gr_line (start 163.576 91.186) (end 167.894 91.186) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA513F))
+  (gr_line (start 163.576 93.726) (end 167.894 93.726) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA513C))
+  (gr_line (start 163.576 96.266) (end 167.894 96.266) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA513A))
+  (gr_line (start 163.576 98.806) (end 167.894 98.806) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5138))
+  (gr_line (start 163.576 101.346) (end 167.894 101.346) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA512B))
+  (gr_line (start 163.576 103.886) (end 167.894 103.886) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5124))
+  (gr_line (start 163.576 106.426) (end 167.894 106.426) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA511D))
+  (gr_line (start 163.576 108.966) (end 167.894 108.966) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5117))
+  (gr_line (start 163.576 111.506) (end 167.894 111.506) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA510E))
+  (gr_line (start 163.576 114.046) (end 167.894 114.046) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5107))
+  (gr_line (start 127.381 75.946) (end 131.699 75.946) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA505D))
+  (gr_line (start 127.381 78.486) (end 131.699 78.486) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5051))
+  (gr_line (start 127.381 81.026) (end 131.699 81.026) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5048))
+  (gr_line (start 127.381 83.566) (end 131.699 83.566) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5025))
+  (gr_line (start 127.381 86.106) (end 131.699 86.106) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5014))
+  (gr_line (start 127.381 88.646) (end 131.699 88.646) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA5004))
+  (gr_line (start 127.381 91.186) (end 131.699 91.186) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4FFE))
+  (gr_line (start 127.381 93.726) (end 131.699 93.726) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4FF7))
+  (gr_line (start 127.381 96.266) (end 131.699 96.266) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4FDC))
+  (gr_line (start 127.381 98.806) (end 131.699 98.806) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4FD5))
+  (gr_line (start 127.381 101.346) (end 131.699 101.346) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4FCE))
+  (gr_line (start 127.381 103.886) (end 131.699 103.886) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4FC2))
+  (gr_line (start 127.381 106.426) (end 131.699 106.426) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4FB8))
+  (gr_line (start 127.381 108.966) (end 131.699 108.966) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4FAF))
+  (gr_line (start 127.381 111.506) (end 131.699 111.506) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4F9C))
+  (gr_line (start 127.381 114.046) (end 131.699 114.046) (angle 90) (layer B.SilkS) (width 0.508))
+  (gr_line (start 165.735 116.205) (end 165.735 73.66) (angle 90) (layer B.SilkS) (width 0.508) (tstamp 56FA4F5F))
+  (gr_line (start 129.54 116.205) (end 129.54 73.66) (angle 90) (layer B.SilkS) (width 0.508))
+  (gr_line (start 125 95) (end 170 95) (angle 90) (layer F.Fab) (width 0.254))
+  (gr_line (start 147.5 120) (end 147.5 70) (angle 90) (layer F.Fab) (width 0.254))
+  (gr_line (start 125 120) (end 125 70) (angle 90) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 170 120) (end 125 120) (angle 90) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 170 70) (end 170 120) (angle 90) (layer Edge.Cuts) (width 0.254))
+  (gr_line (start 125 70) (end 170 70) (angle 90) (layer Edge.Cuts) (width 0.254))
+  (gr_text iCE40-IO (at 146.812 99.06) (layer B.SilkS) (tstamp 56FB79AC)
+    (effects (font (size 3.81 3.81) (thickness 0.635)) (justify mirror))
+  )
+  (gr_text Rev.A (at 138.43 99.314) (layer F.SilkS) (tstamp 56FB7631)
+    (effects (font (size 1.016 1.016) (thickness 0.254)))
+  )
+  (gr_text iCE40-IO (at 147.574 96.012) (layer F.SilkS) (tstamp 56FB75D9)
+    (effects (font (size 3.302 3.302) (thickness 0.508)))
+  )
+  (gr_text "2 Layers PCB" (at 147.066 124.079) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text https://www.olimex.com (at 147.574 77.216) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text 45x50mm (at 147.32 126.873) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text "(C) 2016" (at 155.194 99.314) (layer F.SilkS)
+    (effects (font (size 1.016 1.016) (thickness 0.254)))
+  )
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

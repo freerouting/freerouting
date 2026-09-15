@@ -1,0 +1,30 @@
+{
+  "board": "breakout-boards_usb-5v-3v3",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\breakout-boards_usb-5v-3v3\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 0,
+  "segment_count": 20,
+  "approximate_track_length_mm": 49.62,
+  "kicad_drc_violations": 58,
+  "generated_at": "2026-08-18T18:36:12.812626+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 58,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 11,
+      "copper_edge_clearance": 6,
+      "courtyards_overlap": 2,
+      "drill_out_of_range": 2,
+      "lib_footprint_issues": 10,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 5,
+      "silk_overlap": 18,
+      "text_height": 2
+    },
+    "by_severity": {
+      "error": 21,
+      "warning": 37
+    }
+  }
+}

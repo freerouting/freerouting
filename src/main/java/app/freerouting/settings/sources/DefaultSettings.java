@@ -2,6 +2,8 @@ package app.freerouting.settings.sources;
 
 import app.freerouting.autoroute.BoardUpdateStrategy;
 import app.freerouting.autoroute.ItemSelectionStrategy;
+import app.freerouting.settings.OptimizerScoringVersion;
+import app.freerouting.settings.RouterScoringVersion;
 import app.freerouting.settings.RouterSettings;
 import app.freerouting.settings.SettingsSource;
 
@@ -74,11 +76,57 @@ public class DefaultSettings implements SettingsSource {
    */
   public static final double DEFAULT_UNDESIRED_DIRECTION_TRACE_COST = 1.0;
 
-  /** Default copper-to-board-edge clearance in micrometres (0.5 mm). */
-  public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 500.0;
+  /**
+   * Default copper-to-board-edge clearance in micrometres (0.25 mm / 250 um, IPC-2221 precision /
+   * CNC routing standard).
+   */
+  public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 250.0;
 
   /** Default drill-hole-to-copper clearance in micrometres. Zero preserves legacy DSN behaviour. */
   public static final double DEFAULT_HOLE_CLEARANCE_UM = 0.0;
+
+  /** Current default router score formula. */
+  public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
+      RouterScoringVersion.V2_CONTINUOUS;
+
+  /** Current default optimizer score formula. */
+  public static final OptimizerScoringVersion DEFAULT_OPTIMIZER_SCORING_VERSION =
+      OptimizerScoringVersion.V2_LOWER_BOUND;
+
+  public static final float DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT = 1000.0F;
+
+  /** Split between first-half and second-half unrouted weights. Default 0.5. */
+  public static final float DEFAULT_ROUTER_UNROUTED_FREE_FRACTION = 0.5F;
+
+  /**
+   * Penalty for having the first half of connections still open. Half of {@link
+   * #DEFAULT_ROUTER_UNROUTED_SECOND_HALF_WEIGHT} so early progress still moves the score, but less
+   * than finishing the remaining nets. Together with the second-half weight this sums to 1000.
+   */
+  public static final float DEFAULT_ROUTER_UNROUTED_FIRST_HALF_WEIGHT = 1000.0F / 3.0F;
+
+  /**
+   * Penalty for having the last half of connections still open. Twice the first-half weight so a
+   * fully open board scores 0 and a half-done board scores about 333.
+   */
+  public static final float DEFAULT_ROUTER_UNROUTED_SECOND_HALF_WEIGHT = 2000.0F / 3.0F;
+
+  public static final float DEFAULT_ROUTER_CLEARANCE_COUNT_WEIGHT = 25.0F;
+  public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_WEIGHT = 300.0F;
+  public static final float DEFAULT_ROUTER_CLEARANCE_DEPTH_SCALE_UM = 1000.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_LENGTH_WEIGHT = 1000.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_VIA_WEIGHT = 2000.0F;
+  public static final float DEFAULT_OPTIMIZER_EXCESS_BEND_WEIGHT = 500.0F;
+  public static final float DEFAULT_OPTIMIZER_LENGTH_FLOOR = 1.0F;
+  public static final float DEFAULT_OPTIMIZER_DIFFICULTY_SCALE_FLOOR = 1.0F;
+
+  /**
+   * Relative optimizer-pass improvement percentage below which {@code BatchOptimizer} stops. The
+   * comparison is {@code (scoreAfter - scoreBefore) / scoreBefore * 100}, expressed directly as an
+   * actual percentage (e.g. 2.5 = 2.5%). Default is 2.5 (2.5%), providing optimal balance between
+   * via elimination and runtime.
+   */
+  public static final float DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD = 2.5F;
 
   private static final int PRIORITY = 0;
 
@@ -93,19 +141,22 @@ public class DefaultSettings implements SettingsSource {
     // 2-layer design.
     RouterSettings settings = new RouterSettings();
 
-    settings.enabled = true;
-    settings.algorithm = RouterSettings.ALGORITHM_CURRENT;
+    settings.autorouter.enabled = true;
+    settings.autorouter.algorithm = RouterSettings.ALGORITHM_CURRENT;
     settings.jobTimeoutString = "12:00:00";
-    settings.maxPasses = 9999;
-    settings.maxItems = Integer.MAX_VALUE;
+    settings.autorouter.maxPasses = 0;
+    settings.autorouter.maxItems = Integer.MAX_VALUE;
     settings.tracePullTightAccuracy = 500;
     settings.viasAllowed = true;
     settings.automaticNeckdown = true;
-    settings.saveIntermediateStages = false;
-    settings.ignoreNetClasses = new String[0];
+    settings.autorouter.saveIntermediateStages = false;
+    settings.autorouter.ignoreNetClasses = new String[0];
     settings.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+    settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
+    settings.planeNets = new String[0];
+    settings.planeAsObstacle = false;
     settings.neckWidthUm = 0.0;
     settings.strictDrc = false;
 
@@ -132,14 +183,15 @@ public class DefaultSettings implements SettingsSource {
     settings.optimizer.maxPasses = 100;
     settings.optimizer.maxItems = Integer.MAX_VALUE;
     settings.optimizer.maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
-    settings.optimizer.optimizationImprovementThreshold = 0.01f;
-    settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GREEDY;
-    settings.optimizer.hybridRatio = "1:1";
-    settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.PRIORITIZED;
+    settings.optimizer.optimizationImprovementThreshold = DEFAULT_OPTIMIZER_IMPROVEMENT_THRESHOLD;
+    settings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
+    settings.optimizer.itemSelectionStrategy = ItemSelectionStrategy.SEQUENTIAL;
     settings.optimizer.additionalRipupCostFactorAtStart = 10;
     settings.optimizer.traceRipupCostFactor = 0.6f;
     settings.optimizer.maxAutoroutePasses = 6;
+    settings.optimizer.enablePreflightGuards = true;
     settings.optimizer.maxConsecutiveFailures = 50;
+    settings.optimizer.maxConsecutiveFailuresPass1 = 12;
 
     // Scalar trace-cost defaults (layer-specific arrays are omitted for the same reason as
     // the layer arrays above – their sizes depend on the board).
@@ -153,6 +205,22 @@ public class DefaultSettings implements SettingsSource {
     settings.scoring.clearanceViolationPenalty = DEFAULT_CLEARANCE_VIOLATION_PENALTY;
     settings.scoring.bendPenalty = DEFAULT_BEND_PENALTY;
     settings.scoring.defaultBendCost = 0.0;
+
+    settings.routerScoring.version = DEFAULT_ROUTER_SCORING_VERSION;
+    settings.routerScoring.unroutedConnectionWeight = DEFAULT_ROUTER_UNROUTED_CONNECTION_WEIGHT;
+    settings.routerScoring.unroutedFreeFraction = DEFAULT_ROUTER_UNROUTED_FREE_FRACTION;
+    settings.routerScoring.unroutedFirstHalfWeight = DEFAULT_ROUTER_UNROUTED_FIRST_HALF_WEIGHT;
+    settings.routerScoring.unroutedSecondHalfWeight = DEFAULT_ROUTER_UNROUTED_SECOND_HALF_WEIGHT;
+    settings.routerScoring.clearanceViolationCountWeight = DEFAULT_ROUTER_CLEARANCE_COUNT_WEIGHT;
+    settings.routerScoring.clearanceViolationDepthWeight = DEFAULT_ROUTER_CLEARANCE_DEPTH_WEIGHT;
+    settings.routerScoring.clearanceViolationDepthScale = DEFAULT_ROUTER_CLEARANCE_DEPTH_SCALE_UM;
+
+    settings.optimizerScoring.version = DEFAULT_OPTIMIZER_SCORING_VERSION;
+    settings.optimizerScoring.excessWireLengthWeight = DEFAULT_OPTIMIZER_EXCESS_LENGTH_WEIGHT;
+    settings.optimizerScoring.excessViaWeight = DEFAULT_OPTIMIZER_EXCESS_VIA_WEIGHT;
+    settings.optimizerScoring.excessBendWeight = DEFAULT_OPTIMIZER_EXCESS_BEND_WEIGHT;
+    settings.optimizerScoring.lengthFloor = DEFAULT_OPTIMIZER_LENGTH_FLOOR;
+    settings.optimizerScoring.difficultyScaleFloor = DEFAULT_OPTIMIZER_DIFFICULTY_SCALE_FLOOR;
 
     return settings;
   }

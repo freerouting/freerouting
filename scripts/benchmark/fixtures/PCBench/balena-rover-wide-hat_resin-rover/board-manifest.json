@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "balena-rover-wide-hat_resin-rover",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 472365,
+      "sha256": "c264ffe10ee0181b82b538d629e368a1e0e6f4ca7c92b1b1772766aacf28bc47"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 356495,
+      "sha256": "630027b201e8050c17a4c8810d24c811039ea7e5cd9cfe01b07b9451829b9132"
+    },
+    "metadata_json": {
+      "bytes": 561,
+      "sha256": "8e075f9fdfb6b59f2b2e29106de4d94371c5693736f888bcf586f9a981c44b72"
+    },
+    "final_json": {
+      "bytes": 201705,
+      "sha256": "ce9cc2579a94caa367fe324871077d5577f059bc9afd5a950ce0659ac2ed72c2"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:31:58.458979+00:00"
+  }
+}

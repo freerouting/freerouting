@@ -1,0 +1,32 @@
+{
+  "board": "soil-moisture-sensor-analog_analog-moist-sensor",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\soil-moisture-sensor-analog_analog-moist-sensor\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 19,
+  "segment_count": 185,
+  "approximate_track_length_mm": 325.02,
+  "kicad_drc_violations": 169,
+  "generated_at": "2026-08-18T19:46:24.556881+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 169,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 2,
+      "clearance": 54,
+      "copper_edge_clearance": 2,
+      "hole_clearance": 4,
+      "lib_footprint_issues": 29,
+      "padstack": 2,
+      "silk_edge_clearance": 4,
+      "silk_over_copper": 32,
+      "silk_overlap": 36,
+      "starved_thermal": 2,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 64,
+      "warning": 105
+    }
+  }
+}

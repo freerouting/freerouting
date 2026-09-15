@@ -1,0 +1,814 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\keyboard_converter_converter\reference-routed.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer Front
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer Back
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  125098 -100002  125291 -100041  125473 -100116  125636 -100225
+            125775 -100364  125884 -100527  125959 -100709  125998 -100902
+            126000 -101000  126000 -136000  125998 -136098  125959 -136291
+            125884 -136473  125775 -136636  125636 -136775  125473 -136884
+            125291 -136959  125098 -136998  125000 -137000  101000 -137000
+            100902 -136998  100709 -136959  100527 -136884  100364 -136775
+            100225 -136636  100116 -136473  100041 -136291  100002 -136098
+            100000 -136000  100000 -101000  100002 -100902  100041 -100709
+            100116 -100527  100225 -100364  100364 -100225  100527 -100116
+            100709 -100041  100902 -100002  101000 -100000  125000 -100000
+            125098 -100002)
+    )
+    (via "Via[0-1]_889:508_um")
+    (rule
+      (width 254)
+      (clearance 254)
+      (clearance 63.5 (type smd_smd))
+    )
+  )
+  (placement
+    (component keyboard_parts:USB_microB
+      (place J1 113000 -135550 front 0 (PN USB_mini_micro_B))
+    )
+    (component keyboard_parts:LED_3020_REFLOW
+      (place D1 102000 -103375 front -90 (PN LED))
+    )
+    (component "keyboard_parts:FA-238"
+      (place X1 122375 -126000 front 0 (PN 16M))
+    )
+    (component 000NewKeyboard_parts:QFP32
+      (place U1 108500 -118725 front 180 (PN ATMEGA32U2))
+    )
+    (component 000NewKeyboard_parts:SW_ALPS_SKRP
+      (place SW1 103800 -128580 front 90 (PN SW_PUSH))
+    )
+    (component 000NewKeyboard_parts:C_1608
+      (place C1 119350 -131155 front -90 (PN 4.7u))
+      (place R13 120725 -113800 front 180 (PN 1K))
+      (place R3 102475 -113505 front 180 (PN 1k))
+      (place R4 102475 -111280 front 0 (PN R_LED))
+      (place R10 122275 -119650 front 180 (PN 1K))
+      (place R11 120725 -117700 front 180 (PN 1K))
+      (place R12 122275 -115750 front 180 (PN 1K))
+      (place R1 114275 -127005 front -90 (PN 22))
+      (place R2 111725 -127000 front -90 (PN 22))
+      (place R14 122275 -111850 front 180 (PN 1K))
+      (place C6 122375 -122600 front 180 (PN 10p))
+      (place C5 122375 -129405 front 0 (PN 10p))
+      (place C2 108325 -126430 front 0 (PN 1u))
+      (place C3 116775 -119130 front 0 (PN 0.1u))
+      (place C4 115925 -122930 front 0 (PN 0.1u))
+    )
+    (component 000NewKeyboard_parts:SOLDER_JUMPER_2
+      (place SJ30 123625 -127700 back 90 (PN SOLDER_JUMPER))
+      (place SJ29 123625 -124700 back 90 (PN SOLDER_JUMPER))
+      (place SJ28 123625 -118700 back 90 (PN SOLDER_JUMPER))
+      (place SJ27 123625 -115700 back 90 (PN SOLDER_JUMPER))
+      (place SJ26 123625 -112700 back 90 (PN SOLDER_JUMPER))
+      (place SJ25 120625 -112700 back 90 (PN SOLDER_JUMPER))
+      (place SJ24 117625 -127700 back 90 (PN SOLDER_JUMPER))
+      (place SJ23 117625 -124700 back 90 (PN SOLDER_JUMPER))
+      (place SJ22 117625 -121700 back 90 (PN SOLDER_JUMPER))
+      (place SJ21 117625 -112700 back 90 (PN SOLDER_JUMPER))
+      (place SJ20 114625 -127700 back 90 (PN SOLDER_JUMPER))
+      (place SJ19 114625 -124700 back 90 (PN SOLDER_JUMPER))
+      (place SJ18 114625 -121700 back 90 (PN SOLDER_JUMPER))
+      (place SJ17 114625 -118700 back 90 (PN SOLDER_JUMPER))
+      (place SJ16 114625 -115700 back 90 (PN SOLDER_JUMPER))
+      (place SJ15 114625 -112700 back 90 (PN SOLDER_JUMPER))
+      (place SJ14 111625 -115700 back 90 (PN SOLDER_JUMPER))
+      (place SJ13 108625 -127700 back 90 (PN SOLDER_JUMPER))
+      (place SJ12 108625 -124700 back 90 (PN SOLDER_JUMPER))
+      (place SJ11 108625 -121700 back 90 (PN SOLDER_JUMPER))
+      (place SJ10 108625 -118700 back 90 (PN SOLDER_JUMPER))
+      (place SJ9 108625 -115700 back 90 (PN SOLDER_JUMPER))
+      (place SJ8 108625 -112700 back 90 (PN SOLDER_JUMPER))
+      (place SJ7 105625 -115700 back 90 (PN SOLDER_JUMPER))
+      (place SJ6 105625 -112700 back 90 (PN SOLDER_JUMPER))
+      (place SJ5 102625 -124700 back 90 (PN SOLDER_JUMPER))
+      (place SJ4 102625 -121700 back 90 (PN SOLDER_JUMPER))
+      (place SJ3 102625 -118700 back 90 (PN SOLDER_JUMPER))
+      (place SJ2 102625 -115700 back 90 (PN SOLDER_JUMPER))
+      (place SJ1 102625 -112700 back 90 (PN SOLDER_JUMPER))
+      (place SJ98 107075 -133205 front 0 (PN SOLDER_JUMPER))
+      (place SJ99 123475 -103555 front 0 (PN SOLDER_JUMPER))
+    )
+    (component HOLE_M2.6
+      (place HOLE_M2.6_4 122962 -133987 front 0 (PN VAL**))
+    )
+    (component HOLE_M2.6::1
+      (place HOLE_M2.6_3 103432 -107716 front 0 (PN VAL**))
+    )
+    (component HOLE_M2.6::2
+      (place HOLE_M2.6_2 122862 -107716 front 0 (PN VAL**))
+    )
+    (component HOLE_M2.6::3
+      (place HOLE_M2.6 103532 -133987 front 0 (PN VAL**))
+    )
+    (component 000NewKeyboard_parts:PIN_1
+      (place P1 116825 -130300 front 0 (PN CONN_1))
+      (place P2 114275 -130300 front 0 (PN CONN_1))
+      (place P3 111725 -130300 front 0 (PN CONN_1))
+      (place P4 109175 -130300 front 0 (PN CONN_1))
+    )
+    (component 000NewKeyboard_parts:MINI_DIN_8
+      (place CN1 113000 -102762 front 0 (PN MINI_DIN_8P_JACK))
+    )
+  )
+  (library
+    (image keyboard_parts:USB_microB
+      (outline (path signal 200  3750 -2150  4250 -2750))
+      (outline (path signal 200  -3750 -2150  -4250 -2675))
+      (outline (path signal 200  -3000 -1450  3000 -1450))
+      (outline (path signal 200  -3750 -2150  -3750 -1350))
+      (outline (path signal 200  -3750 -2150  3750 -2150))
+      (outline (path signal 200  3750 -2150  3750 -1350))
+      (pin Rect[T]Pad_1200.000000x1900.000000_um 6 850 0)
+      (pin Rect[T]Pad_400.000000x1350.000000_um (rotate 180) 1 1297.94 2674.62)
+      (pin Rect[T]Pad_2100.000000x2000.000000_um 6@1 -3098.8 2349.5)
+      (pin Rect[T]Pad_2100.000000x2000.000000_um 6@2 3098.8 2349.5)
+      (pin Rect[T]Pad_1600.000000x1900.000000_um 6@3 -4099.56 0)
+      (pin Rect[T]Pad_1600.000000x1900.000000_um 6@4 4099.56 0)
+      (pin Rect[T]Pad_400.000000x1350.000000_um (rotate 180) 2 650.24 2674.62)
+      (pin Rect[T]Pad_400.000000x1350.000000_um (rotate 180) 3 0 2674.62)
+      (pin Rect[T]Pad_400.000000x1350.000000_um (rotate 180) 4 -650.24 2674.62)
+      (pin Rect[T]Pad_400.000000x1350.000000_um (rotate 180) 5 -1300.48 2674.62)
+      (pin Rect[T]Pad_1200.000000x1900.000000_um 6@5 -850 0)
+    )
+    (image keyboard_parts:LED_3020_REFLOW
+      (outline (path signal 200  2900 1200  2900 -1200))
+      (outline (path signal 200  2800 -1200  2800 1200))
+      (outline (path signal 200  2700 1200  2700 -1200))
+      (outline (path signal 200  -1400 1200  -2600 1200))
+      (outline (path signal 200  -2600 1200  -2600 -1200))
+      (outline (path signal 200  -2600 -1200  -1400 -1200))
+      (outline (path signal 200  2600 1200  2600 -1200))
+      (outline (path signal 200  1400 1200  3000 1200))
+      (outline (path signal 200  3000 1200  3000 -1200))
+      (outline (path signal 200  3000 -1200  1400 -1200))
+      (pin Rect[T]Pad_1450.000000x1600.000000_um 1 -1475 0)
+      (pin Rect[T]Pad_1450.000000x1600.000000_um 2 1475 0)
+    )
+    (image "keyboard_parts:FA-238"
+      (outline (path signal 200  -2375 -1875  -2375 1875))
+      (outline (path signal 200  -2375 1875  2375 1875))
+      (outline (path signal 200  2375 1875  2375 -1875))
+      (outline (path signal 200  2375 -1875  -2375 -1875))
+      (pin "Rect[T][-100.000000,50.000000]Pad_1400.000000x1200.000000_um" 3 -1100 800)
+      (pin Rect[T][100.000000,50.000000]Pad_1400.000000x1200.000000_um 2 1100 800)
+      (pin "Rect[T][-100.000000,-50.000000]Pad_1400.000000x1200.000000_um" 1 -1100 -800)
+      (pin "Rect[T][100.000000,-50.000000]Pad_1400.000000x1200.000000_um" 3@1 1100 -800)
+    )
+    (image 000NewKeyboard_parts:QFP32
+      (outline (path signal 200  -2685.04 2400  -2667.85 2497.49  -2618.36 2583.22  -2542.52 2646.86
+            -2449.5 2680.71  -2350.5 2680.71  -2257.48 2646.86  -2181.64 2583.22
+            -2132.15 2497.49  -2114.96 2400  -2132.15 2302.51  -2181.64 2216.78
+            -2257.48 2153.14  -2350.5 2119.29  -2449.5 2119.29  -2542.52 2153.14
+            -2618.36 2216.78  -2667.85 2302.51  -2685.04 2400))
+      (outline (path signal 200  3050 3050  3050 -3025))
+      (outline (path signal 200  3050 -3025  -3075 -3025))
+      (outline (path signal 200  -3075 -3025  -3075 2425))
+      (outline (path signal 200  -3075 2425  -2425 3075))
+      (outline (path signal 200  -2425 3075  3050 3075))
+      (pin Rect[T]Pad_1500.000000x450.000000_um 8 -4250 -2800)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 7 -4250 -2000)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 6 -4250 -1200)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 5 -4250 -400)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 4 -4250 400)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 3 -4250 1200)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 2 -4250 2000)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 1 -4250 2800)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 24 4250 2800)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 17 4250 -2800)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 18 4250 -2000)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 19 4250 -1200)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 20 4250 -400)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 21 4250 400)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 22 4250 1200)
+      (pin Rect[T]Pad_1500.000000x450.000000_um 23 4250 2000)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 32 -2800 4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 31 -2000 4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 30 -1200 4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 29 -400 4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 28 400 4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 27 1200 4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 26 2000 4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 25 2800 4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 9 -2800 -4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 10 -2000 -4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 11 -1200 -4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 12 -400 -4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 13 400 -4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 14 1200 -4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 15 2000 -4250)
+      (pin Rect[T]Pad_450.000000x1500.000000_um 16 2800 -4250)
+    )
+    (image 000NewKeyboard_parts:SW_ALPS_SKRP
+      (outline (path signal 200  -2950 1750  2950 1750))
+      (outline (path signal 200  2950 1750  2950 -1750))
+      (outline (path signal 200  2950 -1750  -2950 -1750))
+      (outline (path signal 200  -2950 -1750  -2950 1650))
+      (outline (path signal 200  -2950 1650  -2950 1750))
+      (pin Rect[T]Pad_1100.000000x700.000000_um 2 2100 -1100)
+      (pin Rect[T]Pad_1100.000000x700.000000_um 2@1 -2100 -1100)
+      (pin Rect[T]Pad_1100.000000x700.000000_um 1 -2100 1100)
+      (pin Rect[T]Pad_1100.000000x700.000000_um 1@1 2100 1100)
+    )
+    (image 000NewKeyboard_parts:C_1608
+      (outline (path signal 200  -1650 800  1650 800))
+      (outline (path signal 200  1650 800  1650 -800))
+      (outline (path signal 200  1650 -800  -1650 -800))
+      (outline (path signal 200  -1650 -800  -1650 800))
+      (pin Rect[T]Pad_1100.000000x1100.000000_um 2 850 0)
+      (pin Rect[T]Pad_1100.000000x1100.000000_um 1 -850 0)
+    )
+    (image 000NewKeyboard_parts:SOLDER_JUMPER_2
+      (outline (path signal 200  950 600  950 -550))
+      (outline (path signal 200  -700 850  700 850))
+      (outline (path signal 200  -950 -600  -950 600))
+      (outline (path signal 200  -650 -850  650 -850))
+      (outline (polygon signal 0  -700 -750  -650 -763.397  -613.398 -800  -600 -850  -613.397 -900
+            -650 -936.602  -700 -950  -790.586 -938.074  -875 -903.109  -947.488 -847.488
+            -1003.11 -775  -1038.07 -690.586  -1050 -600  -1036.6 -550  -1000 -513.397
+            -950 -500  -900 -513.398  -863.397 -550  -850 -600  -850 -629.837
+            -827.164 -684.969  -784.969 -727.164  -729.837 -750  -700 -750))
+      (outline (polygon signal 0  -850 600  -863.397 550  -900 513.398  -950 500  -1000 513.397
+            -1036.6 550  -1050 600  -1038.07 690.586  -1003.11 775  -947.488 847.488
+            -875 903.109  -790.586 938.074  -700 950  -650 936.602  -613.397 900
+            -600 850  -613.398 800  -650 763.397  -700 750  -729.837 750
+            -784.969 727.164  -827.164 684.969  -850 629.837  -850 600))
+      (outline (polygon signal 0  700 750  650 763.397  613.398 800  600 850  613.397 900
+            650 936.602  700 950  790.586 938.074  875 903.109  947.488 847.488
+            1003.11 775  1038.07 690.586  1050 600  1036.6 550  1000 513.397
+            950 500  900 513.398  863.397 550  850 600  850 629.837  827.164 684.969
+            784.969 727.164  729.837 750  700 750))
+      (outline (polygon signal 0  850 -600  863.397 -550  900 -513.398  950 -500  1000 -513.397
+            1036.6 -550  1050 -600  1038.07 -690.586  1003.11 -775  947.488 -847.488
+            875 -903.109  790.586 -938.074  700 -950  650 -936.602  613.397 -900
+            600 -850  613.398 -800  650 -763.397  700 -750  729.837 -750
+            784.969 -727.164  827.164 -684.969  850 -629.837  850 -600))
+      (pin Rect[T]Pad_600.000000x1200.000000_um 2 400 0)
+      (pin Rect[T]Pad_600.000000x1200.000000_um 1 -400 0)
+    )
+    (image HOLE_M2.6
+      (keepout "" (circle Front 3300 -462.5 -13))
+      (keepout "" (circle Back 3300 -462.5 -13))
+    )
+    (image HOLE_M2.6::1
+      (keepout "" (circle Front 3300 68.5 15.5))
+      (keepout "" (circle Back 3300 68.5 15.5))
+    )
+    (image HOLE_M2.6::2
+      (keepout "" (circle Front 3300 -362.5 15.5))
+      (keepout "" (circle Back 3300 -362.5 15.5))
+    )
+    (image HOLE_M2.6::3
+      (keepout "" (circle Front 3300 -31.5 -13))
+      (keepout "" (circle Back 3300 -31.5 -13))
+    )
+    (image 000NewKeyboard_parts:PIN_1
+      (pin Round[A]Pad_1600.000000_um 1 0 0)
+    )
+    (image 000NewKeyboard_parts:MINI_DIN_8
+      (outline (path signal 381  -6750 -800  -6750 -8150))
+      (outline (path signal 381  6750 -800  6750 -8150))
+      (outline (path signal 381  -6750 -8150  6750 -8150))
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 3 -3400 -3800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 5 3400 -3800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 6 -3400 -6300)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 8 3400 -6300)
+      (pin Round[A]Pad_3200.000000_um (rotate 180) 9 0 0)
+      (pin Round[A]Pad_3200.000000_um (rotate 180) 9@1 -6750 -800)
+      (pin Round[A]Pad_3200.000000_um (rotate 180) 9@2 6750 -800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 1 -1300 -3800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 2 1300 -3800)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 4 -1300 -6300)
+      (pin Round[A]Pad_1600.000000_um (rotate 180) 7 900 -6300)
+    )
+    (padstack Round[A]Pad_1600.000000_um
+      (shape (circle Front 1600))
+      (shape (circle Back 1600))
+      (attach off)
+    )
+    (padstack Round[A]Pad_3200.000000_um
+      (shape (circle Front 3200))
+      (shape (circle Back 3200))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2100.000000x2000.000000_um
+      (shape (rect Front -1050 -1000 1050 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_400.000000x1350.000000_um
+      (shape (rect Front -200 -675 200 675))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_450.000000x1500.000000_um
+      (shape (rect Front -225 -750 225 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_600.000000x1200.000000_um
+      (shape (rect Front -300 -600 300 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100.000000x700.000000_um
+      (shape (rect Front -550 -350 550 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100.000000x1100.000000_um
+      (shape (rect Front -550 -550 550 550))
+      (attach off)
+    )
+    (padstack Rect[T][100.000000,50.000000]Pad_1400.000000x1200.000000_um
+      (shape (rect Front -600 -550 800 650))
+      (attach off)
+    )
+    (padstack "Rect[T][100.000000,-50.000000]Pad_1400.000000x1200.000000_um"
+      (shape (rect Front -600 -650 800 550))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x1900.000000_um
+      (shape (rect Front -600 -950 600 950))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1450.000000x1600.000000_um
+      (shape (rect Front -725 -800 725 800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1500.000000x450.000000_um
+      (shape (rect Front -750 -225 750 225))
+      (attach off)
+    )
+    (padstack "Rect[T][-100.000000,50.000000]Pad_1400.000000x1200.000000_um"
+      (shape (rect Front -800 -550 600 650))
+      (attach off)
+    )
+    (padstack "Rect[T][-100.000000,-50.000000]Pad_1400.000000x1200.000000_um"
+      (shape (rect Front -800 -650 600 550))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x1900.000000_um
+      (shape (rect Front -800 -950 800 950))
+      (attach off)
+    )
+    (padstack "Via[0-1]_889:508_um"
+      (shape (circle Front 889))
+      (shape (circle Back 889))
+      (attach off)
+    )
+  )
+  (network
+    (net +5V
+      (pins J1-1 U1-4 U1-32 U1-31 C1-1 R13-1 R10-1 R11-1 R12-1 R14-1 SJ27-2 SJ26-2
+        SJ24-2 SJ18-2 SJ8-2 SJ5-2 SJ3-2 P1-1 C3-1 C4-1)
+    )
+    (net /D+
+      (pins J1-3 R2-2 P3-1)
+    )
+    (net "/D-"
+      (pins J1-2 R1-2 P2-1)
+    )
+    (net /DIN1
+      (pins SJ5-1 SJ4-1 SJ3-1 SJ2-1 SJ1-1 CN1-1)
+    )
+    (net /DIN2
+      (pins SJ7-1 SJ6-1 CN1-2)
+    )
+    (net /DIN3
+      (pins SJ13-1 SJ12-1 SJ11-1 SJ10-1 SJ9-1 SJ8-1 CN1-3)
+    )
+    (net /DIN4
+      (pins SJ14-1 CN1-4)
+    )
+    (net /DIN5
+      (pins SJ20-1 SJ19-1 SJ18-1 SJ17-1 SJ16-1 SJ15-1 CN1-5)
+    )
+    (net /DIN6
+      (pins SJ24-1 SJ23-1 SJ22-1 SJ21-1 CN1-6)
+    )
+    (net /DIN7
+      (pins SJ25-1 CN1-7)
+    )
+    (net /DIN8
+      (pins SJ30-1 SJ29-1 SJ28-1 SJ27-1 SJ26-1 CN1-8)
+    )
+    (net /PB0
+      (pins U1-14)
+    )
+    (net /PB1
+      (pins U1-15)
+    )
+    (net /PB2
+      (pins U1-16)
+    )
+    (net /PB3
+      (pins U1-17)
+    )
+    (net /PB4
+      (pins U1-18)
+    )
+    (net /PB5
+      (pins U1-19)
+    )
+    (net /PB6
+      (pins U1-20)
+    )
+    (net /PB7
+      (pins U1-21)
+    )
+    (net /PC6
+      (pins U1-23)
+    )
+    (net /PC7
+      (pins U1-22)
+    )
+    (net /PD0
+      (pins U1-6 R10-2 SJ19-2 SJ13-2 SJ4-2)
+    )
+    (net /PD1
+      (pins U1-7 R11-2 SJ22-2 SJ20-2 SJ16-2 SJ12-2)
+    )
+    (net /PD2
+      (pins U1-8 R12-2 SJ21-2 SJ14-2 SJ10-2)
+    )
+    (net /PD3
+      (pins U1-9 R13-2 SJ17-2 SJ15-2 SJ2-2)
+    )
+    (net /PD4
+      (pins U1-10 R14-2 SJ23-2 SJ9-2)
+    )
+    (net /PD5
+      (pins U1-11)
+    )
+    (net /PD6
+      (pins D1-1 U1-12)
+    )
+    (net /PD7
+      (pins U1-13 R3-2)
+    )
+    (net "/~{RESET}"
+      (pins U1-24 SW1-1 SW1-1@1)
+    )
+    (net GND
+      (pins J1-5 X1-3 X1-3@1 U1-3 U1-28 SW1-2 SW1-2@1 C1-2 R3-1 R4-2 SJ30-2 SJ29-2
+        SJ28-2 SJ25-2 SJ11-2 SJ7-2 SJ6-2 SJ1-2 P4-1 C6-2 C5-2 C2-2 C3-2 C4-2 SJ98-1
+        SJ99-2)
+    )
+    (net "Net-(C2-Pad1)"
+      (pins U1-27 C2-1)
+    )
+    (net "Net-(C5-Pad1)"
+      (pins X1-1 U1-1 C5-1)
+    )
+    (net "Net-(C6-Pad1)"
+      (pins X1-2 U1-2 C6-1)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins D1-2 R4-1)
+    )
+    (net "Net-(R1-Pad1)"
+      (pins U1-30 R1-1)
+    )
+    (net "Net-(R2-Pad1)"
+      (pins U1-29 R2-1)
+    )
+    (net /PC2
+      (pins U1-5)
+    )
+    (net /PC4
+      (pins U1-26)
+    )
+    (net /PC5
+      (pins U1-25)
+    )
+    (net "Net-(J1-Pad4)"
+      (pins J1-4)
+    )
+    (net "Net-(CN1-Pad9)"
+      (pins SJ99-1 CN1-9@2)
+    )
+    (net "Net-(J1-Pad6)"
+      (pins J1-6@1 SJ98-2)
+    )
+    (class kicad_default /D+ "/D-" /DIN1 /DIN2 /DIN3 /DIN4 /DIN5 /DIN6 /DIN7
+      /DIN8 /PB0 /PB1 /PB2 /PB3 /PB4 /PB5 /PB6 /PB7 /PC2 /PC4 /PC5 /PC6 /PC7
+      /PD0 /PD1 /PD2 /PD3 /PD4 /PD5 /PD6 /PD7 "/~{RESET}" "Net-(C2-Pad1)"
+      "Net-(C5-Pad1)" "Net-(C6-Pad1)" "Net-(CN1-Pad9)" "Net-(D1-Pad2)" "Net-(J1-Pad4)"
+      "Net-(J1-Pad6)" "Net-(R1-Pad1)" "Net-(R2-Pad1)"
+      (circuit
+        (use_via "Via[0-1]_889:508_um")
+      )
+      (rule
+        (width 254)
+        (clearance 254)
+      )
+    )
+    (class Power +5V GND
+      (circuit
+        (use_via "Via[0-1]_889:508_um")
+      )
+      (rule
+        (width 381)
+        (clearance 254)
+      )
+    )
+  )
+  (wiring
+    (wire (path Front 381  114298 -132378  114298 -132379  114298 -132875)(net +5V)(type route))
+    (wire (path Front 381  114298 -132378  114298 -132875)(net +5V)(type route))
+    (wire (path Front 381  116825 -130300  116805 -130300  115625 -131480  114700 -131480
+            114298 -131882  114298 -132378)(net +5V)(type route))
+    (wire (path Front 381  111300 -122975  111300 -122125)(net +5V)(type route))
+    (wire (path Front 381  122625 -117700  121575 -117700)(net +5V)(type route))
+    (wire (path Back 381  103425 -119100  102625 -119100)(net +5V)(type route))
+    (wire (path Back 381  105925 -119400  105625 -119100  103425 -119100)(net +5V)(type route))
+    (wire (path Front 381  110500 -121975  110500 -121875  110325 -121700  106125 -121700
+            105575 -121150  105575 -119750  105925 -119400)(net +5V)(type route))
+    (wire (path Front 381  110500 -122975  110500 -121975  110500 -122975)(net +5V)(type route))
+    (wire (path Front 381  111300 -122125  111025 -121850  110625 -121850  110500 -121975)(net +5V)(type route))
+    (wire (path Front 381  116825 -128930  116825 -126380  114445 -124000  112875 -124000)(net +5V)(type route))
+    (wire (path Front 381  116825 -130300  116825 -128930)(net +5V)(type route))
+    (wire (path Front 381  123125 -119650  123125 -120705  122800 -121030  121175 -121030)(net +5V)(type route))
+    (wire (path Front 381  112750 -119125  115920 -119125  115925 -119130)(net +5V)(type route))
+    (wire (path Front 381  115075 -122930  112905 -122930  112875 -122900)(net +5V)(type route))
+    (wire (path Back 381  105925 -119400  106058 -119400  106775 -118683  106775 -118105
+            107400 -117480  107400 -113355  107655 -113100  108625 -113100)(net +5V)(type route))
+    (wire (path Front 381  116825 -130300  119345 -130300  119350 -130305)(net +5V)(type route))
+    (wire (path Front 381  118825 -128100  117655 -128100  116825 -128930  116825 -130300)(net +5V)(type route))
+    (wire (path Front 381  110500 -122975  110500 -123828  110672 -124000  111300 -124000)(net +5V)(type route))
+    (wire (path Front 381  123125 -111850  123125 -113250  122575 -113800)(net +5V)(type route))
+    (wire (path Front 381  121575 -113800  122575 -113800  122625 -113800  123125 -114300
+            123125 -115750)(net +5V)(type route))
+    (wire (path Front 381  123125 -119650  123125 -118200  122625 -117700)(net +5V)(type route))
+    (wire (path Front 381  123125 -115750  123125 -117200  122625 -117700)(net +5V)(type route))
+    (wire (path Back 381  118825 -128100  119975 -128100  121175 -126900  121175 -121030
+            121175 -117550)(net +5V)(type route))
+    (wire (path Back 381  102625 -119100  103425 -119100  103825 -119500  103825 -124700
+            103425 -125100  102625 -125100)(net +5V)(type route))
+    (wire (path Front 381  111300 -122975  111300 -122125  111300 -119375  111550 -119125
+            112750 -119125)(net +5V)(type route))
+    (wire (path Front 381  112875 -122900  112875 -124000)(net +5V)(type route))
+    (wire (path Back 381  114625 -122100  113675 -122100  112875 -122900)(net +5V)(type route))
+    (wire (path Back 381  123625 -113100  122425 -113100  121175 -114350  121175 -117550
+            122625 -116100  123625 -116100)(net +5V)(type route))
+    (wire (path Back 381  118825 -128100  117625 -128100)(net +5V)(type route))
+    (wire (path Front 381  111300 -124000  112875 -124000)(net +5V)(type route))
+    (wire (path Front 381  111300 -124000  111300 -122975)(net +5V)(type route))
+    (wire (path Front 254  113000 -132875  113000 -131575  111725 -130300)(net /D+)(type route))
+    (wire (path Front 254  113000 -133025  113000 -132875)(net /D+)(type route))
+    (wire (path Front 254  111725 -127850  111725 -130300)(net /D+)(type route))
+    (wire (path Front 254  113650 -131975  113650 -131975  113650 -132875)(net "/D-")(type route))
+    (wire (path Front 254  113650 -131975  113650 -130925  114275 -130300)(net "/D-")(type route))
+    (wire (path Front 254  113650 -133025  113650 -131975)(net "/D-")(type route))
+    (wire (path Front 254  114275 -130300  114275 -127855)(net "/D-")(type route))
+    (wire (path Back 254  102625 -112300  102625 -111555  104125 -110055  104650 -110055
+            105850 -108855  105850 -107825  108495 -105180  110600 -105180
+            111700 -106280  111700 -106562)(net /DIN1)(type route))
+    (wire (path Back 254  102625 -112300  101830 -112300  101550 -112580  101550 -114975)(net /DIN1)(type route))
+    (wire (path Back 254  102625 -112300  102880 -112300)(net /DIN1)(type route))
+    (wire (path Back 254  102625 -115300  101875 -115300  101550 -114975)(net /DIN1)(type route))
+    (wire (path Back 254  102625 -118300  101825 -118300  101550 -118025)(net /DIN1)(type route))
+    (wire (path Back 254  102625 -121300  101925 -121300  101550 -120925)(net /DIN1)(type route))
+    (wire (path Back 254  102625 -124300  101775 -124300  101550 -124075  101550 -120925
+            101550 -118025  101550 -114975)(net /DIN1)(type route))
+    (wire (path Back 254  105625 -112300  104930 -112300  104525 -112705  104525 -114950
+            104875 -115300  105625 -115300)(net /DIN2)(type route))
+    (wire (path Back 254  105625 -112300  105625 -110980  106425 -110180)(net /DIN2)(type route))
+    (wire (path Front 254  106425 -110180  106450 -110155  106450 -107355  108625 -105180
+            113375 -105180  114300 -106105  114300 -106562)(net /DIN2)(type route))
+    (wire (path Back 254  109650 -115155  109505 -115300  108625 -115300)(net /DIN3)(type route))
+    (wire (path Back 254  107425 -120850  107425 -123825)(net /DIN3)(type route))
+    (wire (path Back 254  108625 -118300  107730 -118300  107425 -118605  107425 -120850)(net /DIN3)(type route))
+    (wire (path Back 254  108625 -112300  108625 -111555  108025 -110955  108025 -108138
+            109600 -106562)(net /DIN3)(type route))
+    (wire (path Back 254  108625 -118300  108655 -118300  109650 -117305  109650 -115155)(net /DIN3)(type route))
+    (wire (path Back 254  108625 -112300  109495 -112300  109650 -112455  109650 -115155)(net /DIN3)(type route))
+    (wire (path Back 254  108625 -121300  107875 -121300  107425 -120850)(net /DIN3)(type route))
+    (wire (path Back 254  108625 -124300  107900 -124300  107425 -123825)(net /DIN3)(type route))
+    (wire (path Back 254  108625 -127300  107775 -127300  107425 -126950  107425 -123825)(net /DIN3)(type route))
+    (wire (path Back 254  111700 -109062  111700 -110280  111625 -110355  111625 -115300)(net /DIN4)(type route))
+    (wire (path Back 254  116400 -106562  117408 -106562  118050 -107205  118050 -109430
+            115675 -111805)(net /DIN5)(type route))
+    (wire (path Back 254  114625 -118300  115425 -118300  115675 -118050)(net /DIN5)(type route))
+    (wire (path Back 254  114625 -115300  115425 -115300  115675 -115050)(net /DIN5)(type route))
+    (wire (path Back 254  114625 -112300  115375 -112300  115675 -112000)(net /DIN5)(type route))
+    (wire (path Back 254  114625 -121300  115375 -121300  115675 -121000  115675 -118050
+            115675 -115050  115675 -112000  115675 -111805  115675 -111800)(net /DIN5)(type route))
+    (wire (path Back 254  114625 -124300  112750 -124300  111875 -123425  111875 -122400
+            112975 -121300  114625 -121300)(net /DIN5)(type route))
+    (wire (path Back 254  114625 -124300  115400 -124300  115775 -124675  115775 -126925
+            115400 -127300  114625 -127300)(net /DIN5)(type route))
+    (wire (path Back 254  116500 -120900  116500 -123925)(net /DIN6)(type route))
+    (wire (path Back 254  117625 -112300  116725 -112300  116500 -112525  116500 -120900)(net /DIN6)(type route))
+    (wire (path Back 254  116500 -123925  116500 -127025  116775 -127300  117625 -127300)(net /DIN6)(type route))
+    (wire (path Back 254  117625 -112300  117625 -111305)(net /DIN6)(type route))
+    (wire (path Front 254  117625 -111305  110925 -111305  109600 -109980  109600 -109062)(net /DIN6)(type route))
+    (wire (path Back 254  117625 -124300  116875 -124300  116500 -123925)(net /DIN6)(type route))
+    (wire (path Back 254  117625 -121300  116900 -121300  116500 -120900)(net /DIN6)(type route))
+    (wire (path Front 254  113900 -109062  113900 -109680  114650 -110430  119950 -110430)(net /DIN7)(type route))
+    (wire (path Back 254  119950 -110430  120625 -111105  120625 -112300)(net /DIN7)(type route))
+    (wire (path Back 254  124675 -112100  124675 -114975)(net /DIN8)(type route))
+    (wire (path Back 254  124225 -110575  124675 -111025  124675 -112100)(net /DIN8)(type route))
+    (wire (path Back 254  124675 -114975  124675 -118050  124675 -124075)(net /DIN8)(type route))
+    (wire (path Front 254  116400 -109062  120588 -109062  122100 -110575)(net /DIN8)(type route))
+    (wire (path Front 254  120588 -109062  122100 -110575  124225 -110575)(net /DIN8)(type route))
+    (wire (path Back 254  124675 -124075  124450 -124300  123625 -124300)(net /DIN8)(type route))
+    (wire (path Back 254  123625 -127300  124300 -127300  124675 -126925  124675 -124075)(net /DIN8)(type route))
+    (wire (path Back 254  123625 -118300  124425 -118300  124675 -118050)(net /DIN8)(type route))
+    (wire (path Back 254  123625 -115300  124350 -115300  124675 -114975)(net /DIN8)(type route))
+    (wire (path Back 254  123625 -112300  124475 -112300  124675 -112100)(net /DIN8)(type route))
+    (wire (path Front 254  112750 -117525  111750 -117525  110625 -118650)(net /PD0)(type route))
+    (wire (path Front 254  112775 -117550  112750 -117525)(net /PD0)(type route))
+    (wire (path Front 254  110625 -118650  110625 -118675  110625 -120550  110622 -120552
+            110047 -121128  107175 -121128  106547 -120500  106475 -120500)(net /PD0)(type route))
+    (wire (path Back 254  110625 -118675  110625 -118680  111350 -119405  111350 -123705
+            112745 -125100  114625 -125100)(net /PD0)(type route))
+    (wire (path Back 254  106475 -120500  106300 -120500  104725 -122075  104725 -124600)(net /PD0)(type route))
+    (wire (path Back 254  102625 -122100  102625 -123150)(net /PD0)(type route))
+    (wire (path Front 254  102625 -123150  104075 -124600  104725 -124600)(net /PD0)(type route))
+    (wire (path Back 254  107275 -128100  108625 -128100)(net /PD0)(type route))
+    (wire (path Front 254  104725 -124600  105875 -124600  106400 -125125  106400 -127225
+            107275 -128100)(net /PD0)(type route))
+    (wire (path Front 254  110625 -118675  110625 -118650)(net /PD0)(type route))
+    (wire (path Front 254  112750 -117525  113945 -117525  114400 -117980  118225 -117980
+            119895 -119650  121425 -119650)(net /PD0)(type route))
+    (wire (path Back 254  113920 -128100  114625 -128100)(net /PD1)(type route))
+    (wire (path Back 254  108625 -125100  108625 -126305  108800 -126480  109350 -126480
+            109675 -126805  109675 -127650  110125 -128100  113920 -128100
+            114625 -128100)(net /PD1)(type route))
+    (wire (path Front 254  114625 -116955  118350 -116955)(net /PD1)(type route))
+    (wire (path Front 254  112750 -116725  113920 -116725  114150 -116955  114625 -116955)(net /PD1)(type route))
+    (wire (path Back 254  109675 -120150  109675 -120180  110800 -121305  110800 -123930
+            113500 -126630  113500 -127680  113920 -128100)(net /PD1)(type route))
+    (wire (path Front 254  112750 -116725  111150 -116725  109675 -118200  109675 -120150)(net /PD1)(type route))
+    (wire (path Front 254  118350 -116955  118362 -116968  119095 -117700  119875 -117700)(net /PD1)(type route))
+    (wire (path Back 254  114625 -116100  114625 -116955)(net /PD1)(type route))
+    (wire (path Back 254  118350 -116955  118725 -117330  118725 -121730  118355 -122100
+            117625 -122100)(net /PD1)(type route))
+    (wire (path Front 254  113725 -115680  114155 -115250  118175 -115250)(net /PD2)(type route))
+    (wire (path Front 254  112750 -115925  113480 -115925  113725 -115680)(net /PD2)(type route))
+    (wire (path Back 254  111625 -116100  111625 -116255  109700 -118180  109700 -118825
+            109425 -119100  108625 -119100)(net /PD2)(type route))
+    (wire (path Front 254  118175 -115250  119625 -115250  120125 -115750  121425 -115750)(net /PD2)(type route))
+    (wire (path Back 254  118175 -115250  117625 -114700  117625 -113100)(net /PD2)(type route))
+    (wire (path Front 254  112750 -115925  113725 -115925  113725 -115680)(net /PD2)(type route))
+    (wire (path Back 254  111625 -116100  112425 -116100  112675 -115850  112675 -114375
+            112525 -114225)(net /PD2)(type route))
+    (wire (path Front 254  112525 -114225  113725 -115425  113725 -115680)(net /PD2)(type route))
+    (wire (path Back 254  113400 -113100  114625 -113100)(net /PD3)(type route))
+    (wire (path Back 254  113375 -113100  113400 -113100)(net /PD3)(type route))
+    (wire (path Front 254  119875 -113800  118875 -113800  118425 -114250  114525 -114250
+            113375 -113100)(net /PD3)(type route))
+    (wire (path Front 254  111300 -114475  111300 -113425  111625 -113100  113375 -113100)(net /PD3)(type route))
+    (wire (path Back 254  114625 -119100  113850 -119100  113400 -118650  113400 -113100)(net /PD3)(type route))
+    (wire (path Front 254  111300 -114475  111300 -115780  109075 -118005  105775 -118005)(net /PD3)(type route))
+    (wire (path Back 254  105775 -118005  104975 -117205  103000 -117205  102625 -116830
+            102625 -116100)(net /PD3)(type route))
+    (wire (path Front 254  119125 -111850  121425 -111850)(net /PD4)(type route))
+    (wire (path Front 254  110500 -114475  110500 -112975  111325 -112150  114575 -112150
+            115375 -112950  118025 -112950  119125 -111850)(net /PD4)(type route))
+    (wire (path Front 254  108625 -117075  108675 -117025  109225 -117025  110500 -115750
+            110500 -114475)(net /PD4)(type route))
+    (wire (path Back 254  108625 -116100  108625 -117075)(net /PD4)(type route))
+    (wire (path Back 254  117625 -125100  118625 -125100  119475 -124250  119475 -113425
+            119125 -113075  119125 -111850)(net /PD4)(type route))
+    (wire (path Front 254  102000 -101900  102750 -101900  103775 -102925  103775 -104450
+            105525 -106200  105525 -111125  106675 -112275  108325 -112275
+            108900 -112850  108900 -114475)(net /PD6)(type route))
+    (wire (path Front 254  108100 -114475  108100 -113298  107907 -113105  105125 -113105
+            104575 -113655  104575 -114205  104150 -114630  101950 -114630
+            101625 -114305  101625 -113505)(net /PD7)(type route))
+    (wire (path Front 254  102700 -126480  102700 -130680)(net "/~{RESET}")(type route))
+    (wire (path Front 254  102700 -126480  101900 -126480  101350 -125930  101350 -122130
+            101955 -121525  104250 -121525)(net "/~{RESET}")(type route))
+    (wire (path Back 381  120625 -113100  121403 -113100  121816 -112688  121816 -111697
+            123867 -109646  124570 -109646  125288 -110364  125288 -127542
+            125073 -127757)(net GND)(type route))
+    (wire (path Back 381  124670 -128100  124730 -128100  125073 -127757)(net GND)(type route))
+    (wire (path Front 381  124720 -126800  125073 -127154  125073 -127757)(net GND)(type route))
+    (wire (path Front 381  124561 -126800  124720 -126800)(net GND)(type route))
+    (wire (path Front 381  123475 -126800  124561 -126800)(net GND)(type route))
+    (wire (path Front 381  121275 -125200  122320 -125200)(net GND)(type route))
+    (wire (path Front 381  123475 -127347  122320 -126192  122320 -125200)(net GND)(type route))
+    (wire (path Front 381  123475 -127347  123475 -127895)(net GND)(type route))
+    (wire (path Front 381  123475 -126800  123475 -127347)(net GND)(type route))
+    (wire (path Front 381  117625 -119768  117625 -119966)(net GND)(type route))
+    (wire (path Front 381  117625 -119130  117625 -119768)(net GND)(type route))
+    (wire (path Front 381  112750 -119925  114167 -119925  114381 -120139  117254 -120139
+            117625 -119768)(net GND)(type route))
+    (wire (path Front 381  111700 -132875  111700 -131756)(net GND)(type route))
+    (wire (path Front 381  109175 -130300  110631 -131756  111700 -131756)(net GND)(type route))
+    (wire (path Front 381  106675 -132160  108535 -130300  109175 -130300)(net GND)(type route))
+    (wire (path Front 381  106675 -132319  106675 -132160)(net GND)(type route))
+    (wire (path Front 381  106675 -133205  106675 -132319)(net GND)(type route))
+    (wire (path Front 381  104900 -130680  104900 -126480)(net GND)(type route))
+    (wire (path Front 381  104900 -131177  104900 -130680)(net GND)(type route))
+    (wire (path Front 381  104900 -131177  104900 -131675)(net GND)(type route))
+    (wire (path Front 381  120345 -130400  120345 -132005)(net GND)(type route))
+    (wire (path Front 381  116775 -122930  116775 -124441  120345 -128011  120345 -130400
+            123225 -130400)(net GND)(type route))
+    (wire (path Front 381  123225 -129405  123225 -130400)(net GND)(type route))
+    (wire (path Front 381  103325 -112488  103325 -113505)(net GND)(type route))
+    (wire (path Front 381  103325 -111280  103325 -112488  100870 -112488  100582 -112776
+            100582 -130101  102156 -131675  104900 -131675)(net GND)(type route))
+    (wire (path Front 381  117625 -119966  120259 -122600  120530 -122600)(net GND)(type route))
+    (wire (path Front 381  123225 -129405  123225 -128145  123475 -127895)(net GND)(type route))
+    (wire (path Front 381  109175 -126430  109175 -126272  108100 -125196  108100 -122975)(net GND)(type route))
+    (wire (path Front 381  109175 -130300  109175 -126430)(net GND)(type route))
+    (wire (path Front 381  121525 -122600  120530 -122600)(net GND)(type route))
+    (wire (path Front 381  119350 -132005  120345 -132005)(net GND)(type route))
+    (wire (path Back 381  122580 -128100  121678 -129002  110472 -129002  109175 -130300)(net GND)(type route))
+    (wire (path Back 381  123103 -128100  123102 -128100  122580 -128100)(net GND)(type route))
+    (wire (path Back 381  123103 -125100  122580 -125622  122580 -128100)(net GND)(type route))
+    (wire (path Back 381  123625 -128100  123103 -128100)(net GND)(type route))
+    (wire (path Back 381  123103 -125100  122580 -125100)(net GND)(type route))
+    (wire (path Back 381  123625 -125100  123103 -125100)(net GND)(type route))
+    (wire (path Back 381  123625 -119100  123625 -119845  122580 -120889)(net GND)(type route))
+    (wire (path Back 381  123625 -128100  124670 -128100)(net GND)(type route))
+    (wire (path Back 381  105625 -116100  106670 -116100)(net GND)(type route))
+    (wire (path Back 381  105625 -113100  105625 -113845  105718 -113845  106670 -114796
+            106670 -116100)(net GND)(type route))
+    (wire (path Back 381  105625 -116100  104580 -116100)(net GND)(type route))
+    (wire (path Back 381  102625 -113100  102625 -113845  102718 -113845  103670 -114796
+            103670 -115189  104580 -116100)(net GND)(type route))
+    (wire (path Front 381  106675 -132160  105386 -132160  104900 -131675)(net GND)(type route))
+    (wire (path Front 381  123875 -103555  124620 -103555  125132 -104068  125132 -126388
+            124720 -126800)(net GND)(type route))
+    (wire (path Back 381  109670 -123145  109670 -125870  110500 -126700)(net GND)(type route))
+    (wire (path Back 381  108625 -122100  109670 -123145)(net GND)(type route))
+    (wire (path Front 381  109445 -126700  109175 -126430)(net GND)(type route))
+    (wire (path Front 381  110500 -126700  109445 -126700)(net GND)(type route))
+    (wire (path Front 381  121525 -122600  122000 -122600)(net GND)(type route))
+    (wire (path Back 381  122500 -122600  122580 -122680)(net GND)(type route))
+    (wire (path Back 381  122000 -122600  122500 -122600)(net GND)(type route))
+    (wire (path Back 381  122580 -122680  122580 -125100)(net GND)(type route))
+    (wire (path Back 381  122580 -120889  122580 -122680)(net GND)(type route))
+    (wire (path Front 381  103325 -113505  103325 -113505  103325 -113505)(net GND)(type route))
+    (wire (path Back 381  102920 -113100  103325 -113505)(net GND)(type route))
+    (wire (path Back 381  102625 -113100  102920 -113100)(net GND)(type route))
+    (wire (path Front 254  107475 -126430  107475 -125380  107300 -125205  107300 -122975)(net "Net-(C2-Pad1)")(type route))
+    (wire (path Front 254  121525 -129400  121525 -129405)(net "Net-(C5-Pad1)")(type route))
+    (wire (path Front 254  121275 -126800  121275 -128205  121525 -128455  121525 -129400)(net "Net-(C5-Pad1)")(type route))
+    (wire (path Front 254  121275 -126800  120125 -126800  119725 -126400  119725 -124075
+            117175 -121525  112750 -121525)(net "Net-(C5-Pad1)")(type route))
+    (wire (path Front 254  123295 -123650  120125 -123650  117200 -120725  112750 -120725)(net "Net-(C6-Pad1)")(type route))
+    (wire (path Front 254  123475 -123830  123295 -123650  123475 -123830)(net "Net-(C6-Pad1)")(type route))
+    (wire (path Front 254  123225 -122600  123225 -123580  123295 -123650)(net "Net-(C6-Pad1)")(type route))
+    (wire (path Front 254  123475 -123830  123475 -124500  123475 -125200)(net "Net-(C6-Pad1)")(type route))
+    (wire (path Front 254  123475 -124500  123475 -123830)(net "Net-(C6-Pad1)")(type route))
+    (wire (path Front 254  123475 -125200  123475 -124500)(net "Net-(C6-Pad1)")(type route))
+    (wire (path Front 254  123475 -125200  123475 -124500)(net "Net-(C6-Pad1)")(type route))
+    (wire (path Front 254  102000 -104850  102000 -105775  101250 -106525  101250 -109850
+            101625 -110225  101625 -111280)(net "Net-(D1-Pad2)")(type route))
+    (wire (path Front 254  109700 -122975  109700 -124255  110025 -124580  113600 -124580
+            114275 -125255  114275 -126155)(net "Net-(R1-Pad1)")(type route))
+    (wire (path Front 254  111725 -126150  111725 -125505  111350 -125130  109500 -125130
+            108900 -124530  108900 -122975)(net "Net-(R2-Pad1)")(type route))
+    (wire (path Front 254  119750 -103562  123068 -103562  123075 -103555)(net "Net-(CN1-Pad9)")(type route))
+    (wire (path Front 254  123068 -103562  123075 -103555)(net "Net-(CN1-Pad9)")(type route))
+    (wire (path Front 254  109901 -133200  109901 -133200)(net "Net-(J1-Pad6)")(type route))
+    (wire (path Front 254  109901 -133200  107480 -133200  107475 -133205)(net "Net-(J1-Pad6)")(type route))
+    (wire (path Front 254  109901 -133200  109901 -133200)(net "Net-(J1-Pad6)")(type route))
+    (via "Via[0-1]_889:508_um"  122000 -122600 (net GND)(type route))
+    (via "Via[0-1]_889:508_um"  110500 -126700 (net GND)(type route))
+    (via "Via[0-1]_889:508_um"  121175 -121030 (net +5V)(type route))
+    (via "Via[0-1]_889:508_um"  105925 -119400 (net +5V)(type route))
+    (via "Via[0-1]_889:508_um"  112875 -122900 (net +5V)(type route))
+    (via "Via[0-1]_889:508_um"  118825 -128100 (net +5V)(type route))
+    (via "Via[0-1]_889:508_um"  106425 -110180 (net /DIN2)(type route))
+    (via "Via[0-1]_889:508_um"  117625 -111305 (net /DIN6)(type route))
+    (via "Via[0-1]_889:508_um"  119950 -110430 (net /DIN7)(type route))
+    (via "Via[0-1]_889:508_um"  124225 -110575 (net /DIN8)(type route))
+    (via "Via[0-1]_889:508_um"  106475 -120500 (net /PD0)(type route))
+    (via "Via[0-1]_889:508_um"  104725 -124600 (net /PD0)(type route))
+    (via "Via[0-1]_889:508_um"  102625 -123150 (net /PD0)(type route))
+    (via "Via[0-1]_889:508_um"  107275 -128100 (net /PD0)(type route))
+    (via "Via[0-1]_889:508_um"  110625 -118675 (net /PD0)(type route))
+    (via "Via[0-1]_889:508_um"  109675 -120150 (net /PD1)(type route))
+    (via "Via[0-1]_889:508_um"  114625 -116955 (net /PD1)(type route))
+    (via "Via[0-1]_889:508_um"  118350 -116955 (net /PD1)(type route))
+    (via "Via[0-1]_889:508_um"  118175 -115250 (net /PD2)(type route))
+    (via "Via[0-1]_889:508_um"  112525 -114225 (net /PD2)(type route))
+    (via "Via[0-1]_889:508_um"  113375 -113100 (net /PD3)(type route))
+    (via "Via[0-1]_889:508_um"  105775 -118005 (net /PD3)(type route))
+    (via "Via[0-1]_889:508_um"  108625 -117075 (net /PD4)(type route))
+    (via "Via[0-1]_889:508_um"  119125 -111850 (net /PD4)(type route))
+    (via "Via[0-1]_889:508_um"  125073 -127757 (net GND)(type route))
+    (via "Via[0-1]_889:508_um"  103325 -113505 (net GND)(type route))
+    (via "Via[0-1]_889:508_um"  103325 -113505 (net GND)(type route))
+  )
+)

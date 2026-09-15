@@ -33,6 +33,7 @@ from properties_io import (  # noqa: E402
 )
 
 HTML_KEYS = {"trace_hover_info", "pin_hover_info", "via_hover_info", "net_hover_info"}
+FALLBACK_PROBE_KEYS = {"text_manager_fallback_class_probe", "text_manager_fallback_common_probe"}
 
 
 def bundles_to_validate(context: Dict[str, Dict[str, Any]], bundles: Optional[List[str]]) -> Set[str]:
@@ -74,6 +75,8 @@ def validate_locale(
             continue
 
         for key in english_props:
+            if key in FALLBACK_PROBE_KEYS:
+                continue
             total_keys += 1
             qualified_key = f"{bundle}.{key}"
             if key not in locale_props:

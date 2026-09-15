@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "I2CTempsensor_sensors",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 23424,
+      "sha256": "76bc48250c005b807bc7f5818dedc3ea518fa0c0f7741676fb5d2b08de6c7ae7"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 28989,
+      "sha256": "0896b79cd0fcaf29244f29bf465ad2052e965c1c663f39b986d98972baee7f2c"
+    },
+    "metadata_json": {
+      "bytes": 465,
+      "sha256": "affddb90b7a82d6dac0bac3180c68ad17dd4252661335f411edbf9a94665cc1a"
+    },
+    "final_json": {
+      "bytes": 19254,
+      "sha256": "c0828b4aa56c869171f4b4a29b57cd3f6b96939691f72523de1cf79cbe7ce55f"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:57:58.496487+00:00"
+  }
+}

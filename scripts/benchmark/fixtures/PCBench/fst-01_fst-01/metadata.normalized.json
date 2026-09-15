@@ -1,0 +1,69 @@
+{
+  "board_id": "fst-01_fst-01",
+  "display_name": "fst-01_fst-01",
+  "pcbench_directory": "PCBs/fst-01_fst-01",
+  "source": "https://github.com/vinaebizs/fst-01",
+  "author": "vinaebizs",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:01.262160+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 2,
+    "components": 25,
+    "dimensions_mm": {
+      "width": 26.48,
+      "height": 13.15
+    },
+    "area_cm2": 3.48,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 270,
+    "vias": 12,
+    "track_length_mm": 298.74,
+    "kicad_drc_violations": 261,
+    "kicad_drc_breakdown": {
+      "total_violations": 261,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 2,
+        "clearance": 42,
+        "copper_edge_clearance": 22,
+        "hole_clearance": 4,
+        "lib_footprint_issues": 19,
+        "padstack": 2,
+        "silk_over_copper": 30,
+        "silk_overlap": 79,
+        "solder_mask_bridge": 44,
+        "starved_thermal": 1,
+        "text_height": 15,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 115,
+        "warning": 146
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.929516+00:00",
+    "elapsed_seconds": 35.81,
+    "unrouted_nets": 11,
+    "clearance_violations": 21,
+    "quality_score": 762.5
+  }
+}

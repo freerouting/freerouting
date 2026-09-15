@@ -1,0 +1,64 @@
+{
+  "board_id": "TinySimon_TinySimon",
+  "display_name": "TinySimon_TinySimon",
+  "pcbench_directory": "PCBs/TinySimon_TinySimon",
+  "source": "https://github.com/74hc595/TinySimon",
+  "author": "74hc595",
+  "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+  "license_spdx": "BSD-3-Clause",
+  "retrieved_at": "2023-08-17T17:22:43.321949+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 8,
+    "components": 20,
+    "dimensions_mm": {
+      "width": 14.33,
+      "height": 0.0
+    },
+    "area_cm2": 0.0,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 215,
+    "vias": 22,
+    "track_length_mm": 415.64,
+    "kicad_drc_violations": 323,
+    "kicad_drc_breakdown": {
+      "total_violations": 323,
+      "unconnected_count": 1,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "item_on_disabled_layer": 1,
+        "lib_footprint_issues": 19,
+        "silk_over_copper": 94,
+        "silk_overlap": 199,
+        "solder_mask_bridge": 4,
+        "track_dangling": 2,
+        "via_dangling": 1
+      },
+      "by_severity": {
+        "error": 8,
+        "warning": 315
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.145743+00:00",
+    "elapsed_seconds": 34.77,
+    "unrouted_nets": 3,
+    "clearance_violations": 2,
+    "quality_score": 910.51
+  }
+}

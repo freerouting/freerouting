@@ -1,0 +1,64 @@
+{
+  "board_id": "kitspace_Spikeling_V2.2",
+  "display_name": "kitspace_Spikeling_V2.2",
+  "pcbench_directory": "PCBs/kitspace_Spikeling_V2.2",
+  "source": "https://github.com/MaxZimmer/Spikeling-V2",
+  "author": "",
+  "license": "[{'name': 'GNU', 'link': 'https://raw.githubusercontent.com/MaxZimmer/Spikeling-V2/main/LICENSE'}]",
+  "license_spdx": "",
+  "retrieved_at": "2023-04-25T19:18:49.512917+00:00",
+  "cad": {
+    "source_version": "KiCad 20211014",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 60,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 120.0,
+      "height": 80.0
+    },
+    "area_cm2": 96.0,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 372,
+    "vias": 14,
+    "track_length_mm": 2747.3,
+    "kicad_drc_violations": 132,
+    "kicad_drc_breakdown": {
+      "total_violations": 132,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 25,
+        "clearance": 1,
+        "courtyards_overlap": 3,
+        "footprint_type_mismatch": 5,
+        "hole_to_hole": 2,
+        "lib_footprint_issues": 18,
+        "lib_footprint_mismatch": 28,
+        "malformed_courtyard": 14,
+        "silk_edge_clearance": 5,
+        "silk_overlap": 4,
+        "starved_thermal": 1,
+        "text_height": 25,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 51,
+        "warning": 81
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

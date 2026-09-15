@@ -1,0 +1,60 @@
+{
+  "board_id": "LadyBugShield_LadyBugShield",
+  "display_name": "LadyBugShield_LadyBugShield",
+  "pcbench_directory": "PCBs/LadyBugShield_LadyBugShield",
+  "source": "https://github.com/BitKnitting/LadyBugShield",
+  "author": "BitKnitting",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:26.309749+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 51,
+    "dimensions_mm": {
+      "width": 66.89,
+      "height": 54.57
+    },
+    "area_cm2": 36.5,
+    "zones": 1
+  },
+  "reference": {
+    "segments": 439,
+    "vias": 20,
+    "track_length_mm": 1048.95,
+    "kicad_drc_violations": 275,
+    "kicad_drc_breakdown": {
+      "total_violations": 275,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 51,
+        "copper_edge_clearance": 1,
+        "invalid_outline": 9,
+        "silk_edge_clearance": 6,
+        "silk_over_copper": 64,
+        "silk_overlap": 29,
+        "text_height": 83,
+        "text_thickness": 20,
+        "track_dangling": 12
+      },
+      "by_severity": {
+        "error": 61,
+        "warning": 214
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b",
+    "zone"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

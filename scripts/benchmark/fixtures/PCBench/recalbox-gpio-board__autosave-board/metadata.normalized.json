@@ -1,0 +1,56 @@
+{
+  "board_id": "recalbox-gpio-board__autosave-board",
+  "display_name": "recalbox-gpio-board__autosave-board",
+  "pcbench_directory": "PCBs/recalbox-gpio-board__autosave-board",
+  "source": "https://github.com/ChristopheBraud/recalbox-gpio-board",
+  "author": "ChristopheBraud",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:51.866050+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 26,
+    "components": 123,
+    "dimensions_mm": {
+      "width": 210.82,
+      "height": 86.36
+    },
+    "area_cm2": 182.06,
+    "zones": 29
+  },
+  "reference": {
+    "segments": 227,
+    "vias": 53,
+    "track_length_mm": 3188.96,
+    "kicad_drc_violations": 212,
+    "kicad_drc_breakdown": {
+      "total_violations": 212,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 79,
+        "hole_to_hole": 2,
+        "lib_footprint_issues": 123,
+        "starved_thermal": 7,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 86,
+        "warning": 126
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

@@ -1,0 +1,29 @@
+{
+  "board": "antdroid-board_antdroid-board",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\antdroid-board_antdroid-board\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 2,
+  "segment_count": 275,
+  "approximate_track_length_mm": 1110.04,
+  "kicad_drc_violations": 268,
+  "generated_at": "2026-08-18T18:28:32.371104+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 268,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 114,
+      "copper_edge_clearance": 1,
+      "lib_footprint_issues": 60,
+      "silk_edge_clearance": 6,
+      "silk_over_copper": 84,
+      "silk_overlap": 1,
+      "starved_thermal": 1,
+      "text_thickness": 1
+    },
+    "by_severity": {
+      "error": 116,
+      "warning": 152
+    }
+  }
+}

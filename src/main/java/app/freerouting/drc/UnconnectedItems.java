@@ -1,6 +1,6 @@
 package app.freerouting.drc;
 
-import app.freerouting.board.Item;
+import app.freerouting.board.model.items.Item;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

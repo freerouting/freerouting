@@ -7,8 +7,45 @@
 # touching business-logic code.
 # ---------------------------------------------------------------------------
 
+import os
+import platform
 import tempfile
 from pathlib import Path
+
+
+def get_cache_dir():
+    """Return the platform-specific cache directory for Freerouting."""
+    system = platform.system().lower()
+    if "windows" in system:
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        if local_app_data:
+            return Path(local_app_data) / "freerouting" / "cache"
+        return Path.home() / "AppData" / "Local" / "freerouting" / "cache"
+    elif "darwin" in system:
+        return Path.home() / "Library" / "Caches" / "freerouting"
+    else:
+        xdg_cache = os.environ.get("XDG_CACHE_HOME")
+        if xdg_cache:
+            return Path(xdg_cache) / "freerouting"
+        return Path.home() / ".cache" / "freerouting"
+
+
+def get_log_dir():
+    """Return the platform-specific log directory for Freerouting."""
+    system = platform.system().lower()
+    if "windows" in system:
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        if local_app_data:
+            return Path(local_app_data) / "freerouting" / "logs" / "kicad"
+        return Path.home() / "AppData" / "Local" / "freerouting" / "logs" / "kicad"
+    elif "darwin" in system:
+        return Path.home() / "Library" / "Logs" / "freerouting" / "kicad"
+    else:
+        xdg_state = os.environ.get("XDG_STATE_HOME")
+        if xdg_state:
+            return Path(xdg_state) / "freerouting" / "logs" / "kicad"
+        return Path.home() / ".local" / "state" / "freerouting" / "logs" / "kicad"
+
 
 # ------------------------------------------------------------------
 # Freerouting API server settings (used when running in JSON/API mode)
@@ -26,7 +63,8 @@ DEFAULT_FR_API_BASE_URL = f"http://{DEFAULT_FR_API_HOST}:{DEFAULT_FR_API_PORT}"
 JAVA_MIN_MAJOR_VERSION = 25
 
 # Folder where downloaded JREs are cached between sessions.
-JRE_TEMP_FOLDER = Path(tempfile.gettempdir()) / "freerouting" / "jre"
+JRE_CACHE_FOLDER = get_cache_dir() / "jre"
+JRE_TEMP_FOLDER = JRE_CACHE_FOLDER
 
 # Glob pattern used to discover previously-downloaded JRE 25 builds.
 JRE_GLOB_PATTERN = "jdk-25.*.*+*-jre/bin/java*"
@@ -89,7 +127,7 @@ API_JOB_TIMEOUT = 600
 SAVE_DEBUG_JSON = True
 
 # Folder and filenames for debug JSON output.
-LOG_DIR = Path(tempfile.gettempdir()) / "freerouting" / "kicad"
+LOG_DIR = get_log_dir()
 DEBUG_JSON_DIR = LOG_DIR
 DEBUG_INPUT_JSON_FILENAME = "freerouting_input_board.json"
 DEBUG_OUTPUT_JSON_FILENAME = "freerouting_output_board.json"

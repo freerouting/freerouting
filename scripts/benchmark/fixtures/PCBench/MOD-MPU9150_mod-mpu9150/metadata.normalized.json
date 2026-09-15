@@ -1,0 +1,64 @@
+{
+  "board_id": "MOD-MPU9150_mod-mpu9150",
+  "display_name": "MOD-MPU9150_mod-mpu9150",
+  "pcbench_directory": "PCBs/MOD-MPU9150_mod-mpu9150",
+  "source": "https://github.com/OLIMEX/MOD-MPU9150",
+  "author": "OLIMEX",
+  "license": "Apache License 2.0",
+  "license_spdx": "Apache-2.0",
+  "retrieved_at": "2023-08-17T17:22:46.481986+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 20,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 22.22,
+      "height": 16.51
+    },
+    "area_cm2": 3.67,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 125,
+    "vias": 9,
+    "track_length_mm": 210.6,
+    "kicad_drc_violations": 109,
+    "kicad_drc_breakdown": {
+      "total_violations": 109,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 31,
+        "copper_edge_clearance": 18,
+        "lib_footprint_issues": 15,
+        "silk_over_copper": 18,
+        "silk_overlap": 23,
+        "text_thickness": 3,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 49,
+        "warning": 60
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.037575+00:00",
+    "elapsed_seconds": 24.0,
+    "unrouted_nets": 2,
+    "clearance_violations": 10,
+    "quality_score": 894.73
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "xwhatits-capsense-controller_displaywriter-usb",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 335254,
+      "sha256": "b07e6c896c916089df079447406cb7cb97df8a714ca20c6acbbe2e1e26493d5f"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 204675,
+      "sha256": "8c016f9f0024216b06cc7d239eaa425da4a6e855ac828bc9661b5dbbfc9434ab"
+    },
+    "metadata_json": {
+      "bytes": 742,
+      "sha256": "0a532f468b823c8674dbd812207a6aa878d8a65a94a4568f41c6c16307e13326"
+    },
+    "final_json": {
+      "bytes": 241153,
+      "sha256": "d34fbcea5b88b55d8681b5832bf5f83925a2ea0e2d1a5219ad09e6b6c4c4df5d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:58:15.175676+00:00"
+  }
+}

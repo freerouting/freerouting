@@ -1,0 +1,33 @@
+{
+  "board": "RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD_negative",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\RGBMatrixPanelCPLD-PhotonBackpack_RGBMatrixPanel_CPLD_negative\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 57,
+  "segment_count": 374,
+  "approximate_track_length_mm": 984.52,
+  "kicad_drc_violations": 321,
+  "generated_at": "2026-08-18T19:41:01.166061+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 321,
+    "unconnected_count": 0,
+    "by_type": {
+      "annular_width": 24,
+      "clearance": 147,
+      "courtyards_overlap": 2,
+      "hole_clearance": 2,
+      "lib_footprint_issues": 28,
+      "npth_inside_courtyard": 1,
+      "silk_edge_clearance": 2,
+      "silk_over_copper": 62,
+      "silk_overlap": 4,
+      "solder_mask_bridge": 40,
+      "starved_thermal": 8,
+      "track_dangling": 1
+    },
+    "by_severity": {
+      "error": 224,
+      "warning": 97
+    }
+  }
+}

@@ -40,15 +40,15 @@ public class DebugSettings implements Serializable {
    * Checks if the given net number or name is permitted by the filter. If the filter is empty, all
    * nets are permitted.
    */
-  public boolean isNetPermitted(int netNo, String netName) {
+  public boolean isNetPermitted(int netNumber, String netName) {
     if (filterByNet.isEmpty()) {
       return true;
     }
-    String netNoStr = String.valueOf(netNo);
+    String netNoStr = String.valueOf(netNumber);
     // Check "1", "Net #1", "Net#1"
     return filterByNet.contains(netNoStr)
-        || filterByNet.contains("Net #" + netNo)
-        || filterByNet.contains("Net#" + netNo)
+        || filterByNet.contains("Net #" + netNumber)
+        || filterByNet.contains("Net#" + netNumber)
         || (netName != null && filterByNet.contains(netName.toLowerCase()));
     // Note: external input should be lower-cased before adding to the set if we
     // want case insensitivity

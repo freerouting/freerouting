@@ -1,0 +1,66 @@
+{
+  "board_id": "Teensy-Hats_Teensy-7-Segment-Hat",
+  "display_name": "Teensy-Hats_Teensy-7-Segment-Hat",
+  "pcbench_directory": "PCBs/Teensy-Hats_Teensy-7-Segment-Hat",
+  "source": "https://github.com/wickerbox/Teensy-Hats",
+  "author": "wickerbox",
+  "license": "GNU General Public License v3.0",
+  "license_spdx": "GPL-3.0",
+  "retrieved_at": "2023-08-17T17:23:03.170182+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 7,
+    "dimensions_mm": {
+      "width": 37.08,
+      "height": 18.03
+    },
+    "area_cm2": 6.69,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 80,
+    "vias": 3,
+    "track_length_mm": 143.66,
+    "kicad_drc_violations": 94,
+    "kicad_drc_breakdown": {
+      "total_violations": 94,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 14,
+        "copper_edge_clearance": 15,
+        "courtyards_overlap": 5,
+        "lib_footprint_issues": 7,
+        "malformed_courtyard": 1,
+        "pth_inside_courtyard": 16,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 29,
+        "starved_thermal": 3
+      },
+      "by_severity": {
+        "error": 54,
+        "warning": 40
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.134948+00:00",
+    "elapsed_seconds": 11.09,
+    "unrouted_nets": 0,
+    "clearance_violations": 30,
+    "quality_score": 750.0
+  }
+}

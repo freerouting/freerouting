@@ -32,14 +32,18 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   "router": {
     "default_preferred_direction_trace_cost": 1.0,
     "default_undesired_direction_trace_cost": 2.5,
-    "max_passes": 100,
-    "fanout_max_passes": 20,
+    "autorouter": {
+      "enabled": true,
+      "max_passes": 100
+    },
     "max_threads": 11,
-    "improvement_threshold": 0.01,
+    "improvement_threshold": 2.5,
     "trace_pull_tight_accuracy": 500,
     "allowed_via_types": true,
     "via_costs": 50,
     "plane_via_costs": 5,
+    "plane_nets": ["GND", "VCC"],
+    "plane_as_obstacle": false,
     "start_ripup_costs": 100,
     "automatic_neckdown": true
   },
@@ -120,19 +124,96 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 
 - **`default_preferred_direction_trace_cost`**: Cost factor for routing traces in the preferred direction.
 - **`default_undesired_direction_trace_cost`**: Cost factor for routing traces in undesired directions.
-- **`max_passes`**: Maximum number of routing passes.
-- **`fanout_max_passes`**: Maximum number of passes for fanout routing.
-- **`max_threads`**: Maximum number of threads to use for routing.
+- **`autorouter`**: Batch autorouter stage knobs. Canonical CLI is
+  `--router.autorouter.max_passes`. Flat keys (`--router.max_passes`, `-mp`,
+  `FREEROUTING__ROUTER__MAX_PASSES`) still apply and warn until they are removed.
+  The v1.9 compatibility build also accepts the nested `--router.autorouter.*`
+  flags (it maps them onto the same flat knobs), so shared benchmark commands can
+  use one flag set for both jars.
+    - **`enabled`**: Whether the autorouter stage runs after fanout.
+    - **`algorithm`**: Algorithm identifier (`freerouting-router` by default).
+    - **`max_passes`**: Maximum autorouter passes. `0` means no limit.
+    - **`max_items`**: Maximum items attempted in the autorouter stage.
+    - **`save_intermediate_stages`**: Save board snapshots between passes.
+    - **`ignore_net_classes`**: Net class names the autorouter should skip.
+    - **`max_threads`**: Worker-thread cap for a multi-thread autorouter pass. Canonical CLI is
+      `--router.autorouter.max_threads`. Independent of `--router.optimizer.max_threads`. The
+      production batch loop still runs a single-thread pass; this value is what
+      `AutoroutePassRunner.runMultiThread` would use. The legacy flat `--router.max_threads`
+      remains as a fallback / GUI knob.
+- **`result_json`**: Optional path for a machine-readable routing result manifest written at the
+  end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
+  flag: `--router.result_json=<path>`.
+- **`max_threads`**: Legacy flat / GUI worker-thread cap. `setMaxThreads()` still copies this
+  value into both `autorouter.max_threads` and `optimizer.max_threads`. Prefer the nested CLI
+  flags (`--router.autorouter.max_threads`, `--router.optimizer.max_threads`) when the two pools
+  must differ. `-mt` sets **optimizer** threads only.
 - **`improvement_threshold`**: Minimum improvement required to continue routing.
 - **`trace_pull_tight_accuracy`**: Accuracy for pulling traces tight.
 - **`allowed_via_types`**: Enables or disables the use of different via types.
 - **`via_costs`**: Cost factor for using vias.
 - **`plane_via_costs`**: Cost factor for using vias on plane layers.
+- **`plane_nets`**: Explicit array of net names to treat as power-plane nets, enabling plane-routing mode and discounted plane via costs for these nets.
+- **`plane_as_obstacle`**: Boolean controlling whether conduction areas (copper pours) act as obstacles blocking foreign traces from passing through. Default is `false` (foreign traces may route through fills).
 - **`start_ripup_costs`**: Cost factor for ripping up existing traces.
 - **`automatic_neckdown`**: Enables or disables automatic neckdown of traces.
 - **`layers`**: An array of layer-specific settings (transient, typically set via CLI or loaded from board files). Each element contains:
     - **`routable`**: Boolean indicating if the layer is active/routable by the autorouter.
     - **`preferred_direction_horizontal`**: Boolean indicating if the preferred direction on this layer is horizontal.
+- **`router_scoring`**: Autorouter board score (`V2_CONTINUOUS` by default; `V1_LEGACY`
+  remains available). Used by the autorouter, board history, and API `normalized_score`.
+  Incomplete connections are split at `unrouted_free_fraction` (0.5): the first half
+  uses `unrouted_first_half_weight` (1000/3) and the last half uses
+  `unrouted_second_half_weight` (2000/3), so a fully open board scores 0, a half-done
+  board scores about 333, and a finished board scores 1000 before DRC. DRC adds
+  `clearance_violation_count_weight` (25) times violation count / D plus
+  `clearance_violation_depth_weight` (300) times stacked shortfall µm /
+  `clearance_violation_depth_scale` (1000 µm) / D. D is max(1, pins × signal layers).
+  `unrouted_connection_weight` is unused by V2.
+  Equations and a glossary for every symbol are in [docs/scoring.md](scoring.md).
+- **`optimizer_scoring`**: Optimizer board score (`V2_LOWER_BOUND` by default; `V1_LEGACY`
+  remains available). Completeness and DRC count are keep/undo gates, not score terms.
+  The score is 1000 minus excess wire length, vias, and bends versus placement lower
+  bounds. Defaults: `excess_wire_length_weight` (1000), `excess_via_weight` (2000),
+  `excess_bend_weight` (500), `length_floor` (1), `difficulty_scale_floor` (1). Via and
+  bend excess divide by D; length excess divides by Lmin.
+  Equations and a glossary for every symbol are in [docs/scoring.md](scoring.md).
+
+The router and optimizer versions are independent. CLI aliases are
+`--router-scoring-version=v1|v2`, `--optimizer-scoring-version=v1|v2`, and
+`--scoring-version=v1|v2` to select both.
+
+##### **`optimizer` Sub-section**
+
+Configures the optional route-optimization stage that runs after autorouting.
+
+- **`enabled`**: Whether to run the optimizer. Default is `true`.
+- **`max_passes`**: Maximum number of optimizer passes.
+- **`max_items`**: Maximum number of item optimization attempts.
+- **`max_threads`**: Optimizer worker-thread cap. Canonical CLI is
+  `--router.optimizer.max_threads`. The default is the JVM-visible processor count minus one
+  (`Runtime.getRuntime().availableProcessors() - 1`), with a minimum of one worker. Headless,
+  API, and GUI all use this pool (`BatchOptimizer`). Independent of
+  `feature_flags.multi_threading` (that GUI flag does **not** disable optimizer workers) and of
+  `--router.autorouter.max_threads`. Each in-flight worker `deepCopy()`s the board, so peak heap
+  scales with this value.
+- **`improvement_threshold`**: Minimum **relative** optimizer-score percentage gain required to
+  continue after a pass (default `2.5`, representing 2.5%). `BatchOptimizer` compares
+  `((scoreAfter - scoreBefore) / scoreBefore) * 100`. Benchmark calibration across golden fixtures
+  demonstrates that `2.5` saves ~25% optimizer runtime while retaining >80% of via reductions.
+  - *Practical Ranges:*
+    - `0.5 – 1.0` (0.5% – 1.0%): Precision mode. Runs full multi-pass tail to eliminate every possible via on complex designs.
+    - `2.0 – 2.5` (2.0% – 2.5%): Balanced default. Retains >80% via reductions while pruning low-yield late passes.
+    - `3.5 – 5.0` (3.5% – 5.0%): Fast mode. Cuts optimizer time by ~45%, retaining ~65% via cuts.
+    - `> 5.5` (> 5.5%): Rapid prototyping. Stops after 1–2 passes; not recommended for production boards.
+- **`enable_preflight_guards`**: Whether pre-flight optimization guards are evaluated before starting the
+  optimizer loop. If enabled, bypasses the optimizer stage when the board has unrouted connections, has no vias
+  to eliminate (with trace length already near optimal), has an initial score at or near theoretical maximum,
+  or all vias are mandatory layer transitions between SMD pins that cannot be eliminated. Default is `true`.
+- **`max_consecutive_failures`**: Maximum consecutive candidate failures allowed before concluding the
+  current pass. Default is `50`.
+- **`max_consecutive_failures_pass1`**: Maximum consecutive candidate failures allowed in pass 1 before
+  early-terminating the pass (canary probe). Default is `12`.
 
 ##### **`fanout` Sub-section**
 
@@ -160,7 +241,9 @@ Configures the SMD-pin fanout pre-pass stage.
 
 #### **`feature_flags` Section**
 
-- **`multi_threading`**: Enables or disables multi-threaded routing.
+- **`multi_threading`**: GUI opt-in for experimental multi-thread **autorouter** UI. It does
+  **not** gate the optimizer worker pool (`optimizer.max_threads`) and does not change the
+  production maze path, which still runs a single-thread pass.
 - **`inspection_mode`**: Enables or disables inspection mode in the GUI.
 - **`other_menu`**: Enables or disables the "Other" menu in the GUI.
 - **`save_jobs`**: Enables or disables saving routing jobs to disk.
@@ -172,7 +255,7 @@ Configures the SMD-pin fanout pre-pass stage.
 - **`endpoints`**: A list of endpoints that the API server will listen on. Each endpoint is specified as
   `[protocol]://[host]:[port]`.
   When set via CLI or environment variable, provide a **comma-separated string** of endpoint URLs:
-  - CLI: `--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
+  - CLI: `--api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
   - Env var: `FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864`
 - *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk). When CORS is enabled, the server automatically allows the following request headers in preflight responses: `Content-Type`, `Accept`, `Origin`, `X-Requested-With`, `Authorization`, `Freerouting-Profile-ID`, `Freerouting-Profile-Email`, and `Freerouting-Environment-Host`. This ensures browser-based clients (e.g. EasyEDA at `https://pro.lceda.cn`) can authenticate successfully without being blocked by CORS preflight checks.
 - **`rate_limit`**: Fixed-window throttling for API requests.
@@ -219,15 +302,15 @@ Freerouting can also be configured using command-line arguments. These arguments
 **Scalar example:**
 
 ```bash
-java -jar freerouting.jar --gui.enabled=false --router.max_passes=200
+java -jar freerouting.jar --gui.enabled=false --router.autorouter.max_passes=200
 ```
 
 **List-valued settings** (e.g. `api_server.endpoints`, `mcp_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
 
 ```bash
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
-java -jar freerouting.jar --mcp_server-enabled=true --mcp_server-endpoints=http://127.0.0.1:37964 --mcp_server-target_api_base_url=http://127.0.0.1:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting.jar --mcp_server.enabled=true --mcp_server.endpoints=http://127.0.0.1:37964 --mcp_server.target_api_base_url=http://127.0.0.1:37864
 java -jar freerouting.jar --api_server.rate_limit.enabled=true --api_server.rate_limit.requests_per_window=120 --api_server.rate_limit.window_seconds=60
 java -jar freerouting.jar --mcp_server.rate_limit.enabled=true --mcp_server.rate_limit.requests_per_window=60 --mcp_server.rate_limit.window_seconds=60
 ```
@@ -240,7 +323,7 @@ Environment variables provide another way to override settings. The environment 
 
 ```bash
 FREEROUTING__GUI__ENABLED=false
-FREEROUTING__ROUTER__MAX_PASSES=200
+FREEROUTING__ROUTER__AUTOROUTER__MAX_PASSES=200
 java -jar freerouting.jar
 ```
 
@@ -265,12 +348,35 @@ Settings are resolved by the `SettingsMerger` class, which collects all active `
 | 20 | DSN file metadata | `DsnFileSettings` |
 | 30 | SES file metadata | `SesFileSettings` |
 | 40 | RULES file overrides | `RulesFileSettings` |
-| 50 | GUI (interactive user changes) | `GuiSettings` |
 | 55 | Environment variables (`FREEROUTING__ROUTER__*`) | `EnvironmentVariablesSource` |
 | 60 | CLI arguments (`--router.*`) | `CliSettings` |
+| 65 | GUI (interactive user changes) | `GuiSettingsSource` / `WorkspaceSettings` |
 | 70 | REST API caller — highest priority | `ApiSettings` |
 
 If a setting is not defined in any source, the hardcoded default from `DefaultSettings` is used.
+
+### Specctra `.rules` File Settings (Priority 40)
+
+When a `.rules` file is provided (via CLI `-dr`, `-de board.dsn+board.rules`, API `POST /v1/jobs/{jobId}/rules`, or an adjacent `<designName>.rules` file), `RulesFileSettings` parses both general routing rules and the `(autoroute_settings ...)` block. Supported parameters include:
+- `(autoroute on|off)` / `(postroute on|off)` / `(vias on|off)`
+- `(via_costs <int>)`, `(plane_via_costs <int>)`, `(start_ripup_costs <int>)`
+- Per-layer settings via `(layer_rule <layer_name> ...)`:
+  - `(active on|off)`
+  - `(preferred_direction horizontal|vertical)`
+  - `(preferred_direction_trace_costs <float>)`
+  - `(against_preferred_direction_trace_costs <float>)`
+
+## Storage Locations
+
+Freerouting stores configuration (`freerouting.json`), user data (`data/`), and logs (`freerouting.log`) in dedicated, platform-standard operating system directories:
+
+| Platform | Configuration (`freerouting.json`) & Data (`data/`) | Logs (`freerouting.log`) | Cache (JREs, artifacts) |
+|---|---|---|---|
+| **Windows** | `%APPDATA%\freerouting` (e.g. `C:\Users\<User>\AppData\Roaming\freerouting`) | `%LOCALAPPDATA%\freerouting\logs` | `%LOCALAPPDATA%\freerouting\cache` |
+| **macOS** | `~/Library/Application Support/freerouting` | `~/Library/Logs/freerouting` | `~/Library/Caches/freerouting` |
+| **Linux / POSIX (XDG)** | `$XDG_CONFIG_HOME/freerouting` (`~/.config/freerouting`) | `$XDG_STATE_HOME/freerouting/logs` (`~/.local/state/freerouting/logs`) | `$XDG_CACHE_HOME/freerouting` (`~/.cache/freerouting`) |
+
+You can override the base configuration/data root directory using `--user_data_path=<dir>` or the `FREEROUTING__USER_DATA_PATH` environment variable. On first launch, Freerouting automatically migrates any legacy configuration found in `<tmpdir>/freerouting/freerouting.json`.
 
 ## Settings Architecture — Why Fields Must Be Nullable
 

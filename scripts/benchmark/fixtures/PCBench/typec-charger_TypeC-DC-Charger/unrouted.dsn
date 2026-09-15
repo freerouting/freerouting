@@ -1,0 +1,1249 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\typec-charger_TypeC-DC-Charger\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer In1.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (layer In2.Cu
+      (type signal)
+      (property
+        (index 2)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 3)
+      )
+    )
+    (boundary
+      (path pcb 0  147098 -50002.4  147291 -50040.7  147473 -50115.9  147636 -50225.1
+            147775 -50364.1  147884 -50527.5  147959 -50709  147998 -50901.7
+            148000 -51000  148000 -105000  147998 -105098  147959 -105291
+            147884 -105473  147775 -105636  147636 -105775  147473 -105884
+            147291 -105959  147098 -105998  147000 -106000  101000 -106000
+            100902 -105998  100709 -105959  100527 -105884  100364 -105775
+            100225 -105636  100116 -105473  100041 -105291  100002 -105098
+            100000 -105000  100000 -51000  100002 -50901.7  100041 -50709
+            100116 -50527.5  100225 -50364.1  100364 -50225.1  100527 -50115.9
+            100709 -50040.7  100902 -50002.4  101000 -50000  147000 -50000
+            147098 -50002.4)
+    )
+    (via "Via[0-3]_800:400_um" "Via[0-3]_600:350_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Applidyne_Capacitor:CAPC3225X170L
+      (place C2 123250 -69250 front 0 (PN 10UF_X7S_3225M))
+      (place C3 123250 -65750 front 0 (PN 10UF_X7S_3225M))
+      (place C16 123250 -54000 front 0 (PN 22UF_X7R_3225M))
+      (place C17 123250 -57500 front 0 (PN 22UF_X7R_3225M))
+      (place C18 123250 -54000 back 180 (PN 22UF_X7R_3225M))
+    )
+    (component "Applidyne_QFN:QFN50P500X400X100-29T255X355N"
+      (place U1 135750 -60250 front 0 (PN LM5175RHF))
+    )
+    (component "Applidyne_QFN:QFN40P400X400X100-33T280N"
+      (place U2 132335 -92911.5 front 90 (PN TPS25741))
+    )
+    (component "Applidyne_Connector:XT60-PT-MALE"
+      (place CON1 109500 -77500 front 90 (PN "XT60-PT-MALE"))
+    )
+    (component Applidyne_DPAK:DPAK4P229_990X239L159X95L
+      (place Q9 119000 -89750 front -90 (PN IRFR9024NTRPBF))
+    )
+    (component "Applidyne_DPAK:TO440P972X240-3N"
+      (place D7 106700 -89750 front -90 (PN 300V_10A_DPAK))
+    )
+    (component "Applidyne_Switch:MCEMR-03-T"
+      (place SW1 131250 -77750 front 0 (PN 2.54mm_3xSPST_SMD))
+    )
+    (component "Applidyne_USB:MOLEX-105450-0101"
+      (place J1 141200 -77500 front 90 (PN USB_C_SOCKET_RA_SMD))
+    )
+    (component "Applidyne_SON:SON65P315X300X90-9T174X245L"
+      (place Q1 118250 -67250 front -90 (PN CSD18543Q3A))
+      (place Q2 118250 -63500 front 90 (PN CSD18543Q3A))
+      (place Q3 118250 -56000 front -90 (PN CSD17551Q3A))
+      (place Q5 131500 -101000 front 90 (PN CSD17579Q3A))
+      (place Q6 136500 -101000 front -90 (PN CSD17579Q3A))
+      (place Q4 118250 -59750 front 90 (PN CSD17551Q3A))
+    )
+    (component Applidyne_Inductor:INDM132129X500N
+      (place L1 107750 -61000 front -90 (PN 3.3uH_5050M))
+    )
+    (component "Applidyne_LED:PLCC110P330X340X200-8L"
+      (place D11 106000 -96400 front 0 (PN LED_RGB_PLCC6))
+    )
+    (component Applidyne_Capacitor:CAPC1005X60L
+      (place C28 138750 -76250 front 90 (PN 330PF_X7R_1005M))
+      (place C11 140500 -59750 front -90 (PN 47PF_X7R_1005M))
+      (place C21 127250 -95250 front 180 (PN 100NF_X7R_1005M))
+      (place C23 130500 -97250 front 180 (PN 100NF_X7R_1005M))
+      (place C24 130500 -98500 front 180 (PN 10NF_X7R_1005M))
+      (place C4 135500 -66250 front -90 (PN 100PF_C0G_1005M))
+      (place C5 136750 -66250 front -90 (PN 100NF_X7R_1005M))
+      (place C12 130250 -59250 front -90 (PN 100NF_X7R_1005M))
+      (place C13 137250 -56000 front 0 (PN 100NF_X7R_1005M))
+      (place C29 146000 -91905 front -90 (PN 100NF_X7R_1005M))
+      (place C8 139250 -66250 front 90 (PN 100PF_C0G_1005M))
+      (place C9 138000 -66250 front -90 (PN 22NF_X7R_1005M))
+      (place C20 129500 -88250 front 90 (PN 330NF_X5R_1005M))
+      (place C27 138750 -78750 front -90 (PN 330PF_X7R_1005M))
+      (place C25 137500 -97250 front 0 (PN 330NF_X5R_1005M))
+      (place R33 127250 -91500 front 0 (PN 0R_1005M))
+    )
+    (component Applidyne_SOD:SOD2512X110L
+      (place D5 118250 -53250 front 180 (PN 40V_500mA_SOD323))
+    )
+    (component Applidyne_SOD:SOD2512X110L::1
+      (place D1 129500 -69250 front 0 (PN 40V_500mA_SOD323))
+      (place D4 140630 -56000 front 0 (PN 40V_500mA_SOD323))
+    )
+    (component Applidyne_SOD:SOD2512X110L::2
+      (place D3 130250 -56000 front 90 (PN 40V_500mA_SOD323))
+    )
+    (component "Applidyne_SOT:SOT95P240X110-3L16L"
+      (place D10 121600 -82600 front 0 (PN BAV99))
+    )
+    (component "Applidyne_SOT:SOT95P240X110-3L16L::1"
+      (place Q8 115250 -101250 front 0 (PN BC857B))
+    )
+    (component Applidyne_SOD:SODFL5436X262L
+      (place D2 118750 -64250 back 180 (PN "CD214B-B250LF"))
+    )
+    (component Applidyne_SOD:SODFL5436X262L::1
+      (place D6 137800 -86200 front 180 (PN "SSB44-E3/52T_DO214AA"))
+    )
+    (component Applidyne_SOD:SOD3715X145L
+      (place D8 109750 -97000 front -90 (PN 33V_500mW_SOD123))
+      (place D9 115250 -97000 front -90 (PN 33V_500mW_SOD123))
+    )
+    (component Applidyne_Resistor:RESC2012X50L
+      (place R23 140500 -98000 front -90 (PN 0.005R_2012M))
+      (place R24 137500 -95750 front 180 (PN 120R_2012M))
+      (place R27 112250 -96000 front -90 (PN 10R_2012M))
+    )
+    (component Applidyne_Resistor:RESC3216X60L
+      (place R9 123250 -61500 front 180 (PN 0.01R_3216M))
+      (place C30 112250 -100000 front -90 (PN 1UF_X7R_3216M))
+      (place C31 118000 -96750 front -90 (PN 1UF_X7R_3216M))
+    )
+    (component Applidyne_Resistor:RESC1608X50L
+      (place R1 129500 -62750 front 0 (PN 249K_1608M))
+      (place R2 129500 -61250 front 180 (PN 41K2_1608M))
+      (place R7 129500 -65750 front 0 (PN 10R_1608M))
+      (place R12 143500 -64250 front -90 (PN 49K9_1608M))
+      (place R13 143500 -67175 front -90 (PN 9K53_1608M))
+      (place R14 145000 -67175 front -90 (PN 4K99_1608M))
+      (place R15 146500 -67175 front -90 (PN 5K76_1608M))
+      (place R26 102675 -94000 front 180 (PN 100K_1608M))
+      (place R28 109750 -101000 front -90 (PN 22K_1608M))
+      (place R29 118000 -101000 front -90 (PN 332K_1608M))
+      (place R30 121600 -85400 front 0 (PN 10R_1608M))
+      (place R35 104250 -100700 front -90 (PN 1K50_1608M))
+    )
+    (component Applidyne_Resistor:RESC1608X50L::1
+      (place R31 124400 -83000 front -90 (PN 10K0_1608M))
+      (place R36 107750 -100750 front -90 (PN 2K40_1608M))
+      (place R37 106000 -100700 front -90 (PN 330R_1608M))
+    )
+    (component Applidyne_Resistor:RESC1005X40L
+      (place R16 127250 -94000 front 0 (PN 1M_1005M))
+      (place R19 133500 -97750 front 90 (PN 10R_1005M))
+      (place R20 132250 -97750 front -90 (PN 1K_1005M))
+      (place R21 134750 -97750 front 90 (PN 10R_1005M))
+      (place R3 141250 -58000 front 0 (PN 10K_1005M))
+      (place R10 142500 -59250 front 180 (PN 100R_1005M))
+      (place R11 142500 -60250 front 180 (PN 100R_1005M))
+      (place R22 137500 -98500 front 180 (PN 10R_1005M))
+      (place R4 131750 -66250 front -90 (PN 93K1_1005M))
+      (place R5 133000 -66250 front -90 (PN 0R_1005M))
+      (place R6 134250 -66250 front -90 (PN 84K5_1005M))
+      (place R8 140500 -66250 front 90 (PN 10K_1005M))
+      (place R25 144250 -93750 front 180 (PN 10R_1005M))
+    )
+    (component Applidyne_Resistor:RESC1005X40L::1
+      (place R17 127250 -92750 front 180 (PN 680K_1005M))
+      (place R18 130750 -88250 front -90 (PN 100K_1005M))
+      (place R32 128750 -80250 front 90 (PN 220K_1005M))
+      (place R34 128750 -78000 front -90 (PN 220K_1005M))
+    )
+    (component Applidyne_Capacitor:CAPC3216X135L
+      (place C32 122000 -79600 front 180 (PN 100NF_X7R_3216M))
+      (place C26 137800 -89600 front 180 (PN 6.8UF_X7R_3216M))
+    )
+    (component Applidyne_Capacitor:CAPC1608X90L
+      (place C6 141250 -61500 front 0 (PN 1UF_X7R_1608M))
+      (place C7 134500 -56000 front 0 (PN 1UF_X7R_1608M))
+      (place C10 129500 -64250 front 0 (PN 100NF_X7R_1608M))
+      (place C14 142000 -64250 front -90 (PN 22NF_X7R_1608M))
+      (place C15 142000 -67155 front -90 (PN 100NF_X7R_1608M))
+    )
+    (component Applidyne_Capacitor:CAPC1005X60L::1
+      (place C22 137500 -94250 front 0 (PN 100NF_X7R_1005M))
+    )
+    (component Applidyne_Capacitor:CAPAE660X580DD180L260L
+      (place C1 124200 -74600 front 0 (PN 100UF_ELEC_35V_660X580M))
+      (place C19 124000 -99500 front 180 (PN 100UF_ELEC_35V_660X580M))
+    )
+    (component "Applidyne_Test:HARWIN_S1751-46"
+      (place TEST2 102750 -97500 back 0 (PN PROBE_HOOK))
+      (place TEST3 145000 -86200 back 0 (PN PROBE_HOOK))
+      (place TEST5 102750 -101250 back 0 (PN PROBE_HOOK))
+    )
+    (component "Applidyne_SOT:SOT95P240X110-6L16L"
+      (place U3 143500 -91500 front -90 (PN TPS2514))
+    )
+    (component "Applidyne_SOT:SOT95P240X110-3L16N"
+      (place Q7 144600 -96400 front 0 (PN 2N7002P))
+    )
+  )
+  (library
+    (image Applidyne_Capacitor:CAPC3225X170L
+      (outline (path signal 120  -1700 -1350  -1700 1350))
+      (outline (path signal 120  -1700 1350  1700 1350))
+      (outline (path signal 120  1700 1350  1700 -1350))
+      (outline (path signal 120  1700 -1350  -1700 -1350))
+      (outline (path signal 100  1600 1460  -1600 1460))
+      (outline (path signal 100  1600 -1460  -1600 -1460))
+      (pin Rect[T]Pad_960.000000x2620.000000_um (rotate 180) 2 1375 0)
+      (pin Rect[T]Pad_960.000000x2620.000000_um (rotate 180) 1 -1375 0)
+    )
+    (image "Applidyne_QFN:QFN50P500X400X100-29T255X355N"
+      (outline (path signal 120  -2080 -2080  -2080 -2255))
+      (outline (path signal 120  2580 -2080  -1310 -2080))
+      (outline (path signal 120  -1310 -2080  -2580 -810))
+      (outline (path signal 120  -2580 -810  -2580 2080))
+      (outline (path signal 120  -2580 2080  2580 2080))
+      (outline (path signal 120  2580 2080  2580 -2080))
+      (outline (path signal 120  -2080 -2080  -2580 -2080))
+      (outline (path signal 120  -2580 -2080  -2580 -1580))
+      (outline (path signal 120  2080 -2080  2580 -2080))
+      (outline (path signal 120  2580 -2080  2580 -1580))
+      (outline (path signal 120  2080 2080  2580 2080))
+      (outline (path signal 120  2580 2080  2580 1580))
+      (outline (path signal 120  -2080 2080  -2580 2080))
+      (outline (path signal 120  -2580 2080  -2580 1580))
+      (pin Rect[T]Pad_2550.000000x3550.000000_um (rotate 90) 29 0 0)
+      (pin Rect[T]Pad_860.000000x300.000000_um 28 -2445 -1250)
+      (pin Rect[T]Pad_860.000000x300.000000_um 27 -2445 -750)
+      (pin Rect[T]Pad_860.000000x300.000000_um 26 -2445 -250)
+      (pin Rect[T]Pad_860.000000x300.000000_um 25 -2445 250)
+      (pin Rect[T]Pad_860.000000x300.000000_um 24 -2445 750)
+      (pin Rect[T]Pad_860.000000x300.000000_um 23 -2445 1250)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 22 -1750 1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 21 -1250 1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 20 -750 1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 19 -250 1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 18 250 1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 17 750 1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 16 1250 1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 15 1750 1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um 14 2445 1250)
+      (pin Rect[T]Pad_860.000000x300.000000_um 13 2445 750)
+      (pin Rect[T]Pad_860.000000x300.000000_um 12 2445 250)
+      (pin Rect[T]Pad_860.000000x300.000000_um 11 2445 -250)
+      (pin Rect[T]Pad_860.000000x300.000000_um 10 2445 -750)
+      (pin Rect[T]Pad_860.000000x300.000000_um 9 2445 -1250)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 8 1750 -1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 7 1250 -1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 6 750 -1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 5 250 -1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 4 -250 -1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 3 -750 -1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 2 -1250 -1945)
+      (pin Rect[T]Pad_860.000000x300.000000_um (rotate 90) 1 -1750 -1945)
+    )
+    (image "Applidyne_QFN:QFN40P400X400X100-33T280N"
+      (outline (path signal 120  -1710 -2080  -1710 -2260))
+      (outline (path signal 120  2080 -2080  -810 -2080))
+      (outline (path signal 120  -810 -2080  -2080 -810))
+      (outline (path signal 120  -2080 -810  -2080 2080))
+      (outline (path signal 120  -2080 2080  2080 2080))
+      (outline (path signal 120  2080 2080  2080 -2080))
+      (outline (path signal 120  -1710 -2080  -2080 -2080))
+      (outline (path signal 120  -2080 -2080  -2080 -1710))
+      (outline (path signal 120  1710 -2080  2080 -2080))
+      (outline (path signal 120  2080 -2080  2080 -1710))
+      (outline (path signal 120  1710 2080  2080 2080))
+      (outline (path signal 120  2080 2080  2080 1710))
+      (outline (path signal 120  -1710 2080  -2080 2080))
+      (outline (path signal 120  -2080 2080  -2080 1710))
+      (pin Rect[T]Pad_1200.000000x1200.000000_um 33 -800 800)
+      (pin Rect[T]Pad_1200.000000x1200.000000_um 33@1 -800 -800)
+      (pin Rect[T]Pad_1200.000000x1200.000000_um 33@2 800 800)
+      (pin Rect[T]Pad_1200.000000x1200.000000_um 33@3 800 -800)
+      (pin Rect[T]Pad_740.000000x250.000000_um 32 -2010 -1400)
+      (pin Rect[T]Pad_740.000000x250.000000_um 31 -2010 -1000)
+      (pin Rect[T]Pad_740.000000x250.000000_um 30 -2010 -600)
+      (pin Rect[T]Pad_740.000000x250.000000_um 29 -2010 -200)
+      (pin Rect[T]Pad_740.000000x250.000000_um 28 -2010 200)
+      (pin Rect[T]Pad_740.000000x250.000000_um 27 -2010 600)
+      (pin Rect[T]Pad_740.000000x250.000000_um 26 -2010 1000)
+      (pin Rect[T]Pad_740.000000x250.000000_um 25 -2010 1400)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 24 -1400 2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 23 -1000 2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 22 -600 2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 21 -200 2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 20 200 2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 19 600 2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 18 1000 2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 17 1400 2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um 16 2010 1400)
+      (pin Rect[T]Pad_740.000000x250.000000_um 15 2010 1000)
+      (pin Rect[T]Pad_740.000000x250.000000_um 14 2010 600)
+      (pin Rect[T]Pad_740.000000x250.000000_um 13 2010 200)
+      (pin Rect[T]Pad_740.000000x250.000000_um 12 2010 -200)
+      (pin Rect[T]Pad_740.000000x250.000000_um 11 2010 -600)
+      (pin Rect[T]Pad_740.000000x250.000000_um 10 2010 -1000)
+      (pin Rect[T]Pad_740.000000x250.000000_um 9 2010 -1400)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 8 1400 -2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 7 1000 -2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 6 600 -2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 5 200 -2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 4 -200 -2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 3 -600 -2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 2 -1000 -2010)
+      (pin Rect[T]Pad_740.000000x250.000000_um (rotate 90) 1 -1400 -2010)
+    )
+    (image "Applidyne_Connector:XT60-PT-MALE"
+      (outline (polygon signal 0  -7995 -9745  -7995 10745  7995 10745  7995 -9745))
+      (outline (path signal 150  -7500 -5000  7450 -5000))
+      (outline (path signal 150  7450 -5000  7450 10250))
+      (outline (path signal 150  7450 10250  -7500 10250))
+      (outline (path signal 150  -7500 10250  -7500 -5000))
+      (outline (path signal 150  -7500 10250  7500 10250))
+      (outline (path signal 150  7500 10250  7500 -5000))
+      (outline (path signal 150  7500 -5000  -7500 -5000))
+      (outline (path signal 150  -7500 -5000  -7500 10250))
+      (pin Rect[A]Pad_1500.000000x3000.000000_um @1 6500 0)
+      (pin Rect[T]Pad_3200.000000x4500.000000_um 2 3500 -6650)
+      (pin Rect[A]Pad_1500.000000x3000.000000_um @2 -6500 0)
+      (pin Rect[T]Pad_3200.000000x4500.000000_um 1 -4000 -6650)
+    )
+    (image Applidyne_DPAK:DPAK4P229_990X239L159X95L
+      (outline (path signal 100  -3030 -5300  -3030 -2210))
+      (outline (path signal 100  2945 4007.5  3370 4007.5))
+      (outline (path signal 100  3370 4007.5  3370 -2212.5))
+      (outline (path signal 100  3370 -2212.5  -3370 -2212.5))
+      (outline (path signal 100  -3370 -2212.5  -3370 4007.5))
+      (outline (path signal 100  -3370 4007.5  -2945 4007.5))
+      (outline (path signal 120  3370 -2212.5  -2100 -2212.5))
+      (outline (path signal 120  -2100 -2212.5  -3370 -942.5))
+      (outline (path signal 120  -3370 -942.5  -3370 4007.5))
+      (outline (path signal 120  -3370 4007.5  3370 4007.5))
+      (outline (path signal 120  3370 4007.5  3370 -2212.5))
+      (pin Rect[T]Pad_5880.000000x5590.000000_um (rotate 90) 4 0 2420)
+      (pin Rect[T]Pad_2530.000000x1180.000000_um (rotate 90) 3 2290 -4090)
+      (pin Rect[T]Pad_2530.000000x1180.000000_um (rotate 90) 1 -2290 -4090)
+    )
+    (image "Applidyne_DPAK:TO440P972X240-3N"
+      (outline (path signal 120  -2860 -5340  -2860 -1930))
+      (outline (path signal 120  2910 4270  3300 4270))
+      (outline (path signal 120  3300 4270  3300 -1930))
+      (outline (path signal 120  3300 -1930  -3300 -1930))
+      (outline (path signal 120  -3300 -1930  -3300 4270))
+      (outline (path signal 120  -3300 4270  -2910 4270))
+      (outline (path signal 120  3300 -1930  -2030 -1930))
+      (outline (path signal 120  -2030 -1930  -3300 -660))
+      (outline (path signal 120  -3300 -660  -3300 4270))
+      (outline (path signal 120  -3300 4270  3300 4270))
+      (outline (path signal 120  3300 4270  3300 -1930))
+      (pin Rect[T]Pad_6360.000000x5460.000000_um (rotate 90) C 0 2220)
+      (pin Rect[T]Pad_1730.000000x960.000000_um (rotate 90) A 2200 -4540)
+      (pin Rect[T]Pad_1730.000000x960.000000_um (rotate 90) A@1 -2200 -4540)
+    )
+    (image "Applidyne_Switch:MCEMR-03-T"
+      (outline (polygon signal 0  6745 -5745  -1745 -5745  -1745 5745  6745 5745))
+      (outline (path signal 150  -500 0  500 0))
+      (outline (path signal 150  -500 1000  500 1000))
+      (outline (path signal 150  -500 -1500  -500 1500))
+      (outline (path signal 150  500 -1500  -500 -1500))
+      (outline (path signal 150  500 1500  500 -1500))
+      (outline (path signal 150  -500 1500  500 1500))
+      (outline (path signal 150  -1220 -3000  6300 -3000))
+      (outline (path signal 150  -1220 3000  -1220 -3000))
+      (outline (path signal 150  -1220 3000  6300 3000))
+      (outline (path signal 150  3040 1500  3040 -1500))
+      (outline (path signal 150  2040 1500  3040 1500))
+      (outline (path signal 150  2040 -1500  2040 1500))
+      (outline (path signal 150  3040 -1500  2040 -1500))
+      (outline (path signal 150  2040 0  3040 0))
+      (outline (path signal 150  2040 1000  3040 1000))
+      (outline (path signal 150  6300 3000  6300 -3000))
+      (outline (path signal 150  4580 1500  5580 1500))
+      (outline (path signal 150  4580 -1500  4580 1500))
+      (outline (path signal 150  5580 -1500  4580 -1500))
+      (outline (path signal 150  5580 1500  5580 -1500))
+      (outline (path signal 150  4580 0  5580 0))
+      (outline (path signal 150  4580 1000  5580 1000))
+      (outline (path signal 150  -1250 3000  6250 3000))
+      (outline (path signal 150  6250 3000  6250 -3000))
+      (outline (path signal 150  6250 -3000  -1250 -3000))
+      (outline (path signal 150  -1250 -3000  -1250 3000))
+      (pin Rect[T]Pad_1100.000000x2000.000000_um 5 5080 -4400)
+      (pin Rect[T]Pad_1100.000000x2000.000000_um 6 5080 4400)
+      (pin Rect[T]Pad_1100.000000x2000.000000_um 4 2540 4400)
+      (pin Rect[T]Pad_1100.000000x2000.000000_um 3 2540 -4400)
+      (pin Rect[T]Pad_1100.000000x2000.000000_um 1 0 -4400)
+      (pin Rect[T]Pad_1100.000000x2000.000000_um 2 0 4400)
+    )
+    (image "Applidyne_USB:MOLEX-105450-0101"
+      (outline (path signal 150  4500 -7000  4500 -7130))
+      (outline (path signal 150  4500 -7130  -4500 -7130))
+      (outline (path signal 150  -4500 -7130  -4500 -7000))
+      (outline (path signal 150  -4500 500  4500 500))
+      (outline (path signal 150  4500 500  4500 -7250))
+      (outline (path signal 150  4500 -7250  -4500 -7250))
+      (outline (path signal 150  -4500 -7250  -4500 500))
+      (outline (path signal 150  4500 -3500  4500 -1500))
+      (outline (path signal 150  -4500 -3500  -4500 -1500))
+      (pin Rect[T]Pad_1000.000000x700.000000_um B1 3100 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B2 2250 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B3 1750 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B4 1250 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B5 750 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B6 250 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B7 -250 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B8 -750 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B9 -1250 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B10 -1750 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um B11 -2250 -890)
+      (pin Rect[T]Pad_1000.000000x700.000000_um B12 -3100 -890)
+      (pin Rect[T]Pad_300.000000x700.000000_um A7 500 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A8 1000 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A12 3000 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A9 1500 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A11 2500 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A10 2000 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A6 -500 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A5 -1000 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A4 -1500 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A3 -2000 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A2 -2500 410)
+      (pin Rect[T]Pad_300.000000x700.000000_um A1 -3000 410)
+      (pin Oval[A]Pad_1100.000000x2600.000000_um S4 4320 -5360)
+      (pin Oval[A]Pad_1100.000000x2600.000000_um S2 -4320 -5360)
+      (pin Oval[A]Pad_1100.000000x2100.000000_um S3 4320 0)
+      (pin Oval[A]Pad_1100.000000x2100.000000_um S1 -4320 0)
+    )
+    (image "Applidyne_SON:SON65P315X300X90-9T174X245L"
+      (outline (path signal 120  1630 -1550  -596.67 -1550))
+      (outline (path signal 120  -596.67 -1550  -1630 -516.67))
+      (outline (path signal 120  -1630 -516.67  -1630 1550))
+      (outline (path signal 120  -1630 1550  1630 1550))
+      (outline (path signal 120  1630 1550  1630 -1550))
+      (outline (path signal 100  1300 -1550  1630 -1550))
+      (outline (path signal 100  1630 -1550  1630 1550))
+      (outline (path signal 100  1630 1550  1300 1550))
+      (outline (path signal 100  -1300 -1550  -1630 -1550))
+      (outline (path signal 100  -1630 -1550  -1630 1550))
+      (outline (path signal 100  -1630 1550  -1300 1550))
+      (outline (path signal 100  -1300 -1550  -1300 -1700))
+      (pin Rect[T]Pad_1740.000000x2450.000000_um (rotate 90) 3 0 250)
+      (pin Rect[T]Pad_680.000000x350.000000_um (rotate 90) 3@1 -975 1410)
+      (pin Rect[T]Pad_680.000000x350.000000_um (rotate 90) 3@2 -325 1410)
+      (pin Rect[T]Pad_680.000000x350.000000_um (rotate 90) 3@3 325 1410)
+      (pin Rect[T]Pad_680.000000x350.000000_um (rotate 90) 3@4 975 1410)
+      (pin Rect[T]Pad_680.000000x350.000000_um (rotate 90) 1 975 -1410)
+      (pin Rect[T]Pad_680.000000x350.000000_um (rotate 90) 2 325 -1410)
+      (pin Rect[T]Pad_680.000000x350.000000_um (rotate 90) 2@1 -325 -1410)
+      (pin Rect[T]Pad_680.000000x350.000000_um (rotate 90) 2@2 -975 -1410)
+    )
+    (image Applidyne_Inductor:INDM132129X500N
+      (outline (path signal 120  -6850 -6700  -6850 6700))
+      (outline (path signal 120  -6850 6700  6850 6700))
+      (outline (path signal 120  6850 6700  6850 -6700))
+      (outline (path signal 120  6850 -6700  -6850 -6700))
+      (outline (path signal 120  6600 6700  -6600 6700))
+      (outline (path signal 120  6600 -6700  -6600 -6700))
+      (pin Rect[T]Pad_3530.000000x5000.000000_um 2 5585 0)
+      (pin Rect[T]Pad_3530.000000x5000.000000_um 1 -5585 0)
+    )
+    (image "Applidyne_LED:PLCC110P330X340X200-8L"
+      (outline (path signal 120  -1400 -1150  -1400 1600))
+      (outline (path signal 120  -1400 1600  1400 1600))
+      (outline (path signal 120  1400 1600  1400 -1600))
+      (outline (path signal 120  1400 -1600  -950 -1600))
+      (outline (path signal 100  -1575 -2075  -1575 1600))
+      (outline (path signal 100  1575 -1600  1575 1600))
+      (outline (path signal 120  -1400 -1150  -950 -1600))
+      (pin Rect[T]Pad_920.000000x620.000000_um (rotate 90) A1 -1100 1490)
+      (pin Rect[T]Pad_920.000000x620.000000_um (rotate 90) A2 0 1490)
+      (pin Rect[T]Pad_920.000000x620.000000_um (rotate 90) A3 1100 1490)
+      (pin Rect[T]Pad_920.000000x620.000000_um (rotate 90) C3 1100 -1490)
+      (pin Rect[T]Pad_920.000000x620.000000_um (rotate 90) C2 0 -1490)
+      (pin Rect[T]Pad_920.000000x620.000000_um (rotate 90) C1 -1100 -1490)
+    )
+    (image Applidyne_Capacitor:CAPC1005X60L
+      (outline (path signal 120  -530 -280  -530 280))
+      (outline (path signal 120  -530 280  530 280))
+      (outline (path signal 120  530 280  530 -280))
+      (outline (path signal 120  530 -280  -530 -280))
+      (outline (path signal 100  500 400  -500 400))
+      (outline (path signal 100  500 -400  -500 -400))
+      (pin Rect[T]Pad_500.000000x590.000000_um (rotate 90) 2 405 0)
+      (pin Rect[T]Pad_500.000000x590.000000_um (rotate 90) 1 -405 0)
+    )
+    (image Applidyne_SOD:SOD2512X110L
+      (outline (path signal 150  -1985 0  -1970.68 44.084  -1933.18 71.329  -1886.82 71.329
+            -1849.32 44.084  -1835 0  -1849.32 -44.084  -1886.82 -71.329
+            -1933.18 -71.329  -1970.68 -44.084  -1985 0))
+      (outline (path signal 120  -900 -680  -900 226.7))
+      (outline (path signal 120  -900 226.7  -446.7 680))
+      (outline (path signal 120  -446.7 680  900 680))
+      (outline (path signal 120  900 680  900 -680))
+      (outline (path signal 120  900 -680  -900 -680))
+      (outline (path signal 100  850 680  -1660 680))
+      (outline (path signal 100  -1660 680  -1660 -680))
+      (outline (path signal 100  -1660 -680  850 -680))
+      (pin Rect[T]Pad_460.000000x760.000000_um (rotate 90) A 1130 0)
+      (pin Rect[T]Pad_460.000000x760.000000_um (rotate 90) C -1130 0)
+    )
+    (image Applidyne_SOD:SOD2512X110L::1
+      (outline (path signal 150  -1835 0  -1849.32 -44.084  -1886.82 -71.329  -1933.18 -71.329
+            -1970.68 -44.084  -1985 0  -1970.68 44.084  -1933.18 71.329
+            -1886.82 71.329  -1849.32 44.084  -1835 0))
+      (outline (path signal 120  -900 -680  -900 226.7))
+      (outline (path signal 120  -900 226.7  -446.7 680))
+      (outline (path signal 120  -446.7 680  900 680))
+      (outline (path signal 120  900 680  900 -680))
+      (outline (path signal 120  900 -680  -900 -680))
+      (outline (path signal 100  850 680  -1660 680))
+      (outline (path signal 100  -1660 680  -1660 -680))
+      (outline (path signal 100  -1660 -680  850 -680))
+      (pin Rect[T]Pad_460.000000x760.000000_um (rotate 90) A 1130 0)
+      (pin Rect[T]Pad_460.000000x760.000000_um (rotate 90) C -1130 0)
+    )
+    (image Applidyne_SOD:SOD2512X110L::2
+      (outline (path signal 150  -1910 -75  -1954.08 -60.676  -1981.33 -23.176  -1981.33 23.176
+            -1954.08 60.676  -1910 75  -1865.92 60.676  -1838.67 23.176
+            -1838.67 -23.176  -1865.92 -60.676  -1910 -75))
+      (outline (path signal 120  -900 -680  -900 226.7))
+      (outline (path signal 120  -900 226.7  -446.7 680))
+      (outline (path signal 120  -446.7 680  900 680))
+      (outline (path signal 120  900 680  900 -680))
+      (outline (path signal 120  900 -680  -900 -680))
+      (outline (path signal 100  850 680  -1660 680))
+      (outline (path signal 100  -1660 680  -1660 -680))
+      (outline (path signal 100  -1660 -680  850 -680))
+      (pin Rect[T]Pad_460.000000x760.000000_um (rotate 90) A 1130 0)
+      (pin Rect[T]Pad_460.000000x760.000000_um (rotate 90) C -1130 0)
+    )
+    (image "Applidyne_SOT:SOT95P240X110-3L16L"
+      (outline (path signal 100  1500 700  435 700))
+      (outline (path signal 100  1500 -700  1500 700))
+      (outline (path signal 100  1385 -700  1500 -700))
+      (outline (path signal 100  -1500 700  -435 700))
+      (outline (path signal 100  -1500 -700  -1500 700))
+      (outline (path signal 100  -1385 -700  -1500 -700))
+      (outline (path signal 100  -1385 -1365  -1385 -700))
+      (outline (path signal 120  1500 700  1500 -700))
+      (outline (path signal 120  -1500 700  1500 700))
+      (outline (path signal 120  -1500 -233.3  -1500 700))
+      (outline (path signal 120  -1033.3 -700  -1500 -233.3))
+      (outline (path signal 120  1500 -700  -1033.3 -700))
+      (outline (path signal 150  -875 -1665  -889.324 -1709.08  -926.824 -1736.33  -973.176 -1736.33
+            -1010.68 -1709.08  -1025 -1665  -1010.68 -1620.92  -973.176 -1593.67
+            -926.824 -1593.67  -889.324 -1620.92  -875 -1665))
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 1 -950 -975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 2 950 -975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 3 0 975)
+    )
+    (image "Applidyne_SOT:SOT95P240X110-3L16L::1"
+      (outline (path signal 150  -875 -1665  -889.324 -1709.08  -926.824 -1736.33  -973.176 -1736.33
+            -1010.68 -1709.08  -1025 -1665  -1010.68 -1620.92  -973.176 -1593.67
+            -926.824 -1593.67  -889.324 -1620.92  -875 -1665))
+      (outline (path signal 120  1500 -700  -1033.3 -700))
+      (outline (path signal 120  -1033.3 -700  -1500 -233.3))
+      (outline (path signal 120  -1500 -233.3  -1500 700))
+      (outline (path signal 120  -1500 700  1500 700))
+      (outline (path signal 120  1500 700  1500 -700))
+      (outline (path signal 100  -1385 -1365  -1385 -700))
+      (outline (path signal 100  -1385 -700  -1500 -700))
+      (outline (path signal 100  -1500 -700  -1500 700))
+      (outline (path signal 100  -1500 700  -435 700))
+      (outline (path signal 100  1385 -700  1500 -700))
+      (outline (path signal 100  1500 -700  1500 700))
+      (outline (path signal 100  1500 700  435 700))
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 3 0 975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 2 950 -975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 1 -950 -975)
+    )
+    (image Applidyne_SOD:SODFL5436X262L
+      (outline (path signal 150  -3230 0  -3244.32 -44.084  -3281.82 -71.329  -3328.18 -71.329
+            -3365.68 -44.084  -3380 0  -3365.68 44.084  -3328.18 71.329
+            -3281.82 71.329  -3244.32 44.084  -3230 0))
+      (outline (path signal 120  -2290 -1970  -2290 700))
+      (outline (path signal 120  -2290 700  -1020 1970))
+      (outline (path signal 120  -1020 1970  2290 1970))
+      (outline (path signal 120  2290 1970  2290 -1970))
+      (outline (path signal 120  2290 -1970  -2290 -1970))
+      (outline (path signal 100  2160 1970  -3055 1970))
+      (outline (path signal 100  -3055 1970  -3055 -1970))
+      (outline (path signal 100  -3055 -1970  2160 -1970))
+      (pin Rect[T]Pad_1630.000000x2130.000000_um (rotate 180) A 2090 0)
+      (pin Rect[T]Pad_1630.000000x2130.000000_um (rotate 180) C -2090 0)
+    )
+    (image Applidyne_SOD:SODFL5436X262L::1
+      (outline (path signal 150  -3380 0  -3365.68 44.084  -3328.18 71.329  -3281.82 71.329
+            -3244.32 44.084  -3230 0  -3244.32 -44.084  -3281.82 -71.329
+            -3328.18 -71.329  -3365.68 -44.084  -3380 0))
+      (outline (path signal 120  -2290 -1970  -2290 700))
+      (outline (path signal 120  -2290 700  -1020 1970))
+      (outline (path signal 120  -1020 1970  2290 1970))
+      (outline (path signal 120  2290 1970  2290 -1970))
+      (outline (path signal 120  2290 -1970  -2290 -1970))
+      (outline (path signal 100  2160 1970  -3055 1970))
+      (outline (path signal 100  -3055 1970  -3055 -1970))
+      (outline (path signal 100  -3055 -1970  2160 -1970))
+      (pin Rect[T]Pad_1630.000000x2130.000000_um (rotate 180) A 2090 0)
+      (pin Rect[T]Pad_1630.000000x2130.000000_um (rotate 180) C -2090 0)
+    )
+    (image Applidyne_SOD:SOD3715X145L
+      (outline (path signal 150  -2530 75  -2485.92 60.676  -2458.67 23.176  -2458.67 -23.176
+            -2485.92 -60.676  -2530 -75  -2574.08 -60.676  -2601.33 -23.176
+            -2601.33 23.176  -2574.08 60.676  -2530 75))
+      (outline (path signal 120  -1430 -850  -1430 283.3))
+      (outline (path signal 120  -1430 283.3  -863.3 850))
+      (outline (path signal 120  -863.3 850  1430 850))
+      (outline (path signal 120  1430 850  1430 -850))
+      (outline (path signal 120  1430 -850  -1430 -850))
+      (outline (path signal 100  1350 850  -2280 850))
+      (outline (path signal 100  -2280 850  -2280 -850))
+      (outline (path signal 100  -2280 -850  1350 -850))
+      (pin Rect[T]Pad_720.000000x900.000000_um (rotate 90) A 1680 0)
+      (pin Rect[T]Pad_720.000000x900.000000_um (rotate 90) C -1680 0)
+    )
+    (image Applidyne_Resistor:RESC2012X50L
+      (outline (path signal 120  -1050 -700  -1050 700))
+      (outline (path signal 120  -1050 700  1050 700))
+      (outline (path signal 120  1050 700  1050 -700))
+      (outline (path signal 120  1050 -700  -1050 -700))
+      (outline (path signal 100  1000 810  -1000 810))
+      (outline (path signal 100  1000 -810  -1000 -810))
+      (pin Rect[T]Pad_670.000000x1320.000000_um (rotate 180) 2 880 0)
+      (pin Rect[T]Pad_670.000000x1320.000000_um (rotate 180) 1 -880 0)
+    )
+    (image Applidyne_Resistor:RESC3216X60L
+      (outline (path signal 120  -1650 -880  -1650 880))
+      (outline (path signal 120  -1650 880  1650 880))
+      (outline (path signal 120  1650 880  1650 -880))
+      (outline (path signal 120  1650 -880  -1650 -880))
+      (outline (path signal 100  1600 985  -1600 985))
+      (outline (path signal 100  1600 -985  -1600 -985))
+      (pin Rect[T]Pad_820.000000x1670.000000_um (rotate 180) 2 1405 0)
+      (pin Rect[T]Pad_820.000000x1670.000000_um (rotate 180) 1 -1405 0)
+    )
+    (image Applidyne_Resistor:RESC1608X50L
+      (outline (path signal 120  -830 -480  -830 480))
+      (outline (path signal 120  -830 480  830 480))
+      (outline (path signal 120  830 480  830 -480))
+      (outline (path signal 120  830 -480  -830 -480))
+      (outline (path signal 100  800 590  -800 590))
+      (outline (path signal 100  800 -590  -800 -590))
+      (pin Rect[T]Pad_650.000000x880.000000_um (rotate 180) 2 675 0)
+      (pin Rect[T]Pad_650.000000x880.000000_um (rotate 180) 1 -675 0)
+    )
+    (image Applidyne_Resistor:RESC1608X50L::1
+      (outline (path signal 100  800 -590  -800 -590))
+      (outline (path signal 100  800 590  -800 590))
+      (outline (path signal 120  830 -480  -830 -480))
+      (outline (path signal 120  830 480  830 -480))
+      (outline (path signal 120  -830 480  830 480))
+      (outline (path signal 120  -830 -480  -830 480))
+      (pin Rect[T]Pad_650.000000x880.000000_um (rotate 180) 1 -675 0)
+      (pin Rect[T]Pad_650.000000x880.000000_um (rotate 180) 2 675 0)
+    )
+    (image Applidyne_Resistor:RESC1005X40L
+      (outline (path signal 120  -530 -280  -530 280))
+      (outline (path signal 120  -530 280  530 280))
+      (outline (path signal 120  530 280  530 -280))
+      (outline (path signal 120  530 -280  -530 -280))
+      (outline (path signal 100  500 400  -500 400))
+      (outline (path signal 100  500 -400  -500 -400))
+      (pin Rect[T]Pad_500.000000x510.000000_um (rotate 90) 2 445 0)
+      (pin Rect[T]Pad_500.000000x510.000000_um (rotate 90) 1 -445 0)
+    )
+    (image Applidyne_Resistor:RESC1005X40L::1
+      (outline (path signal 100  500 -400  -500 -400))
+      (outline (path signal 100  500 400  -500 400))
+      (outline (path signal 120  530 -280  -530 -280))
+      (outline (path signal 120  530 280  530 -280))
+      (outline (path signal 120  -530 280  530 280))
+      (outline (path signal 120  -530 -280  -530 280))
+      (pin Rect[T]Pad_500.000000x510.000000_um (rotate 90) 1 -445 0)
+      (pin Rect[T]Pad_500.000000x510.000000_um (rotate 90) 2 445 0)
+    )
+    (image Applidyne_Capacitor:CAPC3216X135L
+      (outline (path signal 100  1600 -1010  -1600 -1010))
+      (outline (path signal 100  1600 1010  -1600 1010))
+      (outline (path signal 120  1700 -900  -1700 -900))
+      (outline (path signal 120  1700 900  1700 -900))
+      (outline (path signal 120  -1700 900  1700 900))
+      (outline (path signal 120  -1700 -900  -1700 900))
+      (pin Rect[T]Pad_960.000000x1720.000000_um (rotate 180) 1 -1375 0)
+      (pin Rect[T]Pad_960.000000x1720.000000_um (rotate 180) 2 1375 0)
+    )
+    (image Applidyne_Capacitor:CAPC1608X90L
+      (outline (path signal 120  -880 -480  -880 480))
+      (outline (path signal 120  -880 480  880 480))
+      (outline (path signal 120  880 480  880 -480))
+      (outline (path signal 120  880 -480  -880 -480))
+      (outline (path signal 100  800 585  -800 585))
+      (outline (path signal 100  800 -585  -800 -585))
+      (pin Rect[T]Pad_720.000000x870.000000_um (rotate 180) 2 675 0)
+      (pin Rect[T]Pad_720.000000x870.000000_um (rotate 180) 1 -675 0)
+    )
+    (image Applidyne_Capacitor:CAPC1005X60L::1
+      (outline (path signal 100  500 -400  -500 -400))
+      (outline (path signal 100  500 400  -500 400))
+      (outline (path signal 120  530 -280  -530 -280))
+      (outline (path signal 120  530 280  530 -280))
+      (outline (path signal 120  -530 280  530 280))
+      (outline (path signal 120  -530 -280  -530 280))
+      (pin Rect[T]Pad_500.000000x590.000000_um (rotate 90) 1 -405 0)
+      (pin Rect[T]Pad_500.000000x590.000000_um (rotate 90) 2 405 0)
+    )
+    (image Applidyne_Capacitor:CAPAE660X580DD180L260L
+      (outline (path signal 120  3400 3400  3400 -3400))
+      (outline (path signal 120  3400 -3400  -2040 -3400))
+      (outline (path signal 120  -2040 -3400  -3400 -2040))
+      (outline (path signal 120  -3400 -2040  -3400 2040))
+      (outline (path signal 120  -3400 2040  -2040 3400))
+      (outline (path signal 120  -2040 3400  3400 3400))
+      (outline (path signal 100  3400 840  3400 3400))
+      (outline (path signal 100  3400 3400  -2040 3400))
+      (outline (path signal 100  -2040 3400  -3400 2040))
+      (outline (path signal 100  -3400 2040  -3400 840))
+      (outline (path signal 100  3400 -840  3400 -3400))
+      (outline (path signal 100  3400 -3400  -2040 -3400))
+      (outline (path signal 100  -2040 -3400  -3400 -2040))
+      (outline (path signal 100  -3400 -2040  -3400 -840))
+      (pin Rect[T]Pad_1380.000000x2970.000000_um (rotate 90) 2 2430 0)
+      (pin Rect[T]Pad_1380.000000x2970.000000_um (rotate 90) 1 -2430 0)
+    )
+    (image "Applidyne_Test:HARWIN_S1751-46"
+      (pin Rect[T]Pad_3450.000000x1850.000000_um 1 0 0)
+    )
+    (image "Applidyne_SOT:SOT95P240X110-6L16L"
+      (outline (path signal 100  1500 700  1385 700))
+      (outline (path signal 100  1500 -700  1500 700))
+      (outline (path signal 100  1385 -700  1500 -700))
+      (outline (path signal 100  -1500 700  -1385 700))
+      (outline (path signal 100  -1500 -700  -1500 700))
+      (outline (path signal 100  -1385 -700  -1500 -700))
+      (outline (path signal 100  -1385 -1365  -1385 -700))
+      (outline (path signal 120  1500 700  1500 -700))
+      (outline (path signal 120  -1500 700  1500 700))
+      (outline (path signal 120  -1500 -233.3  -1500 700))
+      (outline (path signal 120  -1033.3 -700  -1500 -233.3))
+      (outline (path signal 120  1500 -700  -1033.3 -700))
+      (outline (path signal 150  -950 -1590  -905.916 -1604.32  -878.671 -1641.82  -878.671 -1688.18
+            -905.916 -1725.68  -950 -1740  -994.084 -1725.68  -1021.33 -1688.18
+            -1021.33 -1641.82  -994.084 -1604.32  -950 -1590))
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 1 -950 -975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 2 0 -975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 3 950 -975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 4 950 975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 5 0 975)
+      (pin Rect[T]Pad_570.000000x880.000000_um (rotate 180) 6 -950 975)
+    )
+    (image "Applidyne_SOT:SOT95P240X110-3L16N"
+      (outline (path signal 120  1500 700  485 700))
+      (outline (path signal 120  1500 -700  1500 700))
+      (outline (path signal 120  -1500 700  -485 700))
+      (outline (path signal 120  -1500 -1555  -1500 700))
+      (outline (path signal 120  1500 700  1500 -700))
+      (outline (path signal 120  -1500 700  1500 700))
+      (outline (path signal 120  -1500 -233.3  -1500 700))
+      (outline (path signal 120  -1033.3 -700  -1500 -233.3))
+      (outline (path signal 120  1500 -700  -1033.3 -700))
+      (outline (path signal 200  -850 -1935  -865.875 -1989.06  -908.458 -2025.96  -964.231 -2033.98
+            -1015.49 -2010.58  -1045.95 -1963.17  -1045.95 -1906.83  -1015.49 -1859.42
+            -964.231 -1836.02  -908.458 -1844.04  -865.875 -1880.94  -850 -1935))
+      (pin Rect[T]Pad_610.000000x1180.000000_um (rotate 180) 1 -950 -1025)
+      (pin Rect[T]Pad_610.000000x1180.000000_um (rotate 180) 2 950 -1025)
+      (pin Rect[T]Pad_610.000000x1180.000000_um (rotate 180) 3 0 1025)
+    )
+    (padstack Oval[A]Pad_1100.000000x2100.000000_um
+      (shape (path F.Cu 1100  0 -500  0 500))
+      (shape (path In1.Cu 1100  0 -500  0 500))
+      (shape (path In2.Cu 1100  0 -500  0 500))
+      (shape (path B.Cu 1100  0 -500  0 500))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_1100.000000x2600.000000_um
+      (shape (path F.Cu 1100  0 -750  0 750))
+      (shape (path In1.Cu 1100  0 -750  0 750))
+      (shape (path In2.Cu 1100  0 -750  0 750))
+      (shape (path B.Cu 1100  0 -750  0 750))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2530.000000x1180.000000_um
+      (shape (rect F.Cu -1265 -590 1265 590))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2550.000000x3550.000000_um
+      (shape (rect F.Cu -1275 -1775 1275 1775))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_300.000000x700.000000_um
+      (shape (rect F.Cu -150 -350 150 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3200.000000x4500.000000_um
+      (shape (rect F.Cu -1600 -2250 1600 2250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3450.000000x1850.000000_um
+      (shape (rect F.Cu -1725 -925 1725 925))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_3530.000000x5000.000000_um
+      (shape (rect F.Cu -1765 -2500 1765 2500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_460.000000x760.000000_um
+      (shape (rect F.Cu -230 -380 230 380))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x510.000000_um
+      (shape (rect F.Cu -250 -255 250 255))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x590.000000_um
+      (shape (rect F.Cu -250 -295 250 295))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_570.000000x880.000000_um
+      (shape (rect F.Cu -285 -440 285 440))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_5880.000000x5590.000000_um
+      (shape (rect F.Cu -2940 -2795 2940 2795))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_610.000000x1180.000000_um
+      (shape (rect F.Cu -305 -590 305 590))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_6360.000000x5460.000000_um
+      (shape (rect F.Cu -3180 -2730 3180 2730))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_650.000000x880.000000_um
+      (shape (rect F.Cu -325 -440 325 440))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_670.000000x1320.000000_um
+      (shape (rect F.Cu -335 -660 335 660))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_680.000000x350.000000_um
+      (shape (rect F.Cu -340 -175 340 175))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_720.000000x870.000000_um
+      (shape (rect F.Cu -360 -435 360 435))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_720.000000x900.000000_um
+      (shape (rect F.Cu -360 -450 360 450))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_740.000000x250.000000_um
+      (shape (rect F.Cu -370 -125 370 125))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_820.000000x1670.000000_um
+      (shape (rect F.Cu -410 -835 410 835))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_860.000000x300.000000_um
+      (shape (rect F.Cu -430 -150 430 150))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_920.000000x620.000000_um
+      (shape (rect F.Cu -460 -310 460 310))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_960.000000x2620.000000_um
+      (shape (rect F.Cu -480 -1310 480 1310))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_960.000000x1720.000000_um
+      (shape (rect F.Cu -480 -860 480 860))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x700.000000_um
+      (shape (rect F.Cu -500 -350 500 350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1100.000000x2000.000000_um
+      (shape (rect F.Cu -550 -1000 550 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x1200.000000_um
+      (shape (rect F.Cu -600 -600 600 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1380.000000x2970.000000_um
+      (shape (rect F.Cu -690 -1485 690 1485))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_1500.000000x3000.000000_um
+      (shape (rect F.Cu -750 -1500 750 1500))
+      (shape (rect In1.Cu -750 -1500 750 1500))
+      (shape (rect In2.Cu -750 -1500 750 1500))
+      (shape (rect B.Cu -750 -1500 750 1500))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1630.000000x2130.000000_um
+      (shape (rect F.Cu -815 -1065 815 1065))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1730.000000x960.000000_um
+      (shape (rect F.Cu -865 -480 865 480))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1740.000000x2450.000000_um
+      (shape (rect F.Cu -870 -1225 870 1225))
+      (attach off)
+    )
+    (padstack "Via[0-3]_800:400_um"
+      (shape (circle F.Cu 800))
+      (shape (circle In1.Cu 800))
+      (shape (circle In2.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+    (padstack "Via[0-3]_600:350_um"
+      (shape (circle F.Cu 600))
+      (shape (circle In1.Cu 600))
+      (shape (circle In2.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(U1-Pad10)"
+      (pins U1-11 U1-10)
+    )
+    (net "Net-(U2-Pad9)"
+      (pins U2-9)
+    )
+    (net "Net-(U2-Pad11)"
+      (pins U2-11)
+    )
+    (net "Net-(U2-Pad12)"
+      (pins U2-12)
+    )
+    (net "Net-(U2-Pad13)"
+      (pins U2-13)
+    )
+    (net "Net-(U2-Pad15)"
+      (pins U2-15)
+    )
+    (net "Net-(U2-Pad28)"
+      (pins U2-28)
+    )
+    (net VIN
+      (pins C2-1 C3-1 U1-28 Q9-4 Q1-3 Q1-3@1 Q1-3@2 Q1-3@3 Q1-3@4 D1-A R1-1 C32-1
+        C1-1)
+    )
+    (net "Net-(C4-Pad1)"
+      (pins U1-4 C4-1)
+    )
+    (net "Net-(C5-Pad1)"
+      (pins U1-5 C5-1)
+    )
+    (net VARIABLE_DC
+      (pins C16-1 C17-1 C18-1 U1-21 U1-9 U2-25 Q3-3 Q3-3@1 Q3-3@2 Q3-3@3 Q3-3@4 Q5-3
+        Q5-3@1 Q5-3@2 Q5-3@3 Q5-3@4 D11-A1 D11-A3 D5-C R12-1 R16-1 C6-1 C14-1 C23-1
+        C19-1 TEST2-1)
+    )
+    (net "/Power Supply/VCC"
+      (pins U1-20 D3-A D4-A R3-2 C7-1)
+    )
+    (net "Net-(C9-Pad2)"
+      (pins R8-1 C9-2)
+    )
+    (net "Net-(C10-Pad2)"
+      (pins U1-27 R7-2 C10-2)
+    )
+    (net "Net-(C11-Pad2)"
+      (pins U1-12 R11-2 C11-2)
+    )
+    (net "Net-(C11-Pad1)"
+      (pins U1-13 R10-2 C11-1)
+    )
+    (net "Net-(C12-Pad1)"
+      (pins U1-23 D3-C C12-1)
+    )
+    (net "Net-(C13-Pad1)"
+      (pins U1-17 D4-C C13-1)
+    )
+    (net SW2
+      (pins U1-15 Q3-2 Q3-2@1 Q3-2@2 Q4-3 Q4-3@1 Q4-3@2 Q4-3@3 Q4-3@4 L1-1 D5-A C13-2)
+    )
+    (net FB
+      (pins U1-8 R12-2 R13-1 R14-1 R15-1 C14-2 C15-1)
+    )
+    (net "/USBC Controller/DVDD"
+      (pins U2-18 U2-17 SW1-4 C20-1 R32-1 R33-1 R34-1)
+    )
+    (net "Net-(C21-Pad1)"
+      (pins U2-21 C21-1)
+    )
+    (net "Net-(C22-Pad1)"
+      (pins U2-1 C22-1)
+    )
+    (net "Net-(C24-Pad1)"
+      (pins R20-2 C24-1)
+    )
+    (net VBUS
+      (pins U2-26 J1-B4 J1-B9 J1-A9 J1-A4 D6-C R23-1 R24-1 C25-2 TEST3-1 C26-1 Q7-3)
+    )
+    (net CC1
+      (pins U2-2 J1-A5 C27-1)
+    )
+    (net CC2
+      (pins U2-4 J1-B5 C28-1)
+    )
+    (net "Net-(D1-PadC)"
+      (pins D1-C R7-1)
+    )
+    (net SW1
+      (pins U1-25 Q1-2 Q1-2@1 Q1-2@2 Q2-3 Q2-3@1 Q2-3@2 Q2-3@3 Q2-3@4 L1-2 D2-C C12-2)
+    )
+    (net RCS
+      (pins Q2-2 Q2-2@1 Q2-2@2 Q4-2 Q4-2@1 Q4-2@2 D2-A R9-2 R10-1)
+    )
+    (net "Net-(J1-PadA2)"
+      (pins J1-A2)
+    )
+    (net "Net-(J1-PadA3)"
+      (pins J1-A3)
+    )
+    (net D+
+      (pins J1-B6 J1-A6 U3-1)
+    )
+    (net "Net-(J1-PadA10)"
+      (pins J1-A10)
+    )
+    (net "Net-(J1-PadA11)"
+      (pins J1-A11)
+    )
+    (net "Net-(J1-PadA8)"
+      (pins J1-A8)
+    )
+    (net "D-"
+      (pins J1-B7 J1-A7 U3-6)
+    )
+    (net "Net-(J1-PadB11)"
+      (pins J1-B11)
+    )
+    (net "Net-(J1-PadB10)"
+      (pins J1-B10)
+    )
+    (net "Net-(J1-PadB8)"
+      (pins J1-B8)
+    )
+    (net "Net-(J1-PadB3)"
+      (pins J1-B3)
+    )
+    (net "Net-(J1-PadB2)"
+      (pins J1-B2)
+    )
+    (net HDRV1
+      (pins U1-24 Q1-1)
+    )
+    (net LDRV1
+      (pins U1-22 Q2-1)
+    )
+    (net HDRV2
+      (pins U1-16 Q3-1)
+    )
+    (net LDRV2
+      (pins U1-18 Q4-1)
+    )
+    (net "Net-(Q5-Pad1)"
+      (pins Q5-1 R19-1)
+    )
+    (net GDNS
+      (pins U2-30 Q5-2 Q5-2@1 Q5-2@2 Q6-2 Q6-2@1 Q6-2@2)
+    )
+    (net "Net-(Q6-Pad1)"
+      (pins Q6-1 R21-1)
+    )
+    (net "Net-(Q7-Pad1)"
+      (pins R25-1 Q7-1)
+    )
+    (net "Net-(R1-Pad2)"
+      (pins U1-26 R1-2 R2-1)
+    )
+    (net "Net-(R3-Pad1)"
+      (pins U1-14 R3-1)
+    )
+    (net "Net-(R4-Pad1)"
+      (pins U1-1 R4-1)
+    )
+    (net "Net-(R5-Pad1)"
+      (pins U1-2 R5-1)
+    )
+    (net "Net-(R6-Pad1)"
+      (pins U1-3 R6-1)
+    )
+    (net CTRL1
+      (pins U2-7 R14-2 R36-2)
+    )
+    (net CTRL2
+      (pins U2-8 R15-2 R35-2)
+    )
+    (net "Net-(R16-Pad2)"
+      (pins U2-20 R16-2 R17-1)
+    )
+    (net GDNG
+      (pins U2-29 R19-2 R20-1 R21-2)
+    )
+    (net ISNS
+      (pins U2-24 R22-2 C25-1)
+    )
+    (net DSCG
+      (pins U2-31 R24-2)
+    )
+    (net "~{UFP}"
+      (pins U2-14)
+    )
+    (net "Net-(U3-Pad4)"
+      (pins U3-4)
+    )
+    (net "Net-(U3-Pad3)"
+      (pins U3-3)
+    )
+    (net "Net-(C8-Pad1)"
+      (pins U1-6 C8-1 C9-1)
+    )
+    (net GND
+      (pins C2-2 C3-2 C16-2 C17-2 C18-2 U1-29 U1-19 U1-7 U2-33 U2-33@1 U2-33@2 U2-33@3
+        U2-23 U2-22 U2-5 U2-3 CON1-1 SW1-6 SW1-2 J1-B1 J1-B12 J1-A12 J1-A1 J1-S4 J1-S2
+        J1-S3 J1-S1 C28-2 D10-1 D6-A R9-1 C30-2 R2-2 R13-2 R28-2 R29-2 R17-2 R18-1
+        R11-1 R4-2 R5-2 R6-2 R8-2 C6-2 C7-2 C10-1 C15-2 C21-2 C22-2 C23-2 C24-2 C4-2
+        C5-2 C29-2 C8-2 C20-2 C27-2 C1-2 C19-2 TEST5-1 U3-2 C26-2 R37-2)
+    )
+    (net G5V
+      (pins U2-32 R25-2)
+    )
+    (net "Net-(C30-Pad1)"
+      (pins R27-2 C30-1)
+    )
+    (net "Net-(Q6-Pad3)"
+      (pins Q6-3 Q6-3@1 Q6-3@2 Q6-3@3 Q6-3@4 R23-2 R22-1)
+    )
+    (net "Net-(C31-Pad1)"
+      (pins Q9-3 D7-C Q8-2 D9-C R27-1 C31-1)
+    )
+    (net "Net-(C31-Pad2)"
+      (pins D10-3 Q8-3 D9-A C31-2 R29-1 R31-2 R30-2)
+    )
+    (net "Net-(C32-Pad2)"
+      (pins D10-2 R31-1 C32-2)
+    )
+    (net "Net-(D8-PadC)"
+      (pins Q8-1 D8-C R26-1)
+    )
+    (net "Net-(D8-PadA)"
+      (pins D8-A R28-1)
+    )
+    (net "Net-(Q9-Pad1)"
+      (pins Q9-1 R30-1)
+    )
+    (net /Connectors/RAW_BATT
+      (pins CON1-2 D7-A D7-A@1 R26-2)
+    )
+    (net "/USBC Controller/PSEL"
+      (pins U2-16 SW1-3 R18-2)
+    )
+    (net "/USBC Controller/HIPWR"
+      (pins U2-6 SW1-1 R32-2)
+    )
+    (net "Net-(R33-Pad2)"
+      (pins U2-19 R33-2)
+    )
+    (net "/USBC Controller/EN12V"
+      (pins U2-10 SW1-5 R34-2)
+    )
+    (net "Net-(U2-Pad27)"
+      (pins U2-27)
+    )
+    (net "Net-(D11-PadC1)"
+      (pins D11-C1 R35-1)
+    )
+    (net "Net-(D11-PadC3)"
+      (pins D11-C3 R36-1)
+    )
+    (net "Net-(D11-PadC2)"
+      (pins D11-C2 R37-1)
+    )
+    (net 5V
+      (pins D11-A2 C29-1 U3-5 Q7-2)
+    )
+    (class kicad_default /Connectors/RAW_BATT "/Power Supply/VCC" 5V D+ "D-"
+      FB HDRV1 HDRV2 LDRV1 LDRV2 "Net-(C10-Pad2)" "Net-(C11-Pad1)" "Net-(C11-Pad2)"
+      "Net-(C12-Pad1)" "Net-(C13-Pad1)" "Net-(C24-Pad1)" "Net-(C30-Pad1)"
+      "Net-(C31-Pad1)" "Net-(C31-Pad2)" "Net-(C32-Pad2)" "Net-(C4-Pad1)" "Net-(C5-Pad1)"
+      "Net-(C8-Pad1)" "Net-(C9-Pad2)" "Net-(D1-PadC)" "Net-(D11-PadC1)" "Net-(D11-PadC2)"
+      "Net-(D11-PadC3)" "Net-(D8-PadA)" "Net-(D8-PadC)" "Net-(J1-PadA10)"
+      "Net-(J1-PadA11)" "Net-(J1-PadA2)" "Net-(J1-PadA3)" "Net-(J1-PadA8)"
+      "Net-(J1-PadB10)" "Net-(J1-PadB11)" "Net-(J1-PadB2)" "Net-(J1-PadB3)"
+      "Net-(J1-PadB8)" "Net-(Q5-Pad1)" "Net-(Q6-Pad1)" "Net-(Q6-Pad3)" "Net-(Q7-Pad1)"
+      "Net-(Q9-Pad1)" "Net-(R1-Pad2)" "Net-(R3-Pad1)" "Net-(R4-Pad1)" "Net-(R5-Pad1)"
+      "Net-(R6-Pad1)" "Net-(U1-Pad10)" "Net-(U2-Pad11)" "Net-(U2-Pad12)" "Net-(U2-Pad13)"
+      "Net-(U2-Pad15)" "Net-(U2-Pad27)" "Net-(U2-Pad28)" "Net-(U2-Pad9)" "Net-(U3-Pad3)"
+      "Net-(U3-Pad4)" RCS SW1 SW2 VIN
+      (circuit
+        (use_via "Via[0-3]_800:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+    (class TPS25741 "/USBC Controller/DVDD" "/USBC Controller/EN12V" "/USBC Controller/HIPWR"
+      "/USBC Controller/PSEL" CC1 CC2 CTRL1 CTRL2 DSCG G5V GDNG GDNS GND ISNS
+      "Net-(C21-Pad1)" "Net-(C22-Pad1)" "Net-(R16-Pad2)" "Net-(R33-Pad2)"
+      VARIABLE_DC VBUS "~{UFP}"
+      (circuit
+        (use_via "Via[0-3]_600:350_um")
+      )
+      (rule
+        (width 220)
+        (clearance 150)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -43,8 +43,31 @@ class JsonFileSettingsTest {
     RouterSettings settings = sut.getSettings();
 
     assertNotNull(settings, "getSettings() must not return null for a valid file");
-    assertNotNull(settings.maxPasses, "maxPasses should have been parsed from the router section");
-    assertEquals(42, settings.maxPasses, "maxPasses should match the value in the JSON file");
+    assertNotNull(
+        settings.autorouter.maxPasses, "maxPasses should have been parsed from the router section");
+    assertEquals(
+        42, settings.autorouter.maxPasses, "maxPasses should match the value in the JSON file");
+  }
+
+  @Test
+  void loadsMaxPassesFromNestedAutorouterSection() throws Exception {
+    Path file =
+        write(
+            "nested.json",
+            """
+            {
+              "router": {
+                "autorouter": {
+                  "max_passes": 7
+                }
+              }
+            }
+            """);
+
+    JsonFileSettings sut = new JsonFileSettings(file);
+    RouterSettings settings = sut.getSettings();
+
+    assertEquals(7, settings.autorouter.maxPasses);
   }
 
   @Test
@@ -65,7 +88,8 @@ class JsonFileSettingsTest {
 
     assertNotNull(
         settings, "getSettings() must not return null even when router section is absent");
-    assertNull(settings.maxPasses, "maxPasses should be null (no router section in JSON)");
+    assertNull(
+        settings.autorouter.maxPasses, "maxPasses should be null (no router section in JSON)");
   }
 
   @Test
@@ -84,7 +108,8 @@ class JsonFileSettingsTest {
 
     assertNotNull(
         settings, "getSettings() must not return null when router value is not an object");
-    assertNull(settings.maxPasses, "maxPasses should be null when router is not a JSON object");
+    assertNull(
+        settings.autorouter.maxPasses, "maxPasses should be null when router is not a JSON object");
   }
 
   // -------------------------------------------------------------------------
@@ -99,7 +124,7 @@ class JsonFileSettingsTest {
     RouterSettings settings = sut.getSettings();
 
     assertNotNull(settings, "getSettings() must not return null for a missing file");
-    assertNull(settings.maxPasses, "maxPasses should be null when file does not exist");
+    assertNull(settings.autorouter.maxPasses, "maxPasses should be null when file does not exist");
   }
 
   // -------------------------------------------------------------------------
@@ -114,7 +139,8 @@ class JsonFileSettingsTest {
     RouterSettings settings = sut.getSettings();
 
     assertNotNull(settings, "getSettings() must not return null for malformed JSON");
-    assertNull(settings.maxPasses, "maxPasses should be null when JSON cannot be parsed");
+    assertNull(
+        settings.autorouter.maxPasses, "maxPasses should be null when JSON cannot be parsed");
   }
 
   // -------------------------------------------------------------------------

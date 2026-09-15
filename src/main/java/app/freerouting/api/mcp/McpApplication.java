@@ -7,7 +7,6 @@ import app.freerouting.api.EnvironmentHostValidationFilter;
 import app.freerouting.api.GsonMessageBodyHandler;
 import app.freerouting.api.JsonStringMessageBodyWriter;
 import app.freerouting.api.NotFoundExceptionMapper;
-import app.freerouting.api.v1.McpControllerV1;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 import java.util.HashSet;

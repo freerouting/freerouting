@@ -1,0 +1,58 @@
+{
+  "board_id": "Hardware_Playground_leds_array",
+  "display_name": "Hardware_Playground_leds_array",
+  "pcbench_directory": "PCBs/Hardware_Playground_leds_array",
+  "source": "https://github.com/mtiutiu/Hardware_Playground",
+  "author": "mtiutiu",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.733695+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 142,
+    "dimensions_mm": {
+      "width": 92.2,
+      "height": 92.33
+    },
+    "area_cm2": 85.13,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 356,
+    "vias": 7,
+    "track_length_mm": 1273.67,
+    "kicad_drc_violations": 288,
+    "kicad_drc_breakdown": {
+      "total_violations": 288,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 3,
+        "lib_footprint_issues": 142,
+        "silk_over_copper": 64,
+        "silk_overlap": 12,
+        "solder_mask_bridge": 40,
+        "text_height": 1,
+        "track_dangling": 26
+      },
+      "by_severity": {
+        "error": 43,
+        "warning": 245
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "complex",
+    "medium",
+    "plane",
+    "tier-c"
+  ],
+  "tier": "C",
+  "expected_outcome": "partial",
+  "timeout_budget": "00:15:00"
+}

@@ -1,0 +1,805 @@
+(pcb "C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\Horticulture_Light_EQ_3-Band_light\unrouted.dsn"
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  580390 -31750  29210 -31750  29210 -19050  580390 -19050
+            580390 -31750)
+    )
+    (via "Via[0-1]_600:400_um" "Via[0-1]_800:600_um")
+    (rule
+      (width 500)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "junes:VIA-0.6mm"
+      (place REF**99_9 334645 -27114.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**99_8 334708 -24701.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**99_7 335216 -22479 front 90 (PN "VIA-0.6mm"))
+      (place REF**99_6 337376 -22479 front 90 (PN "VIA-0.6mm"))
+      (place REF**99_5 339534 -22542.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**99_4 348107 -26924 front 90 (PN "VIA-0.6mm"))
+      (place REF**99_3 348107 -25590.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**99_2 348107 -24193.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**80_2 473507 -23164.8 front 90 (PN "VIA-0.6mm"))
+      (place REF**53_2 476009 -23164.8 front 90 (PN "VIA-0.6mm"))
+      (place REF**89_2 474358 -23164.8 front 90 (PN "VIA-0.6mm"))
+      (place REF**71_2 475183 -23164.8 front 90 (PN "VIA-0.6mm"))
+      (place REF**62_2 476860 -23164.8 front 90 (PN "VIA-0.6mm"))
+      (place REF**17_2 475628 -28409.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**26_2 475183 -27647.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**35_2 476009 -27647.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**44_2 474358 -27647.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**8_2 474739 -28409.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**102_3 562762 -25755.6 front 90 (PN "VIA-0.6mm"))
+      (place REF**102_2 562762 -24688.8 front 90 (PN "VIA-0.6mm"))
+      (place REF**126 550012 -27178 front 90 (PN "VIA-0.6mm"))
+      (place REF**125 482244 -22453.6 front 90 (PN "VIA-0.6mm"))
+      (place REF**124 407772 -27178 front 90 (PN "VIA-0.6mm"))
+      (place REF**122 550418 -24701.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**121 481203 -24701.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**120 408178 -24701.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**118 554609 -22542.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**117 485394 -22542.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**116 412369 -22542.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**114 550482 -22733 front 90 (PN "VIA-0.6mm"))
+      (place REF**109 481228 -23317.2 front 90 (PN "VIA-0.6mm"))
+      (place REF**108 408242 -22733 front 90 (PN "VIA-0.6mm"))
+      (place REF**105 494157 -24892 front 90 (PN "VIA-0.6mm"))
+      (place REF**102 562661 -22606 front 90 (PN "VIA-0.6mm"))
+      (place REF**101 494157 -22606 front 90 (PN "VIA-0.6mm"))
+      (place REF**100 420319 -22606 front 90 (PN "VIA-0.6mm"))
+      (place REF**99 348107 -22606 front 90 (PN "VIA-0.6mm"))
+      (place REF**66 494157 -25781 front 90 (PN "VIA-0.6mm"))
+      (place REF**30 494157 -26733.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_143 325323 -23723.6 front 0 (PN "VIA-0.6mm"))
+      (place REF**_142 325323 -27076.4 front 0 (PN "VIA-0.6mm"))
+      (place REF**57_3 327508 -23164.8 front 90 (PN "VIA-0.6mm"))
+      (place REF**57_2 330810 -23145.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**_141 329133 -27647.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**_140 328689 -28409.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**_139 329959 -27647.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**_138 328308 -27647.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**_137 329578 -28409.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**_136 279641 -27622.5 front -90 (PN "VIA-0.6mm"))
+      (place REF**_135 280022 -28384.5 front -90 (PN "VIA-0.6mm"))
+      (place REF**_134 280911 -28384.5 front -90 (PN "VIA-0.6mm"))
+      (place REF**_133 280467 -27622.5 front -90 (PN "VIA-0.6mm"))
+      (place REF**_132 281292 -27622.5 front -90 (PN "VIA-0.6mm"))
+      (place REF**213 565730 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**212 520857 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**210 423490 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**22 374807 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**113 565730 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**112 520857 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**110 423490 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**13 374807 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**413 566492 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**412 521619 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**410 424252 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**49 375569 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**322 566492 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**321 521619 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**319 424252 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**318 375569 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**313 566492 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**312 521619 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**310 424252 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**31 375569 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**713 571026 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**712 526153 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**710 428786 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**76 380103 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**513 571026 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**512 526153 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**510 428786 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**58 380103 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**98 571026 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**97 526153 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**95 428786 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**94 380103 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**813 571788 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**812 526915 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**85 380865 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**613 571788 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**612 526915 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**67 380865 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**93 328345 -23145.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**92 577101 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**91 544398 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**90 507886 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**89 471373 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**88 434861 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**87 398348 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**86 361836 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**83 577863 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**82 545160 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**81 508648 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**80 471373 -23723.6 front 0 (PN "VIA-0.6mm"))
+      (place REF**79 435623 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**78 399110 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**77 362598 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**75 329170 -23145.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**74 577101 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**73 544398 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**72 507886 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**71 471373 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**70 434861 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**69 398348 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**68 361836 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**65 577863 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**64 545160 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**63 508648 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**62 471373 -27076.4 front 0 (PN "VIA-0.6mm"))
+      (place REF**61 435623 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**60 399110 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**59 362598 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**57 329996 -23145.9 front 90 (PN "VIA-0.6mm"))
+      (place REF**56 577101 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**55 544398 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**54 507886 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**53 471373 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**52 434861 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**51 398348 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**50 361836 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**47 572567 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**46 539864 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**45 503352 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**44 466839 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**43 430327 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**42 393814 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**41 357302 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**38 572567 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**37 539864 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**36 503352 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**35 466839 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**34 430327 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**33 393814 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**32 357302 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**29 572567 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**28 539864 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**27 503352 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**26 466839 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**25 430327 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**24 393814 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**23 357302 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**20 571805 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**19 539102 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**18 502590 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**17 466077 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**16 429565 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**15 393052 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**14 356540 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**11 571805 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**10 539102 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**9 502590 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**8 466077 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**7 429565 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**6 393052 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**5 356540 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_131 325323 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_130 325323 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_129 325323 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_128 320789 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_127 320027 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_126 320789 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_125 320789 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_124 320027 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_123 51054 -22542.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_122 46990 -23215.6 front 90 (PN "VIA-0.6mm"))
+      (place REF**_121 59791.6 -24892 front 90 (PN "VIA-0.6mm"))
+      (place REF**_120 47701.2 -22504.4 front 90 (PN "VIA-0.6mm"))
+      (place REF**_119 59817 -26733.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_118 59817 -22606 front 90 (PN "VIA-0.6mm"))
+      (place REF**_117 59817 -25781 front 90 (PN "VIA-0.6mm"))
+      (place REF**_116 129032 -22606 front 90 (PN "VIA-0.6mm"))
+      (place REF**_115 129032 -26733.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_114 129032 -25781 front 90 (PN "VIA-0.6mm"))
+      (place REF**_113 129032 -24841.2 front 90 (PN "VIA-0.6mm"))
+      (place REF**_112 115367 -27178 front 90 (PN "VIA-0.6mm"))
+      (place REF**_111 116078 -24701.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_110 120269 -22542.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_109 116142 -22733 front 90 (PN "VIA-0.6mm"))
+      (place REF**_108 189166 -22733 front 90 (PN "VIA-0.6mm"))
+      (place REF**_107 202032 -24841.2 front 90 (PN "VIA-0.6mm"))
+      (place REF**_106 202057 -22606 front 90 (PN "VIA-0.6mm"))
+      (place REF**_105 190195 -22504.4 front 90 (PN "VIA-0.6mm"))
+      (place REF**_104 202057 -26733.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_103 193294 -22542.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_102 202057 -25781 front 90 (PN "VIA-0.6mm"))
+      (place REF**_101 261722 -27178 front 90 (PN "VIA-0.6mm"))
+      (place REF**_100 275082 -22606 front 90 (PN "VIA-0.6mm"))
+      (place REF**_99 275082 -25781 front 90 (PN "VIA-0.6mm"))
+      (place REF**_98 275082 -26733.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_97 275082 -24892 front 90 (PN "VIA-0.6mm"))
+      (place REF**_96 262128 -24701.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_95 262192 -22733 front 90 (PN "VIA-0.6mm"))
+      (place REF**_94 266319 -22542.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_93 278828 -23177.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_92 281305 -23177.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_91 279654 -23177.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_90 282130 -23177.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_89 280480 -23177.5 front 90 (PN "VIA-0.6mm"))
+      (place REF**_88 284353 -27051 front 0 (PN "VIA-0.6mm"))
+      (place REF**_87 284353 -23749 front 0 (PN "VIA-0.6mm"))
+      (place REF**2_11 134874 -28405.7 front 90 (PN "VIA-0.6mm"))
+      (place REF**2_10 134430 -27643.7 front 90 (PN "VIA-0.6mm"))
+      (place REF**2_9 135255 -27643.7 front 90 (PN "VIA-0.6mm"))
+      (place REF**2_8 134048 -28405.7 front 90 (PN "VIA-0.6mm"))
+      (place REF**2_7 133604 -27643.7 front 90 (PN "VIA-0.6mm"))
+      (place REF**4_10 233997 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**3_8 185314 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**4_9 233997 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**3_7 185314 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**4_8 234759 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**3_6 186076 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**4_7 234759 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**3_5 186076 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**2_6 138303 -27051 front 0 (PN "VIA-0.6mm"))
+      (place REF**4_6 233997 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**3_4 185314 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**4_5 229552 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**3_3 180869 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**2_5 134430 -23156.3 front -90 (PN "VIA-0.6mm"))
+      (place REF**4_4 229552 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**3_2 180869 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**2_4 135255 -23156.3 front -90 (PN "VIA-0.6mm"))
+      (place REF**4_3 228790 -25019 front 0 (PN "VIA-0.6mm"))
+      (place REF**2_3 136080 -23177.5 front -90 (PN "VIA-0.6mm"))
+      (place REF**4_2 229552 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**3 180869 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**2_2 133604 -23156.3 front -90 (PN "VIA-0.6mm"))
+      (place REF**4 228790 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**2 132778 -23177.5 front -90 (PN "VIA-0.6mm"))
+      (place REF**1_10 82740.5 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**1_9 83502.5 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**1_8 82740.5 -25019 front 0 (PN "VIA-0.6mm"))
+      (place REF**1_7 83502.5 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**1_6 83502.5 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**1_5 87947.5 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**1_4 87947.5 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**1_3 87947.5 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**1_2 88709.5 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**1 88709.5 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_86 288734 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_85 252222 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_84 215710 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_83 179197 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_82 142684 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_81 106172 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_80 288734 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_79 252222 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_78 215710 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_77 179197 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_76 142684 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_75 106172 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_74 289496 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_73 252984 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_72 216472 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_71 180022 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_70 143446 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_69 106934 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_68 289496 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_67 252984 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_66 216472 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**_65 180022 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**_64 143446 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**_63 106934 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**_62 288734 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_61 252222 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_60 215710 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_59 179197 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_58 142684 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_57 106172 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_56 247078 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_55 210566 -25019 front 0 (PN "VIA-0.6mm"))
+      (place REF**_54 174054 -25019 front 0 (PN "VIA-0.6mm"))
+      (place REF**_53 138303 -23749 front 0 (PN "VIA-0.6mm"))
+      (place REF**_52 101028 -25019 front 0 (PN "VIA-0.6mm"))
+      (place REF**_51 284353 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_50 247840 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_49 211328 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_48 174816 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_47 138303 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_46 101790 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_45 284353 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_44 247840 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_43 211328 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_42 174816 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_41 138303 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_40 101790 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_39 284353 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_38 247840 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_37 211328 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_36 174816 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_35 138303 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_34 101790 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_33 247078 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_32 210566 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_31 174054 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_30 101028 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_29 69659.5 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_28 70421.5 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**_27 69659.5 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_26 69659.5 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_25 70421.5 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_24 64516 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_23 65278 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_22 65278 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_21 65278 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_20 64516 -25019 front 0 (PN "VIA-0.6mm"))
+      (place REF**_19 38671.5 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_18 38671.5 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_17 38671.5 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_16 43053 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_15 43815 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**_14 43053 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_13 43053 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_12 43815 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_11 37846 -24955.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_10 37846 -25781 front 0 (PN "VIA-0.6mm"))
+      (place REF**_9 31813.5 -25844.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_8 31813.5 -25019 front 0 (PN "VIA-0.6mm"))
+      (place REF**_7 32575.5 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_6 32575.5 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_5 36957 -26225.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_4 36957 -24574.5 front 0 (PN "VIA-0.6mm"))
+      (place REF**_3 36957 -25400 front 0 (PN "VIA-0.6mm"))
+      (place REF**_2 32575.5 -25400 front 0 (PN "VIA-0.6mm"))
+    )
+    (component junes:MP3030
+      (place D14 552640 -25400 front 90 (PN Led_Small))
+      (place D17 483426 -25400 front 90 (PN Led_Small))
+      (place D20 410400 -25400 front 90 (PN Led_Small))
+      (place D23 337376 -25400 front 90 (PN Led_Small))
+      (place D15 560514 -25400 front 90 (PN Led_Small))
+      (place D18 491300 -25400 front 90 (PN Led_Small))
+      (place D21 418274 -25400 front 90 (PN Led_Small))
+      (place D24 345250 -25400 front 90 (PN Led_Small))
+      (place D11 264350 -25400 front 90 (PN Led_Small))
+      (place D8 191326 -25400 front 90 (PN Led_Small))
+      (place D12 272224 -25400 front 90 (PN Led_Small))
+      (place D9 199200 -25400 front 90 (PN Led_Small))
+      (place D5 118300 -25400 front 90 (PN Led_Small))
+      (place D6 126174 -25400 front 90 (PN Led_Small))
+      (place D3 56959.5 -25400 front 90 (PN Led_Small))
+      (place D2 49085.5 -25400 front 90 (PN Led_Small))
+    )
+    (component junes:MP3030::1
+      (place D13 556578 -25400 front -90 (PN Led_Small))
+      (place D16 487362 -25400 front -90 (PN Led_Small))
+      (place D19 414338 -25400 front -90 (PN Led_Small))
+      (place D22 341312 -25400 front -90 (PN Led_Small))
+      (place D10 268288 -25400 front -90 (PN Led_Small))
+      (place D7 195262 -25400 front -90 (PN Led_Small))
+      (place D4 122238 -25400 front -90 (PN Led_Small))
+      (place D1 53022.5 -25400 front -90 (PN Led_Small))
+    )
+    (component junes:1814676
+      (place P1 304800 -25400 front 0 (PN CONN_02X03))
+    )
+    (component junes:Blue_450nm
+      (place D25 280458 -25400 front 180 (PN "Blue 450nm"))
+      (place D28 134408 -25400 front 180 (PN "Blue 450nm"))
+    )
+    (component junes:Blue_450nm::1
+      (place D26 231775 -25400 front -90 (PN "Blue 450nm"))
+      (place D27 183092 -25400 front -90 (PN "Blue 450nm"))
+      (place D29 85725 -25400 front -90 (PN "Blue 450nm"))
+      (place D30 40851.7 -25400 front -90 (PN "Blue 450nm"))
+      (place D32 377825 -25400 front -90 (PN "Blue 450nm"))
+      (place D33 426508 -25400 front -90 (PN "Blue 450nm"))
+      (place D35 523875 -25400 front -90 (PN "Blue 450nm"))
+      (place D36 568748 -25400 front -90 (PN "Blue 450nm"))
+      (place D39 213519 -25400 front -90 (PN "Deep Red 660nm"))
+      (place D40 177006 -25400 front -90 (PN "Deep Red 660nm"))
+      (place D43 67468.8 -25400 front -90 (PN "Deep Red 660nm"))
+      (place D44 34766.2 -25400 front -90 (PN "Deep Red 660nm"))
+      (place D47 396081 -25400 front -90 (PN "Deep Red 660nm"))
+      (place D48 432594 -25400 front -90 (PN "Deep Red 660nm"))
+      (place D51 542131 -25400 front -90 (PN "Deep Red 660nm"))
+      (place D52 574834 -25400 front -90 (PN "Deep Red 660nm"))
+    )
+    (component junes:Blue_450nm::2
+      (place D31 329142 -25400 front 0 (PN "Blue 450nm"))
+      (place D34 475192 -25400 front 0 (PN "Blue 450nm"))
+    )
+    (component junes:Deep_Red_660nm
+      (place D37 286544 -25400 front 90 (PN "Deep Red 660nm"))
+      (place D38 250031 -25400 front 90 (PN "Deep Red 660nm"))
+      (place D41 140494 -25400 front 90 (PN "Deep Red 660nm"))
+      (place D42 103981 -25400 front 90 (PN "Deep Red 660nm"))
+      (place D45 323056 -25400 front 90 (PN "Deep Red 660nm"))
+      (place D46 359569 -25400 front 90 (PN "Deep Red 660nm"))
+      (place D49 469106 -25400 front 90 (PN "Deep Red 660nm"))
+      (place D50 505619 -25400 front 90 (PN "Deep Red 660nm"))
+    )
+  )
+  (library
+    (image "junes:VIA-0.6mm"
+      (pin Round[A]Pad_600.000000_um 1 0 0)
+    )
+    (image junes:MP3030
+      (outline (path signal 150  -2159 -2286  -2222.5 -2268.99  -2268.99 -2222.5  -2286 -2159
+            -2268.99 -2095.5  -2222.5 -2049.01  -2159 -2032  -2095.5 -2049.01
+            -2049.01 -2095.5  -2032 -2159  -2049.01 -2222.5  -2095.5 -2268.99
+            -2159 -2286))
+      (outline (path signal 150  1500 -1500  1500 1500))
+      (outline (path signal 150  -1500 1500  -1500 -1500))
+      (outline (path signal 150  -1500 1500  1500 1500))
+      (outline (path signal 150  -1500 -1500  1500 -1500))
+      (pin Rect[T]Pad_750.000000x3600.000000_um 2 -1363 0)
+      (pin Rect[T]Pad_338.000000x2400.000000_um 2@1 -819 0)
+      (pin Rect[T]Pad_1550.000000x2400.000000_um 1 675 0)
+      (pin Rect[T]Pad_750.000000x1200.000000_um 1@1 1825 0)
+    )
+    (image junes:MP3030::1
+      (outline (path signal 150  -2159 -2032  -2095.5 -2049.01  -2049.01 -2095.5  -2032 -2159
+            -2049.01 -2222.5  -2095.5 -2268.99  -2159 -2286  -2222.5 -2268.99
+            -2268.99 -2222.5  -2286 -2159  -2268.99 -2095.5  -2222.5 -2049.01
+            -2159 -2032))
+      (outline (path signal 150  1500 -1500  1500 1500))
+      (outline (path signal 150  -1500 1500  -1500 -1500))
+      (outline (path signal 150  -1500 1500  1500 1500))
+      (outline (path signal 150  -1500 -1500  1500 -1500))
+      (pin Rect[T]Pad_750.000000x3600.000000_um 2 -1363 0)
+      (pin Rect[T]Pad_338.000000x2400.000000_um 2@1 -819 0)
+      (pin Rect[T]Pad_1550.000000x2400.000000_um 1 675 0)
+      (pin Rect[T]Pad_750.000000x1200.000000_um 1@1 1825 0)
+    )
+    (image junes:1814676
+      (outline (path signal 150  -7750 -3500  -7750 5500))
+      (outline (path signal 150  7750 -3500  -7750 -3500))
+      (outline (path signal 150  7750 5500  7750 -3500))
+      (outline (path signal 150  -7750 5500  7750 5500))
+      (pin Rect[T]Pad_1400.000000x3400.000000_um 1 -6250 -3850)
+      (pin Rect[T]Pad_1400.000000x3400.000000_um 2 -3750 -3850)
+      (pin Rect[T]Pad_1400.000000x3400.000000_um 3 -1250 -3850)
+      (pin Rect[T]Pad_1400.000000x3400.000000_um 4 1250 -3850)
+      (pin Rect[T]Pad_1400.000000x3400.000000_um 5 3750 -3850)
+      (pin Rect[T]Pad_1400.000000x3400.000000_um 6 6250 -3850)
+      (pin Rect[T]Pad_2300.000000x5600.000000_um 7 8850 2750)
+      (pin Rect[T]Pad_2300.000000x5600.000000_um 7@1 -8850 2750)
+    )
+    (image junes:Blue_450nm
+      (outline (path signal 150  -2211.61 -2032  -2193.82 -1954.07  -2143.98 -1891.58  -2071.97 -1856.9
+            -1992.03 -1856.9  -1920.02 -1891.58  -1870.18 -1954.07  -1852.39 -2032
+            -1870.18 -2109.93  -1920.02 -2172.42  -1992.03 -2207.1  -2071.97 -2207.1
+            -2143.98 -2172.42  -2193.82 -2109.93  -2211.61 -2032))
+      (outline (path signal 150  -1725 1725  1725 1725))
+      (outline (path signal 150  -1725 -1725  -1725 1725))
+      (outline (path signal 150  1725 -1725  -1725 -1725))
+      (outline (path signal 150  1725 1725  1725 -1725))
+      (pin Rect[T]Pad_500.000000x2700.000000_um 2 -1100 0)
+      (pin Rect[T]Pad_500.000000x2700.000000_um 1 1100 0)
+      (pin Rect[T]Pad_1000.000000x2700.000000_um 3 0 0)
+    )
+    (image junes:Blue_450nm::1
+      (outline (path signal 150  -2032 -1852.39  -1954.07 -1870.18  -1891.58 -1920.02  -1856.9 -1992.03
+            -1856.9 -2071.97  -1891.58 -2143.98  -1954.07 -2193.82  -2032 -2211.61
+            -2109.93 -2193.82  -2172.42 -2143.98  -2207.1 -2071.97  -2207.1 -1992.03
+            -2172.42 -1920.02  -2109.93 -1870.18  -2032 -1852.39))
+      (outline (path signal 150  -1725 1725  1725 1725))
+      (outline (path signal 150  -1725 -1725  -1725 1725))
+      (outline (path signal 150  1725 -1725  -1725 -1725))
+      (outline (path signal 150  1725 1725  1725 -1725))
+      (pin Rect[T]Pad_500.000000x2700.000000_um 2 -1100 0)
+      (pin Rect[T]Pad_500.000000x2700.000000_um 1 1100 0)
+      (pin Rect[T]Pad_1000.000000x2700.000000_um 3 0 0)
+    )
+    (image junes:Blue_450nm::2
+      (outline (path signal 150  -1852.39 -2032  -1870.18 -2109.93  -1920.02 -2172.42  -1992.03 -2207.1
+            -2071.97 -2207.1  -2143.98 -2172.42  -2193.82 -2109.93  -2211.61 -2032
+            -2193.82 -1954.07  -2143.98 -1891.58  -2071.97 -1856.9  -1992.03 -1856.9
+            -1920.02 -1891.58  -1870.18 -1954.07  -1852.39 -2032))
+      (outline (path signal 150  -1725 1725  1725 1725))
+      (outline (path signal 150  -1725 -1725  -1725 1725))
+      (outline (path signal 150  1725 -1725  -1725 -1725))
+      (outline (path signal 150  1725 1725  1725 -1725))
+      (pin Rect[T]Pad_500.000000x2700.000000_um 2 -1100 0)
+      (pin Rect[T]Pad_500.000000x2700.000000_um 1 1100 0)
+      (pin Rect[T]Pad_1000.000000x2700.000000_um 3 0 0)
+    )
+    (image junes:Deep_Red_660nm
+      (outline (path signal 150  -2032 -2211.61  -2109.93 -2193.82  -2172.42 -2143.98  -2207.1 -2071.97
+            -2207.1 -1992.03  -2172.42 -1920.02  -2109.93 -1870.18  -2032 -1852.39
+            -1954.07 -1870.18  -1891.58 -1920.02  -1856.9 -1992.03  -1856.9 -2071.97
+            -1891.58 -2143.98  -1954.07 -2193.82  -2032 -2211.61))
+      (outline (path signal 150  -1725 1725  1725 1725))
+      (outline (path signal 150  -1725 -1725  -1725 1725))
+      (outline (path signal 150  1725 -1725  -1725 -1725))
+      (outline (path signal 150  1725 1725  1725 -1725))
+      (pin Rect[T]Pad_500.000000x2700.000000_um 2 -1100 0)
+      (pin Rect[T]Pad_500.000000x2700.000000_um 1 1100 0)
+      (pin Rect[T]Pad_1000.000000x2700.000000_um 3 0 0)
+    )
+    (padstack Round[A]Pad_600.000000_um
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2300.000000x5600.000000_um
+      (shape (rect F.Cu -1150 -2800 1150 2800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_338.000000x2400.000000_um
+      (shape (rect F.Cu -169 -1200 169 1200))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_500.000000x2700.000000_um
+      (shape (rect F.Cu -250 -1350 250 1350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_750.000000x3600.000000_um
+      (shape (rect F.Cu -375 -1800 375 1800))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_750.000000x1200.000000_um
+      (shape (rect F.Cu -375 -600 375 600))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1000.000000x2700.000000_um
+      (shape (rect F.Cu -500 -1350 500 1350))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1400.000000x3400.000000_um
+      (shape (rect F.Cu -700 -1700 700 1700))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1550.000000x2400.000000_um
+      (shape (rect F.Cu -775 -1200 775 1200))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+    (padstack "Via[0-1]_800:600_um"
+      (shape (circle F.Cu 800))
+      (shape (circle B.Cu 800))
+      (attach off)
+    )
+  )
+  (network
+    (net W+
+      (pins D13-2 D13-2@1 D16-2 D16-2@1 D19-2 D19-2@1 D22-2 D22-2@1 D10-2 D10-2@1
+        D7-2 D7-2@1 D4-2 D4-2@1 D1-2 D1-2@1 P1-3)
+    )
+    (net "W-"
+      (pins D15-1 D15-1@1 D18-1 D18-1@1 D21-1 D21-1@1 D24-1 D24-1@1 D12-1 D12-1@1
+        D9-1 D9-1@1 D6-1 D6-1@1 D3-1 D3-1@1 P1-4)
+    )
+    (net B+
+      (pins P1-5 D25-2 D31-2)
+    )
+    (net "Net-(D25-Pad1)"
+      (pins D25-1 D26-2)
+    )
+    (net "B-"
+      (pins P1-6 D30-1 D36-1)
+    )
+    (net R+
+      (pins P1-1 D37-2 D45-2)
+    )
+    (net "Net-(D37-Pad1)"
+      (pins D37-1 D38-2)
+    )
+    (net "R-"
+      (pins P1-2 D44-1 D52-1)
+    )
+    (net THERMAL
+      (pins REF**80_2-1 REF**53_2-1 REF**89_2-1 REF**71_2-1 REF**62_2-1 REF**17_2-1
+        REF**26_2-1 REF**35_2-1 REF**44_2-1 REF**8_2-1 REF**_143-1 REF**_142-1 REF**57_3-1
+        REF**57_2-1 REF**_141-1 REF**_140-1 REF**_139-1 REF**_138-1 REF**_137-1 REF**_136-1
+        REF**_135-1 REF**_134-1 REF**_133-1 REF**_132-1 REF**213-1 REF**212-1 REF**210-1
+        REF**22-1 REF**113-1 REF**112-1 REF**110-1 REF**13-1 REF**413-1 REF**412-1
+        REF**410-1 REF**49-1 REF**322-1 REF**321-1 REF**319-1 REF**318-1 REF**313-1
+        REF**312-1 REF**310-1 REF**31-1 REF**713-1 REF**712-1 REF**710-1 REF**76-1
+        REF**513-1 REF**512-1 REF**510-1 REF**58-1 REF**98-1 REF**97-1 REF**95-1 REF**94-1
+        REF**813-1 REF**812-1 REF**85-1 REF**613-1 REF**612-1 REF**67-1 REF**93-1
+        REF**92-1 REF**91-1 REF**90-1 REF**89-1 REF**88-1 REF**87-1 REF**86-1 REF**83-1
+        REF**82-1 REF**81-1 REF**80-1 REF**79-1 REF**78-1 REF**77-1 REF**75-1 REF**74-1
+        REF**73-1 REF**72-1 REF**71-1 REF**70-1 REF**69-1 REF**68-1 REF**65-1 REF**64-1
+        REF**63-1 REF**62-1 REF**61-1 REF**60-1 REF**59-1 REF**57-1 REF**56-1 REF**55-1
+        REF**54-1 REF**53-1 REF**52-1 REF**51-1 REF**50-1 REF**47-1 REF**46-1 REF**45-1
+        REF**44-1 REF**43-1 REF**42-1 REF**41-1 REF**38-1 REF**37-1 REF**36-1 REF**35-1
+        REF**34-1 REF**33-1 REF**32-1 REF**29-1 REF**28-1 REF**27-1 REF**26-1 REF**25-1
+        REF**24-1 REF**23-1 REF**20-1 REF**19-1 REF**18-1 REF**17-1 REF**16-1 REF**15-1
+        REF**14-1 REF**11-1 REF**10-1 REF**9-1 REF**8-1 REF**7-1 REF**6-1 REF**5-1
+        REF**_131-1 REF**_130-1 REF**_129-1 REF**_128-1 REF**_127-1 REF**_126-1 REF**_125-1
+        REF**_124-1 REF**_93-1 REF**_92-1 REF**_91-1 REF**_90-1 REF**_89-1 REF**_88-1
+        REF**_87-1 REF**2_11-1 REF**2_10-1 REF**2_9-1 REF**2_8-1 REF**2_7-1 REF**4_10-1
+        REF**3_8-1 REF**4_9-1 REF**3_7-1 REF**4_8-1 REF**3_6-1 REF**4_7-1 REF**3_5-1
+        REF**2_6-1 REF**4_6-1 REF**3_4-1 REF**4_5-1 REF**3_3-1 REF**2_5-1 REF**4_4-1
+        REF**3_2-1 REF**2_4-1 REF**4_3-1 REF**2_3-1 REF**4_2-1 REF**3-1 REF**2_2-1
+        REF**4-1 REF**2-1 REF**1_10-1 REF**1_9-1 REF**1_8-1 REF**1_7-1 REF**1_6-1
+        REF**1_5-1 REF**1_4-1 REF**1_3-1 REF**1_2-1 REF**1-1 REF**_86-1 REF**_85-1
+        REF**_84-1 REF**_83-1 REF**_82-1 REF**_81-1 REF**_80-1 REF**_79-1 REF**_78-1
+        REF**_77-1 REF**_76-1 REF**_75-1 REF**_74-1 REF**_73-1 REF**_72-1 REF**_71-1
+        REF**_70-1 REF**_69-1 REF**_68-1 REF**_67-1 REF**_66-1 REF**_65-1 REF**_64-1
+        REF**_63-1 REF**_62-1 REF**_61-1 REF**_60-1 REF**_59-1 REF**_58-1 REF**_57-1
+        REF**_56-1 REF**_55-1 REF**_54-1 REF**_53-1 REF**_52-1 REF**_51-1 REF**_50-1
+        REF**_49-1 REF**_48-1 REF**_47-1 REF**_46-1 REF**_45-1 REF**_44-1 REF**_43-1
+        REF**_42-1 REF**_41-1 REF**_40-1 REF**_39-1 REF**_38-1 REF**_37-1 REF**_36-1
+        REF**_35-1 REF**_34-1 REF**_33-1 REF**_32-1 REF**_31-1 REF**_30-1 REF**_29-1
+        REF**_28-1 REF**_27-1 REF**_26-1 REF**_25-1 REF**_24-1 REF**_23-1 REF**_22-1
+        REF**_21-1 REF**_20-1 REF**_19-1 REF**_18-1 REF**_17-1 REF**_16-1 REF**_15-1
+        REF**_14-1 REF**_13-1 REF**_12-1 REF**_11-1 REF**_10-1 REF**_9-1 REF**_8-1
+        REF**_7-1 REF**_6-1 REF**_5-1 REF**_4-1 REF**_3-1 REF**_2-1 D25-3 D26-3 D27-3
+        D28-3 D29-3 D30-3 D31-3 D32-3 D33-3 D34-3 D35-3 D36-3 D37-3 D38-3 D39-3 D40-3
+        D41-3 D42-3 D43-3 D44-3 D45-3 D46-3 D47-3 D48-3 D49-3 D50-3 D51-3 D52-3)
+    )
+    (net "Net-(D1-Pad1)"
+      (pins D2-2 D2-2@1 D1-1 D1-1@1)
+    )
+    (net "Net-(D2-Pad1)"
+      (pins REF**_123-1 REF**_122-1 REF**_121-1 REF**_120-1 REF**_119-1 REF**_118-1
+        REF**_117-1 D3-2 D3-2@1 D2-1 D2-1@1)
+    )
+    (net "Net-(D13-Pad1)"
+      (pins D14-2 D14-2@1 D13-1 D13-1@1)
+    )
+    (net "Net-(D14-Pad1)"
+      (pins REF**102_3-1 REF**102_2-1 REF**126-1 REF**122-1 REF**118-1 D14-1 D14-1@1
+        REF**114-1 REF**102-1 D15-2 D15-2@1)
+    )
+    (net "Net-(D16-Pad1)"
+      (pins D17-2 D17-2@1 D16-1 D16-1@1)
+    )
+    (net "Net-(D17-Pad1)"
+      (pins REF**125-1 REF**121-1 REF**117-1 D17-1 D17-1@1 REF**109-1 REF**105-1 REF**101-1
+        REF**66-1 REF**30-1 D18-2 D18-2@1)
+    )
+    (net "Net-(D19-Pad1)"
+      (pins D20-2 D20-2@1 D19-1 D19-1@1)
+    )
+    (net "Net-(D20-Pad1)"
+      (pins REF**124-1 REF**120-1 REF**116-1 D20-1 D20-1@1 REF**108-1 REF**100-1 D21-2
+        D21-2@1)
+    )
+    (net "Net-(D22-Pad1)"
+      (pins D23-2 D23-2@1 D22-1 D22-1@1)
+    )
+    (net "Net-(D23-Pad1)"
+      (pins REF**99_9-1 REF**99_8-1 REF**99_7-1 REF**99_6-1 REF**99_5-1 REF**99_4-1
+        REF**99_3-1 REF**99_2-1 D23-1 D23-1@1 REF**99-1 D24-2 D24-2@1)
+    )
+    (net "Net-(D26-Pad1)"
+      (pins D26-1 D27-2)
+    )
+    (net "Net-(D27-Pad1)"
+      (pins D27-1 D28-2)
+    )
+    (net "Net-(D28-Pad1)"
+      (pins D28-1 D29-2)
+    )
+    (net "Net-(D29-Pad1)"
+      (pins D29-1 D30-2)
+    )
+    (net "Net-(D31-Pad1)"
+      (pins D31-1 D32-2)
+    )
+    (net "Net-(D32-Pad1)"
+      (pins D32-1 D33-2)
+    )
+    (net "Net-(D33-Pad1)"
+      (pins D33-1 D34-2)
+    )
+    (net "Net-(D34-Pad1)"
+      (pins D34-1 D35-2)
+    )
+    (net "Net-(D35-Pad1)"
+      (pins D35-1 D36-2)
+    )
+    (net "Net-(D38-Pad1)"
+      (pins D38-1 D39-2)
+    )
+    (net "Net-(D39-Pad1)"
+      (pins D39-1 D40-2)
+    )
+    (net "Net-(D40-Pad1)"
+      (pins D40-1 D41-2)
+    )
+    (net "Net-(D41-Pad1)"
+      (pins D41-1 D42-2)
+    )
+    (net "Net-(D42-Pad1)"
+      (pins D42-1 D43-2)
+    )
+    (net "Net-(D43-Pad1)"
+      (pins D43-1 D44-2)
+    )
+    (net "Net-(D45-Pad1)"
+      (pins D45-1 D46-2)
+    )
+    (net "Net-(D46-Pad1)"
+      (pins D46-1 D47-2)
+    )
+    (net "Net-(D47-Pad1)"
+      (pins D47-1 D48-2)
+    )
+    (net "Net-(D48-Pad1)"
+      (pins D48-1 D49-2)
+    )
+    (net "Net-(D49-Pad1)"
+      (pins D49-1 D50-2)
+    )
+    (net "Net-(D50-Pad1)"
+      (pins D50-1 D51-2)
+    )
+    (net "Net-(D51-Pad1)"
+      (pins D51-1 D52-2)
+    )
+    (net "Net-(D4-Pad1)"
+      (pins D5-2 D5-2@1 D4-1 D4-1@1)
+    )
+    (net "Net-(D5-Pad1)"
+      (pins REF**_116-1 REF**_115-1 REF**_114-1 REF**_113-1 REF**_112-1 REF**_111-1
+        REF**_110-1 REF**_109-1 D5-1 D5-1@1 D6-2 D6-2@1)
+    )
+    (net "Net-(D7-Pad1)"
+      (pins D8-2 D8-2@1 D7-1 D7-1@1)
+    )
+    (net "Net-(D8-Pad1)"
+      (pins REF**_108-1 REF**_107-1 REF**_106-1 REF**_105-1 REF**_104-1 REF**_103-1
+        REF**_102-1 D8-1 D8-1@1 D9-2 D9-2@1)
+    )
+    (net "Net-(D10-Pad1)"
+      (pins D11-2 D11-2@1 D10-1 D10-1@1)
+    )
+    (net "Net-(D11-Pad1)"
+      (pins REF**_101-1 REF**_100-1 REF**_99-1 REF**_98-1 REF**_97-1 REF**_96-1 REF**_95-1
+        REF**_94-1 D11-1 D11-1@1 D12-2 D12-2@1)
+    )
+    (class kicad_default B+ "B-" "Net-(D1-Pad1)" "Net-(D10-Pad1)" "Net-(D11-Pad1)"
+      "Net-(D13-Pad1)" "Net-(D14-Pad1)" "Net-(D16-Pad1)" "Net-(D17-Pad1)"
+      "Net-(D19-Pad1)" "Net-(D2-Pad1)" "Net-(D20-Pad1)" "Net-(D22-Pad1)" "Net-(D23-Pad1)"
+      "Net-(D25-Pad1)" "Net-(D26-Pad1)" "Net-(D27-Pad1)" "Net-(D28-Pad1)"
+      "Net-(D29-Pad1)" "Net-(D31-Pad1)" "Net-(D32-Pad1)" "Net-(D33-Pad1)"
+      "Net-(D34-Pad1)" "Net-(D35-Pad1)" "Net-(D37-Pad1)" "Net-(D38-Pad1)"
+      "Net-(D39-Pad1)" "Net-(D4-Pad1)" "Net-(D40-Pad1)" "Net-(D41-Pad1)" "Net-(D42-Pad1)"
+      "Net-(D43-Pad1)" "Net-(D45-Pad1)" "Net-(D46-Pad1)" "Net-(D47-Pad1)"
+      "Net-(D48-Pad1)" "Net-(D49-Pad1)" "Net-(D5-Pad1)" "Net-(D50-Pad1)" "Net-(D51-Pad1)"
+      "Net-(D7-Pad1)" "Net-(D8-Pad1)" R+ "R-"
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 500)
+        (clearance 200)
+      )
+    )
+    (class up THERMAL W+ "W-"
+      (circuit
+        (use_via "Via[0-1]_800:600_um")
+      )
+      (rule
+        (width 1016)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,0 +1,31 @@
+{
+  "board": "kitspace_USB-LED-Otter",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_USB-LED-Otter\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 17,
+  "segment_count": 168,
+  "approximate_track_length_mm": 152.37,
+  "kicad_drc_violations": 105,
+  "generated_at": "2026-08-18T19:13:09.536658+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 105,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 7,
+      "copper_edge_clearance": 18,
+      "courtyards_overlap": 3,
+      "lib_footprint_issues": 6,
+      "lib_footprint_mismatch": 8,
+      "silk_edge_clearance": 3,
+      "solder_mask_bridge": 38,
+      "text_height": 13,
+      "track_dangling": 3,
+      "via_dangling": 6
+    },
+    "by_severity": {
+      "error": 66,
+      "warning": 39
+    }
+  }
+}

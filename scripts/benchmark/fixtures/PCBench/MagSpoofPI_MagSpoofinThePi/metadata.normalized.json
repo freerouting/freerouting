@@ -1,0 +1,60 @@
+{
+  "board_id": "MagSpoofPI_MagSpoofinThePi",
+  "display_name": "MagSpoofPI_MagSpoofinThePi",
+  "pcbench_directory": "PCBs/MagSpoofPI_MagSpoofinThePi",
+  "source": "https://github.com/salmg/MagSpoofPI",
+  "author": "salmg",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:21.201689+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 38,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 64.99,
+      "height": 30.03
+    },
+    "area_cm2": 19.52,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 125,
+    "vias": 0,
+    "track_length_mm": 540.78,
+    "kicad_drc_violations": 104,
+    "kicad_drc_breakdown": {
+      "total_violations": 104,
+      "unconnected_count": 5,
+      "by_type": {
+        "clearance": 73,
+        "invalid_outline": 3,
+        "lib_footprint_issues": 17,
+        "silk_edge_clearance": 1,
+        "solder_mask_bridge": 5,
+        "starved_thermal": 1,
+        "text_height": 1,
+        "text_thickness": 1,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 82,
+        "warning": 22
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

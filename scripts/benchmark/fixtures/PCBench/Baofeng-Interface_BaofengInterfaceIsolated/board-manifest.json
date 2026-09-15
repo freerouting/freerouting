@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Baofeng-Interface_BaofengInterfaceIsolated",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 163232,
+      "sha256": "270ce65711bf20c2a41bd29d9c9a766de9aaa761788db7a3afb0ab86c24295a3"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 137386,
+      "sha256": "91d31105e4d9690592c95c79e341e0618507941a878c88f069f601cf8377e48f"
+    },
+    "metadata_json": {
+      "bytes": 684,
+      "sha256": "7cb820ca3cfb35f7e274866ba6e49a4e39efe888f76f29806810235997e60589"
+    },
+    "final_json": {
+      "bytes": 90110,
+      "sha256": "163fc87c7a002dad1bc7f86ccf7ca7e2baa11e42b78f82f9e1166029dcefd575"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:32:08.455998+00:00"
+  }
+}

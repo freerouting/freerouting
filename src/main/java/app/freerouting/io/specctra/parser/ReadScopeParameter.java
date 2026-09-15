@@ -1,13 +1,12 @@
 package app.freerouting.io.specctra.parser;
 
-import app.freerouting.board.AngleRestriction;
-import app.freerouting.board.BasicBoard;
-import app.freerouting.board.BoardObservers;
-import app.freerouting.board.Communication;
-import app.freerouting.board.RoutingBoard;
-import app.freerouting.board.Unit;
+import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.structure.AngleRestriction;
+import app.freerouting.board.state.BoardObservers;
+import app.freerouting.board.state.Communication;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.datastructures.IdentificationNumberGenerator;
+import app.freerouting.datastructures.IdGenerator;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.io.CoordinateTransform;
@@ -28,7 +27,7 @@ public class ReadScopeParameter {
   final BoardParserCallback boardHandling;
   final NetList netlist = new NetList();
   final BoardObservers observers;
-  final IdentificationNumberGenerator itemIdNoGenerator;
+  final IdGenerator idGenerator;
 
   /**
    * Warnings collected during DSN parsing (e.g. skipped wires, missing padstacks, degenerate
@@ -85,7 +84,8 @@ public class ReadScopeParameter {
   /** Nullable — only populated when an {@code (autoroute ...)} scope is present in the DSN file. */
   public RouterSettings autorouteSettings;
 
-  public Unit unit = Unit.MIL;
+  public app.freerouting.board.model.structure.Unit unit =
+      app.freerouting.board.model.structure.Unit.MIL;
   public int resolution = 100; // default resolution
 
   /**
@@ -95,16 +95,14 @@ public class ReadScopeParameter {
    *
    * @param scanner the token scanner over the DSN input stream
    * @param observers nullable; for host-system embedding
-   * @param itemIdNoGenerator nullable; for host-system embedding
+   * @param idGenerator nullable; for host-system embedding
    */
   public ReadScopeParameter(
-      IJFlexScanner scanner,
-      BoardObservers observers,
-      IdentificationNumberGenerator itemIdNoGenerator) {
+      IJFlexScanner scanner, BoardObservers observers, IdGenerator idGenerator) {
     this.scanner = scanner;
     boardHandling = new MinimalBoardManager();
     this.observers = observers;
-    this.itemIdNoGenerator = itemIdNoGenerator;
+    this.idGenerator = idGenerator;
   }
 
   /**
@@ -140,7 +138,7 @@ public class ReadScopeParameter {
     @Override
     public void createBoard(
         IntBox boundingBox,
-        app.freerouting.board.LayerStructure layerStructure,
+        app.freerouting.board.model.structure.LayerStructure layerStructure,
         PolylineShape[] outlineShapes,
         String outlineClearanceClassName,
         BoardRules rules,

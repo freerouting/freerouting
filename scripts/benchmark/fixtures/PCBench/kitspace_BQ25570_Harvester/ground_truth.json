@@ -1,0 +1,26 @@
+{
+  "board": "kitspace_BQ25570_Harvester",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_BQ25570_Harvester\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 10,
+  "segment_count": 176,
+  "approximate_track_length_mm": 193.99,
+  "kicad_drc_violations": 127,
+  "generated_at": "2026-08-18T19:04:09.947055+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 127,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 70,
+      "copper_edge_clearance": 11,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 20,
+      "text_height": 24
+    },
+    "by_severity": {
+      "error": 83,
+      "warning": 44
+    }
+  }
+}

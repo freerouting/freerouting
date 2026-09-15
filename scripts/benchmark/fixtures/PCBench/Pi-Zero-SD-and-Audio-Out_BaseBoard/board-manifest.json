@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Pi-Zero-SD-and-Audio-Out_BaseBoard",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 245093,
+      "sha256": "9590941fac249195c3144c4ac91bbe713ada3f4210d11ca6ab33b9460ff0dbe9"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 169839,
+      "sha256": "e0b58e36e3841662f94cf26dacf0cf1024b2ad91539b18e420104f2b6adbbf27"
+    },
+    "metadata_json": {
+      "bytes": 509,
+      "sha256": "dcabca4a74b0d628977bc24f8992cd8d1f6bcff34e9d22934d9f32e72edd38c8"
+    },
+    "final_json": {
+      "bytes": 141354,
+      "sha256": "01eb1cd7e863023127971913e6df85c0fe6757d3e87edd1d052e728a71b9d948"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:33:16.986319+00:00"
+  }
+}

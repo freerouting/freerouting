@@ -1,0 +1,67 @@
+{
+  "board_id": "sensorboard_DiffIR.kicad_pcb_narrow",
+  "display_name": "sensorboard_DiffIR.kicad_pcb_narrow",
+  "pcbench_directory": "PCBs/sensorboard_DiffIR.kicad_pcb_narrow",
+  "source": "https://github.com/quixotic120/sensorboard",
+  "author": "quixotic120",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:23:00.294149+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 11,
+    "components": 17,
+    "dimensions_mm": {
+      "width": 33.02,
+      "height": 24.77
+    },
+    "area_cm2": 8.18,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 133,
+    "vias": 1,
+    "track_length_mm": 291.25,
+    "kicad_drc_violations": 99,
+    "kicad_drc_breakdown": {
+      "total_violations": 99,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 62,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 17,
+        "silk_edge_clearance": 1,
+        "silk_over_copper": 13,
+        "silk_overlap": 2
+      },
+      "by_severity": {
+        "error": 66,
+        "warning": 33
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "plane",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.109847+00:00",
+    "elapsed_seconds": 6.75,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 999.99
+  }
+}

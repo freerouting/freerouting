@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "ESP8266-MQTT-battery-monitor-hw_battery-monitor",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 223341,
+      "sha256": "a782bb0924b83ca966404d970cc5f580f2414d44848b05096dc5dee29abcc5c2"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 105556,
+      "sha256": "9770d4584df1730ac466bc6f1e88e5424cf0a4e9d2a021e7cd7638c31bed61fb"
+    },
+    "metadata_json": {
+      "bytes": 558,
+      "sha256": "1403472e01d8dd3a668cf73ccab51be2cc6c1ed83e19af1a1829bf86679bb560"
+    },
+    "final_json": {
+      "bytes": 85838,
+      "sha256": "b0c836eb95b030b2577a1f95aae5910c992df697c1b60d27f7ca114d96e9d271"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:46:41.043513+00:00"
+  }
+}

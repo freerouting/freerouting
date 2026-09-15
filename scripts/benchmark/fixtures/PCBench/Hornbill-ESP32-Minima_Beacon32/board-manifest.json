@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Hornbill-ESP32-Minima_Beacon32",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 147813,
+      "sha256": "2159c4ba948c2cf4d5e1bb82214c4a33d30c8541810b2c20a5df0a286ef9ff86"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 144450,
+      "sha256": "ca2c5f79d1bd77f5e775cb709430c5832ba8a1f111b0877d61bd3f0f32678a1c"
+    },
+    "metadata_json": {
+      "bytes": 531,
+      "sha256": "4bdc3e1a45841eb7c361dbe56ea4444ee15e9f3ed36aba890dea77c7eb64fcb4"
+    },
+    "final_json": {
+      "bytes": 99133,
+      "sha256": "28cd0c2f336613e9da5eed16aeed2f0fa5bd45a4d883ec1589eac80605724c4d"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:57:04.857044+00:00"
+  }
+}

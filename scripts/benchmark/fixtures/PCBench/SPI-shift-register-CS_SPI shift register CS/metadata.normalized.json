@@ -1,0 +1,66 @@
+{
+  "board_id": "SPI-shift-register-CS_SPI shift register CS",
+  "display_name": "SPI-shift-register-CS_SPI shift register CS",
+  "pcbench_directory": "PCBs/SPI-shift-register-CS_SPI shift register CS",
+  "source": "https://github.com/Sembazuru/SPI-shift-register-CS",
+  "author": "Sembazuru",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:55.562093+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 0,
+    "components": 22,
+    "dimensions_mm": {
+      "width": 114.3,
+      "height": 29.21
+    },
+    "area_cm2": 33.39,
+    "zones": 2
+  },
+  "reference": {
+    "segments": 181,
+    "vias": 14,
+    "track_length_mm": 1206.73,
+    "kicad_drc_violations": 502,
+    "kicad_drc_breakdown": {
+      "total_violations": 502,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 330,
+        "copper_edge_clearance": 3,
+        "hole_clearance": 1,
+        "lib_footprint_issues": 22,
+        "silk_over_copper": 123,
+        "silk_overlap": 19,
+        "starved_thermal": 2,
+        "text_height": 1,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 336,
+        "warning": 166
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.123870+00:00",
+    "elapsed_seconds": 22.56,
+    "unrouted_nets": 1,
+    "clearance_violations": 22,
+    "quality_score": 943.74
+  }
+}

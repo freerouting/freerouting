@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "FMCW_RADAR_Radar RF",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 676341,
+      "sha256": "1244f61b10e2ff5644c3f8b0cb4aa0d9d9889ea4c25a2b9836cd33171ea9d3d4"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 319768,
+      "sha256": "3e12478f6ecee366db32cb78db7adfeff663fdfc141467b654c123717e6e6b40"
+    },
+    "metadata_json": {
+      "bytes": 656,
+      "sha256": "77606b3dcae1f9516d3ea52d97ae70e6c3d1e910aa91ff3ef88948e535894993"
+    },
+    "final_json": {
+      "bytes": 338307,
+      "sha256": "188a64a048880349af73b72e6006a09a3b90fd3b2a29e756a167589445e4cf4e"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:15:49.698905+00:00"
+  }
+}

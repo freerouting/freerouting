@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "RFM69HCW_ATSHA204A_Breakout_RFM69HCW_ATSHA204A_Breakout",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 75502,
+      "sha256": "2261366e488956dd4e5c5a2f29f92e89e4e6461bb0009b9ab76fc1808dffb826"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 35124,
+      "sha256": "21eeb2674a0bf4d97da3f308045856678d5241098b8f2d4fb5187d7e0e54f815"
+    },
+    "metadata_json": {
+      "bytes": 765,
+      "sha256": "25bf32fe3c194f497ecc99f78a7f08ae9b7684827cbefb3f7a9d634d7389ff60"
+    },
+    "final_json": {
+      "bytes": 26157,
+      "sha256": "9de7e22beaa86f07b2fb167368bf0e1243c0f3af10148fe4ae8e76032cc3c9fc"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:40:29.033749+00:00"
+  }
+}

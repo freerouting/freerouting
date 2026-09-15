@@ -1,0 +1,4849 @@
+
+(kicad_pcb
+  (version 20171130)
+  (host pcbnew "(5.1.12)-1")
+  (general
+    (thickness 1.6)
+    (drawings 7)
+    (tracks 429)
+    (zones 0)
+    (modules 33)
+    (nets 10))
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user)
+    (33 F.Adhes user)
+    (34 B.Paste user)
+    (35 F.Paste user)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
+    (38 B.Mask user)
+    (39 F.Mask user)
+    (40 Dwgs.User user)
+    (41 Cmts.User user)
+    (42 Eco1.User user)
+    (43 Eco2.User user)
+    (44 Edge.Cuts user)
+    (45 Margin user)
+    (46 B.CrtYd user)
+    (47 F.CrtYd user)
+    (48 B.Fab user)
+    (49 F.Fab user))
+  (setup
+    (last_trace_width 0.25)
+    (trace_clearance 0.1)
+    (zone_clearance 0.508)
+    (zone_45_only no)
+    (trace_min 0.2)
+    (via_size 0.6)
+    (via_drill 0.4)
+    (via_min_size 0.4)
+    (via_min_drill 0.3)
+    (uvia_size 0.3)
+    (uvia_drill 0.1)
+    (uvias_allowed no)
+    (uvia_min_size 0.2)
+    (uvia_min_drill 0.1)
+    (edge_width 0.2)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.524 1.524)
+    (pad_drill 0.762)
+    (pad_to_mask_clearance 0.2)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x00030_80000001)
+      (usegerberextensions false)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer true)
+      (linewidth 0.1)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.0)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue true)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 1)
+      (scaleselection 1)
+      (outputdirectory "")))
+  (net 0 "")
+  (net 1 A)
+  (net 2 B)
+  (net 3 C)
+  (net 4 D)
+  (net 5 E)
+  (net 6 F)
+  (net 7 /GND)
+  (net 8 /VCC)
+  (net 9 /IR-signal)
+  (net_class Default "This is the default net class."
+    (clearance 0.1)
+    (trace_width 0.25)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net /GND)
+    (add_net /IR-signal)
+    (add_net /VCC)
+    (add_net A)
+    (add_net B)
+    (add_net C)
+    (add_net D)
+    (add_net E)
+    (add_net F))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F973F8)
+    (at 96.4 112 253.1)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F84DF8)
+    (attr smd)
+    (fp_text reference D1
+      (at 3.750132 0.062529 253.1)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 253.1)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 73.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (pad 1 smd rect
+      (at -0.7493 0 73.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97411)
+    (at 94.1 111 241.9)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F8508C)
+    (attr smd)
+    (fp_text reference D2
+      (at 3.909422 -0.22376 241.9)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 241.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.750001)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.750001)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.750001)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.750001)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.199999 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.200001)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.200001)
+      (end -0.199999 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.199999 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 61.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (pad 1 smd rect
+      (at -0.7493 0 61.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F9742A)
+    (at 92.1 109.7 230.6)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F8550C)
+    (attr smd)
+    (fp_text reference D3
+      (at 3.76318 -0.264781 230.6)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 230.6)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 50.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (pad 1 smd rect
+      (at -0.7493 0 50.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97443)
+    (at 90.3 107.9 219.4)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85539)
+    (attr smd)
+    (fp_text reference D4
+      (at 3.903425 -0.145428 219.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 219.4)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 39.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (pad 1 smd rect
+      (at -0.7493 0 39.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F9745C)
+    (at 89 105.9 208.1)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F8555F)
+    (attr smd)
+    (fp_text reference D5
+      (at 3.622873 -0.101554 208.1)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 208.1)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 28.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (pad 1 smd rect
+      (at -0.7493 0 28.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97475)
+    (at 88 103.6 196.9)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F8558E)
+    (attr smd)
+    (fp_text reference D6
+      (at 3.575045 -0.009121 196.9)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 196.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 16.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (pad 1 smd rect
+      (at -0.7493 0 16.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F9748E)
+    (at 87.6 101.2 185.6)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F855F2)
+    (attr smd)
+    (fp_text reference D7
+      (at 3.800993 -0.029228 185.6)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 185.6)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 5.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (pad 1 smd rect
+      (at -0.7493 0 5.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F974A7)
+    (at 87.6 98.8 174.4)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F856B8)
+    (attr smd)
+    (fp_text reference D8
+      (at 3.78616 -0.122047 174.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 174.4)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 354.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (pad 1 smd rect
+      (at -0.7493 0 354.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F974C0)
+    (at 88 96.4 163.1)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85700)
+    (attr smd)
+    (fp_text reference D9
+      (at 3.678535 0.349746 163.1)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 163.1)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 343.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (pad 1 smd rect
+      (at -0.7493 0 343.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F974D9)
+    (at 89 94.1 151.9)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85735)
+    (attr smd)
+    (fp_text reference D10
+      (at 4.119036 -0.047743 151.9)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 151.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 331.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (pad 1 smd rect
+      (at -0.7493 0 331.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F974F2)
+    (at 90.3 92.1 140.6)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F859CD)
+    (attr smd)
+    (fp_text reference D11
+      (at 4.325663 0.2593 140.6)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 140.6)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 320.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (pad 1 smd rect
+      (at -0.7493 0 320.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F9750B)
+    (at 92.1 90.3 129.4)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85A16)
+    (attr smd)
+    (fp_text reference D12
+      (at 4.199495 0.294471 129.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 129.4)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 309.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (pad 1 smd rect
+      (at -0.7493 0 309.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97524)
+    (at 94.1 89 118.1)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85A5C)
+    (attr smd)
+    (fp_text reference D13
+      (at 4.35831 -0.400378 118.1)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 118.1)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 298.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (pad 1 smd rect
+      (at -0.7493 0 298.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F9753D)
+    (at 96.4 88 106.9)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85AB5)
+    (attr smd)
+    (fp_text reference D14
+      (at 4.164596 -0.202069 106.9)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 106.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 286.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (pad 1 smd rect
+      (at -0.7493 0 286.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97556)
+    (at 98.8 87.6 95.6)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85AFB)
+    (attr smd)
+    (fp_text reference D15
+      (at 4.316522 -0.081169 95.6)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 95.6)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 275.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (pad 1 smd rect
+      (at -0.7493 0 275.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F9756F)
+    (at 101.2 87.6 84.4)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85CCE)
+    (attr smd)
+    (fp_text reference D16
+      (at 4.306568 -0.020345 84.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 84.4)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 264.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (pad 1 smd rect
+      (at -0.7493 0 264.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97588)
+    (at 103.6 88 73.1)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85D28)
+    (attr smd)
+    (fp_text reference D17
+      (at 4.134944 0.104474 73.1)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 73.1)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 253.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (pad 1 smd rect
+      (at -0.7493 0 253.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F975A1)
+    (at 105.9 89 61.9)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85D77)
+    (attr smd)
+    (fp_text reference D18
+      (at 4.19063 0.086341 61.9)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 61.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 241.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (pad 1 smd rect
+      (at -0.7493 0 241.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F975BA)
+    (at 107.9 90.3 50.6)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85E07)
+    (attr smd)
+    (fp_text reference D19
+      (at 4.260921 0.180481 50.6)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 50.6)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 230.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (pad 1 smd rect
+      (at -0.7493 0 230.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F975D3)
+    (at 109.7 92.1 39.4)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F85E78)
+    (attr smd)
+    (fp_text reference D20
+      (at 4.281897 0.033454 39.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 39.4)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 219.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (pad 1 smd rect
+      (at -0.7493 0 219.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F975EC)
+    (at 111 94.1 28.1)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F86370)
+    (attr smd)
+    (fp_text reference D21
+      (at 4.029059 -0.000301 28.1)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 28.1)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 208.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (pad 1 smd rect
+      (at -0.7493 0 208.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97605)
+    (at 112 96.4 16.9)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F863CF)
+    (attr smd)
+    (fp_text reference D22
+      (at 3.993163 0.01131 16.9)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 16.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 196.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (pad 1 smd rect
+      (at -0.7493 0 196.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F9761E)
+    (at 112.4 98.8 5.6)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F8642D)
+    (attr smd)
+    (fp_text reference D23
+      (at 4.215009 -0.091122 5.6)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 5.6)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 185.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (pad 1 smd rect
+      (at -0.7493 0 185.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97637)
+    (at 112.4 101.2 354.4)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F8648E)
+    (attr smd)
+    (fp_text reference D24
+      (at 4.205055 -0.010391 354.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 354.4)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 174.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (pad 1 smd rect
+      (at -0.7493 0 174.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97650)
+    (at 112 103.6 343.1)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F864F6)
+    (attr smd)
+    (fp_text reference D25
+      (at 3.963511 -0.108905 343.1)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 343.1)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 163.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (pad 1 smd rect
+      (at -0.7493 0 163.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97669)
+    (at 111 105.9 331.9)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F8679B)
+    (attr smd)
+    (fp_text reference D26
+      (at 4.205076 -0.209313 331.9)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 331.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 151.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (pad 1 smd rect
+      (at -0.7493 0 151.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 1 A))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F97682)
+    (at 109.7 107.9 320.6)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F86809)
+    (attr smd)
+    (fp_text reference D27
+      (at 4.217155 -0.112273 320.6)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 320.6)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1e-06 0.25)
+      (end -0.25 -1e-06)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1e-06 -0.25)
+      (end -1e-06 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -1e-06)
+      (end 1e-06 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 1e-06)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.099999 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.099999 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 140.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (pad 1 smd rect
+      (at -0.7493 0 140.6)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 2 B))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F9769B)
+    (at 107.9 109.7 309.4)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F8687E)
+    (attr smd)
+    (fp_text reference D28
+      (at 4.020881 -0.048949 309.4)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 309.4)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 129.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (pad 1 smd rect
+      (at -0.7493 0 129.4)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 3 C))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F976B4)
+    (at 105.9 111 298.1)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F868EE)
+    (attr smd)
+    (fp_text reference D29
+      (at 4.324713 -0.014747 298.1)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 298.1)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 118.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (pad 1 smd rect
+      (at -0.7493 0 118.1)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 4 D))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module LEDs:LED_0603 locked
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57F976CD)
+    (at 103.6 112 286.9)
+    (descr "LED 0603 smd package")
+    (tags "LED led 0603 SMD smd SMT smt smdled SMDLED smtled SMTLED")
+    (path /57F86963)
+    (attr smd)
+    (fp_text reference D30
+      (at 4.319107 -0.187754 286.9)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value LED
+      (at 0 1.5 286.9)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start -1.4 -0.75)
+      (end 1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.4 0.75)
+      (end -1.4 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 0.75)
+      (end -1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 1.4 -0.75)
+      (end 1.4 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start 0 0.25)
+      (end -0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 0 -0.25)
+      (end 0 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 0)
+      (end 0 -0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.25 -0.25)
+      (end -0.25 0.25)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.25 0)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 -0.55)
+      (end 0.8 -0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -1.1 0.55)
+      (end 0.8 0.55)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.8 0.4)
+      (end -0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.8 -0.4)
+      (end 0.8 -0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 -0.4)
+      (end 0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.8 0.4)
+      (end -0.8 0.4)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 -0.2)
+      (end 0.1 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start 0.1 0.2)
+      (end -0.2 0)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.2 0)
+      (end 0.1 -0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (fp_line
+      (start -0.3 -0.2)
+      (end -0.3 0.2)
+      (layer F.Fab)
+      (width 0.15))
+    (pad 2 smd rect
+      (at 0.7493 0 106.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 6 F))
+    (pad 1 smd rect
+      (at -0.7493 0 106.9)
+      (size 0.79756 0.79756)
+      (layers F.Cu F.Paste F.Mask)
+      (net 5 E))
+    (model LEDs.3dshapes/LED_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 180))))
+  (module knopf:FlatFlex
+    (layer B.Cu)
+    (tedit 57FABE7F)
+    (tstamp 57F9CD23)
+    (at 100 113.03)
+    (path /57F9B599)
+    (fp_text reference P1
+      (at 2.22 5.01)
+      (layer B.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))
+        (justify mirror)))
+    (fp_text value CONN_01X12
+      (at 0 0.75)
+      (layer B.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))
+        (justify mirror)))
+    (pad 12 smd rect
+      (at 2.75 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 6 F))
+    (pad 11 smd rect
+      (at 2.25 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 5 E))
+    (pad 10 smd rect
+      (at 1.75 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 4 D))
+    (pad 9 smd rect
+      (at 1.25 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 8 /VCC))
+    (pad 8 smd rect
+      (at 0.75 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 7 /GND))
+    (pad 7 smd rect
+      (at 0.25 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 9 /IR-signal))
+    (pad 1 smd rect
+      (at -2.75 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 1 A))
+    (pad 2 smd rect
+      (at -2.25 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 2 B))
+    (pad 3 smd rect
+      (at -1.75 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 3 C))
+    (pad 4 smd rect
+      (at -1.25 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 8 /VCC))
+    (pad 5 smd rect
+      (at -0.75 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 7 /GND))
+    (pad 6 smd rect
+      (at -0.25 0)
+      (size 0.25 4)
+      (layers B.Cu B.Paste B.Mask)
+      (net 9 /IR-signal)))
+  (module Capacitors_SMD:C_0603
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57FA9651)
+    (at 100.0125 111.76 180)
+    (descr "Capacitor SMD 0603, reflow soldering, AVX (see smccp.pdf)")
+    (tags "capacitor 0603")
+    (path /57FA98EA)
+    (attr smd)
+    (fp_text reference C1
+      (at 0.1025 2.74 180)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_text value 100n
+      (at 0 1.9 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1 1)
+          (thickness 0.15))))
+    (fp_line
+      (start 0.35 0.6)
+      (end -0.35 0.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -0.35 -0.6)
+      (end 0.35 -0.6)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 1.45 -0.75)
+      (end 1.45 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.45 -0.75)
+      (end -1.45 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.45 0.75)
+      (end 1.45 0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (fp_line
+      (start -1.45 -0.75)
+      (end 1.45 -0.75)
+      (layer F.CrtYd)
+      (width 0.05))
+    (pad 2 smd rect
+      (at 0.75 0 180)
+      (size 0.8 0.75)
+      (layers F.Cu F.Paste F.Mask)
+      (net 7 /GND))
+    (pad 1 smd rect
+      (at -0.75 0 180)
+      (size 0.8 0.75)
+      (layers F.Cu F.Paste F.Mask)
+      (net 8 /VCC))
+    (model Capacitors_SMD.3dshapes/C_0603.wrl
+      (at
+        (xyz 0 0 0))
+      (scale
+        (xyz 1 1 1))
+      (rotate
+        (xyz 0 0 0))))
+  (module knopf:TSOP75xx
+    (layer F.Cu)
+    (tedit 57FABC1D)
+    (tstamp 57FA965D)
+    (at 100 115.062 180)
+    (path /57FA8D46)
+    (fp_text reference Q1
+      (at 1.62 -2.918)
+      (layer F.SilkS)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_text value TSOP75338
+      (at 0 -0.75 180)
+      (layer F.Fab)
+      (effects
+        (font
+          (size 1.5 1.5)
+          (thickness 0.15))))
+    (fp_line
+      (start 3.4 1.5)
+      (end 3.4 -1.5)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start 3.4 -1.5)
+      (end -3.4 -1.5)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -3.4 -1.5)
+      (end -3.4 1.5)
+      (layer F.SilkS)
+      (width 0.15))
+    (fp_line
+      (start -3.4 1.5)
+      (end 3.4 1.5)
+      (layer F.SilkS)
+      (width 0.15))
+    (pad 2 smd rect
+      (at -0.635 0.6 180)
+      (size 0.8 1.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 8 /VCC))
+    (pad 1 smd rect
+      (at -1.905 0.6 180)
+      (size 0.8 1.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 7 /GND))
+    (pad 3 smd rect
+      (at 0.635 0.6 180)
+      (size 0.8 1.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 9 /IR-signal))
+    (pad 4 smd rect
+      (at 1.905 0.6 180)
+      (size 0.8 1.8)
+      (layers F.Cu F.Paste F.Mask)
+      (net 7 /GND)))
+  (gr_text "github\nhzeller/DerKnopf"
+    (at 100 87.93)
+    (layer B.SilkS)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.15))
+      (justify mirror)))
+  (gr_text %%gitversion%%
+    (at 88.96 100 90)
+    (layer B.SilkS)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.15))
+      (justify mirror)))
+  (gr_arc
+    (start 93.321 116.8)
+    (end 96.4 116.8)
+    (angle -68.5)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_arc
+    (start 106.679 116.8)
+    (end 103.6 116.8)
+    (angle 68.3)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_arc
+    (start 100 100)
+    (end 105.542 113.939)
+    (angle -316.6)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_line
+    (start 96.4 116.8)
+    (end 103.6 116.8)
+    (angle 90)
+    (layer Edge.Cuts)
+    (width 0.2))
+  (gr_circle
+    (center 100 100)
+    (end 110 100)
+    (layer Edge.Cuts)
+    (width 0.2))
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  )

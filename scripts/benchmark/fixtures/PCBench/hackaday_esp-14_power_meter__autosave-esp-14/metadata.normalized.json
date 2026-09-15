@@ -1,0 +1,60 @@
+{
+  "board_id": "hackaday_esp-14_power_meter__autosave-esp-14",
+  "display_name": "hackaday_esp-14_power_meter__autosave-esp-14",
+  "pcbench_directory": "PCBs/hackaday_esp-14_power_meter__autosave-esp-14",
+  "source": "https://github.com/hexagon5un/hackaday_esp-14_power_meter",
+  "author": "hexagon5un",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:25.713742+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 22,
+    "components": 3,
+    "dimensions_mm": {
+      "width": 30.0,
+      "height": 37.0
+    },
+    "area_cm2": 11.1,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 65,
+    "vias": 0,
+    "track_length_mm": 160.91,
+    "kicad_drc_violations": 27,
+    "kicad_drc_breakdown": {
+      "total_violations": 27,
+      "unconnected_count": 0,
+      "by_type": {
+        "lib_footprint_issues": 3,
+        "silk_over_copper": 24
+      },
+      "by_severity": {
+        "warning": 27
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "canary",
+    "golden-canary",
+    "small",
+    "tier-a",
+    "tier-b"
+  ],
+  "tier": "A",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:32.936425+00:00",
+    "elapsed_seconds": 5.24,
+    "unrouted_nets": 0,
+    "clearance_violations": 0,
+    "quality_score": 1000.0
+  }
+}

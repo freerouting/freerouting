@@ -12,15 +12,15 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - Log4j (logging)
   - Gson, Jakarta EE APIs, Google Cloud & Sheets APIs, Swagger/OpenAPI.
 - **Python Client Library:** The project ecosystem includes a Python client library for headless interactions and REST API integrations; it is maintained outside this repository (release workflow reference: `docs/developer.md`).
-- **EDA Integrations:** In-repo integration assets exist under `integrations/` for KiCad, Autodesk EAGLE, Target3001!, and EasyEDA; `README.md` and `docs/integrations.md` also document tscircuit and pcb-rnd workflows.
+- **EDA Integrations:** In-repo integration assets exist under `integrations/` for KiCad, Autodesk Fusion, Target3001!, and EasyEDA; `README.md` and `docs/integrations.md` also document tscircuit and pcb-rnd workflows.
 
 # Architecture & Standards
 
 - **Architecture Reference:** The authoritative architecture overview lives in [`docs/architecture.md`](docs/architecture.md). It includes a Mermaid diagram of the full system, a package glossary, and navigation guidance. **Keep this file up-to-date whenever structural changes are made** — for example, when packages are added or reorganised, when a new interface (GUI mode, API version, CLI flag) is introduced, or when the boundary between the routing pipeline and the orchestration layer shifts. The in-repo diagram is the first document contributors read; a stale diagram misleads more than no diagram at all.
 - **Domain Orientation:** This is an **algorithmic-heavy** project. The complexity lies in spatial data structures, pathfinding (e.g., modified A*, Lee algorithm, maze routing), and geometric calculations.
 - **Separation of Concerns:** The **UI/Visualizer** and the **Routing Engine** are distinct domains. Always maintain a strict boundary between visual representation and core algorithmic logic. UI concerns should not bleed into the geometric models.
-- **Module Boundary Enforcement:** Architectural package boundaries are enforced by strict ArchUnit tests in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java` and `src/test/java/app/freerouting/io/SpecctraPackageArchTest.java`. Keep every rule green; do not relax strict rules to hide regressions. Accepted boundary debt is documented in `docs/issues/soc-gui-separation-and-accessibility-plan.md` §12.
-- **Repository Package Boundaries:** Keep routing/data logic in `src/main/java/app/freerouting/{autoroute,board,geometry,drc,core,rules}`; keep UI/editor flow in `src/main/java/app/freerouting/{gui,gui/interactive,gui/session,gui/rendering}`; keep REST/API server concerns in `src/main/java/app/freerouting/{api,management}`; keep file-format I/O in `src/main/java/app/freerouting/io/{specctra,specctra/parser}` — the public entry points live in `io.specctra` and grammar internals in `io.specctra.parser`.
+- **Module Boundary Enforcement:** Architectural package boundaries are enforced by strict ArchUnit tests in `src/test/java/app/freerouting/architecture/ModuleBoundariesArchTest.java` and `src/test/java/app/freerouting/io/SpecctraPackageArchTest.java`. Keep every rule green; do not relax strict rules to hide regressions. Accepted boundary debt is documented in `docs/architecture.md` ("Accepted architectural debt"), mirroring the D-code comments in `ModuleBoundariesArchTest.java`.
+- **Repository Package Boundaries:** Keep routing/data logic in `src/main/java/app/freerouting/{autoroute,board,geometry,drc,core,rules}`; keep UI/editor flow in `src/main/java/app/freerouting/{gui,gui/interactive,gui/workspace,gui/rendering,gui/a11y}`; keep REST/API server concerns in `src/main/java/app/freerouting/{api,management}`; keep file-format I/O in `src/main/java/app/freerouting/io/{specctra,specctra/parser}` — the public entry points live in `io.specctra` and grammar internals in `io.specctra.parser`.
 - **Coding Standards:** Adhere strictly to Clean Code principles and standard Java naming conventions (e.g., CamelCase for classes/methods). Prioritize readability and maintainability without sacrificing the algorithmic performance.
 - **Formatting and quality gates:** Use the repository's pinned Spotless/Google Java Format
   configuration and LF line-ending policy. Do not run `spotlessApply` as an automatic
@@ -30,20 +30,23 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   The frozen `src_v19/` tree is compiled for compatibility but is not current code to
   refactor or Checkstyle.
 - **AI/contributor verification:** Before handoff, run
-  `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`
+  `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`,
+  `pre-commit run --all-files`,
   and `python scripts/i18n/extract-context.py --check` when applicable. On Windows use
   `gradlew.bat`. If formatting is intentionally changed, isolate it in a dedicated
   change and inspect `git diff --stat` plus `git diff --check`.
+  **PR Push Rule:** If a Pull Request is already open and new commits are made locally, **do not push the commits to the remote branch without explicit confirmation from the user** (pushing triggers GitHub Actions workflows online, which may be unnecessary while iterating or reviewing).
+  **PR and Issue Body Integrity Rule:** Always pass markdown descriptions via `--body-file <path>` when creating or editing pull requests or issues (`gh pr create/edit --body-file <file>`, `gh issue create/edit --body-file <file>`). **Never** pass inline markdown text through shell command-line flags (e.g. `--body "..."`) or string interpolation in PowerShell, Bash, or Python scripts. Shell argument parsers and language escape evaluators mangle characters like `\`t` (tab), `\`f` (form feed), `\`r` (carriage return), and `\`b` (backspace) inside code identifiers, backticks, and file paths (e.g. converting `\BatchOptimizer` to `\BatchOptimizer` or dropping `r` in `\routing-engine`), resulting in corrupted descriptions on GitHub.
 - **Legacy Reference Implementation:** The source code of the original v1.9 implementation is available in the `src_v19/` directory. It remains a **historical reference** for understanding original algorithmic decisions and for optional deep-dive investigations. Do not refactor or optimize the v1.9 code directly; modify it only when additional trace logging is needed for a specific comparison. **It is no longer the primary routing-parity baseline for current development.**
 - **Logging & Debugging:** Use the `FRLogger` class for logging. The method `trace(String method, String operation, String message, String impactedItems, Point[] impactedPoints)` should be used for detailed algorithmic steps, especially in routing logic, to facilitate debugging and performance analysis. Logs should be structured and informative, including impacted nets and impacted points in the routing process. When comparing against a baseline build, keep diagnostic payloads synchronized between the WIP tree and that baseline before drawing conclusions from log diffs.
   - For parity investigations, keep diagnostic payloads synchronized between WIP and the baseline under comparison. If WIP emits a debug marker (for example `[assign_raw]` with section/door identity), add the same marker fields to the baseline instrumentation before drawing conclusions from log diffs.
-- **`InteractiveSettings` / GUI Session State:** `InteractiveSettings` extends `GuiSettings` (which implements `SettingsSource` at priority 50) and is the **sole** live source of GUI state in the `SettingsMerger` pipeline. Key invariants:
-  - It is a **singleton within a GUI session**. Always obtain it via `InteractiveSettings.getOrCreate(board)` and reset it on every board load with `InteractiveSettings.reset(board)`.
-  - It must **never** be referenced from `HeadlessBoardManager` or any `api`/`management` code path. `HeadlessBoardManager.getInteractiveSettings()` always returns `null` by design.
-  - `InteractiveSettings.getSettings()` returns a **live snapshot** of the current GUI state and is what `SettingsMerger` reads at priority 50. Do not cache the result; always call `merger.merge()` to get an up-to-date `RouterSettings`.
-  - All fields in `InteractiveSettings` (own and inherited) are `private`; external access must go through getters/setters so that `PropertyChangeEvent`s fire correctly.
-- **`BoardManager` Class Hierarchy:** `HeadlessBoardManager` is the headless/API base; `GuiBoardManager` extends it and adds all GUI concerns (Swing panels, `InteractiveSettings`, serialisation of `.frb` binary files). Code that must work in both modes lives in `HeadlessBoardManager`; code that requires a display or user interaction lives in `GuiBoardManager`.
-- **`SettingsMerger.addOrReplaceSources(SettingsSource)`:** When registering a `GuiSettings`-subtype source (e.g., the `InteractiveSettings` singleton), pass the concrete instance — the merger uses subtype matching to find and replace any existing `GuiSettings` entry at priority 50. Never register a plain `GuiSettings` instance after the singleton has been registered or it will silently shadow the live GUI state.
+- **`WorkspaceSettings` / GUI Session State:** `WorkspaceSettings` extends `GuiSettingsSource` (which implements `SettingsSource` at priority 65) and is the **sole** live source of GUI state in the `SettingsMerger` pipeline. Key invariants:
+  - It is a **singleton within a GUI session**. Always obtain it via `WorkspaceSettings.getOrCreate(board)` and reset it on every board load with `WorkspaceSettings.reset(board)`.
+  - It must **never** be referenced from `HeadlessBoardManager` or any `api`/`management` code path. There is deliberately no `getWorkspaceSettings()` on the headless API: GUI-only manager operations live on the `WorkspaceContract` interface, which only `GuiBoardManager` implements. From a `BoardManager` reference, narrow with `if (manager instanceof WorkspaceContract gui)` — never with a null check.
+  - `WorkspaceSettings.getSettings()` returns a **live snapshot** of the current GUI state and is what `SettingsMerger` reads at priority 65. Do not cache the result; always call `merger.merge()` to get an up-to-date `RouterSettings`.
+  - All fields in `WorkspaceSettings` (own and inherited) are `private`; external access must go through getters/setters so that `PropertyChangeEvent`s fire correctly.
+- **`BoardManager` Class Hierarchy:** `HeadlessBoardManager` is the headless/API base; `GuiBoardManager` extends it and adds all GUI concerns (Swing panels, `WorkspaceSettings`, serialisation of `.frb` binary files). Code that must work in both modes lives in `HeadlessBoardManager`; code that requires a display or user interaction lives in `GuiBoardManager`.
+- **`SettingsMerger.addOrReplaceSources(SettingsSource)`:** When registering a `GuiSettingsSource`-subtype source (e.g., the `WorkspaceSettings` singleton), pass the concrete instance — the merger uses subtype matching to find and replace any existing `GuiSettingsSource` entry at priority 65. Never register a plain `GuiSettingsSource` instance after the singleton has been registered or it will silently shadow the live GUI state.
 
 # Specific Constraints & Logic
 
@@ -57,7 +60,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   - Classify divergence before fixing: distinguish numeric-only drift from behavioral ordering/tie-break divergence by suppressing volatile values (for example `expansion_value` and `sorting_value`) and comparing decision continuity.
   - Preferred remediation sequence: (1) synchronize instrumentation payloads in WIP and baseline, (2) diff around the first normalized mismatch with stable identifiers (section, door, from_door, net), (3) apply the smallest possible ordering/tie-break fix in WIP, (4) rerun comparisons to confirm the mismatch moves later or disappears without introducing violations.
   - Exit criteria for parity investigations: no new clearance violations (full DRC), no regression in routing completion vs v2.3.0, and stable or improved compare metrics across repeated runs and at least two `max_items` checkpoints.
-  - The v1.9 tree (`src_v19/`) may still be used for historical algorithm archaeology; it is not required for routine WIP gates. See also `docs/issues/soc-gui-separation-and-accessibility-plan.md` (D24).
+  - The v1.9 tree (`src_v19/`) may still be used for historical algorithm archaeology; it is not required for routine WIP gates.
 - **Algorithm Performance Metrics:** When optimizing routing algorithms, focus on key performance metrics such as:
   - **Clearance Violations:** (Critical priority) Ensure that no routing changes introduce new clearance violations.
   - **Routing Completion Rate:** (High priority) The percentage of successfully routed nets.
@@ -67,19 +70,18 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
     - **Expected memory profile for a multi-pass routing job:** Working-set typically grows in a staircase pattern (each pass plateau, then a GC trim) up to a board-size-dependent peak, then drops sharply when the routing thread pool winds down and releases per-pass board state. The optimizer phase that follows normally runs at a significantly lower and flat memory footprint. Sustained growth *during* the optimizer (not routing) is the signal that indicates a genuine GC-root retention leak.
   - **Trace Length Optimization:** (Low priority) The total length of traces should be minimized while respecting design rules.
 - **Testing & Validation:** Always write comprehensive unit tests for any new routing logic or optimizations. Use the existing test suite as a reference and ensure that all tests pass before merging changes. For any new features or optimizations, add specific test cases that validate the expected behavior and performance improvements.
-  - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably the `Issue508Test_BM01_first_2_nets` which is one of the quickest routing test. Use `./gradlew test` for the default (fast) unit-test set and `./gradlew check` for the full integration testing suite.
+  - **Running Tests:** If you implement a small change you can run only one unit test to do a quick check, preferably `Dac2020Bm01RoutingTest` which is one of the quickest routing tests. Use `./gradlew test` for the default (fast) unit-test set and `./gradlew check` for the full integration testing suite.
   - **Slow-test tagging policy:** Tag long-running fixture/benchmark tests with `@Tag("slow")`. The default `test` task excludes these tests unless explicitly enabled (`-PincludeSlowTests=true`). Use `./gradlew testSlow` to run only slow tests, and `./gradlew testAll` to run both fast + slow sets before releases or merge-critical validation.
   - **Timeout budget:** The Gradle unit-test task timeout is **30 minutes** to accommodate fanout-enabled routing fixtures on slower hardware.
-  - **Large-board CI tests:** Boards with >500 nets can take several minutes per routing pass. Use `TestingSettings.setMaxItems(n)` (e.g. 100–200) to slice off a bounded chunk of work that runs in under 30 seconds while still exercising the target code path. Do **not** rely on a short `jobTimeoutString` alone — the timeout fires after the pass completes, so a single slow pass can still blow the budget.
+  - **Large-board CI tests:** Boards with >500 nets can take several minutes per routing pass. Create a `new TestingSettings()` and use its instance setters `setMaxItems(n)` (e.g. 100–200) to slice off a bounded chunk of work that runs in under 30 seconds while still exercising the target code path. Do **not** rely on a short `jobTimeoutString` alone — the timeout fires after the pass completes, so a single slow pass can still blow the budget.
   - **Full-scale OOM / stress tests** that cannot be bounded to CI time belong in `scripts/tests/` as standalone PowerShell scripts (see `run_test_Issue420_oom.ps1` as the reference pattern). These scripts build the executable JAR, run it headlessly with `-XX:+HeapDumpOnOutOfMemoryError`, sample the JVM working-set every 30 s via a `Start-Job` background sampler, and print a pass/fail summary with the memory trend at the end.
-- **GUI vs Headless Guard:** Before calling any method that accesses `interactiveSettings`, always check `getInteractiveSettings() != null` or restrict the call to `GuiBoardManager` only. Concrete editor-state code lives in `gui.interactive` and may access the session manager only through its GUI-session contract; ensure those paths are reachable only from a `GuiBoardManager` instance.
+- **GUI vs Headless Guard:** GUI-session state is reachable only through `WorkspaceContract` (implemented solely by `GuiBoardManager`). From a `BoardManager` reference, narrow with `if (manager instanceof WorkspaceContract gui)` before touching `gui.getWorkspaceSettings()`; never call workspace code from `HeadlessBoardManager` or any `api`/`management` path. Concrete editor-state code lives in `gui.interactive` and may access the session manager only through its GUI-session contract; ensure those paths are reachable only from a `GuiBoardManager` instance.
 - **Test Placement Conventions:**
   - Issue-regression and full-pipeline tests → `src/test/java/app/freerouting/fixtures/` (extend `RoutingFixtureTest`).
-  - Unit/integration tests scoped to a specific package → place in the matching test package (e.g., tests for `app.freerouting.gui.interactive` go in `src/test/java/app/freerouting/gui/interactive/`, and session tests go in `src/test/java/app/freerouting/gui/session/`).
+  - Unit/integration tests scoped to a specific package → place in the matching test package (e.g., tests for `app.freerouting.gui.interactive` go in `src/test/java/app/freerouting/gui/interactive/`, and workspace tests go in `src/test/java/app/freerouting/gui/workspace/`).
   - DSN fixture files live in `fixtures/`; reference them by filename (e.g., `"Issue508-DAC2020_bm01.dsn"`). The quickest fixture for smoke-checks is `Dac2020Bm01RoutingTest`.
-  - Bound long-running routing tests with `TestingSettings.setMaxPasses(n)`, `setMaxItems(m)`, and `setJobTimeoutString("HH:MM:SS")` to keep CI fast.
-- **Issue Tracking:** Detailed per-issue specifications live in `docs/issues/`. Each file documents the problem, sub-issues (with ✅ when done), proposed/actual implementation, and acceptance criteria. Keep these files up-to-date as sub-issues are resolved so future agents have accurate context without re-reading the full conversation history.
-  - Architecture boundary debt for the GUI/headless separation work is tracked in `docs/issues/soc-gui-separation-and-accessibility-plan.md` §12. Update that section whenever strict rules or accepted debt change.
+  - Bound long-running routing tests with the `TestingSettings` instance setters `setMaxPasses(n)`, `setMaxItems(m)`, and `setJobTimeoutString("HH:MM:SS")` to keep CI fast.
+- **Issue Tracking:** Per-issue specification files under `docs/issues/` were retired (directory removed during the docs cleanup); track new work in GitHub issues and keep `docs/architecture.md` ("Accepted architectural debt") up to date as strict rules or accepted debt change, so future agents have accurate context without re-reading the full conversation history.
   - Temporary analysis artifacts (draft GitHub replies, one-off log extracts, heap-dump notes) should be written to `logs/<IssueNNN>/` — this directory is git-ignored and will not clutter the repository.
 - **Licensing:** This project is open-source under the **GPLv3** license. Ensure all dependencies and contributions respect this license.
 
@@ -89,9 +91,9 @@ Router configuration is resolved at runtime by `SettingsMerger`, which layers ni
 
 This design has one critical invariant: **all fields in `RouterSettings` (and its nested `RouterOptimizerSettings` / `RouterScoringSettings`) must be nullable reference types with no default initializers.** If a field were initialised to a non-null value (e.g. `public Integer maxPasses = 9999;`), every source object would carry that value and the merger could no longer distinguish "this source sets this field" from "this source has no opinion". A low-priority source would then silently override a higher-priority one. All hardcoded defaults belong exclusively in `DefaultSettings.getSettings()`, which is always applied first as the base layer.
 
-The full priority ladder is documented in `docs/settings.md`. Key sources: `DefaultSettings` (0), `JsonFileSettings` (10), `DsnFileSettings` (20), `SesFileSettings` (30), `RulesFileSettings` (40), `GuiSettings` (50), `EnvironmentVariablesSource` (55), `CliSettings` (60), `ApiSettings` (70).
+The full priority ladder is documented in `docs/settings.md`. Key sources: `DefaultSettings` (0), `JsonFileSettings` (10), `DsnFileSettings` (20), `SesFileSettings` (30), `RulesFileSettings` (40), `EnvironmentVariablesSource` (55), `CliSettings` (60), `GuiSettingsSource` / `WorkspaceSettings` (65), `ApiSettings` (70).
 
-- **Copper-to-edge default:** `RouterSettings.copperToEdgeClearanceUm` defaults to **500.0 µm (0.5 mm)** in `DefaultSettings`. Keep the field nullable (no initializer in `RouterSettings`) so higher-priority sources can still override it cleanly.
+- **Copper-to-edge default:** `RouterSettings.copperToEdgeClearanceUm` defaults to **250.0 µm (0.25 mm)** in `DefaultSettings`. Keep the field nullable (no initializer in `RouterSettings`) so higher-priority sources can still override it cleanly.
 - **Override-test guidance:** When writing tests for the edge-clearance override path, set `copperToEdgeClearanceUm` to a **non-default** value so the test verifies source precedence/override behavior, not just default propagation.
 
 # Workflow Commands
@@ -107,39 +109,42 @@ Execute the following commands from the root directory using the Gradle Wrapper:
 - **Run Current Development Environment:** `./gradlew run`
 - **Run v1.9 Compatibility Build:** `./gradlew runV19`
 - **Apply Project-Wide Cleanup/Formatting Recipes:** `./gradlew rewriteRun`
+- **Gradle Build Scan:** Gradle Build Scan is activated and available after builds complete on GitHub Actions (inspect the Develocity link printed in CI summaries and build results).
 
 # Communication Style
 
 Your communication should be direct, professional, and technically precise. Acknowledge and respect the inherent complexity of PCB routing logic. Do not oversimplify geometric problems; instead, provide thorough, algorithmically-sound justifications for any proposed code changes. Output complete and correct code when finalizing solutions.
 
 - **Spelling:** The product name is always written **"Freerouting"** (capital F). Never write "freerouting" in prose, documentation, or user-facing messages.
+- **Command Line Arguments / Parameter Names:** Always use lowercase `snake_case`, with nested fields separated by the dot (`.`) character (e.g. `--router.plane_as_obstacle=true`, `--router.plane_via_costs=50`, `--router.copper_to_edge_clearance_um=500`). Do not encourage users to use deprecated parameters (such as `conduction_is_obstacle` or `conductionIsObstacle`) or `camelCase` parameters (such as `planeAsObstacle`). Sample parameter references in documentation, CLI help, and discussions must strictly follow the lowercase `snake_case` with dot `.` format.
+- **Release Notes:** Release notes must follow the structure and sections of the most recent releases (e.g. v2.4.1, v2.3.0). The style should be professional, direct, friendly, and grateful. Keep release notes as brief as possible without leaving anything important out. Include relevant sponsor callouts, highlights, detailed categorized sections, known limitations/guidance, and heartfelt contributor acknowledgments.
 
 # DRC & Clearance Architecture
 
 Key facts about how design-rule checking and clearances work — important context for any issue investigation:
 
-- **Internal DRC entry point:** `DesignRulesChecker.getAllClearanceViolations()` is the comprehensive DRC method that iterates all board item pairs. Always use this when you need a complete violation count. The shortcut `board.get_outline().clearance_violation_count()` (currently used in `BoardStatistics`) only checks violations from the `BoardOutline`'s perspective and is incomplete.
-- **`BoardStatistics.clearanceViolations.totalCount` is currently incomplete:** It calls `board.get_outline().clearance_violation_count()` instead of `DesignRulesChecker.getAllClearanceViolations()`. Do not treat this count as a definitive "no violations" signal without understanding this limitation (see Issue 558).
-- **A passing test is not always correct:** A routing fixture test that asserts `clearanceViolations.totalCount == 0` may pass because the internal DRC is checking the wrong threshold, not because the routing is actually correct. Always verify that the DRC is checking the same clearance values that the final EDA tool (e.g. KiCad) will check.
-- **KiCad DSN export does not include copper-to-edge clearance:** KiCad's "copper to board edge clearance" setting is **not written into the Specctra `.dsn` file**. Freerouting therefore assigns the `BoardOutline` the default conductor-to-conductor clearance class and routes traces at that (smaller) distance from the board edge. KiCad's own DRC will flag violations after import. The Specctra format supports `(clearance_class ...)` inside `(boundary ...)`, and freerouting already parses it — the fix requires KiCad to start emitting it. See `docs/issues/Issue558-copper-to-edge-clearance.md` for the full analysis and workaround plan.
-- **Board outline clearance class:** The `BoardOutline` item's clearance class is set during `HeadlessBoardManager.create_board()` from `p_outline_clearance_class_name`. When this is `null` (the KiCad case), it falls back to `ItemClass.AREA` = class 1 = "default". The `ShapeSearchTree` then uses this class's compensation value to determine how close routing can approach the board edge.
+- **Internal DRC entry point:** `DesignRulesChecker.getAllClearanceViolations()` is the comprehensive DRC method that iterates all board item pairs. Always use this when you need a complete violation count.
+- **`BoardStatistics.clearanceViolations.totalCount` is authoritative:** it is computed from `DesignRulesChecker.getAllClearanceViolations()` (see the `BoardStatistics` constructor). Treat it as the definitive in-app violation signal.
+- **A passing test still needs threshold scrutiny:** verify that the DRC is checking the same clearance values that the final EDA tool (e.g. KiCad) will check (see the copper-to-edge gap below).
+- **KiCad DSN export does not include copper-to-edge clearance:** KiCad's "copper to board edge clearance" setting is **not written into the Specctra `.dsn` file**. Freerouting therefore assigns the `BoardOutline` the default conductor-to-conductor clearance class and routes traces at that (smaller) distance from the board edge. KiCad's own DRC will flag violations after import. The Specctra format supports `(clearance_class ...)` inside `(boundary ...)`, and freerouting already parses it — the fix requires KiCad to start emitting it.
+- **Board outline clearance class:** The `BoardOutline` item's clearance class is set during `HeadlessBoardManager.createBoard()` from `p_outline_clearance_class_name`. When this is `null` (the KiCad case), it falls back to `ItemClass.AREA` = class 1 = "default". The `ShapeSearchTree` then uses this class's compensation value to determine how close routing can approach the board edge.
 
 # Copper Pour / Power Plane Architecture
 
 Key facts about how copper pours (power/ground planes) are modelled and routed — established during the Issue 152 investigation:
 
 - **Model:** Copper pours are represented as `board.ConductionArea` (extends `ObstacleArea`, implements `Connectable`). A `ConductionArea` belongs to exactly one net (e.g. GND) and occupies one PCB layer.
-- **Obstacle flag:** `ConductionArea.is_obstacle` controls whether the area blocks foreign-net traces. When `false` (the default for fills) foreign traces may pass through the pour geometrically, which is the normal behaviour for a poured plane. Use `RoutingBoard.change_conduction_is_obstacle(boolean)` to toggle this in bulk; note that the method is only reachable from `GuiBoardManager`, not headless code.
-- **Plane-net flag:** `rules.Net.contains_plane` is the critical flag that switches the autorouter into plane-routing mode for a given net. When `true`, `BatchAutorouter.autoroute_item()` routes *from* the already-connected group *toward* the `ConductionArea` (short stub + via pattern), rather than routing pad-to-pad. An early-exit `CONNECTED_TO_PLANE` state is returned as soon as the connected set already touches a `ConductionArea`.
+- **Obstacle flag:** `ConductionArea.is_obstacle` controls whether the area blocks foreign-net traces. When `false` (the default for fills) foreign traces may pass through the pour geometrically, which is the normal behaviour for a poured plane. Use `RoutingBoard.changePlaneAsObstacle(boolean)` to toggle this in bulk (`changeConductionIsObstacle` is a deprecated alias). The GUI toggles it via `GuiBoardRoutingSettings`; headless applies the `router.plane_as_obstacle` setting in `HeadlessBoardManager.applyPlaneAsObstacleOverride`.
+- **Plane-net flag:** `rules.Net.contains_plane` is the critical flag that switches the autorouter into plane-routing mode for a given net. When `true`, `AutorouteConnectionRouter` routes *from* the already-connected group *toward* the `ConductionArea` (short stub + via pattern), rather than routing pad-to-pad. An early-exit `CONNECTED_TO_PLANE` state is returned as soon as the connected set already touches a `ConductionArea`.
 - **Two independent paths set `contains_plane`:**
-  - **Path A — `Network.java` (reliable, fires for standard KiCad exports):** At net-creation time, `LayerStructure.contains_plane(netName)` is called. If the DSN `structure` section includes explicit plane layer-type information (KiCad's `(plane <netname> ...)` declaration triggers this), the flag is set immediately. Live tests confirm this works correctly for outer-layer pours (B.Cu, F.Cu) and inner-layer pours (In1.Cu).
-  - **Path B — `DsnFile.adjustPlaneAutorouteSettings()` (heuristic fallback):** Only invoked when the DSN has no `(autoroute ...)` scope. Uses a ≥ 50% board-area threshold and skips outer layers (index 0 and last). This latent outer-layer guard is a bug for non-KiCad DSN files, but Path A fires first for well-formed KiCad exports so it is not normally encountered.
-- **Via cost discount for plane nets:** When `contains_plane` is `true`, `BatchAutorouter.autoroute_item()` passes `settings.get_plane_via_costs()` (cheaper than the regular via cost) to `AutorouteControl`. This incentivises dropping vias onto the plane rather than routing traces across the board.
-- **Via optimisation for plane-connected vias:** `OptViaAlgo.opt_plane_or_fanout_via()` handles the post-routing via repositioning for the stub-to-plane case. It verifies the new location is inside the `ConductionArea` before moving.
-- **`getAutorouteItems()` quadratic false-work (partially fixed):** `BasicBoard.connectable_item_count()` counts `ConductionArea` as a connectable item. For a GND net with N pads + 1 pour, every pad whose `connected_set` has fewer than N+1 members is enqueued — even those already touching the plane. **Fix applied:** `BatchAutorouter.getAutorouteItems()` now skips items that are already connected to a `ConductionArea` for plane nets (i.e., `net.contains_plane() && connected_set.anyMatch(ConductionArea)`). Items not yet connected to the plane are still enqueued so they can drop a via onto the pour. This eliminates the repeated `normalize_traces` failure (which arose because `InsertFoundConnectionAlgo` was called for those false-work items) and ensures `autoroute_pass()` returns `false` once all plane-net items are connected — letting the routing loop exit cleanly.
-- **Confirmed bug — plane routing introduces clearance violations (Issue 093):** Routing `Issue093-interf_u.dsn` (bottom-copper GND pour) with the current code introduces **62 clearance violations** and logs an internal error in `BatchAutorouter.autoroute_pass`. The plane-routing code path is active when this occurs. This is a safety-critical open bug tracked in `docs/issues/Issue152-copper-pour-plane-awareness.md`.
+  - **Path A — DSN `(plane ...)` scopes (reliable, fires for standard KiCad exports):** At structure-load time, `io.specctra.parser.Structure` inserts each `(plane <netname> ...)` scope as a `ConductionArea` and creates the net via `nets.add(name, subnetNumber, /* containsPlane */ true)`, so the flag is set immediately. An explicit per-net override is also available via the `router.plane_nets` setting (`HeadlessBoardManager.applyPlaneNetsOverride`). Live tests confirm this works correctly for outer-layer pours (B.Cu, F.Cu) and inner-layer pours (In1.Cu).
+  - **Path B — `DsnFile.adjustPlaneAutorouteSettings()` (heuristic fallback):** Only invoked from `DsnReader.readBoard` when the DSN has no `(autoroute ...)` scope. Uses a ≥ 30% board-area threshold (relaxed from 50% to support outer-layer pours on 2-layer boards) with no outer-layer skip.
+- **Via cost discount for plane nets:** When `contains_plane` is `true`, `AutorouteConnectionRouter` passes `settings.getPlaneViaCosts()` (cheaper than the regular via cost) to the attempt. This incentivises dropping vias onto the plane rather than routing traces across the board.
+- **Via optimisation for plane-connected vias:** `ViaOptimizer.optPlaneOrFanoutVia()` handles the post-routing via repositioning for the stub-to-plane case. It verifies the new location is inside the `ConductionArea` before moving.
+- **`getAutorouteItems()` quadratic false-work (partially fixed):** `BasicBoard.connectable_item_count()` counts `ConductionArea` as a connectable item. For a GND net with N pads + 1 pour, every pad whose `connected_set` has fewer than N+1 members is enqueued — even those already touching the plane. **Fix applied:** `BatchAutorouter.getAutorouteItems()` now skips items that are already connected to a `ConductionArea` for plane nets (i.e., `net.containsPlane() && connected_set.anyMatch(ConductionArea)`). Items not yet connected to the plane are still enqueued so they can drop a via onto the pour. This eliminates the repeated `normalizeTraces` failure (which arose because `InsertFoundConnectionAlgo` was called for those false-work items) and ensures `autoroutePass()` returns `false` once all plane-net items are connected — letting the routing loop exit cleanly.
+- **Confirmed bug — plane routing introduces clearance violations (Issue 093):** Routing `Issue093-interf_u.dsn` (bottom-copper GND pour) with the current code introduces **62 clearance violations** and logs an internal error in the autorouter pass. The plane-routing code path is active when this occurs. This is a safety-critical open bug.
 - **No pour connectivity / void detection:** If a foreign-net trace cuts through a pour layer, creating an isolated copper island, Freerouting does **not** detect the disconnected region. The `RatsNest` and the exported `.ses` file will show the net as fully routed even though part of the pour is electrically floating. This is long-term future work.
-- **Loading boards to check plane flags without routing:** Use `DsnReader.readBoard(InputStream, BoardObservers, IdentificationNumberGenerator, String)` directly when you only need to inspect the loaded board state (e.g. verify `Net.contains_plane`) without running the routing scheduler. This is faster and avoids timeout issues in tests.
+- **Loading boards to check plane flags without routing:** Use `DsnReader.readBoard(InputStream, BoardObservers, IdGenerator, String)` (returns a `BoardReadResult`) directly when you only need to inspect the loaded board state (e.g. verify `Net.contains_plane`) without running the routing scheduler. This is faster and avoids timeout issues in tests.
 
 # API Analytics Architecture
 
@@ -200,10 +205,10 @@ GROUP BY api_method ORDER BY error_count DESC;
 
 | File | Role |
 |---|---|
-| `management/analytics/FRAnalytics.java` | Static facade; `apiEndpointCalled(…, UUID userId)` is the primary call site |
-| `management/analytics/FreeroutingAnalyticsClient.java` | HTTP client posting to `api.freerouting.app/v1/analytics/track` |
-| `management/analytics/AnalyticsErrorAggregator.java` | Aggregates delivery failures; emits first-failure WARN + hourly summary |
-| `management/analytics/BigQueryClient.java` | Singleton GCP BigQuery writer; `getInstance()` avoids per-request re-auth |
+| `analytics/FRAnalytics.java` | Static facade; `apiEndpointCalled(…, UUID userId)` is the primary call site |
+| `analytics/FreeroutingAnalyticsClient.java` | HTTP client posting to `api.freerouting.app/v1/analytics/track` |
+| `analytics/AnalyticsErrorAggregator.java` | Aggregates delivery failures; emits first-failure WARN + hourly summary |
+| `analytics/BigQueryClient.java` | Singleton GCP BigQuery writer; `getInstance()` avoids per-request re-auth |
 | `api/ApiAnalyticsFilter.java` | JAX-RS dual filter; tracks all ≥ 400 responses centrally |
 | `api/FreeroutingApplication.java` | Registers `ApiAnalyticsFilter` alongside existing filters |
 
@@ -378,6 +383,8 @@ Key facts and invariants for all GitHub Actions workflows under `.github/workflo
 | File | Trigger | Purpose |
 |---|---|---|
 | `gradle-build-on-pr.yml` | `pull_request` | Build + test on Ubuntu, macOS, Windows |
+| `gui-a11y.yml` | `pull_request` (path-filtered to GUI sources/tests/resources) | GUI accessibility tests on Ubuntu, macOS, Windows |
+| `pre-commit.yml` | `pull_request` + push to `master` | Run pre-commit hooks |
 | `create-snapshot.yml` | push to `master` | Build all platform installers and publish to the `SNAPSHOT` release |
 | `create-release.yml` | push of `v*` tag | Build all platform installers and publish to the versioned release |
 | `docker-nightly.yml` | push to `master` | Build + push multi-arch Docker image tagged `nightly` |
@@ -407,21 +414,21 @@ needs: [ build-and-test, delete-old-snapshot-assets ]
 **Never** depend on `delete-old-snapshot-assets` alone. If `build-and-test` fails, the old assets must not be deleted and no broken artifacts should be published. Depending only on `delete-old-snapshot-assets` (as was the original bug) allows the deletion to race ahead of a failing build and leave the `SNAPSHOT` release empty or stale.
 
 ## `gradle/actions/setup-gradle` version
-Use `gradle/actions/setup-gradle@v4` (not v3). v4 is the current stable version with improved caching and Gradle 9 compatibility.
+Use `gradle/actions/setup-gradle@v5` (not v3/v4). v5 is the current stable version with improved caching and Gradle 9 compatibility.
 
 ## `actions/stale` version
 Use `actions/stale@v9`. v5 (previously used) ran on Node.js 16 which is EOL. Do not downgrade. Do not pin to a commit SHA — the SHA has historically broken when the upstream repository rebased its release tags.
 
 # Trace Normalisation & Routing-Loop Architecture
 
-Key facts about how `PolylineTrace.normalize()`, `BasicBoard.normalize_traces()`, and `BatchAutorouter.runBatchLoop()` interact — established during the Issue 676 regression investigation.
+Key facts about how `PolylineTraceNormalization`, `BasicBoard.normalize_traces()`, and `AutorouteBatchLoop.run()` interact — established during the Issue 676 regression investigation.
 
-## `PolylineTrace.normalize()` depth limit
+## `PolylineTraceNormalization.normalize()` depth limit
 
-`PolylineTrace.MAX_NORMALIZATION_DEPTH` (= 34) caps the recursion depth in the private `normalize(IntOctagon, int)` method. **Prior to the fix, exceeding the cap threw `Exception("Max normalization depth reached…")`.** This was silently swallowed by a try-catch in `InsertFoundConnectionAlgo` and logged as:
+`PolylineTraceNormalization.MAX_NORMALIZATION_DEPTH` (= 16) caps the recursion depth of trace normalization. **Exceeding the cap returns `false` (no further change at that depth level) instead of throwing** — an exception here used to be swallowed by a caller try-catch and surfaced only as:
 > `WARNING The normalization of net 'GND' failed.`
 
-**Fix applied:** The `throw` was replaced with `FRLogger.debug(…) + return false`. `return false` is safe because the outer while-loop in `normalize_traces` treats it as "no change for this trace" and continues to the next trace, terminating normally. Both `public normalize(IntOctagon)` and `private normalize(IntOctagon, int)` no longer declare `throws Exception`, and all callers (in `InsertFoundConnectionAlgo`, `PullTightAlgo`, and `Wiring.java`) have had their try-catch wrappers removed.
+`return false` is safe because the outer loop in `normalize_traces` treats it as "no change for this trace" and continues to the next trace, terminating normally. `normalize()` declares no checked exception.
 
 ## `PolylineTrace.combine_at_end()` null search-tree entries
 
@@ -430,34 +437,23 @@ Key facts about how `PolylineTrace.normalize()`, `BasicBoard.normalize_traces()`
 1. **Full remove + re-insert** — used when `joined_polyline.arr.length != new_line_count` (parallel lines were skipped at the join).
 2. **Optimised merge via `merge_entries_at_end`** — reuses existing search-tree leaf nodes for performance.
 
-Path 2 calls `p_to_trace.get_search_tree_entries(tree)` and `p_from_trace.get_search_tree_entries(tree)`. Either can return `null` if the trace has no entries in the given search tree (e.g. it was freshly inserted or its entries were cleared). This caused a `NullPointerException` inside `ShapeSearchTree.merge_entries_at_end` at line 237, visible in the stack as:
+Path 2 calls `p_to_trace.get_search_tree_entries(tree)` and `p_from_trace.get_search_tree_entries(tree)`. Either can return `null` if the trace has no entries in the given search tree (e.g. it was freshly inserted or its entries were cleared). This caused a `NullPointerException` inside `ShapeSearchTree.merge_entries_at_end`, visible in the stack as:
 ```
 NullPointerException: Cannot load from object array because "to_trace_entries" is null
-    at ShapeSearchTree.merge_entries_at_end(ShapeSearchTree.java:237)
-    at PolylineTrace.combine_at_end(PolylineTrace.java:395)
-    at PolylineTrace.normalize(PolylineTrace.java:776)
+ at ShapeSearchTree.merge_entries_at_end(ShapeSearchTree.java:237)
+ at PolylineTrace.combine_at_end(PolylineTrace.java:395)
+ at PolylineTrace.normalize(PolylineTrace.java:776)
 ```
-Previously this NPE was hidden because the old try-catch in `InsertFoundConnectionAlgo` also caught `RuntimeException` (via `Exception`).
 
-**Fix applied (in `PolylineTrace.combine_at_end`):** Before choosing path 2, check whether both `this` and `other_trace` have entries in the default search tree (`board.search_tree_manager.get_default_tree()`). If either is null, fall back to path 1 (the safe full-remove + re-insert). This guard lives entirely in `combine_at_end` so the tree-management code in `ShapeSearchTree` does not need to be changed.
-
-```java
-boolean hasTreeEntries =
-    (this.get_search_tree_entries(board.search_tree_manager.get_default_tree()) != null)
-    && (other_trace.get_search_tree_entries(board.search_tree_manager.get_default_tree()) != null);
-if (joined_polyline.arr.length != new_line_count || !hasTreeEntries) {
-    // fall back to full remove + re-insert
-    ...
-}
-```
+**Fix applied (via `PolylineTraceSearchTreeAdapter.hasDefaultEntries`):** Before choosing path 2, `combine_at_end` checks whether both `this` and `other_trace` have entries in the default search tree (`board.search_tree_manager.get_default_tree()`). If either is null, it falls back to path 1 (the safe full-remove + re-insert).
 
 > **Why the default tree is sufficient for the guard:** All traces are always inserted into the default tree. Compensated trees are built on top of it. If a trace is missing from the default tree it is definitionally not in any compensated tree either.
 
-## `BatchAutorouter` same-board-hash stop detection
+## `AutorouteBatchLoop` same-board-hash tracking
 
-v1.9 maintained an `already_checked_board_hashes` set. Between passes it computed a board hash; if the same hash appeared twice, it stopped routing. The new `BatchAutorouter` lacked this, so when GND plane items kept being queued and attempted without changing board state the router looped endlessly with score 0.
+v1.9 maintained an `already_checked_board_hashes` set. Between passes it computed a board hash; if the same hash appeared twice, it stopped routing.
 
-**Fix applied:** `runBatchLoop()` now maintains an `alreadyRoutedBoardHashes` `HashSet<String>`. Before each pass, the current board hash is checked; if already seen, the router logs an explanatory message and calls `thread.request_stop_auto_router()`. The set is cleared whenever a previous board state is restored (ripup + retry cycle) so that the restored state can be routed again with a higher ripup cost.
+**Current state:** `AutorouteBatchLoop.run()` declares an `alreadyRoutedBoardHashes` `HashSet<String>`, but the same-hash early stop is **disabled (commented out)** — per-pass ripup budgets and random seeds change each pass, so an identical hash can still make progress later. Stagnation is instead handled by the `BoardHistory` restore check, which uses a strict `>` comparison so equally-scored boards do not trigger unbounded restores. The hash set is still cleared whenever a previous board state is restored (ripup + retry cycle), so a restored state can be routed again with a higher ripup cost.
 
 ## `BoardStatistics.getNormalizedScore()` division by zero / NaN
 
@@ -469,7 +465,7 @@ v1.9 maintained an `already_checked_board_hashes` set. Between passes it compute
 
 | Symptom | Root cause | Fix location |
 |---|---|---|
-| `WARNING The normalization of net 'GND' failed.` (every pass) | `PolylineTrace.normalize()` threw `Exception` at max depth | `PolylineTrace.normalize()` — throw → `return false` |
-| `NullPointerException` in `merge_entries_at_end` | Trace missing search-tree entries, `combine_at_end` chose optimised path | `PolylineTrace.combine_at_end()` — null guard before path 2 |
+| `WARNING The normalization of net 'GND' failed.` (every pass) | `PolylineTraceNormalization` hit the max depth and threw | `PolylineTraceNormalization` — throw → debug + `return false` |
+| `NullPointerException` in `merge_entries_at_end` | Trace missing search-tree entries, `combine_at_end` chose optimised path | `PolylineTrace.combine_at_end()` — `PolylineTraceSearchTreeAdapter.hasDefaultEntries` guard before path 2 |
 | Score always 0 | `getNormalizedScore()` divided by 0 when board fully routed | `BoardStatistics.getNormalizedScore()` — `<= 0` guard |
-| Router loops endlessly on same board | No board-hash stagnation detection | `BatchAutorouter.runBatchLoop()` — `alreadyRoutedBoardHashes` set |
+| Router loops endlessly on same board | No board-hash stagnation detection | `AutorouteBatchLoop.run()` — same-hash early stop currently disabled (see above); stagnation handled by the `BoardHistory` strict-`>` restore check |

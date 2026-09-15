@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "Dekada_dekada_TopoR_curves",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 175229,
+      "sha256": "18f31ef18ec7661b68f4aa0d3527a63b7c356e8f17626b4a00072f8f1242cc9e"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 183287,
+      "sha256": "c8fe7a575475c60f498a7532ded1d1399339a29e74469bcfa7a1521188f90e81"
+    },
+    "metadata_json": {
+      "bytes": 486,
+      "sha256": "b5e35e057bf78c1d1fe395f103c53e1d2b36a9aae1c1ab93b15227860bd7afd7"
+    },
+    "final_json": {
+      "bytes": 137087,
+      "sha256": "ebc9e080b8bc0b3f628a53ca3da8e22b78f67cffb2c9795bd55f1aa178107f7f"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T18:41:04.594155+00:00"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "board": "wifi-iot-core-hw_wifi-iot-core-hw",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\wifi-iot-core-hw_wifi-iot-core-hw\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 42,
+  "segment_count": 656,
+  "approximate_track_length_mm": 1371.49,
+  "kicad_drc_violations": 612,
+  "generated_at": "2026-08-18T19:56:48.357082+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 612,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 284,
+      "copper_edge_clearance": 3,
+      "courtyards_overlap": 15,
+      "drill_out_of_range": 2,
+      "hole_clearance": 2,
+      "lib_footprint_issues": 52,
+      "malformed_courtyard": 8,
+      "solder_mask_bridge": 199,
+      "starved_thermal": 6,
+      "text_height": 39,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 519,
+      "warning": 93
+    }
+  }
+}

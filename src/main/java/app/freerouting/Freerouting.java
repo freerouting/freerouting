@@ -1,5 +1,11 @@
 package app.freerouting;
 
+import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.analytics.NetworkProxyConfig;
+import app.freerouting.analytics.ProcessEnvironmentDetector;
+import app.freerouting.analytics.model.ActorType;
+import app.freerouting.analytics.model.JobLifecycleStatus;
+import app.freerouting.analytics.model.PipelineType;
 import app.freerouting.api.AppContextListener;
 import app.freerouting.api.mcp.McpApplication;
 import app.freerouting.api.mcp.McpContextListener;
@@ -7,18 +13,21 @@ import app.freerouting.api.mcp.McpWebSocketEndpoint;
 import app.freerouting.constants.Constants;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.RoutingJobState;
+import app.freerouting.core.results.RoutingResultManifest;
 import app.freerouting.drc.DesignRulesChecker;
-import app.freerouting.gui.DefaultExceptionHandler;
-import app.freerouting.gui.GuiManager;
+import app.freerouting.gui.board.GuiManager;
+import app.freerouting.gui.support.DefaultExceptionHandler;
+import app.freerouting.io.FileFormat;
+import app.freerouting.io.kicad.KiCadDrcReport;
 import app.freerouting.io.specctra.SesImportSummary;
 import app.freerouting.io.specctra.SesReader;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.BoardLoader;
-import app.freerouting.management.SessionManager;
-import app.freerouting.management.analytics.FRAnalytics;
+import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.ApiServerSettings;
 import app.freerouting.settings.GlobalSettings;
 import app.freerouting.settings.McpServerSettings;
+import app.freerouting.settings.RuntimeEnvironment;
 import app.freerouting.settings.SettingsMerger;
 import app.freerouting.settings.sources.CliSettings;
 import app.freerouting.settings.sources.DefaultSettings;
@@ -123,13 +132,29 @@ public class Freerouting {
     settingsMerger.addOrReplaceSources(
         new DsnFileSettings(routingJob.input.getData(), routingJob.input.getFilename()));
 
+    if (globalSettings.initialRulesFile != null) {
+      try {
+        routingJob.setRules(globalSettings.initialRulesFile);
+        if (routingJob.rules != null && routingJob.rules.getData() != null) {
+          settingsMerger.addOrReplaceSources(
+              new app.freerouting.settings.sources.RulesFileSettings(
+                  routingJob.rules.getData(), routingJob.rules.getFilename()));
+        }
+      } catch (Exception e) {
+        FRLogger.warn(
+            "Couldn't load rules file '"
+                + globalSettings.initialRulesFile
+                + "': "
+                + e.getMessage());
+      }
+    }
+
     routingJob.routerSettings = settingsMerger.merge();
     routingJob.drcSettings = Freerouting.globalSettings.drcSettings.clone();
     routingJob.state = RoutingJobState.READY_TO_START;
 
-    // Wait for the RoutingJobScheduler to do its work
-    while ((routingJob.state != RoutingJobState.COMPLETED)
-        && (routingJob.state != RoutingJobState.TERMINATED)) {
+    // Wait for the RoutingJobScheduler to finish (success, timeout, cancel, or error).
+    while (!isCliTerminalState(routingJob.state)) {
       try {
         Thread.sleep(500);
       } catch (InterruptedException _) {
@@ -138,40 +163,215 @@ public class Freerouting {
       }
     }
 
-    // Save the output file
-    if (routingJob.state == RoutingJobState.COMPLETED) {
-      try {
-        Path outputFilePath = Path.of(globalSettings.initialOutputFile);
-        Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
-      } catch (IOException e) {
-        FRLogger.error(
-            "Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
-      }
+    boolean outputWritten = writeCliOutputIfAvailable(globalSettings, routingJob);
+    int cliExitCode = computeCliExitCode(routingJob, outputWritten);
+    writeCliResultManifestIfRequested(globalSettings, routingJob, outputWritten, cliExitCode);
 
-      // Print a sponsor/success-story message to stdout (not the log) once the
-      // condition is met: ≥5 completed jobs and the user has not yet saved their email
-      if ((globalSettings.statistics.jobsCompleted >= 5)
-          && globalSettings.userProfileSettings.userEmail.isEmpty()) {
-        String nl = System.lineSeparator();
-        IO.println(
-            nl
-                + "╔══════════════════════════════════════════════════════════════════╗"
-                + nl
-                + "║           Thank you for using Freerouting!                       ║"
-                + nl
-                + "║                                                                  ║"
-                + nl
-                + "║  If you would like to support the project, please consider       ║"
-                + nl
-                + "║  sponsoring me at https://github.com/sponsors/andrasfuchs        ║"
-                + nl
-                + "║  Even a small monthly donation is greatly appreciated!           ║"
-                + nl
-                + "╚══════════════════════════════════════════════════════════════════╝");
+    if (outputWritten
+        && (globalSettings.statistics.jobsCompleted >= 5)
+        && globalSettings.userProfileSettings.userEmail.isEmpty()) {
+      String nl = System.lineSeparator();
+      IO.println(
+          nl
+              + "╔══════════════════════════════════════════════════════════════════╗"
+              + nl
+              + "║           Thank you for using Freerouting!                       ║"
+              + nl
+              + "║                                                                  ║"
+              + nl
+              + "║  If you would like to support the project, please visit          ║"
+              + nl
+              + "║  https://www.freerouting.app/donate.html                         ║"
+              + nl
+              + "║  Every contribution helps keep this project open and active!     ║"
+              + nl
+              + "╚══════════════════════════════════════════════════════════════════╝");
+    }
+
+    // Emit consolidated batch job summary telemetry for CLI batch execution
+    try {
+      JobLifecycleStatus status =
+          switch (routingJob.state) {
+            case COMPLETED ->
+                (cliExitCode == 0 ? JobLifecycleStatus.SUCCEEDED : JobLifecycleStatus.FAILED);
+            case TIMED_OUT -> JobLifecycleStatus.TIMED_OUT;
+            case CANCELLED -> JobLifecycleStatus.CANCELLED;
+            default -> JobLifecycleStatus.FAILED;
+          };
+      String failureReason =
+          cliExitCode != 0 ? "CLI exit code " + cliExitCode + " (" + routingJob.state + ")" : null;
+      var stats = routingJob.board != null ? routingJob.board.getStatistics() : null;
+      Integer netsTotal = stats != null && stats.nets != null ? stats.nets.totalCount : null;
+      Integer netsIncomplete =
+          stats != null && stats.connections != null ? stats.connections.incompleteCount : null;
+      Integer clearanceViolations =
+          stats != null && stats.clearanceViolations != null
+              ? stats.clearanceViolations.totalCount
+              : null;
+      Float normalizedScore =
+          stats != null && routingJob.routerSettings != null
+              ? stats.getRouterScore(routingJob.routerSettings)
+              : null;
+      int totalPasses =
+          routingJob.routerSettings != null
+                  && routingJob.routerSettings.autorouter.maxPasses != null
+              ? routingJob.routerSettings.autorouter.maxPasses
+              : 0;
+      double runtimeSeconds =
+          routingJob.startedAt != null
+              ? java.time.Duration.between(routingJob.startedAt, java.time.Instant.now()).toMillis()
+                  / 1000.0
+              : 0.0;
+      String inputBasename =
+          globalSettings.initialInputFile != null
+              ? java.nio.file.Path.of(globalSettings.initialInputFile).getFileName().toString()
+              : "unknown.dsn";
+
+      FRAnalytics.recordBatchJobSummary(
+          routingJob.id.toString(),
+          cliSession.id.toString(),
+          inputBasename,
+          cliExitCode,
+          status,
+          failureReason,
+          netsTotal,
+          netsIncomplete,
+          clearanceViolations,
+          normalizedScore,
+          totalPasses,
+          runtimeSeconds,
+          routingJob.resourceUsage.cpuTimeUsed,
+          routingJob.resourceUsage.peakMemoryUsed,
+          routingJob.getDetectedHost(),
+          null);
+      FRAnalytics.flush(1500);
+    } catch (Throwable ex) {
+      FRLogger.warn("Failed to record batch job summary: " + ex.getMessage());
+    }
+
+    globalSettings.cliExitCode = cliExitCode;
+    return cliExitCode == 0;
+  }
+
+  private static boolean isCliTerminalState(RoutingJobState state) {
+    return state == RoutingJobState.COMPLETED
+        || state == RoutingJobState.TERMINATED
+        || state == RoutingJobState.TIMED_OUT
+        || state == RoutingJobState.CANCELLED;
+  }
+
+  private static boolean writeCliOutputIfAvailable(
+      GlobalSettings globalSettings, RoutingJob routingJob) {
+    if (routingJob.output == null || routingJob.output.getData() == null) {
+      return false;
+    }
+    if (routingJob.state != RoutingJobState.COMPLETED
+        && routingJob.state != RoutingJobState.TIMED_OUT) {
+      return false;
+    }
+
+    boolean anyWritten = false;
+    try {
+      Path outputFilePath = Path.of(globalSettings.initialOutputFile);
+      FRLogger.info(
+          "Saving output file '"
+              + outputFilePath.toAbsolutePath()
+              + "' ("
+              + routingJob.output.format
+              + ")...");
+      Files.write(outputFilePath, routingJob.output.getData().readAllBytes());
+      if (Files.exists(outputFilePath) && Files.size(outputFilePath) > 0) {
+        FRLogger.info(
+            "Successfully saved output file '"
+                + outputFilePath.toAbsolutePath()
+                + "' ("
+                + Files.size(outputFilePath)
+                + " bytes).");
+        anyWritten = true;
+      }
+    } catch (IOException e) {
+      FRLogger.error("Couldn't save the output file '" + globalSettings.initialOutputFile + "'", e);
+    }
+
+    // Write any additional output files specified via -do (multi-format support)
+    if (globalSettings.additionalOutputFiles != null
+        && !globalSettings.additionalOutputFiles.isEmpty()
+        && routingJob.board != null) {
+      for (String addPathStr : globalSettings.additionalOutputFiles) {
+        try {
+          Path addPath = Path.of(addPathStr);
+          FileFormat fmt = RoutingJob.getFileFormat(addPath);
+          if (fmt == FileFormat.UNKNOWN) {
+            String lower = addPathStr.toLowerCase(Locale.ROOT);
+            if (lower.endsWith(".drc.json") || lower.endsWith(".drc")) {
+              fmt = FileFormat.DRC_JSON;
+            }
+          }
+          if (fmt != FileFormat.UNKNOWN) {
+            var outResult =
+                app.freerouting.io.MultiOutputGenerator.generateOutputs(
+                    routingJob.board,
+                    routingJob.name,
+                    java.util.Set.of(fmt),
+                    routingJob.drcSettings,
+                    false);
+            byte[] bytes = outResult.getFile(fmt);
+            if (bytes != null) {
+              if (addPath.getParent() != null) {
+                Files.createDirectories(addPath.getParent());
+              }
+              Files.write(addPath, bytes);
+              FRLogger.info(
+                  "Successfully saved additional output file '"
+                      + addPath.toAbsolutePath()
+                      + "' ("
+                      + Files.size(addPath)
+                      + " bytes).");
+              anyWritten = true;
+            }
+          }
+        } catch (Exception ex) {
+          FRLogger.error("Failed to write additional output file '" + addPathStr + "'", ex);
+        }
       }
     }
 
-    return true;
+    return anyWritten;
+  }
+
+  private static int computeCliExitCode(RoutingJob routingJob, boolean outputWritten) {
+    if (routingJob.state == RoutingJobState.COMPLETED && outputWritten) {
+      return 0;
+    }
+    if (routingJob.state == RoutingJobState.TIMED_OUT && outputWritten) {
+      return 0;
+    }
+    return 1;
+  }
+
+  private static void writeCliResultManifestIfRequested(
+      GlobalSettings globalSettings, RoutingJob routingJob, boolean outputWritten, int exitCode) {
+    if (routingJob.routerSettings == null
+        || routingJob.routerSettings.resultJsonPath == null
+        || routingJob.routerSettings.resultJsonPath.isBlank()) {
+      return;
+    }
+    try {
+      RoutingResultManifest manifest =
+          RoutingResultManifest.fromJob(
+              routingJob,
+              globalSettings.initialInputFile,
+              outputWritten,
+              exitCode,
+              globalSettings.runtimeEnvironment.cpuScore);
+      RoutingResultManifest.write(Path.of(routingJob.routerSettings.resultJsonPath), manifest);
+    } catch (IOException e) {
+      FRLogger.error(
+          "Couldn't write routing result manifest to '"
+              + routingJob.routerSettings.resultJsonPath
+              + "'",
+          e);
+    }
   }
 
   private static boolean initializeDrc(GlobalSettings globalSettings) {
@@ -202,6 +402,26 @@ public class Freerouting {
     if (!BoardLoader.loadBoardIfNeeded(drcJob)) {
       FRLogger.error("Failed to load board for DRC check", null);
       System.exit(1);
+    }
+
+    // Load rules file if specified for DRC
+    if (globalSettings.initialRulesFile != null) {
+      try {
+        java.io.File rulesFile = new java.io.File(globalSettings.initialRulesFile);
+        if (rulesFile.exists()) {
+          FRLogger.info("Loading RULES file for DRC: " + globalSettings.initialRulesFile);
+          try (java.io.FileInputStream rulesStream = new java.io.FileInputStream(rulesFile)) {
+            String designName = drcJob.name != null ? drcJob.name : "board";
+            app.freerouting.io.specctra.RulesReader.read(
+                rulesStream, designName, drcJob.board, drcJob.routerSettings);
+            FRLogger.info("RULES file loaded for DRC successfully");
+          }
+        } else {
+          FRLogger.warn("RULES file for DRC not found: " + globalSettings.initialRulesFile);
+        }
+      } catch (Exception e) {
+        FRLogger.error("Failed to load RULES file for DRC", e);
+      }
     }
 
     // Load session file if specified for DRC
@@ -248,8 +468,7 @@ public class Freerouting {
 
     // Generate DRC report
     String sourceFileName = new File(globalSettings.initialInputFile).getName();
-    app.freerouting.drc.DrcReport report =
-        drcChecker.generateReport(sourceFileName, coordinateUnit);
+    KiCadDrcReport report = drcChecker.generateReport(sourceFileName, coordinateUnit);
 
     // Calculate final quality score for DRC report
     try {
@@ -258,7 +477,8 @@ public class Freerouting {
           new DsnFileSettings(drcJob.input.getData(), drcJob.input.getFilename()));
       var routerSettings = settingsMerger.merge();
       var finalStats = drcJob.board.getStatistics();
-      report.qualityScore = (double) finalStats.getNormalizedScore(routerSettings.scoring);
+      report.qualityScore = (double) finalStats.getRouterScore(routerSettings);
+      report.optimizerScore = (double) finalStats.getOptimizerScore(routerSettings);
     } catch (Exception e) {
       FRLogger.warn("Failed to calculate quality score for DRC report: " + e.getMessage());
     }
@@ -328,8 +548,9 @@ public class Freerouting {
       // Check if the protocol is HTTP or HTTPS
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
         FRLogger.warn(
-            "Can't use the endpoint '%s' for the API server, because its protocol is not HTTP "
-                + "or HTTPS.".formatted(endpointUrl));
+            ("Can't use the endpoint '%s' for the API server, because its protocol is not HTTP "
+                    + "or HTTPS.")
+                .formatted(endpointUrl));
         continue;
       }
 
@@ -341,10 +562,12 @@ public class Freerouting {
         continue;
       }
 
-      // Warn the user that HTTPS is not implemented yet
+      // Fail closed when HTTPS is requested, because TLS is not implemented yet
       if ("https".equals(protocol)) {
         FRLogger.warn(
-            "HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+            "HTTPS endpoint '%s' cannot be initialized because TLS is not implemented yet; rejecting plaintext fallback."
+                .formatted(endpointUrl));
+        continue;
       }
 
       String hostAndPort = endpointParts[1];
@@ -366,10 +589,15 @@ public class Freerouting {
     // Configure CORS if origins are provided
     if (apiServerSettings.corsOrigins != null && !"".equals(apiServerSettings.corsOrigins)) {
       String allowedOrigins = apiServerSettings.corsOrigins;
+      Set<String> originPatterns = splitCommaSeparated(allowedOrigins);
+      boolean hasWildcard = originPatterns.contains("*");
+      if (hasWildcard) {
+        FRLogger.warn("CORS configured with wildcard origin; disabling allowCredentials.");
+      }
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
-      corsHandler.setAllowCredentials(true);
-      corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
+      corsHandler.setAllowCredentials(!hasWildcard);
+      corsHandler.setAllowedOriginPatterns(originPatterns);
       corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
       corsHandler.setAllowedHeaders(
           Set.of(
@@ -396,7 +624,8 @@ public class Freerouting {
     // Set up the Jersey Servlet that handles the API
     ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
     jerseyServlet.setInitOrder(0);
-    jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "app.freerouting.api");
+    jerseyServlet.setInitParameter(
+        "jakarta.ws.rs.Application", "app.freerouting.api.FreeroutingApplication");
     jerseyServlet.setInitParameter("jersey.config.application.disableJsonBinding", "true");
 
     // Add Listeners
@@ -413,7 +642,8 @@ public class Freerouting {
     }
 
     // Keep the caller responsive after the server has bound its connectors.
-    new Thread(
+    Thread apiJoinThread =
+        new Thread(
             () -> {
               try {
                 apiServer.join();
@@ -423,10 +653,23 @@ public class Freerouting {
                   globalSettings.apiServerSettings.isRunning = false;
                 }
               }
-            })
-        .start();
+            },
+            "api-server-join");
+    apiJoinThread.setDaemon(true);
+    apiJoinThread.start();
 
     return apiServer;
+  }
+
+  /** Stops the API server if it is currently running. */
+  public static void stopApiServer() {
+    if (apiServer != null && apiServer.isRunning()) {
+      try {
+        apiServer.stop();
+      } catch (Exception e) {
+        FRLogger.error("Error stopping API server", e);
+      }
+    }
   }
 
   /**
@@ -452,8 +695,9 @@ public class Freerouting {
 
       if (!"http".equals(protocol) && !"https".equals(protocol)) {
         FRLogger.warn(
-            "Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP "
-                + "or HTTPS.".formatted(endpointUrl));
+            ("Can't use the endpoint '%s' for the MCP server, because its protocol is not HTTP "
+                    + "or HTTPS.")
+                .formatted(endpointUrl));
         continue;
       }
 
@@ -464,9 +708,12 @@ public class Freerouting {
         continue;
       }
 
+      // Fail closed when HTTPS is requested, because TLS is not implemented yet
       if ("https".equals(protocol)) {
         FRLogger.warn(
-            "HTTPS support is not implemented yet, falling back to HTTP.".formatted(endpointUrl));
+            "HTTPS endpoint '%s' cannot be initialized because TLS is not implemented yet; rejecting plaintext fallback."
+                .formatted(endpointUrl));
+        continue;
       }
 
       String hostAndPort = endpointParts[1];
@@ -486,10 +733,15 @@ public class Freerouting {
 
     if (mcpServerSettings.corsOrigins != null && !"".equals(mcpServerSettings.corsOrigins)) {
       String allowedOrigins = mcpServerSettings.corsOrigins;
+      Set<String> originPatterns = splitCommaSeparated(allowedOrigins);
+      boolean hasWildcard = originPatterns.contains("*");
+      if (hasWildcard) {
+        FRLogger.warn("MCP CORS configured with wildcard origin; disabling allowCredentials.");
+      }
 
       CrossOriginHandler corsHandler = new CrossOriginHandler();
-      corsHandler.setAllowCredentials(true);
-      corsHandler.setAllowedOriginPatterns(splitCommaSeparated(allowedOrigins));
+      corsHandler.setAllowCredentials(!hasWildcard);
+      corsHandler.setAllowedOriginPatterns(originPatterns);
       corsHandler.setAllowedMethods(Set.of("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
       corsHandler.setAllowedHeaders(
           Set.of(
@@ -535,7 +787,8 @@ public class Freerouting {
     }
 
     // Keep the caller responsive after the server has bound its connectors.
-    new Thread(
+    Thread mcpJoinThread =
+        new Thread(
             () -> {
               try {
                 mcpServer.join();
@@ -545,8 +798,10 @@ public class Freerouting {
                   globalSettings.mcpServerSettings.isRunning = false;
                 }
               }
-            })
-        .start();
+            },
+            "mcp-server-join");
+    mcpJoinThread.setDaemon(true);
+    mcpJoinThread.start();
 
     return mcpServer;
   }
@@ -702,6 +957,74 @@ public class Freerouting {
     return folderPath.resolve(filename).normalize().toAbsolutePath();
   }
 
+  private static boolean compareBoardFiles(String file1Path, String file2Path) {
+    FRLogger.info("Starting comparison of board files: " + file1Path + " and " + file2Path);
+    try {
+      java.io.File file1 = new java.io.File(file1Path);
+      java.io.File file2 = new java.io.File(file2Path);
+      if (!file1.exists()) {
+        FRLogger.error("Comparison file 1 does not exist: " + file1Path, null);
+        return false;
+      }
+      if (!file2.exists()) {
+        FRLogger.error("Comparison file 2 does not exist: " + file2Path, null);
+        return false;
+      }
+
+      app.freerouting.board.facade.RoutingBoard board1 = loadBoardFromFile(file1);
+      app.freerouting.board.facade.RoutingBoard board2 = loadBoardFromFile(file2);
+
+      if (board1 == null || board2 == null) {
+        FRLogger.error("Failed to load one or both boards for comparison.", null);
+        return false;
+      }
+
+      app.freerouting.board.state.BoardComparator.ComparisonResult result =
+          app.freerouting.board.state.BoardComparator.compare(board1, board2, 1e-3);
+
+      IO.println(result.report);
+
+      if (result.areEqual) {
+        FRLogger.info("SUCCESS: Boards are identical.");
+      } else {
+        FRLogger.warn("WARNING: Differences detected between the loaded boards.");
+      }
+      return result.areEqual;
+    } catch (Exception e) {
+      FRLogger.error("Error during board files comparison: " + e.getMessage(), e);
+      return false;
+    }
+  }
+
+  private static app.freerouting.board.facade.RoutingBoard loadBoardFromFile(java.io.File file)
+      throws Exception {
+    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
+      if (file.getName().toLowerCase().endsWith(".json")) {
+        try (java.io.Reader r =
+            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
+          app.freerouting.io.BoardReadResult readResult =
+              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
+          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+            return (app.freerouting.board.facade.RoutingBoard) success.board();
+          } else if (readResult
+              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+            return (app.freerouting.board.facade.RoutingBoard) outlineMissing.board();
+          }
+        }
+      } else {
+        app.freerouting.io.BoardReadResult readResult =
+            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
+        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
+          return (app.freerouting.board.facade.RoutingBoard) success.board();
+        } else if (readResult
+            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
+          return (app.freerouting.board.facade.RoutingBoard) outlineMissing.board();
+        }
+      }
+    }
+    return null;
+  }
+
   /**
    * The entry point of the Freerouting application.
    *
@@ -735,9 +1058,9 @@ public class Freerouting {
 
     // the first thing we need to do is to determine the user directory, because all
     // settings and logs will be located there
-    // 1, set it to the temp directory by default
-    Path userdataPath = Path.of(System.getProperty("java.io.tmpdir"), "freerouting");
-    String userdataPathSource = "default (java.io.tmpdir)";
+    // 1, set it to the OS standard user data directory by default
+    Path userdataPath = app.freerouting.settings.AppPaths.getDefaultUserDataPath();
+    String userdataPathSource = "default (OS standard user-data path)";
     // 2, check if we need to override it with the "FREEROUTING__USER_DATA_PATH"
     // environment variable value
     if (System.getenv("FREEROUTING__USER_DATA_PATH") != null) {
@@ -855,6 +1178,13 @@ public class Freerouting {
           consoleLoggingLevel = arg.substring("--logging.console.level=".length());
         } else if (arg.startsWith("--logging.file.location=")) {
           fileLoggingLocation = arg.substring("--logging.file.location=".length());
+        } else if (arg.startsWith("-l=")) {
+          fileLoggingLocation = arg.substring("-l=".length());
+        } else if ("-l".equals(arg)) {
+          int index = Arrays.asList(args).indexOf("-l");
+          if (index >= 0 && index < args.length - 1) {
+            fileLoggingLocation = args[index + 1];
+          }
         } else if (arg.startsWith("--logging.file.pattern=")) {
           fileLoggingPattern = arg.substring("--logging.file.pattern=".length());
         } else if (arg.startsWith("--debug.enable_detailed_logging=")) {
@@ -877,10 +1207,14 @@ public class Freerouting {
     }
 
     // Resolve the log file location
+    Path defaultLogDir =
+        userdataPathSource.startsWith("default")
+            ? app.freerouting.settings.AppPaths.getDefaultLogDirectory()
+            : userdataPath;
     if (fileLoggingLocation == null || fileLoggingLocation.isBlank()) {
-      fileLoggingLocation = resolveLogPath(null, userdataPath).toString();
+      fileLoggingLocation = resolveLogPath(null, defaultLogDir).toString();
     } else {
-      fileLoggingLocation = resolveLogPath(fileLoggingLocation, userdataPath).toString();
+      fileLoggingLocation = resolveLogPath(fileLoggingLocation, defaultLogDir).toString();
     }
 
     // Set system properties for log4j2 ConfigurationFactory to read
@@ -1066,7 +1400,8 @@ public class Freerouting {
     globalSettings.runtimeEnvironment.freeroutingVersion =
         Constants.FREEROUTING_VERSION + "," + Constants.FREEROUTING_BUILD_DATE;
     globalSettings.runtimeEnvironment.appStartedAt = Instant.now();
-    globalSettings.runtimeEnvironment.commandLineArguments = String.join(" ", args);
+    globalSettings.runtimeEnvironment.commandLineArguments =
+        app.freerouting.settings.RuntimeEnvironment.sanitizeCommandLineArguments(args);
     globalSettings.runtimeEnvironment.architecture =
         System.getProperty("os.name")
             + ","
@@ -1079,16 +1414,19 @@ public class Freerouting {
         Locale.getDefault().getLanguage() + "," + Locale.getDefault();
     globalSettings.runtimeEnvironment.cpuCores = Runtime.getRuntime().availableProcessors();
     globalSettings.runtimeEnvironment.ram = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
+    globalSettings.runtimeEnvironment.cpuScore = RuntimeEnvironment.measureCpuScore();
     FRLogger.debug("Version: " + globalSettings.runtimeEnvironment.freeroutingVersion);
     FRLogger.debug(
         "Command line arguments: '" + globalSettings.runtimeEnvironment.commandLineArguments + "'");
     FRLogger.debug("Architecture: " + globalSettings.runtimeEnvironment.architecture);
     FRLogger.debug("Java: " + globalSettings.runtimeEnvironment.java);
     FRLogger.debug("System Language: " + globalSettings.runtimeEnvironment.systemLanguage);
-    FRLogger.debug(
+    FRLogger.info(
         "Hardware: "
             + globalSettings.runtimeEnvironment.cpuCores
-            + " CPU cores,"
+            + " CPU cores, "
+            + globalSettings.runtimeEnvironment.cpuScore
+            + " CPU score, "
             + globalSettings.runtimeEnvironment.ram
             + " MB RAM");
     FRLogger.debug("UTC Time: " + globalSettings.runtimeEnvironment.appStartedAt);
@@ -1099,6 +1437,22 @@ public class Freerouting {
     if (globalSettings.compareFile1 != null && globalSettings.compareFile2 != null) {
       boolean success = compareBoardFiles(globalSettings.compareFile1, globalSettings.compareFile2);
       System.exit(success ? 0 : 1);
+    }
+
+    if (globalSettings.calculateBenchmarkScores) {
+      if (globalSettings.benchmarkScoresInput == null
+          || globalSettings.benchmarkScoresOutput == null) {
+        FRLogger.error(
+            "Both --input=<path> and --output=<path> must be specified with"
+                + " --calculate-benchmark-scores",
+            null);
+        System.exit(1);
+      }
+      int exitCode =
+          app.freerouting.core.scoring.BenchmarkScoreCalculator.run(
+              Path.of(globalSettings.benchmarkScoresInput),
+              Path.of(globalSettings.benchmarkScoresOutput));
+      System.exit(exitCode);
     }
 
     FRLogger.debug("GUI Language: " + globalSettings.currentLocale);
@@ -1132,6 +1486,9 @@ public class Freerouting {
 
     boolean allowAnalytics = false;
 
+    // configure corporate proxy and truststores
+    NetworkProxyConfig.configure(globalSettings.networkSettings);
+
     // initialize analytics
     FRAnalytics.setAccessKey(
         Constants.FREEROUTING_VERSION, globalSettings.usageAndDiagnosticData.loggerKey);
@@ -1156,10 +1513,40 @@ public class Freerouting {
     FRAnalytics.setEnabled(allowAnalytics);
     FRAnalytics.setUserId(
         globalSettings.userProfileSettings.userId, globalSettings.userProfileSettings.userEmail);
+
+    boolean isMcpEnabled = globalSettings.mcpServerSettings.isEnabled;
+    boolean isMcpStdio = Boolean.TRUE.equals(globalSettings.mcpServerSettings.isStdioMode);
+    boolean isApiEnabled = globalSettings.apiServerSettings.isEnabled;
+    boolean isGuiEnabled = globalSettings.guiSettings.isEnabled;
+    boolean hasInitialInput = globalSettings.initialInputFile != null;
+
+    PipelineType detectedPipeline =
+        ProcessEnvironmentDetector.detectPipelineType(
+            isMcpEnabled, isMcpStdio, isApiEnabled, isGuiEnabled, hasInitialInput);
+
+    ActorType detectedActor =
+        ProcessEnvironmentDetector.detectActorType(
+            detectedPipeline, isGuiEnabled, width == 0 && height == 0, String.join(" ", args));
+
+    String detectedHost =
+        (globalSettings.runtimeEnvironment.host != null
+                && !globalSettings.runtimeEnvironment.host.isBlank()
+                && !"N/A".equals(globalSettings.runtimeEnvironment.host))
+            ? globalSettings.runtimeEnvironment.host
+            : "Freerouting";
+
+    globalSettings.runtimeEnvironment.pipelineType = detectedPipeline.name();
+    globalSettings.runtimeEnvironment.actorType = detectedActor.name();
+
+    FRAnalytics.setExecutionContext(detectedPipeline, detectedActor, detectedHost, "");
+
     FRAnalytics.identify();
     if (!globalSettings.userProfileSettings.userEmail.isBlank()) {
       FRAnalytics.refreshIdentity();
     }
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread(() -> FRAnalytics.flush(1500), "freerouting-analytics-shutdown-flush"));
     try {
       Thread.sleep(1000);
     } catch (Exception _) {
@@ -1179,6 +1566,7 @@ public class Freerouting {
         globalSettings.currentLocale,
         globalSettings.runtimeEnvironment.cpuCores,
         globalSettings.runtimeEnvironment.ram,
+        globalSettings.runtimeEnvironment.cpuScore,
         globalSettings.runtimeEnvironment.host,
         width,
         height,
@@ -1186,7 +1574,9 @@ public class Freerouting {
 
     // check for new version
     VersionChecker checker = new VersionChecker(Constants.FREEROUTING_VERSION);
-    new Thread(checker).start();
+    Thread versionThread = new Thread(checker, "version-checker");
+    versionThread.setDaemon(true);
+    versionThread.start();
 
     // Check if the user requested help
     if (globalSettings.showHelpOption) {
@@ -1252,14 +1642,14 @@ public class Freerouting {
       }
     }
 
-    // If the GUI is disabled and the API server is not running, then we are in CLI mode
+    // If the GUI is disabled, execute CLI routing / DRC or run in daemon mode
     boolean cliResult = true;
-    if (!globalSettings.guiSettings.isEnabled
-        && !globalSettings.apiServerSettings.isRunning
-        && !globalSettings.mcpServerSettings.isRunning) {
+    if (!globalSettings.guiSettings.isEnabled) {
       if (globalSettings.drcReportFile != null) {
         cliResult = initializeDrc(globalSettings);
-      } else {
+      } else if (globalSettings.initialInputFile != null
+          || (!globalSettings.apiServerSettings.isRunning
+              && !globalSettings.mcpServerSettings.isRunning)) {
         cliResult = initializeCli(globalSettings);
       }
     }
@@ -1270,6 +1660,13 @@ public class Freerouting {
       shutdownApplication();
       FRLogger.traceExit("MainApplication.main()");
       System.exit(1);
+    }
+
+    // If a batch CLI job was executed with an input file, shut down and exit immediately
+    if (globalSettings.initialInputFile != null && !globalSettings.guiSettings.isEnabled) {
+      shutdownApplication();
+      FRLogger.traceExit("MainApplication.main()");
+      System.exit(globalSettings.cliExitCode);
     }
 
     while (globalSettings.guiSettings.isRunning
@@ -1285,74 +1682,11 @@ public class Freerouting {
     shutdownApplication();
 
     FRLogger.traceExit("MainApplication.main()");
+    if (!globalSettings.guiSettings.isEnabled
+        && !globalSettings.apiServerSettings.isRunning
+        && !globalSettings.mcpServerSettings.isRunning) {
+      System.exit(globalSettings.cliExitCode);
+    }
     System.exit(0);
-  }
-
-  private static boolean compareBoardFiles(String file1Path, String file2Path) {
-    FRLogger.info("Starting comparison of board files: " + file1Path + " and " + file2Path);
-    try {
-      java.io.File file1 = new java.io.File(file1Path);
-      java.io.File file2 = new java.io.File(file2Path);
-      if (!file1.exists()) {
-        FRLogger.error("Comparison file 1 does not exist: " + file1Path, null);
-        return false;
-      }
-      if (!file2.exists()) {
-        FRLogger.error("Comparison file 2 does not exist: " + file2Path, null);
-        return false;
-      }
-
-      app.freerouting.board.RoutingBoard board1 = loadBoardFromFile(file1);
-      app.freerouting.board.RoutingBoard board2 = loadBoardFromFile(file2);
-
-      if (board1 == null || board2 == null) {
-        FRLogger.error("Failed to load one or both boards for comparison.", null);
-        return false;
-      }
-
-      app.freerouting.board.BoardComparator.ComparisonResult result =
-          app.freerouting.board.BoardComparator.compare(board1, board2, 1e-3);
-
-      IO.println(result.report);
-
-      if (result.areEqual) {
-        FRLogger.info("SUCCESS: Boards are identical.");
-      } else {
-        FRLogger.warn("WARNING: Differences detected between the loaded boards.");
-      }
-      return result.areEqual;
-    } catch (Exception e) {
-      FRLogger.error("Error during board files comparison: " + e.getMessage(), e);
-      return false;
-    }
-  }
-
-  private static app.freerouting.board.RoutingBoard loadBoardFromFile(java.io.File file)
-      throws Exception {
-    try (java.io.InputStream is = new java.io.FileInputStream(file)) {
-      if (file.getName().toLowerCase().endsWith(".json")) {
-        try (java.io.Reader r =
-            new java.io.InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8)) {
-          app.freerouting.io.BoardReadResult readResult =
-              app.freerouting.io.kicad.KiCadJsonReader.readBoard(r, null, null);
-          if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-            return (app.freerouting.board.RoutingBoard) success.board();
-          } else if (readResult
-              instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-            return (app.freerouting.board.RoutingBoard) outlineMissing.board();
-          }
-        }
-      } else {
-        app.freerouting.io.BoardReadResult readResult =
-            app.freerouting.io.specctra.DsnReader.readBoard(is, null, null, file.getName());
-        if (readResult instanceof app.freerouting.io.BoardReadResult.Success success) {
-          return (app.freerouting.board.RoutingBoard) success.board();
-        } else if (readResult
-            instanceof app.freerouting.io.BoardReadResult.OutlineMissing outlineMissing) {
-          return (app.freerouting.board.RoutingBoard) outlineMissing.board();
-        }
-      }
-    }
-    return null;
   }
 }

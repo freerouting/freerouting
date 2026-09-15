@@ -1,0 +1,275 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\kitspace_Mixtape_Barebone\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  104140 -69850  71120 -69850  71120 -52070  104140 -52070
+            104140 -69850)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 400)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component "8BitMixtape_DIY-CAD:Loch_mixtape_seltsam"
+      (place J4_6 88265 -54483 front 0 (PN GND))
+    )
+    (component "8BitMixtape_DIY-CAD:Loch_mixtape_seltsam::1"
+      (place J1 83185 -66929 front 0 (PN PB5))
+      (place J2 85725 -66929 front 0 (PN PB3))
+      (place J3_2 88265 -66929 front 0 (PN PB4))
+      (place J5 90805 -54483 front 0 (PN PB0))
+      (place J4_5 90805 -66929 front 0 (PN GND))
+      (place J8 83185 -54483 front 0 (PN VCC))
+      (place J7 85725 -54483 front 0 (PN PB2))
+    )
+    (component "8BitMixtape_DIY-CAD:GND_Loch_mixtape"
+      (place J4_4 72390 -64770 front 0 (PN GND))
+      (place J4_3 93980 -53975 front 0 (PN GND))
+      (place J4_2 101727 -64897 front 0 (PN GND))
+      (place J4 77470 -53975 front 0 (PN GND))
+    )
+    (component "8BitMixtape_DIY-CAD:Loch_mixtape"
+      (place J10 101600 -57277 front 0 (PN "S-Out"))
+      (place J11 96520 -53975 front 0 (PN LED))
+      (place J3 72390 -57150 front 0 (PN PB4))
+      (place J9 72390 -60960 front 0 (PN Prog))
+      (place J8_2 80010 -53975 front 0 (PN VCC))
+    )
+    (component "8BitMixtape_DIY-CAD:Mixtape_NEO_WS2812B"
+      (place NEO2 96571 -60920 front -90 (PN SK6813b))
+      (place NEO1 77419 -60920 front -90 (PN SK6813b))
+    )
+    (component "8BitMixtape_DIY-CAD:R_1206_Mixtape"
+      (place R7 96615 -59944 back 0 (PN 330))
+      (place R1 77375 -64008 back 0 (PN 22K))
+    )
+    (component "8BitMixtape_DIY-CAD:R_1206_Mixtape::1"
+      (place R6 96615 -57150 back 180 (PN 1K))
+      (place R2 77375 -66675 back 180 (PN 22K))
+    )
+    (component "8BitMixtape_DIY-CAD:C_1210_MixtapeStyle"
+      (place C3 95250 -64802 back 270 (PN 100nF))
+      (place C1 75565 -59023 back 270 (PN 100nF))
+    )
+    (component "8BitMixtape_DIY-CAD:C_1210_MixtapeStyle::1"
+      (place C2 79375 -59023 back 90 (PN 100nF))
+    )
+    (component "8BitMixtape_mCore:Attiny_DIP-8_W7.62mm"
+      (place IC1 83185 -64770 front 90 (PN "ATTINY85-20PU"))
+    )
+  )
+  (library
+    (image "8BitMixtape_DIY-CAD:Loch_mixtape_seltsam"
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 1 0 0)
+      (pin Round[T]Pad_1000.000000_um @1 0 0)
+    )
+    (image "8BitMixtape_DIY-CAD:Loch_mixtape_seltsam::1"
+      (pin Round[A]Pad_2000.000000_um 1 0 0)
+      (pin Round[T]Pad_1000.000000_um @1 0 0)
+    )
+    (image "8BitMixtape_DIY-CAD:GND_Loch_mixtape"
+      (pin Rect[A]Pad_2000.000000x2000.000000_um 1 0 0)
+    )
+    (image "8BitMixtape_DIY-CAD:Loch_mixtape"
+      (pin Round[A]Pad_2000.000000_um 1 0 0)
+    )
+    (image "8BitMixtape_DIY-CAD:Mixtape_NEO_WS2812B"
+      (outline (polygon signal 0  3745 2845  3745 -2845  -3745 -2845  -3745 2845))
+      (outline (path signal 100  0 2000  278.346 1980.54  551.275 1922.52  813.473 1827.09
+            1059.84 1696.1  1285.58 1532.09  1486.29 1338.26  1658.08 1118.39
+            1797.59 876.742  1902.11 618.034  1969.62 347.296  1998.78 69.799
+            1989.04 -209.057  1940.59 -483.844  1854.37 -749.213  1732.05 -1000
+            1576.02 -1231.32  1389.32 -1438.68  1175.57 -1618.03  938.943 -1765.89
+            684.04 -1879.38  415.823 -1956.3  139.513 -1995.13  -139.513 -1995.13
+            -415.823 -1956.3  -684.04 -1879.38  -938.943 -1765.89  -1175.57 -1618.03
+            -1389.32 -1438.68  -1576.02 -1231.32  -1732.05 -1000  -1854.37 -749.213
+            -1940.59 -483.844  -1989.04 -209.057  -1998.78 69.799  -1969.62 347.296
+            -1902.11 618.034  -1797.59 876.742  -1658.08 1118.39  -1486.29 1338.26
+            -1285.58 1532.09  -1059.84 1696.1  -813.473 1827.09  -551.275 1922.52
+            -278.346 1980.54  0 2000))
+      (outline (path signal 100  2500 2500  -2500 2500))
+      (outline (path signal 100  2500 -2500  2500 2500))
+      (outline (path signal 100  -2500 -2500  2500 -2500))
+      (outline (path signal 100  -2500 2500  -2500 -2500))
+      (outline (path signal 100  2500 -1500  1500 -2500))
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 3 2500 -1600)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 4 2500 1600)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 2 -2500 -1600)
+      (pin Rect[T]Pad_1600.000000x1000.000000_um 1 -2500 1600)
+    )
+    (image "8BitMixtape_DIY-CAD:R_1206_Mixtape"
+      (outline (polygon signal 0  -3245 1105  3245 1105  3245 -1095  -3245 -1095))
+      (outline (path signal 120  -1000 1070  1000 1070))
+      (outline (path signal 120  1000 -1070  -1000 -1070))
+      (outline (path signal 100  -1600 800  1600 800))
+      (outline (path signal 100  1600 800  1600 -800))
+      (outline (path signal 100  1600 -800  -1600 -800))
+      (outline (path signal 100  -1600 -800  -1600 800))
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 2 2000 0)
+    )
+    (image "8BitMixtape_DIY-CAD:R_1206_Mixtape::1"
+      (outline (polygon signal 0  3245 -1095  -3245 -1095  -3245 1105  3245 1105))
+      (outline (path signal 120  -1000 1070  1000 1070))
+      (outline (path signal 120  1000 -1070  -1000 -1070))
+      (outline (path signal 100  -1600 800  1600 800))
+      (outline (path signal 100  1600 800  1600 -800))
+      (outline (path signal 100  1600 -800  -1600 -800))
+      (outline (path signal 100  -1600 -800  -1600 800))
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x1700.000000_um 2 2000 0)
+    )
+    (image "8BitMixtape_DIY-CAD:C_1210_MixtapeStyle"
+      (outline (polygon signal 0  3245 1495  3245 -1495  -3245 -1495  -3245 1495))
+      (outline (path signal 120  -1000 -1480  1000 -1480))
+      (outline (path signal 120  1000 1480  -1000 1480))
+      (outline (path signal 100  -1600 1250  1600 1250))
+      (outline (path signal 100  1600 1250  1600 -1250))
+      (outline (path signal 100  1600 -1250  -1600 -1250))
+      (outline (path signal 100  -1600 -1250  -1600 1250))
+      (pin Rect[T]Pad_2000.000000x2500.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x2500.000000_um 2 2000 0)
+    )
+    (image "8BitMixtape_DIY-CAD:C_1210_MixtapeStyle::1"
+      (outline (polygon signal 0  -3245 -1495  -3245 1495  3245 1495  3245 -1495))
+      (outline (path signal 120  -1000 -1480  1000 -1480))
+      (outline (path signal 120  1000 1480  -1000 1480))
+      (outline (path signal 100  -1600 1250  1600 1250))
+      (outline (path signal 100  1600 1250  1600 -1250))
+      (outline (path signal 100  1600 -1250  -1600 -1250))
+      (outline (path signal 100  -1600 -1250  -1600 1250))
+      (pin Rect[T]Pad_2000.000000x2500.000000_um 1 -2000 0)
+      (pin Rect[T]Pad_2000.000000x2500.000000_um 2 2000 0)
+    )
+    (image "8BitMixtape_mCore:Attiny_DIP-8_W7.62mm"
+      (outline (polygon signal 0  -1095 -9145  -1095 1545  8695 1545  8695 -9145))
+      (outline (path signal 100  635 270  1635 1270))
+      (outline (path signal 100  635 -8890  635 270))
+      (outline (path signal 100  6985 -8890  635 -8890))
+      (outline (path signal 100  6985 1270  6985 -8890))
+      (outline (path signal 100  1635 1270  6985 1270))
+      (pin "Oval[A][-200.000000,0.000000]Pad_2200.000000x1800.000000_um" 1 0 0)
+      (pin Oval[A][200.000000,0.000000]Pad_2200.000000x1800.000000_um 5 7620 -7620)
+      (pin "Oval[A][-200.000000,0.000000]Pad_2200.000000x1800.000000_um" 2 0 -2540)
+      (pin Oval[A][200.000000,0.000000]Pad_2200.000000x1800.000000_um 6 7620 -5080)
+      (pin "Oval[A][-200.000000,0.000000]Pad_2200.000000x1800.000000_um" 3 0 -5080)
+      (pin Oval[A][200.000000,0.000000]Pad_2200.000000x1800.000000_um 7 7620 -2540)
+      (pin "Oval[A][-200.000000,0.000000]Pad_2200.000000x1800.000000_um" 4 0 -7620)
+      (pin Oval[A][200.000000,0.000000]Pad_2200.000000x1800.000000_um 8 7620 0)
+    )
+    (padstack Round[T]Pad_1000.000000_um
+      (shape (circle F.Cu 1000))
+      (attach off)
+    )
+    (padstack Round[A]Pad_2000.000000_um
+      (shape (circle F.Cu 2000))
+      (shape (circle B.Cu 2000))
+      (attach off)
+    )
+    (padstack "Oval[A][-200.000000,0.000000]Pad_2200.000000x1800.000000_um"
+      (shape (path F.Cu 1800  -400 0  0 0))
+      (shape (path B.Cu 1800  -400 0  0 0))
+      (attach off)
+    )
+    (padstack Oval[A][200.000000,0.000000]Pad_2200.000000x1800.000000_um
+      (shape (path F.Cu 1800  0 0  400 0))
+      (shape (path B.Cu 1800  0 0  400 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2000.000000x2000.000000_um
+      (shape (rect F.Cu -1000 -1000 1000 1000))
+      (shape (rect B.Cu -1000 -1000 1000 1000))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x2500.000000_um
+      (shape (rect F.Cu -1000 -1250 1000 1250))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_2000.000000x1700.000000_um
+      (shape (rect F.Cu -1000 -850 1000 850))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1600.000000x1000.000000_um
+      (shape (rect F.Cu -800 -500 800 500))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(C1-Pad2)"
+      (pins J9-1 C1-2)
+    )
+    (net VCC
+      (pins J8_2-1 NEO2-1 NEO1-1 R1-1 C2-2 IC1-8 J8-1)
+    )
+    (net GND
+      (pins J4_6-1 J4_5-1 J4_4-1 J4_3-1 J4_2-1 J4-1 NEO2-3 NEO1-3 R2-2 C3-1 C2-1 IC1-4)
+    )
+    (net "Net-(C3-Pad2)"
+      (pins J10-1 R7-1 C3-2)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins J11-1 R6-2)
+    )
+    (net "Net-(IC1-Pad6)"
+      (pins R7-2 R6-1 IC1-6)
+    )
+    (net "Net-(IC1-Pad7)"
+      (pins IC1-7 J7-1)
+    )
+    (net "Net-(IC1-Pad1)"
+      (pins J1-1 IC1-1)
+    )
+    (net Prog
+      (pins J2-1 R2-1 R1-2 C1-1 IC1-2)
+    )
+    (net NEO
+      (pins J5-1 NEO1-4 IC1-5)
+    )
+    (net "Net-(NEO1-Pad2)"
+      (pins NEO2-4 NEO1-2)
+    )
+    (net CV_In
+      (pins J3_2-1 J3-1 IC1-3)
+    )
+    (class kicad_default CV_In GND NEO "Net-(C1-Pad2)" "Net-(C3-Pad2)" "Net-(D1-Pad2)"
+      "Net-(IC1-Pad1)" "Net-(IC1-Pad6)" "Net-(IC1-Pad7)" "Net-(NEO1-Pad2)"
+      Prog VCC
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 400)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "front-end-modules_LimeSDR_Sony",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 1150587,
+      "sha256": "acbce34ad958b29a89c03d24f77587b8605ae45a7c220a594076fdf26393c008"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 694895,
+      "sha256": "8f16bc74837d17e6362389a4e3a51d97cd4b19f753f409683159deea859a6d74"
+    },
+    "metadata_json": {
+      "bytes": 506,
+      "sha256": "62b814f8de01d6daa4f7a2848d4c018ad216c465b18dfb69cc20f2d3c4b06f9b"
+    },
+    "final_json": {
+      "bytes": 724863,
+      "sha256": "d8873093ee053da7e3a166ceb526ec397f62eb4af0ae3d19cc0e0d685d5c4154"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T17:29:08.572636+00:00"
+  }
+}

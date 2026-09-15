@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "board_id": "KiCad-Like-a-Pro-Tutorial_rf24-breakout-v1",
+  "source_files": {
+    "raw_kicad_pcb": {
+      "bytes": 23248,
+      "sha256": "84d05112b93ed8a2ae98f299b89325f1f4453af4e3df15706ca6049cd5f8d106"
+    },
+    "processed_kicad_pcb": {
+      "bytes": 15849,
+      "sha256": "c5a98294f0b3be8a0a08734500f80b82dea0be5e94a051d36135969a70377a9f"
+    },
+    "metadata_json": {
+      "bytes": 537,
+      "sha256": "6548576ffc56923948365f0c9bfcc53eff32e02b8f181f269c1f3a6408319bc9"
+    },
+    "final_json": {
+      "bytes": 11428,
+      "sha256": "e6d2c2f352e10fa1657ba633c7a7206203123beb315ec1e4e94f9cee5817e319"
+    }
+  },
+  "generated_files": {
+    "raw_kicad_pcb": "raw.kicad_pcb",
+    "processed_kicad_pcb": "processed.kicad_pcb",
+    "unrouted_kicad_pcb": "unrouted.kicad_pcb",
+    "unrouted_dsn": "unrouted.dsn",
+    "reference_routed_dsn": "reference-routed.dsn",
+    "ground_truth_json": "ground_truth.json",
+    "metadata_normalized_json": "metadata.normalized.json"
+  },
+  "conversion_tools": {
+    "kicad_version": "10.0.2",
+    "generator": "scripts/pcbench/generate_board_metadata.py",
+    "generated_at": "2026-08-18T19:01:58.440603+00:00"
+  }
+}

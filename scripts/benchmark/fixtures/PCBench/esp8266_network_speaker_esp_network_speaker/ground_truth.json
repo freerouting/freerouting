@@ -1,0 +1,30 @@
+{
+  "board": "esp8266_network_speaker_esp_network_speaker",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\esp8266_network_speaker_esp_network_speaker\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 36,
+  "segment_count": 390,
+  "approximate_track_length_mm": 651.1,
+  "kicad_drc_violations": 115,
+  "generated_at": "2026-08-18T18:47:29.951316+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 115,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 30,
+      "copper_edge_clearance": 20,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 50,
+      "silk_over_copper": 2,
+      "silk_overlap": 1,
+      "text_height": 8,
+      "track_dangling": 1,
+      "via_dangling": 1
+    },
+    "by_severity": {
+      "error": 52,
+      "warning": 63
+    }
+  }
+}

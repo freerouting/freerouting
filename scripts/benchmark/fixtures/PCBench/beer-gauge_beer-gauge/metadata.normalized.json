@@ -1,0 +1,41 @@
+{
+  "board_id": "beer-gauge_beer-gauge",
+  "display_name": "beer-gauge_beer-gauge",
+  "pcbench_directory": "PCBs/beer-gauge_beer-gauge",
+  "source": "https://github.com/jeffkub/beer-gauge",
+  "author": "jeffkub",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:31.549810+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 30,
+    "components": 74,
+    "dimensions_mm": {
+      "width": 69.85,
+      "height": 95.25
+    },
+    "area_cm2": 66.53,
+    "zones": 8
+  },
+  "reference": {
+    "segments": 818,
+    "vias": 151,
+    "track_length_mm": 2064.09,
+    "kicad_drc_violations": null
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

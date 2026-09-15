@@ -1,0 +1,61 @@
+{
+  "board_id": "eeg_brainboardv2",
+  "display_name": "eeg_brainboardv2",
+  "pcbench_directory": "PCBs/eeg_brainboardv2",
+  "source": "https://github.com/gskelly/eeg",
+  "author": "gskelly",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:24.221724+00:00",
+  "cad": {
+    "source_version": "KiCad 3",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 27,
+    "components": 105,
+    "dimensions_mm": {
+      "width": 86.36,
+      "height": 54.61
+    },
+    "area_cm2": 47.16,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 889,
+    "vias": 70,
+    "track_length_mm": 1463.0,
+    "kicad_drc_violations": 952,
+    "kicad_drc_breakdown": {
+      "total_violations": 952,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 499,
+        "copper_edge_clearance": 4,
+        "nonmirrored_text_on_back_layer": 10,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 199,
+        "silk_overlap": 40,
+        "starved_thermal": 4,
+        "text_height": 109,
+        "text_thickness": 83,
+        "track_dangling": 1
+      },
+      "by_severity": {
+        "error": 507,
+        "warning": 445
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "plane",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

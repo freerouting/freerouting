@@ -1,0 +1,36 @@
+{
+  "board": "kitspace_EEZ%20DIB%20MCU%20r1B2",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\kitspace_EEZ%20DIB%20MCU%20r1B2\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 591,
+  "segment_count": 9426,
+  "approximate_track_length_mm": 9089.44,
+  "kicad_drc_violations": 293,
+  "generated_at": "2026-08-18T18:17:38.604913+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 293,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 6,
+      "copper_edge_clearance": 8,
+      "hole_clearance": 12,
+      "items_not_allowed": 3,
+      "lib_footprint_issues": 194,
+      "nonmirrored_text_on_back_layer": 1,
+      "shorting_items": 5,
+      "silk_edge_clearance": 16,
+      "silk_over_copper": 5,
+      "silk_overlap": 10,
+      "solder_mask_bridge": 17,
+      "text_height": 1,
+      "text_thickness": 1,
+      "track_dangling": 10,
+      "via_dangling": 4
+    },
+    "by_severity": {
+      "error": 51,
+      "warning": 242
+    }
+  }
+}

@@ -1,0 +1,210 @@
+(pcb C:\Work\freerouting\scripts\pcbench\..\benchmark\fixtures\PCBench\z2amiller_sensorboard_programmer\unrouted.dsn
+  (parser
+    (string_quote ")
+    (space_in_quoted_tokens on)
+    (host_cad "KiCad's Pcbnew")
+    (host_version "10.0.2")
+  )
+  (resolution um 10)
+  (unit um)
+  (structure
+    (layer F.Cu
+      (type signal)
+      (property
+        (index 0)
+      )
+    )
+    (layer B.Cu
+      (type signal)
+      (property
+        (index 1)
+      )
+    )
+    (boundary
+      (path pcb 0  157480 -56515  131445 -56515  131445 -38100  157480 -38100
+            157480 -56515)
+    )
+    (via "Via[0-1]_600:400_um")
+    (rule
+      (width 250)
+      (clearance 200)
+      (clearance 50 (type smd_smd))
+    )
+  )
+  (placement
+    (component Pin_Headers:Pin_Header_Straight_1x06
+      (place "USB MODULE" 134400 -40900 front 0 (PN CONN_01X06))
+      (place P2 154600 -40900 front 0 (PN CONN_01X06))
+    )
+    (component w_switch:PCB_PUSH
+      (place RESET 143002 -51308 front 90 (PN SW_PUSH))
+      (place PROG 143002 -43180 front 90 (PN SW_PUSH))
+    )
+    (component "LEDs:LED-0805"
+      (place USB 150368 -53848 front 90 (PN USB))
+    )
+    (component "LEDs:LED-0805::1"
+      (place ESP 150368 -40640 front -90 (PN ESP))
+    )
+    (component Resistors_SMD:R_0603_HandSoldering
+      (place R1 150368 -49784 front 90 (PN "100 ohm"))
+    )
+    (component Resistors_SMD:R_0603_HandSoldering::1
+      (place R2 150368 -44704 front -90 (PN "100 ohm"))
+    )
+  )
+  (library
+    (image Pin_Headers:Pin_Header_Straight_1x06
+      (outline (polygon signal 0  1745 -14445  -1745 -14445  -1745 1745  1745 1745))
+      (outline (path signal 150  1270 -1270  1270 -13970))
+      (outline (path signal 150  1270 -13970  -1270 -13970))
+      (outline (path signal 150  -1270 -13970  -1270 -1270))
+      (outline (path signal 150  1550 1550  1550 0))
+      (outline (path signal 150  1270 -1270  -1270 -1270))
+      (outline (path signal 150  -1550 0  -1550 1550))
+      (outline (path signal 150  -1550 1550  1550 1550))
+      (pin Rect[A]Pad_2032.000000x1727.200000_um 1 0 0)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 2 0 -2540)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 3 0 -5080)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 4 0 -7620)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 5 0 -10160)
+      (pin Oval[A]Pad_2032.000000x1727.200000_um 6 0 -12700)
+    )
+    (image w_switch:PCB_PUSH
+      (outline (path signal 304.8  -3048 3048  3048 3048))
+      (outline (path signal 304.8  3048 3048  3048 -3048))
+      (outline (path signal 304.8  3048 -3048  -3048 -3048))
+      (outline (path signal 304.8  -3048 -3048  -3048 3048))
+      (outline (path signal 2540  0 -803.219  -172.668 -784.44  -337.263 -728.982  -486.087 -639.437
+            -612.183 -519.993  -709.654 -376.235  -773.942 -214.884  -802.041 -43.485
+            -792.638 129.946  -746.172 297.302  -664.816 450.756  -552.373 583.133
+            -414.103 688.244  -256.469 761.173  -86.843 798.51  86.843 798.51
+            256.469 761.173  414.103 688.244  552.373 583.133  664.816 450.756
+            746.172 297.302  792.638 129.946  802.041 -43.485  773.942 -214.884
+            709.654 -376.235  612.183 -519.993  486.087 -639.437  337.263 -728.982
+            172.668 -784.44  0 -803.219))
+      (pin Round[A]Pad_1998.980000_um 1 -2250.44 3251.2)
+      (pin Round[A]Pad_1998.980000_um 2 2250.44 -3251.2)
+      (pin Round[A]Pad_1998.980000_um 4 2250.44 3251.2)
+      (pin Round[A]Pad_1998.980000_um 3 -2250.44 -3251.2)
+    )
+    (image "LEDs:LED-0805"
+      (outline (polygon signal 0  -1895 -945  -1895 945  1895 945  1895 -945))
+      (outline (path signal 150  -1600 -750  1100 -750))
+      (outline (path signal 150  -1600 750  1100 750))
+      (outline (path signal 150  -100 -150  -100 100))
+      (outline (path signal 150  -100 100  -250 -50))
+      (outline (path signal 150  -350 350  -350 -350))
+      (outline (path signal 150  0 0  350 0))
+      (outline (path signal 150  -350 0  0 350))
+      (outline (path signal 150  0 350  0 -350))
+      (outline (path signal 150  0 -350  -350 0))
+      (pin Rect[T]Pad_1198.880000x1198.880000_um (rotate 180) 2 1049.02 0)
+      (pin Rect[T]Pad_1198.880000x1198.880000_um (rotate 180) 1 -1049.02 0)
+    )
+    (image "LEDs:LED-0805::1"
+      (outline (polygon signal 0  1895 945  1895 -945  -1895 -945  -1895 945))
+      (outline (path signal 150  -1600 -750  1100 -750))
+      (outline (path signal 150  -1600 750  1100 750))
+      (outline (path signal 150  -100 -150  -100 100))
+      (outline (path signal 150  -100 100  -250 -50))
+      (outline (path signal 150  -350 350  -350 -350))
+      (outline (path signal 150  0 0  350 0))
+      (outline (path signal 150  -350 0  0 350))
+      (outline (path signal 150  0 350  0 -350))
+      (outline (path signal 150  0 -350  -350 0))
+      (pin Rect[T]Pad_1198.880000x1198.880000_um (rotate 180) 2 1049.02 0)
+      (pin Rect[T]Pad_1198.880000x1198.880000_um (rotate 180) 1 -1049.02 0)
+    )
+    (image Resistors_SMD:R_0603_HandSoldering
+      (outline (polygon signal 0  -1995 -795  -1995 795  1995 795  1995 -795))
+      (outline (path signal 150  500 -675  -500 -675))
+      (outline (path signal 150  -500 675  500 675))
+      (pin Rect[T]Pad_1200.000000x900.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1200.000000x900.000000_um 2 1100 0)
+    )
+    (image Resistors_SMD:R_0603_HandSoldering::1
+      (outline (polygon signal 0  1995 795  1995 -795  -1995 -795  -1995 795))
+      (outline (path signal 150  500 -675  -500 -675))
+      (outline (path signal 150  -500 675  500 675))
+      (pin Rect[T]Pad_1200.000000x900.000000_um 1 -1100 0)
+      (pin Rect[T]Pad_1200.000000x900.000000_um 2 1100 0)
+    )
+    (padstack Round[A]Pad_1998.980000_um
+      (shape (circle F.Cu 1998.98))
+      (shape (circle B.Cu 1998.98))
+      (attach off)
+    )
+    (padstack Oval[A]Pad_2032.000000x1727.200000_um
+      (shape (path F.Cu 1727.2  -152.4 0  152.4 0))
+      (shape (path B.Cu 1727.2  -152.4 0  152.4 0))
+      (attach off)
+    )
+    (padstack Rect[A]Pad_2032.000000x1727.200000_um
+      (shape (rect F.Cu -1016 -863.6 1016 863.6))
+      (shape (rect B.Cu -1016 -863.6 1016 863.6))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1198.880000x1198.880000_um
+      (shape (rect F.Cu -599.44 -599.44 599.44 599.44))
+      (attach off)
+    )
+    (padstack Rect[T]Pad_1200.000000x900.000000_um
+      (shape (rect F.Cu -600 -450 600 450))
+      (attach off)
+    )
+    (padstack "Via[0-1]_600:400_um"
+      (shape (circle F.Cu 600))
+      (shape (circle B.Cu 600))
+      (attach off)
+    )
+  )
+  (network
+    (net "Net-(P1-Pad2)"
+      (pins "USB MODULE"-2)
+    )
+    (net RXI
+      (pins "USB MODULE"-3 P2-1)
+    )
+    (net TXO
+      (pins "USB MODULE"-4 P2-2)
+    )
+    (net GND
+      (pins "USB MODULE"-5 P2-3 RESET-2 RESET-4 PROG-2 PROG-4 USB-1 ESP-1)
+    )
+    (net +5V
+      (pins "USB MODULE"-6)
+    )
+    (net "Net-(P2-Pad4)"
+      (pins P2-4 R2-2)
+    )
+    (net "Net-(P2-Pad6)"
+      (pins P2-6 RESET-3)
+    )
+    (net "Net-(P2-Pad5)"
+      (pins P2-5 PROG-3)
+    )
+    (net "Net-(D1-Pad2)"
+      (pins USB-2 R1-1)
+    )
+    (net "Net-(D2-Pad2)"
+      (pins ESP-2 R2-1)
+    )
+    (net "Net-(P1-Pad1)"
+      (pins "USB MODULE"-1 R1-2)
+    )
+    (class kicad_default +5V GND "Net-(D1-Pad2)" "Net-(D2-Pad2)" "Net-(P1-Pad1)"
+      "Net-(P1-Pad2)" "Net-(P2-Pad4)" "Net-(P2-Pad5)" "Net-(P2-Pad6)" RXI
+      TXO
+      (circuit
+        (use_via "Via[0-1]_600:400_um")
+      )
+      (rule
+        (width 250)
+        (clearance 200)
+      )
+    )
+  )
+  (wiring
+  )
+)

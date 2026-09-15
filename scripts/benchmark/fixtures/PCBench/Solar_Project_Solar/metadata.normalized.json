@@ -1,0 +1,63 @@
+{
+  "board_id": "Solar_Project_Solar",
+  "display_name": "Solar_Project_Solar",
+  "pcbench_directory": "PCBs/Solar_Project_Solar",
+  "source": "https://github.com/nickcengel/Solar_Project",
+  "author": "nickcengel",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:53.330067+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 4,
+    "nets": 74,
+    "components": 132,
+    "dimensions_mm": {
+      "width": 143.76,
+      "height": 80.26
+    },
+    "area_cm2": 115.38,
+    "zones": 40
+  },
+  "reference": {
+    "segments": 890,
+    "vias": 310,
+    "track_length_mm": 2556.12,
+    "kicad_drc_violations": 345,
+    "kicad_drc_breakdown": {
+      "total_violations": 345,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 54,
+        "copper_edge_clearance": 1,
+        "courtyards_overlap": 1,
+        "items_not_allowed": 2,
+        "lib_footprint_issues": 132,
+        "pth_inside_courtyard": 1,
+        "silk_edge_clearance": 7,
+        "silk_over_copper": 75,
+        "silk_overlap": 56,
+        "solder_mask_bridge": 4,
+        "text_height": 8,
+        "track_dangling": 4
+      },
+      "by_severity": {
+        "error": 63,
+        "warning": 282
+      }
+    }
+  },
+  "tags": [
+    "4-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

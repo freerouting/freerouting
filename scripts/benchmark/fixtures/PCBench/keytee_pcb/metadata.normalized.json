@@ -1,0 +1,59 @@
+{
+  "board_id": "keytee_pcb",
+  "display_name": "keytee_pcb",
+  "pcbench_directory": "PCBs/keytee_pcb",
+  "source": "https://github.com/trebb/keytee",
+  "author": "trebb",
+  "license": "Other",
+  "license_spdx": "NOASSERTION",
+  "retrieved_at": "2023-08-17T17:22:25.533740+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 9,
+    "components": 38,
+    "dimensions_mm": {
+      "width": 32.5,
+      "height": 11.3
+    },
+    "area_cm2": 3.67,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 416,
+    "vias": 36,
+    "track_length_mm": 387.54,
+    "kicad_drc_violations": 352,
+    "kicad_drc_breakdown": {
+      "total_violations": 352,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 2,
+        "copper_edge_clearance": 83,
+        "courtyards_overlap": 3,
+        "lib_footprint_issues": 38,
+        "silk_edge_clearance": 3,
+        "silk_over_copper": 21,
+        "silk_overlap": 5,
+        "solder_mask_bridge": 155,
+        "text_height": 42
+      },
+      "by_severity": {
+        "error": 243,
+        "warning": 109
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,26 @@
+{
+  "board": "Arduino_Lipo_Storage_Discharger_Lipo_Storage_Discharger",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\Arduino_Lipo_Storage_Discharger_Lipo_Storage_Discharger\\raw.kicad_pcb",
+  "layers": 2,
+  "via_count": 19,
+  "segment_count": 245,
+  "approximate_track_length_mm": 960.38,
+  "kicad_drc_violations": 161,
+  "generated_at": "2026-08-18T18:29:21.850013+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 161,
+    "unconnected_count": 0,
+    "by_type": {
+      "clearance": 81,
+      "lib_footprint_issues": 42,
+      "silk_over_copper": 5,
+      "silk_overlap": 31,
+      "track_dangling": 2
+    },
+    "by_severity": {
+      "error": 81,
+      "warning": 80
+    }
+  }
+}

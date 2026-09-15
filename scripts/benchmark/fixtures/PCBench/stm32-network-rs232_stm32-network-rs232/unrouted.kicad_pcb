@@ -1,0 +1,2630 @@
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.12)-1")
+
+  (general
+    (thickness 1.6)
+    (drawings 31)
+    (tracks 763)
+    (zones 0)
+    (modules 57)
+    (nets 87)
+  )
+
+  (page A4)
+  (layers
+    (0 F.Cu signal)
+    (31 B.Cu signal)
+    (32 B.Adhes user hide)
+    (33 F.Adhes user hide)
+    (34 B.Paste user hide)
+    (35 F.Paste user hide)
+    (36 B.SilkS user hide)
+    (37 F.SilkS user hide)
+    (38 B.Mask user hide)
+    (39 F.Mask user hide)
+    (40 Dwgs.User user hide)
+    (41 Cmts.User user hide)
+    (42 Eco1.User user hide)
+    (43 Eco2.User user hide)
+    (44 Edge.Cuts user)
+  )
+
+  (setup
+    (last_trace_width 0.254)
+    (trace_clearance 0.2032)
+    (zone_clearance 0.254)
+    (zone_45_only no)
+    (trace_min 0.2032)
+    (via_size 0.5842)
+    (via_drill 0.3302)
+    (via_min_size 0.508)
+    (via_min_drill 0.3302)
+    (uvia_size 0.508)
+    (uvia_drill 0.127)
+    (uvias_allowed no)
+    (uvia_min_size 0.508)
+    (uvia_min_drill 0.127)
+    (edge_width 0.1)
+    (segment_width 0.2)
+    (pcb_text_width 0.3)
+    (pcb_text_size 1.5 1.5)
+    (mod_edge_width 0.15)
+    (mod_text_size 1 1)
+    (mod_text_width 0.15)
+    (pad_size 1.54 1.54)
+    (pad_drill 1.04)
+    (pad_to_mask_clearance 0)
+    (aux_axis_origin 0 0)
+    (visible_elements 7FFFFFFF)
+    (pcbplotparams
+      (layerselection 0x010f0_80000001)
+      (usegerberextensions true)
+      (usegerberattributes true)
+      (usegerberadvancedattributes true)
+      (creategerberjobfile true)
+      (excludeedgelayer false)
+      (linewidth 0.100000)
+      (plotframeref false)
+      (viasonmask false)
+      (mode 1)
+      (useauxorigin false)
+      (hpglpennumber 1)
+      (hpglpenspeed 20)
+      (hpglpendiameter 15.000000)
+      (psnegative false)
+      (psa4output false)
+      (plotreference true)
+      (plotvalue false)
+      (plotinvisibletext false)
+      (padsonsilk false)
+      (subtractmaskfromsilk false)
+      (outputformat 1)
+      (mirror false)
+      (drillshape 0)
+      (scaleselection 1)
+      (outputdirectory "/home/jferner/Dropbox/temp/stm32-network-rs232/"))
+  )
+
+  (net 0 "")
+  (net 1 GNDPWR)
+  (net 2 +3.3V)
+  (net 3 "Net-(C3-Pad1)")
+  (net 4 "Net-(C4-Pad1)")
+  (net 5 "Net-(C6-Pad1)")
+  (net 6 "Net-(C9-Pad1)")
+  (net 7 "Net-(C10-Pad1)")
+  (net 8 "Net-(C13-Pad2)")
+  (net 9 "Net-(C14-Pad2)")
+  (net 10 "Net-(C18-Pad1)")
+  (net 11 "Net-(C19-Pad1)")
+  (net 12 "Net-(C20-Pad1)")
+  (net 13 "Net-(C20-Pad2)")
+  (net 14 "Net-(C21-Pad1)")
+  (net 15 "Net-(C21-Pad2)")
+  (net 16 /USBDP)
+  (net 17 /USBDM)
+  (net 18 "Net-(D1-Pad2)")
+  (net 19 "Net-(J1-Pad2)")
+  (net 20 "Net-(J1-Pad3)")
+  (net 21 "Net-(P2-Pad3)")
+  (net 22 "Net-(P2-Pad4)")
+  (net 23 "Net-(P2-Pad5)")
+  (net 24 "Net-(P2-Pad6)")
+  (net 25 "Net-(P2-Pad7)")
+  (net 26 "Net-(P2-Pad8)")
+  (net 27 "Net-(P2-Pad9)")
+  (net 28 "Net-(P2-Pad10)")
+  (net 29 "Net-(P3-Pad2)")
+  (net 30 "Net-(P3-Pad3)")
+  (net 31 /USART1RX)
+  (net 32 /USART1TX)
+  (net 33 "Net-(P3-Pad6)")
+  (net 34 /SWCLK)
+  (net 35 /SWDIO)
+  (net 36 /nRST)
+  (net 37 "Net-(P4-Pad6)")
+  (net 38 "Net-(P5-Pad2)")
+  (net 39 "Net-(P5-Pad3)")
+  (net 40 /USART2RX)
+  (net 41 /USART2TX)
+  (net 42 "Net-(P5-Pad6)")
+  (net 43 "Net-(R1-Pad2)")
+  (net 44 "Net-(R2-Pad1)")
+  (net 45 "Net-(P1-Pad8)")
+  (net 46 "Net-(R3-Pad1)")
+  (net 47 "Net-(P1-Pad10)")
+  (net 48 "Net-(P1-Pad2)")
+  (net 49 "Net-(P1-Pad3)")
+  (net 50 "Net-(P1-Pad4)")
+  (net 51 "Net-(P1-Pad5)")
+  (net 52 /USBDIS)
+  (net 53 "Net-(R12-Pad2)")
+  (net 54 "Net-(U1-Pad3)")
+  (net 55 /ENC28J60INT)
+  (net 56 "Net-(U1-Pad5)")
+  (net 57 /SPIMISO)
+  (net 58 /SPIMOSI)
+  (net 59 /SPISCK)
+  (net 60 /ENC28J60CS)
+  (net 61 /ENC28J60RESET)
+  (net 62 "Net-(U2-Pad2)")
+  (net 63 "Net-(U2-Pad3)")
+  (net 64 "Net-(U2-Pad4)")
+  (net 65 "Net-(U2-Pad10)")
+  (net 66 "Net-(U2-Pad11)")
+  (net 67 "Net-(U2-Pad14)")
+  (net 68 "Net-(U2-Pad38)")
+  (net 69 "Net-(U2-Pad39)")
+  (net 70 "Net-(U2-Pad40)")
+  (net 71 "Net-(U2-Pad41)")
+  (net 72 "Net-(U2-Pad42)")
+  (net 73 "Net-(U2-Pad43)")
+  (net 74 +5V)
+  (net 75 "Net-(U5-Pad4)")
+  (net 76 /RS232TX)
+  (net 77 /DB9RX)
+  (net 78 /RS232RX)
+  (net 79 /DB9TX)
+  (net 80 "Net-(U3-Pad10)")
+  (net 81 "Net-(P6-Pad1)")
+  (net 82 "Net-(P6-Pad4)")
+  (net 83 "Net-(P6-Pad6)")
+  (net 84 "Net-(P6-Pad7)")
+  (net 85 "Net-(P6-Pad8)")
+  (net 86 "Net-(P6-Pad9)")
+
+  (net_class Default "This is the default net class."
+    (clearance 0.2032)
+    (trace_width 0.254)
+    (via_dia 0.5842)
+    (via_drill 0.3302)
+    (uvia_dia 0.508)
+    (uvia_drill 0.127)
+    (add_net /DB9RX)
+    (add_net /DB9TX)
+    (add_net /ENC28J60CS)
+    (add_net /ENC28J60INT)
+    (add_net /ENC28J60RESET)
+    (add_net /RS232RX)
+    (add_net /RS232TX)
+    (add_net /SPIMISO)
+    (add_net /SPIMOSI)
+    (add_net /SPISCK)
+    (add_net /SWCLK)
+    (add_net /SWDIO)
+    (add_net /USART1RX)
+    (add_net /USART1TX)
+    (add_net /USART2RX)
+    (add_net /USART2TX)
+    (add_net /USBDIS)
+    (add_net /USBDM)
+    (add_net /USBDP)
+    (add_net /nRST)
+    (add_net GNDPWR)
+    (add_net "Net-(C10-Pad1)")
+    (add_net "Net-(C13-Pad2)")
+    (add_net "Net-(C14-Pad2)")
+    (add_net "Net-(C18-Pad1)")
+    (add_net "Net-(C19-Pad1)")
+    (add_net "Net-(C20-Pad1)")
+    (add_net "Net-(C20-Pad2)")
+    (add_net "Net-(C21-Pad1)")
+    (add_net "Net-(C21-Pad2)")
+    (add_net "Net-(C3-Pad1)")
+    (add_net "Net-(C4-Pad1)")
+    (add_net "Net-(C6-Pad1)")
+    (add_net "Net-(C9-Pad1)")
+    (add_net "Net-(D1-Pad2)")
+    (add_net "Net-(J1-Pad2)")
+    (add_net "Net-(J1-Pad3)")
+    (add_net "Net-(P1-Pad10)")
+    (add_net "Net-(P1-Pad2)")
+    (add_net "Net-(P1-Pad3)")
+    (add_net "Net-(P1-Pad4)")
+    (add_net "Net-(P1-Pad5)")
+    (add_net "Net-(P1-Pad8)")
+    (add_net "Net-(P2-Pad10)")
+    (add_net "Net-(P2-Pad3)")
+    (add_net "Net-(P2-Pad4)")
+    (add_net "Net-(P2-Pad5)")
+    (add_net "Net-(P2-Pad6)")
+    (add_net "Net-(P2-Pad7)")
+    (add_net "Net-(P2-Pad8)")
+    (add_net "Net-(P2-Pad9)")
+    (add_net "Net-(P3-Pad2)")
+    (add_net "Net-(P3-Pad3)")
+    (add_net "Net-(P3-Pad6)")
+    (add_net "Net-(P4-Pad6)")
+    (add_net "Net-(P5-Pad2)")
+    (add_net "Net-(P5-Pad3)")
+    (add_net "Net-(P5-Pad6)")
+    (add_net "Net-(P6-Pad1)")
+    (add_net "Net-(P6-Pad4)")
+    (add_net "Net-(P6-Pad6)")
+    (add_net "Net-(P6-Pad7)")
+    (add_net "Net-(P6-Pad8)")
+    (add_net "Net-(P6-Pad9)")
+    (add_net "Net-(R1-Pad2)")
+    (add_net "Net-(R12-Pad2)")
+    (add_net "Net-(R2-Pad1)")
+    (add_net "Net-(R3-Pad1)")
+    (add_net "Net-(U1-Pad3)")
+    (add_net "Net-(U1-Pad5)")
+    (add_net "Net-(U2-Pad10)")
+    (add_net "Net-(U2-Pad11)")
+    (add_net "Net-(U2-Pad14)")
+    (add_net "Net-(U2-Pad2)")
+    (add_net "Net-(U2-Pad3)")
+    (add_net "Net-(U2-Pad38)")
+    (add_net "Net-(U2-Pad39)")
+    (add_net "Net-(U2-Pad4)")
+    (add_net "Net-(U2-Pad40)")
+    (add_net "Net-(U2-Pad41)")
+    (add_net "Net-(U2-Pad42)")
+    (add_net "Net-(U2-Pad43)")
+    (add_net "Net-(U3-Pad10)")
+    (add_net "Net-(U5-Pad4)")
+  )
+
+  (net_class power ""
+    (clearance 0.2032)
+    (trace_width 0.381)
+    (via_dia 0.5842)
+    (via_drill 0.3302)
+    (uvia_dia 0.508)
+    (uvia_drill 0.127)
+    (add_net +5V)
+  )
+
+  (net_class powersmall ""
+    (clearance 0.2032)
+    (trace_width 0.2921)
+    (via_dia 0.5842)
+    (via_drill 0.3302)
+    (uvia_dia 0.508)
+    (uvia_drill 0.127)
+    (add_net +3.3V)
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17E30) (tstamp 53BD4BD2)
+    (at 91.5 77 270)
+    (path /53B5F0B3)
+    (fp_text reference C1 (at -1 -1.5 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 270) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0 270) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17E1F) (tstamp 53BD4BDC)
+    (at 87 89)
+    (path /53B5F087)
+    (fp_text reference C2 (at -2.2 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 52486F7B) (tstamp 53BD4BE6)
+    (at 91 72)
+    (path /53B87374)
+    (fp_text reference C3 (at 2.286 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 18pF (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(C3-Pad1)"))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 52486F7B) (tstamp 53BD4BF0)
+    (at 97.2 72 180)
+    (path /53B874C1)
+    (fp_text reference C4 (at 2.286 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 18pF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(C4-Pad1)"))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17DD0) (tstamp 53BD4BFA)
+    (at 99.5 91.7 180)
+    (path /53B5F06A)
+    (fp_text reference C5 (at -2.3 0.9 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17E8F) (tstamp 53BD4C04)
+    (at 100.8 57.2 270)
+    (path /53B87B4E)
+    (fp_text reference C6 (at -2.2 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 10uF (at 0 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 270) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C6-Pad1)"))
+    (pad 2 smd rect (at 0.95 0 270) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17E16) (tstamp 53BD4C0E)
+    (at 104 87.5 180)
+    (path /53B5F04E)
+    (fp_text reference C7 (at 1 1.5) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17E18) (tstamp 53BD4C18)
+    (at 104 83.5 180)
+    (path /53B5EFF7)
+    (fp_text reference C8 (at 1.2 1.5) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17E10) (tstamp 53BD4C22)
+    (at 108.4 93.1 180)
+    (path /53B5EF93)
+    (fp_text reference C9 (at -2.2 -0.1 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 18pF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(C9-Pad1)"))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17E0D) (tstamp 53BD4C2C)
+    (at 108.4 80.7 180)
+    (path /53B5EFC5)
+    (fp_text reference C10 (at -2.4 0.1 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 18pF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(C10-Pad1)"))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C9BD1A) (tstamp 53BD4C36)
+    (at 81.6 74.2 180)
+    (path /53B8933F)
+    (fp_text reference C13 (at 2.2 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(C13-Pad2)"))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C9BD21) (tstamp 53BD4C40)
+    (at 81.6 61.8 180)
+    (path /53B8AE64)
+    (fp_text reference C14 (at 2.2 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(C14-Pad2)"))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 52486F7B) (tstamp 53BD4C4A)
+    (at 100.4 67.2 90)
+    (path /53B88FB5)
+    (fp_text reference C15 (at 2.286 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 90) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0 90) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17E95) (tstamp 53BD4C54)
+    (at 86.2682 63.679)
+    (path /53B88F64)
+    (fp_text reference C16 (at -0.86824 -1.479 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 52486F7B) (tstamp 53BD4C5E)
+    (at 117.4 72.7)
+    (path /53B80C41)
+    (fp_text reference C18 (at 2.286 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(C18-Pad1)"))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 52486F7B) (tstamp 53BD4C68)
+    (at 117.4 68.1)
+    (path /53B805D4)
+    (fp_text reference C19 (at 2.286 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 11 "Net-(C19-Pad1)"))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 52486F7B) (tstamp 53BD4C72)
+    (at 117.4 75)
+    (path /53B7F617)
+    (fp_text reference C20 (at 2.286 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 12 "Net-(C20-Pad1)"))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 13 "Net-(C20-Pad2)"))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 52486F7B) (tstamp 53BD4C7C)
+    (at 117.4 70.4)
+    (path /53B8009A)
+    (fp_text reference C21 (at 2.286 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 14 "Net-(C21-Pad1)"))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 15 "Net-(C21-Pad2)"))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 52486F7B) (tstamp 53BD4C86)
+    (at 110.9 75.6)
+    (path /53B851FE)
+    (fp_text reference C22 (at 2.286 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 0.1uF (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17CDE) (tstamp 53BD4C90)
+    (at 60 90.5 180)
+    (path /53B60469)
+    (fp_text reference C23 (at 2.2 -0.1 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 47pF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 16 /USBDP))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPC2012X100N (layer F.Cu) (tedit 53C17CE2) (tstamp 53BD4C9A)
+    (at 60 83 180)
+    (path /53B60603)
+    (fp_text reference C24 (at 2.2 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 47pF (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 17 /USBDM))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPCP2012X100N (layer F.Cu) (tedit 52486F89) (tstamp 53BD4CA4)
+    (at 72 84 90)
+    (path /53B9986A)
+    (fp_text reference C25 (at 2.286 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 10uF (at 0 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (fp_circle (center -1.9 0) (end -1.8 0.1) (layer F.SilkS) (width 0.25))
+    (pad 1 smd rect (at -0.95 0 90) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 2 smd rect (at 0.95 0 90) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:CAPCP2012X100N (layer F.Cu) (tedit 52486F89) (tstamp 53BD4CAF)
+    (at 82 84 90)
+    (path /53BC0E29)
+    (fp_text reference C26 (at 2.286 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 10uF (at 0 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (fp_circle (center -1.9 0) (end -1.8 0.1) (layer F.SilkS) (width 0.25))
+    (pad 1 smd rect (at -0.95 0 90) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 74 +5V))
+    (pad 2 smd rect (at 0.95 0 90) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+  )
+
+  (module kicad-new-lib:LEDC3216X100N (layer F.Cu) (tedit 53C17D02) (tstamp 53BD4CBA)
+    (at 66.5 93.5 180)
+    (path /53B858FF)
+    (fp_text reference D1 (at 0.1 1.7 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value POWER (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -2.3 1.15) (end -2.3 -1.15) (layer Cmts.User) (width 0.1))
+    (fp_line (start 2.3 1.15) (end -2.3 1.15) (layer Cmts.User) (width 0.1))
+    (fp_line (start 2.3 -1.15) (end 2.3 1.15) (layer Cmts.User) (width 0.1))
+    (fp_line (start -2.3 -1.15) (end 2.3 -1.15) (layer Cmts.User) (width 0.1))
+    (fp_line (start -0.8 -0.6) (end 0.8 -0.6) (layer F.SilkS) (width 0.1))
+    (fp_line (start -0.8 0.6) (end 0.8 0.6) (layer F.SilkS) (width 0.1))
+    (fp_line (start 0.2 0) (end -0.3 -0.4) (layer F.SilkS) (width 0.1))
+    (fp_line (start -0.3 0.4) (end 0.2 0) (layer F.SilkS) (width 0.1))
+    (fp_line (start -0.3 -0.4) (end -0.3 0.4) (layer F.SilkS) (width 0.1))
+    (fp_line (start 0.2 0.4) (end 0.2 -0.4) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -1.5 0 180) (size 1.05 1.75) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 2 smd rect (at 1.5 0 180) (size 1.05 1.75) (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(D1-Pad2)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 524871D4) (tstamp 53BD4CDB)
+    (at 86.6 70.3 180)
+    (path /53B84AAC)
+    (fp_text reference L1 (at 2.159 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value >80mA (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(C13-Pad2)"))
+  )
+
+  (module kicad-new-lib:MTGNP565H328Z565P (layer F.Cu) (tedit 524870AC) (tstamp 53BD4CE5)
+    (at 53.6 55)
+    (path /53B60D6B)
+    (fp_text reference M1 (at 0 3.683) (layer F.SilkS) hide
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value "Mount Hole" (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_circle (center 0 0) (end 2.95 0) (layer Cmts.User) (width 0.1))
+    (pad "" thru_hole circle (at 0 0) (size 5.65 5.65) (drill 3.2766) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module kicad-new-lib:MTGNP565H328Z565P (layer F.Cu) (tedit 524870AC) (tstamp 53BD4CEA)
+    (at 53.6 95)
+    (path /53B60F6A)
+    (fp_text reference M2 (at 0 3.683) (layer F.SilkS) hide
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value "Mount Hole" (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_circle (center 0 0) (end 2.95 0) (layer Cmts.User) (width 0.1))
+    (pad "" thru_hole circle (at 0 0) (size 5.65 5.65) (drill 3.2766) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module kicad-new-lib:MTGNP565H328Z565P (layer F.Cu) (tedit 524870AC) (tstamp 53BD4CEF)
+    (at 131.6 95 90)
+    (path /53B60F93)
+    (fp_text reference M3 (at 0 3.683 90) (layer F.SilkS) hide
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value "Mount Hole" (at 0 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_circle (center 0 0) (end 2.95 0) (layer Cmts.User) (width 0.1))
+    (pad "" thru_hole circle (at 0 0 90) (size 5.65 5.65) (drill 3.2766) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module kicad-new-lib:MTGNP565H328Z565P (layer F.Cu) (tedit 524870AC) (tstamp 53BD4CF4)
+    (at 131.6 55)
+    (path /53B60FB9)
+    (fp_text reference M4 (at 0 3.683) (layer F.SilkS) hide
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value "Mount Hole" (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_circle (center 0 0) (end 2.95 0) (layer Cmts.User) (width 0.1))
+    (pad "" thru_hole circle (at 0 0) (size 5.65 5.65) (drill 3.2766) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module kicad-new-lib:BEL-FUSE-08B0-1X1T-06-F (layer F.Cu) (tedit 53C17E82) (tstamp 53BD4CF9)
+    (at 72.5 68 90)
+    (path /53B87C9D)
+    (fp_text reference P1 (at 10 1.3 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value BELFUSE-08B0-1X1T-06-F (at 0 -9.2 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -9.017 -17.526) (end -9.017 -22.098) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -17.526) (end 9.017 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start 9.017 -22.098) (end 9.017 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -22.098) (end 9.017 -22.098) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -0.635) (end -9.017 -4.318) (layer Cmts.User) (width 0.15))
+    (fp_line (start -5.461 -0.635) (end -9.017 -0.635) (layer Cmts.User) (width 0.15))
+    (fp_line (start -5.461 -4.318) (end -5.461 -0.635) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -4.318) (end -5.461 -4.318) (layer Cmts.User) (width 0.15))
+    (fp_line (start 9.017 -4.318) (end 5.461 -4.318) (layer Cmts.User) (width 0.15))
+    (fp_line (start 9.017 -4.318) (end 9.017 -0.635) (layer Cmts.User) (width 0.15))
+    (fp_line (start 5.461 -0.635) (end 9.017 -0.635) (layer Cmts.User) (width 0.15))
+    (fp_line (start 5.461 -0.635) (end 5.461 -4.318) (layer Cmts.User) (width 0.15))
+    (fp_line (start -8.1534 3.429) (end -8.1534 -22.098) (layer F.SilkS) (width 0.15))
+    (fp_line (start 8.1534 3.429) (end -8.1534 3.429) (layer F.SilkS) (width 0.15))
+    (fp_line (start 8.1534 -22.098) (end 8.1534 3.429) (layer F.SilkS) (width 0.15))
+    (fp_line (start -8.1534 -22.098) (end 8.1534 -22.098) (layer F.SilkS) (width 0.15))
+    (fp_line (start 11.43 6.35) (end 11.43 -22.098) (layer Cmts.User) (width 0.15))
+    (fp_line (start -11.43 6.35) (end 11.43 6.35) (layer Cmts.User) (width 0.15))
+    (fp_line (start -11.43 -22.098) (end -11.43 6.35) (layer Cmts.User) (width 0.15))
+    (fp_line (start -7.874 -4.318) (end -5.461 -1.905) (layer Cmts.User) (width 0.15))
+    (fp_line (start -6.731 -4.318) (end -5.461 -3.175) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -4.318) (end -5.461 -0.762) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -3.048) (end -6.604 -0.635) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -1.778) (end -7.874 -0.635) (layer Cmts.User) (width 0.15))
+    (fp_line (start 5.461 -4.318) (end 9.017 -0.762) (layer Cmts.User) (width 0.15))
+    (fp_line (start 6.731 -4.318) (end 9.017 -2.032) (layer Cmts.User) (width 0.15))
+    (fp_line (start 8.001 -4.318) (end 9.017 -3.302) (layer Cmts.User) (width 0.15))
+    (fp_line (start 5.461 -3.048) (end 7.874 -0.635) (layer Cmts.User) (width 0.15))
+    (fp_line (start 5.461 -1.905) (end 6.731 -0.635) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -18.923) (end -7.62 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -20.32) (end -6.223 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -9.017 -21.59) (end -4.953 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -8.255 -22.098) (end -3.683 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -6.731 -22.098) (end -2.159 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -5.334 -22.098) (end -0.762 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -3.81 -22.098) (end 0.762 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -2.286 -22.098) (end 2.286 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start -0.762 -22.098) (end 3.81 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start 0.762 -22.098) (end 5.334 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start 2.413 -22.098) (end 6.985 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start 4.064 -22.098) (end 8.636 -17.526) (layer Cmts.User) (width 0.15))
+    (fp_line (start 5.588 -22.098) (end 9.017 -18.669) (layer Cmts.User) (width 0.15))
+    (fp_line (start 7.112 -22.098) (end 9.017 -20.193) (layer Cmts.User) (width 0.15))
+    (fp_line (start 8.382 -22.098) (end 9.017 -21.463) (layer Cmts.User) (width 0.15))
+    (pad 1 thru_hole circle (at -5.08 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 8 "Net-(C13-Pad2)"))
+    (pad 2 thru_hole circle (at -3.048 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 48 "Net-(P1-Pad2)"))
+    (pad 3 thru_hole circle (at -1.016 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 49 "Net-(P1-Pad3)"))
+    (pad 4 thru_hole circle (at 1.016 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 50 "Net-(P1-Pad4)"))
+    (pad 5 thru_hole circle (at 3.048 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 51 "Net-(P1-Pad5)"))
+    (pad 6 thru_hole circle (at 5.08 0 90) (size 1.524 1.524) (drill 1.016) (layers *.Cu *.Mask F.SilkS)
+      (net 9 "Net-(C14-Pad2)"))
+    (pad 7 thru_hole circle (at -7.2136 2.4638 90) (size 1.651 1.651) (drill 1.143) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDPWR))
+    (pad 8 thru_hole circle (at -4.6736 2.4638 90) (size 1.651 1.651) (drill 1.143) (layers *.Cu *.Mask F.SilkS)
+      (net 45 "Net-(P1-Pad8)"))
+    (pad 9 thru_hole circle (at 4.6736 2.4638 90) (size 1.651 1.651) (drill 1.143) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDPWR))
+    (pad 10 thru_hole circle (at 7.2136 2.4638 90) (size 1.651 1.651) (drill 1.143) (layers *.Cu *.Mask F.SilkS)
+      (net 47 "Net-(P1-Pad10)"))
+    (pad "" thru_hole circle (at 6.35 -11.176 90) (size 3.302 3.302) (drill 3.2512) (layers *.Cu *.Mask F.SilkS))
+    (pad "" thru_hole circle (at -6.35 -11.176 90) (size 3.302 3.302) (drill 3.2512) (layers *.Cu *.Mask F.SilkS))
+    (pad "" thru_hole circle (at -8.0645 -14.351 90) (size 1.651 1.651) (drill 1.5748) (layers *.Cu *.Mask F.SilkS))
+    (pad "" thru_hole circle (at 8.0645 -14.351 90) (size 1.651 1.651) (drill 1.5748) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (module kicad-new-lib:HDRV10W66P254_1X10_1006X249X838P (layer F.Cu) (tedit 53C17D27) (tstamp 53BD4D36)
+    (at 71.5 95.8)
+    (path /53B84A38)
+    (fp_text reference P2 (at -1.7 0.8 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value P10 (at 1.27 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.25 1.25) (end -1.25 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 24 1.25) (end -1.25 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 24 -1.25) (end 24 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.25 -1.25) (end 24 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.4 1.4) (end -1.4 -1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 24.15 1.4) (end -1.4 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 24.15 -1.4) (end 24.15 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.4 -1.4) (end 24.15 -1.4) (layer Cmts.User) (width 0.1))
+    (pad 1 thru_hole rect (at 0 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 2 +3.3V))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDPWR))
+    (pad 3 thru_hole circle (at 5.08 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 21 "Net-(P2-Pad3)"))
+    (pad 4 thru_hole circle (at 7.62 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 22 "Net-(P2-Pad4)"))
+    (pad 5 thru_hole circle (at 10.16 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 23 "Net-(P2-Pad5)"))
+    (pad 6 thru_hole circle (at 12.7 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 24 "Net-(P2-Pad6)"))
+    (pad 7 thru_hole circle (at 15.24 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 25 "Net-(P2-Pad7)"))
+    (pad 8 thru_hole circle (at 17.78 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 26 "Net-(P2-Pad8)"))
+    (pad 9 thru_hole circle (at 20.32 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 27 "Net-(P2-Pad9)"))
+    (pad 10 thru_hole circle (at 22.86 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 28 "Net-(P2-Pad10)"))
+  )
+
+  (module kicad-new-lib:HDRV6W66P254_1X6_1524X249X838P (layer F.Cu) (tedit 53C17E39) (tstamp 53BD4D4B)
+    (at 85.9 85.8 90)
+    (path /53B62672)
+    (fp_text reference P3 (at 13.4 1.9 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value DEBUG (at 1.27 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.25 1.25) (end -1.25 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 14 1.25) (end -1.25 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 14 -1.25) (end 14 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.25 -1.25) (end 14 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.4 1.4) (end -1.4 -1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 14.15 1.4) (end -1.4 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 14.15 -1.4) (end 14.15 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.4 -1.4) (end 14.15 -1.4) (layer Cmts.User) (width 0.1))
+    (pad 1 thru_hole rect (at 0 0 90) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDPWR))
+    (pad 2 thru_hole circle (at 2.54 0 90) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 29 "Net-(P3-Pad2)"))
+    (pad 3 thru_hole circle (at 5.08 0 90) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 30 "Net-(P3-Pad3)"))
+    (pad 4 thru_hole circle (at 7.62 0 90) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 31 /USART1RX))
+    (pad 5 thru_hole circle (at 10.16 0 90) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 32 /USART1TX))
+    (pad 6 thru_hole circle (at 12.7 0 90) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 33 "Net-(P3-Pad6)"))
+  )
+
+  (module kicad-new-lib:HDRV6W66P254_1X6_1524X249X838P (layer F.Cu) (tedit 53C17DC8) (tstamp 53BD4D5C)
+    (at 98.5 95.8)
+    (path /53B63010)
+    (fp_text reference P4 (at 14.7 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value SWD (at 1.27 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.25 1.25) (end -1.25 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 14 1.25) (end -1.25 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 14 -1.25) (end 14 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.25 -1.25) (end 14 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.4 1.4) (end -1.4 -1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 14.15 1.4) (end -1.4 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 14.15 -1.4) (end 14.15 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.4 -1.4) (end 14.15 -1.4) (layer Cmts.User) (width 0.1))
+    (pad 1 thru_hole rect (at 0 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 2 +3.3V))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 34 /SWCLK))
+    (pad 3 thru_hole circle (at 5.08 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDPWR))
+    (pad 4 thru_hole circle (at 7.62 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 35 /SWDIO))
+    (pad 5 thru_hole circle (at 10.16 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 36 /nRST))
+    (pad 6 thru_hole circle (at 12.7 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 37 "Net-(P4-Pad6)"))
+  )
+
+  (module kicad-new-lib:HDRV6W66P254_1X6_1524X249X838P (layer F.Cu) (tedit 53C17EA0) (tstamp 53BD4D6D)
+    (at 104.3 63.4 270)
+    (path /53B63918)
+    (fp_text reference P5 (at -2 -0.1) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value RS232-TAP (at 1.27 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.25 1.25) (end -1.25 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 14 1.25) (end -1.25 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 14 -1.25) (end 14 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.25 -1.25) (end 14 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.4 1.4) (end -1.4 -1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 14.15 1.4) (end -1.4 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 14.15 -1.4) (end 14.15 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.4 -1.4) (end 14.15 -1.4) (layer Cmts.User) (width 0.1))
+    (pad 1 thru_hole rect (at 0 0 270) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDPWR))
+    (pad 2 thru_hole circle (at 2.54 0 270) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 38 "Net-(P5-Pad2)"))
+    (pad 3 thru_hole circle (at 5.08 0 270) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 39 "Net-(P5-Pad3)"))
+    (pad 4 thru_hole circle (at 7.62 0 270) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 40 /USART2RX))
+    (pad 5 thru_hole circle (at 10.16 0 270) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 41 /USART2TX))
+    (pad 6 thru_hole circle (at 12.7 0 270) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 42 "Net-(P5-Pad6)"))
+  )
+
+  (module kicad-new-lib:HDRV3W66P254_1X3_762X249X838P (layer F.Cu) (tedit 53C1819F) (tstamp 53C182CA)
+    (at 108.458 62.23)
+    (path /53BA9CCF)
+    (fp_text reference P7 (at -1.82 0.026 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value P03 (at 2.5834 -2.1336) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.25 1.25) (end -1.25 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 6.35 1.25) (end -1.25 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 6.35 -1.25) (end 6.35 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.25 -1.25) (end 6.35 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.4 1.4) (end -1.4 -1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 6.5 1.4) (end -1.4 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 6.5 -1.4) (end 6.5 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.4 -1.4) (end 6.5 -1.4) (layer Cmts.User) (width 0.1))
+    (pad 1 thru_hole rect (at 0 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 76 /RS232TX))
+    (pad 2 thru_hole circle (at 2.54 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 77 /DB9RX))
+    (pad 3 thru_hole circle (at 5.08 0) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 78 /RS232RX))
+  )
+
+  (module kicad-new-lib:HDRV3W66P254_1X3_762X249X838P (layer F.Cu) (tedit 53C181A6) (tstamp 53C180F2)
+    (at 113.538 64.77 180)
+    (path /53BA93FC)
+    (fp_text reference P8 (at 6.918 -0.006 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value P03 (at 3.9136 -1.8542 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.25 1.25) (end -1.25 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 6.35 1.25) (end -1.25 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 6.35 -1.25) (end 6.35 1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.25 -1.25) (end 6.35 -1.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.4 1.4) (end -1.4 -1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 6.5 1.4) (end -1.4 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start 6.5 -1.4) (end 6.5 1.4) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.4 -1.4) (end 6.5 -1.4) (layer Cmts.User) (width 0.1))
+    (pad 1 thru_hole rect (at 0 0 180) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 76 /RS232TX))
+    (pad 2 thru_hole circle (at 2.54 0 180) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 79 /DB9TX))
+    (pad 3 thru_hole circle (at 5.08 0 180) (size 1.65 1.65) (drill 1) (layers *.Cu *.Mask F.SilkS)
+      (net 78 /RS232RX))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 524871D4) (tstamp 53BD4DBA)
+    (at 86.8 57.2 90)
+    (path /53B885DF)
+    (fp_text reference R1 (at 2.159 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value "2.32K 1%" (at 0 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 90) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0 90) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 43 "Net-(R1-Pad2)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C9BD1B) (tstamp 53BD4DC4)
+    (at 81.6 76.6 180)
+    (path /53B8A8B6)
+    (fp_text reference R2 (at 2.2 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 1K (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 44 "Net-(R2-Pad1)"))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 45 "Net-(P1-Pad8)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C9BD23) (tstamp 53BD4DCE)
+    (at 81.6 59.4 180)
+    (path /53B8A9E2)
+    (fp_text reference R3 (at 2.2 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 1K (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 46 "Net-(R3-Pad1)"))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 47 "Net-(P1-Pad10)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C9BD19) (tstamp 53BD4DD8)
+    (at 81.6 71.8)
+    (path /53B89920)
+    (fp_text reference R4 (at -2.2 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 50R (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(C13-Pad2)"))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 "Net-(P1-Pad2)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C9BD1D) (tstamp 53BD4DE2)
+    (at 81.6 69.4 180)
+    (path /53B89AFA)
+    (fp_text reference R5 (at 2.2 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 50R (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 49 "Net-(P1-Pad3)"))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 8 "Net-(C13-Pad2)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C9BD1E) (tstamp 53BD4DEC)
+    (at 81.6 66.6)
+    (path /53B8AD7D)
+    (fp_text reference R6 (at -2.2 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 50R (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(C14-Pad2)"))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 50 "Net-(P1-Pad4)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C9BD1F) (tstamp 53BD4DF6)
+    (at 81.6 64.2 180)
+    (path /53B8ADE6)
+    (fp_text reference R7 (at 2.2 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 50R (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 51 "Net-(P1-Pad5)"))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 9 "Net-(C14-Pad2)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C17CE8) (tstamp 53BD4E00)
+    (at 61 93.5)
+    (path /53B85B2C)
+    (fp_text reference R8 (at -2.2 -0.1 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 1K (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at 0.95 0) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 18 "Net-(D1-Pad2)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C17D22) (tstamp 53BD4E0A)
+    (at 71.5 91.5 270)
+    (path /53B6149B)
+    (fp_text reference R9 (at -2.1 0.1) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 10K (at 0 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 270) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 52 /USBDIS))
+    (pad 2 smd rect (at 0.95 0 270) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C17CDF) (tstamp 53BD4E14)
+    (at 60 85.5 180)
+    (path /53B60486)
+    (fp_text reference R10 (at 2.2 -0.1 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 22R (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 17 /USBDM))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 19 "Net-(J1-Pad2)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C17CE1) (tstamp 53BD4E1E)
+    (at 60 88 180)
+    (path /53B60573)
+    (fp_text reference R11 (at 2.2 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 22R (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 16 /USBDP))
+    (pad 2 smd rect (at 0.95 0 180) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 20 "Net-(J1-Pad3)"))
+  )
+
+  (module kicad-new-lib:RESC2012X100N (layer F.Cu) (tedit 53C17CE5) (tstamp 53BD4E28)
+    (at 64 89 270)
+    (path /53B60C29)
+    (fp_text reference R12 (at -2.2 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 1.5K (at 0 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.7 1) (end -1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 1) (end -1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.7 -1) (end 1.7 1) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.7 -1) (end 1.7 -1) (layer Cmts.User) (width 0.1))
+    (fp_line (start 0 -0.55) (end 0 0.55) (layer F.SilkS) (width 0.1))
+    (pad 1 smd rect (at -0.95 0 270) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 16 /USBDP))
+    (pad 2 smd rect (at 0.95 0 270) (size 1 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 53 "Net-(R12-Pad2)"))
+  )
+
+  (module kicad-new-lib:QFP50P900X900X160-48N (layer F.Cu) (tedit 53C17E29) (tstamp 53BD4E32)
+    (at 95.5 85 180)
+    (path /53B5E71C)
+    (clearance 0.2)
+    (fp_text reference U2 (at -4.1 -4.4 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value STM32-48PIN (at 0 0 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -3.2 3.2) (end -3.2 -3.2) (layer F.SilkS) (width 0.1))
+    (fp_line (start 3.2 3.2) (end -3.2 3.2) (layer F.SilkS) (width 0.1))
+    (fp_line (start 3.2 -3.2) (end 3.2 3.2) (layer F.SilkS) (width 0.1))
+    (fp_line (start -3.2 -3.2) (end 3.2 -3.2) (layer F.SilkS) (width 0.1))
+    (fp_line (start -5.25 5.25) (end -5.25 -5.25) (layer Cmts.User) (width 0.1))
+    (fp_line (start 5.25 5.25) (end -5.25 5.25) (layer Cmts.User) (width 0.1))
+    (fp_line (start 5.25 -5.25) (end 5.25 5.25) (layer Cmts.User) (width 0.1))
+    (fp_line (start -5.25 -5.25) (end 5.25 -5.25) (layer Cmts.User) (width 0.1))
+    (fp_circle (center -2.5 -2.5) (end -2.3 -2.5) (layer F.SilkS) (width 0.4))
+    (fp_circle (center -4.8 -3.5) (end -4.7 -3.5) (layer F.SilkS) (width 0.25))
+    (pad 1 smd rect (at -4.25 -2.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 2 smd rect (at -4.25 -2.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 62 "Net-(U2-Pad2)"))
+    (pad 3 smd rect (at -4.25 -1.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 63 "Net-(U2-Pad3)"))
+    (pad 4 smd rect (at -4.25 -1.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 64 "Net-(U2-Pad4)"))
+    (pad 5 smd rect (at -4.25 -0.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(C9-Pad1)"))
+    (pad 6 smd rect (at -4.25 -0.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(C10-Pad1)"))
+    (pad 7 smd rect (at -4.25 0.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 36 /nRST))
+    (pad 8 smd rect (at -4.25 0.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 9 smd rect (at -4.25 1.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 10 smd rect (at -4.25 1.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 65 "Net-(U2-Pad10)"))
+    (pad 11 smd rect (at -4.25 2.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 66 "Net-(U2-Pad11)"))
+    (pad 12 smd rect (at -4.25 2.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 41 /USART2TX))
+    (pad 13 smd rect (at -2.75 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 40 /USART2RX))
+    (pad 14 smd rect (at -2.25 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 67 "Net-(U2-Pad14)"))
+    (pad 15 smd rect (at -1.75 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 59 /SPISCK))
+    (pad 16 smd rect (at -1.25 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 57 /SPIMISO))
+    (pad 17 smd rect (at -0.75 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 58 /SPIMOSI))
+    (pad 18 smd rect (at -0.25 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 60 /ENC28J60CS))
+    (pad 19 smd rect (at 0.25 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 61 /ENC28J60RESET))
+    (pad 20 smd rect (at 0.75 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 55 /ENC28J60INT))
+    (pad 21 smd rect (at 1.25 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 23 "Net-(P2-Pad5)"))
+    (pad 22 smd rect (at 1.75 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 24 "Net-(P2-Pad6)"))
+    (pad 23 smd rect (at 2.25 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 24 smd rect (at 2.75 4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 25 smd rect (at 4.25 2.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 25 "Net-(P2-Pad7)"))
+    (pad 26 smd rect (at 4.25 2.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 26 "Net-(P2-Pad8)"))
+    (pad 27 smd rect (at 4.25 1.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 27 "Net-(P2-Pad9)"))
+    (pad 28 smd rect (at 4.25 1.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 28 "Net-(P2-Pad10)"))
+    (pad 29 smd rect (at 4.25 0.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 52 /USBDIS))
+    (pad 30 smd rect (at 4.25 0.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 32 /USART1TX))
+    (pad 31 smd rect (at 4.25 -0.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 31 /USART1RX))
+    (pad 32 smd rect (at 4.25 -0.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 17 /USBDM))
+    (pad 33 smd rect (at 4.25 -1.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 16 /USBDP))
+    (pad 34 smd rect (at 4.25 -1.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 35 /SWDIO))
+    (pad 35 smd rect (at 4.25 -2.25 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 36 smd rect (at 4.25 -2.75 180) (size 1.45 0.3) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 37 smd rect (at 2.75 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 34 /SWCLK))
+    (pad 38 smd rect (at 2.25 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 68 "Net-(U2-Pad38)"))
+    (pad 39 smd rect (at 1.75 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 69 "Net-(U2-Pad39)"))
+    (pad 40 smd rect (at 1.25 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 70 "Net-(U2-Pad40)"))
+    (pad 41 smd rect (at 0.75 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 71 "Net-(U2-Pad41)"))
+    (pad 42 smd rect (at 0.25 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 72 "Net-(U2-Pad42)"))
+    (pad 43 smd rect (at -0.25 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 73 "Net-(U2-Pad43)"))
+    (pad 44 smd rect (at -0.75 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 45 smd rect (at -1.25 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 21 "Net-(P2-Pad3)"))
+    (pad 46 smd rect (at -1.75 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 22 "Net-(P2-Pad4)"))
+    (pad 47 smd rect (at -2.25 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 48 smd rect (at -2.75 -4.25 180) (size 0.3 1.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:SOT95P237X112_123-3N (layer F.Cu) (tedit 53C17CF1) (tstamp 53BD4E6F)
+    (at 68 89)
+    (path /53B611C2)
+    (fp_text reference U4 (at 0 -2.2) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value MOSFET-P (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -0.65 1.45) (end -0.65 -1.45) (layer F.SilkS) (width 0.1))
+    (fp_line (start -0.65 1.45) (end 0.65 1.45) (layer F.SilkS) (width 0.1))
+    (fp_line (start 0.65 -1.45) (end 0.65 1.45) (layer F.SilkS) (width 0.1))
+    (fp_line (start -0.65 -1.45) (end 0.65 -1.45) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.95 1.8) (end -1.95 -1.8) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.95 1.8) (end -1.95 1.8) (layer Cmts.User) (width 0.1))
+    (fp_line (start 1.95 -1.8) (end 1.95 1.8) (layer Cmts.User) (width 0.1))
+    (fp_line (start -1.95 -1.8) (end 1.95 -1.8) (layer Cmts.User) (width 0.1))
+    (pad 1 smd rect (at -1.05 -0.95) (size 1.3 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 52 /USBDIS))
+    (pad 2 smd rect (at -1.05 0.95) (size 1.3 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 53 "Net-(R12-Pad2)"))
+    (pad 3 smd rect (at 1.05 0) (size 1.3 0.6) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:SOT230P700X180-4N (layer F.Cu) (tedit 5248715E) (tstamp 53BD4E7D)
+    (at 77 84 90)
+    (path /53B990D6)
+    (fp_text reference U5 (at 0 4.064 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value ZLDO1117 (at 0 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.775 3.25) (end -1.775 -3.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 1.775 3.25) (end -1.775 3.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 1.775 -3.25) (end 1.775 3.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -1.775 -3.25) (end 1.775 -3.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4.15 3.55) (end -4.15 -3.55) (layer Cmts.User) (width 0.1))
+    (fp_line (start 4.15 3.55) (end -4.15 3.55) (layer Cmts.User) (width 0.1))
+    (fp_line (start 4.15 -3.55) (end 4.15 3.55) (layer Cmts.User) (width 0.1))
+    (fp_line (start -4.15 -3.55) (end 4.15 -3.55) (layer Cmts.User) (width 0.1))
+    (fp_circle (center -1 -2.4) (end -0.8 -2.4) (layer F.SilkS) (width 0.4))
+    (fp_circle (center -3.7 -3.3) (end -3.6 -3.3) (layer F.SilkS) (width 0.2))
+    (pad 1 smd rect (at -3 -2.3 90) (size 1.8 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at -3 0 90) (size 1.8 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 3 smd rect (at -3 2.3 90) (size 1.8 0.9) (layers F.Cu F.Paste F.Mask)
+      (net 74 +5V))
+    (pad 4 smd rect (at 3 0 90) (size 1.8 3.2) (layers F.Cu F.Paste F.Mask)
+      (net 75 "Net-(U5-Pad4)"))
+  )
+
+  (module kicad-new-lib:XTAL8045X200N (layer F.Cu) (tedit 524871A6) (tstamp 53BD4E8E)
+    (at 94 68)
+    (path /53B866E9)
+    (fp_text reference X1 (at 5 1.975) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 25MHz (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start 4 -2.25) (end 4 -1.6) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4 -2.25) (end 4 -2.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4 -1.6) (end -4 -2.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4 2.25) (end -4 1.6) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4 2.25) (end 4 2.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 4 1.6) (end 4 2.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4.9 2.6) (end -4.9 -2.6) (layer Cmts.User) (width 0.1))
+    (fp_line (start 4.9 2.6) (end -4.9 2.6) (layer Cmts.User) (width 0.1))
+    (fp_line (start 4.9 -2.6) (end 4.9 2.6) (layer Cmts.User) (width 0.1))
+    (fp_line (start -4.9 -2.6) (end 4.9 -2.6) (layer Cmts.User) (width 0.1))
+    (pad 1 smd rect (at -3.4 0) (size 2.45 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(C3-Pad1)"))
+    (pad 2 smd rect (at 3.4 0) (size 2.45 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(C4-Pad1)"))
+  )
+
+  (module kicad-new-lib:XTAL8045X200N (layer F.Cu) (tedit 524871A6) (tstamp 53BD4E9D)
+    (at 109.2 87 90)
+    (path /53B5E89B)
+    (fp_text reference X2 (at 0 3.175 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value 8MHz (at 0 0 90) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start 4 -2.25) (end 4 -1.6) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4 -2.25) (end 4 -2.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4 -1.6) (end -4 -2.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4 2.25) (end -4 1.6) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4 2.25) (end 4 2.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start 4 1.6) (end 4 2.25) (layer F.SilkS) (width 0.1))
+    (fp_line (start -4.9 2.6) (end -4.9 -2.6) (layer Cmts.User) (width 0.1))
+    (fp_line (start 4.9 2.6) (end -4.9 2.6) (layer Cmts.User) (width 0.1))
+    (fp_line (start 4.9 -2.6) (end 4.9 2.6) (layer Cmts.User) (width 0.1))
+    (fp_line (start -4.9 -2.6) (end 4.9 -2.6) (layer Cmts.User) (width 0.1))
+    (pad 1 smd rect (at -3.4 0 90) (size 2.45 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 6 "Net-(C9-Pad1)"))
+    (pad 2 smd rect (at 3.4 0 90) (size 2.45 2.1) (layers F.Cu F.Paste F.Mask)
+      (net 7 "Net-(C10-Pad1)"))
+  )
+
+  (module kicad-new-lib:SOP65P640X120-16N (layer F.Cu) (tedit 53C987ED) (tstamp 53BD4876)
+    (at 110.9 71.1 180)
+    (path /53B7FEE1)
+    (clearance 0.1778)
+    (fp_text reference U3 (at 0 -3.25 180) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value MAX3221 (at 0 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -1.85 2.5) (end -1.85 -2.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.85 2.5) (end -1.85 2.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 1.85 -2.5) (end 1.85 2.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start -1.85 -2.5) (end 1.85 -2.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start -3.9 2.8) (end -3.9 -2.8) (layer Cmts.User) (width 0.15))
+    (fp_line (start 3.9 2.8) (end -3.9 2.8) (layer Cmts.User) (width 0.15))
+    (fp_line (start 3.9 -2.8) (end 3.9 2.8) (layer Cmts.User) (width 0.15))
+    (fp_line (start -3.9 -2.8) (end 3.9 -2.8) (layer Cmts.User) (width 0.15))
+    (fp_circle (center -1.27 -1.905) (end -1.143 -1.905) (layer F.SilkS) (width 0.508))
+    (pad 1 smd rect (at -2.9 -2.275 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 2 smd rect (at -2.9 -1.625 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 12 "Net-(C20-Pad1)"))
+    (pad 3 smd rect (at -2.9 -0.975 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 10 "Net-(C18-Pad1)"))
+    (pad 4 smd rect (at -2.9 -0.325 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 13 "Net-(C20-Pad2)"))
+    (pad 5 smd rect (at -2.9 0.325 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 14 "Net-(C21-Pad1)"))
+    (pad 6 smd rect (at -2.9 0.975 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 15 "Net-(C21-Pad2)"))
+    (pad 7 smd rect (at -2.9 1.625 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 11 "Net-(C19-Pad1)"))
+    (pad 8 smd rect (at -2.9 2.275 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 78 /RS232RX))
+    (pad 9 smd rect (at 2.9 2.275 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 40 /USART2RX))
+    (pad 10 smd rect (at 2.9 1.625 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 80 "Net-(U3-Pad10)"))
+    (pad 11 smd rect (at 2.9 0.975 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 41 /USART2TX))
+    (pad 12 smd rect (at 2.9 0.325 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 13 smd rect (at 2.9 -0.325 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 76 /RS232TX))
+    (pad 14 smd rect (at 2.9 -0.975 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 15 smd rect (at 2.9 -1.625 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 16 smd rect (at 2.9 -2.275 180) (size 1.45 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:SOP65P780X200-28N (layer F.Cu) (tedit 53C98843) (tstamp 53BD3F42)
+    (at 93.8 60.2 270)
+    (path /53B8C19A)
+    (clearance 0.1778)
+    (fp_text reference U1 (at 0 -5.75 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value ENC28J60 (at 0 0) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -2.25 5.1) (end -2.25 -5.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.25 5.1) (end -2.25 5.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start 2.25 -5.1) (end 2.25 5.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -2.25 -5.1) (end 2.25 -5.1) (layer F.SilkS) (width 0.15))
+    (fp_line (start -4.7 5.5) (end -4.7 -5.5) (layer Cmts.User) (width 0.15))
+    (fp_line (start 4.7 5.5) (end -4.7 5.5) (layer Cmts.User) (width 0.15))
+    (fp_line (start 4.7 -5.5) (end 4.7 5.5) (layer Cmts.User) (width 0.15))
+    (fp_line (start -4.7 -5.5) (end 4.7 -5.5) (layer Cmts.User) (width 0.15))
+    (fp_circle (center -1.651 -4.445) (end -1.524 -4.445) (layer F.SilkS) (width 0.508))
+    (pad 1 smd rect (at -3.5 -4.225 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 5 "Net-(C6-Pad1)"))
+    (pad 2 smd rect (at -3.5 -3.575 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 3 smd rect (at -3.5 -2.925 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 54 "Net-(U1-Pad3)"))
+    (pad 4 smd rect (at -3.5 -2.275 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 55 /ENC28J60INT))
+    (pad 5 smd rect (at -3.5 -1.625 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 56 "Net-(U1-Pad5)"))
+    (pad 6 smd rect (at -3.5 -0.975 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 57 /SPIMISO))
+    (pad 7 smd rect (at -3.5 -0.325 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 58 /SPIMOSI))
+    (pad 8 smd rect (at -3.5 0.325 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 59 /SPISCK))
+    (pad 9 smd rect (at -3.5 0.975 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 60 /ENC28J60CS))
+    (pad 10 smd rect (at -3.5 1.625 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 61 /ENC28J60RESET))
+    (pad 11 smd rect (at -3.5 2.275 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 12 smd rect (at -3.5 2.925 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 51 "Net-(P1-Pad5)"))
+    (pad 13 smd rect (at -3.5 3.575 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 50 "Net-(P1-Pad4)"))
+    (pad 14 smd rect (at -3.5 4.225 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 43 "Net-(R1-Pad2)"))
+    (pad 15 smd rect (at 3.5 4.225 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 16 smd rect (at 3.5 3.575 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 49 "Net-(P1-Pad3)"))
+    (pad 17 smd rect (at 3.5 2.925 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 48 "Net-(P1-Pad2)"))
+    (pad 18 smd rect (at 3.5 2.275 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 19 smd rect (at 3.5 1.625 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 20 smd rect (at 3.5 0.975 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 21 smd rect (at 3.5 0.325 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 22 smd rect (at 3.5 -0.325 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad 23 smd rect (at 3.5 -0.975 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 3 "Net-(C3-Pad1)"))
+    (pad 24 smd rect (at 3.5 -1.625 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 4 "Net-(C4-Pad1)"))
+    (pad 25 smd rect (at 3.5 -2.275 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+    (pad 26 smd rect (at 3.5 -2.925 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 44 "Net-(R2-Pad1)"))
+    (pad 27 smd rect (at 3.5 -3.575 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 46 "Net-(R3-Pad1)"))
+    (pad 28 smd rect (at 3.5 -4.225 270) (size 1.85 0.45) (layers F.Cu F.Paste F.Mask)
+      (net 2 +3.3V))
+  )
+
+  (module kicad-new-lib:JST_UB-MC5BR3-SD204-4S-NMP (layer F.Cu) (tedit 53B99B86) (tstamp 53BD4CC9)
+    (at 51.7 86 270)
+    (path /53B5FADD)
+    (clearance 0.2032)
+    (fp_text reference J1 (at 0 -4.191 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value USB (at 0 0 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -5.2 1.704) (end 5.2 1.704) (layer Dwgs.User) (width 0.1))
+    (fp_line (start 5.2 -4.25) (end 5.2 1.25) (layer Cmts.User) (width 0.1))
+    (fp_line (start -5.2 -4.25) (end 5.2 -4.25) (layer Cmts.User) (width 0.1))
+    (fp_line (start -5.2 1.25) (end -5.2 -4.25) (layer Cmts.User) (width 0.1))
+    (pad 1 smd rect (at -1.3 -2.95 270) (size 0.4 1.9) (layers F.Cu F.Paste F.Mask)
+      (net 74 +5V))
+    (pad 2 smd rect (at -0.65 -2.95 270) (size 0.4 1.9) (layers F.Cu F.Paste F.Mask)
+      (net 19 "Net-(J1-Pad2)"))
+    (pad 3 smd rect (at 0 -2.95 270) (size 0.4 1.9) (layers F.Cu F.Paste F.Mask)
+      (net 20 "Net-(J1-Pad3)"))
+    (pad 4 smd rect (at 0.65 -2.95 270) (size 0.4 1.9) (layers F.Cu F.Paste F.Mask))
+    (pad 5 smd rect (at 1.3 -2.95 270) (size 0.4 1.9) (layers F.Cu F.Paste F.Mask)
+      (net 1 GNDPWR))
+    (pad "" smd rect (at -3.2 -2.35 270) (size 1.6 1.4) (layers F.Cu F.Paste F.Mask))
+    (pad "" smd rect (at 3.2 -2.35 270) (size 1.6 1.4) (layers F.Cu F.Paste F.Mask))
+    (pad "" smd rect (at -4 0 270) (size 1.8 1.9) (layers F.Cu F.Paste F.Mask))
+    (pad "" smd rect (at 4 0 270) (size 1.8 1.9) (layers F.Cu F.Paste F.Mask))
+    (pad "" smd rect (at -1.2 0 270) (size 1.9 1.9) (layers F.Cu F.Paste F.Mask))
+    (pad "" smd rect (at 1.2 0 270) (size 1.9 1.9) (layers F.Cu F.Paste F.Mask))
+  )
+
+  (module kicad-new-lib:TECONN-5747840-2 (layer F.Cu) (tedit 552332D3) (tstamp 53BD4D7E)
+    (at 125.9 75 270)
+    (path /53B8374E)
+    (fp_text reference P6 (at 0 2.54 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_text value RS-232-DB-9-DTE (at 0 -8.509 270) (layer F.SilkS)
+      (effects (font (size 0.6 0.6) (thickness 0.1)))
+    )
+    (fp_line (start -8.46 -9.5) (end -15.595 -9.5) (layer Cmts.User) (width 0.15))
+    (fp_line (start -8.46 -15.62) (end -8.46 -9.5) (layer Cmts.User) (width 0.15))
+    (fp_line (start 8.46 -15.62) (end -8.46 -15.62) (layer Cmts.User) (width 0.15))
+    (fp_line (start 8.46 -9.5) (end 8.46 -15.62) (layer Cmts.User) (width 0.15))
+    (fp_line (start 15.595 -9.5) (end 8.46 -9.5) (layer Cmts.User) (width 0.15))
+    (fp_line (start 15.595 3) (end 15.595 -4.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start 8.509 3) (end 15.595 3) (layer F.SilkS) (width 0.15))
+    (fp_line (start 8.509 1.5) (end 8.509 3) (layer F.SilkS) (width 0.15))
+    (fp_line (start -8.763 1.5) (end 8.509 1.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start -8.763 3) (end -8.763 1.5) (layer F.SilkS) (width 0.15))
+    (fp_line (start -15.595 3) (end -8.763 3) (layer F.SilkS) (width 0.15))
+    (fp_line (start -15.595 -4.5) (end -15.595 3) (layer F.SilkS) (width 0.15))
+    (fp_line (start -15.595 -9.5) (end -15.595 -4.5) (layer Cmts.User) (width 0.15))
+    (fp_line (start 15.595 -9.5) (end 15.595 -4.5) (layer Cmts.User) (width 0.15))
+    (fp_line (start -18 6) (end -18 -20) (layer Cmts.User) (width 0.15))
+    (fp_line (start 18 6) (end -18 6) (layer Cmts.User) (width 0.15))
+    (fp_line (start 18 -20) (end 18 6) (layer Cmts.User) (width 0.15))
+    (fp_line (start -18 -20) (end 18 -20) (layer Cmts.User) (width 0.15))
+    (pad 5 thru_hole circle (at -5.48 0 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 1 GNDPWR))
+    (pad 4 thru_hole circle (at -2.74 0 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 82 "Net-(P6-Pad4)"))
+    (pad 3 thru_hole circle (at 0 0 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 79 /DB9TX))
+    (pad 2 thru_hole circle (at 2.74 0 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 77 /DB9RX))
+    (pad 1 thru_hole circle (at 5.48 0 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 81 "Net-(P6-Pad1)"))
+    (pad 9 thru_hole circle (at -4.11 -2.84 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 86 "Net-(P6-Pad9)"))
+    (pad 8 thru_hole circle (at -1.37 -2.84 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 85 "Net-(P6-Pad8)"))
+    (pad 7 thru_hole circle (at 1.37 -2.84 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 84 "Net-(P6-Pad7)"))
+    (pad 6 thru_hole circle (at 4.11 -2.84 270) (size 1.54 1.54) (drill 1.04) (layers *.Cu *.Mask F.SilkS)
+      (net 83 "Net-(P6-Pad6)"))
+    (pad "" thru_hole circle (at -12.495 -1.42 270) (size 3.3 3.3) (drill 3.25) (layers *.Cu *.Mask F.SilkS))
+    (pad "" thru_hole circle (at 12.495 -1.42 270) (size 3.3 3.3) (drill 3.25) (layers *.Cu *.Mask F.SilkS))
+  )
+
+  (gr_text "Network <-> RS232" (at 71.2978 54.4068) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text DCE (at 108.4 60.4) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.2)))
+  )
+  (gr_text DTE (at 113.6 60.4) (layer F.SilkS)
+    (effects (font (size 0.8 0.8) (thickness 0.2)))
+  )
+  (gr_text GND (at 102.6 63.4) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify right))
+  )
+  (gr_text TX (at 102.6 73.6) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify right))
+  )
+  (gr_text RX (at 102.6 71.2) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify right))
+  )
+  (gr_text USART (at 105.2 78.4) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text GND (at 87.4 86) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text RX (at 87.4 78.4) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text TX (at 87.4 75.8) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text DEBUG (at 83.8 80.2 90) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text +3.3V (at 98.4 94) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+  (gr_text SWD (at 104 93.8) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.2)))
+  )
+  (gr_text GND (at 74 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text PB15 (at 94.4 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text PB14 (at 91.8 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text PB13 (at 89.2 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text PB12 (at 86.8 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text PB11 (at 84.2 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text PB10 (at 81.6 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text PB9 (at 79.2 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text PB8 (at 76.6 94.2 90) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)) (justify left))
+  )
+  (gr_text +3.3V (at 71.2 94) (layer F.SilkS)
+    (effects (font (size 0.6 0.6) (thickness 0.1)))
+  )
+  (gr_text POWER (at 66.6 95.6) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (gr_text 2014-07-12 (at 111.6 57.4) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text "By: Joe Ferner" (at 112.2 54.6) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text "Network <-> RS232" (at 70.8 54.4) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_line (start 50 98.6) (end 50 51.4) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 135.2 98.6) (end 50 98.6) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 135.2 51.4) (end 135.2 98.6) (angle 90) (layer Edge.Cuts) (width 0.1))
+  (gr_line (start 50 51.4) (end 135.2 51.4) (angle 90) (layer Edge.Cuts) (width 0.1))
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+)

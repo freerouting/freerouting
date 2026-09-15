@@ -1,0 +1,54 @@
+{
+  "board_id": "AVR-ISP_level-shifter_AVR-ISP_level-shifter",
+  "display_name": "AVR-ISP_level-shifter_AVR-ISP_level-shifter",
+  "pcbench_directory": "PCBs/AVR-ISP_level-shifter_AVR-ISP_level-shifter",
+  "source": "https://github.com/madworm/AVR-ISP_level-shifter",
+  "author": "madworm",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:49.226018+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 4,
+    "components": 27,
+    "dimensions_mm": {
+      "width": 44.0,
+      "height": 20.0
+    },
+    "area_cm2": 8.8,
+    "zones": 0
+  },
+  "reference": {
+    "segments": 268,
+    "vias": 10,
+    "track_length_mm": 450.66,
+    "kicad_drc_violations": 33,
+    "kicad_drc_breakdown": {
+      "total_violations": 33,
+      "unconnected_count": 0,
+      "by_type": {
+        "copper_edge_clearance": 3,
+        "lib_footprint_issues": 27,
+        "silk_edge_clearance": 1,
+        "track_dangling": 2
+      },
+      "by_severity": {
+        "error": 3,
+        "warning": 30
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "routine",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

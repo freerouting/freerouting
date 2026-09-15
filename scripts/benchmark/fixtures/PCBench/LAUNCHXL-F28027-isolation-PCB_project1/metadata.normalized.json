@@ -1,0 +1,63 @@
+{
+  "board_id": "LAUNCHXL-F28027-isolation-PCB_project1",
+  "display_name": "LAUNCHXL-F28027-isolation-PCB_project1",
+  "pcbench_directory": "PCBs/LAUNCHXL-F28027-isolation-PCB_project1",
+  "source": "https://github.com/stawiski/LAUNCHXL-F28027-isolation-PCB",
+  "author": "stawiski",
+  "license": "MIT License",
+  "license_spdx": "MIT",
+  "retrieved_at": "2023-08-17T17:22:48.514010+00:00",
+  "cad": {
+    "source_version": "KiCad 20171130",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 1,
+    "components": 19,
+    "dimensions_mm": {
+      "width": 49.5,
+      "height": 20.0
+    },
+    "area_cm2": 9.9,
+    "zones": 6
+  },
+  "reference": {
+    "segments": 185,
+    "vias": 11,
+    "track_length_mm": 323.81,
+    "kicad_drc_violations": 225,
+    "kicad_drc_breakdown": {
+      "total_violations": 225,
+      "unconnected_count": 0,
+      "by_type": {
+        "clearance": 21,
+        "copper_edge_clearance": 42,
+        "silk_edge_clearance": 9,
+        "silk_over_copper": 115,
+        "silk_overlap": 32,
+        "text_height": 6
+      },
+      "by_severity": {
+        "error": 63,
+        "warning": 162
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "plane",
+    "small",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "baseline_violations",
+  "timeout_budget": "00:01:00",
+  "baseline_routing": {
+    "calibrated_at": "2026-08-18T20:56:33.010924+00:00",
+    "elapsed_seconds": 35.71,
+    "unrouted_nets": 0,
+    "clearance_violations": 8,
+    "quality_score": 954.28
+  }
+}

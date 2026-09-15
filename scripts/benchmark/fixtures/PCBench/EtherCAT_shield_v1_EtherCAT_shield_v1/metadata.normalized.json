@@ -1,0 +1,61 @@
+{
+  "board_id": "EtherCAT_shield_v1_EtherCAT_shield_v1",
+  "display_name": "EtherCAT_shield_v1_EtherCAT_shield_v1",
+  "pcbench_directory": "PCBs/EtherCAT_shield_v1_EtherCAT_shield_v1",
+  "source": "https://github.com/yuqlid/EtherCAT_shield_v1",
+  "author": "yuqlid",
+  "license": "None",
+  "license_spdx": "",
+  "retrieved_at": "2023-08-17T17:22:40.809919+00:00",
+  "cad": {
+    "source_version": "KiCad 4",
+    "conversion_version": "10.0.2"
+  },
+  "board": {
+    "layers": 2,
+    "nets": 90,
+    "components": 115,
+    "dimensions_mm": {
+      "width": 71.12,
+      "height": 81.28
+    },
+    "area_cm2": 57.81,
+    "zones": 4
+  },
+  "reference": {
+    "segments": 1268,
+    "vias": 154,
+    "track_length_mm": 2871.01,
+    "kicad_drc_violations": 812,
+    "kicad_drc_breakdown": {
+      "total_violations": 812,
+      "unconnected_count": 0,
+      "by_type": {
+        "annular_width": 37,
+        "clearance": 490,
+        "copper_edge_clearance": 3,
+        "courtyards_overlap": 1,
+        "lib_footprint_issues": 115,
+        "silk_edge_clearance": 4,
+        "silk_over_copper": 1,
+        "silk_overlap": 2,
+        "solder_mask_bridge": 151,
+        "track_dangling": 8
+      },
+      "by_severity": {
+        "error": 682,
+        "warning": 130
+      }
+    }
+  },
+  "tags": [
+    "2-layer",
+    "medium",
+    "plane",
+    "routine",
+    "tier-b"
+  ],
+  "tier": "B",
+  "expected_outcome": "complete",
+  "timeout_budget": "00:05:00"
+}

@@ -1,0 +1,28 @@
+{
+  "board": "newer-motor-controllers_stm32f407riser",
+  "source_pcb": "C:\\Work\\PCBench\\PCBs\\newer-motor-controllers_stm32f407riser\\raw.kicad_pcb",
+  "layers": 4,
+  "via_count": 79,
+  "segment_count": 732,
+  "approximate_track_length_mm": 1497.53,
+  "kicad_drc_violations": 423,
+  "generated_at": "2026-08-18T18:21:03.592801+00:00",
+  "note": "KiCad DSN export omits copper-to-edge clearance (Issue 558); KiCad DRC on raw.kicad_pcb is the external reference.",
+  "kicad_drc_breakdown": {
+    "total_violations": 423,
+    "unconnected_count": 5,
+    "by_type": {
+      "clearance": 242,
+      "courtyards_overlap": 2,
+      "lib_footprint_issues": 57,
+      "silk_over_copper": 82,
+      "silk_overlap": 29,
+      "text_height": 5,
+      "track_dangling": 6
+    },
+    "by_severity": {
+      "error": 244,
+      "warning": 179
+    }
+  }
+}
