@@ -278,6 +278,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
   /** Optimize the route on the board. */
   public void runBatchLoop() {
+    if (this.job != null && this.job.board != null) {
+      this.board = this.job.board;
+    }
+
     job.logDebug(
         "Before optimization: Via count: "
             + board.getVias().size()
