@@ -45,6 +45,7 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
   ./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes
   pre-commit run --all-files
   ```
+- **Reviewer Feedback Loop:** After creating a PR, wait a few minutes for Copilot (or other reviewer agents / bots) to review the PR (`gh pr view <pr-number> --json comments,reviews`). Read the remarks, evaluate them objectively, and fix any valid issues before considering the PR ready or moving to the next task.
 
 ## 3. Standard Label Taxonomy
 
