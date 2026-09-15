@@ -851,7 +851,7 @@ public final class BatchOptimizer extends NamedAlgorithm {
         this.deadlineMs);
   }
 
-  private static ItemRouteResult optRouteItemOnBoard(
+  static ItemRouteResult optRouteItemOnBoard(
       RoutingJob job,
       RoutingBoard routingBoard,
       Item item,

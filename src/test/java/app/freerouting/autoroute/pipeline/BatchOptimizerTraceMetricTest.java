@@ -53,6 +53,33 @@ class BatchOptimizerTraceMetricTest {
   }
 
   @Test
+  void zeroBaselineFallbackDerivesFromBoardSnapshot() throws Exception {
+    RoutingJob job = routedFixtureJob();
+    Trace trace =
+        job.board.getTraces().stream()
+            .filter(item -> !item.isUserFixed())
+            .min(Comparator.comparingInt(Trace::getId))
+            .orElseThrow(() -> new AssertionError("Fixture must contain an unfixed trace"));
+
+    double snapshotWeightedTraceLength = weightedTraceLength(job.board);
+
+    // Explicitly pass baselineTraceLength = 0.0 to exercise the fallback path
+    ItemRouteResult result =
+        BatchOptimizer.optRouteItemOnBoard(
+            job, job.board, trace, 0.0, false, false, job.thread, null);
+
+    assertNotNull(result, "Optimizer must produce an ItemRouteResult");
+    // With the bug, baseline was 0.0 so result.lengthReduced() was 0.0 - afterTraceLength < 0
+    // and reconstructedBefore would be 0.0. With the fix, reconstructedBefore == snapshotBefore.
+    double reconstructedBefore = result.lengthReduced() + result.traceLength();
+    assertEquals(
+        snapshotWeightedTraceLength,
+        reconstructedBefore,
+        0.001,
+        "When baselineTraceLength is 0, baseline must fall back to board's weighted trace length");
+  }
+
+  @Test
   void traceOnlyImprovementIsAcceptedWhenCanonicalMetricDecreases() {
     ItemRouteResult result = new ItemRouteResult(1, 2, 2, 100.0, 90.0, 0, 0);
 

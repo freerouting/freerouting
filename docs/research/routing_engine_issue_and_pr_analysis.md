@@ -36,7 +36,7 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 | :--- | :--- | :--- | :--- | :--- |
 | **RE-01** | [#872](https://github.com/freerouting/freerouting/issues/872) | Single-sided regression: optimizer starts from worse board than autorouter | **RESOLVED IN PR #892**. `BatchOptimizer.board` instance handoff re-synchronized; regression tests and fixture added. | **MERGE PR #892 (P0)** |
 | **RE-02** | [#798](https://github.com/freerouting/freerouting/issues/798) | NPE in `PullTightAlgo` during interactive routing | **RESOLVED IN PR #901** (supersedes [#817](https://github.com/freerouting/freerouting/pull/817)). Read/write locks, thread-local traversal stack, query-local IDs. | **MERGE PR #901 (P0)** |
-| **RE-03** | [#811](https://github.com/freerouting/freerouting/issues/811) | Optimizer discarding accepted trace improvements | **PARTIALLY VALID**. Board reuse, hygiene & guards merged. Worker trace metric fix pending in PR #818. | **PORT PR #818 (P1)** |
+| **RE-03** | [#811](https://github.com/freerouting/freerouting/issues/811) | Optimizer discarding accepted trace improvements | **RESOLVED IN PR #902** (supersedes [#818](https://github.com/freerouting/freerouting/pull/818)). Weighted trace metric baseline ported to unified `BatchOptimizer`. | **MERGE PR #902 (P1)** |
 | **RE-04** | [#858](https://github.com/freerouting/freerouting/issues/858) | 2.3.0 regression: clearance violations on clean boards | **RESOLVED IN MASTER**. Commit `b32877f93` separated pre-existing DRC violations and added pin containment exemption. | **VERIFY & CLOSE (P1)** |
 | **RE-05** | [#558](https://github.com/freerouting/freerouting/issues/558) | Board-edge clearance class override | **HANDLED IN FREEROUTING**. PR #567 merged; `--router.copper_to_edge_clearance_um` added; upstream KiCad block. | **CLOSE / DOCUMENT (P2)** |
 | **RE-06** | [#632](https://github.com/freerouting/freerouting/issues/632) | Crash on multi-board panels with pins outside PCB boundary | **HANDLED IN MASTER**. `validateBoardDesignErrors()` logs structured warnings. PR #820 provides strict fail-fast. | **CLOSE #632 (P2)** |
@@ -89,7 +89,7 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
   - Board cloning overhead resolved via worker board reuse (`50ee20b4d`).
   - Leftover maze state cleared (`8dcd4cd68`).
   - Pre-flight guards and thresholding implemented (`b3f4ccc0f`, `e7f9bdf1a`).
-  - Remaining: worker trace baseline was starting at `0.0`. PR [#818](https://github.com/freerouting/freerouting/pull/818) fixes this, but needs rebasing into `app.freerouting.autoroute.pipeline.BatchOptimizer`.
+  - Worker trace baseline fix ported to unified `pipeline.BatchOptimizer` with weighted trace metric and unit tests in PR [#902](https://github.com/freerouting/freerouting/pull/902) (superseding [#818](https://github.com/freerouting/freerouting/pull/818)).
 - **Test Command Line:**
   ```powershell
   ./gradlew test --tests app.freerouting.autoroute.pipeline.BatchOptimizerTraceMetricTest
