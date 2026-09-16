@@ -614,7 +614,7 @@ public class GlobalSettings implements Serializable {
               String rawArg = args[j].trim();
               if (new java.io.File(rawArg).exists()) {
                 files.add(rawArg);
-              } else if (rawArg.contains("+")) {
+              } else if (isMultiFileConcatenation(rawArg)) {
                 // Split each argument by '+' to support legacy concatenation (e.g.
                 // file1.dsn+file2.rules)
                 String[] parts = rawArg.split("\\+");
@@ -702,7 +702,7 @@ public class GlobalSettings implements Serializable {
             int j = i + 1;
             while (j < args.length && !args[j].startsWith("-")) {
               String rawArg = args[j].trim();
-              if (rawArg.contains("+")) {
+              if (isMultiFileConcatenation(rawArg)) {
                 String[] parts = rawArg.split("\\+");
                 for (String part : parts) {
                   if (!part.trim().isEmpty()) {
@@ -944,5 +944,34 @@ public class GlobalSettings implements Serializable {
   /** Returns the configured optimizer item-selection strategy. */
   public ItemSelectionStrategy getItemSelectionStrategy() {
     return routerSettings.optimizer.itemSelectionStrategy;
+  }
+
+  /**
+   * Checks if a command line argument string represents a '+' concatenated list of multiple file
+   * paths (e.g. "file1.dsn+file2.rules" or "out.ses+out.kicad_pcb"), rather than a single file path
+   * that happens to contain a '+' character in its name or directory (e.g. "board+rev1.dsn" or
+   * "mechkeys_MF68+10--unrouted.ses").
+   */
+  public static boolean isMultiFileConcatenation(String rawArg) {
+    if (rawArg == null || !rawArg.contains("+")) {
+      return false;
+    }
+    String[] parts = rawArg.split("\\+", -1);
+    if (parts.length < 2) {
+      return false;
+    }
+    for (String part : parts) {
+      String trimmed = part.trim();
+      if (trimmed.isEmpty()) {
+        return false;
+      }
+      // Each file in a '+' concatenation must have a file extension
+      int lastSlash = Math.max(trimmed.lastIndexOf('/'), trimmed.lastIndexOf('\\'));
+      int lastDot = trimmed.lastIndexOf('.');
+      if (lastDot <= lastSlash || lastDot == trimmed.length() - 1) {
+        return false;
+      }
+    }
+    return true;
   }
 }

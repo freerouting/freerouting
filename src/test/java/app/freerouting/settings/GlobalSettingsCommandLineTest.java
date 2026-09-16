@@ -170,6 +170,40 @@ class GlobalSettingsCommandLineTest {
     assertEquals(10, settings.getMaxPasses());
   }
 
+  @Test
+  void outputFileWithPlusInNameNotSplit() {
+    String[] args = {"-do", "scripts/benchmark/outputs/mechkeys_MF68+10--unrouted--2.5.0-RC5.ses"};
+    settings.applyCommandLineArguments(args);
+
+    assertEquals(
+        "scripts/benchmark/outputs/mechkeys_MF68+10--unrouted--2.5.0-RC5.ses",
+        settings.initialOutputFile);
+    assertTrue(settings.additionalOutputFiles.isEmpty());
+  }
+
+  @Test
+  void outputFileWithTrailingPlusNotSplit() {
+    String[] args = {
+      "-do", "scripts/benchmark/outputs/perfplusplus_Ard-perf++--unrouted--2.5.0-RC5.ses"
+    };
+    settings.applyCommandLineArguments(args);
+
+    assertEquals(
+        "scripts/benchmark/outputs/perfplusplus_Ard-perf++--unrouted--2.5.0-RC5.ses",
+        settings.initialOutputFile);
+    assertTrue(settings.additionalOutputFiles.isEmpty());
+  }
+
+  @Test
+  void multiFileOutputWithPlusSplit() {
+    String[] args = {"-do", "output.ses+output.kicad_pcb"};
+    settings.applyCommandLineArguments(args);
+
+    assertEquals("output.ses", settings.initialOutputFile);
+    assertEquals(1, settings.additionalOutputFiles.size());
+    assertEquals("output.kicad_pcb", settings.additionalOutputFiles.get(0));
+  }
+
   // -------------------------------------------------------------------------
   // Tests for string-array settings via the --key=value mechanism
   // -------------------------------------------------------------------------
