@@ -341,7 +341,8 @@ def route_single_board(
                 stray_root_ses.replace(ses_path)
             else:
                 stray_root_ses.unlink(missing_ok=True)
-        except Exception:
+        except OSError:
+            # Best-effort relocation or deletion of stray SES file
             pass
 
     # Clean up truncated prefix file in output_dir (e.g. mechkeys_MF68) if it exists
@@ -350,7 +351,8 @@ def route_single_board(
         if truncated_prefix.is_file():
             try:
                 truncated_prefix.unlink(missing_ok=True)
-            except Exception:
+            except OSError:
+                # Best-effort deletion of truncated prefix artifact
                 pass
 
     # Read normalized metadata from fixture
@@ -653,7 +655,8 @@ def main() -> int:
     for stray_ses in Path(".").glob("*--unrouted--*.ses"):
         try:
             stray_ses.unlink(missing_ok=True)
-        except Exception:
+        except OSError:
+            # Best-effort cleanup of stray SES files at startup
             pass
 
     # Enforce single active benchmark instance
@@ -835,11 +838,13 @@ def main() -> int:
                                     for p in list(active_procs.values()):
                                         try:
                                             p.kill()
-                                        except Exception:
+                                        except (ProcessLookupError, OSError):
+                                            # Process may have already exited
                                             pass
                                 break
                     time.sleep(0.05)
             except Exception:
+                # Keyboard listener polling failed or terminated
                 pass
 
     refresh_thread = threading.Thread(target=background_refresh, daemon=True)
@@ -942,7 +947,8 @@ def main() -> int:
         for stray_ses in Path(".").glob("*--unrouted--*.ses"):
             try:
                 stray_ses.unlink(missing_ok=True)
-            except Exception:
+            except OSError:
+                # Best-effort cleanup of stray SES files on exit
                 pass
 
     if force_kill_event.is_set():
