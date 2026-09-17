@@ -42,7 +42,7 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
 - **PR Push Rule:** If a Pull Request is already open and new commits are made locally, **do not push the commits to the remote branch without explicit confirmation from the user** (pushing triggers remote CI workflows on GitHub Actions).
 - **Quality Gates:** Before creating a PR or requesting review, ensure the local verification passes:
   ```powershell
-  ./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes
+  ./gradlew spotlessCheck checkstyleMain checkstyleTest
   pre-commit run --all-files
   ```
 - **Reviewer Feedback Loop:** After creating a PR, wait a few minutes for Copilot (or other reviewer agents / bots) to review the PR (`gh pr view <pr-number> --json comments,reviews`). Read the remarks, evaluate them objectively, and fix any valid issues before considering the PR ready or moving to the next task.

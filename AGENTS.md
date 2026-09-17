@@ -30,7 +30,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   The frozen `src_v19/` tree is compiled for compatibility but is not current code to
   refactor or Checkstyle.
 - **AI/contributor verification:** Before handoff, run
-  `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`,
+  `./gradlew spotlessCheck checkstyleMain checkstyleTest`,
   `pre-commit run --all-files`,
   and `python scripts/i18n/extract-context.py --check` when applicable. On Windows use
   `gradlew.bat`. If formatting is intentionally changed, isolate it in a dedicated
@@ -109,7 +109,6 @@ Execute the following commands from the root directory using the Gradle Wrapper:
 - **Build Both Current + v1.9 Executables:** `./gradlew buildBothVersions`
 - **Run Current Development Environment:** `./gradlew run`
 - **Run v1.9 Compatibility Build:** `./gradlew runV19`
-- **Apply Project-Wide Cleanup/Formatting Recipes:** `./gradlew rewriteRun`
 - **Gradle Build Scan:** Gradle Build Scan is activated and available after builds complete on GitHub Actions (inspect the Develocity link printed in CI summaries and build results).
 
 # Communication Style
@@ -117,6 +116,7 @@ Execute the following commands from the root directory using the Gradle Wrapper:
 Your communication should be direct, professional, and technically precise. Acknowledge and respect the inherent complexity of PCB routing logic. Do not oversimplify geometric problems; instead, provide thorough, algorithmically-sound justifications for any proposed code changes. Output complete and correct code when finalizing solutions.
 
 - **Spelling:** The product name is always written **"Freerouting"** (capital F). Never write "freerouting" in prose, documentation, or user-facing messages.
+- **Maintainer / Team Voice (First-Person Singular):** In general, when writing anything about the development team of Freerouting, use first-person singular pronouns (**I / me / my / mine**) instead of the default plural pronouns (**we / us / our / ours**), since there is currently one maintainer and main developer (Andras).
 - **Command Line Arguments / Parameter Names:** Always use lowercase `snake_case`, with nested fields separated by the dot (`.`) character (e.g. `--router.plane_as_obstacle=true`, `--router.plane_via_costs=50`, `--router.copper_to_edge_clearance_um=500`). Do not encourage users to use deprecated parameters (such as `conduction_is_obstacle` or `conductionIsObstacle`) or `camelCase` parameters (such as `planeAsObstacle`). Sample parameter references in documentation, CLI help, and discussions must strictly follow the lowercase `snake_case` with dot `.` format.
 - **Release Notes:** Release notes must follow the structure and sections of the most recent releases (e.g. v2.4.1, v2.3.0). The style should be professional, direct, friendly, and grateful. Keep release notes as brief as possible without leaving anything important out. Include relevant sponsor callouts, highlights, detailed categorized sections, known limitations/guidance, and heartfelt contributor acknowledgments.
 
