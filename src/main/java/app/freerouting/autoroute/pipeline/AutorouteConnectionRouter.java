@@ -2,6 +2,7 @@ package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.AutorouteEngine;
 import app.freerouting.board.facade.BasicBoard;
@@ -143,6 +144,7 @@ final class AutorouteConnectionRouter {
               applyStrictDrcAfterRoute(
                   routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot, ripupPassNo);
           if (strictResult != null) {
+            recordFailure(strictResult, routeNet, routeNetNo);
             return strictResult;
           }
           return neckedResult;
@@ -154,20 +156,30 @@ final class AutorouteConnectionRouter {
             applyStrictDrcAfterRoute(
                 routeNetNo, maxItemIdBeforeRoute, strictDrcBoardSnapshot, ripupPassNo);
         if (strictResult != null) {
+          recordFailure(strictResult, routeNet, routeNetNo);
           return strictResult;
         }
       }
 
-      if (autorouteResult.state == AutorouteAttemptState.FAILED
-          && autorouteResult.failureReason != null) {
-        String netName = routeNet != null ? routeNet.name : "#" + routeNetNo;
-        router.recordNetFailureReason(netName, autorouteResult.failureReason);
-      }
+      recordFailure(autorouteResult, routeNet, routeNetNo);
 
       return autorouteResult;
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);
-      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
+      return new AutorouteAttemptResult(
+          AutorouteAttemptState.FAILED,
+          "Unexpected exception during routing: " + e.getMessage(),
+          new FailureReason(
+              FailureReason.FailureType.UNEXPECTED_EXCEPTION,
+              "Unexpected exception aborted the routing attempt: " + e));
+    }
+  }
+
+  /** Records a FAILED result's reason in the per-net map consumed by the unrouted report. */
+  private void recordFailure(AutorouteAttemptResult result, Net routeNet, int routeNetNo) {
+    if (result.state == AutorouteAttemptState.FAILED && result.failureReason != null) {
+      String netName = routeNet != null ? routeNet.name : "#" + routeNetNo;
+      router.recordNetFailureReason(netName, result.failureReason);
     }
   }
 

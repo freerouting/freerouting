@@ -50,6 +50,38 @@ public record FailureReason(FailureType type, String description) {
      * Via placement was attempted during the search, but every candidate via location failed the
      * DRC or via-mask checks, so not a single via expansion element was ever accepted.
      */
-    VIA_PLACEMENT_BLOCKED
+    VIA_PLACEMENT_BLOCKED,
+
+    /**
+     * The router hit its maximum allowed rip-up/shove retry depth. It did not run out of wall-clock
+     * time, but it detected a cyclic conflict where traces were endlessly shoving each other back
+     * and forth.
+     */
+    MAX_RIPUP_DEPTH_REACHED,
+
+    /**
+     * The net's routing layer restrictions conflict with the physical board. For example, the net
+     * class forces routing on the "Top" layer, but the destination is a surface-mount pad on the
+     * "Bottom" layer with no via allowed.
+     */
+    LAYER_RESTRICTION_CONFLICT,
+
+    /**
+     * The maze search found a connection, but it could not be backtracked into concrete board items
+     * and inserted (internal locator or inserter failure).
+     */
+    CONNECTION_INSERTION_FAILED,
+
+    /**
+     * The connection was inserted, but strict DRC enforcement found clearance violations among the
+     * newly inserted items, so the whole connection was ripped and the attempt counts as failed.
+     */
+    STRICT_DRC_REJECTED,
+
+    /**
+     * An unexpected exception aborted the routing attempt before a normal give-up condition was
+     * reached. The exception itself is logged with an error-level stack trace.
+     */
+    UNEXPECTED_EXCEPTION
   }
 }
