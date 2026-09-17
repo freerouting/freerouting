@@ -6,11 +6,13 @@
 # ---------------------------------------------------------------------------
 
 import json
+import platform
 import subprocess
 import textwrap
 import threading
 import time
 import logging
+
 
 from pathlib import Path
 
@@ -115,10 +117,18 @@ class JsonApiRouter:
         """
         logger.info("Starting Freerouting API server...")
         try:
+            popen_kwargs = {}
+            if platform.system() == "Windows":
+                popen_kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+            else:
+                popen_kwargs["start_new_session"] = True
+
             self._api_process = subprocess.Popen(
                 self.plugin.module_command,
+                **popen_kwargs,
             )
         except Exception as e:
+
             logger.error(f"Failed to start Freerouting API server: {e}", exc_info=True)
             wx_show_error(f"Failed to start Freerouting API server:\n{e}")
             return False
