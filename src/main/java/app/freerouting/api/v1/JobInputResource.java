@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -209,11 +210,98 @@ public class JobInputResource extends BaseController {
 
     // Change the settings of the job
     job.setSettings(routerSettings);
+    if (job.board != null) {
+      job.routerSettings.applyBoardSpecificOptimizations(job.board);
+      job.routerSettings.applyNetClassExclusions(job.board);
+    }
 
     // Return the job object
     var response = GSON.toJson(job);
     FRAnalytics.apiEndpointCalled(
         "POST v1/jobs/" + jobId + "/settings", GSON.toJson(routerSettings), response, userId);
+    return Response.ok(response).build();
+  }
+
+  /**
+   * Retrieves the effective merged router settings for a job, including board-specific
+   * optimizations and validation warnings (unknown net classes, clamped values).
+   */
+  @Operation(
+      summary = "Get effective router settings",
+      description =
+          "Returns the effective merged router settings for a job after resolving all"
+              + " configuration layers (defaults, DSN, rules, CLI, and API overrides),"
+              + " board-specific optimizations, and preflight validation warnings.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Effective router settings retrieved successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = RouterSettings.class))),
+        @ApiResponse(responseCode = "404", description = "Job not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid request or session")
+      })
+  @GET
+  @Path("/{jobId}/settings")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getEffectiveSettings(
+      @Parameter(description = "ID of the job to inspect", required = true) @PathParam("jobId")
+          String jobId) {
+    UUID userId = authenticateUser();
+
+    var job = RoutingJobScheduler.getInstance().getJob(jobId);
+    if (job == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("{}").build();
+    }
+
+    Session session = SessionManager.getInstance().getSession(job.sessionId.toString(), userId);
+    if (session == null) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"The session ID '" + job.sessionId + "' is invalid.\"}")
+          .build();
+    }
+
+    RouterSettings effectiveSettings;
+    if (job.board != null) {
+      effectiveSettings =
+          job.routerSettings != null ? job.routerSettings.clone() : new RouterSettings();
+      effectiveSettings.applyBoardSpecificOptimizations(job.board);
+      effectiveSettings.validateAgainstBoard(job.board);
+    } else if (job.input != null && job.input.getData() != null) {
+      try {
+        var tempJob = new RoutingJob(job.sessionId);
+        if (job.routerSettings != null) {
+          tempJob.routerSettings = job.routerSettings.clone();
+        }
+        var compositeInput = new app.freerouting.management.CompositeBoardInput();
+        compositeInput.setDesign(job.input.getData().readAllBytes(), job.input.getFilename());
+        if (job.rules != null && job.rules.getData() != null) {
+          compositeInput.setRules(job.rules.getData().readAllBytes(), job.rules.getFilename());
+        }
+        compositeInput.assembleBoard(tempJob);
+        effectiveSettings = tempJob.routerSettings;
+        if (effectiveSettings == null) {
+          effectiveSettings = new RouterSettings();
+        }
+        effectiveSettings.applyBoardSpecificOptimizations(tempJob.board);
+        effectiveSettings.validateAgainstBoard(tempJob.board);
+      } catch (Exception e) {
+        effectiveSettings =
+            job.routerSettings != null ? job.routerSettings.clone() : new RouterSettings();
+        effectiveSettings.validate();
+      }
+    } else {
+      effectiveSettings =
+          job.routerSettings != null ? job.routerSettings.clone() : new RouterSettings();
+      effectiveSettings.validate();
+    }
+
+    effectiveSettings.populateEffectiveLayerCosts();
+    var response = GSON.toJson(effectiveSettings);
+    FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/settings", null, response, userId);
     return Response.ok(response).build();
   }
 
@@ -334,9 +422,11 @@ public class JobInputResource extends BaseController {
         job.input.setFilename(job.name);
       }
 
-      var routerSettings = new RouterSettings();
-      routerSettings.setLayerCount(job.input.statistics.layers.totalCount);
-      job.setSettings(routerSettings);
+      if (job.routerSettings == null) {
+        job.routerSettings = new RouterSettings();
+      }
+      job.routerSettings.setLayerCount(job.input.statistics.layers.totalCount);
+      job.fireSettingsUpdatedEvent();
 
       var request =
           GSON.toJson(input)
@@ -537,9 +627,11 @@ public class JobInputResource extends BaseController {
       job.input.setFilename(job.name);
     }
 
-    var routerSettings = new RouterSettings();
-    routerSettings.setLayerCount(job.input.statistics.layers.totalCount);
-    job.setSettings(routerSettings);
+    if (job.routerSettings == null) {
+      job.routerSettings = new RouterSettings();
+    }
+    job.routerSettings.setLayerCount(job.input.statistics.layers.totalCount);
+    job.fireSettingsUpdatedEvent();
 
     var request = TextManager.shortenString(jsonBody, 200);
     var response = GSON.toJson(job);

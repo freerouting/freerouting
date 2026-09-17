@@ -184,6 +184,7 @@ public final class RoutingJobScheduler {
                               }
 
                               job.routerSettings.applyBoardSpecificOptimizations(job.board);
+                              job.routerSettings.applyNetClassExclusions(job.board);
 
                               // Load session file if specified in job or globally
                               byte[] sessionBytesToLoad = null;
