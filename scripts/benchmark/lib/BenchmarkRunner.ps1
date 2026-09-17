@@ -250,6 +250,9 @@ function Invoke-BenchmarkRun {
         }
     }
 
+    # Clean up any stray SES files created in the repository root due to '+' filename splitting
+    Get-ChildItem -Path "." -Filter "*--unrouted--*.ses" -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+
     return [PSCustomObject]@{
         ExitCode          = if ($timedOut) { -1 } else { $process.ExitCode }
         WallClockSeconds  = ($endTime - $startTime).TotalSeconds
