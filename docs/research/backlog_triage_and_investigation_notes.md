@@ -15,7 +15,7 @@
 | **[#820](https://github.com/freerouting/freerouting/pull/820)** | PR (Engine/IO) | `CLOSED` | **Confirmed Superseded by #632 fix.** Master uses non-blocking structured `WARNING` logs via `validateBoardDesignErrors()`. Fixture exists at `fixtures/Issue632-MiniAutoPilot/`. | **Closed as superseded.** Test fixture retained. |
 | **[#885](https://github.com/freerouting/freerouting/issues/885)** | Issue (API/MCP) | `OPEN` (High Prio) | **Confirmed Bug in Settings Pipeline.** `CliSettings` omits `-inc`, and `applyBoardSpecificOptimizations()` stomps explicit per-layer trace costs with defaults. | **Fix in v2.5.x.** Unify CLI flags and protect explicit layer settings. |
 | **[#886](https://github.com/freerouting/freerouting/issues/886)** | Issue (API/MCP) | `OPEN` (High Prio) | **Confirmed Feature Gap.** No way to set per-job ignored net classes or layer costs without server restart; no pre-routing settings verification endpoint. | **Implement in v2.5.x.** Expose effective settings and net-class exclusion to MCP. |
-| **[#873](https://github.com/freerouting/freerouting/issues/873)** | Issue (GUI/Plugin) | `OPEN` (High Prio) | **KiCad Plugin Hang.** Modal dialog waits indefinitely on child process/API. Cancellation crashes KiCad. Correlates with off-EDT startup exceptions (PR #819). | **Responded asking for logs.** Test PR #819 thread confinement fix. |
+| **[#873](https://github.com/freerouting/freerouting/issues/873)** | Issue (GUI/Plugin) | `RESOLVED` (Ready to Close) | **KiCad Plugin Hang & Crash.** Commit `899806b1` forced `--gui.enabled=false`, running silent headless routing with no UI, perceived as a startup hang. Terminating child triggered wx callback on deleted C++ dialog. | **Resolved in KiCad plugin.** Restored GUI mode default, added `[settings] gui = true/false`, live stdout streaming in headless mode, and hardened process termination/wx callbacks. |
 | **[#523](https://github.com/freerouting/freerouting/issues/523)** | Issue (Engine) | `CLOSED` | **Discarded / Unreproduced.** Extensive investigation found no reproduction on clean boards; post-route optimizer normalizes stubs. | **Closed as missing-info.** |
 | **[#793](https://github.com/freerouting/freerouting/pull/793)** | PR (Engine/CLI) | `Draft / CONFLICTING` | **Valuable Bug Fixes + Experimental Heuristics.** Contains 6 critical fixes (stub pass trace deletion, `IntPoint.hashCode`, `PriorityQueue.poll`, stream leak) alongside unverified heuristics. | **Cherry-pick high-value bug fixes.** Discard or defer experimental heuristics. |
 | **[#743](https://github.com/freerouting/freerouting/pull/743)** | PR (GUI/Engine) | `Draft / CONFLICTING` | ETA estimation based on search progress. | **Defer.** Low priority for current release. |
@@ -83,30 +83,42 @@
   - **2. Per-Layer Cost Modeling:** Instead of primitive unmanaged `double[]` arrays that lose provenance, store per-layer costs either inside `LayerSettings` (e.g., `layer.preferredTraceCost`, `layer.undesiredTraceCost` using nullable `Double`) or maintain an explicit override mask (`BitSet explicitTraceCosts`).
   - **3. Non-Destructive Default Initialization:** Update `applyBoardSpecificOptimizations()` so it only computes geometric aspect-ratio defaults for layers that have *not* been explicitly configured by a `.rules` file, CLI flag, or API request.
   - **4. Expose to MCP (#886):** Add `ignore_net_classes` and `layer_rules` to the REST API request models and MCP tool definitions (`autoroute_board`, `update_job_settings`), plus a `get_effective_settings` inspection tool to allow clients to verify configuration before routing begins.
+- **Action Taken & Resolution:** **Resolved via PR #906 (Merged to `master`).**
+  - **Unified CLI Mapping:** Added `-inc` mapping in `CliSettings.java` targeting `router.autorouter.ignore_net_classes` with a deprecation notice.
+  - **Safe Reflection Copy:** Updated `ReflectionUtil.copyFields()` to allow copying explicit empty arrays and supported `List`/`Set` collection cloning (`ArrayList` and `LinkedHashSet`).
+  - **Explicit Layer Cost Preservation:** Updated `applyBoardSpecificOptimizations()` in `RouterSettings.java` to preserve user/rules explicit costs on `LayerSettings` without overwriting unconfigured layers with pseudo-overrides.
+  - **Decoupled Net-Class Exclusions:** Moved `applyNetClassExclusions()` out of `applyBoardSpecificOptimizations()` and hooked it into board assembly, scheduling, and settings updates, keeping `GET /v1/jobs/{jobId}/settings` strictly read-only and non-mutating on live boards.
+  - **Per-Layer Cost & Preflight Inspection:** Added `preferredDirectionTraceCost` and `undesiredDirectionTraceCost` to `LayerSettings`, added `populateEffectiveLayerCosts()` for read-only snapshot rendering, and added `validateAgainstBoard()` with warning deduplication.
+  - **Effective Settings Endpoint & MCP Registration:** Implemented `GET /v1/jobs/{jobId}/settings` (`getEffectiveSettings`) and registered `get_effective_settings` in `OpenApiMcpToolRegistry`.
+  - **Serialization:** Exposed `layers` and `validation_warnings` in `RouterSettingsTypeAdapterFactory`.
+  - **Regression Coverage:** Added `Issue885SettingsInitializationTest` and `Issue886McpSettingsTest`.
 
 ---
 
 ### 2.4. Issue #873: 2.4.1 Stays Forever in Loop During Startup
-- **Question:** *How many users are affected? What can the reason be? Is it reproducible? Did they attach logs?*
-- **Investigation:**
+- **Initial Question:** *How many users are affected? What can the reason be? Is it reproducible? Did they attach logs?*
+- **Investigation & Finding:**
   - **User Reports:** 3 distinct users commented on #873 across different platforms:
     1. Kubuntu 26.04 LTS (KDE Plasma 6, OpenJDK 25.0.4)
     2. Fedora Linux 44 (KDE Plasma, OpenJDK 25.0.4.1)
     3. Windows 11 (KiCad 10.0.0.1, Java 25.0.3 JRE)
-  - **Log Attachments:** **None.** No users attached log files to the issue.
-  - **Plugin Mechanism:**
-    - In `integrations/KiCad/kicad-freerouting/plugins/plugin.py`:
-      - For DSN mode, `_run_dsn_stages()` spawns `ProcessThread(self.module_command, on_complete)` and immediately calls `dialog.ShowModal()`.
-      - If the child process (`java -jar freerouting.jar ...`) deadlocks or hangs at startup, `on_complete` is never invoked, leaving the dialog in the "Auto-router is running" state indefinitely.
-      - When the user presses "Cancel", `invoker.terminate()` attempts to kill the process while the wxWidgets modal loop is active, frequently crashing KiCad's Python process on Linux/Windows.
-    - For API mode, `client.wait_for_job_completion()` polls in a background thread while the modal dialog runs. If the embedded API server fails to start or job status never transitions, it hangs similarly.
-  - **Probable Root Cause:**
-    - Startup thread confinement: Prior to **PR #819**, `GuiManager.initializeGUI` called from off the Event Dispatch Thread caused `IllegalStateException: ScreenMessages must only be mutated on the EDT` when loading a board, preventing the GUI window from rendering and hanging the process.
-- **Action Taken:**
-  - **Commented on #873** explaining the plugin modal loop mechanism and requesting diagnostic logs from users:
-    - Freerouting log: `%TEMP%\freerouting\freerouting.log` (Windows) or `/tmp/freerouting/freerouting.log` (Linux).
-    - KiCad plugin terminal / stderr trace.
-  - Recommended testing against the EDT thread confinement fix in PR #819.
+  - **Community Breakthrough:** Users `@joern-h` and `@lucasasdelli` discovered that changing `router_dsn.py:151` from `--gui.enabled=false` to `true` completely fixed the startup problem, allowing the Freerouting 2.4.1 GUI to open and route normally.
+  - **Actual Root Cause Breakdown:**
+    1. **Forced Headless CLI Mode:** In commit `899806b1`, `--gui.enabled=false` was hardcoded into `router_dsn.py`. Users clicking the KiCad toolbar button expected the interactive Swing GUI window to appear. Instead, Freerouting ran silently in the background while KiCad displayed a modal progress dialog with a spinning arrow (*"Auto-router is running"*).
+    2. **Invisible Terminal on Linux/macOS:** On Linux (Kubuntu, Fedora) and macOS, GUI desktop environments do not allocate terminal windows for spawned child processes. Without visual progress or an open GUI, users assumed Freerouting had hung during startup.
+    3. **Crash on Terminate / Cancel:** When users clicked "Terminate", `invoker.terminate()` killed the process, but `ProcessThread`'s `finally:` block queued `dialog.terminate` via `wx_safe_invoke`. By the time wxWidgets dispatched the callback, the modal dialog had already been destroyed, attempting an invocation on a dead C++ pointer and crashing KiCad.
+- **Resolution Implemented:**
+  - **GUI Default & Configurable Mode:** Added `DEFAULT_GUI_ENABLED = True` in `config.py` and `[settings] gui = true` in `plugin.ini`. Users can choose interactive GUI mode (default) or headless background routing.
+  - **Clean Live Progress & Tooltips in Headless Mode:**
+    - Stripped Log4j metadata prefixes (`clean_log_line`) so the dialog shows meaningful status (e.g. `Auto-routing pass #1 started...`) instead of being cut off by timestamp/thread prefixes.
+    - Bound native hover tooltips (`SetToolTip`) to the detail line so hovering displays the complete raw timestamped log entry.
+  - **Console Suppression across all Platforms:** Applied `subprocess.CREATE_NO_WINDOW` on Windows (and `start_new_session = True` on POSIX) across all child process calls, eliminating empty black console windows and popup flashes on all platforms.
+  - **Crash-Safe Process Termination:**
+    - In `ProcessThread`, cancellation immediately disarms `on_complete` under a lock, preventing post-termination callbacks.
+    - `ProcessDialog.terminate()` and `_on_click` guard against invocation on non-modal or destroying dialogs.
+    - `wx_safe_invoke` checks C++ object lifetime (`IsBeingDeleted()`, `bool(target)`) to cleanly drop callbacks if widgets are destroyed.
+
+
 
 ---
 
@@ -252,7 +264,7 @@ flowchart TD
 
     subgraph CriticalFixes ["2. Core Stability & API Fixes"]
         D[Rebase & Merge PR #819 - GUI EDT Confinement]
-        E[Fix #885 & #886 - Unify CliSettings & Protect Layer Costs in SettingsMerger]
+        E[Resolve #885 & #886 - PR #906 MERGED]
         F[Cherry-pick Bug Fixes from PR #793 - Stub deletion, PriorityQueue.poll, FD leak]
     end
 

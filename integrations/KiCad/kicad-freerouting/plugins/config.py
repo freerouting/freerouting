@@ -151,3 +151,12 @@ def normalize_routing_mode(mode):
     if mode is None:
         return DEFAULT_ROUTING_MODE
     return _ROUTING_MODE_ALIASES.get(mode, mode)
+
+
+# ------------------------------------------------------------------
+# GUI / Interactive settings
+# ------------------------------------------------------------------
+# When True, the DSN workflow launches Freerouting's interactive GUI window.
+# When False, Freerouting runs headlessly in the background with progress
+# streamed into KiCad's dialog.
+DEFAULT_GUI_ENABLED = True
