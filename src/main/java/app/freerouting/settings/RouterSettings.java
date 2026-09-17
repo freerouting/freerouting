@@ -449,12 +449,6 @@ public class RouterSettings implements Serializable, Cloneable {
       boardSpecificTraceCostsApplied = true;
     }
 
-    // Keep layers array in sync with final scoring values
-    for (int i = 0; i < layerCount; i++) {
-      layers[i].preferredDirectionTraceCost = scoring.preferredDirectionTraceCost[i];
-      layers[i].undesiredDirectionTraceCost = scoring.undesiredDirectionTraceCost[i];
-    }
-
     // Log the changed parameters
     StringBuilder summary =
         new StringBuilder("applyBoardSpecificOptimizations changed parameters:");
@@ -502,22 +496,46 @@ public class RouterSettings implements Serializable, Cloneable {
     if (changed) {
       FRLogger.debug(summary.toString());
     }
+  }
 
-    // Apply net-class exclusions to the board
-    if (board != null
-        && board.rules != null
-        && board.rules.netClasses != null
-        && this.autorouter != null
-        && this.autorouter.ignoreNetClasses != null) {
-      for (String netClassName : this.autorouter.ignoreNetClasses) {
-        if (netClassName == null || netClassName.isBlank()) {
-          continue;
+  /**
+   * Applies configured net-class autorouter exclusions onto the board's net classes.
+   *
+   * @param board routing board whose net classes to update
+   */
+  public void applyNetClassExclusions(RoutingBoard board) {
+    if (board == null
+        || board.rules == null
+        || board.rules.netClasses == null
+        || this.autorouter == null
+        || this.autorouter.ignoreNetClasses == null) {
+      return;
+    }
+    for (String netClassName : this.autorouter.ignoreNetClasses) {
+      if (netClassName == null || netClassName.isBlank()) {
+        continue;
+      }
+      for (int i = 0; i < board.rules.netClasses.count(); i++) {
+        if (board.rules.netClasses.get(i).getName().equalsIgnoreCase(netClassName)) {
+          board.rules.netClasses.get(i).isIgnoredByAutorouter = true;
         }
-        for (int i = 0; i < board.rules.netClasses.count(); i++) {
-          if (board.rules.netClasses.get(i).getName().equalsIgnoreCase(netClassName)) {
-            board.rules.netClasses.get(i).isIgnoredByAutorouter = true;
-          }
-        }
+      }
+    }
+  }
+
+  /**
+   * Populates effective layer costs from {@link #scoring} onto the {@link #layers} array. Useful
+   * when returning settings snapshots to clients via API or MCP without mutating configuration
+   * provenance on the primary router settings instance.
+   */
+  public void populateEffectiveLayerCosts() {
+    if (layers == null || scoring == null) {
+      return;
+    }
+    for (int i = 0; i < layers.length; i++) {
+      if (layers[i] != null) {
+        layers[i].preferredDirectionTraceCost = getPreferredDirectionTraceCosts(i);
+        layers[i].undesiredDirectionTraceCost = getAgainstPreferredDirectionTraceCosts(i);
       }
     }
   }
@@ -1087,9 +1105,7 @@ public class RouterSettings implements Serializable, Cloneable {
    *     needed
    */
   public void validateAgainstBoard(RoutingBoard board) {
-    if (this.validationWarnings == null) {
-      this.validationWarnings = new ArrayList<>();
-    }
+    this.validationWarnings = new ArrayList<>();
 
     // Validate maxPasses (0 means no limit)
     if (this.autorouter != null && this.autorouter.maxPasses != null) {

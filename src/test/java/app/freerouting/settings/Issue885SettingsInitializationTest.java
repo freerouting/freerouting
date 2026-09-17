@@ -97,7 +97,7 @@ class Issue885SettingsInitializationTest {
     assertEquals(false, powerClass.isIgnoredByAutorouter);
 
     settings.autorouter.ignoreNetClasses = new String[] {"POWER"};
-    settings.applyBoardSpecificOptimizations(board);
+    settings.applyNetClassExclusions(board);
 
     assertTrue(powerClass.isIgnoredByAutorouter);
   }

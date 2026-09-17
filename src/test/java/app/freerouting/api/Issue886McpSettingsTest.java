@@ -145,4 +145,46 @@ class Issue886McpSettingsTest {
     assertTrue(json.contains("1.25"), "JSON should contain undesired trace cost");
     assertTrue(json.contains("Warning: test warning"));
   }
+
+  @Test
+  void validateAgainstBoardDoesNotDuplicateWarningsOnRepeatedCalls() {
+    RouterSettings settings = new RouterSettings();
+    settings.setLayerCount(2);
+    settings.autorouter.ignoreNetClasses = new String[] {"UNKNOWN_CLASS"};
+
+    settings.validateAgainstBoard(board);
+    int firstCount = settings.validationWarnings.size();
+    assertTrue(firstCount > 0);
+
+    settings.validateAgainstBoard(board);
+    assertEquals(firstCount, settings.validationWarnings.size());
+  }
+
+  @Test
+  void getEffectiveSettingsDoesNotMutateLiveBoardOrTurnFallbacksIntoExplicitOverrides() {
+    job.board = board;
+    RouterSettings settings = new RouterSettings();
+    settings.setLayerCount(2);
+    settings.layers[0].preferredDirectionTraceCost = 0.25; // explicit
+    settings.autorouter.ignoreNetClasses = new String[] {"default"};
+    job.routerSettings = settings;
+
+    // Verify board net class is initially not ignored before settings applied to board
+    assertEquals(false, board.rules.netClasses.get("default").isIgnoredByAutorouter);
+
+    // Call GET effective settings
+    Response response = resource.getEffectiveSettings(jobId);
+    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+    // Verify live board was NOT mutated by read-only GET
+    assertEquals(false, board.rules.netClasses.get("default").isIgnoredByAutorouter);
+
+    // Verify fallback costs on unconfigured layer 1 did NOT become explicit on job.routerSettings
+    assertEquals(null, job.routerSettings.layers[1].preferredDirectionTraceCost);
+
+    // Verify response contains the effective costs
+    RouterSettings effective = GSON.fromJson(response.getEntity().toString(), RouterSettings.class);
+    assertEquals(0.25, effective.layers[0].preferredDirectionTraceCost, 1e-6);
+    assertNotNull(effective.layers[1].preferredDirectionTraceCost);
+  }
 }

@@ -210,6 +210,10 @@ public class JobInputResource extends BaseController {
 
     // Change the settings of the job
     job.setSettings(routerSettings);
+    if (job.board != null) {
+      job.routerSettings.applyBoardSpecificOptimizations(job.board);
+      job.routerSettings.applyNetClassExclusions(job.board);
+    }
 
     // Return the job object
     var response = GSON.toJson(job);
@@ -295,6 +299,7 @@ public class JobInputResource extends BaseController {
       effectiveSettings.validate();
     }
 
+    effectiveSettings.populateEffectiveLayerCosts();
     var response = GSON.toJson(effectiveSettings);
     FRAnalytics.apiEndpointCalled("GET v1/jobs/" + jobId + "/settings", null, response, userId);
     return Response.ok(response).build();
