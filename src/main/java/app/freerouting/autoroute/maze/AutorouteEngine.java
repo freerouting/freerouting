@@ -136,7 +136,7 @@ public class AutorouteEngine {
       Map<Item, Integer> ripupCosts) {
     MazeSearchEngine mazeSearchAlgo;
     try {
-      mazeSearchAlgo = MazeSearchEngine.getInstance(startSet, destSet, this, ctrl);
+      mazeSearchAlgo = MazeSearchEngine.create(startSet, destSet, this, ctrl);
     } catch (Exception e) {
       FRLogger.error(
           "AutorouteEngine.autoroute_connection: Exception in MazeSearchEngine.get_instance", e);
@@ -152,6 +152,25 @@ public class AutorouteEngine {
           new FailureReason(
               FailureReason.FailureType.INITIALIZATION_FAILED,
               "MazeSearchEngine.getInstance returned null for net #" + ctrl.netNumber));
+    }
+
+    if (!mazeSearchAlgo.isInitialized()) {
+      // Init gave up: attach the specific reason recorded during init (e.g. the start pin cannot
+      // escape, or no valid destination items), falling back to the generic initialization
+      // failure when init was aborted by a stop request without a reason.
+      FailureReason reason = mazeSearchAlgo.getFailureReason();
+      if (reason == null) {
+        reason =
+            new FailureReason(
+                FailureReason.FailureType.INITIALIZATION_FAILED,
+                "Maze search initialization failed for net #" + ctrl.netNumber);
+      }
+      return new AutorouteAttemptResult(
+          AutorouteAttemptState.FAILED,
+          "Failed to route connection between "
+              + describeConnection(startSet, destSet)
+              + ", because the maze search algorithm could not be initialized.",
+          reason);
     }
 
     MazeSearchEngine.Result searchResult = null;

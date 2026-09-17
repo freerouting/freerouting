@@ -286,6 +286,7 @@ final class MazeExpansionEngine {
         }
         --currentLayer;
       }
+      search.viaExpansionAttempts++;
       if (viaLowerBound > currentDrill.firstLayer) {
         return;
       }
@@ -370,7 +371,9 @@ final class MazeExpansionEngine {
               roomRipped,
               MazeSearchElement.Adjustment.NONE,
               false);
-      search.mazeExpansionList.add(newElement);
+      if (search.mazeExpansionList.add(newElement)) {
+        search.viaExpansionSuccesses++;
+      }
     }
   }
 

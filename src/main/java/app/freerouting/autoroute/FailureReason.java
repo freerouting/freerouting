@@ -37,6 +37,19 @@ public record FailureReason(FailureType type, String description) {
      * Destination items were supplied but none of them had a usable tree shape on an active layer,
      * so the maze had nothing to aim at.
      */
-    NO_VALID_DESTINATION_ITEMS
+    NO_VALID_DESTINATION_ITEMS,
+
+    /**
+     * The maze search could not take even a first step: the start items produced no accessible
+     * expansion doors, i.e. the start pin or pad is fully encapsulated by keepouts, adjacent pads,
+     * or traces, and no escape route into free space exists.
+     */
+    START_PIN_ESCAPE_FAILED,
+
+    /**
+     * Via placement was attempted during the search, but every candidate via location failed the
+     * DRC or via-mask checks, so not a single via expansion element was ever accepted.
+     */
+    VIA_PLACEMENT_BLOCKED
   }
 }

@@ -9,6 +9,8 @@ import app.freerouting.io.specctra.DsnTestFixtures;
 import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 /** Unit tests for {@link AutorouteUnroutedReport} failure-reason inclusion. */
 class AutorouteUnroutedReportTest {
@@ -65,5 +67,29 @@ class AutorouteUnroutedReportTest {
     RoutingBoard board = loadSampleBoard();
     String report = AutorouteUnroutedReport.build(board);
     assertFalse(report.contains("Last failure reason"), () -> report);
+  }
+
+  /**
+   * The report pipeline must stay reason-agnostic: every {@link FailureReason.FailureType} —
+   * including the newer {@code START_PIN_ESCAPE_FAILED} and {@code VIA_PLACEMENT_BLOCKED} — must
+   * round-trip into the printed report line unchanged.
+   */
+  @ParameterizedTest
+  @EnumSource(FailureReason.FailureType.class)
+  void everyFailureTypeIsPrintedForKnownNet(FailureReason.FailureType type) {
+    RoutingBoard board = loadSampleBoard();
+    String baseline = AutorouteUnroutedReport.build(board, Map.of());
+    java.util.regex.Matcher matcher =
+        java.util.regex.Pattern.compile("Net '([^']+)'").matcher(baseline);
+    assertTrue(
+        matcher.find(),
+        () -> "Fixture board must have at least one unrouted net, got:\n" + baseline);
+    String netName = matcher.group(1);
+
+    FailureReason reason = new FailureReason(type, "Test failure description.");
+    String report = AutorouteUnroutedReport.build(board, Map.of(netName, reason));
+    assertTrue(
+        report.contains("Last failure reason (" + type.name() + "): Test failure description."),
+        () -> "Report should contain the failure reason line for " + type + ", got:\n" + report);
   }
 }
