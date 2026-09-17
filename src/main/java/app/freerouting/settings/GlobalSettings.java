@@ -614,7 +614,7 @@ public class GlobalSettings implements Serializable {
               String rawArg = args[j].trim();
               if (new java.io.File(rawArg).exists()) {
                 files.add(rawArg);
-              } else if (isMultiFileConcatenation(rawArg)) {
+              } else if (isMultiFileConcatenation(rawArg, DE_VALID_EXTENSIONS)) {
                 // Split each argument by '+' to support legacy concatenation (e.g.
                 // file1.dsn+file2.rules)
                 String[] parts = rawArg.split("\\+");
@@ -702,7 +702,7 @@ public class GlobalSettings implements Serializable {
             int j = i + 1;
             while (j < args.length && !args[j].startsWith("-")) {
               String rawArg = args[j].trim();
-              if (isMultiFileConcatenation(rawArg)) {
+              if (isMultiFileConcatenation(rawArg, DO_VALID_EXTENSIONS)) {
                 String[] parts = rawArg.split("\\+");
                 for (String part : parts) {
                   if (!part.trim().isEmpty()) {
@@ -946,13 +946,20 @@ public class GlobalSettings implements Serializable {
     return routerSettings.optimizer.itemSelectionStrategy;
   }
 
+  public static final java.util.Set<String> DE_VALID_EXTENSIONS =
+      java.util.Set.of(".dsn", ".json", ".ses", ".rules");
+
+  public static final java.util.Set<String> DO_VALID_EXTENSIONS =
+      java.util.Set.of(".ses", ".dsn", ".scr", ".rules", ".json", ".drc", ".frb", ".kicad_pcb");
+
   /**
    * Checks if a command line argument string represents a '+' concatenated list of multiple file
    * paths (e.g. "file1.dsn+file2.rules" or "out.ses+out.kicad_pcb"), rather than a single file path
-   * that happens to contain a '+' character in its name or directory (e.g. "board+rev1.dsn" or
-   * "mechkeys_MF68+10--unrouted.ses").
+   * that happens to contain a '+' character in its name or directory (e.g. "board+rev1.dsn",
+   * "board.v1+final.dsn", or "mechkeys_MF68+10--unrouted.ses").
    */
-  public static boolean isMultiFileConcatenation(String rawArg) {
+  public static boolean isMultiFileConcatenation(
+      String rawArg, java.util.Set<String> validExtensions) {
     if (rawArg == null || !rawArg.contains("+")) {
       return false;
     }
@@ -971,7 +978,19 @@ public class GlobalSettings implements Serializable {
       if (lastDot <= lastSlash || lastDot == trimmed.length() - 1) {
         return false;
       }
+      String ext = trimmed.substring(lastDot).toLowerCase(java.util.Locale.ROOT);
+      if (validExtensions != null && !validExtensions.contains(ext)) {
+        return false;
+      }
     }
     return true;
+  }
+
+  /**
+   * Checks if a command line argument string represents a '+' concatenated list of multiple file
+   * paths with any valid file extension.
+   */
+  public static boolean isMultiFileConcatenation(String rawArg) {
+    return isMultiFileConcatenation(rawArg, null);
   }
 }

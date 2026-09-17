@@ -217,6 +217,10 @@ def route_single_board(
     log_path = log_dir / f"{board_id}--unrouted--{version_label}.log"
 
     wid = worker_slots.get()
+    if cancel_event.is_set() or force_kill_event.is_set():
+        worker_slots.put(wid)
+        return None
+
     t0 = time.perf_counter()
 
     with status_lock:
@@ -226,6 +230,10 @@ def route_single_board(
             "last_line": "Starting autorouter process...",
             "active": True,
         }
+
+    # Isolate per-worker user data directory to prevent concurrent write contention on freerouting.json
+    worker_user_data_dir = user_data_dir / f"worker-{wid}"
+    worker_user_data_dir.mkdir(parents=True, exist_ok=True)
 
     # Timeout calculation
     parts = timeout_budget.split(":")
@@ -242,7 +250,7 @@ def route_single_board(
         "-Dfreerouting.log.console.level=INFO",
         "-jar",
         str(jar_path),
-        f"--user_data_path={user_data_dir.resolve()}",
+        f"--user_data_path={worker_user_data_dir.resolve()}",
         "--gui.enabled=false",
         "--api_server.enabled=false",
         "--mcp_server.enabled=false",
@@ -276,7 +284,13 @@ def route_single_board(
             bufsize=1,
         )
         with status_lock:
-            active_procs[wid] = proc
+            if force_kill_event.is_set():
+                try:
+                    proc.kill()
+                except (ProcessLookupError, OSError):
+                    pass
+            else:
+                active_procs[wid] = proc
 
         def stream_reader():
             if proc.stdout:
@@ -556,6 +570,7 @@ def render_dashboard(
     status_lock: threading.Lock,
     version_label: str = "",
     cancel_requested: bool = False,
+    keyboard_supported: bool = True,
     in_place: bool = True,
 ) -> None:
     """Print updated multi-worker dashboard with live logs and recent history."""
@@ -567,7 +582,7 @@ def render_dashboard(
 
     ver_part = f" | {C_BWHITE}Version:{C_RESET} {C_BCYAN}{version_label}{C_RESET}" if version_label else ""
 
-    status_hint = "" if cancel_requested else f" | {C_DIM}[ESC / Q to stop gracefully]{C_RESET}"
+    status_hint = "" if cancel_requested or not keyboard_supported else f" | {C_DIM}[ESC / Q to stop gracefully]{C_RESET}"
 
     lines = []
     lines.append(f"{C_BCYAN}{'=' * 135}{C_RESET}")
@@ -651,14 +666,6 @@ def main() -> int:
     results_dir.mkdir(parents=True, exist_ok=True)
     user_data_dir.mkdir(parents=True, exist_ok=True)
 
-    # Clean up any stray SES files created in root working directory
-    for stray_ses in Path(".").glob("*--unrouted--*.ses"):
-        try:
-            stray_ses.unlink(missing_ok=True)
-        except OSError:
-            # Best-effort cleanup of stray SES files at startup
-            pass
-
     # Enforce single active benchmark instance
     lock_file = results_dir / ".benchmark.lock"
     proc_lock = ProcessLock(lock_file)
@@ -677,6 +684,14 @@ def main() -> int:
             flush=True,
         )
         return 1
+
+    # Clean up any stray SES files created in root working directory
+    for stray_ses in Path(".").glob("*--unrouted--*.ses"):
+        try:
+            stray_ses.unlink(missing_ok=True)
+        except OSError:
+            # Best-effort cleanup of stray SES files at startup
+            pass
 
     atexit.register(proc_lock.release)
 
@@ -797,6 +812,28 @@ def main() -> int:
     stop_refresh = threading.Event()
     cancel_event = threading.Event()
     force_kill_event = threading.Event()
+    keyboard_supported = sys.platform == "win32" or (hasattr(sys, "stdin") and sys.stdin.isatty())
+
+    def on_cancel_key():
+        if not cancel_event.is_set():
+            cancel_event.set()
+            with status_lock:
+                active_cnt = sum(1 for w in worker_status.values() if w.get("active"))
+                recent_messages.append(
+                    f"{C_BYELLOW}[GRACEFUL STOP] Draining {active_cnt} active worker(s). Press ESC/Q again to force kill.{C_RESET}"
+                )
+        else:
+            force_kill_event.set()
+            with status_lock:
+                recent_messages.append(
+                    f"{C_BRED}[FORCE KILL] Terminating all active processes immediately...{C_RESET}"
+                )
+                for p in list(active_procs.values()):
+                    try:
+                        p.kill()
+                    except (ProcessLookupError, OSError):
+                        # Process may have already exited
+                        pass
 
     def background_refresh():
         while not stop_refresh.is_set() and not force_kill_event.is_set():
@@ -811,6 +848,7 @@ def main() -> int:
                     status_lock,
                     version_label=args.version_label,
                     cancel_requested=cancel_event.is_set(),
+                    keyboard_supported=keyboard_supported,
                     in_place=True,
                 )
 
@@ -822,29 +860,34 @@ def main() -> int:
                     if msvcrt.kbhit():
                         ch = msvcrt.getch()
                         if ch in (b"\x1b", b"q", b"Q"):
-                            if not cancel_event.is_set():
-                                cancel_event.set()
-                                with status_lock:
-                                    active_cnt = sum(1 for w in worker_status.values() if w.get("active"))
-                                    recent_messages.append(
-                                        f"{C_BYELLOW}[GRACEFUL STOP] Draining {active_cnt} active worker(s). Press ESC/Q again to force kill.{C_RESET}"
-                                    )
-                            else:
-                                force_kill_event.set()
-                                with status_lock:
-                                    recent_messages.append(
-                                        f"{C_BRED}[FORCE KILL] Terminating all active processes immediately...{C_RESET}"
-                                    )
-                                    for p in list(active_procs.values()):
-                                        try:
-                                            p.kill()
-                                        except (ProcessLookupError, OSError):
-                                            # Process may have already exited
-                                            pass
+                            on_cancel_key()
+                            if force_kill_event.is_set():
                                 break
                     time.sleep(0.05)
             except Exception:
                 # Keyboard listener polling failed or terminated
+                pass
+        elif hasattr(sys, "stdin") and sys.stdin.isatty():
+            try:
+                import select
+                import termios
+                import tty
+                fd = sys.stdin.fileno()
+                old_settings = termios.tcgetattr(fd)
+                try:
+                    tty.setcbreak(fd)
+                    while not stop_refresh.is_set() and not force_kill_event.is_set():
+                        rlist, _, _ = select.select([sys.stdin], [], [], 0.05)
+                        if rlist:
+                            ch = sys.stdin.read(1)
+                            if ch in ("\x1b", "q", "Q"):
+                                on_cancel_key()
+                                if force_kill_event.is_set():
+                                    break
+                finally:
+                    termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            except Exception:
+                # POSIX keyboard listener unsupported or terminal unavailable
                 pass
 
     refresh_thread = threading.Thread(target=background_refresh, daemon=True)
@@ -919,11 +962,14 @@ def main() -> int:
                         recent_messages,
                         status_lock,
                         version_label=args.version_label,
+                        cancel_requested=cancel_event.is_set(),
+                        keyboard_supported=keyboard_supported,
                         in_place=True,
                     )
 
                 except Exception as e:
                     error_count += 1
+                    pct = (completed / len(tasks)) * 100.0 if tasks else 0.0
                     msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: ERROR {e}"
                     recent_messages.append(msg)
                     save_benchmarks_atomic()
@@ -935,6 +981,8 @@ def main() -> int:
                         recent_messages,
                         status_lock,
                         version_label=args.version_label,
+                        cancel_requested=cancel_event.is_set(),
+                        keyboard_supported=keyboard_supported,
                         in_place=True,
                     )
 

@@ -204,6 +204,20 @@ class GlobalSettingsCommandLineTest {
     assertEquals("output.kicad_pcb", settings.additionalOutputFiles.get(0));
   }
 
+  @Test
+  void fileWithDotAndPlusInNameNotSplit() {
+    String[] args = {"-do", "board.v1+final.dsn"};
+    settings.applyCommandLineArguments(args);
+
+    assertEquals("board.v1+final.dsn", settings.initialOutputFile);
+    assertTrue(settings.additionalOutputFiles.isEmpty());
+
+    GlobalSettings gsDe = new GlobalSettings();
+    gsDe.applyCommandLineArguments(new String[] {"-de", "board.v1+final.dsn"});
+    assertEquals("board.v1+final.dsn", gsDe.initialInputFile);
+    assertNull(gsDe.designSessionFilename);
+  }
+
   // -------------------------------------------------------------------------
   // Tests for string-array settings via the --key=value mechanism
   // -------------------------------------------------------------------------
