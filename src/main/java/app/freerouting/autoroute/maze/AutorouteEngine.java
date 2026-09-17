@@ -3,6 +3,7 @@ package app.freerouting.autoroute.maze;
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.AutorouteDiagnostic;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.autoroute.drill.DrillPageArray;
 import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
@@ -147,7 +148,10 @@ public class AutorouteEngine {
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
               + describeConnection(startSet, destSet)
-              + ", because the maze search algorithm could not be created.");
+              + ", because the maze search algorithm could not be created.",
+          new FailureReason(
+              FailureReason.FailureType.INITIALIZATION_FAILED,
+              "MazeSearchEngine.getInstance returned null for net #" + ctrl.netNumber));
     }
 
     MazeSearchEngine.Result searchResult = null;
@@ -205,17 +209,21 @@ public class AutorouteEngine {
     }
 
     if (searchResult == null) {
+      FailureReason reason = (mazeSearchAlgo != null) ? mazeSearchAlgo.getFailureReason() : null;
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
               + describeConnection(startSet, destSet)
-              + ", because no connection was found between their nets.");
+              + ", because no connection was found between their nets.",
+          reason);
     }
 
     if (autorouteResult == null) {
+      FailureReason reason = (mazeSearchAlgo != null) ? mazeSearchAlgo.getFailureReason() : null;
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
-          "Failed to route connection between " + describeConnection(startSet, destSet) + ".");
+          "Failed to route connection between " + describeConnection(startSet, destSet) + ".",
+          reason);
     }
 
     if (!ctrl.layerActive[autorouteResult.startLayer]

@@ -158,6 +158,12 @@ final class AutorouteConnectionRouter {
         }
       }
 
+      if (autorouteResult.state == AutorouteAttemptState.FAILED
+          && autorouteResult.failureReason != null) {
+        String netName = routeNet != null ? routeNet.name : "#" + routeNetNo;
+        router.recordNetFailureReason(netName, autorouteResult.failureReason);
+      }
+
       return autorouteResult;
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);

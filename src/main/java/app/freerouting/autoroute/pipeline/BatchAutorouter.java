@@ -3,6 +3,7 @@ package app.freerouting.autoroute.pipeline;
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.BoardHistory;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
@@ -31,6 +32,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** Handles the sequencing of the auto-router passes. */
 public final class BatchAutorouter extends NamedAlgorithm {
@@ -77,6 +79,13 @@ public final class BatchAutorouter extends NamedAlgorithm {
   private final AutorouteConnectionRouter connectionRouter;
   private final AutoroutePassRunner passRunner;
   private final AutorouteBatchLoop batchLoop;
+
+  /**
+   * Latest maze-search failure reason per net name (thread-safe; routing passes may run on multiple
+   * worker threads). Consumed by {@link AutorouteUnroutedReport} at stagnation time.
+   */
+  private final Map<String, FailureReason> netFailureReasons = new ConcurrentHashMap<>();
+
   protected RoutingJob job;
   int totalItemsRouted;
   boolean fanoutTimedOut;
@@ -519,7 +528,23 @@ public final class BatchAutorouter extends NamedAlgorithm {
   }
 
   String buildUnroutedConnectionsReport() {
-    return AutorouteUnroutedReport.build(this.board);
+    return AutorouteUnroutedReport.build(this.board, this.netFailureReasons);
+  }
+
+  /**
+   * Records the latest maze-search failure reason for the given net name. Thread-safe: routing
+   * passes may run on multiple worker threads. The most recent reason wins, because the unrouted
+   * report is emitted at stagnation time and the latest attempt best reflects the current state.
+   */
+  void recordNetFailureReason(String netName, FailureReason reason) {
+    if (netName != null && reason != null) {
+      this.netFailureReasons.put(netName, reason);
+    }
+  }
+
+  /** Clears all recorded per-net failure reasons (called at the start of a routing session). */
+  void clearNetFailureReasons() {
+    this.netFailureReasons.clear();
   }
 
   void removeTails(Item.StopConnectionOption stopConnectionOption) {
