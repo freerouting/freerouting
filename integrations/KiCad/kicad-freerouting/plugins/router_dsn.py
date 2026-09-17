@@ -148,7 +148,7 @@ class DsnRouter:
             str(self.plugin.module_output),
             "-host",
             str(self.plugin.host),
-            "--gui.enabled=false",
+            "--gui.enabled=true",
             "--api_server.enabled=false",
             "--mcp_server.enabled=false",
             f"--logging.file.location={LOG_DIR}",
