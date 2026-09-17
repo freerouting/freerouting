@@ -1,5 +1,6 @@
 package app.freerouting.autoroute.maze;
 
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.autoroute.drill.DrillPage;
 import app.freerouting.autoroute.drill.ExpansionDrill;
@@ -70,6 +71,13 @@ public class MazeSearchEngine {
   private ExpandableObject destinationDoor;
 
   private int sectionNoOfDestinationDoor;
+
+  /**
+   * When non-null, explains why {@link #findConnection()} returned null for this attempt. Populated
+   * only at give-up time; null on success. Per-instance (not shared) so it is safe in multithreaded
+   * routing; the optimizer/batch loop aggregates and deduplicates by net.
+   */
+  private FailureReason failureReason;
 
   /** Creates a new instance of MazeSearchEngine. */
   MazeSearchEngine(AutorouteEngine autorouteEngine, AutorouteControl ctrl) {
@@ -302,9 +310,23 @@ public class MazeSearchEngine {
       continue;
     }
     if (this.destinationDoor == null) {
+      // Exhausted the expansion list without reaching the destination.
+      this.failureReason =
+          new FailureReason(
+              FailureReason.FailureType.CLEARANCE_WALKED_EXHAUSTED,
+              "Maze expansion list exhausted; no DRC-legal path to destination found for net #"
+                  + ctrl.netNumber);
       return null;
     }
     return new Result(this.destinationDoor, this.sectionNoOfDestinationDoor);
+  }
+
+  /**
+   * Returns the failure reason captured during {@link #findConnection()}, or null if the search
+   * succeeded. Callers should treat a null return as "no failure information available".
+   */
+  public FailureReason getFailureReason() {
+    return this.failureReason;
   }
 
   /**
@@ -321,6 +343,13 @@ public class MazeSearchEngine {
     boolean nextElementFound = false;
     while (!mazeExpansionList.isEmpty()) {
       if (this.autorouteEngine.isStopRequested()) {
+        // The routing thread requested a stop (time limit, user cancel, or global timeout).
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.TIME_LIMIT_EXCEEDED,
+                "Maze expansion stopped by thread request; net #"
+                    + ctrl.netNumber
+                    + " did not reach destination");
         return false;
       }
 
