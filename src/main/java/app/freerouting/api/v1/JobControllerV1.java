@@ -15,8 +15,10 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -263,6 +265,36 @@ public class JobControllerV1 extends BaseController {
           String jobId,
       String requestBody) {
     return new JobInputResource().changeSettings(jobId, requestBody);
+  }
+
+  /** Retrieves the effective merged router settings for a job. */
+  @Operation(
+      summary = "Get effective router settings",
+      description =
+          "Returns the effective merged router settings for a job after resolving all configuration"
+              + " layers, board-specific optimizations, and preflight validation warnings.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Effective router settings retrieved successfully",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = RouterSettings.class))),
+        @ApiResponse(responseCode = "404", description = "Job not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid request or session")
+      })
+  @GET
+  @Path("/{jobId}/settings")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getEffectiveSettings(
+      @Parameter(
+              description = "Unique identifier of the job",
+              example = "550e8400-e29b-41d4-a716-446655440000")
+          @PathParam("jobId")
+          String jobId) {
+    return new JobInputResource().getEffectiveSettings(jobId);
   }
 
   /**

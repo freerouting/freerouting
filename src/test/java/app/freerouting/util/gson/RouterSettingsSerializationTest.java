@@ -3,7 +3,6 @@ package app.freerouting.util.gson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.freerouting.settings.LayerSettings;
@@ -29,24 +28,30 @@ class RouterSettingsSerializationTest {
     original.layers[1] = new LayerSettings(true, false);
     original.autorouter.maxPasses = 42;
 
-    // 2. Serialize to JSON using GsonProvider.GSON (must NOT contain layers since we never
-    // serialize it)
+    // 2. Serialize to JSON using GsonProvider.GSON (contains layers when present)
     String json = GsonProvider.GSON.toJson(original);
     assertNotNull(json);
-    assertFalse(json.contains("\"layers\""), "Serialized JSON must NOT contain the 'layers' field");
+    assertTrue(json.contains("\"layers\""), "Serialized JSON must contain the 'layers' field");
     assertTrue(json.contains("\"autorouter\""), "Serialized JSON must nest autorouter settings");
     assertTrue(
         json.contains("\"max_passes\""),
         "Serialized JSON must contain other settings like 'max_passes'");
 
     // 3. Deserialize from the serialized JSON
-    RouterSettings deserializedFromEmptyLayers =
-        GsonProvider.GSON.fromJson(json, RouterSettings.class);
-    assertNotNull(deserializedFromEmptyLayers);
-    assertEquals(42, deserializedFromEmptyLayers.autorouter.maxPasses);
-    assertNull(
-        deserializedFromEmptyLayers.layers,
-        "Layers array should be null since it was not serialized");
+    RouterSettings deserializedFromLayers = GsonProvider.GSON.fromJson(json, RouterSettings.class);
+    assertNotNull(deserializedFromLayers);
+    assertEquals(42, deserializedFromLayers.autorouter.maxPasses);
+    assertNotNull(deserializedFromLayers.layers, "Layers array should be deserialized");
+    assertEquals(2, deserializedFromLayers.layers.length);
+    assertFalse(deserializedFromLayers.layers[0].routable);
+    assertTrue(deserializedFromLayers.layers[0].preferredDirectionHorizontal);
+
+    // 3b. Verify that when layers is null, it is not emitted
+    RouterSettings uninitialized = new RouterSettings();
+    String uninitializedJson = GsonProvider.GSON.toJson(uninitialized);
+    assertFalse(
+        uninitializedJson.contains("\"layers\""),
+        "Serialized JSON must NOT contain 'layers' when null");
 
     // 4. Deserialize from a JSON payload that contains the layers array (simulating API call)
     String apiJson =

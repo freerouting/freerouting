@@ -84,6 +84,10 @@ public class CliSettings implements SettingsSource {
           FRLogger.warn(
               "The '-oit' command-line flag is deprecated; use"
                   + " '--router.optimizer.improvement_threshold' instead.");
+        } else if ("inc".equals(flag)) {
+          FRLogger.warn(
+              "The '-inc' command-line flag is deprecated; use"
+                  + " '--router.autorouter.ignore_net_classes' instead.");
         }
 
         // Map short flags to router settings
@@ -168,6 +172,7 @@ public class CliSettings implements SettingsSource {
     return switch (flag) {
       case "mp" -> "router.max_passes";
       case "mt" -> "router.max_threads";
+      case "inc" -> "router.autorouter.ignore_net_classes";
       case "oit" -> "router.optimizer.improvement_threshold";
       case "router-scoring-version" -> "router.scoring.version";
       case "optimizer-scoring-version" -> "optimizer.scoring.version";
