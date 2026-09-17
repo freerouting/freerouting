@@ -49,9 +49,11 @@ def wx_safe_invoke(function, *args, **kwargs):
         try:
             function(*args, **kwargs)
         except (RuntimeError, TypeError):
+            # Dropped cleanly if target wx object was destroyed concurrently
             pass
 
     wx.CallAfter(_safe_wrapper)
+
 
 
 

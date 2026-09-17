@@ -277,6 +277,7 @@ class ProcessDialog(wx.Dialog):
                 self.Refresh()
                 self.Update()
             except Exception:
+                # Dialog or widget may have been hidden or destroyed during message dispatch
                 pass
 
     def set_detail(self, text, tooltip=None):
@@ -293,6 +294,7 @@ class ProcessDialog(wx.Dialog):
                 self.Refresh()
                 self.Update()
             except Exception:
+                # Detail label may have been destroyed during background stream update
                 pass
 
     def terminate(self):
@@ -301,6 +303,7 @@ class ProcessDialog(wx.Dialog):
             if self and hasattr(self, "IsModal") and self.IsModal():
                 self.EndModal(self.result_terminate)
         except Exception:
+            # Dialog may have already been closed or destroyed
             pass
 
     def show_and_paint(self):
@@ -327,6 +330,7 @@ class ProcessDialog(wx.Dialog):
             if self and hasattr(self, "IsModal") and self.IsModal():
                 self.EndModal(self.result_button)
         except Exception:
+            # Modal loop may have already ended
             pass
 
 
@@ -396,7 +400,6 @@ class ProcessThread(threading.Thread):
                 **popen_kwargs
             )
 
-
             if self.output_handler is not None and self.process.stdout is not None:
                 for line in iter(self.process.stdout.readline, ""):
                     if self.cancelled:
@@ -406,7 +409,8 @@ class ProcessThread(threading.Thread):
                         self.output_handler(line_str)
                 try:
                     self.process.stdout.close()
-                except Exception:
+                except (OSError, ValueError):
+                    # Stream may already be closed or broken during process shutdown
                     pass
 
             self.process.wait()
@@ -453,10 +457,12 @@ class ProcessThread(threading.Thread):
             except subprocess.TimeoutExpired:
                 try:
                     self.process.kill()
-                except Exception:
+                except OSError:
+                    # Process may have already exited before kill was delivered
                     pass
             except Exception as e:
                 print(f"Error terminating process: {e}")
+
 
     def show_error(self):
         """Display a diagnostic dialog with command, exit code, and output."""
