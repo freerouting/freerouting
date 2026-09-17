@@ -1,30 +1,34 @@
 # Routing Engine Issues and PR Analysis for Freerouting v2.5
 
-**Date:** September 15, 2026
+**Date:** September 17, 2026
 **Target Release:** Freerouting v2.5.0
-**Branch:** `fix/v2.5-routing-engine-improvements` / `fix-issue-798-search-tree-npe`
-**Status:** In Progress — RE-01 (PR #892) & RE-02 (PR #901) resolved and under PR review
+**Branch:** `master`
+**Status:** All P0/P1 Engine PRs Merged (#892, #901, #902, #904); 2.5.0-RC5 Benchmark Validated (Score: 953.5, 0 Failures); RE-04 (#858) & Housekeeping (#558, #632, #582, PR #818) Closed; Ready for v2.5.0 Release
 
 ---
 
 ## Executive Summary
 
-A comprehensive audit was performed across all GitHub issues and Pull Requests labeled with `routing-engine`. In total, **16 issues** and **8 pull requests** carry this label.
+A comprehensive audit was performed across all GitHub issues and Pull Requests labeled with `routing-engine`. In total, **16 issues** and **9 pull requests** carry or carried this label.
 
 - **Issues (16 Total):**
-  - **3 Closed:** Handled and verified in previous milestones ([#152](https://github.com/freerouting/freerouting/issues/152), [#837](https://github.com/freerouting/freerouting/issues/837), [#848](https://github.com/freerouting/freerouting/issues/848)).
-  - **4 Critical Engine & Pipeline Fixes (v2.5 Cut):** [#872](https://github.com/freerouting/freerouting/issues/872) (resolved in PR #892), [#798](https://github.com/freerouting/freerouting/issues/798) (resolved in PR #901), [#811](https://github.com/freerouting/freerouting/issues/811), [#858](https://github.com/freerouting/freerouting/issues/858).
-  - **3 CAD / DRC Integration & Input Quirks:** [#558](https://github.com/freerouting/freerouting/issues/558), [#632](https://github.com/freerouting/freerouting/issues/632), [#523](https://github.com/freerouting/freerouting/issues/523).
-  - **2 Non-Engine / Stale / GUI:** [#750](https://github.com/freerouting/freerouting/issues/750), [#582](https://github.com/freerouting/freerouting/issues/582).
+  - **10 Closed:**
+    - Handled and verified in previous milestones: [#152](https://github.com/freerouting/freerouting/issues/152), [#837](https://github.com/freerouting/freerouting/issues/837), [#848](https://github.com/freerouting/freerouting/issues/848).
+    - Resolved and closed in v2.5 cut: [#872](https://github.com/freerouting/freerouting/issues/872), [#798](https://github.com/freerouting/freerouting/issues/798), [#811](https://github.com/freerouting/freerouting/issues/811), [#858](https://github.com/freerouting/freerouting/issues/858), [#558](https://github.com/freerouting/freerouting/issues/558), [#632](https://github.com/freerouting/freerouting/issues/632), [#582](https://github.com/freerouting/freerouting/issues/582).
+  - **1 CAD / DRC Integration & Input Quirk:** [#523](https://github.com/freerouting/freerouting/issues/523) (tagged `missing-info`; unreproduced stubs).
+  - **1 Non-Engine / GUI:** [#750](https://github.com/freerouting/freerouting/issues/750) (`routing-engine` label removed; pure GUI component dragging lag).
   - **4 Long-Term Architectural Enhancements (v2.6+ / v3.0):** [#879](https://github.com/freerouting/freerouting/issues/879), [#716](https://github.com/freerouting/freerouting/issues/716), [#718](https://github.com/freerouting/freerouting/issues/718), [#383](https://github.com/freerouting/freerouting/issues/383).
 
-- **Pull Requests (8 Total):**
-  - **1 Merged:** PR [#887](https://github.com/freerouting/freerouting/pull/887) (Memory allocation & benchmark throughput).
-  - **2 New Resolved PRs for v2.5:** PR [#892](https://github.com/freerouting/freerouting/pull/892) (fixes [#872](https://github.com/freerouting/freerouting/issues/872)), PR [#901](https://github.com/freerouting/freerouting/pull/901) (fixes [#798](https://github.com/freerouting/freerouting/issues/798), supersedes PR [#817](https://github.com/freerouting/freerouting/pull/817)).
-  - **1 High-Value Open PR for v2.5:** PR [#818](https://github.com/freerouting/freerouting/pull/818) (addresses [#811](https://github.com/freerouting/freerouting/issues/811) baseline metric, needs rebase onto unified `pipeline.BatchOptimizer`).
-  - **1 Open Input-Validation PR:** PR [#820](https://github.com/freerouting/freerouting/pull/820) (addresses [#632](https://github.com/freerouting/freerouting/issues/632), soft-warning already on master).
-  - **2 Open Experimental / Stale PRs:** PR [#793](https://github.com/freerouting/freerouting/pull/793) (author advises against merging heuristics), PR [#743](https://github.com/freerouting/freerouting/pull/743) (ETA calculator, package conflicts with modern GUI/scheduler).
-  - **1 Superseded PR:** PR [#817](https://github.com/freerouting/freerouting/pull/817) (superseded by PR [#901](https://github.com/freerouting/freerouting/pull/901)).
+- **Pull Requests (9 Total):**
+  - **5 Merged:**
+    - PR [#887](https://github.com/freerouting/freerouting/pull/887) (Memory allocation & benchmark throughput).
+    - PR [#892](https://github.com/freerouting/freerouting/pull/892) (Fixes [#872](https://github.com/freerouting/freerouting/issues/872) - single-sided optimizer handoff).
+    - PR [#901](https://github.com/freerouting/freerouting/pull/901) (Fixes [#798](https://github.com/freerouting/freerouting/issues/798) - search-tree race condition; supersedes [#817](https://github.com/freerouting/freerouting/pull/817)).
+    - PR [#902](https://github.com/freerouting/freerouting/pull/902) (Fixes [#811](https://github.com/freerouting/freerouting/issues/811) - weighted trace metric baseline; supersedes [#818](https://github.com/freerouting/freerouting/pull/818)).
+    - PR [#904](https://github.com/freerouting/freerouting/pull/904) (Fixes '+' path parsing, per-worker isolation, runner graceful termination, and records 2.5.0-RC5 benchmark).
+  - **1 Closed / Superseded PR:** PR [#818](https://github.com/freerouting/freerouting/pull/818) (superseded by merged PR [#902](https://github.com/freerouting/freerouting/pull/902); closed).
+  - **1 Open Input-Validation PR:** PR [#820](https://github.com/freerouting/freerouting/pull/820) (addresses [#632](https://github.com/freerouting/freerouting/issues/632); soft-warning already in master).
+  - **2 Open Experimental / Stale PRs:** PR [#793](https://github.com/freerouting/freerouting/pull/793) (author advises against merging heuristics), PR [#743](https://github.com/freerouting/freerouting/pull/743) (ETA calculator, obsolete thread architecture).
 
 ---
 
@@ -34,15 +38,15 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 
 | Local ID | GitHub Issue | Title / Scope | Validity Assessment | v2.5 Recommendation |
 | :--- | :--- | :--- | :--- | :--- |
-| **RE-01** | [#872](https://github.com/freerouting/freerouting/issues/872) | Single-sided regression: optimizer starts from worse board than autorouter | **RESOLVED IN PR #892**. `BatchOptimizer.board` instance handoff re-synchronized; regression tests and fixture added. | **MERGE PR #892 (P0)** |
-| **RE-02** | [#798](https://github.com/freerouting/freerouting/issues/798) | NPE in `PullTightAlgo` during interactive routing | **RESOLVED IN PR #901** (supersedes [#817](https://github.com/freerouting/freerouting/pull/817)). Read/write locks, thread-local traversal stack, query-local IDs. | **MERGE PR #901 (P0)** |
-| **RE-03** | [#811](https://github.com/freerouting/freerouting/issues/811) | Optimizer discarding accepted trace improvements | **RESOLVED IN PR #902** (supersedes [#818](https://github.com/freerouting/freerouting/pull/818)). Weighted trace metric baseline ported to unified `BatchOptimizer`. | **MERGE PR #902 (P1)** |
-| **RE-04** | [#858](https://github.com/freerouting/freerouting/issues/858) | 2.3.0 regression: clearance violations on clean boards | **RESOLVED IN MASTER**. Commit `b32877f93` separated pre-existing DRC violations and added pin containment exemption. | **VERIFY & CLOSE (P1)** |
-| **RE-05** | [#558](https://github.com/freerouting/freerouting/issues/558) | Board-edge clearance class override | **HANDLED IN FREEROUTING**. PR #567 merged; `--router.copper_to_edge_clearance_um` added; upstream KiCad block. | **CLOSE / DOCUMENT (P2)** |
-| **RE-06** | [#632](https://github.com/freerouting/freerouting/issues/632) | Crash on multi-board panels with pins outside PCB boundary | **HANDLED IN MASTER**. `validateBoardDesignErrors()` logs structured warnings. PR #820 provides strict fail-fast. | **CLOSE #632 (P2)** |
-| **RE-07** | [#523](https://github.com/freerouting/freerouting/issues/523) | Unrouted/redundant track stubs left after passes | **NOT REPRODUCIBLE**. Tested by BanjoR; Specctra import/export already normalizes stubs. | **NEEDS REPRODUCER (P3)** |
-| **RE-08** | [#750](https://github.com/freerouting/freerouting/issues/750) | GUI component dragging lag and ratsnest | **NOT AN ENGINE BUG**. Swing interaction event lag from PR #749. | **REMOVE LABEL / GUI (P3)** |
-| **RE-09** | [#582](https://github.com/freerouting/freerouting/issues/582) | High-density small-area PCB routing guidance | **QUESTION / ANSWERED**. Comprehensive recommendations provided in thread. | **CLOSE AS ANSWERED (P3)** |
+| **RE-01** | [#872](https://github.com/freerouting/freerouting/issues/872) | Single-sided regression: optimizer starts from worse board than autorouter | **RESOLVED & CLOSED**. Fixed in PR [#892](https://github.com/freerouting/freerouting/pull/892). `BatchOptimizer.board` instance handoff synchronized; regression tests and fixture added. | **CLOSED (P0)** |
+| **RE-02** | [#798](https://github.com/freerouting/freerouting/issues/798) | NPE in `PullTightAlgo` during interactive routing | **RESOLVED & CLOSED**. Fixed in PR [#901](https://github.com/freerouting/freerouting/pull/901) (supersedes [#817](https://github.com/freerouting/freerouting/pull/817)). Per-tree read/write locks, thread-local traversal stack, query-local IDs. | **CLOSED (P0)** |
+| **RE-03** | [#811](https://github.com/freerouting/freerouting/issues/811) | Optimizer discarding accepted trace improvements | **RESOLVED & CLOSED**. Fixed in PR [#902](https://github.com/freerouting/freerouting/pull/902) (supersedes [#818](https://github.com/freerouting/freerouting/pull/818)). Weighted trace metric baseline ported to unified `BatchOptimizer`. | **CLOSED (P1)** |
+| **RE-04** | [#858](https://github.com/freerouting/freerouting/issues/858) | 2.3.0 regression: clearance violations on clean boards | **RESOLVED & CLOSED**. Commit `b32877f93` separated pre-existing DRC violations and added pin containment exemption. Verified via `DevBoardClearanceRoutingTest` (0 router-introduced violations). | **CLOSED (P1)** |
+| **RE-05** | [#558](https://github.com/freerouting/freerouting/issues/558) | Board-edge clearance class override | **RESOLVED & CLOSED**. PR #567 merged; `--router.copper_to_edge_clearance_um` added; upstream KiCad tracking [GitLab #24077](https://gitlab.com/kicad/code/kicad/-/work_items/24077). | **CLOSED (P2)** |
+| **RE-06** | [#632](https://github.com/freerouting/freerouting/issues/632) | Crash on multi-board panels with pins outside PCB boundary | **RESOLVED & CLOSED**. `validateBoardDesignErrors()` in `HeadlessBoardManager` logs structured warnings without crashing valid designs. | **CLOSED (P2)** |
+| **RE-07** | [#523](https://github.com/freerouting/freerouting/issues/523) | Unrouted/redundant track stubs left after passes | **NOT REPRODUCIBLE**. Tested by BanjoR; Specctra import/export already normalizes stubs. Tagged `missing-info`. | **TAGGED (P3)** |
+| **RE-08** | [#750](https://github.com/freerouting/freerouting/issues/750) | GUI component dragging lag and ratsnest | **NOT AN ENGINE BUG**. Swing interaction event lag from PR #749. Removed `routing-engine` label; tagged `GUI`. | **UPDATED (P3)** |
+| **RE-09** | [#582](https://github.com/freerouting/freerouting/issues/582) | High-density small-area PCB routing guidance | **ANSWERED & CLOSED**. Comprehensive routing recommendations and best practices provided in thread. | **CLOSED (P3)** |
 | **RE-10** | [#879](https://github.com/freerouting/freerouting/issues/879) | Custom pad semantics (arbitrary non-convex padstacks) | **VALID FEATURE REQUEST**. Requires rewriting geometric primitives (`ConvexShape`, `SearchTree`). | **DEFER TO v3.0** |
 | **RE-11** | [#716](https://github.com/freerouting/freerouting/issues/716) | Automatic trace length tuning (serpentine / meander) | **EXPLORATORY PROPOSAL**. High-speed length tuning architectural proposal. | **DEFER TO v2.6+** |
 | **RE-12** | [#718](https://github.com/freerouting/freerouting/issues/718) | DRC support for net-ties and overlapping pads | **VALID FEATURE REQUEST**. Fixture committed in `9029645e7`. Multi-net pad clearance exemption. | **DEFER TO v2.6** |
@@ -143,10 +147,12 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
 | PR # | Title | State | Head Branch | Base Branch | Fixes Issue | Compatibility with Master | Recommendation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **#887** | Optimize routing memory allocation and update CI actions | **MERGED** | `research/peak-heap-allocation-optimization` | `master` | General perf | Merged Sep 14, 2026 | Already in master |
-| **#892** | Fix single-sided board regression by updating optimizer board reference | **OPEN** | `fix/v2.5-routing-engine-improvements` | `master` | **#872 (RE-01)** | **High**. Fixes stale board instance in `BatchOptimizer`. Fixture & regression test added. | **MERGE for v2.5** |
-| **#901** | Fix search-tree query/removal race (closes #798) | **OPEN** | `fix-issue-798-search-tree-npe` | `master` | **#798 (RE-02)** | **High**. Supersedes #817; resolves merge conflicts with master, adds thread-local traversal stack & query-local tie-breakers. | **MERGE for v2.5** |
-| **#817** | Fix search-tree query/removal race | **SUPERSEDED** | `fix-issue-798-search-tree-npe` | `master` | **#798 (RE-02)** | **High**. Merged and superseded by PR #901 after resolving conflicts with master. | **SUPERSEDED by #901** |
-| **#818** | Fix optimizer worker trace metric baseline | **SUPERSEDED** | `investigate-issue-811-optimizer` | `master` | **#811 (RE-03)** | **Ported**. Ported to unified `pipeline.BatchOptimizer` with weighted trace length baseline and unit tests on branch `fix/issue-811-optimizer-trace-metric`. | **SUPERSEDED by modern port for v2.5** |
+| **#892** | Fix single-sided board regression by updating optimizer board reference | **MERGED** | `fix/v2.5-routing-engine-improvements` | `master` | **#872 (RE-01)** | Merged Sep 15, 2026 | Synchronizes board instance in `BatchOptimizer`. Fixture & regression test added. |
+| **#901** | Fix search-tree query/removal race (closes #798) | **MERGED** | `fix-issue-798-search-tree-npe` | `master` | **#798 (RE-02)** | Merged Sep 15, 2026 | Per-tree read/write lock, thread-local traversal stack, query-local IDs; supersedes #817. |
+| **#902** | Fix optimizer worker trace metric baseline (closes #811) | **MERGED** | `fix/issue-811-optimizer-trace-metric` | `master` | **#811 (RE-03)** | Merged Sep 15, 2026 | Weighted trace metric baseline in unified `BatchOptimizer`; supersedes #818. |
+| **#904** | Fix '+' path parsing, enhance benchmark runner, and record 2.5.0-RC5 results | **MERGED** | `fix/benchmark-isolation-and-plus-path-parsing` | `master` | Runner / RC5 | Merged Sep 16, 2026 | Fixes path parsing for dots/pluses, per-worker user data isolation, graceful worker drain, 2.5.0-RC5 benchmark (Score: 953.5). |
+| **#817** | Fix search-tree query/removal race | **SUPERSEDED** | `fix-issue-798-search-tree-npe` | `master` | **#798 (RE-02)** | Superseded by PR #901 | Superseded and resolved by PR #901 |
+| **#818** | Fix optimizer worker trace metric baseline | **CLOSED** | `investigate-issue-811-optimizer` | `master` | **#811 (RE-03)** | Superseded by PR #902 | Closed with comment pointing to merged PR #902 |
 | **#820** | Fail fast on DSNs with pins outside PCB boundary | **OPEN** | `fix-issue-632-multi-board-routing` | `master` | **#632 (RE-06)** | **Medium**. Master already implemented soft-warning `validateBoardDesignErrors()`. Making it fatal might break valid edge connectors. | **SUPERSEDED by master's soft warnings; CLOSE or add opt-in flag** |
 | **#793** | Draft: headless fixes, Specctra (type protect) handling, and routing heuristic experiments | **OPEN** | `2bee-router-optimizations` | `master` | Heuristics / leaks | **Low (261 commits behind master)**. Author explicitly advised in PR description NOT to merge routing heuristics after 101-board corpus test showed regression. | **DO NOT MERGE HEURISTICS. Cherry-pick only `IntPoint.hashCode()` and `(type protect)` if needed.** |
 | **#743** | Add RoutingEtaCalculator and improve ETA functionality | **OPEN** | `Feat--Routing-ETA-Caluclator` | `master` | UI feature | **Low**. Touches obsolete `interactive.AutorouterAndRouteOptimizerThread`. Author noted accuracy is only ±10-12% and needs multi-phase rework. | **DEFER to post-v2.5** |
@@ -161,40 +167,47 @@ Each issue is assigned a persistent local identifier (`RE-01` through `RE-16`).
   - [x] Synchronize `this.board = this.job.board;` at entry of `BatchOptimizer.runBatchLoop()`.
   - [x] Add reproduction test fixture `fixtures/Issue872-single-layer-repro.dsn`.
   - [x] Add automated regression test `src/test/java/app/freerouting/fixtures/Issue872SingleLayerRoutingTest.java`.
-  - [x] Create PR: [#892](https://github.com/freerouting/freerouting/pull/892).
+  - [x] Merge PR: [#892](https://github.com/freerouting/freerouting/pull/892) and close [#872](https://github.com/freerouting/freerouting/issues/872).
 
-- [x] **Resolve RE-02 (Issue #798) & Merge PR #817 / PR #901 — Search-Tree Query/Removal Race**
+- [x] **Resolve RE-02 (Issue #798) & Merge PR #901 — Search-Tree Query/Removal Race**
   - [x] Merge PR branch `fix-issue-798-search-tree-npe` with modern `master` architecture (`board.searchtree` package refactoring, Java 25 sealed tile hierarchy).
   - [x] Resolve merge conflicts in `MinAreaTree.java` and `ShapeSearchTree.java`.
   - [x] Add `onNodeVisited()` hook to `MinAreaTree` and adapt `MinAreaTreeLeafLifecycleTest` for `List<Leaf>`.
-  - [x] Push branch to `origin/fix-issue-798-search-tree-npe` and open PR: [#901](https://github.com/freerouting/freerouting/pull/901) (superseding [#817](https://github.com/freerouting/freerouting/pull/817)).
-  - [x] Address Copilot review feedback:
-    - [x] Convert `completeShapeStack` to `ThreadLocal<ArrayStack<TreeNode>>` in `ShapeSearchTree`, `ShapeSearchTree45Degree`, and `ShapeSearchTree90Degree` for concurrent query safety.
-    - [x] Replace static `lastGeneratedEntryId` with query-local `nextEntryId++` in `EntrySortedByClearance`, eliminating cross-instance race conditions.
-    - [x] Remove unused parameter in `onNodeVisited()` and format Javadoc/method calls.
-  - [x] Verify quality gates (`spotlessCheck`, `checkstyleMain`, `checkstyleTest`, `./gradlew test`).
-  - [x] Commit fixes to `fix-issue-798-search-tree-npe` (`54f5500cb`).
+  - [x] Convert `completeShapeStack` to `ThreadLocal<ArrayStack<TreeNode>>` in `ShapeSearchTree`, `ShapeSearchTree45Degree`, and `ShapeSearchTree90Degree` for concurrent query safety.
+  - [x] Replace static `lastGeneratedEntryId` with query-local `nextEntryId++` in `EntrySortedByClearance`, eliminating cross-instance race conditions.
+  - [x] Merge PR: [#901](https://github.com/freerouting/freerouting/pull/901) and close [#798](https://github.com/freerouting/freerouting/issues/798).
 
 - [x] **Port PR #818 Fix into Unified BatchOptimizer (Issue #811 / RE-03)**
   - [x] In `src/main/java/app/freerouting/autoroute/pipeline/BatchOptimizer.java`, apply weighted trace length baseline calculation for worker candidate evaluations (`baseline = baselineTraceLength > 0 ? baselineTraceLength : boardStatisticsBefore.traces.totalWeightedLength;`).
   - [x] Use `totalWeightedLength` consistently for both before baseline and after evaluation in `ItemRouteResult`.
   - [x] Add `BatchOptimizerTraceMetricTest.java` in package `app.freerouting.autoroute.pipeline`.
   - [x] Verify quality gates (`spotlessCheck`, `checkstyleTest`, `./gradlew test`).
-  - [x] Push branch `fix/issue-811-optimizer-trace-metric`.
+  - [x] Merge PR: [#902](https://github.com/freerouting/freerouting/pull/902) and close [#811](https://github.com/freerouting/freerouting/issues/811).
 
-- [ ] **Verify & Close RE-04 (Issue #858)**
-  - [ ] Run verification on vanilla KiCad 10 DSN exports.
-  - [ ] Post results demonstrating zero router-introduced violations in v2.5 and close issue #858.
+- [x] **Benchmark Runner Resilience & 2.5.0-RC5 Benchmark Milestone**
+  - [x] Fix path parsing for filenames with dots and pluses (`board.v1+final.dsn`).
+  - [x] Isolate per-worker user data directories (`scripts/benchmark/.user_data/worker-{wid}`) to eliminate lock contention on `recent_files.json`.
+  - [x] Implement graceful stop (ESC / Q waits for active subprocesses to complete without starting new ones).
+  - [x] Complete full 1,157 PCBench benchmark run:
+    - **Total Duration:** 2,137.9s (fastest release to date; vs RC4 2,233.5s and v2.4.1 3,251.0s).
+    - **Average Score:** **953.5** (project record).
+    - **Failures / Timeouts:** 0 / 1,157 (0.0%).
+  - [x] Merge PR: [#904](https://github.com/freerouting/freerouting/pull/904).
+
+- [x] **Verify & Close RE-04 (Issue #858)**
+  - [x] Run verification on vanilla KiCad 10 DSN exports (`DevBoardClearanceRoutingTest`).
+  - [x] Post results demonstrating zero router-introduced violations in v2.5 and close issue [#858](https://github.com/freerouting/freerouting/issues/858).
 
 ---
 
 ### Phase 2: Issue Housekeeping & Label Management
 
-- [ ] **Close Issue #558 (RE-05):** Add summary comment pointing to `--router.copper_to_edge_clearance_um` and the upstream KiCad issue [GitLab #24077](https://gitlab.com/kicad/code/kicad/-/work_items/24077).
-- [ ] **Close Issue #632 (RE-06):** Note that structured `WARNING` logs are emitted in v2.5 by `validateBoardDesignErrors()` without aborting valid boards.
-- [ ] **Close Issue #582 (RE-09):** Mark as answered and link to `docs/architecture.md` / PCB routing tips.
-- [ ] **Update Issue #750 (RE-08):** Remove `routing-engine` label; leave tagged as `GUI`.
-- [ ] **Update Issue #523 (RE-07):** Tag with `needs-reproducer`; close if no modern repro is provided within 14 days.
+- [x] **Close Superseded PR #818:** Added comment pointing to merged PR [#902](https://github.com/freerouting/freerouting/pull/902) and closed PR.
+- [x] **Close Issue #558 (RE-05):** Added summary comment pointing to `--router.copper_to_edge_clearance_um` and the upstream KiCad issue [GitLab #24077](https://gitlab.com/kicad/code/kicad/-/work_items/24077); closed issue.
+- [x] **Close Issue #632 (RE-06):** Documented structured `WARNING` logs emitted in v2.5 by `validateBoardDesignErrors()` without aborting valid boards; closed issue.
+- [x] **Close Issue #582 (RE-09):** Provided summary of high-density routing recommendations and closed question as answered.
+- [x] **Update Issue #750 (RE-08):** Removed `routing-engine` label; kept tagged as `GUI`.
+- [x] **Update Issue #523 (RE-07):** Added `missing-info` label for unreproduced track stubs.
 
 ---
 

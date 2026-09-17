@@ -1,6 +1,7 @@
 package app.freerouting.settings;
 
 import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 
 /**
@@ -8,22 +9,27 @@ import java.io.Serializable;
  * All fields are nullable so {@code SettingsMerger} can tell "this source sets the field" from
  * "this source has no opinion".
  */
+@Schema(name = "AutorouterSettings", description = "Execution settings for the autorouter stage")
 public class AutorouterSettings implements Serializable, Cloneable {
 
   /** Whether the autorouter stage runs after fanout. */
   @SerializedName("enabled")
+  @Schema(description = "Whether the autorouter stage runs after fanout")
   public Boolean enabled;
 
   /** Algorithm identifier (for example {@link RouterSettings#ALGORITHM_CURRENT}). */
   @SerializedName("algorithm")
+  @Schema(description = "Algorithm identifier (e.g. 'freerouting-router')")
   public String algorithm;
 
   /** Maximum autorouter passes. {@code 0} means no limit. */
   @SerializedName("max_passes")
+  @Schema(description = "Maximum autorouter passes (0 means unlimited)")
   public Integer maxPasses;
 
   /** Maximum items attempted in the autorouter stage. */
   @SerializedName("max_items")
+  @Schema(description = "Maximum items attempted in the autorouter stage")
   public Integer maxItems;
 
   /**
@@ -33,14 +39,19 @@ public class AutorouterSettings implements Serializable, Cloneable {
    * router.optimizer.max_threads}.
    */
   @SerializedName("max_threads")
+  @Schema(description = "Maximum worker threads for the autorouter stage")
   public Integer maxThreads;
 
   /** When true, intermediate board snapshots are saved between autorouter passes. */
   @SerializedName("save_intermediate_stages")
+  @Schema(description = "When true, intermediate board snapshots are saved between passes")
   public Boolean saveIntermediateStages;
 
   /** Net class names the autorouter should skip. */
   @SerializedName("ignore_net_classes")
+  @Schema(
+      description = "Array of exact net class names to skip/ignore during autorouting",
+      example = "[\"kicad_default\"]")
   public String[] ignoreNetClasses;
 
   @Override

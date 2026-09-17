@@ -788,6 +788,7 @@ public class HeadlessBoardManager implements BoardManager {
         this.routingJob.routerSettings.setLayerCount(boardLayerCount);
       }
       this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
+      this.routingJob.routerSettings.applyNetClassExclusions(this.board);
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
       applyPlaneNetsOverride();
