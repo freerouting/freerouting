@@ -28,6 +28,7 @@ import wx
 
 from .config import (
     DEFAULT_ROUTING_MODE, ROUTING_MODE_JSON, normalize_routing_mode,
+    DEFAULT_GUI_ENABLED,
     API_POLL_INTERVAL, API_JOB_TIMEOUT,
     SAVE_DEBUG_JSON, DEBUG_JSON_DIR, DEBUG_INPUT_JSON_FILENAME, DEBUG_OUTPUT_JSON_FILENAME,
     LOG_DIR,
@@ -94,6 +95,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         self.host = "KiCad"
         self.SPECCTRA = True
         self.routing_mode = normalize_routing_mode(DEFAULT_ROUTING_MODE)
+        self.gui_enabled = DEFAULT_GUI_ENABLED
 
     # ------------------------------------------------------------------
     # Main entry point
@@ -133,12 +135,22 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         module_file = config["artifact"]["location"]
         logger.info(f"Freerouting jar configured at: {module_file}")
 
+        gui_enabled = DEFAULT_GUI_ENABLED
+        if "settings" in config and "gui" in config["settings"]:
+            try:
+                gui_enabled = config["settings"].getboolean("gui", fallback=DEFAULT_GUI_ENABLED)
+            except Exception:
+                gui_enabled = DEFAULT_GUI_ENABLED
+        self.gui_enabled = gui_enabled
+        logger.info(f"Freerouting GUI enabled: {self.gui_enabled}")
+
         # Set common attributes needed by both routers
         self.board = board
         self.dirpath = dirpath
         self.here_path = here_path
         self.module_file = module_file
         self.module_path = here_path / module_file
+
 
         # Handle spaces in project path
         import tempfile
@@ -488,32 +500,53 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         # --- Stage 4: Auto-router is running ---
         dialog.set_routing_status(STATUS_IN_PROGRESS)
+        gui_enabled = getattr(self, "gui_enabled", True)
+        if gui_enabled:
+            dialog.set_message("Freerouting GUI is running...\nComplete routing and close the window,\nor press Terminate to cancel.")
+            dialog.set_detail("")
+        else:
+            dialog.set_message("Routing in background...")
+            dialog.set_detail("")
         pump_events()
 
         # Create a ProcessThread to run Freerouting
-        from .process_utils import ProcessThread
+        from .process_utils import ProcessThread, clean_log_line
 
         def on_complete():
             logger.info("ProcessThread completed. Terminating dialog...")
             wx_safe_invoke(dialog.terminate)
 
-        invoker = ProcessThread(self.module_command, on_complete)
+        def output_handler(line):
+            if not gui_enabled:
+                clean_msg, full_msg = clean_log_line(line)
+                if clean_msg:
+                    wx_safe_invoke(dialog.set_detail, clean_msg, full_msg)
+
+        invoker = ProcessThread(
+            self.module_command,
+            on_complete=on_complete,
+            output_handler=output_handler if not gui_enabled else None,
+        )
+
         invoker.start()
 
         modal_result = dialog.ShowModal()
-        invoker.join(timeout=10)
 
         if modal_result == dialog.result_button:
             logger.warning("Routing cancelled by user.")
             invoker.terminate()
+            invoker.join(timeout=3)
             dialog.set_routing_status(STATUS_FAIL)
             return True, False
+
+        invoker.join(timeout=10)
 
         if not invoker.has_ok():
             logger.error(f"Routing process failed. Return code: {invoker.process.returncode if invoker.process else 'None'}")
             dialog.set_routing_status(STATUS_FAIL)
             invoker.show_error()
             return False, False
+
 
         dialog.set_routing_status(STATUS_PASS)
         pump_events()
