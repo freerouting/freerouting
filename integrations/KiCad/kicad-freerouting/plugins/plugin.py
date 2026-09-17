@@ -310,9 +310,12 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                                 Error: {e}
                             """))
                     else:
-                        logger.info("Importing Specctra SES file into KiCad (DSN mode)...")
-                        if not router.import_ses():
-                            logger.error("Failed to import Specctra SES file.")
+                        if self.module_output.is_file():
+                            logger.info("Importing Specctra SES file into KiCad (DSN mode)...")
+                            if not router.import_ses():
+                                logger.error("Failed to import Specctra SES file.")
+                        else:
+                            logger.warning("Specctra SES file does not exist.")
                 else:
                     logger.info(f"Routing finished: success={success}, cancelled={cancelled}")
             finally:
