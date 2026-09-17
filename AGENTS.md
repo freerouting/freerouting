@@ -30,7 +30,7 @@ You are a Senior Java Engineer specialized in Computational Geometry and EDA (El
   The frozen `src_v19/` tree is compiled for compatibility but is not current code to
   refactor or Checkstyle.
 - **AI/contributor verification:** Before handoff, run
-  `./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes`,
+  `./gradlew spotlessCheck checkstyleMain checkstyleTest`,
   `pre-commit run --all-files`,
   and `python scripts/i18n/extract-context.py --check` when applicable. On Windows use
   `gradlew.bat`. If formatting is intentionally changed, isolate it in a dedicated
@@ -109,7 +109,6 @@ Execute the following commands from the root directory using the Gradle Wrapper:
 - **Build Both Current + v1.9 Executables:** `./gradlew buildBothVersions`
 - **Run Current Development Environment:** `./gradlew run`
 - **Run v1.9 Compatibility Build:** `./gradlew runV19`
-- **Apply Project-Wide Cleanup/Formatting Recipes:** `./gradlew rewriteRun`
 - **Gradle Build Scan:** Gradle Build Scan is activated and available after builds complete on GitHub Actions (inspect the Develocity link printed in CI summaries and build results).
 
 # Communication Style

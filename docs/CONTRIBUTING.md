@@ -59,7 +59,7 @@ Run the same checks locally before committing:
 
 ```bash
 pre-commit run --all-files
-./gradlew spotlessCheck checkstyleMain checkstyleTest checkstyleRewriteRecipes
+./gradlew spotlessCheck checkstyleMain checkstyleTest
 python scripts/i18n/extract-context.py --check
 ```
 
