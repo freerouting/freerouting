@@ -375,6 +375,7 @@ class ProcessThread(threading.Thread):
         self.process = None
         self.error = None
         self.cancelled = False
+        self.last_output_lines = []
         self._lock = threading.Lock()
 
     # -- public API -------------------------------------------------------
@@ -395,10 +396,13 @@ class ProcessThread(threading.Thread):
                 popen_kwargs["text"] = True
                 popen_kwargs["bufsize"] = 1
 
-            self.process = subprocess.Popen(
-                self.command,
-                **popen_kwargs
-            )
+            with self._lock:
+                if self.cancelled:
+                    return
+                self.process = subprocess.Popen(
+                    self.command,
+                    **popen_kwargs
+                )
 
             if self.output_handler is not None and self.process.stdout is not None:
                 for line in iter(self.process.stdout.readline, ""):
@@ -406,6 +410,9 @@ class ProcessThread(threading.Thread):
                         break
                     line_str = line.strip()
                     if line_str:
+                        self.last_output_lines.append(line_str)
+                        if len(self.last_output_lines) > 20:
+                            self.last_output_lines.pop(0)
                         self.output_handler(line_str)
                 try:
                     self.process.stdout.close()
@@ -423,10 +430,13 @@ class ProcessThread(threading.Thread):
             if not self.cancelled:
                 self.error = e
         finally:
+            callback = None
             with self._lock:
-                should_complete = (not self.cancelled) and (self.on_complete is not None)
-            if should_complete:
-                self.on_complete()
+                if not self.cancelled:
+                    callback = self.on_complete
+                    self.on_complete = None
+            if callback is not None:
+                callback()
 
     def has_ok(self):
         """Return ``True`` if the process exited with code 0 and was not cancelled."""
@@ -446,30 +456,30 @@ class ProcessThread(threading.Thread):
 
     def terminate(self):
         """Send SIGTERM, then SIGKILL if the process doesn't exit."""
+        proc = None
         with self._lock:
             self.cancelled = True
             self.on_complete = None
+            proc = self.process
 
-        if self.has_process() and self.process.poll() is None:
+        if proc is not None and proc.poll() is None:
             try:
-                self.process.terminate()
-                self.process.wait(timeout=3)
+                proc.terminate()
+                proc.wait(timeout=3)
             except subprocess.TimeoutExpired:
                 try:
-                    self.process.kill()
+                    proc.kill()
                 except OSError:
                     # Process may have already exited before kill was delivered
                     pass
             except Exception as e:
                 print(f"Error terminating process: {e}")
 
-
     def show_error(self):
         """Display a diagnostic dialog with command, exit code, and output."""
         if self.cancelled:
             return
         if platform.system() == "Windows":
-
             cmd_str = subprocess.list2cmdline(self.command)
         else:
             cmd_str = " ".join(shlex.quote(a) for a in self.command)
@@ -484,6 +494,14 @@ class ProcessThread(threading.Thread):
                 error:
                 {self.error}"""))
         elif self.has_code():
+            diag_lines = "\n".join(self.last_output_lines[-10:]) if self.last_output_lines else ""
+            if diag_lines:
+                output_desc = f"output:\n{diag_lines}"
+            elif self.output_handler is not None:
+                output_desc = "(no output was captured)"
+            else:
+                output_desc = "(console output was shown in the terminal window)"
+
             wx_show_error(textwrap.dedent(f"""
                 Program failure:
                 ---
@@ -491,4 +509,4 @@ class ProcessThread(threading.Thread):
                 {cmd_str}
                 ---
                 exit code: {self.process.returncode}
-                (console output was shown in the terminal window)"""))
+                {output_desc}"""))
