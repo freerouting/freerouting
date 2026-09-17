@@ -2,6 +2,7 @@ package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.PerformanceProfiler;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
@@ -538,7 +539,12 @@ public class BatchAutorouterThread extends StoppableThread {
       return autorouteResult;
     } catch (Exception e) {
       FRLogger.error("Error during autoroute_item", e);
-      return new AutorouteAttemptResult(AutorouteAttemptState.FAILED);
+      return new AutorouteAttemptResult(
+          AutorouteAttemptState.FAILED,
+          "Unexpected exception during autoroute_item: " + e.getMessage(),
+          new FailureReason(
+              FailureReason.FailureType.UNEXPECTED_EXCEPTION,
+              "Unexpected exception aborted the routing attempt: " + e));
     }
   }
 

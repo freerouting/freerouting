@@ -336,7 +336,12 @@ public final class BatchAutorouter extends NamedAlgorithm {
         AutorouteAttemptState.FAILED,
         "strict_drc: connection ripped because "
             + newItems.size()
-            + " new item(s) included clearance violations");
+            + " new item(s) included clearance violations",
+        new FailureReason(
+            FailureReason.FailureType.STRICT_DRC_REJECTED,
+            "The routed connection was ripped because "
+                + newItems.size()
+                + " new item(s) included clearance violations."));
   }
 
   public boolean isFanoutTimedOut() {

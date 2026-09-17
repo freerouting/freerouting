@@ -229,6 +229,14 @@ public class AutorouteEngine {
 
     if (searchResult == null) {
       FailureReason reason = (mazeSearchAlgo != null) ? mazeSearchAlgo.getFailureReason() : null;
+      if (reason == null) {
+        // findConnection threw an exception (already logged) or was aborted without recording
+        // a reason; keep the failure recorded instead of losing the diagnostic.
+        reason =
+            new FailureReason(
+                FailureReason.FailureType.UNEXPECTED_EXCEPTION,
+                "Maze search returned null without a recorded reason (possible internal error).");
+      }
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
@@ -238,11 +246,15 @@ public class AutorouteEngine {
     }
 
     if (autorouteResult == null) {
-      FailureReason reason = (mazeSearchAlgo != null) ? mazeSearchAlgo.getFailureReason() : null;
+      // The maze search succeeded, so mazeSearchAlgo.getFailureReason() is necessarily null on
+      // this path; the failure is in backtracking the found connection into board items.
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between " + describeConnection(startSet, destSet) + ".",
-          reason);
+          new FailureReason(
+              FailureReason.FailureType.CONNECTION_INSERTION_FAILED,
+              "The maze search found a connection, but it could not be backtracked into board"
+                  + " items."));
     }
 
     if (!ctrl.layerActive[autorouteResult.startLayer]
@@ -251,7 +263,11 @@ public class AutorouteEngine {
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
               + describeConnection(startSet, destSet)
-              + ", because some of their layers are disabled.");
+              + ", because some of their layers are disabled.",
+          new FailureReason(
+              FailureReason.FailureType.LAYER_RESTRICTION_CONFLICT,
+              "The connection endpoints lie on layers that are not active routing layers for this"
+                  + " net (net-class layer restriction or non-signal plane layer)."));
     }
 
     if (autorouteResult.connectionItems == null) {
@@ -300,7 +316,10 @@ public class AutorouteEngine {
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
               + describeConnection(startSet, destSet)
-              + ", because the new connection could not be inserted.");
+              + ", because the new connection could not be inserted.",
+          new FailureReason(
+              FailureReason.FailureType.CONNECTION_INSERTION_FAILED,
+              "The found connection could not be inserted into the board."));
     }
 
     return new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
