@@ -64,7 +64,7 @@ jobs:
         run: .\gradlew.bat dist --no-daemon
       - name: Create Distribution
         run: .\scripts\build\create-distribution-jar.bat "SNAPSHOT-$(([datetime]::now).tostring('yyyyMMdd_HHmm00'))"
-      - uses: AButler/upload-release-assets@v3.0
+      - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-SNAPSHOT-*.jar'
           release-tag: SNAPSHOT
@@ -92,7 +92,7 @@ jobs:
         run: ./gradlew dist
       - name: Create Distribution
         run: scripts/build/create-distribution-SNAPSHOT-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
-      - uses: AButler/upload-release-assets@v3.0
+      - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
           release-tag: SNAPSHOT
@@ -116,7 +116,7 @@ jobs:
         run: .\gradlew.bat dist --no-daemon
       - name: Create Distribution
         run: .\scripts\build\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"
-      - uses: AButler/upload-release-assets@v3.0
+      - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-SNAPSHOT-*-windows-x64.msi'
           release-tag: SNAPSHOT
@@ -144,7 +144,7 @@ jobs:
         run: ./gradlew dist
       - name: Create Distribution
         run: scripts/build/create-distribution-SNAPSHOT-macos-arm64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
-      - uses: AButler/upload-release-assets@v3.0
+      - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-SNAPSHOT-*-macos-arm64.dmg'
           release-tag: SNAPSHOT
