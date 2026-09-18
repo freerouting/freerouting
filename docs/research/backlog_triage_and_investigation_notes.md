@@ -9,16 +9,16 @@
 
 ## 1. Executive Summary & Decision Matrix
 
-### 1.1. Pull Requests (9 Active, 2 Merged)
+### 1.1. Pull Requests (6 Active, 5 Merged/Closed)
 
 | PR | Domain | Status | Title / Description | Action / Recommendation |
 | :--- | :--- | :--- | :--- | :--- |
 | **[PR #909](https://github.com/freerouting/freerouting/pull/909)** | KiCad / Python | `MERGED` | **Fixes Issue #908.** Check Specctra SES file existence before importing in KiCad plugin. Eliminates error dialogs on clean close without routing. | **Merged into master** (`a6e14c4b4`). Closed #908. |
 | **[PR #891](https://github.com/freerouting/freerouting/pull/891)** | CI / Packaging | `MERGED` | Add Linux AppImage build support via `quick-sharun` for portability across distributions. | **Merged into master** (`96563db32`). |
-| **[PR #819](https://github.com/freerouting/freerouting/pull/819)** | GUI / Java | `IN PROGRESS` | Fix GUI startup thread confinement (dispatch GUI startup synchronously onto Swing EDT). Prevents `ScreenMessages` race condition. | **Conflicts resolved & implementation refined.** Ready for review & merge. |
-| **[PR #843](https://github.com/freerouting/freerouting/pull/843)** | API / Server | `MERGEABLE` | Make scheduler maximum parallel jobs configurable via `--api_server.max_parallel_jobs` and environment variable. | **Review & Merge for v2.5.** Essential for server scaling. |
+| **[PR #819](https://github.com/freerouting/freerouting/pull/819)** | GUI / Java | `MERGED` | Fix GUI startup thread confinement (dispatch GUI startup synchronously onto Swing EDT). Prevents `ScreenMessages` race condition. | **Merged into master** (`8ce0f757e`). Closed #819. |
+| **[PR #843](https://github.com/freerouting/freerouting/pull/843) / [PR #919](https://github.com/freerouting/freerouting/pull/919)** | API / Server | `MERGED` | Make scheduler maximum parallel jobs configurable via `--api_server.max_parallel_jobs` and environment variable with dynamic `cores-1` default. | **Superseded by PR #919 & merged into master** (`db16d292d`). Closed #843. |
 | **[PR #810](https://github.com/freerouting/freerouting/pull/810)** | CI | `MERGEABLE` | Update pre-commit workflow cache configuration. | **Low-risk merge.** Improves CI caching. |
-| **[PR #793](https://github.com/freerouting/freerouting/pull/793)** | Engine / CLI | `Draft / CONFLICTING` | Headless fixes, Specctra type protect handling, and routing heuristics. Contains 6 verified bug fixes alongside experimental heuristics. | **Cherry-pick 6 bug fixes** into a clean PR; discard experimental heuristics. |
+| **[PR #793](https://github.com/freerouting/freerouting/pull/793) / [PR #920](https://github.com/freerouting/freerouting/pull/920)** | Engine / CLI | `MERGED / CLOSED` | Headless fixes, Specctra type protect handling, and routing heuristics. Audited against master: 5 fixes already resolved/inapplicable; directory stream leak cherry-picked and tested. | **Superseded by PR #920 & merged into master.** Closed PR #793. Fixed stream leak in `RoutingJobScheduler`; experimental heuristics discarded per author advice. |
 | **[PR #888](https://github.com/freerouting/freerouting/pull/888)** | GUI | `MERGEABLE` | Improve inspect mode GUI (canvas jump removal, toolbar layout, context menu width clamping). | **Defer to v2.6.** UI refinement. |
 | **[PR #870](https://github.com/freerouting/freerouting/pull/870)** | GUI | `MERGEABLE` | Remove separate window for manual rule selection in exchange for inline panel in router parameters. | **Defer to v2.6.** UI cleanup. |
 | **[PR #809](https://github.com/freerouting/freerouting/pull/809)** | GUI | `CONFLICTING` | Reimplemented trace-width editing for net classes in GUI table editor (addresses #796). | **Rebase & Review for v2.6.** |
@@ -85,30 +85,27 @@
 ### 2.3. GUI Startup Thread Confinement ([PR #819](https://github.com/freerouting/freerouting/pull/819))
 - **Problem:** Freerouting's main entry point historically called `GuiManager.initializeGUI` from the initial application thread rather than Swing's Event Dispatch Thread (EDT). When opening a board directly on launch, `ScreenMessages` mutations threw `IllegalStateException: ScreenMessages must only be mutated on the EDT`, freezing the startup process.
 - **Fix:** Wraps GUI initialization synchronously via refined `invokeOnEdt`, guaranteeing thread confinement and adding regression tests for both on-EDT and off-EDT entry points, interrupt handling, and exception safety.
-- **Status:** Conflicts resolved against `master`; implementation refined with symmetric error handling and unit tests relocated to `app.freerouting.gui.board`.
-- **Recommendation:** Merge for v2.5.0.
+- **Status:** **Merged into master** (`8ce0f757e`). Closed PR #819.
 
 ---
 
-### 2.4. Scheduler Parallel Jobs Configuration ([PR #843](https://github.com/freerouting/freerouting/pull/843))
+### 2.4. Scheduler Parallel Jobs Configuration ([PR #843](https://github.com/freerouting/freerouting/pull/843) / [PR #919](https://github.com/freerouting/freerouting/pull/919))
 - **Problem:** `RoutingJobScheduler` hardcodes concurrent routing jobs to `5`. High-spec self-hosted API servers cannot scale out job throughput without custom source patches.
-- **Fix:** Exposes `--api_server.max_parallel_jobs` (default `5`) participating in the normal `SettingsMerger` priority ladder (CLI, environment variables `FREEROUTING__API_SERVER__MAX_PARALLEL_JOBS`, JSON file).
-- **Status:** `MERGEABLE` and cleanly isolated to `api_server` configuration.
-- **Recommendation:** Review and merge for v2.5.0.
+- **Fix:** Exposes `--api_server.max_parallel_jobs` (with dynamic `cores-1` default) participating in the normal `SettingsMerger` priority ladder (CLI, environment variables `FREEROUTING__API_SERVER__MAX_PARALLEL_JOBS`, JSON file).
+- **Status:** **Superseded by PR #919 & merged into master** (`db16d292d`). Closed PR #843.
 
 ---
 
-### 2.5. Headless Fixes & Heuristic Audit ([PR #793](https://github.com/freerouting/freerouting/pull/793))
-- **Audit Findings:** PR #793 by `@gbacskai` contains 27 commits. A strict line must be drawn between bug fixes and unverified heuristics:
-  - **Critical Bug Fixes (Ready to Cherry-Pick):**
-    1. **Destructive Stub Removal (`a21d7759`):** `minimize_stubs()` erroneously tested `contacts == 1`, matching normal pad-to-via traces and deleting valid copper. Corrected to check for 0 contacts and made opt-in via `--router.minimize_stubs`.
-    2. **`IntPoint` Hash Contract (`0bc6276d`):** `IntPoint` overrode `equals()` but not `hashCode()`, causing undefined behavior when used as map/set keys.
-    3. **`PriorityQueue` Non-Deterministic Iteration (`0bc6276d`):** Replaced `queue.iterator().next()` (unspecified order) with `queue.poll()` in `MazeSearchAlgo`.
-    4. **Stream File Descriptor Leak (`d6de64c9`):** Closed `Files.list()` streams in try-with-resources during job folder management.
-    5. **Impossible Outer Layer Condition (`0bc6276d`):** Corrected `p_layer == 0 && p_layer != 0` in `calculateFastHeuristic`.
-    6. **DSN Unit Resolution Scaling (`0f121a2e`):** Derived escape cluster distance thresholds from `communication.get_resolution()` rather than assuming fixed micron units.
-  - **Experimental Heuristics (Do Not Merge):** Multi-threaded autorouter passes and speculative layer assignment heuristics regressed test fixtures and should remain deferred.
-- **Recommendation:** Extract the 6 critical bug fixes into a dedicated PR with targeted tests.
+### 2.5. Headless Fixes & Heuristic Audit ([PR #793](https://github.com/freerouting/freerouting/pull/793) & [PR #920](https://github.com/freerouting/freerouting/pull/920))
+- **Audit Findings:** PR #793 by `@gbacskai` contains 27 commits. A comprehensive audit of the 6 identified bug fixes against current `master` was performed:
+  1. **Destructive Stub Removal (`a21d7759`):** The experimental stub pass `minimize_stubs` was never present in `master`; `master` does not suffer from destructive stub deletion.
+  2. **`IntPoint` Hash Contract (`0bc6276d`):** Already implemented in `master` via commit `845d8298b` with `PointEqualsHashCodeTest`.
+  3. **`PriorityQueue` Non-Deterministic Iteration (`0bc6276d`):** `master` uses `TreeSet` (deterministic ordering), not `PriorityQueue`.
+  4. **Stream File Descriptor Leak (`d6de64c9`):** Active bug found in `master` in `RoutingJobScheduler.java`! Two unclosed `Files.list(userFolderPath)` streams in `saveJobToDisk` leaked file descriptors under concurrent server/headless runs. **Fixed in `master` via [PR #920](https://github.com/freerouting/freerouting/pull/920) using try-with-resources and verified with regression tests in `RoutingJobSchedulerTest`.**
+  5. **Impossible Outer Layer Condition (`0bc6276d`):** Inapplicable to `master`; belonged to the experimental Manhattan heuristic (`calculateFastHeuristic`) which was never adopted.
+  6. **DSN Unit Resolution Scaling (`0f121a2e`):** Inapplicable to `master`; internal parameter within PR 793's experimental power-trunk pass.
+  - **`(type protect)` Wiring Constraints (`f6ec06578`):** Already protected in `master` via `Trace.isRoutable()` and `Via.isRoutable()` (`!isUserFixed()`).
+- **Status:** **Merged into master via [PR #920](https://github.com/freerouting/freerouting/pull/920).** Closed [PR #793](https://github.com/freerouting/freerouting/pull/793) as superseded.
 
 ---
 
@@ -159,14 +156,15 @@
 ## 3. Active Backlog Priority Matrix
 
 ### Tier 1: Release-Critical for v2.5.0
-1. **[PR #819](https://github.com/freerouting/freerouting/pull/819):** Merge GUI startup thread confinement (conflicts resolved, implementation refined).
-2. **[PR #843](https://github.com/freerouting/freerouting/pull/843):** Merge configurable API server job concurrency.
-3. **[PR #793](https://github.com/freerouting/freerouting/pull/793) (Porting):** Cherry-pick the 6 verified bug fixes into a clean PR.
+*(All Tier 1 items completed and merged for v2.5.0)*
 
 ### Completed for v2.5.0
 - **[PR #909](https://github.com/freerouting/freerouting/pull/909) (Fixes #908):** Merged into master (`a6e14c4b4`).
 - **[PR #891](https://github.com/freerouting/freerouting/pull/891):** Merged into master (`96563db32`).
 - **[Issue #905](https://github.com/freerouting/freerouting/issues/905):** Implemented in release pipeline via `macos-15-intel`.
+- **[PR #819](https://github.com/freerouting/freerouting/pull/819):** Merged into master (`8ce0f757e`).
+- **[PR #843](https://github.com/freerouting/freerouting/pull/843) / [PR #919](https://github.com/freerouting/freerouting/pull/919):** Superseded by PR #919 & merged into master (`db16d292d`).
+- **[PR #793](https://github.com/freerouting/freerouting/pull/793) / [PR #920](https://github.com/freerouting/freerouting/pull/920) (Audit & Stream Leak Fix):** Fixed stream leak in master via PR #920. Closed PR #793 as superseded.
 
 ### Tier 2: Post-v2.5 Release & Modernization
 - **[PR #888](https://github.com/freerouting/freerouting/pull/888) & [PR #870](https://github.com/freerouting/freerouting/pull/870):** Inspect mode and inline manual rules panel polish.
@@ -184,17 +182,8 @@ flowchart TD
         A["Merged PR #909 - Fixes #908 SES check"]
         D["Implemented #905 - macOS x86_64 on macos-15-intel"]
         E["Merged PR #891 - Linux AppImage Support"]
+        B["Merged PR #819 - GUI EDT confinement"]
+        C["Merged PR #919 (superseding #843) - Configurable parallel jobs"]
+        F["Merged PR #920 (superseding #793) - Fixed Directory Stream Leak"]
     end
-
-    subgraph Immediate ["1. v2.5 Active Merges"]
-        B["Merge PR #819 - GUI EDT confinement"]
-        C["Merge PR #843 - Configurable parallel jobs"]
-    end
-
-    subgraph EngineFixes ["2. Targeted Bug Extraction"]
-        F["Cherry-pick 6 bug fixes from PR #793"]
-    end
-
-    Done --> Immediate
-    Immediate --> EngineFixes
 ```

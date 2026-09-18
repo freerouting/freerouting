@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * This singleton class is responsible for managing the jobs that will be processed by the router.
@@ -435,28 +436,32 @@ public final class RoutingJobScheduler {
     Files.createDirectories(userFolderPath);
 
     // Check if we already have a directory that has a name with the ending of
-    // sessionFolder
-    Path sessionFolderPath =
-        Files.list(userFolderPath)
-            .filter(Files::isDirectory)
-            .filter(p -> p.getFileName().toString().endsWith(sessionFolder))
-            .findFirst()
-            .orElse(null);
+    // sessionFolder. Streams over directories must be closed to prevent FD leaks.
+    Path sessionFolderPath;
+    try (Stream<Path> dirs = Files.list(userFolderPath)) {
+      sessionFolderPath =
+          dirs.filter(Files::isDirectory)
+              .filter(p -> p.getFileName().toString().endsWith(sessionFolder))
+              .findFirst()
+              .orElse(null);
+    }
 
     if (sessionFolderPath == null) {
       // List all directories in the user folder and check if they start with a number
       // If they do, then they are job folders, and we can get the highest number and
       // increment it
-      int jobFolderCount =
-          Files.list(userFolderPath)
-              .filter(Files::isDirectory)
-              .map(Path::getFileName)
-              .map(Path::toString)
-              .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
-              .filter(s -> s.matches("\\d+")) // Ensure it is numeric
-              .mapToInt(Integer::parseInt)
-              .max()
-              .orElse(0);
+      int jobFolderCount;
+      try (Stream<Path> dirs = Files.list(userFolderPath)) {
+        jobFolderCount =
+            dirs.filter(Files::isDirectory)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
+                .filter(s -> s.matches("\\d+")) // Ensure it is numeric
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
+      }
 
       sessionFolderPath =
           userFolderPath.resolve("%04d".formatted(jobFolderCount + 1) + "_" + sessionFolder);
