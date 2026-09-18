@@ -270,10 +270,12 @@ public class RoutingJobSchedulerTest {
 
   @Test
   void testGetMaxParallelJobsDefault() {
+    int expectedDefault = RoutingJobScheduler.defaultMaxParallelJobs();
+    assertTrue(expectedDefault >= 1, "Default max parallel jobs must be at least 1.");
     assertEquals(
-        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
+        expectedDefault,
         scheduler.getMaxParallelJobs(),
-        "Default max parallel jobs should equal DEFAULT_MAX_PARALLEL_JOBS.");
+        "Default max parallel jobs should equal defaultMaxParallelJobs().");
   }
 
   @Test
@@ -285,31 +287,28 @@ public class RoutingJobSchedulerTest {
 
   @Test
   void testGetMaxParallelJobsFallbackOnInvalidValues() {
+    int expectedDefault = RoutingJobScheduler.defaultMaxParallelJobs();
+
     // Zero should fall back to default
     Freerouting.globalSettings.apiServerSettings.maxParallelJobs = 0;
-    assertEquals(
-        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
-        scheduler.getMaxParallelJobs(),
-        "0 should fall back to default.");
+    assertEquals(expectedDefault, scheduler.getMaxParallelJobs(), "0 should fall back to default.");
 
     // Negative should fall back to default
     Freerouting.globalSettings.apiServerSettings.maxParallelJobs = -5;
     assertEquals(
-        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
+        expectedDefault,
         scheduler.getMaxParallelJobs(),
         "Negative value should fall back to default.");
 
     // Null should fall back to default
     Freerouting.globalSettings.apiServerSettings.maxParallelJobs = null;
     assertEquals(
-        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
-        scheduler.getMaxParallelJobs(),
-        "Null value should fall back to default.");
+        expectedDefault, scheduler.getMaxParallelJobs(), "Null value should fall back to default.");
 
     // Null globalSettings should fall back to default
     Freerouting.globalSettings = null;
     assertEquals(
-        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
+        expectedDefault,
         scheduler.getMaxParallelJobs(),
         "Null globalSettings should fall back to default.");
   }

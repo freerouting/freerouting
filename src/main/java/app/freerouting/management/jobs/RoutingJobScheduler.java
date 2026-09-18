@@ -41,7 +41,6 @@ public final class RoutingJobScheduler {
 
   private static final int MAX_QUEUED_JOBS = 5_000;
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
-  static final int DEFAULT_MAX_PARALLEL_JOBS = 5;
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
 
   // Private constructor to prevent instantiation
@@ -314,9 +313,19 @@ public final class RoutingJobScheduler {
   }
 
   /**
+   * Returns the default maximum number of routing jobs that may run concurrently, calculated
+   * dynamically as {@code max(1, CPU cores - 1)}.
+   *
+   * @return The default maximum number of parallel jobs.
+   */
+  static int defaultMaxParallelJobs() {
+    return Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  }
+
+  /**
    * Returns the maximum number of routing jobs that may run concurrently, taken from the
-   * api_server.max_parallel_jobs setting. Falls back to the built-in default when the settings are
-   * not loaded yet or the configured value is not positive.
+   * api_server.max_parallel_jobs setting. Falls back to {@link #defaultMaxParallelJobs()} when the
+   * settings are not loaded yet or the configured value is not positive.
    *
    * @return The maximum number of parallel jobs.
    */
@@ -327,7 +336,7 @@ public final class RoutingJobScheduler {
         && (globalSettings.apiServerSettings.maxParallelJobs > 0)) {
       return globalSettings.apiServerSettings.maxParallelJobs;
     }
-    return DEFAULT_MAX_PARALLEL_JOBS;
+    return defaultMaxParallelJobs();
   }
 
   private String uuidToShortCode(UUID uuid) {

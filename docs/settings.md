@@ -263,7 +263,7 @@ Configures the SMD-pin fanout pre-pass stage.
   - `enabled`: Enable/disable API-side rate limiting.
   - `requests_per_window`: Maximum accepted requests per identity in each window.
   - `window_seconds`: Window duration in seconds.
-- **`max_parallel_jobs`**: Maximum number of routing jobs the scheduler runs concurrently (default: `5`). Useful for self-hosted instances that size job concurrency to their hardware.
+- **`max_parallel_jobs`**: Maximum number of routing jobs the scheduler runs concurrently (default: `CPU cores - 1`, minimum `1`). Setting to `0` or omitting triggers auto-detection. Useful for self-hosted instances that size job concurrency to their hardware and JVM heap.
   - Env var: `FREEROUTING__API_SERVER__MAX_PARALLEL_JOBS=10`
 
 #### **`mcp_server` Section**
