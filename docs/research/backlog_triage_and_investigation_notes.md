@@ -1,22 +1,22 @@
 # Open Backlog: Triage, Investigations & Decisions
 
-**Date:** September 17, 2026  
+**Date:** September 18, 2026  
 **Repository:** `freerouting/freerouting`  
 **Target Milestone:** Freerouting v2.5.0 / v2.5.1  
-**Scope:** Active, open issues and pull requests (closed items removed)
+**Scope:** Active backlog triage with status tracking for recently merged/closed items
 
 ---
 
 ## 1. Executive Summary & Decision Matrix
 
-### 1.1. Open Pull Requests (11 Active)
+### 1.1. Pull Requests (9 Active, 2 Merged)
 
 | PR | Domain | Status | Title / Description | Action / Recommendation |
 | :--- | :--- | :--- | :--- | :--- |
-| **[PR #909](https://github.com/freerouting/freerouting/pull/909)** | KiCad / Python | `MERGEABLE` | **Fixes Issue #908.** Check Specctra SES file existence before importing in KiCad plugin. Eliminates error dialogs on clean close without routing. | **Review & Merge for v2.5.** Zero-risk, high user satisfaction. |
+| **[PR #909](https://github.com/freerouting/freerouting/pull/909)** | KiCad / Python | `MERGED` | **Fixes Issue #908.** Check Specctra SES file existence before importing in KiCad plugin. Eliminates error dialogs on clean close without routing. | **Merged into master** (`a6e14c4b4`). Closed #908. |
+| **[PR #891](https://github.com/freerouting/freerouting/pull/891)** | CI / Packaging | `MERGED` | Add Linux AppImage build support via `quick-sharun` for portability across distributions. | **Merged into master** (`96563db32`). |
+| **[PR #819](https://github.com/freerouting/freerouting/pull/819)** | GUI / Java | `IN PROGRESS` | Fix GUI startup thread confinement (dispatch GUI startup synchronously onto Swing EDT). Prevents `ScreenMessages` race condition. | **Conflicts resolved & implementation refined.** Ready for review & merge. |
 | **[PR #843](https://github.com/freerouting/freerouting/pull/843)** | API / Server | `MERGEABLE` | Make scheduler maximum parallel jobs configurable via `--api_server.max_parallel_jobs` and environment variable. | **Review & Merge for v2.5.** Essential for server scaling. |
-| **[PR #819](https://github.com/freerouting/freerouting/pull/819)** | GUI / Java | `CONFLICTING` | Fix GUI startup thread confinement (dispatch GUI startup synchronously onto Swing EDT). Prevents `ScreenMessages` race condition. | **Rebase against master & Merge.** |
-| **[PR #891](https://github.com/freerouting/freerouting/pull/891)** | CI / Packaging | `MERGEABLE` | Add Linux AppImage build support via `quick-sharun` for portability across distributions. | **Hardened naming, metadata & ShellCheck compliance.** Ready to validate & merge. |
 | **[PR #810](https://github.com/freerouting/freerouting/pull/810)** | CI | `MERGEABLE` | Update pre-commit workflow cache configuration. | **Low-risk merge.** Improves CI caching. |
 | **[PR #793](https://github.com/freerouting/freerouting/pull/793)** | Engine / CLI | `Draft / CONFLICTING` | Headless fixes, Specctra type protect handling, and routing heuristics. Contains 6 verified bug fixes alongside experimental heuristics. | **Cherry-pick 6 bug fixes** into a clean PR; discard experimental heuristics. |
 | **[PR #888](https://github.com/freerouting/freerouting/pull/888)** | GUI | `MERGEABLE` | Improve inspect mode GUI (canvas jump removal, toolbar layout, context menu width clamping). | **Defer to v2.6.** UI refinement. |
@@ -27,12 +27,12 @@
 
 ---
 
-### 1.2. Open Issues (17 Active)
+### 1.2. Issues (15 Active, 2 Closed)
 
-| Issue | Domain / Tags | Priority / Milestone | Title & Summary | Next Step |
+| Issue | Domain / Tags | Priority / Milestone | Title & Summary | Status / Next Step |
 | :--- | :--- | :--- | :--- | :--- |
-| **[#909](https://github.com/freerouting/freerouting/pull/909) / [#908](https://github.com/freerouting/freerouting/issues/908)** | KiCad, GUI, Linux | Medium / Future | Closing Freerouting without starting routing tries to import non-existing `freerouting.ses` file in KiCad. | **Fixed by PR #909.** Close upon merge. |
-| **[#905](https://github.com/freerouting/freerouting/issues/905)** | CI, macOS | Medium / 2.5 | Package native Intel (`x86_64`) macOS DMG installer via `macos-15-intel` runner (supported through August 2027). | **Implement in v2.5 release workflow.** |
+| **[#909](https://github.com/freerouting/freerouting/pull/909) / [#908](https://github.com/freerouting/freerouting/issues/908)** | KiCad, GUI, Linux | Medium / Future | Closing Freerouting without starting routing tries to import non-existing `freerouting.ses` file in KiCad. | **CLOSED.** Fixed by PR #909. |
+| **[#905](https://github.com/freerouting/freerouting/issues/905)** | CI, macOS | Medium / 2.5 | Package native Intel (`x86_64`) macOS DMG installer via `macos-15-intel` runner (supported through August 2027). | **CLOSED.** Implemented in release workflow. |
 | **[#903](https://github.com/freerouting/freerouting/issues/903)** | GUI, UX | Low / Future | Micro Surveying within Freerouting: passive in-app user feedback & micro-surveys without modals/popups. | Needs architectural design for backend polling/privacy before any code. |
 | **[#879](https://github.com/freerouting/freerouting/issues/879)** | routing-engine | High / Future | Padstack data structure in Freerouting does not support custom pad semantics (arbitrary non-convex padstacks converted to convex hulls). | Architectural refactoring of padstack geometry representation. |
 | **[#856](https://github.com/freerouting/freerouting/issues/856)** | Integration | Low / Future | Altium Designer Integration for Freerouting (direct export/import workflow). | Third-party EDA integration script/plugin. |
@@ -67,7 +67,7 @@
       logger.warning("Specctra SES file does not exist.")
   ```
 - **Evaluation:** Clean, safe, and zero-risk. It eliminates annoying modal errors for users who simply open and close Freerouting.
-- **Recommendation:** **Approve and merge PR #909.** Issue #908 will be closed upon merge.
+- **Status:** **Merged into master** (`a6e14c4b4`). Issue #908 is resolved and closed.
 
 ---
 
@@ -78,15 +78,15 @@
   1. Add `scripts/build/create-distribution-macos-x64.sh` invoking JDK `jlink` + `jpackage` with architecture flags for `x86_64`.
   2. Add `build-macos-x64` in `.github/workflows/create-release.yml` targeting `runs-on: [ macos-15-intel ]`.
   3. Publish `freerouting-<version>-macos-x64.dmg` alongside `macos-arm64.dmg` in GitHub Releases.
-- **Recommendation:** Implement for the v2.5.0 release pipeline.
+- **Status:** **Implemented and closed.** Configured in `.github/workflows/create-release.yml`.
 
 ---
 
 ### 2.3. GUI Startup Thread Confinement ([PR #819](https://github.com/freerouting/freerouting/pull/819))
 - **Problem:** Freerouting's main entry point historically called `GuiManager.initializeGUI` from the initial application thread rather than Swing's Event Dispatch Thread (EDT). When opening a board directly on launch, `ScreenMessages` mutations threw `IllegalStateException: ScreenMessages must only be mutated on the EDT`, freezing the startup process.
-- **Fix:** Wraps GUI initialization synchronously in `SwingUtilities.invokeAndWait`, guaranteeing thread confinement and adding regression tests for both on-EDT and off-EDT entry points.
-- **Status:** The PR branch currently has merge conflicts against `master`.
-- **Recommendation:** Rebase against `master` and merge.
+- **Fix:** Wraps GUI initialization synchronously via refined `invokeOnEdt`, guaranteeing thread confinement and adding regression tests for both on-EDT and off-EDT entry points, interrupt handling, and exception safety.
+- **Status:** Conflicts resolved against `master`; implementation refined with symmetric error handling and unit tests relocated to `app.freerouting.gui.board`.
+- **Recommendation:** Merge for v2.5.0.
 
 ---
 
@@ -127,7 +127,7 @@
   - Resolved ShellCheck warnings (SC2034 unused `ARCH`, SC2086 unquoted variables).
   - Dynamic `SCRIPT_DIR` resolution allows running build scripts from any working directory.
 - **Release Asset Architecture Naming Evaluation:** Kept native `x64` / `arm64` conventions for other release packages (`.zip`, `.msi`, `.dmg`) to prevent breaking downstream third-party automation, package managers, and KiCad plugin auto-downloaders.
-- **Recommendation:** Ready to merge once review is finalized.
+- **Status:** **Merged into master** (`96563db32`).
 
 ---
 
@@ -140,14 +140,16 @@
 ## 3. Active Backlog Priority Matrix
 
 ### Tier 1: Release-Critical for v2.5.0
-1. **[PR #909](https://github.com/freerouting/freerouting/pull/909):** Merge KiCad plugin SES check (fixes #908).
-2. **[PR #819](https://github.com/freerouting/freerouting/pull/819):** Rebase and merge GUI startup thread confinement.
-3. **[PR #843](https://github.com/freerouting/freerouting/pull/843):** Merge configurable API server job concurrency.
-4. **[#905](https://github.com/freerouting/freerouting/issues/905):** Add native macOS x86_64 DMG job using `macos-15-intel`.
-5. **[PR #793](https://github.com/freerouting/freerouting/pull/793) (Porting):** Cherry-pick the 6 verified bug fixes into a clean PR.
+1. **[PR #819](https://github.com/freerouting/freerouting/pull/819):** Merge GUI startup thread confinement (conflicts resolved, implementation refined).
+2. **[PR #843](https://github.com/freerouting/freerouting/pull/843):** Merge configurable API server job concurrency.
+3. **[PR #793](https://github.com/freerouting/freerouting/pull/793) (Porting):** Cherry-pick the 6 verified bug fixes into a clean PR.
+
+### Completed for v2.5.0
+- **[PR #909](https://github.com/freerouting/freerouting/pull/909) (Fixes #908):** Merged into master (`a6e14c4b4`).
+- **[PR #891](https://github.com/freerouting/freerouting/pull/891):** Merged into master (`96563db32`).
+- **[Issue #905](https://github.com/freerouting/freerouting/issues/905):** Implemented in release pipeline via `macos-15-intel`.
 
 ### Tier 2: Post-v2.5 Release & Modernization
-- **[PR #891](https://github.com/freerouting/freerouting/pull/891):** Linux AppImage validation and release workflow integration.
 - **[PR #888](https://github.com/freerouting/freerouting/pull/888) & [PR #870](https://github.com/freerouting/freerouting/pull/870):** Inspect mode and inline manual rules panel polish.
 - **[PR #809](https://github.com/freerouting/freerouting/pull/809):** Net-class trace width GUI editing table rebase.
 - **[#787](https://github.com/freerouting/freerouting/issues/787):** KiCad Plugin Protocol Buffers IPC migration.
@@ -159,21 +161,21 @@
 
 ```mermaid
 flowchart TD
-    subgraph Immediate ["1. v2.5 Immediate Merges"]
-        A[Merge PR #909 - Fixes #908 SES check]
-        B[Rebase & Merge PR #819 - GUI EDT confinement]
-        C[Merge PR #843 - Configurable parallel jobs]
+    subgraph Done ["Completed in v2.5"]
+        A["Merged PR #909 - Fixes #908 SES check"]
+        D["Implemented #905 - macOS x86_64 on macos-15-intel"]
+        E["Merged PR #891 - Linux AppImage Support"]
     end
 
-    subgraph Packaging ["2. Release Pipeline Hardening"]
-        D[Implement #905 - macOS x86_64 on macos-15-intel]
-        E[Validate & Merge PR #891 - Linux AppImage]
+    subgraph Immediate ["1. v2.5 Active Merges"]
+        B["Merge PR #819 - GUI EDT confinement"]
+        C["Merge PR #843 - Configurable parallel jobs"]
     end
 
-    subgraph EngineFixes ["3. Targeted Bug Extraction"]
-        F[Cherry-pick 6 bug fixes from PR #793]
+    subgraph EngineFixes ["2. Targeted Bug Extraction"]
+        F["Cherry-pick 6 bug fixes from PR #793"]
     end
 
-    Immediate --> Packaging
-    Packaging --> EngineFixes
+    Done --> Immediate
+    Immediate --> EngineFixes
 ```
