@@ -1,20 +1,47 @@
 #!/bin/sh
 set -eu
 
-# Usage check and parameter parsing
-if [ $# -lt 1 ]; then
-	echo "Usage: $0 [arch] <version>"
-	echo "Example: $0 x86_64 2.4.1"
-	echo "         $0 2.4.1 (defaults arch to $(uname -m))"
-	exit 1
-fi
+ARCH=""
+VERSION=""
 
-if [ $# -eq 1 ]; then
+if [ $# -eq 0 ]; then
 	ARCH="$(uname -m)"
-	VERSION="$1"
+elif [ $# -eq 1 ]; then
+	case "$1" in
+		x86_64|aarch64|arm64|x64)
+			ARCH="$1"
+			;;
+		*)
+			ARCH="$(uname -m)"
+			VERSION="$1"
+			;;
+	esac
 else
 	ARCH="$1"
 	VERSION="$2"
+fi
+
+# Normalize architecture name
+case "$ARCH" in
+	x64) ARCH="x86_64" ;;
+	arm64) ARCH="aarch64" ;;
+esac
+
+# If VERSION was not explicitly specified, auto-detect from existing zip in current directory
+if [ -z "$VERSION" ]; then
+	for f in freerouting-*-linux-x64.zip; do
+		if [ -f "$f" ]; then
+			v="${f#freerouting-}"
+			VERSION="${v%-linux-x64.zip}"
+			break
+		fi
+	done
+fi
+
+if [ -z "$VERSION" ]; then
+	echo "Error: No version specified and no freerouting-*-linux-x64.zip found." >&2
+	echo "Usage: $0 [arch] <version>" >&2
+	exit 1
 fi
 
 # Strip leading 'v' if provided
@@ -30,7 +57,18 @@ export ADD_HOOKS="self-updater.hook"
 export GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-freerouting/freerouting}"
 GH_OWNER="${GITHUB_REPOSITORY%/*}"
 GH_REPO="${GITHUB_REPOSITORY#*/}"
-export UPINFO="gh-releases-zsync|$GH_OWNER|$GH_REPO|latest|freerouting-*-$ARCH.AppImage.zsync"
+
+if [ "${VERSION#SNAPSHOT}" != "$VERSION" ]; then
+	# SNAPSHOT / nightly release
+	UPINFO_TAG="SNAPSHOT"
+	UPINFO_PATTERN="freerouting-SNAPSHOT-*-$ARCH.AppImage.zsync"
+else
+	# Standard release tag
+	UPINFO_TAG="latest"
+	UPINFO_PATTERN="freerouting-*-$ARCH.AppImage.zsync"
+fi
+
+export UPINFO="gh-releases-zsync|$GH_OWNER|$GH_REPO|$UPINFO_TAG|$UPINFO_PATTERN"
 export DESKTOP="$SCRIPT_DIR/freerouting.desktop"
 export MAIN_BIN="freerouting"
 
