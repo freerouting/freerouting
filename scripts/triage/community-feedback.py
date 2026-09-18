@@ -13,7 +13,7 @@ import tempfile
 import urllib.error
 import urllib.request
 
-GEMINI_MODEL = "gemini-3.8-flash"
+GEMINI_MODEL = "gemini-flash-latest"
 API_URL_TEMPLATE = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
     "{model}:generateContent?key={api_key}"
@@ -46,14 +46,14 @@ def post_comment(target_type: str, number: int, comment_text: str) -> None:
 
 
 def call_gemini(prompt: str, api_key: str) -> str:
-    """Call Google Gemini API with low thinking level using urllib."""
+    """Call Google Gemini API with thinking disabled (budget=0) using urllib."""
     url = API_URL_TEMPLATE.format(model=GEMINI_MODEL, api_key=api_key)
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
             "temperature": 0.3,
             "maxOutputTokens": 800,
-            "thinkingConfig": {"thinking_level": "low"},
+            "thinkingConfig": {"thinking_budget": 0},
         },
     }
 
