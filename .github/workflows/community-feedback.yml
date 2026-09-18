@@ -1,4 +1,4 @@
-name: Gemini Community Feedback
+name: 'Triage: Gemini Community Feedback'
 
 on:
   pull_request_target:

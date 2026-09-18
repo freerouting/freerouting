@@ -1,4 +1,4 @@
-name: Build the source on PR
+name: 'CI: Pull Request Build & Test'
 
 on:
   pull_request:
@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-latest, macos-14 ]
+        os: [ windows-latest, macos-15 ]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     permissions:

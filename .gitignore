@@ -1,5 +1,5 @@
-build
-out
+/build
+/out
 /.nb-gradle/
 .gradle/
 .idea/

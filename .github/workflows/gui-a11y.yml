@@ -1,4 +1,4 @@
-name: GUI accessibility tests
+name: 'CI: GUI Accessibility & Parity'
 
 on:
   pull_request:

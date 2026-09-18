@@ -1,4 +1,4 @@
-name: Publish a new release
+name: 'Distribution: Release Packages'
 
 on:
   push:
@@ -118,7 +118,7 @@ jobs:
 
   build-macos-arm64:
     needs: build-and-test
-    runs-on: [ macos-latest ]
+    runs-on: [ macos-15 ]
     timeout-minutes: 30
     permissions:
       contents: write
@@ -145,5 +145,38 @@ jobs:
       - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-macos-arm64.dmg'
+          release-tag: v${{ steps.tagName.outputs.tag }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos-x64:
+    needs: build-and-test
+    runs-on: [ macos-15-intel ]
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          architecture: 'x64'
+          cache: 'gradle'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Get Tag name
+        id: tagName
+        shell: bash
+        run: echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+      - name: Create Distribution
+        run: scripts/build/create-distribution-macos-x64.sh ${{ steps.tagName.outputs.tag }}
+      - uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg'
           release-tag: v${{ steps.tagName.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
