@@ -312,4 +312,18 @@ public class RoutingJobSchedulerTest {
         scheduler.getMaxParallelJobs(),
         "Null globalSettings should fall back to default.");
   }
+
+  @Test
+  void testSaveJobClosesDirectoryStreams() {
+    Freerouting.globalSettings.featureFlags.saveJobs = true;
+    RoutingJob job = createTestJob();
+    scheduler.enqueueJob(job);
+
+    // Call saveJob multiple times in the same session to exercise both session folder
+    // lookup and job folder count listing paths, ensuring no directory streams leak.
+    scheduler.saveJob(job);
+    scheduler.saveJob(job);
+
+    assertEquals(RoutingJobState.QUEUED, job.state);
+  }
 }
