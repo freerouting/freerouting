@@ -1,13 +1,26 @@
-name: Build the source on PR
+name: 'CI: Pull Request Build & Test'
 
-on: [ pull_request ]
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - 'website/**'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/workflows/deploy-pages.yml'
+      - '.github/workflows/auto-triage.yml'
+      - '.github/workflows/stale.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  gradle:
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-14, windows-latest ]
-    runs-on: ${{ matrix.os }}
+  test:
+    name: Test & Verify (Linux)
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
@@ -16,9 +29,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
+          distribution: 'temurin'
           java-version: '25'
-          cache: 'gradle'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
@@ -28,13 +40,13 @@ jobs:
           build-scan-terms-of-use-agree: 'yes'
 
       - name: Make gradlew executable
-        if: runner.os != 'Windows'
         run: chmod +x gradlew
 
-      - name: Execute Gradle build
+      - name: Execute Gradle build & tests
         run: ./gradlew build
 
   i18n-context-check:
+    name: Verify i18n Context
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

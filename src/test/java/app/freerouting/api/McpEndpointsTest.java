@@ -104,6 +104,9 @@ class McpEndpointsTest {
     if (apiServer != null) {
       stopServerGracefully(apiServer);
     }
+    if (httpClient != null) {
+      httpClient.close();
+    }
     ApiKeyValidationService.resetForTesting();
     McpApiKeyValidationService.resetForTesting();
   }

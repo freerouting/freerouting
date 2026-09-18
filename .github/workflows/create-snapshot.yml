@@ -1,4 +1,4 @@
-name: Update the snapshot build
+name: 'Distribution: Snapshot Installers'
 
 on:
   push:
@@ -7,7 +7,8 @@ on:
   workflow_dispatch: # Allows you to run this workflow manually
 
 jobs:
-  build-and-test:
+  test:
+    name: 'Test & Verify'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -20,7 +21,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -47,31 +54,8 @@ jobs:
             freerouting-SNAPSHOT-*.*
 
   build-jar:
-    needs: [ build-and-test, delete-old-snapshot-assets ]
-    runs-on: [ windows-latest ]
-    timeout-minutes: 30
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v5
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '25'
-          cache: 'gradle'
-      - name: Build with Gradle
-        run: .\gradlew.bat dist --no-daemon
-      - name: Create Distribution
-        run: .\scripts\build\create-distribution-jar.bat "SNAPSHOT-$(([datetime]::now).tostring('yyyyMMdd_HHmm00'))"
-      - uses: AButler/upload-release-assets@v3.0
-        with:
-          files: './scripts/build/freerouting-SNAPSHOT-*.jar'
-          release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-  build-ubuntu-x64:
-    needs: [ build-and-test, delete-old-snapshot-assets ]
+    name: 'Build JAR'
+    needs: [ test, delete-old-snapshot-assets ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
     permissions:
@@ -83,7 +67,45 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-          cache: 'gradle'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Create Distribution
+        run: scripts/build/create-distribution-jar.sh "SNAPSHOT-$(date +'%Y%m%d_%H%M00')"
+      - uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './scripts/build/freerouting-SNAPSHOT-*.jar'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-ubuntu-x64:
+    needs: [ test, delete-old-snapshot-assets ]
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Grant execute permission for build scripts
@@ -92,14 +114,48 @@ jobs:
         run: ./gradlew dist
       - name: Create Distribution
         run: scripts/build/create-distribution-SNAPSHOT-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
-      - uses: AButler/upload-release-assets@v3.0
+      - name: Upload Snapshot Linux Dist Zip Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-linux-dist-zip
+          path: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
+          retention-days: 1
+      - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
+  build-appimage:
+    name: 'Build AppImage'
+    needs: [ test, delete-old-snapshot-assets, build-ubuntu-x64 ]
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Download Snapshot Linux Dist Zip
+        uses: actions/download-artifact@v4
+        with:
+          name: snapshot-linux-dist-zip
+          path: .
+      - name: Build AppImage via Arch Container
+        run: |
+          docker run --rm \
+            -v "$PWD":/workspace \
+            -w /workspace \
+            -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            docker.io/pkgforge/archlinux:latest \
+            /bin/sh -c "./scripts/build/appimage/install-dependencies.sh && ./scripts/build/create-distribution-SNAPSHOT-appimage.sh x86_64"
+      - uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './dist/freerouting-SNAPSHOT-*-x86_64.AppImage;./dist/freerouting-SNAPSHOT-*-x86_64.AppImage.zsync'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
   build-windows-x64:
-    needs: [ build-and-test, delete-old-snapshot-assets ]
+    needs: [ test, delete-old-snapshot-assets ]
     runs-on: [ windows-latest ]
     timeout-minutes: 30
     permissions:
@@ -111,20 +167,25 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-          cache: 'gradle'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
       - name: Build with Gradle
         run: .\gradlew.bat dist --no-daemon
       - name: Create Distribution
         run: .\scripts\build\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"
-      - uses: AButler/upload-release-assets@v3.0
+      - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-SNAPSHOT-*-windows-x64.msi'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos-arm64:
-    needs: [ build-and-test, delete-old-snapshot-assets ]
-    runs-on: [ macos-latest ]
+    needs: [ test, delete-old-snapshot-assets ]
+    runs-on: [ macos-15 ]
     timeout-minutes: 30
     permissions:
       contents: write
@@ -135,7 +196,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-          cache: 'gradle'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Grant execute permission for build scripts
@@ -144,8 +210,42 @@ jobs:
         run: ./gradlew dist
       - name: Create Distribution
         run: scripts/build/create-distribution-SNAPSHOT-macos-arm64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
-      - uses: AButler/upload-release-assets@v3.0
+      - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-SNAPSHOT-*-macos-arm64.dmg'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos-x64:
+    needs: [ test, delete-old-snapshot-assets ]
+    runs-on: [ macos-15-intel ]
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          architecture: 'x64'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
+          build-scan-terms-of-use-agree: 'yes'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh
+      - name: Build with Gradle
+        run: ./gradlew dist
+      - name: Create Distribution
+        run: scripts/build/create-distribution-SNAPSHOT-macos-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
+      - uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './scripts/build/freerouting-SNAPSHOT-*-macos-x64.dmg'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}

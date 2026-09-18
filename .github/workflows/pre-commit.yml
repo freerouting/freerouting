@@ -1,5 +1,5 @@
 ---
-name: pre-commit
+name: 'CI: Code Quality & Linters'
 on:
   pull_request:
     branches: [master]

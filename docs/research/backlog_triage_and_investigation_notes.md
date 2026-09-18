@@ -1,279 +1,179 @@
-# High-Priority Issues and Pull Requests: Triage, Investigations & Decisions
+# Open Backlog: Triage, Investigations & Decisions
 
 **Date:** September 17, 2026  
 **Repository:** `freerouting/freerouting`  
-**Target Release:** Freerouting v2.5.0 / v2.5.1  
-**Status:** Brainstorming, Architectural Analysis, and Decision Tracking (Pre-Implementation)
+**Target Milestone:** Freerouting v2.5.0 / v2.5.1  
+**Scope:** Active, open issues and pull requests (closed items removed)
 
 ---
 
 ## 1. Executive Summary & Decision Matrix
 
-| Item | Type / Domain | Current Status | Investigation Summary & Finding | Decision / Recommendation |
+### 1.1. Open Pull Requests (11 Active)
+
+| PR | Domain | Status | Title / Description | Action / Recommendation |
 | :--- | :--- | :--- | :--- | :--- |
-| **[#816](https://github.com/freerouting/freerouting/pull/816)** | PR (GUI) | `CLOSED` | **Confirmed Merged via commit `a4495b383`.** `WindowBase.createScrollableContainer` and `clampWindowHeight` were implemented across all dialogs with test coverage in `WindowScrollAndClampTest`. | **Closed as superseded.** |
-| **[#820](https://github.com/freerouting/freerouting/pull/820)** | PR (Engine/IO) | `CLOSED` | **Confirmed Superseded by #632 fix.** Master uses non-blocking structured `WARNING` logs via `validateBoardDesignErrors()`. Fixture exists at `fixtures/Issue632-MiniAutoPilot/`. | **Closed as superseded.** Test fixture retained. |
-| **[#885](https://github.com/freerouting/freerouting/issues/885)** | Issue (API/MCP) | `OPEN` (High Prio) | **Confirmed Bug in Settings Pipeline.** `CliSettings` omits `-inc`, and `applyBoardSpecificOptimizations()` stomps explicit per-layer trace costs with defaults. | **Fix in v2.5.x.** Unify CLI flags and protect explicit layer settings. |
-| **[#886](https://github.com/freerouting/freerouting/issues/886)** | Issue (API/MCP) | `OPEN` (High Prio) | **Confirmed Feature Gap.** No way to set per-job ignored net classes or layer costs without server restart; no pre-routing settings verification endpoint. | **Implement in v2.5.x.** Expose effective settings and net-class exclusion to MCP. |
-| **[#873](https://github.com/freerouting/freerouting/issues/873)** | Issue (GUI/Plugin) | `RESOLVED` (Ready to Close) | **KiCad Plugin Hang & Crash.** Commit `899806b1` forced `--gui.enabled=false`, running silent headless routing with no UI, perceived as a startup hang. Terminating child triggered wx callback on deleted C++ dialog. | **Resolved in KiCad plugin.** Restored GUI mode default, added `[settings] gui = true/false`, live stdout streaming in headless mode, and hardened process termination/wx callbacks. |
-| **[#523](https://github.com/freerouting/freerouting/issues/523)** | Issue (Engine) | `CLOSED` | **Discarded / Unreproduced.** Extensive investigation found no reproduction on clean boards; post-route optimizer normalizes stubs. | **Closed as missing-info.** |
-| **[#793](https://github.com/freerouting/freerouting/pull/793)** | PR (Engine/CLI) | `Draft / CONFLICTING` | **Valuable Bug Fixes + Experimental Heuristics.** Contains 6 critical fixes (stub pass trace deletion, `IntPoint.hashCode`, `PriorityQueue.poll`, stream leak) alongside unverified heuristics. | **Cherry-pick high-value bug fixes.** Discard or defer experimental heuristics. |
-| **[#743](https://github.com/freerouting/freerouting/pull/743)** | PR (GUI/Engine) | `Draft / CONFLICTING` | ETA estimation based on search progress. | **Defer.** Low priority for current release. |
-| **[#891](https://github.com/freerouting/freerouting/pull/891)** | PR (CI/Packaging) | `MERGEABLE` | Community AppImage build integration via `quick-sharun`. Evaluated macOS compatibility. | **Plan for testing.** Linux AppImage only (macOS uses DMG/jpackage). |
-| **[#888](https://github.com/freerouting/freerouting/pull/888)** | PR (GUI) | `MERGEABLE` | Canvas jump removal and inspect toolbar restructuring. | **Defer.** Low priority for current release. |
-| **[#870](https://github.com/freerouting/freerouting/pull/870)** | PR (GUI) | `MERGEABLE` | Inlines manual rule selection window into routing settings panel. | **Defer.** Low priority for current release. |
-| **[#900](https://github.com/freerouting/freerouting/pull/900)** | PR (Deps) | `BUILD FAILURE` | Failure caused by `org.openrewrite:plugin:7.41.0` missing `rewrite-bom:8.91.0`. All OpenRewrite migration recipes are already completed. | **Completely remove OpenRewrite.** Remove plugin, sourceSet, and dependencies. |
+| **[PR #909](https://github.com/freerouting/freerouting/pull/909)** | KiCad / Python | `MERGEABLE` | **Fixes Issue #908.** Check Specctra SES file existence before importing in KiCad plugin. Eliminates error dialogs on clean close without routing. | **Review & Merge for v2.5.** Zero-risk, high user satisfaction. |
+| **[PR #843](https://github.com/freerouting/freerouting/pull/843)** | API / Server | `MERGEABLE` | Make scheduler maximum parallel jobs configurable via `--api_server.max_parallel_jobs` and environment variable. | **Review & Merge for v2.5.** Essential for server scaling. |
+| **[PR #819](https://github.com/freerouting/freerouting/pull/819)** | GUI / Java | `CONFLICTING` | Fix GUI startup thread confinement (dispatch GUI startup synchronously onto Swing EDT). Prevents `ScreenMessages` race condition. | **Rebase against master & Merge.** |
+| **[PR #891](https://github.com/freerouting/freerouting/pull/891)** | CI / Packaging | `MERGEABLE` | Add Linux AppImage build support via `quick-sharun` for portability across distributions. | **Hardened naming, metadata & ShellCheck compliance.** Ready to validate & merge. |
+| **[PR #810](https://github.com/freerouting/freerouting/pull/810)** | CI | `MERGEABLE` | Update pre-commit workflow cache configuration. | **Low-risk merge.** Improves CI caching. |
+| **[PR #793](https://github.com/freerouting/freerouting/pull/793)** | Engine / CLI | `Draft / CONFLICTING` | Headless fixes, Specctra type protect handling, and routing heuristics. Contains 6 verified bug fixes alongside experimental heuristics. | **Cherry-pick 6 bug fixes** into a clean PR; discard experimental heuristics. |
+| **[PR #888](https://github.com/freerouting/freerouting/pull/888)** | GUI | `MERGEABLE` | Improve inspect mode GUI (canvas jump removal, toolbar layout, context menu width clamping). | **Defer to v2.6.** UI refinement. |
+| **[PR #870](https://github.com/freerouting/freerouting/pull/870)** | GUI | `MERGEABLE` | Remove separate window for manual rule selection in exchange for inline panel in router parameters. | **Defer to v2.6.** UI cleanup. |
+| **[PR #809](https://github.com/freerouting/freerouting/pull/809)** | GUI | `CONFLICTING` | Reimplemented trace-width editing for net classes in GUI table editor (addresses #796). | **Rebase & Review for v2.6.** |
+| **[PR #890](https://github.com/freerouting/freerouting/pull/890)** | Web / Docs | `MERGEABLE` | Render EDA cards with brand logos and update legal disclaimers. | **Review for website repo/docs.** |
+| **[PR #743](https://github.com/freerouting/freerouting/pull/743)** | GUI / Engine | `Draft / CONFLICTING` | Add `RoutingEtaCalculator` and improve ETA functionality in status bar. | **Defer.** Needs algorithmic rework across multi-pass stages. |
 
 ---
 
-## 2. Detailed Investigations & Architectural Analysis
+### 1.2. Open Issues (17 Active)
 
-### 2.1. Issue & PR #816: User Settings Dialog Text Scaling
-- **Question:** *Is the fix already merged into master?*
-- **Investigation:**
-  - Git history confirms commit `a4495b383d542bd1d273f3edf05468651286b2ea` by Andras Fuchs:
-    > *"Make windows scrollable and clamp height for OS text scaling (fixes #804)"*
-  - This commit introduced `WindowBase.createScrollableContainer` and `clampWindowHeight` (capping packed height to 85% of usable work area), adjusted `WindowUserSettings`, `WindowAbout`, `WindowDisplayMisc`, `WindowRoutingSummary`, etc., and added unit tests in `WindowScrollAndClampTest.java`.
-- **Conclusion:** PR #816 was independently solved and is now obsolete. The merge conflicts in PR #816 are due to these exact changes already existing on `master`.
-- **Action Taken:** **Closed PR #816 as superseded** with a comment referencing commit `a4495b383`.
-
----
-
-### 2.2. Issue & PR #820: Pins Outside PCB Boundary (Issue #632)
-- **Question:** *Is this superseded by another fix that is already merged, and do we have a good test file?*
-- **Investigation:**
-  - Issue [#632](https://github.com/freerouting/freerouting/issues/632) was officially closed as handled in v2.5.0:
-    > *"In modern Freerouting, `validateBoardDesignErrors()` in `HeadlessBoardManager` inspects placed pin coordinates against the board outline boundary at board loading time... emits clear, structured WARNING logs... This prevents unhandled NullPointerExceptions or silent calculation failures while still allowing designs with intentional edge-connector overhangs to load and route without being hard-rejected."*
-  - PR #820 proposed a rigid `BoardReadResult.InvalidGeometry` rejection that aborted the read completely. The maintainer chose instead to issue structured design warnings so multi-board panels or edge-overhang connectors are not blocked outright.
-  - **Test Fixture:** The exact fixture is available in the repository at:
-    - [`fixtures/Issue632-MiniAutoPilot/Mini Auto Pilot.dsn`](file:///c:/Work/freerouting/fixtures/Issue632-MiniAutoPilot/Mini Auto Pilot.dsn)
-    - Along with `.kicad_pcb`, `.kicad_sch`, `.kicad_pro`, and `.kicad_prl`.
-- **Conclusion:** PR #820's hard-rejection approach was superseded by the design-warning validation in master.
-- **Action Taken:** **Closed PR #820 as superseded** with an explanatory comment. Retained the `Issue632-MiniAutoPilot` fixture for regression testing.
+| Issue | Domain / Tags | Priority / Milestone | Title & Summary | Next Step |
+| :--- | :--- | :--- | :--- | :--- |
+| **[#909](https://github.com/freerouting/freerouting/pull/909) / [#908](https://github.com/freerouting/freerouting/issues/908)** | KiCad, GUI, Linux | Medium / Future | Closing Freerouting without starting routing tries to import non-existing `freerouting.ses` file in KiCad. | **Fixed by PR #909.** Close upon merge. |
+| **[#905](https://github.com/freerouting/freerouting/issues/905)** | CI, macOS | Medium / 2.5 | Package native Intel (`x86_64`) macOS DMG installer via `macos-15-intel` runner (supported through August 2027). | **Implement in v2.5 release workflow.** |
+| **[#903](https://github.com/freerouting/freerouting/issues/903)** | GUI, UX | Low / Future | Micro Surveying within Freerouting: passive in-app user feedback & micro-surveys without modals/popups. | Needs architectural design for backend polling/privacy before any code. |
+| **[#879](https://github.com/freerouting/freerouting/issues/879)** | routing-engine | High / Future | Padstack data structure in Freerouting does not support custom pad semantics (arbitrary non-convex padstacks converted to convex hulls). | Architectural refactoring of padstack geometry representation. |
+| **[#856](https://github.com/freerouting/freerouting/issues/856)** | Integration | Low / Future | Altium Designer Integration for Freerouting (direct export/import workflow). | Third-party EDA integration script/plugin. |
+| **[#802](https://github.com/freerouting/freerouting/issues/802)** | GUI | Medium / Future | Comprehensive UX overhaul (unit labeling, status bar, dialog scaling, UI tests). | Scope into milestone iterations. |
+| **[#787](https://github.com/freerouting/freerouting/issues/787)** | KiCad, API, Python | Medium / Future | KiCad Plugin: Migrate from SWIG JSON bridge to Protocol Buffers IPC. | Future modernization of KiCad IPC bridge. |
+| **[#758](https://github.com/freerouting/freerouting/issues/758)** | GUI, Windows | Low / Future | Add context menu action and keyboard shortcut to unfix fixed board items. | GUI context menu enhancement. |
+| **[#750](https://github.com/freerouting/freerouting/issues/750)** | GUI | Low / Future | Fix ratsnest calculation and clearance checking during interactive component dragging; improve snap to grid. | Investigate repaint frequency and drag cursor offset. |
+| **[#747](https://github.com/freerouting/freerouting/issues/747)** | GUI | Medium / Future | Unify unit conversions and labeling (mils, mm, um) across all dialogs and status bar. | Standardize formatting via coordinate/unit utility. |
+| **[#733](https://github.com/freerouting/freerouting/issues/733)** | i18n, Docs | Low / Future | Clean up redundant localization keys and isolate English source bundles. | Run i18n extraction & bundle cleanup script. |
+| **[#726](https://github.com/freerouting/freerouting/issues/726)** | GUI | Low / Future | Display estimated remaining routing time (ETA) in status bar. | Linked to PR #743 (deferred). |
+| **[#718](https://github.com/freerouting/freerouting/issues/718)** | routing-engine, DRC | High / Future | Support net-ties and overlapping pads between different nets without clearance violations. | Clearance matrix and connectivity graph enhancement. |
+| **[#716](https://github.com/freerouting/freerouting/issues/716)** | routing-engine | Medium / Future | Autoroute: Add automatic trace length tuning (serpentine / accordion patterns) for high-speed differential pairs. | Algorithmic routing extension. |
+| **[#695](https://github.com/freerouting/freerouting/issues/695)** | GUI | Low / Future | Add Recent Files menu and router settings preset management. | GUI convenience feature. |
+| **[#677](https://github.com/freerouting/freerouting/issues/677)** | GUI, Good First Issue | Low / Future | Remove redundant Mode indicator label from BoardFrame footer. | Simple UI cleanup task. |
+| **[#383](https://github.com/freerouting/freerouting/issues/383)** | routing-engine | Medium / Future | Autoroute: Support star-ground routing topology to a single reference point. | Algorithmic routing topology expansion. |
 
 ---
 
-### 2.3. Issues #885 and #886: HTTP/MCP Settings Loss and Control Scope
-- **Question:** *Are other fields/properties affected? Do we need a more general approach to handle them?*
-- **Root Cause Breakdown:**
-  1. **CLI Flag Mapping Gap in `CliSettings`:**
-     - In `GlobalSettings.java` (line 894), `-inc` parses into `routerSettings.autorouter.ignoreNetClasses`.
-     - However, in `CliSettings.java`, `mapFlagToProperty()` maps only `-mp`, `-mt`, and `-oit`. It returns `null` for `-inc`!
-     - Because `SettingsMerger` reads `CliSettings` (priority 60) and `DefaultSettings` sets `ignoreNetClasses = new String[0]` (priority 0), the CLI exclusion is dropped during merge.
-  2. **Layer Costs Reset in `applyBoardSpecificOptimizations()`:**
-     - In `RouterSettings.java`, `preferredDirectionTraceCost` and `undesiredDirectionTraceCost` are primitive `double[]` arrays.
-     - `applyBoardSpecificOptimizations()` checks:
-       ```java
-       if (scoring.preferredDirectionTraceCost == null || scoring.preferredDirectionTraceCost.length != layerCount) {
-         scoring.preferredDirectionTraceCost = new double[layerCount];
-         boardSpecificTraceCostsApplied = false;
-       }
-       ```
-     - If the layer count was not initialized or differed when the `.rules` file was parsed, `boardSpecificTraceCostsApplied` is set to `false`.
-     - It then iterates all layers and unconditionally overwrites:
-       ```java
-       scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost; // 1.0
-       ```
-       This wipes custom costs loaded by `RulesReader` (e.g. POWER layer costs of `0.25 / 0.50`).
-  3. **Other Affected Properties:**
-     - **Array fields:** `planeNets` (`String[]`), `layers` (`LayerSettings[]`: `routable`, `preferredDirectionHorizontal`, `bendCost`).
-     - **Missing CLI mappings:** Any `-flag` handled only in `GlobalSettings` but omitted from `CliSettings` (e.g., `-inc`, `-da`, custom layer toggles).
-- **Recommended General Approach:**
-  - **1. Unified CLI Parsing:** Delegate flag mapping in `CliSettings` to the same parser or canonical map used by `GlobalSettings` / `LegacyRouterSettingsBridge`.
-  - **2. Per-Layer Cost Modeling:** Instead of primitive unmanaged `double[]` arrays that lose provenance, store per-layer costs either inside `LayerSettings` (e.g., `layer.preferredTraceCost`, `layer.undesiredTraceCost` using nullable `Double`) or maintain an explicit override mask (`BitSet explicitTraceCosts`).
-  - **3. Non-Destructive Default Initialization:** Update `applyBoardSpecificOptimizations()` so it only computes geometric aspect-ratio defaults for layers that have *not* been explicitly configured by a `.rules` file, CLI flag, or API request.
-  - **4. Expose to MCP (#886):** Add `ignore_net_classes` and `layer_rules` to the REST API request models and MCP tool definitions (`autoroute_board`, `update_job_settings`), plus a `get_effective_settings` inspection tool to allow clients to verify configuration before routing begins.
-- **Action Taken & Resolution:** **Resolved via PR #906 (Merged to `master`).**
-  - **Unified CLI Mapping:** Added `-inc` mapping in `CliSettings.java` targeting `router.autorouter.ignore_net_classes` with a deprecation notice.
-  - **Safe Reflection Copy:** Updated `ReflectionUtil.copyFields()` to allow copying explicit empty arrays and supported `List`/`Set` collection cloning (`ArrayList` and `LinkedHashSet`).
-  - **Explicit Layer Cost Preservation:** Updated `applyBoardSpecificOptimizations()` in `RouterSettings.java` to preserve user/rules explicit costs on `LayerSettings` without overwriting unconfigured layers with pseudo-overrides.
-  - **Decoupled Net-Class Exclusions:** Moved `applyNetClassExclusions()` out of `applyBoardSpecificOptimizations()` and hooked it into board assembly, scheduling, and settings updates, keeping `GET /v1/jobs/{jobId}/settings` strictly read-only and non-mutating on live boards.
-  - **Per-Layer Cost & Preflight Inspection:** Added `preferredDirectionTraceCost` and `undesiredDirectionTraceCost` to `LayerSettings`, added `populateEffectiveLayerCosts()` for read-only snapshot rendering, and added `validateAgainstBoard()` with warning deduplication.
-  - **Effective Settings Endpoint & MCP Registration:** Implemented `GET /v1/jobs/{jobId}/settings` (`getEffectiveSettings`) and registered `get_effective_settings` in `OpenApiMcpToolRegistry`.
-  - **Serialization:** Exposed `layers` and `validation_warnings` in `RouterSettingsTypeAdapterFactory`.
-  - **Regression Coverage:** Added `Issue885SettingsInitializationTest` and `Issue886McpSettingsTest`.
+## 2. Deep-Dive Technical Investigations & Release Decisions
+
+### 2.1. KiCad Plugin SES Import Handling ([Issue #908](https://github.com/freerouting/freerouting/issues/908) & [PR #909](https://github.com/freerouting/freerouting/pull/909))
+- **Problem:** When a user opens Freerouting from KiCad via the plugin, cancels the autoroute confirmation dialog, and closes the Freerouting GUI without performing any routing, Freerouting exits cleanly without writing a `.ses` file. The KiCad plugin unconditionally attempted to run `pcbnew.ImportSpecctraSES(...)`, triggering error dialogs:
+  - *"Failed to invoke pcbnew.ImportSpecctraSES"*
+  - *"Specctra SES file does not exist"*
+- **Fix in PR #909:** Author `@joern-h` added an existence check before triggering the KiCad IPC import in `plugin.py`:
+  ```python
+  if self.module_output.is_file():
+      logger.info("Importing Specctra SES file into KiCad (DSN mode)...")
+      if not router.import_ses():
+          logger.error("Failed to import Specctra SES file.")
+  else:
+      logger.warning("Specctra SES file does not exist.")
+  ```
+- **Evaluation:** Clean, safe, and zero-risk. It eliminates annoying modal errors for users who simply open and close Freerouting.
+- **Recommendation:** **Approve and merge PR #909.** Issue #908 will be closed upon merge.
 
 ---
 
-### 2.4. Issue #873: 2.4.1 Stays Forever in Loop During Startup
-- **Initial Question:** *How many users are affected? What can the reason be? Is it reproducible? Did they attach logs?*
-- **Investigation & Finding:**
-  - **User Reports:** 3 distinct users commented on #873 across different platforms:
-    1. Kubuntu 26.04 LTS (KDE Plasma 6, OpenJDK 25.0.4)
-    2. Fedora Linux 44 (KDE Plasma, OpenJDK 25.0.4.1)
-    3. Windows 11 (KiCad 10.0.0.1, Java 25.0.3 JRE)
-  - **Community Breakthrough:** Users `@joern-h` and `@lucasasdelli` discovered that changing `router_dsn.py:151` from `--gui.enabled=false` to `true` completely fixed the startup problem, allowing the Freerouting 2.4.1 GUI to open and route normally.
-  - **Actual Root Cause Breakdown:**
-    1. **Forced Headless CLI Mode:** In commit `899806b1`, `--gui.enabled=false` was hardcoded into `router_dsn.py`. Users clicking the KiCad toolbar button expected the interactive Swing GUI window to appear. Instead, Freerouting ran silently in the background while KiCad displayed a modal progress dialog with a spinning arrow (*"Auto-router is running"*).
-    2. **Invisible Terminal on Linux/macOS:** On Linux (Kubuntu, Fedora) and macOS, GUI desktop environments do not allocate terminal windows for spawned child processes. Without visual progress or an open GUI, users assumed Freerouting had hung during startup.
-    3. **Crash on Terminate / Cancel:** When users clicked "Terminate", `invoker.terminate()` killed the process, but `ProcessThread`'s `finally:` block queued `dialog.terminate` via `wx_safe_invoke`. By the time wxWidgets dispatched the callback, the modal dialog had already been destroyed, attempting an invocation on a dead C++ pointer and crashing KiCad.
-- **Resolution Implemented:**
-  - **GUI Default & Configurable Mode:** Added `DEFAULT_GUI_ENABLED = True` in `config.py` and `[settings] gui = true` in `plugin.ini`. Users can choose interactive GUI mode (default) or headless background routing.
-  - **Clean Live Progress & Tooltips in Headless Mode:**
-    - Stripped Log4j metadata prefixes (`clean_log_line`) so the dialog shows meaningful status (e.g. `Auto-routing pass #1 started...`) instead of being cut off by timestamp/thread prefixes.
-    - Bound native hover tooltips (`SetToolTip`) to the detail line so hovering displays the complete raw timestamped log entry.
-  - **Console Suppression across all Platforms:** Applied `subprocess.CREATE_NO_WINDOW` on Windows (and `start_new_session = True` on POSIX) across all child process calls, eliminating empty black console windows and popup flashes on all platforms.
-  - **Crash-Safe Process Termination:**
-    - In `ProcessThread`, cancellation immediately disarms `on_complete` under a lock, preventing post-termination callbacks.
-    - `ProcessDialog.terminate()` and `_on_click` guard against invocation on non-modal or destroying dialogs.
-    - `wx_safe_invoke` checks C++ object lifetime (`IsBeingDeleted()`, `bool(target)`) to cleanly drop callbacks if widgets are destroyed.
-
-
+### 2.2. Native Intel macOS Packaging ([Issue #905](https://github.com/freerouting/freerouting/issues/905))
+- **Context:** Modern Apple Silicon Macs are supported by `build-macos-arm64` on `macos-latest`, but Intel Mac users (`x86_64`) were left without native pre-packaged `.dmg` installers after GitHub Actions retired `macos-13`.
+- **Solution:** GitHub Actions announced the **`macos-15-intel`** runner image (supported through August 2027) for x86_64 workloads.
+- **Implementation Plan:**
+  1. Add `scripts/build/create-distribution-macos-x64.sh` invoking JDK `jlink` + `jpackage` with architecture flags for `x86_64`.
+  2. Add `build-macos-x64` in `.github/workflows/create-release.yml` targeting `runs-on: [ macos-15-intel ]`.
+  3. Publish `freerouting-<version>-macos-x64.dmg` alongside `macos-arm64.dmg` in GitHub Releases.
+- **Recommendation:** Implement for the v2.5.0 release pipeline.
 
 ---
 
-### 2.5. Issue #523: Unrouted and Redundant Track Stubs
-- **Question:** *Can we discard this for now?*
-- **Analysis:**
-  - Tagged with `missing-info`.
-  - Maintainer BanjoR performed an extensive investigation on `master` and was unable to reproduce residual stubs on clean boards under normal legal routing rules.
-  - Furthermore, PR #793 identified that an older experimental stub-removal routine (`minimize_stubs()`) had actually been deleting valid traces rather than real stubs.
-- **Action Taken:** **Closed Issue #523 as `missing-info` / not planned.** Informed the user that the issue could not be reproduced on recent builds and invited them to reopen with a modern reproduction `.dsn` if encountered again on v2.4.1+ / v2.5.0.
+### 2.3. GUI Startup Thread Confinement ([PR #819](https://github.com/freerouting/freerouting/pull/819))
+- **Problem:** Freerouting's main entry point historically called `GuiManager.initializeGUI` from the initial application thread rather than Swing's Event Dispatch Thread (EDT). When opening a board directly on launch, `ScreenMessages` mutations threw `IllegalStateException: ScreenMessages must only be mutated on the EDT`, freezing the startup process.
+- **Fix:** Wraps GUI initialization synchronously in `SwingUtilities.invokeAndWait`, guaranteeing thread confinement and adding regression tests for both on-EDT and off-EDT entry points.
+- **Status:** The PR branch currently has merge conflicts against `master`.
+- **Recommendation:** Rebase against `master` and merge.
 
 ---
 
-### 2.6. Pull Request #793: Draft Heuristic Experiments & Headless Fixes
-- **Question:** *Which proposed fixes are still relevant vs. experimental?*
-- **Detailed Commit Audit:**
-  Author `@gbacskai` submitted 27 commits. Analysis reveals a clear separation between critical, high-value bug fixes and unverified experimental heuristics:
-  
-  #### Category A: High-Value Bug Fixes (Recommended to Cherry-Pick)
-  1. **`minimize_stubs()` Trace Deletion Bug (`a21d7759`):**
-     - Endpoint count logic was flawed: it tested `contacts == 1` to identify stubs, but `countContacts()` already excluded the tested trace. Normal pad-to-via traces report 1 contact at each end, causing valid routed traces to be deleted! Fixed to check for 0 contacts and made opt-in via `--router.minimize_stubs`.
-  2. **`IntPoint` Hash Code Invariant (`0bc6276d`):**
-     - `IntPoint` implemented `equals()` without implementing `hashCode()`, making it dangerous to use as a key in hash maps or sets.
-  3. **`PriorityQueue` Iteration Bug in `MazeSearchAlgo` (`0bc6276d`):**
-     - Used `queue.iterator().next()` assuming it returned the queue minimum. Java's `PriorityQueue` iterator has *unspecified* order; only `poll()` or `peek()` yields the minimum!
-  4. **File Descriptor Leak in Job Storage (`d6de64c9`):**
-     - `Files.list()` streams in `saveJob` were not closed in try-with-resources, leading to `/tmp` inode and descriptor exhaustion on headless server runs.
-  5. **Impossible Logic in `calculateFastHeuristic` (`0bc6276d`):**
-     - Contained conditions like `p_layer == 0 && p_layer != 0`, preventing layer-change heuristics from ever executing on outer layers.
-  6. **DSN Resolution Scaling in Escape Distance Thresholds (`0f121a2e`):**
-     - Hardcoded unit assumptions (1 unit = 1 µm) broke boards using `(resolution mil 2540)`. Now properly derived from `communication.get_resolution()`.
-
-  #### Category B: Experimental Heuristics (Discard or Defer)
-  - Multi-threaded autorouter pass experiments (`autoroute_pass_multi_thread`).
-  - Speculative layer assignment and power trunk routing changes.
-- **Decision:** Create a clean, focused PR cherry-picking Category A bug fixes with targeted unit tests. Leave experimental heuristics out of the production path.
+### 2.4. Scheduler Parallel Jobs Configuration ([PR #843](https://github.com/freerouting/freerouting/pull/843))
+- **Problem:** `RoutingJobScheduler` hardcodes concurrent routing jobs to `5`. High-spec self-hosted API servers cannot scale out job throughput without custom source patches.
+- **Fix:** Exposes `--api_server.max_parallel_jobs` (default `5`) participating in the normal `SettingsMerger` priority ladder (CLI, environment variables `FREEROUTING__API_SERVER__MAX_PARALLEL_JOBS`, JSON file).
+- **Status:** `MERGEABLE` and cleanly isolated to `api_server` configuration.
+- **Recommendation:** Review and merge for v2.5.0.
 
 ---
 
-### 2.7. Pull Request #743: Routing ETA Calculator
-- **Assessment:**
-  - Introduces `RoutingEtaCalculator` to estimate remaining time based on search progress.
-  - Still in draft and has merge conflicts against `master`.
-- **Decision:** **Defer.** Confirmed low priority; not planned for v2.5.0.
+### 2.5. Headless Fixes & Heuristic Audit ([PR #793](https://github.com/freerouting/freerouting/pull/793))
+- **Audit Findings:** PR #793 by `@gbacskai` contains 27 commits. A strict line must be drawn between bug fixes and unverified heuristics:
+  - **Critical Bug Fixes (Ready to Cherry-Pick):**
+    1. **Destructive Stub Removal (`a21d7759`):** `minimize_stubs()` erroneously tested `contacts == 1`, matching normal pad-to-via traces and deleting valid copper. Corrected to check for 0 contacts and made opt-in via `--router.minimize_stubs`.
+    2. **`IntPoint` Hash Contract (`0bc6276d`):** `IntPoint` overrode `equals()` but not `hashCode()`, causing undefined behavior when used as map/set keys.
+    3. **`PriorityQueue` Non-Deterministic Iteration (`0bc6276d`):** Replaced `queue.iterator().next()` (unspecified order) with `queue.poll()` in `MazeSearchAlgo`.
+    4. **Stream File Descriptor Leak (`d6de64c9`):** Closed `Files.list()` streams in try-with-resources during job folder management.
+    5. **Impossible Outer Layer Condition (`0bc6276d`):** Corrected `p_layer == 0 && p_layer != 0` in `calculateFastHeuristic`.
+    6. **DSN Unit Resolution Scaling (`0f121a2e`):** Derived escape cluster distance thresholds from `communication.get_resolution()` rather than assuming fixed micron units.
+  - **Experimental Heuristics (Do Not Merge):** Multi-threaded autorouter passes and speculative layer assignment heuristics regressed test fixtures and should remain deferred.
+- **Recommendation:** Extract the 6 critical bug fixes into a dedicated PR with targeted tests.
 
 ---
 
-### 2.8. Pull Request #891: Linux AppImage Build Support & macOS Packaging Strategy
-- **Assessment:**
-  - Adds single-file executable AppImage generation for Linux using the `quick-sharun` toolchain.
-  - Highly valuable for Linux users who encounter distro packaging differences, missing JRE 25 runtimes, or Wayland/glibc discrepancies.
-- **Is AppImage Supported on macOS?**
-  - **No.** AppImage is an executable format strictly tied to Linux (it consists of an ELF binary header, a squashfs compressed filesystem, and a runtime relying on Linux FUSE mounting). macOS cannot mount or execute AppImage binaries.
-  - On macOS, the standard distribution formats are `.dmg` disk images or `.pkg` installers containing signed `.app` application bundles.
-- **Supporting macOS x86_64 (Intel) via GitHub Actions:**
-  - **Current State:** `.github/workflows/create-release.yml` currently runs `build-macos-arm64` on `macos-latest` (Apple Silicon runners), executing `scripts/build/create-distribution-macos-arm64.sh` via JDK `jlink` + `jpackage` to generate `freerouting-<version>-macos-arm64.dmg`.
-  - **Path to x86_64 (Intel) macOS Support:**
-    - GitHub Actions announced the retirement of `macos-13` and introduced the **`macos-15-intel`** runner image for x86_64 architectures (supported through August 2027).
-    - We can add a parallel release job `build-macos-x64` in `create-release.yml`:
-      ```yaml
-      build-macos-x64:
-        needs: build-and-test
-        runs-on: [ macos-15-intel ]
-        timeout-minutes: 30
-        permissions:
-          contents: write
-        steps:
-          - uses: actions/checkout@v5
-          - uses: actions/setup-java@v5
-            with:
-              distribution: 'temurin'
-              java-version: '25'
-              architecture: 'x64'
-              cache: 'gradle'
-          - run: chmod +x gradlew scripts/build/*.sh
-          - run: ./gradlew dist
-          - run: scripts/build/create-distribution-macos-x64.sh ${{ steps.tagName.outputs.tag }}
-          - uses: AButler/upload-release-assets@v3.0
-            with:
-              files: './scripts/build/freerouting-${{ steps.tagName.outputs.tag }}-macos-x64.dmg'
-              release-tag: v${{ steps.tagName.outputs.tag }}
-              repo-token: ${{ secrets.GITHUB_TOKEN }}
-      ```
-    - The accompanying `scripts/build/create-distribution-macos-x64.sh` uses the same `jlink` + `jpackage` recipe as the ARM64 script, producing a native Intel DMG.
-- **Decision:**
-  - **For PR #891 (Linux):** Accept in principle and test the build script in a clean Ubuntu/Fedora container.
-  - **For macOS x86_64:** Support Intel Mac users through native DMG packaging by adding a `macos-15-intel` runner job in `create-release.yml` rather than AppImage. Tracked in newly created issue **[#905](https://github.com/freerouting/freerouting/issues/905)** (*"CI: Package native Intel (x86_64) macOS DMG installer via macos-15-intel runner"*), referencing original user request in [#803](https://github.com/freerouting/freerouting/issues/803). Intel Mac users can also run the universal executable JAR (`freerouting-executable.jar`) on any Java 25 runtime.
+### 2.6. Linux AppImage Support ([PR #891](https://github.com/freerouting/freerouting/pull/891))
+- **Assessment & Enhancements:** Introduces `quick-sharun` AppImage generation. AppImages provide a self-contained executable with bundled JRE and runtime libraries, resolving Linux distribution fragmentation.
+- **Repository Structure & Script Organization:**
+  - Placed distribution scripts consistently in `scripts/build/` alongside other platform packages: `scripts/build/create-distribution-appimage.sh` and `scripts/build/create-distribution-SNAPSHOT-appimage.sh`.
+  - Self-contained container setup and metadata are organized under `scripts/build/appimage/` (`install-dependencies.sh`, `freerouting.desktop`, and `app.freerouting.Freerouting.metainfo.xml`), keeping the repository root clean.
+- **Capitalization & Desktop Entry Refinement:**
+  - Corrected `StartupWMClass=app-freerouting-FreeRouting` to `StartupWMClass=app-freerouting-Freerouting` in `freerouting.desktop` to match Freerouting's main class (`app.freerouting.Freerouting`) and X11 window manager hints, strictly enforcing project product spelling.
+  - Added Freedesktop AppStream metainfo specification (`scripts/build/appimage/app.freerouting.Freerouting.metainfo.xml`) for software centers and catalog tools (`appstreamcli`, AM, Portable Linux Apps).
+- **Naming & Delta Updates (`.zsync`):**
+  - **Artifact Naming:** Set `OUTNAME="freerouting-$VERSION-$ARCH.AppImage"`, producing standard `freerouting-<version>-x86_64.AppImage` (dropping redundant `linux`, using standard GNU `x86_64`, lowercase product prefix, and `.AppImage` extension).
+  - **`UPINFO` Fix:** Fixed malformed GitHub release URL expansion in `UPINFO` so `zsync` correctly parses GitHub release assets matching `freerouting-*-x86_64.AppImage.zsync` (and `freerouting-SNAPSHOT-*-x86_64.AppImage.zsync` for SNAPSHOT builds).
+- **Script Quality & CI Linters:**
+  - Resolved ShellCheck warnings (SC2034 unused `ARCH`, SC2086 unquoted variables).
+  - Dynamic `SCRIPT_DIR` resolution allows running build scripts from any working directory.
+- **Release Asset Architecture Naming Evaluation:** Kept native `x64` / `arm64` conventions for other release packages (`.zip`, `.msi`, `.dmg`) to prevent breaking downstream third-party automation, package managers, and KiCad plugin auto-downloaders.
+- **Recommendation:** Ready to merge once review is finalized.
 
 ---
 
-### 2.9. Pull Requests #888 & #870: GUI Inspect Mode & Manual Rules Panel
-- **Assessment:**
-  - **PR #888:** Smooths inspect mode transitions (removes canvas jump), cleans up inspect toolbar.
-  - **PR #870:** Replaces floating popup window for manual rules with an inline panel in routing parameters.
-- **Decision:** **Defer for Current Release.** Stable and clean, but GUI polish is lower priority than the core engine and API stability fixes.
+### 2.7. Dependency Updates & OpenRewrite Cleanup
+- **Status:** OpenRewrite was completely removed from `master` in commits `54da21183`, `e348262aa`, and PR #912 (`chore/remove-openrewrite`).
+- **PR #900 Resolution:** PR #900 (Dependabot 23-dependency bump) was automatically closed on September 17, 2026. Dependabot will regenerate a clean update PR reflecting the current build configuration without OpenRewrite artifacts.
 
 ---
 
-### 2.10. Pull Request #900: Dependabot Build Failure & OpenRewrite Removal
-- **Question:** *Can we remove the Rewrite package completely?*
-- **Investigation of Build Failure:**
-  - Dependabot attempted to bump `org.openrewrite.rewrite` Gradle plugin from `7.38.0` to `7.41.0`.
-  - CI failed with:
-    ```
-    > Could not resolve org.openrewrite:plugin:7.41.0.
-       > Could not find org.openrewrite:rewrite-bom:8.91.0.
-         Searched in: https://plugins.gradle.org/m2/org/openrewrite/rewrite-bom/8.91.0/rewrite-bom-8.91.0.pom
-    ```
-    The Gradle plugin portal lacks the corresponding BOM metadata required by that plugin release.
-- **OpenRewrite Usage Audit in Codebase:**
-  - OpenRewrite was introduced for automated migration phases:
-    - Phase 1: Static Analysis
-    - Phase 2: `snake_case` → `camelCase` naming conventions
-    - Phase 3: JUnit 5 Jupiter migration
-    - Phase 4: Gradle 9 upgrade
-    - Phase 5: Java 25 upgrade
-  - **All migration phases are complete.** In `build.gradle`, all `activeRecipe(...)` lines are commented out.
-  - The repository still incurs overhead from:
-    - `id 'org.openrewrite.rewrite'` in `build.gradle`
-    - `sourceSets.rewriteRecipes` and `src/rewrite/java/` (custom rename visitors)
-    - 7 separate OpenRewrite library dependencies in `dependencies { ... }`
-    - Checkstyle tasks (`checkstyleRewriteRecipes`) running on every build
-- **Conclusion:** OpenRewrite has served its purpose and is no longer needed.
-- **Decision:** **Remove OpenRewrite completely:**
-  1. Remove `org.openrewrite.rewrite` plugin from `build.gradle`.
-  2. Delete `sourceSets.rewriteRecipes` and `src/rewrite/java/`.
-  3. Remove all `rewrite` and `rewriteRecipesImplementation` dependencies from `build.gradle`.
-  4. Remove the `rewrite { ... }` configuration block and related Phase 2 PowerShell runner tasks.
-  5. Close or rebase PR #900 without OpenRewrite bumps.
-  - *Benefits:* Solves PR #900 build failure, speeds up Gradle configuration and compilation, removes unused dependencies, and simplifies repository maintenance.
+## 3. Active Backlog Priority Matrix
+
+### Tier 1: Release-Critical for v2.5.0
+1. **[PR #909](https://github.com/freerouting/freerouting/pull/909):** Merge KiCad plugin SES check (fixes #908).
+2. **[PR #819](https://github.com/freerouting/freerouting/pull/819):** Rebase and merge GUI startup thread confinement.
+3. **[PR #843](https://github.com/freerouting/freerouting/pull/843):** Merge configurable API server job concurrency.
+4. **[#905](https://github.com/freerouting/freerouting/issues/905):** Add native macOS x86_64 DMG job using `macos-15-intel`.
+5. **[PR #793](https://github.com/freerouting/freerouting/pull/793) (Porting):** Cherry-pick the 6 verified bug fixes into a clean PR.
+
+### Tier 2: Post-v2.5 Release & Modernization
+- **[PR #891](https://github.com/freerouting/freerouting/pull/891):** Linux AppImage validation and release workflow integration.
+- **[PR #888](https://github.com/freerouting/freerouting/pull/888) & [PR #870](https://github.com/freerouting/freerouting/pull/870):** Inspect mode and inline manual rules panel polish.
+- **[PR #809](https://github.com/freerouting/freerouting/pull/809):** Net-class trace width GUI editing table rebase.
+- **[#787](https://github.com/freerouting/freerouting/issues/787):** KiCad Plugin Protocol Buffers IPC migration.
+- **[#879](https://github.com/freerouting/freerouting/issues/879) & [#718](https://github.com/freerouting/freerouting/issues/718):** Architectural engine enhancements (custom padstacks, net-ties).
 
 ---
 
-## 3. Recommended Action Roadmap
+## 4. Workflow Roadmap
 
 ```mermaid
 flowchart TD
-    subgraph Housekeeping ["1. Housekeeping & PR Closure"]
-        A[Close PR #816 - Superseded by a4495b383]
-        B[Close PR #820 - Superseded by #632 fix]
-        C[Park / Close Issue #523 - Missing Info]
+    subgraph Immediate ["1. v2.5 Immediate Merges"]
+        A[Merge PR #909 - Fixes #908 SES check]
+        B[Rebase & Merge PR #819 - GUI EDT confinement]
+        C[Merge PR #843 - Configurable parallel jobs]
     end
 
-    subgraph CriticalFixes ["2. Core Stability & API Fixes"]
-        D[Rebase & Merge PR #819 - GUI EDT Confinement]
-        E[Resolve #885 & #886 - PR #906 MERGED]
-        F[Cherry-pick Bug Fixes from PR #793 - Stub deletion, PriorityQueue.poll, FD leak]
+    subgraph Packaging ["2. Release Pipeline Hardening"]
+        D[Implement #905 - macOS x86_64 on macos-15-intel]
+        E[Validate & Merge PR #891 - Linux AppImage]
     end
 
-    subgraph BuildClean ["3. Build & Dependency Modernization"]
-        G[Remove OpenRewrite Plugin & src/rewrite Tree]
-        H[Re-run Dependabot PR #900 on Clean Build]
-        I[Test AppImage PR #891 on Linux Container]
+    subgraph EngineFixes ["3. Targeted Bug Extraction"]
+        F[Cherry-pick 6 bug fixes from PR #793]
     end
 
-    Housekeeping --> CriticalFixes
-    CriticalFixes --> BuildClean
+    Immediate --> Packaging
+    Packaging --> EngineFixes
 ```

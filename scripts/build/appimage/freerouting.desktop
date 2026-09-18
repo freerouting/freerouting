@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Freerouting
+Comment=Open-source PCB autorouter supporting Specctra/Electra DSN interfaces
+Exec=freerouting %F
+Icon=freerouting
+Terminal=false
+Type=Application
+Categories=Development;Electronics;Engineering;Science;Education;
+StartupNotify=true
+StartupWMClass=app-freerouting-Freerouting
+Keywords=pcb;electronics;autorouter;layout;design;EDA;PCB;free;open-source;specctra;dsn;electra;Freerouting;
+MimeType=application/x-dsn;application/x-dsn+xml;
+GenericName=PCB Autorouter
+

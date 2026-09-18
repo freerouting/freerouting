@@ -1,4 +1,4 @@
-name: Push the Docker nightly image
+name: 'Docker: Publish Nightly Image'
 
 on:
   push:
