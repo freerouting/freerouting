@@ -16,7 +16,7 @@
 | **[PR #909](https://github.com/freerouting/freerouting/pull/909)** | KiCad / Python | `MERGEABLE` | **Fixes Issue #908.** Check Specctra SES file existence before importing in KiCad plugin. Eliminates error dialogs on clean close without routing. | **Review & Merge for v2.5.** Zero-risk, high user satisfaction. |
 | **[PR #843](https://github.com/freerouting/freerouting/pull/843)** | API / Server | `MERGEABLE` | Make scheduler maximum parallel jobs configurable via `--api_server.max_parallel_jobs` and environment variable. | **Review & Merge for v2.5.** Essential for server scaling. |
 | **[PR #819](https://github.com/freerouting/freerouting/pull/819)** | GUI / Java | `CONFLICTING` | Fix GUI startup thread confinement (dispatch GUI startup synchronously onto Swing EDT). Prevents `ScreenMessages` race condition. | **Rebase against master & Merge.** |
-| **[PR #891](https://github.com/freerouting/freerouting/pull/891)** | CI / Packaging | `MERGEABLE` | Add Linux AppImage build support via `quick-sharun` for portability across distributions. | **Validate in Linux containers & Merge.** |
+| **[PR #891](https://github.com/freerouting/freerouting/pull/891)** | CI / Packaging | `MERGEABLE` | Add Linux AppImage build support via `quick-sharun` for portability across distributions. | **Hardened naming, metadata & ShellCheck compliance.** Ready to validate & merge. |
 | **[PR #810](https://github.com/freerouting/freerouting/pull/810)** | CI | `MERGEABLE` | Update pre-commit workflow cache configuration. | **Low-risk merge.** Improves CI caching. |
 | **[PR #793](https://github.com/freerouting/freerouting/pull/793)** | Engine / CLI | `Draft / CONFLICTING` | Headless fixes, Specctra type protect handling, and routing heuristics. Contains 6 verified bug fixes alongside experimental heuristics. | **Cherry-pick 6 bug fixes** into a clean PR; discard experimental heuristics. |
 | **[PR #888](https://github.com/freerouting/freerouting/pull/888)** | GUI | `MERGEABLE` | Improve inspect mode GUI (canvas jump removal, toolbar layout, context menu width clamping). | **Defer to v2.6.** UI refinement. |
@@ -113,9 +113,18 @@
 ---
 
 ### 2.6. Linux AppImage Support ([PR #891](https://github.com/freerouting/freerouting/pull/891))
-- **Assessment:** Introduces `quick-sharun` AppImage generation. AppImages provide an all-in-one executable containing the bundled JRE and dependencies, eliminating Linux distribution library mismatch issues.
-- **Note on macOS:** AppImage is Linux-only (ELF/squashfs/FUSE). macOS is served via native DMG packages (Issue #905).
-- **Recommendation:** Validate packaging in Ubuntu and Fedora environments, then merge.
+- **Assessment & Enhancements:** Introduces `quick-sharun` AppImage generation. AppImages provide a self-contained executable with bundled JRE and runtime libraries, resolving Linux distribution fragmentation.
+- **Capitalization & Desktop Entry Refinement:**
+  - Corrected `StartupWMClass=app-freerouting-FreeRouting` to `StartupWMClass=app-freerouting-Freerouting` in `freerouting.desktop` to match Freerouting's main class (`app.freerouting.Freerouting`) and X11 window manager hints, strictly enforcing project product spelling.
+  - Added Freedesktop AppStream metainfo specification (`appimage/app.freerouting.Freerouting.metainfo.xml`) for software centers and catalog tools (`appstreamcli`, AM, Portable Linux Apps).
+- **Naming & Delta Updates (`.zsync`):**
+  - **Artifact Naming:** Set `OUTNAME="freerouting-$VERSION-$ARCH.AppImage"`, producing standard `freerouting-<version>-x86_64.AppImage` (dropping redundant `linux`, using standard GNU `x86_64`, lowercase product prefix, and `.AppImage` extension).
+  - **`UPINFO` Fix:** Fixed malformed GitHub release URL expansion in `UPINFO` so `zsync` correctly parses GitHub release assets matching `freerouting-*-x86_64.AppImage.zsync`.
+- **Script Quality & CI Linters:**
+  - Resolved ShellCheck warnings (SC2034 unused `ARCH`, SC2086 unquoted variables).
+  - Dynamic `SCRIPT_DIR` resolution allows running build scripts from any working directory.
+- **Release Asset Architecture Naming Evaluation:** Kept native `x64` / `arm64` conventions for other release packages (`.zip`, `.msi`, `.dmg`) to prevent breaking downstream third-party automation, package managers, and KiCad plugin auto-downloaders.
+- **Recommendation:** Ready to merge once review is finalized.
 
 ---
 

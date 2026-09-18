@@ -1,9 +1,7 @@
 #!/bin/sh
 set -eu
 
-ARCH=$(uname -m)
-
-echo "Initializing the build container..."
+echo "Initializing build container for $(uname -m)..."
 echo "---------------------------------------------------------------"
 pacman-key --init
 pacman -Syy --noconfirm archlinux-keyring
