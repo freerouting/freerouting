@@ -318,7 +318,7 @@ public final class RoutingJobScheduler {
    *
    * @return The default maximum number of parallel jobs.
    */
-  static int defaultMaxParallelJobs() {
+  public static int defaultMaxParallelJobs() {
     return Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
   }
 
@@ -329,7 +329,7 @@ public final class RoutingJobScheduler {
    *
    * @return The maximum number of parallel jobs.
    */
-  int getMaxParallelJobs() {
+  public int getMaxParallelJobs() {
     if ((globalSettings != null)
         && (globalSettings.apiServerSettings != null)
         && (globalSettings.apiServerSettings.maxParallelJobs != null)
