@@ -138,7 +138,7 @@ commit.
 
 - **Run Checkstyle on maintained sources independently**:
   ```bash
-  ./gradlew checkstyleMain checkstyleTest checkstyleRewriteRecipes
+  ./gradlew checkstyleMain checkstyleTest
   ```
 
 - **Verify generated i18n context without rewriting it**:
@@ -361,12 +361,15 @@ Recommended guardrails:
 
 ## Source formatting and cleanup
 
-- Freerouting follows Google coding conventions from Google Java Style, and the configured OpenRewrite recipe
-  `org.openrewrite.staticanalysis.CodeCleanup` applies those rules automatically to the codebase.
-- Run the cleanup recipe locally with the Rewrite task:
+- Freerouting follows Google coding conventions from Google Java Style, enforced via Spotless and Checkstyle.
+- Verify formatting locally before committing:
 
-```
-  ./gradlew rewriteRun
+```bash
+./gradlew spotlessCheck checkstyleMain checkstyleTest
 ```
 
-- Run the same command before committing so formatting stays consistent with the automated checks.
+- When formatting changes are intentionally needed, apply them via:
+
+```bash
+./gradlew spotlessApply
+```

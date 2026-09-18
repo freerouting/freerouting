@@ -9,7 +9,6 @@ plugins {
     id 'checkstyle'
     id "com.vanniktech.maven.publish" version "0.37.0"
     id 'io.github.ben-manes.versions' version '0.61.0'
-    id 'org.openrewrite.rewrite' version '7.38.0'
     id "com.diffplug.spotless" version "8.9.0"
 }
 
@@ -34,14 +33,6 @@ java.toolchain {
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-sourceSets {
-    rewriteRecipes {
-        java {
-            srcDirs = ['src/rewrite/java']
-        }
-    }
-}
 
 
 tasks.withType(JavaCompile).configureEach {
@@ -214,22 +205,6 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.55'
     implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.55'
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.55'
-
-    // OpenRewrite (all versions verified current as of Aug 2026; rewrite-migrate-java
-    // transitively provides org.openrewrite:rewrite-gradle for the MigrateToGradle9 recipe):
-    rewrite 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewrite 'org.openrewrite.recipe:rewrite-migrate-java:3.41.0'
-    rewrite 'org.openrewrite.recipe:rewrite-recommendations:1.15.0'
-    rewrite 'org.openrewrite.recipe:rewrite-testing-frameworks:3.43.0'
-
-    rewriteRecipesImplementation 'org.openrewrite.recipe:rewrite-static-analysis:2.40.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    rewriteRecipesImplementation 'org.openrewrite:rewrite-core:8.88.0'
-    rewrite sourceSets.rewriteRecipes.output
-    testImplementation sourceSets.rewriteRecipes.output
-    testImplementation 'org.openrewrite:rewrite-java:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-core:8.88.0'
-    testImplementation 'org.openrewrite:rewrite-java-25:8.88.0'
 
 
     // ArchUnit: package-architecture enforcement
@@ -649,104 +624,4 @@ tasks.named('testSlow') {
 
 tasks.named('testSerial') {
     mustRunAfter(tasks.named('testSlow'))
-}
-
-rewrite {
-    // Fail fast on misspelled / nonexistent recipe names instead of silently skipping them.
-    failOnInvalidActiveRecipes = true
-
-    // Protect the v1.9 reference implementation (src_v19 source set) — it must stay unmodified.
-    exclusion("src_v19/**")
-    exclusion("**/src_v19/**")
-    exclusion("**/geometry/**")
-    exclusion("**/board/**")
-    exclusion("**/drc/**")
-    exclusion("**/autoroute/**")
-    exclusion("**/management/**")
-    exclusion("**/io/**")
-    exclusion("**/interactive/**")
-    exclusion("**/gui/**")
-
-
-tasks.register('phase2GenerateFieldMap', Exec) {
-    group = 'rewrite'
-    description = 'Generate field rename map before running rewriteRun'
-    def pkgs = System.getProperty('rewrite.targetPackages', '')
-    if (pkgs) {
-        def pkgList = pkgs.split(',').collect { it.trim() }
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1', '-TargetPackages', pkgList.join(',')
-    } else {
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/generate-field-rename-map.ps1'
-    }
-}
-
-tasks.register('phase2FieldReferenceRenames', Exec) {
-    group = 'rewrite'
-    description = 'Apply cross-file field reference renames from build/field-renames.tsv'
-    def pkgs = System.getProperty('rewrite.targetPackages', '')
-    if (pkgs) {
-        def pkgList = pkgs.split(',').collect { it.trim() }
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1', '-TargetPackages', pkgList.join(',')
-    } else {
-        commandLine 'powershell', '-NoProfile', '-File', 'scripts/rewrite/apply-field-reference-renames.ps1'
-    }
-}
-
-tasks.register('phase2aFieldsPost') {
-    group = 'rewrite'
-    description = 'Post-steps after Phase2aFields: field reference fallback + spotlessApply'
-    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
-}
-
-tasks.register('phase2fPost') {
-    group = 'rewrite'
-    description = 'Post-steps after Phase2fLocalVariables: spotlessApply only'
-    dependsOn(tasks.named('spotlessApply'))
-}
-
-tasks.register('phase2Naming') {
-    group = 'rewrite'
-    description = 'Phase 2 post-steps: field reference fallback + spotlessApply (run rewriteRun first)'
-    dependsOn(tasks.named('phase2FieldReferenceRenames'), tasks.named('spotlessApply'))
-}
-
-tasks.named('spotlessApply').configure { mustRunAfter(tasks.named('phase2FieldReferenceRenames')) }
-
-['rewriteRun', 'rewriteDryRun', 'rewriteDiscover'].each { taskName ->
-    tasks.matching { it.name == taskName }.configureEach {
-        dependsOn(tasks.named('compileRewriteRecipesJava'))
-    }
-}
-
-
-    // --- PHASE 1: Hygiene (run first to reduce noise) ---
-    // Curated composite in rewrite.yml: CommonStaticAnalysis minus MethodNameCasing
-    // (inconsistent renames across widened-access overrides) and WriteOctalValuesAsDecimal.
-    // activeRecipe("app.freerouting.Phase1Hygiene")
-    // Formatting guardrail: ./gradlew spotlessApply (enforced by spotlessCheck in check)
-
-    // --- PHASE 2: Naming Convention (snake_case -> camelCase) ---
-    // WARNING: renaming private fields breaks Java-serialization compatibility of saved
-    // .frb GUI session files (renamed fields deserialize to defaults).
-    // activeRecipe("org.openrewrite.staticanalysis.RenameLocalVariablesToCamelCase")
-    // activeRecipe("org.openrewrite.staticanalysis.RenamePrivateFieldsToCamelCase")
-
-    // --- PHASE 3: Testing Modernization (JUnit 5 / Jupiter) ---
-    // activeRecipe("org.openrewrite.java.testing.junit5.JUnit5BestPractices")
-
-    // --- PHASE 4: Build System (Gradle 9) ---
-    // activeRecipe("org.openrewrite.gradle.MigrateToGradle9")
-
-    // --- PHASE 5: The Big Upgrade (Java 25) ---
-    // Note: This includes the logic from 17 and 21 automatically.
-    // activeRecipe("org.openrewrite.java.migrate.UpgradeToJava25")
-
-    // --- PHASE 6: Modern Java Features (Optional Polish) ---
-    // activeRecipe("org.openrewrite.staticanalysis.InstanceOfPatternMatch")
-    // activeRecipe("org.openrewrite.java.migrate.lang.UseTextBlocks")
-    // activeRecipe("org.openrewrite.java.migrate.SwitchPatternMatching")
-
-    // --- Configuration ---
-    checkstyleConfigFile = file("config/checkstyle/google_checks.xml")
-    setExportDatatables(true)
 }

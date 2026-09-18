@@ -247,6 +247,7 @@ public class CompositeBoardInput {
     }
 
     job.routerSettings.applyBoardSpecificOptimizations(job.board);
+    job.routerSettings.applyNetClassExclusions(job.board);
 
     // Import initial session (SES or KiCad JSON) if present
     byte[] effectiveSessionData = sessionData;

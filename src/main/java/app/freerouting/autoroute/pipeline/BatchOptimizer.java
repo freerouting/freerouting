@@ -278,6 +278,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
 
   /** Optimize the route on the board. */
   public void runBatchLoop() {
+    if (this.job != null && this.job.board != null) {
+      this.board = this.job.board;
+    }
+
     job.logDebug(
         "Before optimization: Via count: "
             + board.getVias().size()
@@ -831,18 +835,23 @@ public final class BatchOptimizer extends NamedAlgorithm {
       return new ItemRouteResult(item.getId());
     }
 
+    double baseline =
+        this.minCumulativeTraceLength > 0
+            ? this.minCumulativeTraceLength
+            : routingBoard.getStatistics().traces.totalWeightedLength;
+
     return optRouteItemOnBoard(
         job,
         routingBoard,
         item,
-        this.minCumulativeTraceLength,
+        baseline,
         withPreferredDirections,
         this.useIncreasedRipupCosts,
         this.thread,
         this.deadlineMs);
   }
 
-  private static ItemRouteResult optRouteItemOnBoard(
+  static ItemRouteResult optRouteItemOnBoard(
       RoutingJob job,
       RoutingBoard routingBoard,
       Item item,
@@ -852,6 +861,10 @@ public final class BatchOptimizer extends NamedAlgorithm {
       StoppableThread thread,
       Long deadlineMs) {
     BoardStatistics boardStatisticsBefore = new BoardStatistics(routingBoard, null, false);
+    double baseline =
+        baselineTraceLength > 0
+            ? baselineTraceLength
+            : boardStatisticsBefore.traces.totalWeightedLength;
     RouterCounters routerCountersBefore = new RouterCounters();
     routerCountersBefore.incompleteCount = calculateIncompleteCount(routingBoard);
 
@@ -915,8 +928,8 @@ public final class BatchOptimizer extends NamedAlgorithm {
             item.getId(),
             boardStatisticsBefore.items.viaCount,
             boardStatisticsAfter.items.viaCount,
-            baselineTraceLength,
-            boardStatisticsAfter.traces.totalLength,
+            baseline,
+            boardStatisticsAfter.traces.totalWeightedLength,
             routerCountersBefore.incompleteCount,
             routerCountersAfter.incompleteCount);
     boolean routeImproved =

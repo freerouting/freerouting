@@ -1,5 +1,5 @@
-build
-out
+/build
+/out
 /.nb-gradle/
 .gradle/
 .idea/
@@ -37,6 +37,7 @@ gha-creds-*.json
 /.secrets
 /scripts/benchmark/logs
 /scripts/benchmark/outputs
+/scripts/benchmark/.user_data/
 /scripts/benchmark/results/comparison-*/
 /scripts/benchmark/binaries/freerouting-current-*.jar
 /scripts/i18n/__pycache__

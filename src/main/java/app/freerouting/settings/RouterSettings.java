@@ -5,9 +5,12 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.util.ReflectionUtil;
 import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Mutable router configuration assembled from the configured settings sources. */
 public class RouterSettings implements Serializable, Cloneable {
@@ -68,7 +71,15 @@ public class RouterSettings implements Serializable, Cloneable {
   public String jobTimeoutString;
 
   @SerializedName("layers")
+  @Schema(
+      description =
+          "Per-layer configuration (routability, direction, bend cost, preferred/undesired costs)")
   public transient LayerSettings[] layers;
+
+  /** Diagnostic validation warnings populated during settings preflight/validation. */
+  @SerializedName("validation_warnings")
+  @Schema(description = "Validation warnings, unknown classes, or clamped values from preflight")
+  public List<String> validationWarnings;
 
   /** The accuracy of the pull tight algorithm. */
   @SerializedName(
@@ -115,7 +126,7 @@ public class RouterSettings implements Serializable, Cloneable {
    * explicitly by the user) and must not be overwritten by subsequent calls to {@link
    * #applyBoardSpecificOptimizations}.
    */
-  private transient Boolean boardSpecificTraceCostsApplied;
+  public transient Boolean boardSpecificTraceCostsApplied;
 
   // PropertyChangeSupport for bidirectional binding with GUI
   private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -396,8 +407,19 @@ public class RouterSettings implements Serializable, Cloneable {
         layers[i].preferredDirectionHorizontal = currentPreferredDirectionIsHorizontal;
       }
 
-      if (initializeTraceCosts) {
+      // If this layer has an explicit preferred direction cost, preserve it;
+      // otherwise, compute it from the default.
+      if (layers[i].preferredDirectionTraceCost != null) {
+        scoring.preferredDirectionTraceCost[i] = layers[i].preferredDirectionTraceCost;
+      } else if (initializeTraceCosts) {
         scoring.preferredDirectionTraceCost[i] = scoring.defaultPreferredDirectionTraceCost;
+      }
+
+      // If this layer has an explicit against-preferred direction cost, preserve it;
+      // otherwise, compute it from default + aspect ratio penalty.
+      if (layers[i].undesiredDirectionTraceCost != null) {
+        scoring.undesiredDirectionTraceCost[i] = layers[i].undesiredDirectionTraceCost;
+      } else if (initializeTraceCosts) {
         scoring.undesiredDirectionTraceCost[i] = scoring.defaultUndesiredDirectionTraceCost;
         if (currentPreferredDirectionIsHorizontal) {
           scoring.undesiredDirectionTraceCost[i] += horizontalAddCostsAgainstPreferredDir;
@@ -410,11 +432,19 @@ public class RouterSettings implements Serializable, Cloneable {
       int signalLayerCount = board.layerStructure.signalLayerCount();
       if (signalLayerCount > 2) {
         double outerAddCosts = 0.2 * signalLayerCount;
-        // increase costs on the outer layers.
-        scoring.preferredDirectionTraceCost[0] += outerAddCosts;
-        scoring.preferredDirectionTraceCost[layerCount - 1] += outerAddCosts;
-        scoring.undesiredDirectionTraceCost[0] += outerAddCosts;
-        scoring.undesiredDirectionTraceCost[layerCount - 1] += outerAddCosts;
+        // increase costs on the outer layers only if not explicitly configured.
+        if (layers[0].preferredDirectionTraceCost == null) {
+          scoring.preferredDirectionTraceCost[0] += outerAddCosts;
+        }
+        if (layers[layerCount - 1].preferredDirectionTraceCost == null) {
+          scoring.preferredDirectionTraceCost[layerCount - 1] += outerAddCosts;
+        }
+        if (layers[0].undesiredDirectionTraceCost == null) {
+          scoring.undesiredDirectionTraceCost[0] += outerAddCosts;
+        }
+        if (layers[layerCount - 1].undesiredDirectionTraceCost == null) {
+          scoring.undesiredDirectionTraceCost[layerCount - 1] += outerAddCosts;
+        }
       }
       boardSpecificTraceCostsApplied = true;
     }
@@ -469,6 +499,48 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
+   * Applies configured net-class autorouter exclusions onto the board's net classes.
+   *
+   * @param board routing board whose net classes to update
+   */
+  public void applyNetClassExclusions(RoutingBoard board) {
+    if (board == null
+        || board.rules == null
+        || board.rules.netClasses == null
+        || this.autorouter == null
+        || this.autorouter.ignoreNetClasses == null) {
+      return;
+    }
+    for (String netClassName : this.autorouter.ignoreNetClasses) {
+      if (netClassName == null || netClassName.isBlank()) {
+        continue;
+      }
+      for (int i = 0; i < board.rules.netClasses.count(); i++) {
+        if (board.rules.netClasses.get(i).getName().equalsIgnoreCase(netClassName)) {
+          board.rules.netClasses.get(i).isIgnoredByAutorouter = true;
+        }
+      }
+    }
+  }
+
+  /**
+   * Populates effective layer costs from {@link #scoring} onto the {@link #layers} array. Useful
+   * when returning settings snapshots to clients via API or MCP without mutating configuration
+   * provenance on the primary router settings instance.
+   */
+  public void populateEffectiveLayerCosts() {
+    if (layers == null || scoring == null) {
+      return;
+    }
+    for (int i = 0; i < layers.length; i++) {
+      if (layers[i] != null) {
+        layers[i].preferredDirectionTraceCost = getPreferredDirectionTraceCosts(i);
+        layers[i].undesiredDirectionTraceCost = getAgainstPreferredDirectionTraceCosts(i);
+      }
+    }
+  }
+
+  /**
    * Get the number of layers configured in the router settings.
    *
    * @return The layer count
@@ -506,6 +578,8 @@ public class RouterSettings implements Serializable, Cloneable {
       layers[i].routable = true;
       layers[i].preferredDirectionHorizontal = null;
       layers[i].bendCost = null;
+      layers[i].preferredDirectionTraceCost = null;
+      layers[i].undesiredDirectionTraceCost = null;
       scoring.preferredDirectionTraceCost[i] = 1.0;
       scoring.undesiredDirectionTraceCost[i] = 1.0;
     }
@@ -532,6 +606,9 @@ public class RouterSettings implements Serializable, Cloneable {
           result.layers[i] = this.layers[i].clone();
         }
       }
+    }
+    if (this.validationWarnings != null) {
+      result.validationWarnings = new ArrayList<>(this.validationWarnings);
     }
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
@@ -839,6 +916,9 @@ public class RouterSettings implements Serializable, Cloneable {
       scoring.preferredDirectionTraceCost = new double[this.getLayerCount()];
     }
     scoring.preferredDirectionTraceCost[layer] = Math.max(value, 0.1);
+    if (layers != null && layer < layers.length && layers[layer] != null) {
+      layers[layer].preferredDirectionTraceCost = scoring.preferredDirectionTraceCost[layer];
+    }
     boardSpecificTraceCostsApplied = true;
   }
 
@@ -852,6 +932,12 @@ public class RouterSettings implements Serializable, Cloneable {
     if (layer < 0 || layer >= this.getLayerCount()) {
       FRLogger.warn("AutorouteSettings.get_preferred_direction_trace_costs: layer out of range");
       return 0;
+    }
+    if (layers != null
+        && layer < layers.length
+        && layers[layer] != null
+        && layers[layer].preferredDirectionTraceCost != null) {
+      return layers[layer].preferredDirectionTraceCost;
     }
     if (scoring == null
         || scoring.preferredDirectionTraceCost == null
@@ -872,6 +958,12 @@ public class RouterSettings implements Serializable, Cloneable {
       FRLogger.warn(
           "AutorouteSettings.get_against_preferred_direction_trace_costs: layer out of range");
       return 0;
+    }
+    if (layers != null
+        && layer < layers.length
+        && layers[layer] != null
+        && layers[layer].undesiredDirectionTraceCost != null) {
+      return layers[layer].undesiredDirectionTraceCost;
     }
     if (scoring == null
         || scoring.undesiredDirectionTraceCost == null
@@ -894,9 +986,9 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     double result;
     if (getPreferredDirectionIsHorizontal(layer)) {
-      result = scoring.preferredDirectionTraceCost[layer];
+      result = getPreferredDirectionTraceCosts(layer);
     } else {
-      result = scoring.undesiredDirectionTraceCost[layer];
+      result = getAgainstPreferredDirectionTraceCosts(layer);
     }
     return result;
   }
@@ -921,6 +1013,9 @@ public class RouterSettings implements Serializable, Cloneable {
       scoring.undesiredDirectionTraceCost = new double[this.getLayerCount()];
     }
     scoring.undesiredDirectionTraceCost[layer] = Math.max(value, 0.1);
+    if (layers != null && layer < layers.length && layers[layer] != null) {
+      layers[layer].undesiredDirectionTraceCost = scoring.undesiredDirectionTraceCost[layer];
+    }
     boardSpecificTraceCostsApplied = true;
   }
 
@@ -938,9 +1033,9 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     double result;
     if (getPreferredDirectionIsHorizontal(layer)) {
-      result = scoring.undesiredDirectionTraceCost[layer];
+      result = getAgainstPreferredDirectionTraceCosts(layer);
     } else {
-      result = scoring.preferredDirectionTraceCost[layer];
+      result = getPreferredDirectionTraceCosts(layer);
     }
     return result;
   }
@@ -1002,16 +1097,26 @@ public class RouterSettings implements Serializable, Cloneable {
     return changedCount;
   }
 
-  /** Validates and normalizes values that affect routing execution. */
-  public void validate() {
+  /**
+   * Validates and normalizes values that affect routing execution, verifying board-specific
+   * references such as net class exclusions if a board is provided.
+   *
+   * @param board routing board to validate against, or {@code null} if only static validation is
+   *     needed
+   */
+  public void validateAgainstBoard(RoutingBoard board) {
+    this.validationWarnings = new ArrayList<>();
+
     // Validate maxPasses (0 means no limit)
     if (this.autorouter != null && this.autorouter.maxPasses != null) {
       if (this.autorouter.maxPasses < 0
           || (this.autorouter.maxPasses > 9999 && this.autorouter.maxPasses != Integer.MAX_VALUE)) {
-        FRLogger.warn(
+        String warning =
             "Invalid maxPasses value: "
                 + this.autorouter.maxPasses
-                + ", using default 0 (no limit)");
+                + ", using default 0 (no limit)";
+        FRLogger.warn(warning);
+        this.validationWarnings.add(warning);
         this.autorouter.maxPasses = 0;
       }
     }
@@ -1021,22 +1126,111 @@ public class RouterSettings implements Serializable, Cloneable {
     if (this.maxThreads == null) {
       this.maxThreads = defaultMaxThreads();
     } else if (this.maxThreads < 0) {
-      FRLogger.warn(
-          "Invalid maxThreads value: " + this.maxThreads + ", using " + defaultMaxThreads());
+      String warning =
+          "Invalid maxThreads value: " + this.maxThreads + ", using " + defaultMaxThreads();
+      FRLogger.warn(warning);
+      this.validationWarnings.add(warning);
       this.maxThreads = defaultMaxThreads();
     } else if (this.maxThreads > availableProcessors) {
-      FRLogger.warn(
-          "Invalid maxThreads value: " + this.maxThreads + ", capping at " + availableProcessors);
+      String warning =
+          "Invalid maxThreads value: " + this.maxThreads + ", capping at " + availableProcessors;
+      FRLogger.warn(warning);
+      this.validationWarnings.add(warning);
       this.maxThreads = availableProcessors;
     }
 
     // Validate tracePullTightAccuracy
-    if (this.tracePullTightAccuracy < 1) {
-      FRLogger.warn(
+    if (this.tracePullTightAccuracy != null && this.tracePullTightAccuracy < 1) {
+      String warning =
           "Invalid tracePullTightAccuracy value: "
               + this.tracePullTightAccuracy
-              + ", using default 500");
+              + ", using default 500";
+      FRLogger.warn(warning);
+      this.validationWarnings.add(warning);
       this.tracePullTightAccuracy = 500;
     }
+
+    // Validate layer costs and bounds
+    if (this.layers != null) {
+      for (int i = 0; i < this.layers.length; i++) {
+        LayerSettings layer = this.layers[i];
+        if (layer == null) {
+          continue;
+        }
+        if (layer.bendCost != null
+            && (layer.bendCost < MIN_BEND_COST || layer.bendCost > MAX_BEND_COST)) {
+          double clamped = Math.max(MIN_BEND_COST, Math.min(MAX_BEND_COST, layer.bendCost));
+          String warning =
+              "Layer "
+                  + i
+                  + " bendCost "
+                  + layer.bendCost
+                  + " out of range ["
+                  + MIN_BEND_COST
+                  + ", "
+                  + MAX_BEND_COST
+                  + "], clamped to "
+                  + clamped;
+          FRLogger.warn(warning);
+          this.validationWarnings.add(warning);
+          layer.bendCost = clamped;
+        }
+        if (layer.preferredDirectionTraceCost != null && layer.preferredDirectionTraceCost < 0.1) {
+          String warning =
+              "Layer "
+                  + i
+                  + " preferredDirectionTraceCost "
+                  + layer.preferredDirectionTraceCost
+                  + " below 0.1, clamped to 0.1";
+          FRLogger.warn(warning);
+          this.validationWarnings.add(warning);
+          layer.preferredDirectionTraceCost = 0.1;
+        }
+        if (layer.undesiredDirectionTraceCost != null && layer.undesiredDirectionTraceCost < 0.1) {
+          String warning =
+              "Layer "
+                  + i
+                  + " undesiredDirectionTraceCost "
+                  + layer.undesiredDirectionTraceCost
+                  + " below 0.1, clamped to 0.1";
+          FRLogger.warn(warning);
+          this.validationWarnings.add(warning);
+          layer.undesiredDirectionTraceCost = 0.1;
+        }
+      }
+    }
+
+    // Validate ignoreNetClasses against board
+    if (board != null
+        && board.rules != null
+        && board.rules.netClasses != null
+        && this.autorouter != null
+        && this.autorouter.ignoreNetClasses != null) {
+      for (String netClassName : this.autorouter.ignoreNetClasses) {
+        if (netClassName == null || netClassName.isBlank()) {
+          continue;
+        }
+        boolean found = false;
+        for (int i = 0; i < board.rules.netClasses.count(); i++) {
+          if (board.rules.netClasses.get(i).getName().equalsIgnoreCase(netClassName)) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          String warning =
+              "Unknown net class '"
+                  + netClassName
+                  + "' specified in ignoreNetClasses (not present on board)";
+          FRLogger.warn(warning);
+          this.validationWarnings.add(warning);
+        }
+      }
+    }
+  }
+
+  /** Validates and normalizes values that affect routing execution. */
+  public void validate() {
+    validateAgainstBoard(null);
   }
 }

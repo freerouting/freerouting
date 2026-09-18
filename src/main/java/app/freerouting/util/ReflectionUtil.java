@@ -269,25 +269,10 @@ public final class ReflectionUtil {
             if (field.getType().getComponentType().isPrimitive()
                 || field.getType().getComponentType() == String.class) {
               // Only set the field if it is not null on the source object
-              Object targetValue = field.get(target);
-
-              int targetArrayLength = 0;
-              if (targetValue != null && targetValue.getClass().isArray()) {
-                targetArrayLength = java.lang.reflect.Array.getLength(targetValue);
-              }
-
-              int sourceArrayLength = 0;
-              if (sourceValue != null && sourceValue.getClass().isArray()) {
-                sourceArrayLength = java.lang.reflect.Array.getLength(sourceValue);
-              }
-
-              // Check if the target field is null or source array has elements
-              if ((targetValue == null) || (sourceArrayLength > 0)) {
-                // The field is an array of primitive types or strings, so we can copy it
-                // directly
-                field.set(target, sourceValue);
-                numberOfFieldsChanged++;
-              }
+              // The field is an array of primitive types or strings, so we can copy it
+              // directly
+              field.set(target, sourceValue);
+              numberOfFieldsChanged++;
             } else {
               // The field is an array of objects (like LayerSettings[])
               Object[] sourceArray = (Object[]) sourceValue;
@@ -325,6 +310,14 @@ public final class ReflectionUtil {
                 numberOfFieldsChanged += sourceArray.length;
               }
             }
+          } else if (java.util.Collection.class.isAssignableFrom(field.getType())) {
+            java.util.Collection<?> sourceCol = (java.util.Collection<?>) sourceValue;
+            if (java.util.Set.class.isAssignableFrom(field.getType())) {
+              field.set(target, new java.util.LinkedHashSet<>(sourceCol));
+            } else {
+              field.set(target, new java.util.ArrayList<>(sourceCol));
+            }
+            numberOfFieldsChanged++;
           } else {
             // The field is an object, so we need to copy its fields
             Object targetField = field.get(target);
