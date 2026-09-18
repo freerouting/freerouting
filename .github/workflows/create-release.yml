@@ -156,7 +156,7 @@ jobs:
             -w /workspace \
             -e GITHUB_REPOSITORY="${{ github.repository }}" \
             docker.io/pkgforge/archlinux:latest \
-            /bin/sh -c "./appimage/get-dependencies.sh && ./appimage/make-appimage.sh x86_64 ${{ steps.tagName.outputs.tag }}"
+            /bin/sh -c "./scripts/build/appimage/install-dependencies.sh && ./scripts/build/create-distribution-appimage.sh x86_64 ${{ steps.tagName.outputs.tag }}"
       - uses: AButler/upload-release-assets@v4.0
         with:
           files: './dist/freerouting-${{ steps.tagName.outputs.tag }}-x86_64.AppImage;./dist/freerouting-${{ steps.tagName.outputs.tag }}-x86_64.AppImage.zsync'

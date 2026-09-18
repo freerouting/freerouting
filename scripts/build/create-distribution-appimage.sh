@@ -69,7 +69,7 @@ else
 fi
 
 export UPINFO="gh-releases-zsync|$GH_OWNER|$GH_REPO|$UPINFO_TAG|$UPINFO_PATTERN"
-export DESKTOP="$SCRIPT_DIR/freerouting.desktop"
+export DESKTOP="$SCRIPT_DIR/appimage/freerouting.desktop"
 export MAIN_BIN="freerouting"
 
 ZIP_NAME="freerouting-$VERSION-linux-x64.zip"
@@ -92,15 +92,15 @@ cp -rf "$EXTRACT_DIR"/* "$APPDIR/"
 chmod a+x "$APPDIR"/bin/*
 
 # Copy AppStream metainfo if available
-if [ -f "$SCRIPT_DIR/app.freerouting.Freerouting.metainfo.xml" ]; then
-	cp -f "$SCRIPT_DIR/app.freerouting.Freerouting.metainfo.xml" "$APPDIR/usr/share/metainfo/"
+if [ -f "$SCRIPT_DIR/appimage/app.freerouting.Freerouting.metainfo.xml" ]; then
+	cp -f "$SCRIPT_DIR/appimage/app.freerouting.Freerouting.metainfo.xml" "$APPDIR/usr/share/metainfo/"
 fi
 
 # Icon resolution
 if [ -f "$APPDIR/lib/freerouting.png" ]; then
 	export ICON="$APPDIR/lib/freerouting.png"
-elif [ -f "$SCRIPT_DIR/../assets/icon/freerouting_icon_256x256_v3.png" ]; then
-	export ICON="$SCRIPT_DIR/../assets/icon/freerouting_icon_256x256_v3.png"
+elif [ -f "$SCRIPT_DIR/../../assets/icon/freerouting_icon_256x256_v3.png" ]; then
+	export ICON="$SCRIPT_DIR/../../assets/icon/freerouting_icon_256x256_v3.png"
 fi
 
 # Deploy dependencies

@@ -114,12 +114,15 @@
 
 ### 2.6. Linux AppImage Support ([PR #891](https://github.com/freerouting/freerouting/pull/891))
 - **Assessment & Enhancements:** Introduces `quick-sharun` AppImage generation. AppImages provide a self-contained executable with bundled JRE and runtime libraries, resolving Linux distribution fragmentation.
+- **Repository Structure & Script Organization:**
+  - Placed distribution scripts consistently in `scripts/build/` alongside other platform packages: `scripts/build/create-distribution-appimage.sh` and `scripts/build/create-distribution-SNAPSHOT-appimage.sh`.
+  - Self-contained container setup and metadata are organized under `scripts/build/appimage/` (`install-dependencies.sh`, `freerouting.desktop`, and `app.freerouting.Freerouting.metainfo.xml`), keeping the repository root clean.
 - **Capitalization & Desktop Entry Refinement:**
   - Corrected `StartupWMClass=app-freerouting-FreeRouting` to `StartupWMClass=app-freerouting-Freerouting` in `freerouting.desktop` to match Freerouting's main class (`app.freerouting.Freerouting`) and X11 window manager hints, strictly enforcing project product spelling.
-  - Added Freedesktop AppStream metainfo specification (`appimage/app.freerouting.Freerouting.metainfo.xml`) for software centers and catalog tools (`appstreamcli`, AM, Portable Linux Apps).
+  - Added Freedesktop AppStream metainfo specification (`scripts/build/appimage/app.freerouting.Freerouting.metainfo.xml`) for software centers and catalog tools (`appstreamcli`, AM, Portable Linux Apps).
 - **Naming & Delta Updates (`.zsync`):**
   - **Artifact Naming:** Set `OUTNAME="freerouting-$VERSION-$ARCH.AppImage"`, producing standard `freerouting-<version>-x86_64.AppImage` (dropping redundant `linux`, using standard GNU `x86_64`, lowercase product prefix, and `.AppImage` extension).
-  - **`UPINFO` Fix:** Fixed malformed GitHub release URL expansion in `UPINFO` so `zsync` correctly parses GitHub release assets matching `freerouting-*-x86_64.AppImage.zsync`.
+  - **`UPINFO` Fix:** Fixed malformed GitHub release URL expansion in `UPINFO` so `zsync` correctly parses GitHub release assets matching `freerouting-*-x86_64.AppImage.zsync` (and `freerouting-SNAPSHOT-*-x86_64.AppImage.zsync` for SNAPSHOT builds).
 - **Script Quality & CI Linters:**
   - Resolved ShellCheck warnings (SC2034 unused `ARCH`, SC2086 unquoted variables).
   - Dynamic `SCRIPT_DIR` resolution allows running build scripts from any working directory.
