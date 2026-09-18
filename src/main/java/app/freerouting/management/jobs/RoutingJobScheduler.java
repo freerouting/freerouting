@@ -41,7 +41,7 @@ public final class RoutingJobScheduler {
 
   private static final int MAX_QUEUED_JOBS = 5_000;
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
-  private static final int DEFAULT_MAX_PARALLEL_JOBS = 5;
+  static final int DEFAULT_MAX_PARALLEL_JOBS = 5;
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
 
   // Private constructor to prevent instantiation
@@ -320,7 +320,7 @@ public final class RoutingJobScheduler {
    *
    * @return The maximum number of parallel jobs.
    */
-  private int getMaxParallelJobs() {
+  int getMaxParallelJobs() {
     if ((globalSettings != null)
         && (globalSettings.apiServerSettings != null)
         && (globalSettings.apiServerSettings.maxParallelJobs != null)

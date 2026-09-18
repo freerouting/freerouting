@@ -39,6 +39,7 @@ public class RoutingJobSchedulerTest {
     synchronized (scheduler.jobs) {
       scheduler.jobs.clear();
     }
+    Freerouting.globalSettings = new GlobalSettings();
   }
 
   @Test
@@ -265,5 +266,51 @@ public class RoutingJobSchedulerTest {
     assertFalse(
         completedJob.isCancelledByUser(),
         "isCancelledByUser should remain false for COMPLETED job.");
+  }
+
+  @Test
+  void testGetMaxParallelJobsDefault() {
+    assertEquals(
+        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
+        scheduler.getMaxParallelJobs(),
+        "Default max parallel jobs should equal DEFAULT_MAX_PARALLEL_JOBS.");
+  }
+
+  @Test
+  void testGetMaxParallelJobsConfigured() {
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = 12;
+    assertEquals(
+        12, scheduler.getMaxParallelJobs(), "Should return configured maxParallelJobs value.");
+  }
+
+  @Test
+  void testGetMaxParallelJobsFallbackOnInvalidValues() {
+    // Zero should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = 0;
+    assertEquals(
+        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
+        scheduler.getMaxParallelJobs(),
+        "0 should fall back to default.");
+
+    // Negative should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = -5;
+    assertEquals(
+        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
+        scheduler.getMaxParallelJobs(),
+        "Negative value should fall back to default.");
+
+    // Null should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = null;
+    assertEquals(
+        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
+        scheduler.getMaxParallelJobs(),
+        "Null value should fall back to default.");
+
+    // Null globalSettings should fall back to default
+    Freerouting.globalSettings = null;
+    assertEquals(
+        RoutingJobScheduler.DEFAULT_MAX_PARALLEL_JOBS,
+        scheduler.getMaxParallelJobs(),
+        "Null globalSettings should fall back to default.");
   }
 }
