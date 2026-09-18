@@ -1,5 +1,6 @@
 package app.freerouting.management.jobs;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -12,19 +13,26 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /** RoutingJobSchedulerTest. */
 public class RoutingJobSchedulerTest {
 
+  @TempDir Path tempDir;
   private RoutingJobScheduler scheduler;
 
   @BeforeEach
   void setUp() {
+    GlobalSettings.resetForTesting();
+    GlobalSettings.setUserDataPath(tempDir);
     Freerouting.globalSettings = new GlobalSettings();
     scheduler = RoutingJobScheduler.getInstance();
     // Ensure a clean queue before each test; synchronize to avoid racing with the scheduler thread.
@@ -39,6 +47,7 @@ public class RoutingJobSchedulerTest {
     synchronized (scheduler.jobs) {
       scheduler.jobs.clear();
     }
+    GlobalSettings.resetForTesting();
     Freerouting.globalSettings = new GlobalSettings();
   }
 
@@ -325,5 +334,30 @@ public class RoutingJobSchedulerTest {
     scheduler.saveJob(job);
 
     assertEquals(RoutingJobState.QUEUED, job.state);
+
+    Path dataDir = tempDir.resolve("data");
+    assertTrue(Files.exists(dataDir), "Job data directory should exist");
+
+    // If directory streams are not closed, the directory remains locked by open handles.
+    // Verifying that all created files and directories can be immediately deleted ensures
+    // that no unclosed DirectoryStream file descriptors or locks are lingering.
+    assertDoesNotThrow(
+        () -> {
+          try (var stream = Files.walk(dataDir)) {
+            stream
+                .sorted((a, b) -> b.compareTo(a)) // delete children before parents
+                .forEach(
+                    p -> {
+                      try {
+                        Files.delete(p);
+                      } catch (IOException e) {
+                        throw new RuntimeException(
+                            "Failed to delete " + p + " due to open handle lock", e);
+                      }
+                    });
+          }
+        },
+        "Deleting saved job files and directories must succeed without open handle locks");
+    assertFalse(Files.exists(dataDir), "Data directory should be deleted");
   }
 }

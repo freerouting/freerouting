@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary & Decision Matrix
 
-### 1.1. Pull Requests (9 Active, 2 Merged)
+### 1.1. Pull Requests (6 Active, 5 Merged/Closed)
 
 | PR | Domain | Status | Title / Description | Action / Recommendation |
 | :--- | :--- | :--- | :--- | :--- |
@@ -18,7 +18,7 @@
 | **[PR #819](https://github.com/freerouting/freerouting/pull/819)** | GUI / Java | `MERGED` | Fix GUI startup thread confinement (dispatch GUI startup synchronously onto Swing EDT). Prevents `ScreenMessages` race condition. | **Merged into master** (`8ce0f757e`). Closed #819. |
 | **[PR #843](https://github.com/freerouting/freerouting/pull/843) / [PR #919](https://github.com/freerouting/freerouting/pull/919)** | API / Server | `MERGED` | Make scheduler maximum parallel jobs configurable via `--api_server.max_parallel_jobs` and environment variable with dynamic `cores-1` default. | **Superseded by PR #919 & merged into master** (`db16d292d`). Closed #843. |
 | **[PR #810](https://github.com/freerouting/freerouting/pull/810)** | CI | `MERGEABLE` | Update pre-commit workflow cache configuration. | **Low-risk merge.** Improves CI caching. |
-| **[PR #793](https://github.com/freerouting/freerouting/pull/793)** | Engine / CLI | `RESOLVED (SUPERSEDED)` | Headless fixes, Specctra type protect handling, and routing heuristics. Audited against master: 5 fixes already resolved/inapplicable; directory stream leak cherry-picked and tested. | **Resolved & Ready to Close.** Fixed stream leak in `RoutingJobScheduler`; experimental heuristics discarded per author advice. |
+| **[PR #793](https://github.com/freerouting/freerouting/pull/793) / [PR #920](https://github.com/freerouting/freerouting/pull/920)** | Engine / CLI | `MERGED / CLOSED` | Headless fixes, Specctra type protect handling, and routing heuristics. Audited against master: 5 fixes already resolved/inapplicable; directory stream leak cherry-picked and tested. | **Superseded by PR #920 & merged into master.** Closed PR #793. Fixed stream leak in `RoutingJobScheduler`; experimental heuristics discarded per author advice. |
 | **[PR #888](https://github.com/freerouting/freerouting/pull/888)** | GUI | `MERGEABLE` | Improve inspect mode GUI (canvas jump removal, toolbar layout, context menu width clamping). | **Defer to v2.6.** UI refinement. |
 | **[PR #870](https://github.com/freerouting/freerouting/pull/870)** | GUI | `MERGEABLE` | Remove separate window for manual rule selection in exchange for inline panel in router parameters. | **Defer to v2.6.** UI cleanup. |
 | **[PR #809](https://github.com/freerouting/freerouting/pull/809)** | GUI | `CONFLICTING` | Reimplemented trace-width editing for net classes in GUI table editor (addresses #796). | **Rebase & Review for v2.6.** |
@@ -96,16 +96,16 @@
 
 ---
 
-### 2.5. Headless Fixes & Heuristic Audit ([PR #793](https://github.com/freerouting/freerouting/pull/793))
+### 2.5. Headless Fixes & Heuristic Audit ([PR #793](https://github.com/freerouting/freerouting/pull/793) & [PR #920](https://github.com/freerouting/freerouting/pull/920))
 - **Audit Findings:** PR #793 by `@gbacskai` contains 27 commits. A comprehensive audit of the 6 identified bug fixes against current `master` was performed:
   1. **Destructive Stub Removal (`a21d7759`):** The experimental stub pass `minimize_stubs` was never present in `master`; `master` does not suffer from destructive stub deletion.
   2. **`IntPoint` Hash Contract (`0bc6276d`):** Already implemented in `master` via commit `845d8298b` with `PointEqualsHashCodeTest`.
   3. **`PriorityQueue` Non-Deterministic Iteration (`0bc6276d`):** `master` uses `TreeSet` (deterministic ordering), not `PriorityQueue`.
-  4. **Stream File Descriptor Leak (`d6de64c9`):** Active bug found in `master` in `RoutingJobScheduler.java`! Two unclosed `Files.list(userFolderPath)` streams in `saveJobToDisk` leaked file descriptors under concurrent server/headless runs. **Fixed in `master` using try-with-resources and verified with regression tests in `RoutingJobSchedulerTest`.**
+  4. **Stream File Descriptor Leak (`d6de64c9`):** Active bug found in `master` in `RoutingJobScheduler.java`! Two unclosed `Files.list(userFolderPath)` streams in `saveJobToDisk` leaked file descriptors under concurrent server/headless runs. **Fixed in `master` via [PR #920](https://github.com/freerouting/freerouting/pull/920) using try-with-resources and verified with regression tests in `RoutingJobSchedulerTest`.**
   5. **Impossible Outer Layer Condition (`0bc6276d`):** Inapplicable to `master`; belonged to the experimental Manhattan heuristic (`calculateFastHeuristic`) which was never adopted.
   6. **DSN Unit Resolution Scaling (`0f121a2e`):** Inapplicable to `master`; internal parameter within PR 793's experimental power-trunk pass.
   - **`(type protect)` Wiring Constraints (`f6ec06578`):** Already protected in `master` via `Trace.isRoutable()` and `Via.isRoutable()` (`!isUserFixed()`).
-- **Status:** **Resolved.** The genuine stream leak bug was cherry-picked and resolved on branch `fix/close-job-data-directory-streams`. PR #793 is superseded and ready to be closed without merging the regressing heuristics.
+- **Status:** **Merged into master via [PR #920](https://github.com/freerouting/freerouting/pull/920).** Closed [PR #793](https://github.com/freerouting/freerouting/pull/793) as superseded.
 
 ---
 
@@ -164,7 +164,7 @@
 - **[Issue #905](https://github.com/freerouting/freerouting/issues/905):** Implemented in release pipeline via `macos-15-intel`.
 - **[PR #819](https://github.com/freerouting/freerouting/pull/819):** Merged into master (`8ce0f757e`).
 - **[PR #843](https://github.com/freerouting/freerouting/pull/843) / [PR #919](https://github.com/freerouting/freerouting/pull/919):** Superseded by PR #919 & merged into master (`db16d292d`).
-- **[PR #793](https://github.com/freerouting/freerouting/pull/793) (Audit & Stream Leak Fix):** Audited and resolved; stream leak fix isolated on `fix/close-job-data-directory-streams`.
+- **[PR #793](https://github.com/freerouting/freerouting/pull/793) / [PR #920](https://github.com/freerouting/freerouting/pull/920) (Audit & Stream Leak Fix):** Fixed stream leak in master via PR #920. Closed PR #793 as superseded.
 
 ### Tier 2: Post-v2.5 Release & Modernization
 - **[PR #888](https://github.com/freerouting/freerouting/pull/888) & [PR #870](https://github.com/freerouting/freerouting/pull/870):** Inspect mode and inline manual rules panel polish.
@@ -184,6 +184,6 @@ flowchart TD
         E["Merged PR #891 - Linux AppImage Support"]
         B["Merged PR #819 - GUI EDT confinement"]
         C["Merged PR #919 (superseding #843) - Configurable parallel jobs"]
-        F["Audited PR #793 & Fixed Directory Stream Leak"]
+        F["Merged PR #920 (superseding #793) - Fixed Directory Stream Leak"]
     end
 ```

@@ -209,7 +209,7 @@ public class GlobalSettings implements Serializable {
    * static path fields and the lock flag so that {@link #setUserDataPath(Path)} can be exercised in
    * isolated unit tests.
    */
-  static void resetForTesting() {
+  public static void resetForTesting() {
     isUserDataPathLocked = false;
     userDataPath = AppPaths.getDefaultUserDataPath();
     configurationFilePath = userDataPath.resolve("freerouting.json");
