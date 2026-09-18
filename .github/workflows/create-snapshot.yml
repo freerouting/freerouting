@@ -6,6 +6,10 @@ on:
       - master
   workflow_dispatch: # Allows you to run this workflow manually
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   test:
     name: 'Test & Verify'
@@ -38,6 +42,7 @@ jobs:
   setup-snapshot:
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 10
+    permissions: {}
     outputs:
       snapshot_version: ${{ steps.version.outputs.snapshot_version }}
     steps:
@@ -45,29 +50,13 @@ jobs:
         id: version
         run: echo "snapshot_version=SNAPSHOT-$(date -u +'%Y%m%d_%H%M00')" >> "$GITHUB_OUTPUT"
 
-  delete-old-snapshot-assets:
-    runs-on: [ ubuntu-latest ]
-    timeout-minutes: 10
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v5
-      - name: Delete old SNAPSHOT assets
-        uses: mknejp/delete-release-assets@v1
-        with:
-          fail-if-no-assets: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: SNAPSHOT
-          assets: |
-            freerouting-SNAPSHOT.zip
-            freerouting-SNAPSHOT.tar.gz
-            freerouting-SNAPSHOT-*.*
-
   build-jar:
     name: 'Build JAR'
     needs: [ test, setup-snapshot ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -100,6 +89,8 @@ jobs:
     needs: [ test, setup-snapshot ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -133,6 +124,8 @@ jobs:
     needs: [ test, setup-snapshot, build-ubuntu-x64 ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Download Snapshot Linux Dist Zip
@@ -166,6 +159,8 @@ jobs:
     needs: [ test, setup-snapshot ]
     runs-on: [ windows-latest ]
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -194,6 +189,8 @@ jobs:
     needs: [ test, setup-snapshot ]
     runs-on: [ macos-15 ]
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -226,6 +223,8 @@ jobs:
     needs: [ test, setup-snapshot ]
     runs-on: [ macos-15-intel ]
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -259,7 +258,6 @@ jobs:
     name: 'Publish Release Assets'
     needs:
       - setup-snapshot
-      - delete-old-snapshot-assets
       - build-jar
       - build-windows-x64
       - build-ubuntu-x64
@@ -279,6 +277,17 @@ jobs:
 
       - name: List downloaded assets
         run: ls -la ./staging
+
+      - name: Delete old SNAPSHOT assets
+        uses: mknejp/delete-release-assets@v1
+        with:
+          fail-if-no-assets: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: SNAPSHOT
+          assets: |
+            freerouting-SNAPSHOT.zip
+            freerouting-SNAPSHOT.tar.gz
+            freerouting-SNAPSHOT-*.*
 
       # Upload assets in the defined order: .jar, windows, linux, macos-arm64, macos-x64, appimage, appimage.zsync
       - name: Upload JAR
