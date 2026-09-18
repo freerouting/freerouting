@@ -39,6 +39,7 @@ public class RoutingJobSchedulerTest {
     synchronized (scheduler.jobs) {
       scheduler.jobs.clear();
     }
+    Freerouting.globalSettings = new GlobalSettings();
   }
 
   @Test
@@ -265,5 +266,50 @@ public class RoutingJobSchedulerTest {
     assertFalse(
         completedJob.isCancelledByUser(),
         "isCancelledByUser should remain false for COMPLETED job.");
+  }
+
+  @Test
+  void testGetMaxParallelJobsDefault() {
+    int expectedDefault = RoutingJobScheduler.defaultMaxParallelJobs();
+    assertTrue(expectedDefault >= 1, "Default max parallel jobs must be at least 1.");
+    assertEquals(
+        expectedDefault,
+        scheduler.getMaxParallelJobs(),
+        "Default max parallel jobs should equal defaultMaxParallelJobs().");
+  }
+
+  @Test
+  void testGetMaxParallelJobsConfigured() {
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = 12;
+    assertEquals(
+        12, scheduler.getMaxParallelJobs(), "Should return configured maxParallelJobs value.");
+  }
+
+  @Test
+  void testGetMaxParallelJobsFallbackOnInvalidValues() {
+    int expectedDefault = RoutingJobScheduler.defaultMaxParallelJobs();
+
+    // Zero should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = 0;
+    assertEquals(expectedDefault, scheduler.getMaxParallelJobs(), "0 should fall back to default.");
+
+    // Negative should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = -5;
+    assertEquals(
+        expectedDefault,
+        scheduler.getMaxParallelJobs(),
+        "Negative value should fall back to default.");
+
+    // Null should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = null;
+    assertEquals(
+        expectedDefault, scheduler.getMaxParallelJobs(), "Null value should fall back to default.");
+
+    // Null globalSettings should fall back to default
+    Freerouting.globalSettings = null;
+    assertEquals(
+        expectedDefault,
+        scheduler.getMaxParallelJobs(),
+        "Null globalSettings should fall back to default.");
   }
 }

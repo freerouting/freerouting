@@ -39,6 +39,7 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
 
 ## 2. PR Lifecycle & Push Discipline
 
+- **PR Direct Commit Rule (Maintainer Edit Access):** When starting to work on an existing Pull Request, check whether `maintainerCanModify` is `true` (via `gh pr view <number> --json maintainerCanModify`). If `true` and the author's fork is not archived/read-only, check out the PR branch (via `gh pr checkout <number>`), use direct push access, and commit changes directly on the PR's branch rather than creating a separate branch or PR. If the fork repository has been archived or deleted, work on a dedicated branch in `origin` instead.
 - **PR Push Rule:** If a Pull Request is already open and new commits are made locally, **do not push the commits to the remote branch without explicit confirmation from the user** (pushing triggers remote CI workflows on GitHub Actions).
 - **GitHub Actions Polling Rate Rule:** When polling GitHub Actions status checks (e.g. `gh pr checks`, `gh run view`), wait at least 15 seconds between queries to avoid spamming the GitHub API and exhausting rate limits.
 - **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Always present the PR link and check status to the user and wait for their confirmation to merge.

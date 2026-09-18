@@ -42,7 +42,6 @@ public final class RoutingJobScheduler {
   private static final int MAX_QUEUED_JOBS = 5_000;
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
-  private final int maxParallelJobs = 5;
 
   // Private constructor to prevent instantiation
   private RoutingJobScheduler() {
@@ -77,7 +76,7 @@ public final class RoutingJobScheduler {
                                     .filter(j -> j.state == RoutingJobState.RUNNING)
                                     .count();
 
-                        if (parallelJobs < maxParallelJobs) {
+                        if (parallelJobs < getMaxParallelJobs()) {
                           if ((job.input == null) || (job.input.getData() == null)) {
                             FRLogger.warn("RoutingJob input is null, it is skipped.");
                             job.state = RoutingJobState.INVALID;
@@ -311,6 +310,33 @@ public final class RoutingJobScheduler {
    */
   public static RoutingJobScheduler getInstance() {
     return instance;
+  }
+
+  /**
+   * Returns the default maximum number of routing jobs that may run concurrently, calculated
+   * dynamically as {@code max(1, CPU cores - 1)}.
+   *
+   * @return The default maximum number of parallel jobs.
+   */
+  public static int defaultMaxParallelJobs() {
+    return Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  }
+
+  /**
+   * Returns the maximum number of routing jobs that may run concurrently, taken from the
+   * api_server.max_parallel_jobs setting. Falls back to {@link #defaultMaxParallelJobs()} when the
+   * settings are not loaded yet or the configured value is not positive.
+   *
+   * @return The maximum number of parallel jobs.
+   */
+  public int getMaxParallelJobs() {
+    if ((globalSettings != null)
+        && (globalSettings.apiServerSettings != null)
+        && (globalSettings.apiServerSettings.maxParallelJobs != null)
+        && (globalSettings.apiServerSettings.maxParallelJobs > 0)) {
+      return globalSettings.apiServerSettings.maxParallelJobs;
+    }
+    return defaultMaxParallelJobs();
   }
 
   private String uuidToShortCode(UUID uuid) {
