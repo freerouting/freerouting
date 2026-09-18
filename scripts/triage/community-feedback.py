@@ -15,8 +15,7 @@ import urllib.request
 
 GEMINI_MODEL = "gemini-flash-latest"
 API_URL_TEMPLATE = (
-    "https://generativelanguage.googleapis.com/v1beta/models/"
-    "{model}:generateContent?key={api_key}"
+    "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 )
 SNAPSHOT_URL = "https://github.com/freerouting/freerouting/releases/tag/SNAPSHOT"
 
@@ -47,7 +46,7 @@ def post_comment(target_type: str, number: int, comment_text: str) -> None:
 
 def call_gemini(prompt: str, api_key: str) -> str:
     """Call Google Gemini API with thinking disabled (budget=0) using urllib."""
-    url = API_URL_TEMPLATE.format(model=GEMINI_MODEL, api_key=api_key)
+    url = API_URL_TEMPLATE.format(model=GEMINI_MODEL)
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
@@ -61,7 +60,10 @@ def call_gemini(prompt: str, api_key: str) -> str:
     req = urllib.request.Request(
         url,
         data=req_data,
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key,
+        },
         method="POST",
     )
 
