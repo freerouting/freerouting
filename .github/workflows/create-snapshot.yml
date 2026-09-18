@@ -140,6 +140,8 @@ jobs:
         with:
           name: snapshot-linux-dist-zip
           path: .
+      - name: Grant execute permission for build scripts
+        run: chmod +x scripts/build/*.sh scripts/build/appimage/*.sh
       - name: Build AppImage via Arch Container
         run: |
           docker run --rm \
@@ -147,7 +149,9 @@ jobs:
             -w /workspace \
             -e GITHUB_REPOSITORY="${{ github.repository }}" \
             docker.io/pkgforge/archlinux:latest \
-            /bin/sh -c "./scripts/build/appimage/install-dependencies.sh && ./scripts/build/create-distribution-SNAPSHOT-appimage.sh x86_64"
+            /bin/sh -c "chmod +x ./scripts/build/*.sh ./scripts/build/appimage/*.sh && \
+              /bin/sh ./scripts/build/appimage/install-dependencies.sh && \
+              /bin/sh ./scripts/build/create-distribution-SNAPSHOT-appimage.sh x86_64"
       - uses: AButler/upload-release-assets@v4.0
         with:
           files: './dist/freerouting-SNAPSHOT-*-x86_64.AppImage;./dist/freerouting-SNAPSHOT-*-x86_64.AppImage.zsync'
