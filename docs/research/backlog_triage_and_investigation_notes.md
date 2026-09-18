@@ -9,10 +9,12 @@
 
 ## 1. Executive Summary & Decision Matrix
 
-### 1.1. Pull Requests (9 Active, 2 Merged)
+### 1.1. Pull Requests (9 Active, 4 Merged)
 
 | PR | Domain | Status | Title / Description | Action / Recommendation |
 | :--- | :--- | :--- | :--- | :--- |
+| **[PR #917](https://github.com/freerouting/freerouting/pull/917)** | CI / Release | `MERGED` | Synchronize SNAPSHOT asset timestamps, define upload order, harden tag validation & permissions, and document Docker optimization. | **Merged into master** (`7bd78e3c7`). |
+| **[PR #916](https://github.com/freerouting/freerouting/pull/916)** | CI / Packaging | `MERGED` | Fix script execute permissions for AppImage packaging in release and snapshot workflows. | **Merged into master** (`f636e0493`). |
 | **[PR #909](https://github.com/freerouting/freerouting/pull/909)** | KiCad / Python | `MERGED` | **Fixes Issue #908.** Check Specctra SES file existence before importing in KiCad plugin. Eliminates error dialogs on clean close without routing. | **Merged into master** (`a6e14c4b4`). Closed #908. |
 | **[PR #891](https://github.com/freerouting/freerouting/pull/891)** | CI / Packaging | `MERGED` | Add Linux AppImage build support via `quick-sharun` for portability across distributions. | **Merged into master** (`96563db32`). |
 | **[PR #819](https://github.com/freerouting/freerouting/pull/819)** | GUI / Java | `IN PROGRESS` | Fix GUI startup thread confinement (dispatch GUI startup synchronously onto Swing EDT). Prevents `ScreenMessages` race condition. | **Conflicts resolved & implementation refined.** Ready for review & merge. |
@@ -164,6 +166,8 @@
 3. **[PR #793](https://github.com/freerouting/freerouting/pull/793) (Porting):** Cherry-pick the 6 verified bug fixes into a clean PR.
 
 ### Completed for v2.5.0
+- **[PR #917](https://github.com/freerouting/freerouting/pull/917):** Synchronized SNAPSHOT asset timestamps, defined ordered upload, workflow hardening, and Docker optimization notes. Merged into master (`7bd78e3c7`).
+- **[PR #916](https://github.com/freerouting/freerouting/pull/916):** Fixed AppImage script execute permissions in workflows. Merged into master (`f636e0493`).
 - **[PR #909](https://github.com/freerouting/freerouting/pull/909) (Fixes #908):** Merged into master (`a6e14c4b4`).
 - **[PR #891](https://github.com/freerouting/freerouting/pull/891):** Merged into master (`96563db32`).
 - **[Issue #905](https://github.com/freerouting/freerouting/issues/905):** Implemented in release pipeline via `macos-15-intel`.
@@ -183,7 +187,8 @@ flowchart TD
     subgraph Done ["Completed in v2.5"]
         A["Merged PR #909 - Fixes #908 SES check"]
         D["Implemented #905 - macOS x86_64 on macos-15-intel"]
-        E["Merged PR #891 - Linux AppImage Support"]
+        E["Merged PR #891 & #916 - Linux AppImage Support"]
+        G["Merged PR #917 - SNAPSHOT Standardization & Hardening"]
     end
 
     subgraph Immediate ["1. v2.5 Active Merges"]
