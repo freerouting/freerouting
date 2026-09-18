@@ -18,6 +18,7 @@ API_URL_TEMPLATE = (
     "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 )
 SNAPSHOT_URL = "https://github.com/freerouting/freerouting/releases/tag/SNAPSHOT"
+FEEDBACK_MARKER = "<!-- freerouting:community-feedback -->"
 
 
 def run_gh_cmd(cmd: list[str]) -> str:
@@ -108,7 +109,8 @@ def has_already_received_feedback(issue_number: int) -> bool:
         raw = run_gh_cmd(["gh", "issue", "view", str(issue_number), "--json", "comments"])
         data = json.loads(raw)
         for c in data.get("comments", []):
-            if "Generated with Gemini on behalf of the Freerouting project" in c.get("body", ""):
+            body = c.get("body", "")
+            if FEEDBACK_MARKER in body or "Generated with Gemini on behalf of the Freerouting project" in body:
                 return True
     except Exception as e:
         print(f"[WARN] Could not check comments on issue #{issue_number}: {e}", file=sys.stderr)
@@ -145,7 +147,7 @@ PR Description:
 
     try:
         reply = call_gemini(prompt, api_key)
-        reply += "\n\n---\n*— Generated with Gemini on behalf of the Freerouting project.*"
+        reply += f"\n\n{FEEDBACK_MARKER}"
         post_comment("pr", pr_number, reply)
     except Exception as e:
         print(f"[WARN] Failed to generate/post PR comment: {e}", file=sys.stderr)
@@ -175,7 +177,7 @@ PR Description:
 """
         try:
             issue_reply = call_gemini(issue_prompt, api_key)
-            issue_reply += "\n\n---\n*— Generated with Gemini on behalf of the Freerouting project.*"
+            issue_reply += f"\n\n{FEEDBACK_MARKER}"
             post_comment("issue", issue_num, issue_reply)
         except Exception as e:
             print(f"[WARN] Failed to notify issue #{issue_num}: {e}", file=sys.stderr)
@@ -232,7 +234,7 @@ Issue Description:
 
     try:
         reply = call_gemini(prompt, api_key)
-        reply += "\n\n---\n*— Generated with Gemini on behalf of the Freerouting project.*"
+        reply += f"\n\n{FEEDBACK_MARKER}"
         post_comment("issue", issue_number, reply)
     except Exception as e:
         print(f"[WARN] Failed to post closing comment on issue #{issue_number}: {e}", file=sys.stderr)

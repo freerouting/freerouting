@@ -65,7 +65,7 @@ jobs:
         id: tagName
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9] ]]; then
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
             echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
             exit 1
           fi
@@ -107,7 +107,7 @@ jobs:
         id: tagName
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9] ]]; then
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
             echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
             exit 1
           fi
@@ -134,16 +134,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
       - name: Get Tag name
         id: tagName
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9] ]]; then
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
             echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
             exit 1
           fi
           echo "tag=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v5
       - name: Download Linux Dist Zip
         uses: actions/download-artifact@v4
         with:
@@ -157,10 +157,11 @@ jobs:
             -v "$PWD":/workspace \
             -w /workspace \
             -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            -e RELEASE_TAG="${{ steps.tagName.outputs.tag }}" \
             docker.io/pkgforge/archlinux:latest \
             /bin/sh -c "chmod +x ./scripts/build/*.sh ./scripts/build/appimage/*.sh && \
               /bin/sh ./scripts/build/appimage/install-dependencies.sh && \
-              /bin/sh ./scripts/build/create-distribution-appimage.sh x86_64 ${{ steps.tagName.outputs.tag }}"
+              /bin/sh ./scripts/build/create-distribution-appimage.sh x86_64 \"\$RELEASE_TAG\""
       - uses: AButler/upload-release-assets@v4.0
         with:
           files: './dist/freerouting-${{ steps.tagName.outputs.tag }}-x86_64.AppImage;./dist/freerouting-${{ steps.tagName.outputs.tag }}-x86_64.AppImage.zsync'
@@ -192,7 +193,7 @@ jobs:
         id: tagName
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9] ]]; then
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
             echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
             exit 1
           fi
@@ -234,7 +235,7 @@ jobs:
         id: tagName
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9] ]]; then
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
             echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
             exit 1
           fi
@@ -277,7 +278,7 @@ jobs:
         id: tagName
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9] ]]; then
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
             echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
             exit 1
           fi

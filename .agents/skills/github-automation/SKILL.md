@@ -40,6 +40,8 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
 ## 2. PR Lifecycle & Push Discipline
 
 - **PR Push Rule:** If a Pull Request is already open and new commits are made locally, **do not push the commits to the remote branch without explicit confirmation from the user** (pushing triggers remote CI workflows on GitHub Actions).
+- **GitHub Actions Polling Rate Rule:** When polling GitHub Actions status checks (e.g. `gh pr checks`, `gh run view`), wait at least 15 seconds between queries to avoid spamming the GitHub API and exhausting rate limits.
+- **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Always present the PR link and check status to the user and wait for their confirmation to merge.
 - **Quality Gates:** Before creating a PR or requesting review, ensure the local verification passes:
   ```powershell
   ./gradlew spotlessCheck checkstyleMain checkstyleTest
