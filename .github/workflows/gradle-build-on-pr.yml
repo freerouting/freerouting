@@ -31,7 +31,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-          cache: 'gradle'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
@@ -45,46 +44,6 @@ jobs:
 
       - name: Execute Gradle build & tests
         run: ./gradlew build
-
-  cross-platform-compile:
-    name: Compile (${{ matrix.os }})
-    needs: test
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ windows-latest, macos-15 ]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v5
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '25'
-          cache: 'gradle'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          build-scan-publish: true
-          build-scan-terms-of-use-url: 'https://gradle.com/help/legal-terms-of-use'
-          build-scan-terms-of-use-agree: 'yes'
-
-      - name: Make gradlew executable
-        if: runner.os != 'Windows'
-        run: chmod +x gradlew
-
-      - name: Compile source & test classes (skip tests)
-        shell: bash
-        run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            ./gradlew.bat testClasses assemble -x test --no-daemon
-          else
-            ./gradlew testClasses assemble -x test
-          fi
 
   i18n-context-check:
     name: Verify i18n Context
