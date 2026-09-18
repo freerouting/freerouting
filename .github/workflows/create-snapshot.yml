@@ -114,9 +114,43 @@ jobs:
         run: ./gradlew dist
       - name: Create Distribution
         run: scripts/build/create-distribution-SNAPSHOT-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
+      - name: Upload Snapshot Linux Dist Zip Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-linux-dist-zip
+          path: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
+          retention-days: 1
       - uses: AButler/upload-release-assets@v4.0
         with:
           files: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-appimage:
+    name: 'Build AppImage'
+    needs: [ test, delete-old-snapshot-assets, build-ubuntu-x64 ]
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Download Snapshot Linux Dist Zip
+        uses: actions/download-artifact@v4
+        with:
+          name: snapshot-linux-dist-zip
+          path: .
+      - name: Build AppImage via Arch Container
+        run: |
+          docker run --rm \
+            -v "$PWD":/workspace \
+            -w /workspace \
+            -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            docker.io/pkgforge/archlinux:latest \
+            /bin/sh -c "./scripts/build/appimage/install-dependencies.sh && ./scripts/build/create-distribution-SNAPSHOT-appimage.sh x86_64"
+      - uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './dist/freerouting-SNAPSHOT-*-x86_64.AppImage;./dist/freerouting-SNAPSHOT-*-x86_64.AppImage.zsync'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 

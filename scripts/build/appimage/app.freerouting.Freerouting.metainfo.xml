@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>app.freerouting.Freerouting</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Freerouting</name>
+  <summary>Open-source PCB autorouter supporting Specctra/Electra DSN interfaces</summary>
+  <description>
+    <p>
+      Freerouting is an advanced PCB (printed circuit board) auto-router.
+      It interfaces with standard EDA software such as KiCad via the Specctra DSN format.
+    </p>
+  </description>
+  <launchable type="desktop-id">freerouting.desktop</launchable>
+  <url type="homepage">https://freerouting.app</url>
+  <url type="vcs-browser">https://github.com/freerouting/freerouting</url>
+  <url type="bugtracker">https://github.com/freerouting/freerouting/issues</url>
+  <developer id="app.freerouting">
+    <name>Andras Fuchs</name>
+  </developer>
+  <categories>
+    <category>Development</category>
+    <category>Electronics</category>
+    <category>Engineering</category>
+    <category>Education</category>
+  </categories>
+  <provides>
+    <mediatype>application/x-dsn</mediatype>
+    <mediatype>application/x-dsn+xml</mediatype>
+  </provides>
+  <content_rating type="oars-1.1" />
+</component>
