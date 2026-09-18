@@ -35,6 +35,16 @@ jobs:
       - name: Build and Run Tests
         run: ./gradlew build
 
+  setup-snapshot:
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 10
+    outputs:
+      snapshot_version: ${{ steps.version.outputs.snapshot_version }}
+    steps:
+      - name: Generate SNAPSHOT Version
+        id: version
+        run: echo "snapshot_version=SNAPSHOT-$(date -u +'%Y%m%d_%H%M00')" >> "$GITHUB_OUTPUT"
+
   delete-old-snapshot-assets:
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 10
@@ -55,11 +65,9 @@ jobs:
 
   build-jar:
     name: 'Build JAR'
-    needs: [ test, delete-old-snapshot-assets ]
+    needs: [ test, setup-snapshot ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -80,19 +88,18 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew dist
       - name: Create Distribution
-        run: scripts/build/create-distribution-jar.sh "SNAPSHOT-$(date +'%Y%m%d_%H%M00')"
-      - uses: AButler/upload-release-assets@v4.0
+        run: scripts/build/create-distribution-jar.sh "${{ needs.setup-snapshot.outputs.snapshot_version }}"
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: './scripts/build/freerouting-SNAPSHOT-*.jar'
-          release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: snapshot-dist-jar
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}.jar'
+          retention-days: 1
 
   build-ubuntu-x64:
-    needs: [ test, delete-old-snapshot-assets ]
+    needs: [ test, setup-snapshot ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -113,26 +120,19 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew dist
       - name: Create Distribution
-        run: scripts/build/create-distribution-SNAPSHOT-linux-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00")
+        run: scripts/build/create-distribution-SNAPSHOT-linux-x64.sh "${{ needs.setup-snapshot.outputs.snapshot_version }}"
       - name: Upload Snapshot Linux Dist Zip Artifact
         uses: actions/upload-artifact@v4
         with:
           name: snapshot-linux-dist-zip
-          path: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-linux-x64.zip'
           retention-days: 1
-      - uses: AButler/upload-release-assets@v4.0
-        with:
-          files: './scripts/build/freerouting-SNAPSHOT-*-linux-x64.zip'
-          release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-appimage:
     name: 'Build AppImage'
-    needs: [ test, delete-old-snapshot-assets, build-ubuntu-x64 ]
+    needs: [ test, setup-snapshot, build-ubuntu-x64 ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 30
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v5
       - name: Download Snapshot Linux Dist Zip
@@ -148,22 +148,24 @@ jobs:
             -v "$PWD":/workspace \
             -w /workspace \
             -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            -e SNAPSHOT_VERSION="${{ needs.setup-snapshot.outputs.snapshot_version }}" \
             docker.io/pkgforge/archlinux:latest \
             /bin/sh -c "chmod +x ./scripts/build/*.sh ./scripts/build/appimage/*.sh && \
               /bin/sh ./scripts/build/appimage/install-dependencies.sh && \
-              /bin/sh ./scripts/build/create-distribution-SNAPSHOT-appimage.sh x86_64"
-      - uses: AButler/upload-release-assets@v4.0
+              /bin/sh ./scripts/build/create-distribution-SNAPSHOT-appimage.sh x86_64 \"\$SNAPSHOT_VERSION\""
+      - name: Upload Snapshot AppImage Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: './dist/freerouting-SNAPSHOT-*-x86_64.AppImage;./dist/freerouting-SNAPSHOT-*-x86_64.AppImage.zsync'
-          release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: snapshot-dist-appimage
+          path: |
+            ./dist/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage
+            ./dist/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage.zsync
+          retention-days: 1
 
   build-windows-x64:
-    needs: [ test, delete-old-snapshot-assets ]
+    needs: [ test, setup-snapshot ]
     runs-on: [ windows-latest ]
     timeout-minutes: 30
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -180,19 +182,18 @@ jobs:
       - name: Build with Gradle
         run: .\gradlew.bat dist --no-daemon
       - name: Create Distribution
-        run: .\scripts\build\create-distribution-SNAPSHOT-windows-x64.bat "SNAPSHOT-$(([datetime]::now).tostring("yyyyMMdd_HHmm00"))"
-      - uses: AButler/upload-release-assets@v4.0
+        run: .\scripts\build\create-distribution-SNAPSHOT-windows-x64.bat "${{ needs.setup-snapshot.outputs.snapshot_version }}"
+      - name: Upload Snapshot Windows MSI Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: './scripts/build/freerouting-SNAPSHOT-*-windows-x64.msi'
-          release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: snapshot-dist-windows
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-windows-x64.msi'
+          retention-days: 1
 
   build-macos-arm64:
-    needs: [ test, delete-old-snapshot-assets ]
+    needs: [ test, setup-snapshot ]
     runs-on: [ macos-15 ]
     timeout-minutes: 30
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -213,19 +214,18 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew dist
       - name: Create Distribution
-        run: scripts/build/create-distribution-SNAPSHOT-macos-arm64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
-      - uses: AButler/upload-release-assets@v4.0
+        run: scripts/build/create-distribution-SNAPSHOT-macos-arm64.sh "${{ needs.setup-snapshot.outputs.snapshot_version }}" "${{ secrets.APPLE_DEVELOPER_ID }}"
+      - name: Upload Snapshot macOS ARM64 DMG Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: './scripts/build/freerouting-SNAPSHOT-*-macos-arm64.dmg'
-          release-tag: SNAPSHOT
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          name: snapshot-dist-macos-arm64
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-arm64.dmg'
+          retention-days: 1
 
   build-macos-x64:
-    needs: [ test, delete-old-snapshot-assets ]
+    needs: [ test, setup-snapshot ]
     runs-on: [ macos-15-intel ]
     timeout-minutes: 30
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v5
       - name: Set up JDK
@@ -247,9 +247,85 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew dist
       - name: Create Distribution
-        run: scripts/build/create-distribution-SNAPSHOT-macos-x64.sh SNAPSHOT-$(date +"%Y%m%d_%H%M00") "${{ secrets.APPLE_DEVELOPER_ID }}"
-      - uses: AButler/upload-release-assets@v4.0
+        run: scripts/build/create-distribution-SNAPSHOT-macos-x64.sh "${{ needs.setup-snapshot.outputs.snapshot_version }}" "${{ secrets.APPLE_DEVELOPER_ID }}"
+      - name: Upload Snapshot macOS x64 DMG Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: './scripts/build/freerouting-SNAPSHOT-*-macos-x64.dmg'
+          name: snapshot-dist-macos-x64
+          path: './scripts/build/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-x64.dmg'
+          retention-days: 1
+
+  publish-snapshot:
+    name: 'Publish Release Assets'
+    needs:
+      - setup-snapshot
+      - delete-old-snapshot-assets
+      - build-jar
+      - build-windows-x64
+      - build-ubuntu-x64
+      - build-macos-arm64
+      - build-macos-x64
+      - build-appimage
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Download all built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./staging
+          merge-multiple: true
+
+      - name: List downloaded assets
+        run: ls -la ./staging
+
+      # Upload assets in the defined order: .jar, windows, linux, macos-arm64, macos-x64, appimage, appimage.zsync
+      - name: Upload JAR
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}.jar'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows MSI
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-windows-x64.msi'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Linux ZIP
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-linux-x64.zip'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload macOS ARM64 DMG
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-arm64.dmg'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload macOS x64 DMG
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-macos-x64.dmg'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload AppImage
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage'
+          release-tag: SNAPSHOT
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload AppImage zsync
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: './staging/freerouting-${{ needs.setup-snapshot.outputs.snapshot_version }}-x86_64.AppImage.zsync'
           release-tag: SNAPSHOT
           repo-token: ${{ secrets.GITHUB_TOKEN }}

@@ -131,6 +131,25 @@
 
 ---
 
+### 2.8. Docker Build Performance & Release Asset Standardization
+- **Docker Workflow Slowness Investigation:**
+  - `docker-nightly.yml` and `docker-release.yml` jobs took 12–19 minutes to complete.
+  - **Root Cause Analysis:**
+    1. **Redundant Tests (2m 37s):** Native runner ran `./gradlew test`, duplicating the full test suite that already ran during CI push checks.
+    2. **QEMU Emulation Penalty (8m–14m):** Multi-stage Docker build executed `./gradlew executableJar -x test` inside an ARM64 container under QEMU emulation. Compiling Java bytecode under emulation is 5–10x slower than native compilation. Because Java bytecode in a fat JAR is platform-independent, compiling it twice across architectures is completely unnecessary.
+    3. **Missing Buildx Caching:** GitHub Actions Docker layer caching (`type=gha`) was not configured.
+  - **Optimization Recommendations:**
+    - Build the executable fat JAR once on the native runner via `./gradlew executableJar -x test` (~40s).
+    - Multi-arch Docker build only needs `FROM eclipse-temurin:25-jre-jammy` and `COPY` the native JAR. This slashes the multi-arch Docker push duration from ~8–14 minutes to **under 60 seconds**.
+- **Release Asset Synchronization & Ordering:**
+  - Standardized `.github/workflows/create-snapshot.yml` to generate a single workflow-level timestamp (`SNAPSHOT-YYYYMMDD_HHMM00`) passed to all 7 platform builds.
+  - All distribution builders output workflow artifacts; a dedicated `publish-snapshot` job uploads them sequentially in the canonical order: `.jar`, `windows-x64.msi`, `linux-x64.zip`, `macos-arm64.dmg`, `macos-x64.dmg`, `x86_64.AppImage`, `x86_64.AppImage.zsync`.
+- **Workflow & Agent Hardening:**
+  - Hardened Docker invocation in `create-release.yml` by passing `RELEASE_TAG` as an environment variable (`-e RELEASE_TAG=...`) and tightened version tag validation regex (Copilot review on PR #916).
+  - Enforced a minimum 15-second polling interval for GitHub status queries and added a strict rule: **Never merge PRs automatically without explicit user confirmation**.
+
+---
+
 ### 2.7. Dependency Updates & OpenRewrite Cleanup
 - **Status:** OpenRewrite was completely removed from `master` in commits `54da21183`, `e348262aa`, and PR #912 (`chore/remove-openrewrite`).
 - **PR #900 Resolution:** PR #900 (Dependabot 23-dependency bump) was automatically closed on September 17, 2026. Dependabot will regenerate a clean update PR reflecting the current build configuration without OpenRewrite artifacts.

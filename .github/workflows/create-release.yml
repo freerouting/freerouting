@@ -139,7 +139,7 @@ jobs:
         id: tagName
         shell: bash
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9] ]]; then
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] || [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9.]+)?$ ]]; then
             echo "Error: Release workflow must be run on a version tag (e.g. v2.5.0), but got ref '${GITHUB_REF_NAME}' (${GITHUB_REF_TYPE})." >&2
             exit 1
           fi
@@ -157,10 +157,11 @@ jobs:
             -v "$PWD":/workspace \
             -w /workspace \
             -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            -e RELEASE_TAG="${{ steps.tagName.outputs.tag }}" \
             docker.io/pkgforge/archlinux:latest \
             /bin/sh -c "chmod +x ./scripts/build/*.sh ./scripts/build/appimage/*.sh && \
               /bin/sh ./scripts/build/appimage/install-dependencies.sh && \
-              /bin/sh ./scripts/build/create-distribution-appimage.sh x86_64 ${{ steps.tagName.outputs.tag }}"
+              /bin/sh ./scripts/build/create-distribution-appimage.sh x86_64 \"\$RELEASE_TAG\""
       - uses: AButler/upload-release-assets@v4.0
         with:
           files: './dist/freerouting-${{ steps.tagName.outputs.tag }}-x86_64.AppImage;./dist/freerouting-${{ steps.tagName.outputs.tag }}-x86_64.AppImage.zsync'
