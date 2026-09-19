@@ -1,41 +1,58 @@
-﻿# KiCad IPC API Research for Freerouting
+# KiCad IPC API Research for Freerouting
 
 ## Purpose
 
-This document summarizes what changed with KiCad 10, what the KiCad IPC API is, and how Freerouting should approach it.
+This document provides the authoritative technical reference and implementation strategy for integrating Freerouting with KiCad via the official **KiCad Protocol Buffers IPC API**. It outlines the transport, protocol schemas, plugin execution model, debugging playbook, risks, benefits, and the roadmap to ship a testable alpha version in the upcoming release.
 
-## Verified facts
+## Verified Facts & Architecture Details
 
-- KiCad 10 is officially released. The KiCad project announced Version 10.0.0 on 2026-03-20.
-- The official IPC developer documentation covers KiCad 9 and 10 as the main plugin targets.
-- The IPC API is not a gRPC-over-TCP service.
-- KiCad uses a per-instance IPC endpoint:
-  - Unix domain socket on Linux and macOS
-  - Named pipe on Windows
-- KiCad 9 and 10 IPC support is GUI connected only.
-- Official docs state that headless IPC support through kicad-cli arrives in KiCad 11.
-- The IPC API is disabled by default in KiCad 10.
-- Forum reports from March and April 2026 show plugin discovery and attachment friction in KiCad 10.x.
-- KiCad team guidance to Freerouting confirms the SWIG runtime is deprecated and that SWIG-based plugins will not work in KiCad nightly or 11.0.
-- KiCad recommends plugin authors migrate to IPC during the KiCad 11 development cycle.
+- **Official Status & Roadmap:**
+  - KiCad 10 is officially released (10.0.0 on 2026-03-20). The IPC API is supported on KiCad 9 and 10.
+  - The KiCad core team has formally deprecated the in-process SWIG Python bindings (`import pcbnew`). SWIG support will be removed completely in KiCad 11.
+  - IPC is the sole supported forward-compatible integration architecture for KiCad plugins.
+- **Transport Layer:**
+  - Communication uses **Nanomsg Next Generation (NNG / `pynng`)** messaging.
+  - Endpoint mechanism:
+    - **Unix domain sockets** (`api.sock`) on Linux and macOS.
+    - **Named pipes** (`\\.\pipe\kicad-api-...`) on Windows.
+  - Endpoints are per-instance: if multiple KiCad sessions run, KiCad appends the process ID (`PID`) to ensure uniqueness.
+- **Protocol & Serialization:**
+  - Messages are strictly defined using **Protocol Buffers (Protobuf v3)** schemas (`api.proto`, `board.proto`, `board_types.proto`).
+  - Backward compatibility is guaranteed by Protobuf field numbering rules across minor KiCad releases.
+- **Plugin Manifest & Runtime Isolation:**
+  - IPC plugins declare their metadata and actions via `plugin.json` following the schema at `https://go.kicad.org/api/schemas/v1`.
+  - Runtime type is `"type": "python"` or `"type": "exec"`.
+  - When `"python"` is specified, KiCad **launches the plugin out-of-process in a managed virtual environment** located at `${KICAD_CACHE_HOME}/python-environments/<plugin_identifier>`.
+  - KiCad provisions this environment automatically using dependencies declared in `requirements.txt` (e.g. `kicad-python`).
+  - When executing an action, KiCad injects two environment variables:
+    - `KICAD_API_SOCKET`: Path to the active socket or named pipe.
+    - `KICAD_API_TOKEN`: Per-instance authentication/session token.
+- **Official Python Client Library:**
+  - The official bindings library is `kicad-python` (package namespace `kipy`, available on PyPI).
+  - High-level client `kipy.KiCad(socket_path=..., token=...)` manages the NNG socket and Protobuf serialization.
+  - Direct board access is provided via `board = kicad.get_board()`.
+- **Transactional Board Updates:**
+  - Modifications use atomic transactions: `commit = board.begin_commit()`, followed by `board.create_items(...)`, and `board.push_commit(commit)` (or `board.drop_commit(commit)` on failure).
+  - This collapses all autorouting changes into a single undo/redo step in KiCad.
+- **Design Rules & Clearance Integration (Issue #558):**
+  - Unlike Specctra DSN export, the IPC API exposes full live design rules in `BoardDesignRules`.
+  - Copper-to-edge clearance is directly available via `constraints.copper_edge_clearance().value_nm()`.
+- **Operating Constraints:**
+  - In KiCad 9 and 10, the IPC API requires a running KiCad GUI instance; headless operation via `kicad-cli api-server` arrives in KiCad 11.
+  - IPC API server is disabled by default in KiCad preferences (**Preferences > Common > Enable API**).
+  - KiCad processes API requests on its main event loop; calls are synchronous and can block if a modal dialog is open in KiCad.
 
-## Recommendation summary
+## Three Generations of KiCad Integration in Freerouting
 
-- Keep the DSN and IPC paths in parallel.
-- Do not replace DSN support in Freerouting core.
-- Use IPC as a KiCad-native integration path for supported versions.
-- Treat IPC as a bridge around the running KiCad session, not as a standalone file loader.
-- Start migration now because the current SWIG-based KiCad plugin path is end-of-life for nightly and 11.0.
-- Keep the first implementation small and defensive.
+To avoid architectural confusion between legacy SWIG approaches and true IPC, Freerouting defines three distinct tiers:
 
-## Immediate impact of the KiCad team message
+| Tier | Name | Transport | Board Access | Status in Freerouting |
+|---|---|---|---|---|
+| **Gen 1** | **DSN Mode** | File exchange (`.dsn`/`.ses`) | `pcbnew.ExportSpecctraDSN` / `ImportSpecctraSES` | **Current Stable Default** (Legacy SWIG, works on all versions) |
+| **Gen 2** | **JSON/API Mode** | HTTP REST (`127.0.0.1:37864`) | In-process SWIG object walker (`board_json_helpers.py`) | **Transitional Bridge** (v2.3 experimental, opt-in, deprecated) |
+| **Gen 3** | **Protobuf IPC Mode** | NNG Socket/Pipe + HTTP REST | Out-of-process `kicad-python` (`kipy`) client | **Target Architecture** (Alpha in next release, replaces Gen 2) |
 
-The message from the KiCad team changes the urgency and clarifies scope.
-
-- The current plugin implementation that calls SWIG APIs (for example `pcbnew.ExportSpecctraDSN` and `pcbnew.ImportSpecctraSES`) is on a deprecating runtime and cannot be the long-term integration path.
-- DSN as a file format is still useful and should remain supported in Freerouting.
-- The main migration is not "remove DSN". The migration is "replace SWIG plugin execution path with an IPC-based plugin path".
-- For KiCad users, IPC is now a required strategic path, not an optional enhancement.
+---
 
 ## Direct answers to current product questions
 
@@ -232,163 +249,455 @@ What should be new:
 - IPC board data extraction
 - IPC update sending
 
-## What to build first
+## What to build next: Protobuf IPC Migration
 
-### Phase 1: Read only IPC bridge & JSON Loader ✅ Implemented
+### Status of Prior Phases
 
-Goal: prove that Freerouting can read a KiCad board from the live session via the Python bridge and JSON serialization.
+- **Phase 1: Java JSON Reader/Writer & API Core** — ✅ **Completed in Freerouting Core**
+  - Schema: `KiCadBoardJson` DTO defining layers, netclasses, nets, components, pads, traces, vias, zones, and outline.
+  - Core Reader/Writer: `KiCadJsonReader` and `KiCadJsonWriter` deserializing/serializing `RoutingBoard`.
+  - REST API endpoints:
+    - `POST /v1/jobs/{jobId}/input/json` — upload raw KiCad JSON board data.
+    - `GET /v1/jobs/{jobId}/output/json` — download routed board as raw KiCad JSON.
+    - `GET /v1/jobs/{jobId}/output/json/stream` — real-time SSE stream with CRC32 change detection.
+    - `PUT /v1/sessions/{sessionId}/monitor` — binds session board to GUI visualizer.
+  - Round-trip unit tests in `KiCadJsonReaderTest`.
 
-Tasks:
-- ✅ Define the **KiCad JSON schema** for board data (layers, nets, pads, tracks, vias, zones, rules) — `KiCadBoardJson` DTO.
-- ✅ Implement `KiCadJsonReader` in Freerouting to deserialize the JSON stream into a `RoutingBoard`.
-- ✅ Implement `KiCadJsonWriter` to serialize a `RoutingBoard` back to KiCad JSON.
-- ✅ Measure and log the performance penalty of JSON serialization/deserialization.
-- ✅ Implement the **"currently monitored" session API endpoint** (`PUT /v1/sessions/{sessionId}/monitor`) to bind the API session to the active GUI visualizer.
-- ✅ Implement `HeadlessBoardManager.loadFromKiCadJson()` and `GuiBoardManager.loadFromKiCadJson()`.
-- ✅ Integrate JSON format into `BoardLoader` and `RoutingJobSchedulerActionThread.setJobOutput()`.
-- ✅ Add `FileFormat.JSON` enum value and auto-detection in `RoutingJob.getFileFormat()`.
-- ✅ Create tests with a mocked JSON payload — `KiCadJsonReaderTest` (7 tests including round-trip).
+- **Phase 2: Transitional SWIG JSON Bridge** — ✅ **Shipped in v2.3 (Deprecated)**
+  - Shipped in `integrations/KiCad/kicad-freerouting/plugins/router_json_api.py` and `board_json_helpers.py`.
+  - Proved the REST API workflow, but relied on internal `import pcbnew` SWIG iteration.
+  - Must be replaced before KiCad 11 removes SWIG.
 
-New API endpoints for the IPC bridge:
-- `POST /v1/jobs/{jobId}/input/json` — upload raw KiCad JSON (not Base64-encoded) for efficient IPC bridge workflow.
-- `GET /v1/jobs/{jobId}/output/json` — download routing output as raw KiCad JSON (not Base64-encoded).
-- `GET /v1/jobs/{jobId}/output/json/stream` — real-time SSE stream of KiCad JSON output (500ms polling, CRC32 change detection).
-- `PUT /v1/sessions/{sessionId}/monitor` — bind a session's board to the GUI visualizer for real-time monitoring.
+---
 
-Exit criteria:
-- ✅ Board load works via JSON POST.
-- ✅ If GUI is enabled, the loaded board is displayed and progress is visible.
-- ✅ Existing tests still pass.
+## The Protobuf IPC Architecture (Target Alpha)
 
-### Phase 2: Write back support & Streaming API ✅ Implemented
+```
+┌─────────────────────────────────────────────────────────────┐
+│ KiCad 10+ Process (PCB Editor GUI)                          │
+│   • NNG IPC Server (api.sock / \\.\pipe\kicad-api-...)       │
+│   • Protocol Buffers API handlers                           │
+│   • Live Board, Footprints, Nets, Tracks, Vias              │
+│   • BoardDesignRules (includes copper_edge_clearance)       │
+└───────────────────────────┬─────────────────────────────────┘
+                            │ Protobuf over NNG (kicad-python / kipy)
+                            │ Socket / Pipe: KICAD_API_SOCKET
+┌───────────────────────────▼─────────────────────────────────┐
+│ KiCad IPC Bridge (Python out-of-process plugin)             │
+│   • Discovered via plugin.json manifest                     │
+│   • Runs in KiCad-managed venv (isolated dependencies)      │
+│   • Reads board + design rules via kipy.KiCad()             │
+│   • Maps Protobuf Board model -> KiCadBoardJson schema      │
+│   • Starts/attaches Freerouting JAR (localhost REST API)    │
+│   • POST /v1/jobs/{id}/input/json                           │
+│   • Polls / streams routing result JSON                     │
+│   • Maps result JSON -> kipy commit transaction:            │
+│       commit = board.begin_commit()                         │
+│       board.create_items(tracks, vias)                      │
+│       board.push_commit(commit)                             │
+└───────────────────────────┬─────────────────────────────────┘
+                            │ HTTP JSON (127.0.0.1:37864)
+┌───────────────────────────▼─────────────────────────────────┐
+│ Freerouting Application (Java 25)                           │
+│   • Headless API Server or Monitored GUI Session            │
+│   • KiCadJsonReader -> BatchAutorouter -> KiCadJsonWriter   │
+└─────────────────────────────────────────────────────────────┘
+```
 
-Goal: push routed traces and vias back to KiCad via the Python bridge.
+---
 
-Tasks:
-- ✅ Expose routed traces and vias in a JSON format via the REST API (`KiCadJsonWriter` + `/output/json` endpoint).
-- ✅ Use streaming API endpoints (SSE) to send real-time progress and incremental updates (`/output/json/stream`).
-- ✅ DRC endpoint supports JSON input format for board loading.
-- 🔲 Python bridge receives updates and writes them back to KiCad via KiCad IPC (Python-side work, outside this repo).
+---
 
-Exit criteria:
-- ✅ Routed traces available in JSON format for KiCad consumption.
-- 🔲 Routed traces appear in KiCad (requires Python bridge implementation).
-- ✅ The board remains consistent after updates (round-trip test passes).
+## Multi-Version Local Testing Environment (Windows Setup)
 
-### Phase 3: Plugin integration ✅ Implemented
+The local development environment has three active KiCad installations installed in parallel under `C:\Program Files\KiCad\`:
 
-Goal: make IPC the normal path when available, with automatic fallback to DSN.
+| Version | Installation Path | Config Directory (`%APPDATA%`) | Cache & Venv Directory (`%LOCALAPPDATA%`) | Plugin Directory (`%USERPROFILE%\Documents`) | Primary Testing Role |
+|---|---|---|---|---|---|
+| **KiCad 9.0.7** | `C:\Program Files\KiCad\9.0\` | `%APPDATA%\kicad\9.0\` | `%LOCALAPPDATA%\KiCad\9.0\` | `...\Documents\KiCad\9.0\plugins\` | Legacy DSN baseline & early IPC backward-compatibility |
+| **KiCad 10.0.2** | `C:\Program Files\KiCad\10.0\` | `%APPDATA%\kicad\10.0\` | `%LOCALAPPDATA%\KiCad\10.0\` | `...\Documents\KiCad\10.0\plugins\` | **Primary Alpha Target**: Stable GUI IPC API over Named Pipes |
+| **KiCad 10.99 Nightly** (2026-09-18 build 4083) | `C:\Program Files\KiCad\10.99\` | `%APPDATA%\kicad\10.99\` | `%LOCALAPPDATA%\KiCad\10.99\` | `...\Documents\KiCad\10.99\plugins\` | **Future Target**: Pure SWIG-free validation & headless `kicad-cli api-server` |
 
-The KiCad Python plugin (`integrations/KiCad/kicad-freerouting/plugins/plugin.py`) has been updated to support dual-mode operation:
+---
 
-**JSON/API mode (experimental, opt-in via `ROUTING_MODE_JSON`):**
-1. Detects JSON/API availability via `is_json_api_mode_available()` — checks for `pcbnew` JSON export helpers and KiCad 9+ SWIG bindings.
-2. Serializes the board to KiCad JSON using `serialize_board_to_json()`, which walks `pcbnew` board objects in-process.
-3. Saves the JSON to `freerouting_debug.json` for debugging.
-4. Starts Freerouting as a headless API server (`-api_server.enabled=true -api_server.authentication.enabled=false -gui.enabled=false`).
-5. Creates a session and job via the REST API (`POST /v1/sessions/create`, `POST /v1/jobs/enqueue`).
-6. Uploads the JSON board data via `POST /v1/jobs/{jobId}/input/json`.
-7. Starts the job via `PUT /v1/jobs/{jobId}/start`.
-8. Polls for completion with a progress dialog (user can cancel).
-9. Downloads the result JSON via `GET /v1/jobs/{jobId}/output/json`.
-10. Applies the result back to KiCad via native JSON import helpers or manual `pcbnew` API calls.
-11. Saves the result JSON to `freerouting_result.json` for debugging.
+## Comprehensive Debugging Playbook
 
-**DSN mode (default):**
-- The plugin uses the original DSN export/import workflow unless `ROUTING_MODE_JSON` is set in `config.py`.
-- JSON/API mode falls back to DSN automatically when serialization is unavailable.
+To make the IPC feature easy to develop, troubleshoot, and support across all three versions, debugging is organized across six distinct levels:
 
-**Key implementation details:**
-- `FreeroutingApiClient` class: minimal REST API client using `urllib` with automatic JSON serialization, health checks, session/job management, and polling.
-- `is_json_api_mode_available()`: probes whether the in-process SWIG JSON bridge can run on KiCad 9+.
-- `_build_board_json_manually()`: JSON builder that walks `pcbnew` board objects (footprints, pads, tracks, vias, drawings).
-- `_apply_json_result_to_kicad()`: applies routing results back to KiCad via native import helpers or manual `pcbnew.PCB_TRACK`/`pcbnew.PCB_VIA` creation.
-- Debug JSON files are always saved to the routing directory for both input and output.
+### Level 1: Version-Specific Diagnostic Console & Tracing
 
-**Plugin routing mode (in `config.py`):**
-- `DEFAULT_ROUTING_MODE = ROUTING_MODE_DSN` — DSN is the default for v2.3.
-- Set `ROUTING_MODE_JSON` to opt into the experimental JSON/API bridge. Legacy `"IPC"` is accepted as an alias.
-- The API server binds to `127.0.0.1:37864` with authentication disabled for seamless local operation.
+When running on Windows, KiCad suppresses console logs from GUI processes by default. Launch the desired KiCad version with trace logging enabled:
 
-Exit criteria:
-- ✅ The user can route from KiCad without manual file export when JSON/API mode is enabled.
-- ✅ DSN mode is the default production path.
-- ✅ Debug JSON files are saved for both input and output.
-- ✅ Progress dialog shows job ID and session ID during routing.
-- ✅ User can cancel routing via the Terminate button.
+```powershell
+# 1. Debugging KiCad 10.0.2 (Primary Alpha Target)
+$env:KICAD_ALLOC_CONSOLE = "1"     # Forces KiCad to allocate a console window
+$env:KICAD_ENABLE_WXTRACE = "1"    # Enables wxTrace subsystem in release builds
+$env:WXTRACE = "KICAD_API"         # Filters trace messages specifically to the API
+& "C:\Program Files\KiCad\10.0\bin\kicad.exe"
 
-### Phase 4: Testing and parity 🔲 In progress
+# 2. Debugging KiCad 10.99 Nightly (KiCad 11 Preview)
+$env:KICAD_ALLOC_CONSOLE = "1"
+$env:KICAD_ENABLE_WXTRACE = "1"
+$env:WXTRACE = "KICAD_API"
+& "C:\Program Files\KiCad\10.99\bin\kicad.exe"
 
-Goal: verify that IPC and DSN produce equivalent results.
+# 3. Debugging KiCad 9.0.7 (Legacy Baseline)
+$env:KICAD_ALLOC_CONSOLE = "1"
+$env:KICAD_ENABLE_WXTRACE = "1"
+$env:WXTRACE = "KICAD_API"
+& "C:\Program Files\KiCad\9.0\bin\kicad.exe"
+```
 
-Tasks:
+*Status bar warnings:* In KiCad 10.0+ and 10.99, any unhandled exception or `stderr` print from an IPC plugin action is automatically surfaced in the warning icon at the bottom right of the PCB Editor status bar.
 
-- compare routing completion rate
-- compare via count
-- compare trace length
-- compare clearance violation count
-- compare runtime and memory use
-- **wire KiCad edge clearance into JSON serializer + reader (#558 IPC path)**
-- re-enable `Issue733DsnJsonParityTest` when input parity is acceptable
+### Level 2: Headless API Server Testing with KiCad 10.99 `kicad-cli`
 
-Exit criteria:
+KiCad 10.99 provides native headless IPC server execution without opening the GUI. This is invaluable for rapid script and bridge testing:
 
-- no regressions in DSN mode
-- IPC mode behaves predictably
-- edge clearance matches KiCad design settings without CLI override
-- any differences are understood and documented
+```powershell
+# Start headless IPC server for a specific board with custom named pipe:
+& "C:\Program Files\KiCad\10.99\bin\kicad-cli.exe" api-server `
+    --socket "\\.\pipe\kicad-freerouting-test" `
+    "fixtures\bm01.kicad_pcb"
+```
+In another terminal, connect the Python bridge directly to `\\.\pipe\kicad-freerouting-test`!
 
-Tracker: [`docs/issues/kicad-json-api-mode-improvement-tracker.md`](../issues/kicad-json-api-mode-improvement-tracker.md)
+### Level 3: Wire-Level Protobuf Message Logging
 
-## Issue 558 and copper to edge clearance
+KiCad has a built-in wire logger for the IPC API that records every protobuf request and response:
+1. Create or edit the `kicad_advanced` text file in the version-specific config directory:
+   - KiCad 10: `%APPDATA%\kicad\10.0\kicad_advanced`
+   - KiCad 10.99: `%APPDATA%\kicad\10.99\kicad_advanced`
+   - KiCad 9: `%APPDATA%\kicad\9.0\kicad_advanced`
+2. Add the configuration line:
+   ```ini
+   EnableAPILogging=1
+   ```
+3. KiCad will log every Protobuf message payload to:
+   - KiCad 10: `%USERPROFILE%\Documents\KiCad\10.0\logs\api.log`
+   - KiCad 10.99: `%USERPROFILE%\Documents\KiCad\10.99\logs\api.log`
+   - KiCad 9: `%USERPROFILE%\Documents\KiCad\9.0\logs\api.log`
+   *(Note: Remember to delete or disable this after debugging as the file grows rapidly).*
 
-KiCad IPC is important because it **can** expose rule data that DSN loses — including copper-to-edge clearance via `BOARD_DESIGN_SETTINGS.m_CopperEdgeClearance`.
+### Level 4: Standalone External Debugging (Outside KiCad)
 
-**Current state (2026-08-06):** The JSON bridge does **not** read this value yet. See [`docs/issues/kicad-json-api-mode-improvement-tracker.md`](../issues/kicad-json-api-mode-improvement-tracker.md) P0.
+You do **not** need to click the toolbar button inside KiCad to debug the Python IPC bridge:
+1. Start KiCad (e.g. KiCad 10.0.2) and open the target PCB.
+2. In KiCad, ensure **Preferences > Common > Enable API** is checked (or set `"api": { "enable_server": true }` in `kicad_common.json`).
+3. Open a terminal or IDE (VS Code, PyCharm) and run the bridge script directly:
+   ```powershell
+   python -m integrations.KiCad.kicad_freerouting.ipc_bridge.standalone_runner `
+       --board-name "my_board" `
+       --dump-json `
+       --debug
+   ```
+4. If running outside KiCad without `KICAD_API_SOCKET`, the script automatically probes the active Windows named pipes (`\\.\pipe\kicad-api*`).
+5. You can set standard Python breakpoints (`pdb.set_trace()` or IDE visual breakpoints) to inspect the Protobuf board hierarchy interactively.
 
-For DSN users, keep the explicit `copperToEdgeClearanceUm` setting in Freerouting so the gap can still be closed via CLI/API override.
+### Level 5: KiCad-Managed Virtual Environment Inspection
 
-## Risks
+KiCad manages the Python virtual environment for the plugin per version:
+- KiCad 10: `%LOCALAPPDATA%\KiCad\10.0\python-environments\app.freerouting.kicad-plugin`
+- KiCad 10.99: `%LOCALAPPDATA%\KiCad\10.99\python-environments\app.freerouting.kicad-plugin`
+- KiCad 9: `%LOCALAPPDATA%\KiCad\9.0\python-environments\app.freerouting.kicad-plugin`
 
-- IPC is only available in the running GUI session in KiCad 9 and 10.
-- API coverage can still change between KiCad releases.
-- The IPC API is disabled by default, so users may need clearer guidance.
-- A KiCad version mismatch may break the bridge until it is updated.
-- Live update timing may need tuning to avoid UI churn.
-- Some users run in environments where Java download is blocked by policy or proxy rules.
+**Manual activation:** Activate the virtual environment directly in a terminal to check installed versions (`pip list`) or manually install test packages:
+```powershell
+# Activate KiCad 10 plugin venv
+& "$env:LOCALAPPDATA\KiCad\10.0\python-environments\app.freerouting.kicad-plugin\Scripts\Activate.ps1"
+python -c "import kipy; print(kipy.__file__)"
+```
+**Force Environment Reset:** If dependencies become corrupted, right-click the plugin action in KiCad's **Preferences > Action Plugins** and select **"Recreate Plugin Environment"**.
 
-## Testing strategy
+### Level 6: Payload Diffing & Artifact Verification
 
-Use three levels of tests:
+Whenever routing runs in IPC mode, the bridge automatically dumps debug artifacts to the Freerouting log folder (`%LOCALAPPDATA%\freerouting\logs\kicad\`):
+- `freerouting_ipc_input.json`: Board and rule model extracted via IPC.
+- `freerouting_ipc_output.json`: Routed traces and vias received from Freerouting.
+- A built-in diff utility compares `freerouting_ipc_input.json` against the DSN export from `HeadlessBoardManager` to flag any discrepancies in coordinate scaling, pad offsets, or clearance classes before routing starts.
 
-1. Unit tests with a mocked IPC bridge
-2. Integration tests with a running KiCad session
-3. Parity tests comparing DSN and IPC results
+### User-Facing Diagnostic Dialogs
 
-Prefer a small and repeatable first test case.
-Do not start with a large board.
+If the IPC connection fails at runtime, the plugin must never fail silently. It provides an immediate modal diagnostic dialog:
+- If socket connection is refused:
+  > *"Cannot connect to KiCad IPC API. Please ensure the API server is enabled under **Preferences > Common > Enable API**, then restart KiCad."*
+- If Java 25 is missing:
+  > Shows exact binary paths checked, Adoptium download status, and offline fallback instructions.
 
-## Practical next step list
+---
 
-1. Freeze the SWIG-based path as legacy and avoid new feature work there.
-2. Confirm the KiCad IPC model in the plugin layer.
-3. Keep DSN support unchanged in Freerouting core.
-4. Add a DSN compatibility check against current KiCad releases in CI.
-5. Add a small IPC bridge that only reads board data first.
-6. Write tests before adding write-back support.
-7. Add live update support only after the read path is stable.
-8. Add bundled Java runtime option to release packaging and plugin config.
-9. Update user documentation after bridge and runtime flow are stable.
+## Shipping Strategy: Testable Alpha in Next Release
+
+The next release will ship KiCad Protobuf IPC as an **opt-in Alpha feature** alongside the rock-solid DSN production default.
+
+### Routing Mode Priority & Settings
+
+In `config.py` (and the plugin configuration dialog):
+```python
+ROUTING_MODE_DSN = "DSN"       # Default: Stable Specctra DSN export/import
+ROUTING_MODE_IPC = "IPC"       # New Alpha: Official Protobuf IPC API (KiCad 9/10+)
+ROUTING_MODE_JSON = "JSON"     # Transitional: v2.3 SWIG bridge (fallback)
+```
+
+1. **Default Mode:** `ROUTING_MODE_DSN` remains default for all users.
+2. **Opt-in Alpha:** Users can switch to `ROUTING_MODE_IPC` in the plugin UI or `config.py`.
+3. **Graceful Auto-Fallback:** If `ROUTING_MODE_IPC` is selected but the IPC socket is unavailable (e.g. user has not enabled API in preferences), the plugin displays a non-fatal warning and offers an instant one-click fallback to DSN mode.
+4. **Visual Mode Indicator:** The routing progress dialog clearly displays the active engine:
+   - `[Mode: Protobuf IPC (Alpha)]`
+   - `[Mode: Specctra DSN (Standard)]`
+
+---
+
+## Benefits and Risks Assessment
+
+### Benefits Matrix
+
+| Benefit | Description | Impact |
+|---|---|---|
+| **Future-Proof Against SWIG EOL** | SWIG Python bindings will be removed in KiCad 11. Protobuf IPC ensures Freerouting continues working on future KiCad versions. | **Critical** |
+| **Complete Design Rule Fidelity (#558)** | Directly extracts `copper_edge_clearance` via `constraints.copper_edge_clearance().value_nm()` and custom DRU constraints that DSN discards. | **High** |
+| **Atomic Undo/Redo Transactions** | `board.begin_commit()` / `push_commit()` wraps all newly routed tracks and vias into a single undo step in KiCad. | **High** |
+| **Process & Memory Isolation** | The plugin and Java router run in dedicated external processes. Out-of-memory or routing timeouts cannot crash KiCad. | **High** |
+| **No File System Intermediate Churn** | Avoids writing temporary `.dsn` and `.ses` files to the user's project directory. | **Medium** |
+| **Independent Python Runtime** | Plugin runs in an isolated virtual environment (`requirements.txt`), avoiding DLL conflicts with KiCad's bundled Python. | **Medium** |
+
+### Risks & Mitigations
+
+| Risk | Likelihood | Impact | Mitigation Strategy |
+|---|---|---|---|
+| **IPC Server Disabled by Default** | High | High | Plugin actively checks socket connectivity. If unavailable, guides the user with step-by-step instructions to enable it, and falls back to DSN. |
+| **Initial Venv Creation Latency** | High (first run) | Low | First launch can take 10–20 seconds while KiCad installs `kicad-python`. Document this in release notes; toolbar icon appears once venv is built. |
+| **GUI-Only in KiCad 9 & 10** | 100% | Medium | Accepted constraint for KiCad 9/10. Automated CI uses recorded mock fixtures. Full headless CI arrives with KiCad 11 `kicad-cli api-server`. |
+| **Main UI Thread Blocking in KiCad** | Medium | Medium | KiCad IPC is synchronous. If a modal dialog is open in KiCad, requests timeout. Implement retry loops with clear timeouts and user abort buttons. |
+| **Java 25 Dependency Availability** | Medium | Medium | Hardened `java_utils.py` auto-downloads Temurin JRE 25 to user cache; provide pre-bundled offline releases. |
+
+---
+
+## Comprehensive Implementation Plan & Task Lists
+
+This implementation plan details the phases, component touchpoints, task lists, and exit criteria to bring the KiCad Protobuf IPC integration from prototype to a testable Alpha in the next release, and ultimately to the production default for KiCad 11.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ Phase 1: Standalone IPC Spike & Read-Path Prototype (Spike / Immediate)│
+│   • Standalone script using kipy                                       │
+│   • Board & Design Rule extraction (#558 copper_edge_clearance)        │
+│   • KiCadJsonReader outline clearance class mapping                    │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+┌──────────────────────────────────▼─────────────────────────────────────┐
+│ Phase 2: Write-Back Transaction & Undo/Redo Engine                     │
+│   • Map routed traces/vias -> kipy objects                             │
+│   • board.begin_commit() / push_commit() transactional write           │
+│   • Single-step Ctrl+Z undo validation                                 │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+┌──────────────────────────────────▼─────────────────────────────────────┐
+│ Phase 3: Plugin Integration & Alpha Release Packaging (Target Release) │
+│   • plugin.json manifest & requirements.txt for KiCad venv             │
+│   • ipc_entry.py out-of-process runner                                 │
+│   • Tri-mode config (DSN default, IPC alpha, JSON transitional)        │
+│   • Socket connectivity check & graceful auto-fallback to DSN          │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+┌──────────────────────────────────▼─────────────────────────────────────┐
+│ Phase 4: CI Automation & Parity Testing                                │
+│   • Recorded mock IPC session fixtures (no KiCad/Xvfb needed in CI)    │
+│   • Automated Python & Java unit test suites                           │
+│   • DSN vs. IPC parity metrics (completion, vias, DRC)                 │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+┌──────────────────────────────────▼─────────────────────────────────────┐
+│ Phase 5: KiCad 11 Headless Readiness & Deprecation of SWIG             │
+│   • kicad-cli api-server validation                                    │
+│   • Promote IPC to recommended default                                 │
+│   • Remove legacy SWIG bridge (board_json_helpers.py)                  │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Phase 1: Standalone IPC Spike & Read-Path Prototype
+
+**Goal:** Establish an external socket/pipe connection to a running KiCad 10 instance, extract the complete board structure and design rules, serialize to `KiCadBoardJson`, and verify loading into Freerouting.
+
+#### Tasks:
+- [ ] **Python Bridge Core (`ipc_bridge/`):**
+  - [ ] Add `integrations/KiCad/kicad-freerouting/ipc_bridge/` package structure.
+  - [ ] Implement `ipc_connection.py`: Connect to KiCad using `kicad-python` (`kipy.KiCad`). Automatically detect `KICAD_API_SOCKET` or fallback to OS default socket paths (`api.sock` on Linux/macOS, `\\.\pipe\kicad-api` on Windows).
+  - [ ] Implement `ipc_board_reader.py`:
+    - Extract board outline from `board.get_shapes()` on `Edge.Cuts`.
+    - Extract layer stack, copper layers, and planes.
+    - Extract nets and netclasses from `board.get_net_classes()` and `board.get_nets()`.
+    - Extract footprints and pads (positions, shapes, drills, rotations, layers).
+    - Extract pre-existing tracks, vias, and keepouts/zones.
+  - [ ] **Design Rules & Clearance Extraction (Issue #558):**
+    - Query `board.get_design_rules()`.
+    - Extract `constraints.copper_edge_clearance().value_nm()` and map to `KiCadBoardJson.outline.clearance` (converted to microns).
+    - Extract netclass clearance and custom rule clearances into `KiCadBoardJson.clearanceRules`.
+  - [ ] Implement `standalone_runner.py`: CLI script to run against an active KiCad board, dumping `freerouting_ipc_input.json` for validation.
+- [ ] **Freerouting Java Core (`io.kicad`):**
+  - [ ] In `KiCadJsonReader.java`, check if `boardJson.outline.clearance > 0`.
+  - [ ] When outline clearance is present, dynamically append a dedicated `board_edge` clearance class to `ClearanceMatrix` (mirroring `HeadlessBoardManager.applyCopperToEdgeClearance()`).
+  - [ ] Set clearance matrix distances between `board_edge` and conductor classes to `outline.clearance`.
+  - [ ] Assign `outlineShapes` the `board_edge` clearance class number instead of default class 1.
+  - [ ] Add unit test in `KiCadJsonReaderTest` verifying that outline clearance creates the expected clearance class and matrix entries.
+
+**Deliverables:**
+- Standalone CLI runner capable of extracting board JSON from running KiCad 10.
+- `KiCadJsonReader` natively respecting `outline.clearance`.
+
+**Exit Criteria:**
+- One real PCB open in KiCad 10 is extracted via IPC, serialized to JSON, and loaded into Freerouting with identical outline dimensions and correct edge clearance without CLI `--router.copper_to_edge_clearance_um` overrides.
+
+---
+
+### Phase 2: Write-Back Transaction & Undo/Redo Engine
+
+**Goal:** Receive the routed JSON output from Freerouting and write the new tracks and vias back into the active KiCad session as a single atomic transaction.
+
+#### Tasks:
+- [ ] **Python IPC Writer (`ipc_bridge/ipc_board_writer.py`):**
+  - [ ] Parse `KiCadBoardJson.traces` and `KiCadBoardJson.vias` from Freerouting API output (`GET /v1/jobs/{id}/output/json`).
+  - [ ] Convert trace segments to `kipy` track primitives with correct layer IDs, start/end coordinates, and widths.
+  - [ ] Convert vias to `kipy` via primitives with correct coordinates, diameters, drill sizes, and layer ranges.
+  - [ ] Implement atomic commit transaction:
+    ```python
+    commit = board.begin_commit()
+    try:
+        board.create_items(new_tracks + new_vias)
+        board.push_commit(commit)
+    except Exception as e:
+        board.drop_commit(commit)
+        raise
+    ```
+- [ ] **Transactional Safety & Cleanup:**
+  - [ ] If routing existing partially routed nets, optionally remove unstitched or replaced tracks in the same commit.
+  - [ ] Refresh KiCad view / trigger canvas redraw if required by `kipy`.
+- [ ] **Interactive Validation:**
+  - [ ] Route a sample board, observe tracks appearing immediately in KiCad PCB editor.
+  - [ ] Press `Ctrl+Z` in KiCad: verify that all routed tracks and vias disappear in a single undo step.
+  - [ ] Press `Ctrl+Y` in KiCad: verify that all routed tracks and vias reappear cleanly.
+
+**Deliverables:**
+- Full bidirectional IPC bridge supporting read and atomic transactional write-back.
+
+**Exit Criteria:**
+- Routed tracks appear in KiCad without restarting the application or reloading the board, and can be completely undone with a single `Ctrl+Z`.
+
+---
+
+### Phase 3: Plugin Integration & Alpha Release Packaging
+
+**Goal:** Package the IPC bridge as a standard KiCad action plugin that ships with the next Freerouting release, allowing users to opt in and test the Alpha version safely.
+
+#### Tasks:
+- [ ] **Plugin Manifest & Runtime Configuration:**
+  - [ ] Create `integrations/KiCad/kicad-freerouting/plugin.json`:
+    ```json
+    {
+      "$schema": "https://go.kicad.org/api/schemas/v1",
+      "identifier": "app.freerouting.kicad-plugin",
+      "name": "Freerouting",
+      "description": "Advanced PCB autorouter for KiCad",
+      "runtime": { "type": "python" },
+      "actions": [
+        {
+          "identifier": "route_board",
+          "name": "Auto-route Board",
+          "description": "Route active PCB with Freerouting",
+          "entrypoint": "ipc_entry.py",
+          "scopes": ["pcb"],
+          "show-button": true,
+          "icons-light": ["resources/icon_24x24.png"],
+          "icons-dark": ["resources/icon_24x24.png"]
+        }
+      ]
+    }
+    ```
+  - [ ] Create `integrations/KiCad/kicad-freerouting/requirements.txt` with pinned dependency:
+    ```
+    kicad-python>=0.1.0
+    ```
+  - [ ] Create `ipc_entry.py`: Out-of-process entry point invoked by KiCad when the toolbar button is clicked.
+- [ ] **Routing Mode Management & Auto-Fallback:**
+  - [ ] Update `config.py`:
+    - `ROUTING_MODE_DSN = "DSN"` (Default)
+    - `ROUTING_MODE_IPC = "IPC"` (Alpha)
+    - `ROUTING_MODE_JSON = "JSON"` (Transitional SWIG bridge)
+  - [ ] In `ipc_entry.py`, test IPC connectivity:
+    - If `ROUTING_MODE_IPC` is active and KiCad IPC is connected, proceed via IPC bridge.
+    - If IPC connection fails (e.g. API disabled in preferences), present user-friendly dialog:
+      *"Cannot connect to KiCad IPC. Would you like to enable the API under Preferences > Common > Enable API, or fall back to DSN mode?"*
+    - On user confirmation, fall back smoothly to DSN routing without failing the operation.
+- [ ] **UI Progress Dialog Updates:**
+  - [ ] Show active mode tag: `[Mode: Protobuf IPC (Alpha)]`.
+  - [ ] Display real-time progress polled from Freerouting API.
+  - [ ] Support cancel / terminate button.
+- [ ] **Release Packaging:**
+  - [ ] Update plugin zip build scripts to package `plugin.json`, `requirements.txt`, and the `ipc_bridge` module.
+  - [ ] Document the Alpha test instructions in release notes and `README.md`.
+
+**Deliverables:**
+- Distributable KiCad plugin package featuring opt-in IPC Alpha mode alongside production DSN mode.
+
+**Exit Criteria:**
+- The plugin can be installed in KiCad 10, executes via the toolbar icon, routes successfully in IPC mode when enabled, and falls back gracefully to DSN when IPC is disabled.
+
+---
+
+### Phase 4: CI Automation & Parity Testing
+
+**Goal:** Establish regression testing for the IPC bridge in CI without requiring a GUI KiCad instance, and benchmark IPC routing quality against DSN.
+
+#### Tasks:
+- [ ] **Offline Mocking & Session Recording:**
+  - [ ] Add session recording flag (`--record-ipc-session <file.json>`) to capture raw protobuf structures from live KiCad runs.
+  - [ ] Implement `MockIpcClient` that serves recorded responses for `kipy.KiCad`.
+  - [ ] Add automated pytest suite in `integrations/KiCad/` running on GitHub Actions.
+- [ ] **Java Parity Test Suite:**
+  - [ ] Re-enable `Issue733DsnJsonParityTest` in Gradle test suite.
+  - [ ] Verify that `RoutingBoard` constructed from IPC JSON has identical:
+    - Net counts and connectivity.
+    - Conductor clearances.
+    - Board outline dimensions.
+    - Via padstack geometry.
+- [ ] **Benchmark Matrix:**
+  - [ ] Run benchmark boards (e.g. `bm01`, `bm02`) through both DSN and IPC pipelines.
+  - [ ] Confirm zero new clearance violations, equivalent completion rate, and identical or improved via counts.
+
+**Deliverables:**
+- Headless CI test suite for IPC bridge.
+- Parity report comparing DSN vs. IPC across standard benchmark boards.
+
+**Exit Criteria:**
+- Zero test regressions; automated CI passes reliably on Windows, macOS, and Linux runners.
+
+---
+
+### Phase 5: KiCad 11 Headless Readiness & SWIG Deprecation
+
+**Goal:** Ensure readiness for KiCad 11 where SWIG is permanently removed, support headless `kicad-cli api-server`, and promote IPC to the default routing mode.
+
+#### Tasks:
+- [ ] **KiCad 11 Preview Testing:**
+  - [ ] Test IPC bridge against KiCad 11 nightly builds.
+  - [ ] Validate headless IPC integration via `kicad-cli api-server`.
+- [ ] **Retirement of SWIG Code Paths:**
+  - [ ] Remove `board_json_helpers.py` (the manual SWIG walker).
+  - [ ] Mark SWIG DSN export in the plugin as legacy/deprecated.
+- [ ] **Promotion:**
+  - [ ] Switch `DEFAULT_ROUTING_MODE` from `DSN` to `IPC` for KiCad 10+ installations.
+  - [ ] Update all user documentation, tutorials, and integration guides.
+
+**Deliverables:**
+- Fully modernized, native KiCad IPC autorouting integration ready for KiCad 11.
+
+**Exit Criteria:**
+- Freerouting functions seamlessly on KiCad 11 nightly without any SWIG dependencies.
+
+---
 
 ## Conclusion
 
-KiCad 10 is released and the IPC API is real.
-With KiCad signaling SWIG runtime deprecation for nightly and 11.0, IPC migration is now a required compatibility track.
-The safest plan is to keep DSN data support, move KiCad plugin execution to IPC, and implement in small steps.
-
-That gives us:
-
-- compatibility with older KiCad and other tools
-- a clean path to live integration in KiCad 10
-- a lower risk rollout
-- a better base for future KiCad 11 headless support
+Migrating to KiCad's official Protobuf IPC API is the strategic, long-term foundation for Freerouting's KiCad integration. By maintaining the DSN workflow as the rock-solid fallback and reusing Freerouting's existing JSON REST API architecture, we achieve zero risk of regression while unlocking full design rule fidelity (Issue #558) and forward compatibility with KiCad 11. Shipping this as an opt-in Alpha in the upcoming release allows enthusiastic community testing while preserving production stability.
