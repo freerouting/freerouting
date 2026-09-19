@@ -2,6 +2,7 @@ package app.freerouting.board.facade;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.expansion.CompleteFreeSpaceExpansionRoom;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.AutorouteControl.ExpansionCostFactor;
@@ -1105,7 +1106,11 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     if (result == null) {
       result =
           new AutorouteAttemptResult(
-              AutorouteAttemptState.FAILED, "No target items to route connection.");
+              AutorouteAttemptState.FAILED,
+              "No target items to route connection.",
+              new FailureReason(
+                  FailureReason.FailureType.NO_VALID_DESTINATION_ITEMS,
+                  "No target items to route connection (net #" + pinNetNo + ")."));
     }
 
     if (result.state == AutorouteAttemptState.ROUTED) {

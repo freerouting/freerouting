@@ -75,6 +75,7 @@ final class AutorouteBatchLoop {
     // Capture initial state for session summary
     router.sessionStartTime = Instant.now();
     router.initialUnroutedCount = calculateIncompleteCount(router.board);
+    router.clearNetFailureReasons();
 
     final BoardHistory bh = new BoardHistory(job.routerSettings);
 
