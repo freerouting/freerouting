@@ -17,6 +17,7 @@ function Update-BenchmarksHtml {
     # Build premium styled HTML
     $sb = [System.Text.StringBuilder]::new()
     $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    $sysInfo = Get-SystemInfo
     [void]$sb.AppendLine("<div class='benchmark-container'>")
     [void]$sb.AppendLine("  <div class='benchmark-report-info'>Generated on: $ts &middot; System: $($sysInfo.cpu_name) ($($sysInfo.cpu_physical_cores) Cores, $($sysInfo.total_ram_gb) GB RAM)</div>")
 
