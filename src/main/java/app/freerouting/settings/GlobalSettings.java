@@ -240,7 +240,7 @@ public class GlobalSettings implements Serializable {
    *     -1}/{@code +1} without further detail when either string cannot be parsed as a
    *     dot-separated numeric version.
    */
-  static int compareVersionStrings(String v1, String v2) {
+  public static int compareVersionStrings(String v1, String v2) {
     if (v1 == null && v2 == null) {
       return 0;
     }
