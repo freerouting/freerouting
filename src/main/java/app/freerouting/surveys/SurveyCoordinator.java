@@ -50,23 +50,30 @@ public class SurveyCoordinator {
   }
 
   /**
+   * Resets the single-poll session gate. Useful for tests or when dynamic configuration changes.
+   */
+  public synchronized void resetSession() {
+    this.polledThisSession = false;
+  }
+
+  /**
    * Polls for an eligible survey. Completes with {@code null} when the user must not be asked —
    * surveys disabled, offline, nothing active, already handled, expired, unsupported schema, or a
    * survey requiring a newer client. Safe to call from any thread.
    */
   public synchronized CompletableFuture<SurveyDefinition> pollForSurvey() {
-    if (polledThisSession || !surveysAllowed.getAsBoolean()) {
+    if (polledThisSession || surveysAllowed == null || !surveysAllowed.getAsBoolean()) {
       return CompletableFuture.completedFuture(null);
     }
     polledThisSession = true;
+    if (client == null) {
+      return CompletableFuture.completedFuture(null);
+    }
     return client
         .fetchActiveSurvey()
         .thenApply(this::filterEligible)
         // Defensive: never let an unexpected transport error propagate as a failed future.
-        .exceptionally(
-            error -> {
-              return null;
-            });
+        .exceptionally(error -> null);
   }
 
   private SurveyDefinition filterEligible(SurveyDefinition survey) {
@@ -76,10 +83,11 @@ public class SurveyCoordinator {
     if (survey.isExpired(Instant.now())) {
       return null;
     }
-    if (cache.isHandled(survey.id)) {
+    if (cache != null && cache.isHandled(survey.id)) {
       return null;
     }
     if (survey.minClientVersion != null
+        && !survey.minClientVersion.isBlank()
         && GlobalSettings.compareVersionStrings(clientVersion, survey.minClientVersion) < 0) {
       return null;
     }
@@ -95,21 +103,20 @@ public class SurveyCoordinator {
     if (survey == null || option == null || option.isBlank()) {
       return;
     }
-    cache.markAnswered(survey.id);
-    SurveyResponsePayload payload =
-        SurveyResponsePayload.of(survey.id, userId, option, clientVersion);
-    // Fire-and-forget — the 400ms optimistic UI must not wait on the network.
-    client
-        .submitResponse(payload)
-        .exceptionally(
-            error -> {
-              return false;
-            });
+    if (cache != null) {
+      cache.markAnswered(survey.id);
+    }
+    if (client != null) {
+      SurveyResponsePayload payload =
+          SurveyResponsePayload.of(survey.id, userId, option, clientVersion);
+      // Fire-and-forget — the 400ms optimistic UI must not wait on the network.
+      client.submitResponse(payload).exceptionally(error -> false);
+    }
   }
 
   /** Marks the survey as dismissed without submitting an answer. */
   public void dismiss(SurveyDefinition survey) {
-    if (survey != null) {
+    if (survey != null && cache != null) {
       cache.markDismissed(survey.id);
     }
   }

@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,7 +60,8 @@ public class SurveyClient {
 
   /** Creates a client with a custom API base URL (trailing slash normalized). */
   public SurveyClient(String baseUrl) {
-    this.baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+    String effectiveUrl = (baseUrl == null || baseUrl.isBlank()) ? DEFAULT_API_BASE_URL : baseUrl;
+    this.baseUrl = effectiveUrl.endsWith("/") ? effectiveUrl : effectiveUrl + "/";
     this.executor =
         Executors.newFixedThreadPool(
             1,
@@ -82,17 +85,31 @@ public class SurveyClient {
     return DEFAULT_API_BASE_URL;
   }
 
-  /** Resolves local active survey JSON from system property or environment variable. */
+  /**
+   * Resolves local active survey JSON from system property or environment variable. Supports either
+   * inline JSON or a file path pointing to a JSON definition on disk.
+   */
   static String resolveLocalActiveSurveyJson() {
-    String prop = System.getProperty(ACTIVE_SURVEY_PROP);
-    if (prop != null && !prop.isBlank()) {
-      return prop;
+    String raw = System.getProperty(ACTIVE_SURVEY_PROP);
+    if (raw == null || raw.isBlank()) {
+      raw = System.getenv(ACTIVE_SURVEY_ENV);
     }
-    String env = System.getenv(ACTIVE_SURVEY_ENV);
-    if (env != null && !env.isBlank()) {
-      return env;
+    if (raw == null || raw.isBlank()) {
+      return null;
     }
-    return null;
+    String trimmed = raw.trim();
+    if (trimmed.startsWith("{")) {
+      return trimmed;
+    }
+    try {
+      Path p = Path.of(trimmed);
+      if (Files.isRegularFile(p)) {
+        return Files.readString(p, StandardCharsets.UTF_8).trim();
+      }
+    } catch (Exception ignored) {
+      // Not a valid path; fall back to treating it as raw string
+    }
+    return trimmed;
   }
 
   /**
@@ -165,6 +182,9 @@ public class SurveyClient {
    * on a background thread. Never throws.
    */
   public boolean submitResponseBlocking(SurveyResponsePayload payload) {
+    if (payload == null || payload.surveyId == null || payload.surveyId.isBlank()) {
+      return false;
+    }
     if (resolveLocalActiveSurveyJson() != null) {
       // In local override mode, simulate immediate successful recording without network call.
       return true;
@@ -264,6 +284,9 @@ public class SurveyClient {
    * completing thread. Utility for UI glue that must stay silent on failures.
    */
   public static <T> void whenCompleteSilently(CompletableFuture<T> future, Consumer<T> callback) {
+    if (future == null || callback == null) {
+      return;
+    }
     future.whenComplete(
         (value, error) -> {
           if (error != null) {

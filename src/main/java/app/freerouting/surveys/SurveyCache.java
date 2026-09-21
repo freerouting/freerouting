@@ -26,6 +26,12 @@ public class SurveyCache {
 
   private static final String FILE_NAME = "surveys.json";
 
+  /** Environment variable to bypass local survey cache for testing and UI development. */
+  public static final String IGNORE_CACHE_ENV = "FREEROUTING__SURVEYS__IGNORE_CACHE";
+
+  /** System property to bypass local survey cache for testing and UI development. */
+  public static final String IGNORE_CACHE_PROP = "freerouting.surveys.ignore_cache";
+
   private final Path file;
   private State state;
 
@@ -46,13 +52,35 @@ public class SurveyCache {
     this.file = dataDirectory == null ? null : dataDirectory.resolve(FILE_NAME);
   }
 
+  /** Checks whether the ignore-cache flag is set via system property or environment variable. */
+  public static boolean isIgnoreCacheEnabled() {
+    String prop = System.getProperty(IGNORE_CACHE_PROP);
+    if (prop != null && !prop.isBlank()) {
+      return Boolean.parseBoolean(prop) || "1".equals(prop.trim());
+    }
+    String env = System.getenv(IGNORE_CACHE_ENV);
+    if (env != null && !env.isBlank()) {
+      return Boolean.parseBoolean(env) || "1".equals(env.trim());
+    }
+    return false;
+  }
+
   /** Returns {@code true} if the survey was already answered or dismissed. */
   public synchronized boolean isHandled(String surveyId) {
+    if (isIgnoreCacheEnabled()) {
+      return false;
+    }
     if (surveyId == null || file == null) {
       return false;
     }
     ensureLoaded();
     return state.answered.contains(surveyId) || state.dismissed.contains(surveyId);
+  }
+
+  /** Clears all recorded survey answers and dismissals and saves the clean state. */
+  public synchronized void clear() {
+    state = new State();
+    save();
   }
 
   /** Marks the survey as answered and persists the cache. */

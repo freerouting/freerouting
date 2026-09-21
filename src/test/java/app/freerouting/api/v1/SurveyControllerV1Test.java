@@ -137,6 +137,27 @@ class SurveyControllerV1Test {
   }
 
   @Test
+  void publishSucceedsWithApiKeyAuthorizationHeader() {
+    AtomicReference<String> publishedJson = new AtomicReference<>();
+    Response response =
+        SurveyControllerV1.processPublishActiveSurvey(
+            "ApiKey " + ADMIN_KEY, null, ADMIN_KEY, VALID_JSON, NOW, publishedJson::set);
+
+    assertEquals(200, response.getStatus());
+    assertEquals(VALID_JSON, publishedJson.get());
+  }
+
+  @Test
+  void resolveAdminKeyReadsSystemProperty() {
+    System.setProperty(SurveyControllerV1.ADMIN_KEY_PROP, "custom-prop-key");
+    try {
+      assertEquals("custom-prop-key", SurveyControllerV1.resolveAdminKey());
+    } finally {
+      System.clearProperty(SurveyControllerV1.ADMIN_KEY_PROP);
+    }
+  }
+
+  @Test
   void deleteReturns403WhenServerAdminKeyNotConfigured() {
     Response response =
         SurveyControllerV1.processDeleteActiveSurvey("Bearer " + ADMIN_KEY, null, null, () -> {});

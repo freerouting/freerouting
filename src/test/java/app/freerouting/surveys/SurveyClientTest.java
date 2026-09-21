@@ -161,4 +161,47 @@ class SurveyClientTest {
       System.clearProperty(SurveyClient.ACTIVE_SURVEY_PROP);
     }
   }
+
+  @Test
+  void localActiveSurveyFromFilePathParsesWithoutNetwork() throws Exception {
+    java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("survey-test", ".json");
+    try {
+      String json =
+          "{\"schema_version\":1,\"id\":\"file-s1\",\"topic\":\"FromFile\",\"question\":\"From File?\",\"options\":[\"Yes\",\"No\"]}";
+      java.nio.file.Files.writeString(tempFile, json);
+      System.setProperty(SurveyClient.ACTIVE_SURVEY_PROP, tempFile.toAbsolutePath().toString());
+
+      SurveyClient fileClient = new SurveyClient("http://127.0.0.1:1/v1/");
+      SurveyDefinition survey = fileClient.fetchActiveSurveyBlocking();
+      assertNotNull(survey);
+      assertEquals("file-s1", survey.id);
+      assertEquals("FromFile", survey.topic);
+      fileClient.shutdown();
+    } finally {
+      System.clearProperty(SurveyClient.ACTIVE_SURVEY_PROP);
+      java.nio.file.Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void nullBaseUrlDefaultsToStandardBaseUrl() {
+    SurveyClient defaultClient = new SurveyClient(null);
+    assertNotNull(defaultClient);
+    defaultClient.shutdown();
+  }
+
+  @Test
+  void submitResponseBlockingReturnsFalseOnNullOrBlankPayload() {
+    SurveyClient localClient = new SurveyClient("http://127.0.0.1:1/v1/");
+    assertFalse(localClient.submitResponseBlocking(null));
+    assertFalse(localClient.submitResponseBlocking(new SurveyResponsePayload()));
+    localClient.shutdown();
+  }
+
+  @Test
+  void whenCompleteSilentlyHandlesNullGracefully() {
+    SurveyClient.whenCompleteSilently(null, ignored -> {});
+    CompletableFuture<String> future = CompletableFuture.completedFuture("test");
+    SurveyClient.whenCompleteSilently(future, null);
+  }
 }

@@ -165,4 +165,32 @@ class SurveyCoordinatorTest {
     // Ask-once holds even though the network request failed.
     assertTrue(cache.isHandled("s1"));
   }
+
+  @Test
+  void resetSessionAllowsSecondPoll() throws Exception {
+    SurveyCoordinator coordinator =
+        coordinatorWith(clientReturning(survey), new SurveyCache(tempDir), "2.5.0", true);
+
+    assertSame(survey, pollAndGet(coordinator));
+    assertNull(pollAndGet(coordinator));
+
+    coordinator.resetSession();
+    assertSame(survey, pollAndGet(coordinator));
+  }
+
+  @Test
+  void handlesNullCacheAndClientGracefully() throws Exception {
+    SurveyCoordinator coordinator = new SurveyCoordinator(null, null, "u", "2.5.0", () -> true);
+    assertNull(coordinator.pollForSurvey().get(1, TimeUnit.SECONDS));
+    coordinator.submitAnswer(survey, "Yes");
+    coordinator.dismiss(survey);
+  }
+
+  @Test
+  void ignoresBlankMinClientVersion() throws Exception {
+    survey.minClientVersion = "  ";
+    SurveyCoordinator coordinator =
+        coordinatorWith(clientReturning(survey), new SurveyCache(tempDir), "1.0.0", true);
+    assertSame(survey, pollAndGet(coordinator));
+  }
 }

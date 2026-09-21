@@ -78,6 +78,12 @@ class SurveyDefinitionTest {
     survey.options = new String[] {"only one"};
     assertFalse(survey.isValid());
 
+    survey.options = new String[] {"Yes", ""};
+    assertFalse(survey.isValid());
+
+    survey.options = new String[] {"Yes", null};
+    assertFalse(survey.isValid());
+
     survey.options = new String[] {"Yes", "No"};
     assertTrue(survey.isValid());
   }

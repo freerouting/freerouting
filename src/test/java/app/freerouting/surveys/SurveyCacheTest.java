@@ -98,4 +98,35 @@ class SurveyCacheTest {
     assertTrue(Files.isRegularFile(file));
     assertTrue(new SurveyCache(tempDir).isHandled("fresh"));
   }
+
+  @Test
+  void clearResetsBothAnsweredAndDismissed() {
+    SurveyCache cache = new SurveyCache(tempDir);
+    cache.markAnswered("s1");
+    cache.markDismissed("s2");
+    assertTrue(cache.isHandled("s1"));
+    assertTrue(cache.isHandled("s2"));
+
+    cache.clear();
+
+    assertFalse(cache.isHandled("s1"));
+    assertFalse(cache.isHandled("s2"));
+    SurveyCache reloaded = new SurveyCache(tempDir);
+    assertFalse(reloaded.isHandled("s1"));
+    assertFalse(reloaded.isHandled("s2"));
+  }
+
+  @Test
+  void ignoreCacheBypassesHandledCheck() {
+    SurveyCache cache = new SurveyCache(tempDir);
+    cache.markAnswered("s-ignore");
+    assertTrue(cache.isHandled("s-ignore"));
+
+    System.setProperty(SurveyCache.IGNORE_CACHE_PROP, "true");
+    try {
+      assertFalse(cache.isHandled("s-ignore"));
+    } finally {
+      System.clearProperty(SurveyCache.IGNORE_CACHE_PROP);
+    }
+  }
 }

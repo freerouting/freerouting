@@ -64,11 +64,15 @@ public class SurveyDefinition {
 
   /** Returns {@code true} if the definition carries the minimum data needed to be displayed. */
   public boolean isValid() {
-    return id != null
-        && !id.isBlank()
-        && question != null
-        && !question.isBlank()
-        && options != null
-        && options.length >= 2;
+    if (id == null || id.isBlank() || question == null || question.isBlank() || options == null) {
+      return false;
+    }
+    int validOptions = 0;
+    for (String opt : options) {
+      if (opt != null && !opt.isBlank()) {
+        validOptions++;
+      }
+    }
+    return validOptions >= 2;
   }
 }

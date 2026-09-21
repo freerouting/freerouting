@@ -61,6 +61,9 @@ public class SurveyControllerV1 {
   /** Environment variable holding the pre-shared admin secret for survey lifecycle management. */
   static final String ADMIN_KEY_ENV = "FREEROUTING__SURVEYS__ADMIN_KEY";
 
+  /** System property holding the pre-shared admin secret for survey lifecycle management. */
+  static final String ADMIN_KEY_PROP = "freerouting.surveys.admin_key";
+
   /** Custom HTTP header for providing the survey admin key. */
   static final String ADMIN_KEY_HEADER = "X-Survey-Admin-Key";
 
@@ -91,10 +94,33 @@ public class SurveyControllerV1 {
     return buildActiveSurveyResponse(getEffectiveActiveSurveyJson(), Instant.now());
   }
 
-  /** Returns the dynamic active survey if set, falling back to the environment variable. */
+  /** Resolves the configured admin key from system properties or environment variables. */
+  static String resolveAdminKey() {
+    String prop = System.getProperty(ADMIN_KEY_PROP);
+    if (prop != null && !prop.isBlank()) {
+      return prop.trim();
+    }
+    String env = System.getenv(ADMIN_KEY_ENV);
+    if (env != null && !env.isBlank()) {
+      return env.trim();
+    }
+    return null;
+  }
+
+  /**
+   * Returns the dynamic active survey if set, falling back to system properties and environment
+   * variables.
+   */
   static String getEffectiveActiveSurveyJson() {
     String dynamic = dynamicActiveSurveyJson;
-    return dynamic != null ? dynamic : System.getenv(ACTIVE_SURVEY_ENV);
+    if (dynamic != null) {
+      return dynamic;
+    }
+    String prop = System.getProperty("freerouting.surveys.active_survey");
+    if (prop != null && !prop.isBlank()) {
+      return prop.trim();
+    }
+    return System.getenv(ACTIVE_SURVEY_ENV);
   }
 
   /** Sets the dynamic in-memory active survey JSON. */
@@ -166,7 +192,7 @@ public class SurveyControllerV1 {
     return processPublishActiveSurvey(
         authHeader,
         customHeader,
-        System.getenv(ADMIN_KEY_ENV),
+        resolveAdminKey(),
         requestBody,
         Instant.now(),
         SurveyControllerV1::setDynamicActiveSurvey);
@@ -196,7 +222,7 @@ public class SurveyControllerV1 {
       @HeaderParam("Authorization") String authHeader,
       @HeaderParam(ADMIN_KEY_HEADER) String customHeader) {
     return processDeleteActiveSurvey(
-        authHeader, customHeader, System.getenv(ADMIN_KEY_ENV), () -> setDynamicActiveSurvey(""));
+        authHeader, customHeader, resolveAdminKey(), () -> setDynamicActiveSurvey(""));
   }
 
   /** Pure decision logic for publishing an active survey. */
@@ -299,6 +325,9 @@ public class SurveyControllerV1 {
     if (authHeader != null && !authHeader.isBlank()) {
       String trimmed = authHeader.trim();
       if (trimmed.regionMatches(true, 0, "Bearer ", 0, 7)) {
+        return trimmed.substring(7).trim();
+      }
+      if (trimmed.regionMatches(true, 0, "ApiKey ", 0, 7)) {
         return trimmed.substring(7).trim();
       }
       return trimmed;
