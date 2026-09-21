@@ -59,3 +59,20 @@ jobs:
           python-version: '3.12'
       - name: Verify i18n context is up to date
         run: python scripts/i18n/extract-context.py --check
+
+  kicad-plugin-test:
+    name: Verify KiCad Plugin & IPC Integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Run KiCad Plugin Fallback Tests
+        run: python integrations/KiCad/kicad-freerouting/test_plugin_fallback.py
+      - name: Run KiCad IPC Mock CI Tests
+        run: python integrations/KiCad/kicad-freerouting/test_ipc_mock_ci.py
