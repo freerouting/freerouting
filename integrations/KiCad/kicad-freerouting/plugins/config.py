@@ -136,7 +136,7 @@ DEBUG_OUTPUT_JSON_FILENAME = "freerouting_output_board.json"
 # Routing modes
 # ------------------------------------------------------------------
 # "DSN"  — legacy Specctra DSN file exchange (default; works with all KiCad versions).
-# "IPC"  — official KiCad Protocol Buffers IPC API (Alpha; KiCad 9/10+, target for KiCad 11+).
+# "IPC"  — official KiCad Protocol Buffers IPC API (KiCad 9/10+, target for KiCad 11+).
 # "JSON" — experimental live JSON/API bridge via SWIG serialization + localhost REST
 #          (requires KiCad 9+; transitional/deprecated).
 ROUTING_MODE_DSN = "DSN"

@@ -193,7 +193,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         # Configure dialog display for the active mode
         if active_mode == ROUTING_MODE_IPC:
-            dialog.set_routing_mode_label("[Mode: Protobuf IPC (Alpha)]")
+            dialog.set_routing_mode_label("[Mode: Protobuf IPC]")
             dialog.set_ipc_indicator_label("Checking KiCad IPC socket")
         elif active_mode == ROUTING_MODE_JSON:
             dialog.set_routing_mode_label("[Mode: JSON/API (Transitional)]")
@@ -287,7 +287,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         router = None
         if active_mode == ROUTING_MODE_IPC:
             if ipc_ok:
-                logger.info("=== Routing mode: Protobuf IPC (Alpha) ===")
+                logger.info("=== Routing mode: Protobuf IPC ===")
                 router = IpcRouter(self)
             else:
                 logger.warning(f"IPC mode requested but unavailable: {ipc_msg}")

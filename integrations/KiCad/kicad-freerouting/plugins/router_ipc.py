@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# router_ipc.py — KiCad Protobuf IPC routing workflow (Alpha)
+# router_ipc.py — KiCad Protobuf IPC routing workflow
 # ---------------------------------------------------------------------------
 # Official IPC routing path for KiCad 9/10+ (and target default for KiCad 11+):
 #   1. Connect to KiCad via Protocol Buffers IPC (kipy / NNG socket or pipe).
@@ -84,7 +84,7 @@ def is_ipc_available(socket_path: Optional[str] = None, timeout_ms: int = 1500) 
 
 
 class IpcRouter:
-    """KiCad Protobuf IPC routing workflow (Alpha).
+    """KiCad Protobuf IPC routing workflow.
 
     Orchestrates:
       IPC board extraction → local Freerouting REST API server →
