@@ -141,4 +141,24 @@ class SurveyClientTest {
 
     assertEquals("value", seen.get(1, TimeUnit.SECONDS));
   }
+
+  @Test
+  void localActiveSurveyOverrideParsesWithoutNetwork() {
+    String json =
+        "{\"schema_version\":1,\"id\":\"local-s1\",\"topic\":\"Local\",\"question\":\"Testing?\",\"options\":[\"A\",\"B\"]}";
+    System.setProperty(SurveyClient.ACTIVE_SURVEY_PROP, json);
+    try {
+      SurveyClient localClient = new SurveyClient("http://127.0.0.1:1/v1/");
+      SurveyDefinition survey = localClient.fetchActiveSurveyBlocking();
+      assertNotNull(survey);
+      assertEquals("local-s1", survey.id);
+      assertEquals("Local", survey.topic);
+      assertTrue(
+          localClient.submitResponseBlocking(
+              SurveyResponsePayload.of("local-s1", "u", "A", "1.0")));
+      localClient.shutdown();
+    } finally {
+      System.clearProperty(SurveyClient.ACTIVE_SURVEY_PROP);
+    }
+  }
 }

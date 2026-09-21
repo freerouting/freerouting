@@ -33,15 +33,27 @@ public class SurveyClient {
   /** Default REST API base URL; overridable for tests and self-hosted deployments. */
   public static final String DEFAULT_API_BASE_URL = "https://api.freerouting.app/v1/";
 
+  /** Environment variable for setting or mocking an active survey locally. */
+  public static final String ACTIVE_SURVEY_ENV = "FREEROUTING__SURVEYS__ACTIVE_SURVEY";
+
+  /** System property for setting or mocking an active survey locally. */
+  public static final String ACTIVE_SURVEY_PROP = "freerouting.surveys.active_survey";
+
+  /** Environment variable for overriding the API base URL. */
+  public static final String API_URL_ENV = "FREEROUTING__SURVEYS__API_URL";
+
+  /** System property for overriding the API base URL. */
+  public static final String API_URL_PROP = "freerouting.surveys.api_url";
+
   private static final int CONNECT_TIMEOUT_MS = 5000;
   private static final int READ_TIMEOUT_MS = 10000;
 
   private final String baseUrl;
   private final ExecutorService executor;
 
-  /** Creates a client that talks to the public Freerouting API. */
+  /** Creates a client that talks to the public Freerouting API (or local override if set). */
   public SurveyClient() {
-    this(DEFAULT_API_BASE_URL);
+    this(resolveBaseUrl());
   }
 
   /** Creates a client with a custom API base URL (trailing slash normalized). */
@@ -55,6 +67,32 @@ public class SurveyClient {
               t.setDaemon(true);
               return t;
             });
+  }
+
+  /** Resolves the base URL, checking system properties and environment variables first. */
+  static String resolveBaseUrl() {
+    String propUrl = System.getProperty(API_URL_PROP);
+    if (propUrl != null && !propUrl.isBlank()) {
+      return propUrl;
+    }
+    String envUrl = System.getenv(API_URL_ENV);
+    if (envUrl != null && !envUrl.isBlank()) {
+      return envUrl;
+    }
+    return DEFAULT_API_BASE_URL;
+  }
+
+  /** Resolves local active survey JSON from system property or environment variable. */
+  static String resolveLocalActiveSurveyJson() {
+    String prop = System.getProperty(ACTIVE_SURVEY_PROP);
+    if (prop != null && !prop.isBlank()) {
+      return prop;
+    }
+    String env = System.getenv(ACTIVE_SURVEY_ENV);
+    if (env != null && !env.isBlank()) {
+      return env;
+    }
+    return null;
   }
 
   /**
@@ -71,6 +109,18 @@ public class SurveyClient {
    * thread. Never throws.
    */
   public SurveyDefinition fetchActiveSurveyBlocking() {
+    String localJson = resolveLocalActiveSurveyJson();
+    if (localJson != null && !localJson.isBlank()) {
+      try {
+        return GsonProvider.GSON.fromJson(localJson, SurveyDefinition.class);
+      } catch (Exception e) {
+        AnalyticsErrorAggregator.recordFailure(
+            "local-survey-json",
+            new IOException("Failed to parse " + ACTIVE_SURVEY_ENV + ": " + e.getMessage()));
+        return null;
+      }
+    }
+
     String endpoint = baseUrl + "surveys/active";
     HttpURLConnection connection = null;
     try {
@@ -115,6 +165,11 @@ public class SurveyClient {
    * on a background thread. Never throws.
    */
   public boolean submitResponseBlocking(SurveyResponsePayload payload) {
+    if (resolveLocalActiveSurveyJson() != null) {
+      // In local override mode, simulate immediate successful recording without network call.
+      return true;
+    }
+
     String endpoint = baseUrl + "surveys/" + payload.surveyId + "/response";
     HttpURLConnection connection = null;
     try {
