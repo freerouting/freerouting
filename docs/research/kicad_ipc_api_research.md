@@ -192,13 +192,13 @@ Important clarification:
 
 The most intuitive user experience is:
 
-- If KiCad supports IPC and the plugin is attached, use IPC automatically.
-- If IPC is not available, fall back to DSN.
-- Show a clear message about which mode is active.
-- Keep the Java installation check and Java launcher logic that already exists in the Python plugin.
+- Default to DSN mode out-of-the-box for rock-solid stability on KiCad 9 and 10.
+- If (the default) DSN mode fails because the plugin is executed from KiCad 11 or newer (where SWIG bindings are removed or non-functional), **automatically attempt IPC mode** (even while in Alpha status).
+- If IPC mode is explicitly chosen by the user but the IPC socket is unavailable (API server not enabled), notify the user and fall back smoothly to DSN mode.
+- Show a clear, transparent status message in the progress dialog indicating which mode is active (`[Mode: Protobuf IPC (Alpha)]` vs `[Mode: Specctra DSN]`).
+- Keep the Java installation check and Java launcher logic in the Python plugin, offering direct download guidance if automatic download fails.
 - Let the user adjust routing settings before routing starts.
-- Never fail silently when runtime discovery fails.
-- If a SWIG-only path is detected, show a deprecation warning and suggest upgrading to IPC mode.
+- Never fail silently or crash the KiCad UI.
 
 ## Java installation and launch
 
@@ -464,9 +464,11 @@ ROUTING_MODE_IPC = "IPC"       # New Alpha: Official Protobuf IPC API (KiCad 9/1
 ROUTING_MODE_JSON = "JSON"     # Transitional: v2.3 SWIG bridge (fallback)
 ```
 
-1. **Default Mode:** `ROUTING_MODE_DSN` remains default for all users.
-2. **Opt-in Alpha:** Users can switch to `ROUTING_MODE_IPC` in the plugin UI or `config.py`.
-3. **Graceful Auto-Fallback:** If `ROUTING_MODE_IPC` is selected but the IPC socket is unavailable (e.g. user has not enabled API in preferences), the plugin displays a non-fatal warning and offers an instant one-click fallback to DSN mode.
+1. **Default Mode:** `ROUTING_MODE_DSN` remains default for all users on KiCad 9 and 10.
+2. **Opt-in Alpha:** Users can explicitly switch to `ROUTING_MODE_IPC` in the plugin UI or `config.py`.
+3. **Bidirectional Self-Healing Fallback Logic:**
+   - **Case 1 (KiCad 11+ Automatic Promotion):** If DSN mode is active (default) but fails because the plugin is running inside KiCad 11 or newer (where SWIG bindings are removed or `ExportSpecctraDSN` throws `ImportError`/`AttributeError`), the plugin **automatically falls back to IPC mode** (even in Alpha state). This prevents KiCad 11 users from encountering broken plugins out-of-the-box.
+   - **Case 2 (IPC to DSN Fallback on KiCad 9/10):** If `ROUTING_MODE_IPC` is chosen but the IPC socket is unavailable (e.g. user has not enabled API in preferences), the plugin displays a non-fatal prompt with enablement instructions and offers an instant one-click fallback to DSN mode.
 4. **Visual Mode Indicator:** The routing progress dialog clearly displays the active engine:
    - `[Mode: Protobuf IPC (Alpha)]`
    - `[Mode: Specctra DSN (Standard)]`
@@ -645,16 +647,14 @@ This implementation plan details the phases, component touchpoints, task lists, 
     kicad-python>=0.1.0
     ```
   - [ ] Create `ipc_entry.py`: Out-of-process entry point invoked by KiCad when the toolbar button is clicked.
-- [ ] **Routing Mode Management & Auto-Fallback:**
+- [ ] **Routing Mode Management & Bidirectional Auto-Fallback:**
   - [ ] Update `config.py`:
-    - `ROUTING_MODE_DSN = "DSN"` (Default)
-    - `ROUTING_MODE_IPC = "IPC"` (Alpha)
+    - `ROUTING_MODE_DSN = "DSN"` (Default for KiCad 9 and 10)
+    - `ROUTING_MODE_IPC = "IPC"` (Alpha for KiCad 10, target default for KiCad 11)
     - `ROUTING_MODE_JSON = "JSON"` (Transitional SWIG bridge)
-  - [ ] In `ipc_entry.py`, test IPC connectivity:
-    - If `ROUTING_MODE_IPC` is active and KiCad IPC is connected, proceed via IPC bridge.
-    - If IPC connection fails (e.g. API disabled in preferences), present user-friendly dialog:
-      *"Cannot connect to KiCad IPC. To use IPC mode, please enable the API server under Preferences > Plugins > Enable KiCad API, and restart KiCad. Would you like to fall back to standard DSN mode for now?"*
-    - On user confirmation, fall back smoothly to DSN routing without failing the operation.
+  - [ ] In plugin runner (`ipc_entry.py` / `plugin.py`), implement bidirectional self-healing fallback:
+    - **IPC -> DSN Fallback (KiCad 9/10):** If `ROUTING_MODE_IPC` is active but KiCad IPC is not running (API disabled), notify the user and fall back smoothly to DSN routing without failing the job.
+    - **DSN -> IPC Fallback (KiCad 11+):** If `ROUTING_MODE_DSN` is active (default) but DSN export fails because the plugin is executed from KiCad 11 or newer (where SWIG bindings are removed or `ExportSpecctraDSN` throws `ImportError`/`AttributeError`), automatically switch to and execute via the IPC bridge (even while in Alpha mode).
   - [ ] Validate Java 25+ detection in `java_utils.py`: probe system `PATH` and `JAVA_HOME`, attempt automatic Adoptium JRE 25 download into user cache (`%LOCALAPPDATA%\freerouting\cache\jre\`), and if download/extraction fails, display an explicit manual installation dialog with direct download URL (no bundled OS executables).
 - [ ] **UI Progress Dialog Updates:**
   - [ ] Show active mode tag: `[Mode: Protobuf IPC (Alpha)]`.
