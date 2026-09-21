@@ -328,7 +328,8 @@ public class BoardPanelStatus extends JPanel {
               Freerouting.globalSettings != null
                   && Freerouting.globalSettings.userProfileSettings != null
                   && Freerouting.globalSettings.userProfileSettings.isSurveysAllowed(
-                      Freerouting.globalSettings.usageAndDiagnosticData.disableAnalytics));
+                      Freerouting.globalSettings.usageAndDiagnosticData != null
+                          && Freerouting.globalSettings.usageAndDiagnosticData.disableAnalytics));
     } catch (Exception e) {
       FRLogger.warn("Failed to initialize SurveyCoordinator: " + e.getMessage());
       return null;

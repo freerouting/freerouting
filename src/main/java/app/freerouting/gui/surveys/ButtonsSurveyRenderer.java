@@ -68,6 +68,10 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
     if (onDismiss != null) {
       JButton dismissButton = new JButton("✕");
       dismissButton.setToolTipText("Dismiss this survey");
+      dismissButton.getAccessibleContext().setAccessibleName("Dismiss survey");
+      dismissButton
+          .getAccessibleContext()
+          .setAccessibleDescription("Permanently dismiss this survey");
       dismissButton.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
       dismissButton.setContentAreaFilled(false);
       dismissButton.setFocusPainted(false);
@@ -82,7 +86,10 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
     panel.add(Box.createVerticalStrut(6));
 
     // Question area with word wrapping and clean Sans-Serif system font
-    JTextArea questionArea = new JTextArea(survey.question);
+    String questionText = survey.question != null ? survey.question : "";
+    JTextArea questionArea = new JTextArea(questionText);
+    questionArea.getAccessibleContext().setAccessibleName("Survey question");
+    questionArea.getAccessibleContext().setAccessibleDescription(questionText);
     questionArea.setWrapStyleWord(true);
     questionArea.setLineWrap(true);
     questionArea.setOpaque(false);
@@ -108,7 +115,12 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
     List<JButton> buttons = new ArrayList<>();
     if (survey.options != null) {
       for (String option : survey.options) {
+        if (option == null || option.isBlank()) {
+          continue;
+        }
         JButton button = new JButton(option);
+        button.getAccessibleContext().setAccessibleName(option);
+        button.getAccessibleContext().setAccessibleDescription("Option: " + option);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, BUTTON_HEIGHT));
         button.setPreferredSize(new Dimension(PANEL_WIDTH - 28, BUTTON_HEIGHT));

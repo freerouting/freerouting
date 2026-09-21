@@ -120,6 +120,14 @@ public class SurveyPopover extends JPopupMenu {
     Dimension pref = getPreferredSize();
     int x = anchor.getWidth() - pref.width;
     int y = -pref.height - 2;
+    try {
+      java.awt.Point screenLoc = anchor.getLocationOnScreen();
+      if (screenLoc.x + x < 0) {
+        x = -screenLoc.x + 4; // Shift right to remain fully visible on screen
+      }
+    } catch (Exception ignored) {
+      // Best-effort check when component location is accessible
+    }
     show(anchor, x, y);
   }
 
