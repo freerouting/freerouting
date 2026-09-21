@@ -11,15 +11,24 @@ import app.freerouting.gui.a11y.A11y;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.gui.controls.SegmentedButtons;
 import app.freerouting.gui.support.GuiTextManager;
+import app.freerouting.gui.surveys.ButtonsSurveyRenderer;
+import app.freerouting.gui.surveys.SurveyPopover;
 import app.freerouting.gui.workspace.session.EditorStateHandle;
 import app.freerouting.gui.workspace.session.EditorStateKind;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.management.jobs.RoutingJobScheduler;
 import app.freerouting.management.sessions.SessionManager;
+import app.freerouting.settings.AppPaths;
+import app.freerouting.settings.GlobalSettings;
+import app.freerouting.surveys.SurveyCache;
+import app.freerouting.surveys.SurveyClient;
+import app.freerouting.surveys.SurveyCoordinator;
+import app.freerouting.surveys.SurveyDefinition;
 import app.freerouting.util.TextManager;
 import app.freerouting.util.gson.GsonProvider;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -48,6 +57,8 @@ public class BoardToolbar extends JPanel {
   private final float iconFontSize = 26.0F;
   private final SegmentedButtons modeSelectionPanel;
   private final JButton settingsButton;
+  public final JButton surveyTriggerButton;
+  private SurveyCoordinator surveyCoordinator;
   private final JButton toolbarAutorouteButton;
   private final JButton cancelButton;
   private final JButton toolbarUndoButton;
@@ -159,6 +170,18 @@ public class BoardToolbar extends JPanel {
     settingsButton.addActionListener(
         _ -> FRAnalytics.buttonClicked("settingsButton", settingsButton.getText()));
     middleToolbar.add(settingsButton);
+
+    // Micro-survey trigger pill next to settings button (hidden by default)
+    surveyTriggerButton = new JButton();
+    surveyTriggerButton.setVisible(false);
+    tagToolbarButton(surveyTriggerButton, GuiLocators.TOOLBAR_SURVEY_TRIGGER);
+    surveyTriggerButton.setFocusPainted(false);
+    surveyTriggerButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    surveyTriggerButton.setBorder(
+        BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+            BorderFactory.createEmptyBorder(2, 6, 2, 6)));
+    middleToolbar.add(surveyTriggerButton);
 
     // Add "Autoroute" button to the toolbar
     toolbarAutorouteButton = new JButton();
@@ -492,6 +515,8 @@ public class BoardToolbar extends JPanel {
                 cancelButton.setEnabled(isBoardReadOnly);
               });
         });
+
+    initSurveys(createDefaultSurveyCoordinator());
   }
 
   /**
@@ -532,6 +557,11 @@ public class BoardToolbar extends JPanel {
 
     JPanel center = new JPanel();
     addComponentOnlyButton(center, tm, "settingsButton", GuiLocators.TOOLBAR_SETTINGS, listener);
+    JButton surveyBtn = new JButton("💬 Poll");
+    A11y.tag(surveyBtn, GuiLocators.TOOLBAR_SURVEY_TRIGGER);
+    A11y.describe(surveyBtn, "Poll", null);
+    surveyBtn.addActionListener(_ -> listener.accept(GuiLocators.TOOLBAR_SURVEY_TRIGGER));
+    center.add(surveyBtn);
     addComponentOnlyButton(center, tm, "autoroute_button", GuiLocators.TOOLBAR_AUTOROUTE, listener);
     addComponentOnlyButton(center, tm, "cancelButton", GuiLocators.TOOLBAR_CANCEL, listener);
     addComponentOnlyButton(center, tm, "undo_button", GuiLocators.TOOLBAR_UNDO, listener);
@@ -581,6 +611,7 @@ public class BoardToolbar extends JPanel {
       GuiLocators.TOOLBAR_UNIT_MM,
       GuiLocators.TOOLBAR_UNIT_UM,
       GuiLocators.TOOLBAR_SETTINGS,
+      GuiLocators.TOOLBAR_SURVEY_TRIGGER,
       GuiLocators.TOOLBAR_AUTOROUTE,
       GuiLocators.TOOLBAR_CANCEL,
       GuiLocators.TOOLBAR_UNDO,
@@ -596,6 +627,87 @@ public class BoardToolbar extends JPanel {
       if (component != null) {
         component.setEnabled(locator.equals(GuiLocators.TOOLBAR_CANCEL) ? !enabled : enabled);
       }
+    }
+  }
+
+  /**
+   * Initializes the micro-survey trigger button with the provided coordinator. Polls for an
+   * eligible survey asynchronously and displays the trigger pill on the EDT if available.
+   *
+   * @param coordinator the survey coordinator to use
+   */
+  public void initSurveys(SurveyCoordinator coordinator) {
+    this.surveyCoordinator = coordinator;
+    if (this.surveyCoordinator == null) {
+      return;
+    }
+    this.surveyCoordinator
+        .pollForSurvey()
+        .thenAccept(
+            survey -> {
+              if (survey != null) {
+                SwingUtilities.invokeLater(() -> showSurveyTrigger(survey));
+              }
+            });
+  }
+
+  /**
+   * Displays the survey trigger pill for the active survey definition.
+   *
+   * @param survey the survey definition to present
+   */
+  public void showSurveyTrigger(SurveyDefinition survey) {
+    if (survey == null) {
+      return;
+    }
+    String label =
+        (survey.topic != null && !survey.topic.isBlank()) ? "💬 " + survey.topic : "💬 Quick Poll";
+    surveyTriggerButton.setText(label);
+    surveyTriggerButton.setToolTipText(survey.question);
+    for (var l : surveyTriggerButton.getActionListeners()) {
+      surveyTriggerButton.removeActionListener(l);
+    }
+    surveyTriggerButton.addActionListener(
+        _ -> {
+          SurveyPopover popover =
+              new SurveyPopover(
+                  survey,
+                  surveyCoordinator,
+                  new ButtonsSurveyRenderer(),
+                  () -> surveyTriggerButton.setVisible(false));
+          popover.showAnchored(surveyTriggerButton);
+        });
+    surveyTriggerButton.setVisible(true);
+    revalidate();
+    repaint();
+  }
+
+  private static SurveyCoordinator createDefaultSurveyCoordinator() {
+    try {
+      if (Freerouting.globalSettings == null) {
+        return null;
+      }
+      String userId =
+          Freerouting.globalSettings.userProfileSettings != null
+                  && Freerouting.globalSettings.userProfileSettings.userId != null
+              ? Freerouting.globalSettings.userProfileSettings.userId.toString()
+              : "";
+      String version = GlobalSettings.getReleaseSafeVersion();
+      SurveyCache cache = new SurveyCache(AppPaths.getDefaultDataDirectory());
+      SurveyClient client = new SurveyClient();
+      return new SurveyCoordinator(
+          client,
+          cache,
+          userId,
+          version,
+          () ->
+              Freerouting.globalSettings != null
+                  && Freerouting.globalSettings.userProfileSettings != null
+                  && Freerouting.globalSettings.userProfileSettings.isSurveysAllowed(
+                      Freerouting.globalSettings.usageAndDiagnosticData.disableAnalytics));
+    } catch (Exception e) {
+      FRLogger.warn("Failed to initialize SurveyCoordinator: " + e.getMessage());
+      return null;
     }
   }
 

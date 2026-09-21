@@ -68,6 +68,8 @@ public final class GuiLocators {
   /** Common toolbar actions. */
   public static final String TOOLBAR_SETTINGS = "toolbar.settings";
 
+  public static final String TOOLBAR_SURVEY_TRIGGER = "toolbar.survey.trigger";
+
   public static final String TOOLBAR_AUTOROUTE = "toolbar.autoroute";
   public static final String TOOLBAR_CANCEL = "toolbar.cancel";
   public static final String TOOLBAR_UNDO = "toolbar.undo";

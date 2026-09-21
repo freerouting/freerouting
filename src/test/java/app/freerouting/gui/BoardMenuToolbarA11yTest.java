@@ -130,8 +130,16 @@ class BoardMenuToolbarA11yTest {
           GuiA11yHarness.invoke(
               GuiA11yHarness.findByLocator(toolbar, GuiLocators.TOOLBAR_UNIT_MM),
               GuiLocators.TOOLBAR_UNIT_MM);
+          GuiA11yHarness.requireRole(
+              GuiA11yHarness.findByLocator(toolbar, GuiLocators.TOOLBAR_SURVEY_TRIGGER),
+              GuiLocators.TOOLBAR_SURVEY_TRIGGER,
+              AccessibleRole.PUSH_BUTTON);
+          GuiA11yHarness.invoke(
+              GuiA11yHarness.findByLocator(toolbar, GuiLocators.TOOLBAR_SURVEY_TRIGGER),
+              GuiLocators.TOOLBAR_SURVEY_TRIGGER);
           assertTrue(actions.contains("drag_button"));
           assertTrue(actions.contains("unit_mm"));
+          assertTrue(actions.contains(GuiLocators.TOOLBAR_SURVEY_TRIGGER));
 
           BoardToolbar.setComponentOnlyEnabled(toolbar, false);
           GuiA11yHarness.requireDisabled(
