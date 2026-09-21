@@ -57,7 +57,7 @@ For complete details on how to configure and enable authentication on your own s
 
 ## Required headers
 
-All protected endpoints (i.e. everything except `/v1/system/*`, `/v1/analytics/*`, `/openapi/*`, and `/swagger-ui`) **require** the following headers on every request:
+All protected endpoints (i.e. everything except `/v1/system/*`, `/v1/analytics/*`, `/v1/surveys/*`, `/openapi/*`, and `/swagger-ui`) **require** the following headers on every request:
 
 | Header | Required | Format | Description |
 |--------|----------|--------|-------------|
@@ -532,6 +532,69 @@ POST /v1/autoroute
   "message": "Routing completed successfully in 12.34s."
 }
 ```
+
+---
+
+### In-App Micro-Surveys
+
+The micro-survey endpoints are **publicly accessible** (no API key or host header required) so fresh desktop client installations can receive occasional polls and submit feedback without credentials.
+
+#### Get Active Survey
+
+```http
+GET /v1/surveys/active
+```
+
+**Description:** Returns the active micro-survey definition configured via the host environment variable `FREEROUTING__SURVEYS__ACTIVE_SURVEY`, or `204 No Content` when no active survey is configured, invalid, or expired.
+
+**Response (200 OK):**
+
+```json
+{
+  "schema_version": 1,
+  "id": "survey-2026-q3-autoroute",
+  "topic": "Autorouter Performance",
+  "question": "How satisfied are you with the routing completion rate on multi-layer boards?",
+  "options": [
+    "Very Satisfied",
+    "Needs Improvement",
+    "Not Sure"
+  ],
+  "min_client_version": "2.5.0",
+  "expires_at_utc": "2026-12-31T23:59:59Z"
+}
+```
+
+**Response (204 No Content):** Returned when no active survey is available or the survey has expired.
+
+#### Submit Survey Response
+
+```http
+POST /v1/surveys/{surveyId}/response
+```
+
+**Description:** Submits a user's single-click response. Deduplicates on `(survey_id, user_id)` server-side into BigQuery (`survey_response` table); replayed responses return `204 No Content`.
+
+**Request body:**
+
+```json
+{
+  "survey_id": "survey-2026-q3-autoroute",
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "option": "Very Satisfied",
+  "client_version": "2.5.0"
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "status": "recorded"
+}
+```
+
+**Response (204 No Content):** Response was already recorded for this `(survey_id, user_id)` pair (deduplication no-op).
 
 ---
 
