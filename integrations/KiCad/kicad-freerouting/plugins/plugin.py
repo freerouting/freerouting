@@ -196,7 +196,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             dialog.set_routing_mode_label("Plugin Mode: IPC")
             dialog.set_ipc_indicator_label("Checking KiCad IPC socket")
         elif active_mode == ROUTING_MODE_JSON:
-            dialog.set_routing_mode_label("Plugin Mode: JSON/API")
+            dialog.set_routing_mode_label("Plugin Mode: JSON/API (deprecated)")
             dialog.set_ipc_indicator_label("Checking JSON/API availability")
         else:
             dialog.set_routing_mode_label("Plugin Mode: DSN (legacy)")

@@ -45,13 +45,27 @@ def discover_venv_site_packages() -> None:
 
     Checks:
       1. integrations/KiCad/.venv
-      2. %LOCALAPPDATA%/KiCad/<version>/3rdparty/Python*
+      2. KiCad 3rdparty Python site-packages in Documents or OneDrive
+      3. %LOCALAPPDATA%/KiCad/<version>/3rdparty/Python*
     """
-    repo_venv_site_packages = (
-        Path(__file__).resolve().parent.parent.parent / ".venv" / "Lib" / "site-packages"
-    )
-    if repo_venv_site_packages.is_dir() and str(repo_venv_site_packages) not in sys.path:
-        sys.path.insert(0, str(repo_venv_site_packages))
+    candidates = []
+
+    # 1. Local workspace venv
+    here = Path(__file__).resolve().parent
+    candidates.append(here.parent.parent.parent / ".venv" / "Lib" / "site-packages")
+    candidates.append(here.parent / ".venv" / "Lib" / "site-packages")
+
+    # 2. Installed 3rdparty Python site-packages (e.g. Documents/KiCad/x.x/3rdparty/Python*/site-packages)
+    # Check parent trees of plugin installation directory
+    for ancestor in (here.parent, here.parent.parent):
+        for py_dir in ancestor.glob("Python*"):
+            if py_dir.is_dir():
+                candidates.append(py_dir / "site-packages")
+
+    for candidate in candidates:
+        if candidate.is_dir() and str(candidate) not in sys.path:
+            logger.debug(f"Adding candidate site-packages to sys.path: {candidate}")
+            sys.path.insert(0, str(candidate))
 
 
 def is_kipy_installed() -> bool:
