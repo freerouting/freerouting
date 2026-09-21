@@ -107,32 +107,23 @@ Decision rule:
 
 ### How do we make Java 25 not block usage?
 
-There is no absolute guarantee across all locked-down environments, but we can make Java availability non-blocking for most users.
+There is no absolute guarantee across all locked-down environments, but we can make Java availability smooth and transparent for users without maintaining OS-specific runtime-bundled executables.
 
 Current state in plugin:
+- The plugin probes for local Java in system `PATH`, `JAVA_HOME`, and standard platform directories.
+- If Java 25+ is not detected, it automatically attempts to download and extract a lightweight JRE 25 from Adoptium Temurin into the user cache directory (`%LOCALAPPDATA%\freerouting\cache\jre\` on Windows).
 
-- The plugin already detects local Java.
-- If needed, it can download and extract JRE 25 from Adoptium into a temp directory.
-
-Recommended hardening plan:
-
-1. Keep current auto-download logic as fallback.
-2. Add release-packaged runtime option so users can run without network access:
-   - ship platform-specific Freerouting bundles that include a vetted JRE 25 runtime
-   - default plugin config points to bundled runtime first
-3. Add better fallback order in plugin messaging:
-   - bundled runtime
-   - system Java or JAVA_HOME
-   - temp downloaded runtime
-4. Add explicit diagnostics in error dialogs:
-   - show exact path attempted
-   - show whether network download failed, extraction failed, or version check failed
-5. Add an "offline install" help link in dialog text for enterprise environments.
+Hardening plan:
+1. **Prioritize local installation:** Always check system Java and `JAVA_HOME` first.
+2. **Automated cache download:** If missing, attempt the automatic Adoptium Temurin JRE 25 download and extraction into the cache folder.
+3. **Explicit manual installation fallback:** If both local detection and automatic download/extraction fail (due to offline environments, corporate firewalls, proxy authentication, or permission restrictions), **do not fail silently**. Immediately present a clear dialog stating:
+   > *"Freerouting requires Java JRE 25 or higher. Automatic download could not be completed. Please install Java JRE 25+ manually from https://adoptium.net/temurin/releases/ and restart the plugin."*
+4. Include the direct Adoptium URL and show exact diagnostics (e.g. download failed vs. extraction failed vs. permission denied).
 
 Result:
-
-- Most users are no longer blocked by manual Java setup.
-- Locked-down users still get a clear manual path.
+- Zero maintenance overhead for building and distributing OS-specific bundled runtimes.
+- Automated for users with normal internet access.
+- Clear, immediate, actionable guidance for users in restricted or offline environments.
 
 ## What IPC changes for Freerouting
 
@@ -216,14 +207,11 @@ That should be reused and hardened.
 
 Recommended behavior:
 
-- check for Java 25 first
-- install it if needed
-- launch Freerouting as a separate process
-- keep KiCad responsive
-
-Additional recommendation:
-
-- offer a bundled runtime in release artifacts so first run works even without internet access
+- Check system PATH, JAVA_HOME, and known install directories for Java 25+ first.
+- If missing, attempt automatic download and extraction of Adoptium Temurin JRE 25 to user cache.
+- If auto-download/extraction fails, notify the user immediately with the manual download URL (do not bundle platform executables).
+- Launch Freerouting as a separate process.
+- Keep KiCad responsive.
 
 ## Can we keep the current Python code?
 
@@ -362,28 +350,38 @@ KiCad 10.99 provides native headless IPC server execution without opening the GU
 ```
 In another terminal, connect the Python bridge directly to `\\.\pipe\kicad-freerouting-test`!
 
-### Level 3: Wire-Level Protobuf Message Logging
+### Level 3: Wire-Level Protobuf Message Logging (`kicad_advanced`)
 
-KiCad has a built-in wire logger for the IPC API that records every protobuf request and response:
-1. Create or edit the `kicad_advanced` text file in the version-specific config directory:
-   - KiCad 10: `%APPDATA%\kicad\10.0\kicad_advanced`
+KiCad stores normal user configuration in JSON files (`kicad_common.json`, `kicad.json`, `pcbnew.json`). However, internal developer flags and debug overrides are read from a special **extension-less plain text file** named `kicad_advanced`.
+
+> [!IMPORTANT]
+> **File Name & Extension:** The file must be named exactly `kicad_advanced` with **NO extension** (not `kicad_advanced.json`, not `kicad_advanced.ini`, not `kicad_advanced.txt`).
+> When creating this file with Windows Notepad or text editors, ensure the editor does not silently append `.txt`. You can create it in PowerShell via:
+> ```powershell
+> "EnableAPILogging=1" | Out-File -FilePath "$env:APPDATA\kicad\10.0\kicad_advanced" -Encoding ascii -NoNewline
+> ```
+
+1. **File Location per Version:**
+   - KiCad 10: `%APPDATA%\kicad\10.0\kicad_advanced` (e.g. `C:\Users\<username>\AppData\Roaming\kicad\10.0\kicad_advanced`)
    - KiCad 10.99: `%APPDATA%\kicad\10.99\kicad_advanced`
    - KiCad 9: `%APPDATA%\kicad\9.0\kicad_advanced`
-2. Add the configuration line:
-   ```ini
+2. **File Contents:**
+   A simple key-value assignment:
+   ```
    EnableAPILogging=1
    ```
-3. KiCad will log every Protobuf message payload to:
+3. **Log Output Location:**
+   Upon launch, KiCad detects this flag and streams every serialized Protobuf request and response payload to:
    - KiCad 10: `%USERPROFILE%\Documents\KiCad\10.0\logs\api.log`
    - KiCad 10.99: `%USERPROFILE%\Documents\KiCad\10.99\logs\api.log`
    - KiCad 9: `%USERPROFILE%\Documents\KiCad\9.0\logs\api.log`
-   *(Note: Remember to delete or disable this after debugging as the file grows rapidly).*
+   *(Note: Remember to delete or disable this after debugging because the log grows rapidly with board size).*
 
 ### Level 4: Standalone External Debugging (Outside KiCad)
 
 You do **not** need to click the toolbar button inside KiCad to debug the Python IPC bridge:
 1. Start KiCad (e.g. KiCad 10.0.2) and open the target PCB.
-2. In KiCad, ensure **Preferences > Common > Enable API** is checked (or set `"api": { "enable_server": true }` in `kicad_common.json`).
+2. In KiCad, ensure **Preferences > Plugins > Enable KiCad API** is checked.
 3. Open a terminal or IDE (VS Code, PyCharm) and run the bridge script directly:
    ```powershell
    python -m integrations.KiCad.kicad_freerouting.ipc_bridge.standalone_runner `
@@ -416,13 +414,40 @@ Whenever routing runs in IPC mode, the bridge automatically dumps debug artifact
 - `freerouting_ipc_output.json`: Routed traces and vias received from Freerouting.
 - A built-in diff utility compares `freerouting_ipc_input.json` against the DSN export from `HeadlessBoardManager` to flag any discrepancies in coordinate scaling, pad offsets, or clearance classes before routing starts.
 
-### User-Facing Diagnostic Dialogs
+---
 
-If the IPC connection fails at runtime, the plugin must never fail silently. It provides an immediate modal diagnostic dialog:
-- If socket connection is refused:
-  > *"Cannot connect to KiCad IPC API. Please ensure the API server is enabled under **Preferences > Common > Enable API**, then restart KiCad."*
-- If Java 25 is missing:
-  > Shows exact binary paths checked, Adoptium download status, and offline fallback instructions.
+## KiCad API Enablement & User Onboarding
+
+### Is Manual API Enablement Required for Users?
+
+**Yes, for KiCad 9 and KiCad 10.**
+In KiCad 9 and 10, the IPC API server is **disabled by default**. The setting is located in:
+**Preferences > Plugins > Enable KiCad API** (checkbox).
+
+When this checkbox is unchecked:
+- KiCad does not open the named pipe (`\\.\pipe\kicad-api-...`) or Unix domain socket (`api.sock`).
+- Any attempt by the plugin to connect to KiCad IPC fails immediately with a pipe/socket connection error.
+
+### Why DSN Must Remain the Default
+
+Because the KiCad API is disabled by default, **Freerouting cannot make IPC the default routing mode in KiCad 9/10 without breaking out-of-the-box operation for new users**.
+- **DSN Mode** requires zero checkboxes, zero configuration, and works immediately upon plugin installation.
+- **IPC Mode** is an opt-in Alpha feature for users who enable the API server.
+
+### User Guidance & Non-Blocking Auto-Fallback
+
+If a user selects IPC mode in Freerouting settings but the API server is not running:
+1. The plugin probes for the socket/pipe.
+2. If connection is refused, it shows a clear, non-fatal dialog:
+   > *"KiCad IPC API is not enabled.*
+   >
+   > *To use high-speed IPC mode:*
+   > *1. Open KiCad **Preferences > Plugins**.*
+   > *2. Check **'Enable KiCad API'**.*
+   > *3. Restart KiCad.*
+   >
+   > *Would you like to route using standard DSN mode for this session?"*
+3. Clicking **"Use DSN Mode"** routes the board immediately via DSN without failing or cancelling the user's workflow.
 
 ---
 
@@ -469,7 +494,7 @@ ROUTING_MODE_JSON = "JSON"     # Transitional: v2.3 SWIG bridge (fallback)
 | **Initial Venv Creation Latency** | High (first run) | Low | First launch can take 10–20 seconds while KiCad installs `kicad-python`. Document this in release notes; toolbar icon appears once venv is built. |
 | **GUI-Only in KiCad 9 & 10** | 100% | Medium | Accepted constraint for KiCad 9/10. Automated CI uses recorded mock fixtures. Full headless CI arrives with KiCad 11 `kicad-cli api-server`. |
 | **Main UI Thread Blocking in KiCad** | Medium | Medium | KiCad IPC is synchronous. If a modal dialog is open in KiCad, requests timeout. Implement retry loops with clear timeouts and user abort buttons. |
-| **Java 25 Dependency Availability** | Medium | Medium | Hardened `java_utils.py` auto-downloads Temurin JRE 25 to user cache; provide pre-bundled offline releases. |
+| **Java 25 Dependency Availability** | Medium | Medium | Hardened `java_utils.py` auto-downloads Temurin JRE 25 to user cache. If auto-download/extraction fails, displays a clear dialog with the download link for manual installation (no OS-bundled executables). |
 
 ---
 
@@ -628,8 +653,9 @@ This implementation plan details the phases, component touchpoints, task lists, 
   - [ ] In `ipc_entry.py`, test IPC connectivity:
     - If `ROUTING_MODE_IPC` is active and KiCad IPC is connected, proceed via IPC bridge.
     - If IPC connection fails (e.g. API disabled in preferences), present user-friendly dialog:
-      *"Cannot connect to KiCad IPC. Would you like to enable the API under Preferences > Common > Enable API, or fall back to DSN mode?"*
+      *"Cannot connect to KiCad IPC. To use IPC mode, please enable the API server under Preferences > Plugins > Enable KiCad API, and restart KiCad. Would you like to fall back to standard DSN mode for now?"*
     - On user confirmation, fall back smoothly to DSN routing without failing the operation.
+  - [ ] Validate Java 25+ detection in `java_utils.py`: probe system `PATH` and `JAVA_HOME`, attempt automatic Adoptium JRE 25 download into user cache (`%LOCALAPPDATA%\freerouting\cache\jre\`), and if download/extraction fails, display an explicit manual installation dialog with direct download URL (no bundled OS executables).
 - [ ] **UI Progress Dialog Updates:**
   - [ ] Show active mode tag: `[Mode: Protobuf IPC (Alpha)]`.
   - [ ] Display real-time progress polled from Freerouting API.
