@@ -7,7 +7,8 @@ The **True Zero-Friction Micro-Survey** system (Issue #903) allows Freerouting m
 Key design principles:
 - **Zero Friction:** Answering a survey requires exactly one click on an option button. There is no submit button, no long form, and no external browser redirect.
 - **Non-Intrusive:** The survey appears as a subtle, discrete pill button in the status bar at the bottom-right corner of the window (next to the measurement unit label). It never blocks the routing canvas or modal workflows.
-- **Ask-Once Guarantee:** Each survey question is asked at most once per user. Once answered or dismissed (via outside click or Escape), it is cached locally and will never be presented again.
+- **Ask-Once Guarantee:** Each survey question is asked at most once per user. Once answered or explicitly dismissed (via the "✕" button), it is recorded in the local cache and will never be presented again.
+- **Session-Friendly Closing:** Clicking outside the popover or pressing `Escape` simply closes the menu without permanently dismissing the survey. The trigger pill remains in the status bar so users can re-open it at any point during their session.
 - **Privacy-First:** Responses contain only the survey ID, an anonymous installation UUID (`user_id`), the selected option, and client version. No board designs, network IPs, MAC addresses, or personal identifiable information are collected or stored.
 - **Explicit Opt-In / Opt-Out:** Controlled by the `allow_surveys` user profile setting. Users can change their preference at any time in **Settings > User Settings**.
 
@@ -36,7 +37,7 @@ sequenceDiagram
     Desktop->>Desktop: Check user profile (allow_surveys && allow_telemetry)
     Desktop->>API: GET /v1/surveys/active (unauthenticated, public)
     API-->>Desktop: 200 OK SurveyDefinition (or 204 No Content)
-    Desktop->>Desktop: Check SurveyCache (~/.freerouting/surveys.json)
+    Desktop->>Desktop: Check SurveyCache (platform data directory)
     alt Already answered, dismissed, or expired
         Desktop-->>StatusBar: Do nothing (pill remains hidden)
     else Eligible new survey
@@ -48,17 +49,22 @@ sequenceDiagram
     Note over User,StatusBar: 3. Interaction & Submission Phase
     User->>StatusBar: Clicks survey pill button
     StatusBar->>StatusBar: SurveyPopover.showAnchoredAbove()<br/>Renders topic, question & option buttons
-    User->>StatusBar: Single click on option (e.g. "Very Satisfied")
-    StatusBar->>StatusBar: Optimistic UI: Disable buttons, show "✓ Very Satisfied" (400ms dwell)
-    StatusBar->>Desktop: onSurveyAnswered(surveyId, option)
-    Desktop->>Desktop: Record into local SurveyCache immediately (Ask-Once)
-    StatusBar->>StatusBar: Close popover & hide status bar pill
-
-    %% 4. Asynchronous Delivery Phase
-    Note over Desktop,BQ: 4. Telemetry Recording Phase
-    Desktop-)API: POST /v1/surveys/{surveyId}/response<br/>{survey_id, user_id, option, client_version}
-    API->>BQ: Deduplicate on (survey_id, user_id) & insert row
-    API--)Desktop: 200 OK {"status":"recorded"} (or 204 if duplicate)
+    alt User clicks outside / presses Escape
+        StatusBar->>StatusBar: Popover closes (pill remains in status bar for later)
+    else User clicks "✕" Dismiss button
+        StatusBar->>Desktop: onSurveyDismissed(surveyId)
+        Desktop->>Desktop: Record dismissed in local cache
+        StatusBar->>StatusBar: Close popover & hide status bar pill
+    else User clicks option button
+        StatusBar->>StatusBar: Optimistic UI: Disable buttons, show "✓ <Option>" (400ms dwell)
+        StatusBar->>Desktop: onSurveyAnswered(surveyId, option)
+        Desktop->>Desktop: Record answered in local cache immediately
+        StatusBar->>StatusBar: Close popover & hide status bar pill
+        %% 4. Asynchronous Delivery Phase
+        Desktop-)API: POST /v1/surveys/{surveyId}/response<br/>{survey_id, user_id, option, client_version}
+        API->>BQ: Deduplicate on (survey_id, user_id) & insert row
+        API--)Desktop: 200 OK {"status":"recorded"} (or 204 if duplicate)
+    end
 ```
 
 ---
@@ -90,9 +96,61 @@ The micro-survey architecture strictly bifurcates **client endpoints** and **adm
 
 ---
 
-## 4. Operator Runbook
+## 4. Local Development & UI Testing Guide (Zero Key & Zero Server Required)
 
-Maintainers have two methods to publish or retire surveys: **Dynamic Admin API** (instant, zero restart) or **Host Environment Variable** (static).
+You do **not** need an admin API key, nor do you need an API server running, to test the micro-survey feature and its UI.
+
+`SurveyClient` automatically checks the local environment for `FREEROUTING__SURVEYS__ACTIVE_SURVEY` (or system property `-Dfreerouting.surveys.active_survey`). When present, it bypasses network calls, directly presents the survey in the UI, and records test submissions locally.
+
+### Step-by-Step Testing Instructions
+
+#### 1. Configure the Test Survey in PowerShell (Windows)
+
+```powershell
+# Optional: Clear previous cache so the survey ID is considered fresh
+Remove-Item "$env:APPDATA\freerouting\data\surveys.json" -Force -ErrorAction Ignore
+
+# Set the active survey JSON in your terminal session
+$env:FREEROUTING__SURVEYS__ACTIVE_SURVEY = '{"schema_version":1,"id":"test-ui-1","topic":"Quick Poll","question":"How do you like the new status bar button?","options":["Looks great!","Works well","Needs improvement"]}'
+
+# Launch Freerouting
+.\gradlew.bat run
+```
+
+#### 1b. Bash / Zsh (Linux / macOS)
+
+```bash
+# Optional: Clear previous cache
+rm -f "$HOME/.local/share/freerouting/surveys.json" "$HOME/Library/Application Support/freerouting/data/surveys.json"
+
+# Set the active survey JSON in your terminal session
+export FREEROUTING__SURVEYS__ACTIVE_SURVEY='{"schema_version":1,"id":"test-ui-1","topic":"Quick Poll","question":"How do you like the new status bar button?","options":["Looks great!","Works well","Needs improvement"]}'
+
+# Launch Freerouting
+./gradlew run
+```
+
+### Understanding the Cache & Ask-Once Invariant
+
+Freerouting guarantees that a user is **never asked the same question twice**. Once a survey ID is answered or dismissed, it is recorded in the platform-native data directory:
+
+| Operating System | Exact Cache File Location |
+|---|---|
+| **Windows** | `%APPDATA%\freerouting\data\surveys.json` (e.g. `C:\Users\<User>\AppData\Roaming\freerouting\data\surveys.json`) |
+| **Linux / BSD** | `~/.local/share/freerouting/surveys.json` (or `$XDG_DATA_HOME/freerouting/surveys.json`) |
+| **macOS** | `~/Library/Application Support/freerouting/data/surveys.json` |
+
+> [!TIP]
+> If you close and relaunch the app and the survey does not reappear, you have either already answered or dismissed that specific `id`.
+> To see it again, either:
+> 1. Change the `"id"` in your environment variable (e.g. `"test-ui-2"`, `"test-ui-3"`), or
+> 2. Delete the cache file via `Remove-Item "$env:APPDATA\freerouting\data\surveys.json" -Force` (Windows) or `rm -f ~/.local/share/freerouting/surveys.json` (Linux).
+
+---
+
+## 5. Production Operator Runbook
+
+Maintainers have two methods to publish or retire surveys in production: **Dynamic Admin API** (instant, zero restart) or **Host Environment Variable** (static).
 
 ### Method A: Dynamic Admin API (Recommended)
 
@@ -153,12 +211,12 @@ export FREEROUTING__SURVEYS__ACTIVE_SURVEY='{"schema_version":1,"id":"survey-202
 
 ---
 
-## 5. Desktop Client Components & Implementation Details
+## 6. Desktop Client Components & Implementation Details
 
 ### Domain & Transport Layer (`app.freerouting.surveys`)
 - **`SurveyDefinition`:** Data-transfer object representing a survey schema. Validates required fields (`id`, `question`, `options.length >= 2`), minimum client version, and expiration.
 - **`SurveyResponsePayload`:** Outgoing payload containing `survey_id`, anonymous `user_id`, `option`, and `client_version`.
-- **`SurveyCache`:** Local JSON file stored at `~/.freerouting/surveys.json`.
+- **`SurveyCache`:** Local JSON file stored in the platform data directory (`AppPaths.getDefaultDataDirectory()`).
   - Atomically written via `.tmp` file swap to prevent corruption on abrupt application shutdown.
   - Automatically recovers and quarantines corrupted files (`surveys.json.corrupt.<timestamp>`).
   - Tracks answered survey IDs, dismissed survey IDs, and timestamps.
@@ -173,13 +231,14 @@ export FREEROUTING__SURVEYS__ACTIVE_SURVEY='{"schema_version":1,"id":"survey-202
 - **`BoardPanelStatus`:** Houses `surveyTriggerButton` in the status bar at the bottom-right corner next to the measurement unit label (`um`). The button is hidden by default and becomes visible only when an eligible survey is present.
 - **`SurveyPopover`:** A lightweight, non-modal `JPopupMenu`.
   - Opens upwards into the board viewport via `showAnchoredAbove()`, right-aligned to the trigger button.
-  - Dismisses cleanly when clicking outside or pressing Escape (treating dismissal as "dismissed", recording it into cache so the question is never repeated).
+  - Clicking outside closes the popover while preserving the status bar button.
+  - Clicking the "✕" button explicitly dismisses the survey and hides the status bar button.
   - Optimistic feedback: When an option is clicked, the option buttons are disabled, the selected button updates to `"✓ <Selected Option>"`, and the popover closes after a brief 400ms dwell.
-- **`ButtonsSurveyRenderer`:** Renders the topic chip, question text, and stacked full-width option buttons.
+- **`ButtonsSurveyRenderer`:** Renders the header row (topic tag + right-aligned "✕" dismiss button), auto-wrapping question text area (preventing glyph truncation), and full-width option buttons.
 
 ---
 
-## 6. Privacy & Settings Integration
+## 7. Privacy & Settings Integration
 
 Surveys respect user privacy at all times:
 1. **User Profile Settings (`UserProfileSettings`):**
@@ -190,11 +249,11 @@ Surveys respect user privacy at all times:
    - Disabling surveys immediately hides the status bar survey pill and disables all survey polling.
 3. **Anonymity:**
    - No personally identifiable information (PII) is captured.
-   - The `user_id` is an installation-generated random UUID stored in `~/.freerouting/settings.json`.
+   - The `user_id` is an installation-generated random UUID stored in the platform config directory (`freerouting.json`).
 
 ---
 
-## 7. BigQuery Telemetry Schema
+## 8. BigQuery Telemetry Schema
 
 Responses are ingested into Google BigQuery under dataset `telemetry`, table `survey_response`:
 

@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * Standard v1 zero-friction renderer that presents a micro-survey as 2–3 prominent option buttons.
@@ -32,8 +33,8 @@ import javax.swing.JPanel;
  */
 public class ButtonsSurveyRenderer implements SurveyRenderer {
 
-  private static final int PANEL_WIDTH = 300;
-  private static final int BUTTON_HEIGHT = 38;
+  private static final int PANEL_WIDTH = 320;
+  private static final int BUTTON_HEIGHT = 36;
 
   @Override
   public JComponent render(SurveyDefinition survey, Consumer<String> onAnswer) {
@@ -51,6 +52,7 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
     headerRow.setLayout(new BoxLayout(headerRow, BoxLayout.X_AXIS));
     headerRow.setOpaque(false);
     headerRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+    headerRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 
     if (survey.topic != null && !survey.topic.isBlank()) {
       JLabel topicLabel =
@@ -76,18 +78,19 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
     }
 
     panel.add(headerRow);
-    panel.add(Box.createVerticalStrut(4));
+    panel.add(Box.createVerticalStrut(6));
 
-    // Question label (auto-wrapping)
-    JLabel questionLabel =
-        new JLabel(
-            "<html><div style='width: "
-                + (PANEL_WIDTH - 28)
-                + "px; font-weight: bold; font-size: 12px;'>"
-                + escapeHtml(survey.question)
-                + "</div></html>");
-    questionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-    panel.add(questionLabel);
+    // Question area with word wrapping
+    JTextArea questionArea = new JTextArea(survey.question);
+    questionArea.setWrapStyleWord(true);
+    questionArea.setLineWrap(true);
+    questionArea.setOpaque(false);
+    questionArea.setEditable(false);
+    questionArea.setFocusable(false);
+    questionArea.setFont(questionArea.getFont().deriveFont(Font.BOLD, 13.0f));
+    questionArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+    questionArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+    panel.add(questionArea);
     panel.add(Box.createVerticalStrut(10));
 
     // Buttons
@@ -96,7 +99,7 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
       for (String option : survey.options) {
         JButton button = new JButton(option);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
-        button.setMaximumSize(new Dimension(PANEL_WIDTH - 28, BUTTON_HEIGHT));
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, BUTTON_HEIGHT));
         button.setPreferredSize(new Dimension(PANEL_WIDTH - 28, BUTTON_HEIGHT));
         button.setMinimumSize(new Dimension(PANEL_WIDTH - 28, BUTTON_HEIGHT));
         button.setFocusPainted(false);
@@ -123,6 +126,7 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
       }
     }
 
+    panel.setPreferredSize(new Dimension(PANEL_WIDTH, panel.getPreferredSize().height));
     panel.setMaximumSize(new Dimension(PANEL_WIDTH, Integer.MAX_VALUE));
     return panel;
   }
