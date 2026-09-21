@@ -96,39 +96,104 @@ The micro-survey architecture strictly bifurcates **client endpoints** and **adm
 
 ---
 
-## 4. Local Development & UI Testing Guide (Zero Key & Zero Server Required)
+## 4. Local Development & UI Testing Guide
 
-You do **not** need an admin API key, nor do you need an API server running, to test the micro-survey feature and its UI.
+Freerouting makes testing micro-surveys seamless and flexible across two development workflows:
+1. **Keyless Local Mock (Zero Key & Zero Server Required):** Instant UI testing without network traffic or API servers.
+2. **Local API Server with Admin Key:** Testing full publication, inspection, and retirement lifecycle using an admin secret.
 
-`SurveyClient` automatically checks the local environment for `FREEROUTING__SURVEYS__ACTIVE_SURVEY` (or system property `-Dfreerouting.surveys.active_survey`). When present, it bypasses network calls, directly presents the survey in the UI, and records test submissions locally.
+---
 
-### Step-by-Step Testing Instructions
+### Workflow A: Keyless Local Mock (Recommended for UI Development)
 
-#### 1. Configure the Test Survey in PowerShell (Windows)
+You do **not** need an admin API key, nor do you need an API server running.
+`SurveyClient` automatically checks the local environment for `FREEROUTING__SURVEYS__ACTIVE_SURVEY` (or system property `-Dfreerouting.surveys.active_survey`).
+When present, it bypasses network calls, directly presents the survey in the status bar, and records test submissions locally.
 
+#### Option 1: Automated Helper Script (Easiest)
+
+Run the included cross-platform testing utility from the repository root:
+
+- **Windows (PowerShell):**
+  ```powershell
+  .\scripts\tests\test_microsurvey.ps1 -Mode LocalMock
+  ```
+- **Linux / macOS (Bash):**
+  ```bash
+  ./scripts/tests/test_microsurvey.sh LocalMock
+  ```
+
+This automatically sets `FREEROUTING__SURVEYS__IGNORE_CACHE=true`, loads `fixtures/surveys/sample-survey.json`, and launches Freerouting.
+
+#### Option 2: Manual Terminal Configuration
+
+You can provide either a path to a `.json` file or an inline JSON string:
+
+**Windows (PowerShell):**
 ```powershell
-# Optional: Clear previous cache so the survey ID is considered fresh
-Remove-Item "$env:APPDATA\freerouting\data\surveys.json" -Force -ErrorAction Ignore
+# Set the active survey to a JSON file path (or inline JSON)
+$env:FREEROUTING__SURVEYS__ACTIVE_SURVEY = "fixtures/surveys/sample-survey.json"
 
-# Set the active survey JSON in your terminal session
-$env:FREEROUTING__SURVEYS__ACTIVE_SURVEY = '{"schema_version":1,"id":"test-ui-1","topic":"Opinion on Feature X","question":"How do you like the new status bar button?","options":["Looks great!","Works well","Needs improvement"]}'
+# Bypass cache so the survey displays repeatedly during UI iteration (no manual cache deletions needed!)
+$env:FREEROUTING__SURVEYS__IGNORE_CACHE = "true"
 
 # Launch Freerouting
 .\gradlew.bat run
 ```
 
-#### 1b. Bash / Zsh (Linux / macOS)
-
+**Linux / macOS (Bash):**
 ```bash
-# Optional: Clear previous cache
-rm -f "$HOME/.local/share/freerouting/surveys.json" "$HOME/Library/Application Support/freerouting/data/surveys.json"
-
-# Set the active survey JSON in your terminal session
-export FREEROUTING__SURVEYS__ACTIVE_SURVEY='{"schema_version":1,"id":"test-ui-1","topic":"Opinion on Feature X","question":"How do you like the new status bar button?","options":["Looks great!","Works well","Needs improvement"]}'
-
-# Launch Freerouting
+export FREEROUTING__SURVEYS__ACTIVE_SURVEY="fixtures/surveys/sample-survey.json"
+export FREEROUTING__SURVEYS__IGNORE_CACHE="true"
 ./gradlew run
 ```
+
+---
+
+### Workflow B: Local API Server with Admin Key (Lifecycle Testing)
+
+To test the actual REST API server endpoints, dynamic publishing, and survey retirement with an admin secret:
+
+#### Step 1: Start the Local API Server
+Start Freerouting with the API server enabled and an admin key configured:
+
+```powershell
+# In Terminal 1: Start Freerouting with API server and admin secret
+.\scripts\tests\test_microsurvey.ps1 -Mode StartServer -AdminKey "my-local-secret"
+```
+
+Or manually:
+```powershell
+$env:FREEROUTING__SURVEYS__ADMIN_KEY = "my-local-secret"
+.\gradlew.bat run --args="--api.enabled=true"
+```
+
+#### Step 2: Publish a Survey via Admin API
+In another terminal, publish the sample survey:
+
+```powershell
+# Using the test script:
+.\scripts\tests\test_microsurvey.ps1 -Mode ApiPublish -AdminKey "my-local-secret"
+
+# Or using curl / Invoke-RestMethod:
+Invoke-RestMethod -Uri "http://localhost:37864/v1/surveys/active" -Method POST `
+  -Headers @{ "Content-Type" = "application/json"; "X-Survey-Admin-Key" = "my-local-secret" } `
+  -Body (Get-Content "fixtures/surveys/sample-survey.json" -Raw)
+```
+
+#### Step 3: Inspect the Active Survey
+```powershell
+.\scripts\tests\test_microsurvey.ps1 -Mode ApiGet
+# Or: curl http://localhost:37864/v1/surveys/active
+```
+
+#### Step 4: Retire the Active Survey
+```powershell
+.\scripts\tests\test_microsurvey.ps1 -Mode ApiRetire -AdminKey "my-local-secret"
+# Or: curl -X DELETE http://localhost:37864/v1/surveys/active -H "X-Survey-Admin-Key: my-local-secret"
+```
+
+---
 
 ### Understanding the Cache & Ask-Once Invariant
 
@@ -141,10 +206,8 @@ Freerouting guarantees that a user is **never asked the same question twice**. O
 | **macOS** | `~/Library/Application Support/freerouting/data/surveys.json` |
 
 > [!TIP]
-> If you close and relaunch the app and the survey does not reappear, you have either already answered or dismissed that specific `id`.
-> To see it again, either:
-> 1. Change the `"id"` in your environment variable (e.g. `"test-ui-2"`, `"test-ui-3"`), or
-> 2. Delete the cache file via `Remove-Item "$env:APPDATA\freerouting\data\surveys.json" -Force` (Windows) or `rm -f ~/.local/share/freerouting/surveys.json` (Linux).
+> - **During Development:** Set `FREEROUTING__SURVEYS__IGNORE_CACHE=true` (or use `test_microsurvey.ps1 -Mode LocalMock`) to keep surveys appearing across launches without having to clear the cache.
+> - **To Clear Cache Manually:** Run `.\scripts\tests\test_microsurvey.ps1 -Mode ClearCache` or delete the platform cache file listed above.
 
 ---
 
