@@ -269,10 +269,25 @@ public class BoardPanelStatus extends JPanel {
     if (survey == null) {
       return;
     }
-    String label =
-        (survey.topic != null && !survey.topic.isBlank()) ? "💬 " + survey.topic : "💬 Quick Poll";
+    String label;
+    if (survey.topic != null && !survey.topic.isBlank()) {
+      String trimmedTopic = survey.topic.trim();
+      if (trimmedTopic.toLowerCase(java.util.Locale.ROOT).startsWith("poll")) {
+        label = trimmedTopic;
+      } else {
+        label = "Poll: " + trimmedTopic;
+      }
+    } else {
+      label = "Quick Poll";
+    }
+
+    if (label.length() > 28) {
+      label = label.substring(0, 25) + "...";
+    }
+
     surveyTriggerButton.setText(label);
-    surveyTriggerButton.setToolTipText(survey.question);
+    surveyTriggerButton.setToolTipText(
+        (survey.question != null && !survey.question.isBlank()) ? survey.question : label);
     for (var l : surveyTriggerButton.getActionListeners()) {
       surveyTriggerButton.removeActionListener(l);
     }

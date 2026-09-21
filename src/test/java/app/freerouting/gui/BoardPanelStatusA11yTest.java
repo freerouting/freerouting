@@ -80,7 +80,7 @@ class BoardPanelStatusA11yTest {
           GuiA11yHarness.requireRole(
               button, GuiLocators.STATUS_SURVEY_TRIGGER, AccessibleRole.PUSH_BUTTON);
           GuiA11yHarness.requireAccessibleName(button, GuiLocators.STATUS_SURVEY_TRIGGER);
-          assertEquals("💬 Performance", ((javax.swing.JButton) button).getText());
+          assertEquals("Poll: Performance", ((javax.swing.JButton) button).getText());
         });
   }
 

@@ -18,6 +18,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 /**
  * Standard v1 zero-friction renderer that presents a micro-survey as 2–3 prominent option buttons.
@@ -80,14 +81,24 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
     panel.add(headerRow);
     panel.add(Box.createVerticalStrut(6));
 
-    // Question area with word wrapping
+    // Question area with word wrapping and clean Sans-Serif system font
     JTextArea questionArea = new JTextArea(survey.question);
     questionArea.setWrapStyleWord(true);
     questionArea.setLineWrap(true);
     questionArea.setOpaque(false);
     questionArea.setEditable(false);
     questionArea.setFocusable(false);
-    questionArea.setFont(questionArea.getFont().deriveFont(Font.BOLD, 13.0f));
+    Font uiFont = UIManager.getFont("Label.font");
+    if (uiFont != null) {
+      questionArea.setFont(uiFont.deriveFont(Font.BOLD, 13.0f));
+    } else {
+      questionArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 13));
+    }
+    Color fg = UIManager.getColor("Label.foreground");
+    if (fg != null) {
+      questionArea.setForeground(fg);
+    }
+    questionArea.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     questionArea.setAlignmentX(Component.LEFT_ALIGNMENT);
     questionArea.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
     panel.add(questionArea);

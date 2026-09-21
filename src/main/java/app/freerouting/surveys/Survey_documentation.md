@@ -111,7 +111,7 @@ You do **not** need an admin API key, nor do you need an API server running, to 
 Remove-Item "$env:APPDATA\freerouting\data\surveys.json" -Force -ErrorAction Ignore
 
 # Set the active survey JSON in your terminal session
-$env:FREEROUTING__SURVEYS__ACTIVE_SURVEY = '{"schema_version":1,"id":"test-ui-1","topic":"Quick Poll","question":"How do you like the new status bar button?","options":["Looks great!","Works well","Needs improvement"]}'
+$env:FREEROUTING__SURVEYS__ACTIVE_SURVEY = '{"schema_version":1,"id":"test-ui-1","topic":"Opinion on Feature X","question":"How do you like the new status bar button?","options":["Looks great!","Works well","Needs improvement"]}'
 
 # Launch Freerouting
 .\gradlew.bat run
@@ -124,7 +124,7 @@ $env:FREEROUTING__SURVEYS__ACTIVE_SURVEY = '{"schema_version":1,"id":"test-ui-1"
 rm -f "$HOME/.local/share/freerouting/surveys.json" "$HOME/Library/Application Support/freerouting/data/surveys.json"
 
 # Set the active survey JSON in your terminal session
-export FREEROUTING__SURVEYS__ACTIVE_SURVEY='{"schema_version":1,"id":"test-ui-1","topic":"Quick Poll","question":"How do you like the new status bar button?","options":["Looks great!","Works well","Needs improvement"]}'
+export FREEROUTING__SURVEYS__ACTIVE_SURVEY='{"schema_version":1,"id":"test-ui-1","topic":"Opinion on Feature X","question":"How do you like the new status bar button?","options":["Looks great!","Works well","Needs improvement"]}'
 
 # Launch Freerouting
 ./gradlew run
