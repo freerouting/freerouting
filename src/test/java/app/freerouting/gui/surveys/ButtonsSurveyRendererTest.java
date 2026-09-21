@@ -80,6 +80,37 @@ class ButtonsSurveyRendererTest {
     assertEquals(2, buttons.size());
   }
 
+  @Test
+  void clickingDismissButtonInvokesOnDismissCallback() {
+    SurveyDefinition survey = new SurveyDefinition();
+    survey.id = "s1";
+    survey.topic = "Topic";
+    survey.question = "Question?";
+    survey.options = new String[] {"Opt1", "Opt2"};
+
+    java.util.concurrent.atomic.AtomicBoolean dismissed =
+        new java.util.concurrent.atomic.AtomicBoolean(false);
+    ButtonsSurveyRenderer renderer = new ButtonsSurveyRenderer();
+    JComponent comp = renderer.render(survey, opt -> {}, () -> dismissed.set(true));
+
+    assertNotNull(comp);
+    // Find dismiss button in header
+    JButton dismissBtn = null;
+    for (Component child : ((JPanel) comp).getComponents()) {
+      if (child instanceof JPanel header) {
+        for (Component c : header.getComponents()) {
+          if (c instanceof JButton btn && "✕".equals(btn.getText())) {
+            dismissBtn = btn;
+            break;
+          }
+        }
+      }
+    }
+    assertNotNull(dismissBtn);
+    dismissBtn.doClick();
+    assertTrue(dismissed.get());
+  }
+
   private static List<JButton> extractButtons(Component parent) {
     List<JButton> result = new ArrayList<>();
     if (parent instanceof JPanel panel) {

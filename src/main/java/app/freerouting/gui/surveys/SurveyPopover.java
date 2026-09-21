@@ -4,32 +4,32 @@ import app.freerouting.surveys.SurveyCoordinator;
 import app.freerouting.surveys.SurveyDefinition;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.JPopupMenu;
 import javax.swing.Timer;
 import javax.swing.UIManager;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
 /**
- * Non-modal anchored flyout popover for displaying micro-surveys.
+ * Lightweight, non-modal popover that presents a micro-survey anchored to a UI element.
  *
- * <p>Lifecycle rules:
+ * <p>Key lifecycle guarantees:
  *
  * <ul>
- *   <li><b>Optimistic 400ms UI rule:</b> When an option is clicked, the answer is dispatched
- *       immediately to the {@link SurveyCoordinator} (which updates the local cache and begins an
- *       async fire-and-forget HTTP POST). The popover dwells for 400ms on the Swing EDT to give the
- *       user visual feedback, then automatically closes.
- *   <li><b>Click-away dismissal:</b> If the user clicks away or presses Escape without selecting an
- *       option, the popover automatically dismisses and marks the survey as dismissed in the cache.
- *   <li><b>Canvas non-blocking:</b> Built as a lightweight {@link JPopupMenu}, ensuring it never
- *       blocks the routing canvas or steals global window modality.
+ *   <li><b>Optimistic feedback:</b> Selecting an option button disables all options and highlights
+ *       the choice with a checkmark for 400ms before closing.
+ *   <li><b>Session accessibility:</b> Closing the popover by clicking outside or pressing Escape
+ *       does <i>not</i> permanently dismiss the survey or hide the trigger button. The user can
+ *       re-open it at any time during their session.
+ *   <li><b>Explicit dismissal:</b> Clicking the explicit dismiss ("✕") button permanently dismisses
+ *       the survey and hides the trigger button.
+ *   <li><b>Non-blocking delivery:</b> The user's selection is dispatched immediately to the {@link
+ *       SurveyCoordinator} without blocking the UI.
  * </ul>
  */
 public class SurveyPopover extends JPopupMenu {
 
-  /** Visual receipt dwell duration in milliseconds before auto-closing. */
+  /** Dwell duration (in milliseconds) before the popover automatically closes. */
   public static final int DEFAULT_DWELL_MS = 400;
 
   private final SurveyDefinition survey;
@@ -42,12 +42,12 @@ public class SurveyPopover extends JPopupMenu {
   private boolean closed = false;
 
   /**
-   * Creates a survey popover with the default 400ms dwell duration.
+   * Creates a popover with the default 400ms dwell duration.
    *
-   * @param survey the active survey to present
-   * @param coordinator the coordinator handling submission and cache state
-   * @param renderer pluggable renderer for the survey layout
-   * @param onClosed callback invoked when the popover closes (answered or dismissed)
+   * @param survey the survey definition to display
+   * @param coordinator coordinator to receive submit and dismiss events
+   * @param renderer visual renderer for question and options
+   * @param onClosed callback invoked when the survey is answered or explicitly dismissed
    */
   public SurveyPopover(
       SurveyDefinition survey,
@@ -58,13 +58,13 @@ public class SurveyPopover extends JPopupMenu {
   }
 
   /**
-   * Creates a survey popover with an explicit dwell duration (useful for unit tests).
+   * Creates a popover with a configurable dwell duration (primarily for tests).
    *
-   * @param survey the active survey to present
-   * @param coordinator the coordinator handling submission and cache state
-   * @param renderer pluggable renderer for the survey layout
-   * @param onClosed callback invoked when the popover closes (answered or dismissed)
-   * @param dwellMs dwell duration in milliseconds
+   * @param survey the survey definition to display
+   * @param coordinator coordinator to receive submit and dismiss events
+   * @param renderer visual renderer for question and options
+   * @param onClosed callback invoked when the survey is answered or explicitly dismissed
+   * @param dwellMs delay in milliseconds before closing after answer selection
    */
   public SurveyPopover(
       SurveyDefinition survey,
@@ -91,26 +91,8 @@ public class SurveyPopover extends JPopupMenu {
             BorderFactory.createLineBorder(new Color(180, 180, 180), 1),
             BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 
-    // Render survey content into the popup
-    add(this.renderer.render(this.survey, this::handleAnswer));
-
-    // Handle dismissal when user clicks outside without answering
-    addPopupMenuListener(
-        new PopupMenuListener() {
-          @Override
-          public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
-
-          @Override
-          public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-            if (!answered && coordinator != null) {
-              coordinator.dismiss(survey);
-            }
-            triggerClosed();
-          }
-
-          @Override
-          public void popupMenuCanceled(PopupMenuEvent e) {}
-        });
+    // Render survey content into the popup with both answer and explicit dismiss callbacks
+    add(this.renderer.render(this.survey, this::handleAnswer, this::handleDismiss));
   }
 
   /**
@@ -135,7 +117,7 @@ public class SurveyPopover extends JPopupMenu {
     if (anchor == null || !anchor.isShowing()) {
       return;
     }
-    java.awt.Dimension pref = getPreferredSize();
+    Dimension pref = getPreferredSize();
     int x = anchor.getWidth() - pref.width;
     int y = -pref.height - 2;
     show(anchor, x, y);
@@ -166,6 +148,21 @@ public class SurveyPopover extends JPopupMenu {
     timer.start();
   }
 
+  /** Handles explicit dismissal (e.g. clicking the close '✕' button). */
+  void handleDismiss() {
+    if (answered) {
+      return;
+    }
+    answered = true;
+
+    if (coordinator != null) {
+      coordinator.dismiss(survey);
+    }
+
+    setVisible(false);
+    triggerClosed();
+  }
+
   private void triggerClosed() {
     if (!closed) {
       closed = true;
@@ -175,7 +172,7 @@ public class SurveyPopover extends JPopupMenu {
     }
   }
 
-  /** Returns whether an answer has been selected. */
+  /** Returns whether an answer has been selected or explicitly dismissed. */
   public boolean isAnswered() {
     return answered;
   }

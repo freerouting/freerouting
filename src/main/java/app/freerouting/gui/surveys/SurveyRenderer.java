@@ -21,4 +21,17 @@ public interface SurveyRenderer {
    * @return the rendered {@link JComponent} to display inside the popover
    */
   JComponent render(SurveyDefinition survey, Consumer<String> onAnswer);
+
+  /**
+   * Builds the Swing UI component representing the survey, with support for explicit dismissal.
+   *
+   * @param survey the survey definition to display
+   * @param onAnswer callback invoked when the user selects/submits an answer option
+   * @param onDismiss callback invoked when the user explicitly dismisses the survey
+   * @return the rendered {@link JComponent} to display inside the popover
+   */
+  default JComponent render(
+      SurveyDefinition survey, Consumer<String> onAnswer, Runnable onDismiss) {
+    return render(survey, onAnswer);
+  }
 }

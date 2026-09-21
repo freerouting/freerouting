@@ -1,6 +1,7 @@
 package app.freerouting.gui.surveys;
 
 import app.freerouting.surveys.SurveyDefinition;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -36,21 +37,46 @@ public class ButtonsSurveyRenderer implements SurveyRenderer {
 
   @Override
   public JComponent render(SurveyDefinition survey, Consumer<String> onAnswer) {
+    return render(survey, onAnswer, null);
+  }
+
+  @Override
+  public JComponent render(SurveyDefinition survey, Consumer<String> onAnswer, Runnable onDismiss) {
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     panel.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
 
-    // Optional topic header
+    // Header row with optional topic on the left and dismiss button on the right
+    JPanel headerRow = new JPanel();
+    headerRow.setLayout(new BoxLayout(headerRow, BoxLayout.X_AXIS));
+    headerRow.setOpaque(false);
+    headerRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+
     if (survey.topic != null && !survey.topic.isBlank()) {
       JLabel topicLabel =
           new JLabel(
               "<html><span style='color: #888888; font-size: 10px; font-weight: bold;'>"
                   + escapeHtml(survey.topic.toUpperCase())
                   + "</span></html>");
-      topicLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      panel.add(topicLabel);
-      panel.add(Box.createVerticalStrut(4));
+      headerRow.add(topicLabel);
     }
+    headerRow.add(Box.createHorizontalGlue());
+
+    if (onDismiss != null) {
+      JButton dismissButton = new JButton("✕");
+      dismissButton.setToolTipText("Dismiss this survey");
+      dismissButton.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
+      dismissButton.setContentAreaFilled(false);
+      dismissButton.setFocusPainted(false);
+      dismissButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+      dismissButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+      dismissButton.setForeground(new Color(160, 160, 160));
+      dismissButton.addActionListener(e -> onDismiss.run());
+      headerRow.add(dismissButton);
+    }
+
+    panel.add(headerRow);
+    panel.add(Box.createVerticalStrut(4));
 
     // Question label (auto-wrapping)
     JLabel questionLabel =

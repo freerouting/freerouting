@@ -13,8 +13,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JLabel;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import org.junit.jupiter.api.Test;
 
 /** Unit tests for {@link SurveyPopover}. */
@@ -48,6 +46,26 @@ class SurveyPopoverTest {
   }
 
   @Test
+  void explicitDismissalTriggersCoordinatorDismissAndCloses() {
+    SurveyDefinition survey = new SurveyDefinition();
+    survey.id = "s-dismiss";
+
+    SurveyCoordinator coordinator = mock(SurveyCoordinator.class);
+    AtomicBoolean closed = new AtomicBoolean(false);
+
+    SurveyPopover popover =
+        new SurveyPopover(
+            survey, coordinator, (s, onAnswer) -> new JLabel("test"), () -> closed.set(true));
+
+    assertFalse(popover.isAnswered());
+    popover.handleDismiss();
+
+    assertTrue(popover.isAnswered());
+    verify(coordinator).dismiss(survey);
+    assertTrue(closed.get());
+  }
+
+  @Test
   void delegatesRenderingToCustomSurveyRenderer() {
     SurveyDefinition survey = new SurveyDefinition();
     survey.id = "s1";
@@ -66,29 +84,6 @@ class SurveyPopoverTest {
     assertEquals(survey, passedSurvey.get());
     assertEquals(1, popover.getComponentCount());
     assertTrue(popover.getComponent(0) instanceof JLabel);
-  }
-
-  @Test
-  void dismissesSurveyWhenClosedWithoutAnswering() {
-    SurveyDefinition survey = new SurveyDefinition();
-    survey.id = "s-dismiss";
-
-    SurveyCoordinator coordinator = mock(SurveyCoordinator.class);
-    AtomicBoolean closed = new AtomicBoolean(false);
-
-    SurveyPopover popover =
-        new SurveyPopover(
-            survey, coordinator, (s, onAnswer) -> new JLabel("test"), () -> closed.set(true));
-
-    // Simulate click-away / popup close without answer
-    PopupMenuListener[] listeners = popover.getPopupMenuListeners();
-    assertTrue(listeners.length > 0);
-
-    PopupMenuEvent event = new PopupMenuEvent(popover);
-    listeners[0].popupMenuWillBecomeInvisible(event);
-
-    verify(coordinator).dismiss(survey);
-    assertTrue(closed.get());
   }
 
   @Test
