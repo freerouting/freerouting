@@ -117,9 +117,11 @@ class IpcRouter:
         logger.info("Extracting board data via Protocol Buffers IPC...")
         try:
             # Ensure ipc_bridge directory is in sys.path
-            ipc_bridge_dir = Path(__file__).resolve().parent.parent / "ipc_bridge"
-            if str(ipc_bridge_dir) not in sys.path:
-                sys.path.insert(0, str(ipc_bridge_dir))
+            # Check both plugins/ipc_bridge (installed/clean structure) and sibling ipc_bridge
+            here = Path(__file__).resolve().parent
+            for candidate in (here / "ipc_bridge", here.parent / "ipc_bridge"):
+                if candidate.is_dir() and str(candidate) not in sys.path:
+                    sys.path.insert(0, str(candidate))
 
             from ipc_board_reader import KiCadIpcBoardReader
             self._ipc_reader = KiCadIpcBoardReader()
@@ -139,9 +141,10 @@ class IpcRouter:
         """Write routed tracks and vias back to KiCad using an atomic commit."""
         logger.info("Writing routed board back to KiCad via IPC commit...")
         try:
-            ipc_bridge_dir = Path(__file__).resolve().parent.parent / "ipc_bridge"
-            if str(ipc_bridge_dir) not in sys.path:
-                sys.path.insert(0, str(ipc_bridge_dir))
+            here = Path(__file__).resolve().parent
+            for candidate in (here / "ipc_bridge", here.parent / "ipc_bridge"):
+                if candidate.is_dir() and str(candidate) not in sys.path:
+                    sys.path.insert(0, str(candidate))
 
             from ipc_board_writer import KiCadIpcBoardWriter
             board_data = json.loads(output_json_str)

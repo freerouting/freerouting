@@ -37,6 +37,8 @@ def main():
         sys.exit(1)
 
     repo_root = bridge_dir.parent.parent.parent.parent.resolve()
+    if not (repo_root / "fixtures").is_dir():
+        repo_root = repo_root.parent
     fixture_pcb = repo_root / "fixtures" / "Issue558-dev-board-autoroute-demo" / "dev-board.kicad_pcb"
     if not fixture_pcb.is_file():
         logger.error(f"Fixture not found at {fixture_pcb}")

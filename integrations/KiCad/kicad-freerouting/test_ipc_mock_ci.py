@@ -13,9 +13,11 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-# Add ipc_bridge directory to sys.path
+# Add plugins and ipc_bridge directory to sys.path
 here = Path(__file__).resolve().parent
-bridge_dir = here / "ipc_bridge"
+bridge_dir = here / "plugins" / "ipc_bridge"
+if not bridge_dir.is_dir():
+    bridge_dir = here / "ipc_bridge"
 sys.path.insert(0, str(bridge_dir))
 
 

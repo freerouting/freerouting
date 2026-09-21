@@ -24,9 +24,9 @@ from pathlib import Path
 # Add plugins and ipc_bridge to sys.path
 here = Path(__file__).resolve().parent
 plugins_dir = here / "plugins"
-ipc_bridge_dir = here / "ipc_bridge"
+ipc_bridge_dir = plugins_dir / "ipc_bridge"
 for p in (plugins_dir, ipc_bridge_dir):
-    if str(p) not in sys.path:
+    if p.is_dir() and str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
 from config import (
