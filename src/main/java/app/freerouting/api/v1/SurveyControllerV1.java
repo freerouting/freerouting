@@ -13,14 +13,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.Instant;
+import java.util.function.Consumer;
 
 /**
  * JAX-RS controller serving micro-surveys and recording responses.
@@ -28,51 +33,85 @@ import java.time.Instant;
  * <h2>Endpoints</h2>
  *
  * <ul>
- *   <li>{@code GET /v1/surveys/active} — returns the survey defined by the {@code
- *       FREEROUTING__SURVEYS__ACTIVE_SURVEY} environment variable on the API host (JSON {@code
+ *   <li>{@code GET /v1/surveys/active} — returns the active survey definition (JSON {@code
  *       SurveyDefinition}), or {@code 204 No Content} when none is configured, it is malformed, or
  *       it has expired. No API key required — surveys must reach fresh installs that have no key.
+ *   <li>{@code POST /v1/surveys/active} — publishes or updates the active survey in-memory.
+ *       Protected by {@code FREEROUTING__SURVEYS__ADMIN_KEY} via {@code X-Survey-Admin-Key} or
+ *       {@code Authorization: Bearer <key>}.
+ *   <li>{@code DELETE /v1/surveys/active} — retires the active survey so that subsequent GET
+ *       requests return 204 No Content. Protected by {@code FREEROUTING__SURVEYS__ADMIN_KEY}.
  *   <li>{@code POST /v1/surveys/{surveyId}/response} — records a survey response payload to
  *       BigQuery ({@code survey_response} table) with server-side deduplication on {@code
  *       (survey_id, user_id)}. Replayed responses return {@code 204 No Content}.
  * </ul>
  *
- * <p>Maintainers publish or retire a survey purely by changing the environment variable — no
- * desktop client release and no API redeploy. Survey IDs must never be recycled; use a new ID for
- * every new survey run.
+ * <p>Maintainers can publish or retire a survey either dynamically via the admin endpoints, or by
+ * changing the {@code FREEROUTING__SURVEYS__ACTIVE_SURVEY} environment variable on the API host —
+ * no desktop client release and no API redeploy needed. Survey IDs must never be recycled; use a
+ * new ID for every new survey run.
  */
 @Path("/v1/surveys")
-@Tag(name = "Surveys", description = "In-app micro-survey endpoints (public, unauthenticated)")
+@Tag(name = "Surveys", description = "In-app micro-survey endpoints")
 public class SurveyControllerV1 {
 
   /** Environment variable holding the JSON definition of the active survey. */
   static final String ACTIVE_SURVEY_ENV = "FREEROUTING__SURVEYS__ACTIVE_SURVEY";
 
+  /** Environment variable holding the pre-shared admin secret for survey lifecycle management. */
+  static final String ADMIN_KEY_ENV = "FREEROUTING__SURVEYS__ADMIN_KEY";
+
+  /** Custom HTTP header for providing the survey admin key. */
+  static final String ADMIN_KEY_HEADER = "X-Survey-Admin-Key";
+
+  /**
+   * In-memory override for the active survey definition, settable via {@code POST
+   * /v1/surveys/active}. When {@code null}, the controller falls back to {@link
+   * #ACTIVE_SURVEY_ENV}.
+   */
+  private static volatile String dynamicActiveSurveyJson = null;
+
   /** Serves the active survey, or {@code 204} when there is nothing to ask. */
   @Operation(
       summary = "Get the active micro-survey",
       description =
-          "Returns the survey definition configured via the FREEROUTING__SURVEYS__ACTIVE_SURVEY"
-              + " environment variable, or 204 No Content when no eligible survey is configured.")
+          "Returns the active survey definition, or 204 No Content when no eligible survey is"
+              + " configured. Publicly accessible without authentication.")
   @ApiResponses({
     @ApiResponse(responseCode = "200", description = "An active survey is available"),
     @ApiResponse(responseCode = "204", description = "No active survey — nothing to ask"),
     @ApiResponse(
         responseCode = "500",
-        description = "The active survey environment variable contains invalid JSON")
+        description = "The active survey configuration contains invalid JSON")
   })
   @GET
   @Path("/active")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getActiveSurvey() {
-    return buildActiveSurveyResponse(System.getenv(ACTIVE_SURVEY_ENV), Instant.now());
+    return buildActiveSurveyResponse(getEffectiveActiveSurveyJson(), Instant.now());
+  }
+
+  /** Returns the dynamic active survey if set, falling back to the environment variable. */
+  static String getEffectiveActiveSurveyJson() {
+    String dynamic = dynamicActiveSurveyJson;
+    return dynamic != null ? dynamic : System.getenv(ACTIVE_SURVEY_ENV);
+  }
+
+  /** Sets the dynamic in-memory active survey JSON. */
+  static void setDynamicActiveSurvey(String json) {
+    dynamicActiveSurveyJson = json;
+  }
+
+  /** Resets the dynamic active survey JSON back to {@code null} (env var fallback). */
+  static void resetDynamicActiveSurvey() {
+    dynamicActiveSurveyJson = null;
   }
 
   /**
    * Pure decision logic for the {@code active} endpoint, separated from {@link System#getenv} so it
    * is directly unit-testable.
    *
-   * @param json the raw environment-variable content, may be {@code null} or blank
+   * @param json the raw environment-variable or dynamic content, may be {@code null} or blank
    * @param now the current server time for expiry checking
    * @return 200 with the survey JSON, 204 when unset/expired, 500 on malformed JSON
    */
@@ -84,10 +123,9 @@ public class SurveyControllerV1 {
     try {
       survey = GSON.fromJson(json, SurveyDefinition.class);
     } catch (Exception e) {
-      FRLogger.warn(
-          "FREEROUTING__SURVEYS__ACTIVE_SURVEY contains invalid JSON, ignoring: " + e.getMessage());
+      FRLogger.warn("Survey configuration contains invalid JSON, ignoring: " + e.getMessage());
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-          .entity("{\"error\":\"FREEROUTING__SURVEYS__ACTIVE_SURVEY contains invalid JSON.\"}")
+          .entity("{\"error\":\"Survey configuration contains invalid JSON.\"}")
           .build();
     }
     if (survey == null || !survey.isValid() || survey.isExpired(now)) {
@@ -95,6 +133,177 @@ public class SurveyControllerV1 {
     }
     // Serve the raw configured JSON verbatim — the server adds nothing to it.
     return Response.ok(json).build();
+  }
+
+  /**
+   * Publishes or updates the active micro-survey definition.
+   *
+   * @param authHeader HTTP Authorization header
+   * @param customHeader custom X-Survey-Admin-Key header
+   * @param requestBody survey definition JSON
+   * @return 200 on success, 400 on invalid/expired survey, 401 on unauthorized, 403 when admin key
+   *     is unset
+   */
+  @Operation(
+      summary = "Publish or update the active micro-survey",
+      description =
+          "Publishes or replaces the active micro-survey in-memory. Requires the admin pre-shared"
+              + " key via X-Survey-Admin-Key or Authorization: Bearer <key>.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Survey published successfully"),
+    @ApiResponse(responseCode = "400", description = "Invalid or expired survey definition"),
+    @ApiResponse(responseCode = "401", description = "Missing or invalid admin authorization"),
+    @ApiResponse(responseCode = "403", description = "Admin key not configured on server")
+  })
+  @POST
+  @Path("/active")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response publishActiveSurvey(
+      @HeaderParam("Authorization") String authHeader,
+      @HeaderParam(ADMIN_KEY_HEADER) String customHeader,
+      String requestBody) {
+    return processPublishActiveSurvey(
+        authHeader,
+        customHeader,
+        System.getenv(ADMIN_KEY_ENV),
+        requestBody,
+        Instant.now(),
+        SurveyControllerV1::setDynamicActiveSurvey);
+  }
+
+  /**
+   * Retires the active micro-survey so subsequent queries return 204 No Content.
+   *
+   * @param authHeader HTTP Authorization header
+   * @param customHeader custom X-Survey-Admin-Key header
+   * @return 200 on success, 401 on unauthorized, 403 when admin key is unset
+   */
+  @Operation(
+      summary = "Retire the active micro-survey",
+      description =
+          "Retires the active micro-survey so GET /v1/surveys/active returns 204 No Content."
+              + " Requires the admin pre-shared key via X-Survey-Admin-Key or Authorization: Bearer <key>.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Survey retired successfully"),
+    @ApiResponse(responseCode = "401", description = "Missing or invalid admin authorization"),
+    @ApiResponse(responseCode = "403", description = "Admin key not configured on server")
+  })
+  @DELETE
+  @Path("/active")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteActiveSurvey(
+      @HeaderParam("Authorization") String authHeader,
+      @HeaderParam(ADMIN_KEY_HEADER) String customHeader) {
+    return processDeleteActiveSurvey(
+        authHeader, customHeader, System.getenv(ADMIN_KEY_ENV), () -> setDynamicActiveSurvey(""));
+  }
+
+  /** Pure decision logic for publishing an active survey. */
+  static Response processPublishActiveSurvey(
+      String authHeader,
+      String customHeader,
+      String expectedAdminKey,
+      String requestBody,
+      Instant now,
+      Consumer<String> surveySetter) {
+    if (expectedAdminKey == null || expectedAdminKey.isBlank()) {
+      return Response.status(Response.Status.FORBIDDEN)
+          .entity(
+              "{\"error\":\"Survey publishing is disabled: admin key not configured on server.\"}")
+          .build();
+    }
+    if (!isAuthorizedAdmin(authHeader, customHeader, expectedAdminKey)) {
+      return Response.status(Response.Status.UNAUTHORIZED)
+          .entity("{\"error\":\"Missing or invalid admin authorization.\"}")
+          .build();
+    }
+    if (requestBody == null || requestBody.isBlank()) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Request body is required.\"}")
+          .build();
+    }
+
+    SurveyDefinition survey;
+    try {
+      survey = GSON.fromJson(requestBody, SurveyDefinition.class);
+    } catch (Exception e) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Invalid JSON payload: " + e.getMessage() + "\"}")
+          .build();
+    }
+
+    if (survey == null || !survey.isValid()) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity(
+              "{\"error\":\"Invalid survey definition. Required fields: id, question, and at least"
+                  + " 2 options.\"}")
+          .build();
+    }
+
+    if (survey.isExpired(now)) {
+      return Response.status(Response.Status.BAD_REQUEST)
+          .entity("{\"error\":\"Cannot publish a survey that is already expired.\"}")
+          .build();
+    }
+
+    if (surveySetter != null) {
+      surveySetter.accept(requestBody);
+    }
+
+    return Response.ok("{\"status\":\"published\",\"id\":\"" + survey.id + "\"}").build();
+  }
+
+  /** Pure decision logic for retiring an active survey. */
+  static Response processDeleteActiveSurvey(
+      String authHeader, String customHeader, String expectedAdminKey, Runnable surveyClearer) {
+    if (expectedAdminKey == null || expectedAdminKey.isBlank()) {
+      return Response.status(Response.Status.FORBIDDEN)
+          .entity(
+              "{\"error\":\"Survey publishing is disabled: admin key not configured on server.\"}")
+          .build();
+    }
+    if (!isAuthorizedAdmin(authHeader, customHeader, expectedAdminKey)) {
+      return Response.status(Response.Status.UNAUTHORIZED)
+          .entity("{\"error\":\"Missing or invalid admin authorization.\"}")
+          .build();
+    }
+
+    if (surveyClearer != null) {
+      surveyClearer.run();
+    }
+
+    return Response.ok("{\"status\":\"retired\"}").build();
+  }
+
+  /** Verifies admin authorization in constant-time using {@link MessageDigest#isEqual}. */
+  static boolean isAuthorizedAdmin(
+      String authHeader, String customHeader, String expectedAdminKey) {
+    if (expectedAdminKey == null || expectedAdminKey.isBlank()) {
+      return false;
+    }
+    String providedKey = extractProvidedKey(authHeader, customHeader);
+    if (providedKey == null || providedKey.isBlank()) {
+      return false;
+    }
+    return MessageDigest.isEqual(
+        providedKey.getBytes(StandardCharsets.UTF_8),
+        expectedAdminKey.getBytes(StandardCharsets.UTF_8));
+  }
+
+  /** Extracts the admin key from custom or Authorization headers. */
+  static String extractProvidedKey(String authHeader, String customHeader) {
+    if (customHeader != null && !customHeader.isBlank()) {
+      return customHeader.trim();
+    }
+    if (authHeader != null && !authHeader.isBlank()) {
+      String trimmed = authHeader.trim();
+      if (trimmed.regionMatches(true, 0, "Bearer ", 0, 7)) {
+        return trimmed.substring(7).trim();
+      }
+      return trimmed;
+    }
+    return null;
   }
 
   /** Functional interface for checking whether a user has already answered a survey. */

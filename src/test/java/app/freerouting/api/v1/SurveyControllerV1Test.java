@@ -1,14 +1,17 @@
 package app.freerouting.api.v1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jakarta.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Unit tests for the {@code GET /v1/surveys/active} decision logic of {@link SurveyControllerV1}.
- */
+/** Unit tests for the {@link SurveyControllerV1} endpoints and decision logic. */
 class SurveyControllerV1Test {
 
   private static final String VALID_JSON =
@@ -16,6 +19,12 @@ class SurveyControllerV1Test {
           + "\"options\":[\"Yes\",\"No\"],\"expires_at_utc\":\"2030-01-01T00:00:00Z\"}";
 
   private static final Instant NOW = Instant.parse("2026-09-21T00:00:00Z");
+  private static final String ADMIN_KEY = "test-secret-admin-key-999";
+
+  @AfterEach
+  void tearDown() {
+    SurveyControllerV1.resetDynamicActiveSurvey();
+  }
 
   @Test
   void returns204WhenEnvVarIsUnset() {
@@ -52,12 +61,135 @@ class SurveyControllerV1Test {
     assertEquals(500, response.getStatus());
   }
 
+  // --- Admin Publishing & Deletion Tests ---
+
+  @Test
+  void publishReturns403WhenServerAdminKeyNotConfigured() {
+    Response response =
+        SurveyControllerV1.processPublishActiveSurvey(
+            "Bearer " + ADMIN_KEY, null, null, VALID_JSON, NOW, json -> {});
+
+    assertEquals(403, response.getStatus());
+  }
+
+  @Test
+  void publishReturns401WhenAuthHeaderMissingOrInvalid() {
+    Response missing =
+        SurveyControllerV1.processPublishActiveSurvey(
+            null, null, ADMIN_KEY, VALID_JSON, NOW, json -> {});
+    Response invalid =
+        SurveyControllerV1.processPublishActiveSurvey(
+            "Bearer wrong-key", null, ADMIN_KEY, VALID_JSON, NOW, json -> {});
+
+    assertEquals(401, missing.getStatus());
+    assertEquals(401, invalid.getStatus());
+  }
+
+  @Test
+  void publishReturns400OnMissingOrMalformedBody() {
+    Response missing =
+        SurveyControllerV1.processPublishActiveSurvey(
+            null, ADMIN_KEY, ADMIN_KEY, null, NOW, json -> {});
+    Response malformed =
+        SurveyControllerV1.processPublishActiveSurvey(
+            null, ADMIN_KEY, ADMIN_KEY, "{ not json", NOW, json -> {});
+
+    assertEquals(400, missing.getStatus());
+    assertEquals(400, malformed.getStatus());
+  }
+
+  @Test
+  void publishReturns400OnInvalidOrExpiredSurvey() {
+    String incompleteJson = "{\"schema_version\":1,\"id\":\"s1\"}";
+    Response incomplete =
+        SurveyControllerV1.processPublishActiveSurvey(
+            null, ADMIN_KEY, ADMIN_KEY, incompleteJson, NOW, json -> {});
+
+    String expiredJson = VALID_JSON.replace("2030-01-01T00:00:00Z", "2020-01-01T00:00:00Z");
+    Response expired =
+        SurveyControllerV1.processPublishActiveSurvey(
+            null, ADMIN_KEY, ADMIN_KEY, expiredJson, NOW, json -> {});
+
+    assertEquals(400, incomplete.getStatus());
+    assertEquals(400, expired.getStatus());
+  }
+
+  @Test
+  void publishSucceedsWithCustomAdminHeader() {
+    AtomicReference<String> publishedJson = new AtomicReference<>();
+    Response response =
+        SurveyControllerV1.processPublishActiveSurvey(
+            null, ADMIN_KEY, ADMIN_KEY, VALID_JSON, NOW, publishedJson::set);
+
+    assertEquals(200, response.getStatus());
+    assertEquals(VALID_JSON, publishedJson.get());
+  }
+
+  @Test
+  void publishSucceedsWithBearerAuthorizationHeader() {
+    AtomicReference<String> publishedJson = new AtomicReference<>();
+    Response response =
+        SurveyControllerV1.processPublishActiveSurvey(
+            "Bearer " + ADMIN_KEY, null, ADMIN_KEY, VALID_JSON, NOW, publishedJson::set);
+
+    assertEquals(200, response.getStatus());
+    assertEquals(VALID_JSON, publishedJson.get());
+  }
+
+  @Test
+  void deleteReturns403WhenServerAdminKeyNotConfigured() {
+    Response response =
+        SurveyControllerV1.processDeleteActiveSurvey("Bearer " + ADMIN_KEY, null, null, () -> {});
+
+    assertEquals(403, response.getStatus());
+  }
+
+  @Test
+  void deleteReturns401WhenAuthHeaderMissingOrInvalid() {
+    Response missing =
+        SurveyControllerV1.processDeleteActiveSurvey(null, null, ADMIN_KEY, () -> {});
+    Response invalid =
+        SurveyControllerV1.processDeleteActiveSurvey(null, "wrong-key", ADMIN_KEY, () -> {});
+
+    assertEquals(401, missing.getStatus());
+    assertEquals(401, invalid.getStatus());
+  }
+
+  @Test
+  void deleteSucceedsWithValidKeyAndInvokesClearer() {
+    AtomicBoolean cleared = new AtomicBoolean(false);
+    Response response =
+        SurveyControllerV1.processDeleteActiveSurvey(
+            null, ADMIN_KEY, ADMIN_KEY, () -> cleared.set(true));
+
+    assertEquals(200, response.getStatus());
+    assertTrue(cleared.get());
+  }
+
+  @Test
+  void dynamicActiveSurveyLifecycle() {
+    // Initially null, falls back to env var
+    SurveyControllerV1.resetDynamicActiveSurvey();
+
+    // Dynamically published
+    SurveyControllerV1.setDynamicActiveSurvey(VALID_JSON);
+    assertEquals(VALID_JSON, SurveyControllerV1.getEffectiveActiveSurveyJson());
+
+    // Dynamically retired
+    SurveyControllerV1.setDynamicActiveSurvey("");
+    assertEquals("", SurveyControllerV1.getEffectiveActiveSurveyJson());
+    assertEquals(204, SurveyControllerV1.buildActiveSurveyResponse("", NOW).getStatus());
+
+    // Reset back to null
+    SurveyControllerV1.resetDynamicActiveSurvey();
+  }
+
+  // --- Response Submission Tests ---
+
   @Test
   void recordsNewSurveyResponseSuccessfully() {
-    java.util.concurrent.atomic.AtomicBoolean recorded =
-        new java.util.concurrent.atomic.AtomicBoolean(false);
-    java.util.concurrent.atomic.AtomicReference<String> recOption =
-        new java.util.concurrent.atomic.AtomicReference<>();
+    AtomicBoolean recorded = new AtomicBoolean(false);
+    AtomicReference<String> recOption = new AtomicReference<>();
 
     String body =
         "{\"survey_id\":\"s1\",\"user_id\":\"u-123\",\"option\":\"Yes\",\"client_version\":\"2.5.0\"}";
@@ -72,14 +204,13 @@ class SurveyControllerV1Test {
             });
 
     assertEquals(200, response.getStatus());
-    org.junit.jupiter.api.Assertions.assertTrue(recorded.get());
+    assertTrue(recorded.get());
     assertEquals("Yes", recOption.get());
   }
 
   @Test
   void deduplicatesWhenResponseAlreadyExists() {
-    java.util.concurrent.atomic.AtomicBoolean recorded =
-        new java.util.concurrent.atomic.AtomicBoolean(false);
+    AtomicBoolean recorded = new AtomicBoolean(false);
 
     String body = "{\"survey_id\":\"s1\",\"user_id\":\"u-123\",\"option\":\"Yes\"}";
     Response response =
@@ -87,7 +218,7 @@ class SurveyControllerV1Test {
             "s1", body, (s, u) -> true, (s, u, opt, ver) -> recorded.set(true));
 
     assertEquals(204, response.getStatus());
-    org.junit.jupiter.api.Assertions.assertFalse(recorded.get());
+    assertFalse(recorded.get());
   }
 
   @Test
@@ -158,8 +289,7 @@ class SurveyControllerV1Test {
 
   @Test
   void acceptsPayloadWithOmittedSurveyIdAndUsesPathId() {
-    java.util.concurrent.atomic.AtomicReference<String> recSurvey =
-        new java.util.concurrent.atomic.AtomicReference<>();
+    AtomicReference<String> recSurvey = new AtomicReference<>();
 
     String body = "{\"user_id\":\"u-123\",\"option\":\"No\"}";
     Response response =
