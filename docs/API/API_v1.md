@@ -596,6 +596,73 @@ POST /v1/surveys/{surveyId}/response
 
 **Response (204 No Content):** Response was already recorded for this `(survey_id, user_id)` pair (deduplication no-op).
 
+#### Publish or Replace Active Survey (Admin Only)
+
+```http
+POST /v1/surveys/active
+```
+
+**Description:** Publishes or replaces the active micro-survey in-memory on the API server. Requires the pre-shared survey admin key configured via `FREEROUTING__SURVEYS__ADMIN_KEY` on the server host.
+
+**Headers:**
+- `X-Survey-Admin-Key: <ADMIN_KEY>` (or `Authorization: Bearer <ADMIN_KEY>`)
+- `Content-Type: application/json`
+
+**Request body:**
+
+```json
+{
+  "schema_version": 1,
+  "id": "survey-2026-q3-autoroute",
+  "topic": "Autorouter Performance",
+  "question": "How satisfied are you with the routing completion rate on multi-layer boards?",
+  "options": [
+    "Very Satisfied",
+    "Acceptable",
+    "Needs Improvement"
+  ],
+  "min_client_version": "2.5.0",
+  "expires_at_utc": "2026-12-31T23:59:59Z"
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "status": "published",
+  "id": "survey-2026-q3-autoroute"
+}
+```
+
+**Error Responses:**
+- `400 Bad Request` — Missing body, malformed JSON, invalid survey structure (must have `id`, `question`, and at least 2 `options`), or already expired.
+- `401 Unauthorized` — Missing or incorrect survey admin key.
+- `403 Forbidden` — Survey admin key is not configured on the server host (`FREEROUTING__SURVEYS__ADMIN_KEY` unset).
+
+#### Retire Active Survey (Admin Only)
+
+```http
+DELETE /v1/surveys/active
+```
+
+**Description:** Retires the active micro-survey so subsequent `GET /v1/surveys/active` requests return `204 No Content`. Requires the pre-shared survey admin key.
+
+**Headers:**
+- `X-Survey-Admin-Key: <ADMIN_KEY>` (or `Authorization: Bearer <ADMIN_KEY>`)
+
+**Response (200 OK):**
+
+```json
+{
+  "status": "retired"
+}
+```
+
+**Error Responses:**
+- `401 Unauthorized` — Missing or incorrect survey admin key.
+- `403 Forbidden` — Survey admin key is not configured on the server host.
+
 ---
 
 ### Developer Tools
