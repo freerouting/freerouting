@@ -1,11 +1,16 @@
 """
-standalone_runner.py — CLI test utility for KiCad IPC Board Reader
-------------------------------------------------------------------
+standalone_runner.py — CLI test utility for KiCad IPC Board Reader & Writer
+----------------------------------------------------------------------------
 Connects to a running KiCad IPC server (GUI or headless kicad-cli api-server)
-and exports the board as Freerouting-compatible KiCadBoardJson.
+and either exports the board as Freerouting-compatible KiCadBoardJson, or
+applies a routed KiCadBoardJson payload back into KiCad using atomic commits.
 
 Usage:
+    # Read board from KiCad:
     python standalone_runner.py [--socket <socket_path>] [--output <out.json>]
+
+    # Apply routed traces and vias back to KiCad:
+    python standalone_runner.py [--socket <socket_path>] --apply <routed.json>
 """
 
 import argparse
@@ -14,10 +19,11 @@ import logging
 import sys
 from pathlib import Path
 
-# Add current folder to sys.path so ipc_board_reader can be imported
+# Add current folder to sys.path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from ipc_board_reader import KiCadIpcBoardReader
+from ipc_board_writer import KiCadIpcBoardWriter
 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,7 +34,7 @@ logger = logging.getLogger("freerouting.ipc_runner")
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Extract PCB from KiCad IPC API to Freerouting JSON format."
+        description="Interact with KiCad IPC API: extract PCB or apply routed traces."
     )
     parser.add_argument(
         "--socket",
@@ -41,7 +47,19 @@ def main():
         "-o",
         type=str,
         default="freerouting_ipc_input.json",
-        help="Path for exported JSON file. Default: freerouting_ipc_input.json",
+        help="Path for exported JSON file (when extracting). Default: freerouting_ipc_input.json",
+    )
+    parser.add_argument(
+        "--apply",
+        "-a",
+        type=str,
+        default=None,
+        help="Path to routed KiCadBoardJson file to apply back to the board.",
+    )
+    parser.add_argument(
+        "--keep-unfixed",
+        action="store_true",
+        help="Do not delete existing unlocked tracks/vias when applying routed data.",
     )
     parser.add_argument(
         "--timeout",
@@ -52,6 +70,38 @@ def main():
 
     args = parser.parse_args()
 
+    # --- Mode 1: Apply routed JSON back to KiCad ---
+    if args.apply:
+        apply_path = Path(args.apply).resolve()
+        if not apply_path.is_file():
+            logger.error(f"Input file not found: {apply_path}")
+            sys.exit(1)
+
+        logger.info(f"Loading routed data from: {apply_path}")
+        with open(apply_path, "r", encoding="utf-8") as f:
+            board_data = json.load(f)
+
+        logger.info(f"Connecting to KiCad IPC (socket={args.socket})...")
+        try:
+            writer = KiCadIpcBoardWriter(socket_path=args.socket, timeout_ms=args.timeout)
+            logger.info(f"Connected to KiCad — Target board: '{writer.board.name}'")
+        except Exception as e:
+            logger.error(f"Failed to connect to KiCad IPC server: {e}")
+            sys.exit(1)
+
+        result = writer.write_routed_board(
+            board_data,
+            replace_unfixed=not args.keep_unfixed,
+            commit_message="Freerouting Autoroute (IPC)",
+        )
+        logger.info(
+            f"Write-back complete: created {result['created_tracks']} tracks, "
+            f"{result['created_vias']} vias (removed {result['removed_tracks']} old tracks, "
+            f"{result['removed_vias']} old vias)."
+        )
+        return
+
+    # --- Mode 2: Extract board from KiCad ---
     logger.info(f"Connecting to KiCad IPC (socket={args.socket})...")
     try:
         reader = KiCadIpcBoardReader(socket_path=args.socket, timeout_ms=args.timeout)
