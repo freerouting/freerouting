@@ -126,6 +126,22 @@ public class SurveyPopover extends JPopupMenu {
   }
 
   /**
+   * Shows the popover anchored directly above the specified component, aligned to its right edge so
+   * that the popover stays within the window viewport.
+   *
+   * @param anchor the component to anchor above (e.g. the status bar survey trigger button)
+   */
+  public void showAnchoredAbove(Component anchor) {
+    if (anchor == null || !anchor.isShowing()) {
+      return;
+    }
+    java.awt.Dimension pref = getPreferredSize();
+    int x = anchor.getWidth() - pref.width;
+    int y = -pref.height - 2;
+    show(anchor, x, y);
+  }
+
+  /**
    * Handles user submission of an option. Dispatches async network request and starts the 400ms EDT
    * dwell timer.
    */

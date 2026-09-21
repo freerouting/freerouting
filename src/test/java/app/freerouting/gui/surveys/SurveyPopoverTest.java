@@ -90,4 +90,18 @@ class SurveyPopoverTest {
     verify(coordinator).dismiss(survey);
     assertTrue(closed.get());
   }
+
+  @Test
+  void showAnchoredAboveHandlesNonShowingAnchorGracefully() {
+    SurveyDefinition survey = new SurveyDefinition();
+    survey.id = "s-pos";
+    SurveyPopover popover =
+        new SurveyPopover(
+            survey, mock(SurveyCoordinator.class), new ButtonsSurveyRenderer(), () -> {});
+
+    javax.swing.JButton button = new javax.swing.JButton("test");
+    // Not showing on screen: should return early without throwing
+    popover.showAnchoredAbove(button);
+    assertFalse(popover.isVisible());
+  }
 }
