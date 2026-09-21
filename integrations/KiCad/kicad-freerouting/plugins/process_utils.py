@@ -169,20 +169,13 @@ class ProcessDialog(wx.Dialog):
         self.SetForegroundColour(win_fg)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-
-        # --- routing mode banner ---
-        self.mode_label = wx.StaticText(
-            self, wx.ID_ANY, "[Mode: Specctra DSN]", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL
-        )
-        mode_font = self.mode_label.GetFont()
-        mode_font.SetWeight(wx.FONTWEIGHT_BOLD)
-        self.mode_label.SetFont(mode_font)
-        self.mode_label.SetForegroundColour(wx.Colour(0, 120, 215))  # Accent blue
-        sizer.Add(self.mode_label, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.TOP, 8)
-
-        # --- status indicators (vertical stack) ---
         indicator_sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # --- routing mode indicator ---
+        self.mode_indicator = StatusIndicator(self, "Plugin Mode: DSN (legacy)", STATUS_UNDETERMINED)
+        indicator_sizer.Add(self.mode_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
+
+        # --- status indicators (vertical stack) ---
         self.java_indicator = StatusIndicator(self, "Detecting Java 25+ JRE", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.java_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
@@ -244,12 +237,14 @@ class ProcessDialog(wx.Dialog):
 
         self.bttn.Bind(wx.EVT_BUTTON, self._on_click)
 
-    # -- public API -------------------------------------------------------
-
     def set_routing_mode_label(self, mode_str):
-        """Update the routing mode indicator banner."""
-        if hasattr(self, "mode_label") and self.mode_label:
-            self.mode_label.SetLabel(mode_str)
+        """Update the routing mode indicator."""
+        if hasattr(self, "mode_indicator") and self.mode_indicator:
+            # Set text on the inner label
+            if hasattr(self.mode_indicator, "_label"):
+                self.mode_indicator._label.SetLabel(mode_str)
+            self.mode_indicator.set_status(STATUS_UNDETERMINED)
+            self.mode_indicator.Layout()
             self.Layout()
 
     def set_java_status(self, status):

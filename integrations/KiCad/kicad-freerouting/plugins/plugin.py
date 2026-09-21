@@ -193,13 +193,13 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         # Configure dialog display for the active mode
         if active_mode == ROUTING_MODE_IPC:
-            dialog.set_routing_mode_label("[Mode: Protobuf IPC]")
+            dialog.set_routing_mode_label("Plugin Mode: IPC")
             dialog.set_ipc_indicator_label("Checking KiCad IPC socket")
         elif active_mode == ROUTING_MODE_JSON:
-            dialog.set_routing_mode_label("[Mode: JSON/API (Transitional)]")
+            dialog.set_routing_mode_label("Plugin Mode: JSON/API")
             dialog.set_ipc_indicator_label("Checking JSON/API availability")
         else:
-            dialog.set_routing_mode_label("[Mode: Specctra DSN]")
+            dialog.set_routing_mode_label("Plugin Mode: DSN (legacy)")
             dialog.hide_json_api_indicator()
 
         # Use a background thread for pre-flight checks so the dialog stays responsive
@@ -294,7 +294,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 # If DSN is available (KiCad 9/10), offer smooth fallback to DSN
                 if has_pcbnew_api():
                     logger.info("Falling back from IPC mode to DSN mode...")
-                    dialog.set_routing_mode_label("[Mode: Specctra DSN (IPC Fallback)]")
+                    dialog.set_routing_mode_label("Plugin Mode: DSN (legacy - IPC Fallback)")
                     dialog.hide_json_api_indicator()
                     pump_events()
                     router = DsnRouter(self)
