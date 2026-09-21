@@ -135,22 +135,28 @@ DEBUG_OUTPUT_JSON_FILENAME = "freerouting_output_board.json"
 # ------------------------------------------------------------------
 # Routing modes
 # ------------------------------------------------------------------
-# "DSN" — legacy Specctra DSN file exchange (default; works with all KiCad versions).
+# "DSN"  — legacy Specctra DSN file exchange (default; works with all KiCad versions).
+# "IPC"  — official KiCad Protocol Buffers IPC API (Alpha; KiCad 9/10+, target for KiCad 11+).
 # "JSON" — experimental live JSON/API bridge via SWIG serialization + localhost REST
-#          (requires KiCad 9+).  Not KiCad's official protobuf IPC API.
+#          (requires KiCad 9+; transitional/deprecated).
 ROUTING_MODE_DSN = "DSN"
+ROUTING_MODE_IPC = "IPC"
 ROUTING_MODE_JSON = "JSON"
 DEFAULT_ROUTING_MODE = ROUTING_MODE_DSN
 
-# Legacy alias — "IPC" was the pre-v2.3 name for JSON/API mode.
-_ROUTING_MODE_ALIASES = {"IPC": ROUTING_MODE_JSON}
+_ROUTING_MODE_ALIASES = {
+    "IPC": ROUTING_MODE_IPC,
+    "PROTOBUF": ROUTING_MODE_IPC,
+    "SWIG_JSON": ROUTING_MODE_JSON,
+}
 
 
 def normalize_routing_mode(mode):
     """Return a canonical routing mode string."""
-    if mode is None:
+    if not mode:
         return DEFAULT_ROUTING_MODE
-    return _ROUTING_MODE_ALIASES.get(mode, mode)
+    upper_mode = str(mode).strip().upper()
+    return _ROUTING_MODE_ALIASES.get(upper_mode, upper_mode or DEFAULT_ROUTING_MODE)
 
 
 # ------------------------------------------------------------------

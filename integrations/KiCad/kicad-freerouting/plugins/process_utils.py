@@ -170,13 +170,23 @@ class ProcessDialog(wx.Dialog):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # --- routing mode banner ---
+        self.mode_label = wx.StaticText(
+            self, wx.ID_ANY, "[Mode: Specctra DSN]", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL
+        )
+        mode_font = self.mode_label.GetFont()
+        mode_font.SetWeight(wx.FONTWEIGHT_BOLD)
+        self.mode_label.SetFont(mode_font)
+        self.mode_label.SetForegroundColour(wx.Colour(0, 120, 215))  # Accent blue
+        sizer.Add(self.mode_label, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.TOP, 8)
+
         # --- status indicators (vertical stack) ---
         indicator_sizer = wx.BoxSizer(wx.VERTICAL)
 
         self.java_indicator = StatusIndicator(self, "Detecting Java 25+ JRE", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.java_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
-        self.json_api_indicator = StatusIndicator(self, "Checking JSON/API bridge availability", STATUS_UNDETERMINED)
+        self.json_api_indicator = StatusIndicator(self, "Checking IPC / API bridge availability", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.json_api_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
         self.api_indicator = StatusIndicator(self, "Starting up Freerouting API", STATUS_UNDETERMINED)
@@ -236,13 +246,25 @@ class ProcessDialog(wx.Dialog):
 
     # -- public API -------------------------------------------------------
 
+    def set_routing_mode_label(self, mode_str):
+        """Update the routing mode indicator banner."""
+        if hasattr(self, "mode_label") and self.mode_label:
+            self.mode_label.SetLabel(mode_str)
+            self.Layout()
+
     def set_java_status(self, status):
         """Update the Java detection indicator."""
         self.java_indicator.set_status(status)
 
     def set_json_api_status(self, status):
-        """Update the JSON/API bridge indicator."""
+        """Update the JSON/API or IPC bridge indicator."""
         self.json_api_indicator.set_status(status)
+
+    def set_ipc_indicator_label(self, label):
+        """Update the label of the second indicator (e.g. for IPC vs JSON)."""
+        if hasattr(self.json_api_indicator, "_label"):
+            self.json_api_indicator._label.SetLabel(label)
+            self.json_api_indicator.Layout()
 
     def hide_json_api_indicator(self):
         """Hide the JSON/API indicator when running in DSN mode."""
