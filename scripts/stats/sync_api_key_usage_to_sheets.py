@@ -228,9 +228,6 @@ def sync_to_google_sheet(
     # Write batch updates to the sheet
     if updates_to_perform:
         print(f"\nWriting updates for {len(updates_to_perform)} rows to Google Sheet...")
-        min_metric_col = min(col_indices[c] for c in METRIC_COLUMNS) + 1
-        max_metric_col = max(col_indices[c] for c in METRIC_COLUMNS) + 1
-
         cells_to_update = []
         for row_idx, row_data in updates_to_perform:
             for metric_idx, col_name in enumerate(METRIC_COLUMNS):
