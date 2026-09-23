@@ -237,6 +237,17 @@ class DsnRouter:
 
         logger.info("Importing Specctra SES into KiCad...")
         try:
+            # KiCad's ImportSpecctraSES fails with "Unexpected 'place'" if (lock_type position) is present.
+            try:
+                ses_out = Path(self.plugin.module_output)
+                content = ses_out.read_text(encoding="utf-8")
+                if "(lock_type position)" in content:
+                    content = content.replace("(lock_type position)", "")
+                    ses_out.write_text(content, encoding="utf-8")
+                    logger.info("Sanitized SES file by removing '(lock_type position)' for KiCad compatibility.")
+            except Exception as se:
+                logger.debug(f"Could not sanitize SES file: {se}")
+
             logger.info("Trying standard pcbnew.ImportSpecctraSES(filename)...")
             ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
         except TypeError:

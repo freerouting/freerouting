@@ -325,6 +325,28 @@ class TestPluginRoutingMode(unittest.TestCase):
         self.assertAlmostEqual(pad["offset"]["x"], 1.0)
         self.assertAlmostEqual(pad["offset"]["y"], 0.0)
 
+    def test_apply_routing_ses_sanitizes_lock_type(self):
+        """Verify that apply_routing_ses strips '(lock_type position)' from SES files."""
+        import tempfile
+        p = plugin.FreeroutingPlugin()
+        p.defaults()
+        router = router_ipc.IpcRouter(p)
+
+        with tempfile.NamedTemporaryFile(suffix=".ses", delete=False, mode="w", encoding="utf-8") as f:
+            f.write('(session "test"\n (placement (component "R"\n  (place "R1" 0 0 front 0\n   (lock_type position)))))\n')
+            temp_ses = Path(f.name)
+
+        try:
+            with patch("pcbnew.ImportSpecctraSES", return_value=True) as mock_import:
+                result = router.apply_routing_ses(temp_ses)
+                self.assertTrue(result)
+                mock_import.assert_called_once()
+                # Verify that (lock_type position) was stripped from the file content
+                sanitized_content = temp_ses.read_text(encoding="utf-8")
+                self.assertNotIn("(lock_type position)", sanitized_content)
+        finally:
+            temp_ses.unlink(missing_ok=True)
+
 
 if __name__ == "__main__":
     unittest.main()

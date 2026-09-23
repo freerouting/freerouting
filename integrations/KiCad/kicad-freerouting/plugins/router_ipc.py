@@ -247,6 +247,16 @@ class IpcRouter:
         """Import routed tracks and vias from a Specctra SES file into KiCad."""
         logger.info(f"Importing routed SES file into KiCad: {ses_path}...")
         try:
+            # KiCad's ImportSpecctraSES fails with "Unexpected 'place'" if (lock_type position) is present.
+            try:
+                content = ses_path.read_text(encoding="utf-8")
+                if "(lock_type position)" in content:
+                    content = content.replace("(lock_type position)", "")
+                    ses_path.write_text(content, encoding="utf-8")
+                    logger.info("Sanitized SES file by removing '(lock_type position)' for KiCad compatibility.")
+            except Exception as se:
+                logger.debug(f"Could not sanitize SES file: {se}")
+
             import pcbnew
             try:
                 ok = pcbnew.ImportSpecctraSES(str(ses_path))
@@ -254,6 +264,12 @@ class IpcRouter:
                 ok = pcbnew.ImportSpecctraSES(self.plugin.board, str(ses_path))
             if ok:
                 logger.info("Successfully imported SES file into KiCad.")
+                try:
+                    if hasattr(pcbnew, "UpdateUserInterface"):
+                        pcbnew.UpdateUserInterface()
+                    pcbnew.Refresh()
+                except Exception:
+                    pass
                 return True
             else:
                 logger.warning("pcbnew.ImportSpecctraSES returned False.")
