@@ -217,7 +217,8 @@ public class GuiManager {
 
                 if (!(filenameLowerCase.endsWith(".dsn")
                     || filenameLowerCase.endsWith(".ses")
-                    || filenameLowerCase.endsWith(".scr"))) {
+                    || filenameLowerCase.endsWith(".scr")
+                    || filenameLowerCase.endsWith(".json"))) {
                   FRLogger.warn(
                       "Couldn't export board to '" + filename + "', unsupported extension");
                   return;
@@ -226,8 +227,10 @@ public class GuiManager {
                 FRLogger.info("Saving '" + filename + "'...");
                 try {
                   String filenameOnly = new File(filename).getName();
-                  String designName = filenameOnly.substring(0, filenameOnly.length() - 4);
-                  String extension = filenameOnly.substring(filenameOnly.length() - 4);
+                  int dotIdx = filenameOnly.lastIndexOf('.');
+                  String designName = dotIdx > 0 ? filenameOnly.substring(0, dotIdx) : filenameOnly;
+                  String extension =
+                      dotIdx >= 0 ? filenameOnly.substring(dotIdx).toLowerCase() : "";
 
                   try (OutputStream outputStream = new FileOutputStream(filename)) {
                     switch (extension) {
@@ -245,6 +248,13 @@ public class GuiManager {
                             new ByteArrayInputStream(sessionOutputStream.toByteArray());
                         newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsFusionScriptScr(
                             inputStream, outputStream);
+                      }
+                      case ".json" -> {
+                        String jsonContent =
+                            app.freerouting.io.kicad.KiCadJsonWriter.write(
+                                newFrame.boardPanel.boardHandling.getRoutingBoard(), designName);
+                        outputStream.write(
+                            jsonContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
                       }
                       default -> {
                         // The output extension was validated before opening the stream.

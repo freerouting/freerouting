@@ -12,8 +12,16 @@ import json
 import logging
 import math
 import os
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+# Ensure both ipc_bridge and its parent (plugins) are in sys.path
+_bridge_dir = Path(__file__).resolve().parent
+_plugins_dir = _bridge_dir.parent
+for _p in (_plugins_dir, _bridge_dir):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
 logger = logging.getLogger("freerouting.ipc")
 
@@ -32,14 +40,71 @@ class KiCadIpcBoardReader:
         import kipy
 
         self.kicad = kipy.KiCad(socket_path=socket_path, timeout_ms=timeout_ms)
-        self.board = self.kicad.get_board()
-        self.project = self.board.get_project()
-        self.kicad_version = self.kicad.get_version()
-        self.api_version = self.kicad.get_api_version()
+        self._board = None
+        self._project = None
+        self._kicad_version = None
+        self._api_version = None
+
+    @property
+    def board(self):
+        if self._board is None:
+            self._board = self.kicad.get_board()
+        return self._board
+
+    @property
+    def project(self):
+        if self._project is None:
+            self._project = self.board.get_project()
+        return self._project
+
+    @property
+    def kicad_version(self):
+        if self._kicad_version is None:
+            try:
+                self._kicad_version = self.kicad.get_version()
+            except Exception:
+                self._kicad_version = "Unknown"
+        return self._kicad_version
+
+    @property
+    def api_version(self):
+        if self._api_version is None:
+            try:
+                self._api_version = self.kicad.get_api_version()
+            except Exception:
+                self._api_version = "Unknown"
+        return self._api_version
 
     def read_board_data(self) -> Dict[str, Any]:
         """Serializes the board into KiCadBoardJson dictionary format."""
-        # 1. Fast path for live KiCad GUI session:
+        # 1. In-process fast path (when running inside KiCad with pcbnew available):
+        try:
+            import pcbnew
+            if hasattr(pcbnew, "GetBoard") and pcbnew.GetBoard() is not None:
+                pcb = pcbnew.GetBoard()
+                try:
+                    import board_json_helpers
+                    _build_board_json_manually = board_json_helpers._build_board_json_manually
+                except ImportError:
+                    try:
+                        from plugins.board_json_helpers import _build_board_json_manually
+                    except ImportError:
+                        from board_json_helpers import _build_board_json_manually
+
+                board_json_str = _build_board_json_manually(pcb)
+                board_data = json.loads(board_json_str)
+
+                # Ensure outline clearance reflects .kicad_pro min_copper_edge_clearance
+                edge_clearance_mm = self._resolve_edge_clearance()
+                if "outline" in board_data:
+                    board_data["outline"]["clearance"] = edge_clearance_mm
+
+                logger.info("Successfully serialized board via in-process live board fast path.")
+                return board_data
+        except Exception as e:
+            logger.debug(f"In-process live board fast path unavailable or failed: {e}")
+
+        # 2. Fast path for live KiCad GUI session via SaveDocumentToString:
         # In KiCad 10+, KiCad returns AS_BUSY for granular item queries (get_tracks, get_footprints)
         # while an ActionPlugin is running or modal dialog is active, but SaveDocumentToString
         # succeeds immediately. If pcbnew is available in-process, load the live string.
@@ -47,7 +112,7 @@ class KiCadIpcBoardReader:
         if doc_json is not None:
             return doc_json
 
-        # 2. Granular IPC element extraction (for headless kicad-cli api-server or tests):
+        # 3. Granular IPC element extraction (for headless kicad-cli api-server or tests):
         design_name = Path(self.board.name).stem if self.board.name else "Untitled"
 
         data: Dict[str, Any] = {
@@ -120,9 +185,13 @@ class KiCadIpcBoardReader:
 
                 # Find board_json_helpers (parent plugin module)
                 try:
-                    from plugins.board_json_helpers import _build_board_json_manually
+                    import board_json_helpers
+                    _build_board_json_manually = board_json_helpers._build_board_json_manually
                 except ImportError:
-                    from board_json_helpers import _build_board_json_manually
+                    try:
+                        from plugins.board_json_helpers import _build_board_json_manually
+                    except ImportError:
+                        from board_json_helpers import _build_board_json_manually
 
                 board_json_str = _build_board_json_manually(pcb)
                 board_data = json.loads(board_json_str)
@@ -269,7 +338,17 @@ class KiCadIpcBoardReader:
         """Reads min_copper_edge_clearance from .kicad_pro design settings."""
         default_clearance = 0.5
         try:
-            pro_path = Path(self.project.path) / f"{self.project.name}.kicad_pro"
+            pro_path = None
+            try:
+                import pcbnew
+                if hasattr(pcbnew, "GetBoard") and pcbnew.GetBoard() is not None:
+                    fn = pcbnew.GetBoard().GetFileName()
+                    if fn:
+                        pro_path = Path(fn).with_suffix(".kicad_pro")
+            except Exception:
+                pass
+            if not pro_path or not pro_path.is_file():
+                pro_path = Path(self.project.path) / f"{self.project.name}.kicad_pro"
             if pro_path.is_file():
                 with open(pro_path, "r", encoding="utf-8") as f:
                     pro_data = json.load(f)
@@ -332,7 +411,9 @@ class KiCadIpcBoardReader:
                 }
 
                 # Attach pads
-                fp_pads = pads_by_footprint.get(fp_id, [])
+                fp_pads = list(getattr(fp, "pads", []))
+                if not fp_pads:
+                    fp_pads = pads_by_footprint.get(fp_id, [])
                 for pad in fp_pads:
                     pad_dict = self._serialize_pad(pad, fp.position, rotation_deg)
                     comp_dict["pads"].append(pad_dict)

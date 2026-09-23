@@ -19,8 +19,10 @@
 # ---------------------------------------------------------------------------
 
 import configparser
+import json
 import textwrap
 import threading
+import time
 from pathlib import Path
 
 import pcbnew
@@ -182,8 +184,14 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         app = wx.GetApp() or wx.App()
 
         def pump_events():
-            """Process pending wx events so the dialog stays responsive."""
-            app.ProcessPendingEvents()
+            """Process pending wx events and advance animation so the dialog stays responsive."""
+            try:
+                app.ProcessPendingEvents()
+                wx.YieldIfNeeded()
+                if dialog:
+                    dialog.pulse()
+            except Exception:
+                pass
 
         # Check for KiCad 11+ SWIG removal fallback
         active_mode = self.routing_mode
@@ -320,19 +328,20 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         # ============================================================
         # Stage: Starting up Freerouting API server
-        # (for IPC mode and JSON/API mode — DSN mode runs JAR directly)
+        # (for headless IPC mode and JSON/API mode — GUI mode runs JAR directly)
         # ============================================================
-        if isinstance(router, (IpcRouter, JsonApiRouter)):
+        is_headless_api = (isinstance(router, IpcRouter) and not self.gui_enabled) or isinstance(router, JsonApiRouter)
+        if is_headless_api:
             dialog.set_api_status(STATUS_IN_PROGRESS)
             pump_events()
 
             client = FreeroutingApiClient()
             if isinstance(router, IpcRouter):
                 router.build_api_command()
-                started = router.start_api_server() if not client.health_check() else True
+                started = router.start_api_server(pump_callback=pump_events) if not client.health_check() else True
             else:
                 router._build_api_command()
-                started = router._start_api_server() if not client.health_check() else True
+                started = router._start_api_server(pump_callback=pump_events) if not client.health_check() else True
 
             if not started:
                 logger.error("Could not start Freerouting API server.")
@@ -348,6 +357,10 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
             dialog.set_api_status(STATUS_PASS)
             pump_events()
+        elif isinstance(router, IpcRouter) and self.gui_enabled:
+            dialog.set_routing_mode_label("Plugin Mode: Protobuf IPC (GUI)")
+            dialog.set_api_status(STATUS_PASS)
+            pump_events()
 
         # ============================================================
         # Stage 4-6: Execute routing (each stage updates the dialog)
@@ -357,7 +370,10 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         output_data = None
         try:
             if isinstance(router, IpcRouter):
-                cancelled, success, output_data = self._run_ipc_stages(router, dialog, pump_events)
+                if self.gui_enabled:
+                    cancelled, success, output_data = self._run_ipc_gui_stages(router, dialog, pump_events)
+                else:
+                    cancelled, success, output_data = self._run_ipc_stages(router, dialog, pump_events)
             elif isinstance(router, JsonApiRouter):
                 cancelled, success, output_data = self._run_json_api_stages(router, dialog, pump_events)
             else:
@@ -374,13 +390,30 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 # Apply results back to KiCad AFTER progress dialog is destroyed and event loop finishes cleanup
                 if success and not cancelled:
                     if isinstance(router, IpcRouter):
-                        logger.info("Applying routing result to KiCad via Protocol Buffers IPC commit...")
-                        try:
-                            router.apply_routing_result(output_data)
-                            logger.info("Routing result applied successfully via IPC.")
-                        except Exception as e:
-                            logger.error(f"Could not apply IPC result: {e}", exc_info=True)
-                            wx_show_error(f"Routing completed, but failed to apply results via IPC:\n{e}")
+                        if isinstance(output_data, dict) and output_data.get("type") == "ses":
+                            logger.info("Applying routing result to KiCad via SES import...")
+                            try:
+                                router.apply_routing_ses(output_data["path"])
+                                logger.info("Routing result applied successfully via SES import.")
+                            except Exception as e:
+                                logger.error(f"Could not apply SES result: {e}", exc_info=True)
+                                wx_show_error(f"Routing completed, but failed to apply results via SES:\n{e}")
+                        elif isinstance(output_data, dict) and output_data.get("type") == "json":
+                            logger.info("Applying routing result to KiCad via JSON...")
+                            try:
+                                router.apply_routing_result(output_data["data"])
+                                logger.info("Routing result applied successfully via IPC.")
+                            except Exception as e:
+                                logger.error(f"Could not apply JSON result: {e}", exc_info=True)
+                                wx_show_error(f"Routing completed, but failed to apply results via IPC:\n{e}")
+                        else:
+                            logger.info("Applying routing result to KiCad via Protocol Buffers IPC commit...")
+                            try:
+                                router.apply_routing_result(output_data)
+                                logger.info("Routing result applied successfully via IPC.")
+                            except Exception as e:
+                                logger.error(f"Could not apply IPC result: {e}", exc_info=True)
+                                wx_show_error(f"Routing completed, but failed to apply results via IPC:\n{e}")
                     elif isinstance(router, JsonApiRouter):
                         logger.info("Applying routing result to KiCad (JSON/API mode)...")
                         try:
@@ -432,9 +465,28 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         dialog.set_sending_status(STATUS_IN_PROGRESS)
         pump_events()
 
-        board_data = router.extract_board()
+        # Run extraction in worker thread while pumping events on main thread
+        # to prevent deadlock with KiCad's main event loop handling IPC requests
+        import time as _time
+        extraction = {"data": None, "error": None}
+
+        def extract_worker():
+            try:
+                extraction["data"] = router.extract_board()
+            except Exception as e:
+                extraction["error"] = e
+
+        extract_thread = threading.Thread(target=extract_worker, daemon=True)
+        extract_thread.start()
+
+        while extract_thread.is_alive():
+            pump_events()
+            _time.sleep(0.05)
+
+        pump_events()
+        board_data = extraction["data"]
         if not board_data:
-            logger.error("Failed to extract board via IPC.")
+            logger.error(f"Failed to extract board via IPC: {extraction.get('error')}")
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error("Failed to extract board data from KiCad via Protocol Buffers IPC.")
             return False, False, None
@@ -445,6 +497,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             self._save_debug(board_json_str, DEBUG_JSON_DIR / DEBUG_INPUT_JSON_FILENAME)
 
         session_id = client.create_session(host_name="KiCad")
+        pump_events()
         if not session_id:
             logger.error("Failed to create Freerouting session.")
             dialog.set_sending_status(STATUS_FAIL)
@@ -456,6 +509,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         filename = self.board.GetFileName()
         job_name = Path(filename).stem if filename else "KiCad_IPC_Job"
         job_id = client.enqueue_job(session_id, job_name=job_name)
+        pump_events()
         if not job_id:
             logger.error("Failed to enqueue routing job.")
             dialog.set_sending_status(STATUS_FAIL)
@@ -467,6 +521,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error("Failed to upload board JSON.")
             return False, False, None
+        pump_events()
 
         if not client.start_job(job_id):
             logger.error("Failed to start routing job.")
@@ -540,6 +595,146 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         pump_events()
 
         return False, True, output_json
+
+    def _run_ipc_gui_stages(self, router, dialog, pump_events):
+        """Execute the Protobuf IPC routing workflow with interactive Freerouting GUI.
+
+        1. Extracts board via IPC/in-process fast-path.
+        2. Saves freerouting_input_board.json.
+        3. Launches Freerouting GUI with input JSON and output SES/JSON.
+        4. Waits for user to complete routing and close the GUI.
+        5. Imports and applies the result.
+
+        Returns:
+            ``(cancelled, success, output_info)``
+        """
+        logger.info("Executing Protobuf IPC stages in GUI mode...")
+
+        # --- Stage 3: Extracting board from KiCad ---
+        dialog.set_sending_status(STATUS_IN_PROGRESS)
+        pump_events()
+
+        import time as _time
+        extraction = {"data": None, "error": None}
+
+        def extract_worker():
+            try:
+                extraction["data"] = router.extract_board()
+            except Exception as e:
+                extraction["error"] = e
+
+        extract_thread = threading.Thread(target=extract_worker, daemon=True)
+        extract_thread.start()
+
+        while extract_thread.is_alive():
+            pump_events()
+            _time.sleep(0.05)
+
+        pump_events()
+        board_data = extraction["data"]
+        if not board_data:
+            logger.error(f"Failed to extract board via IPC: {extraction.get('error')}")
+            dialog.set_sending_status(STATUS_FAIL)
+            wx_show_error("Failed to extract board data from KiCad via Protocol Buffers IPC.")
+            return False, False, None
+
+        input_json_str = json.dumps(board_data, indent=2)
+        input_json_path = self.routing_dir / "freerouting_input_board.json"
+        try:
+            with open(input_json_path, "w", encoding="utf-8") as f:
+                f.write(input_json_str)
+            logger.info(f"Saved input board JSON to: {input_json_path}")
+        except Exception as e:
+            logger.error(f"Failed to write input JSON: {e}", exc_info=True)
+            dialog.set_sending_status(STATUS_FAIL)
+            return False, False, None
+
+        if SAVE_DEBUG_JSON:
+            DEBUG_JSON_DIR.mkdir(parents=True, exist_ok=True)
+            self._save_debug(input_json_str, DEBUG_JSON_DIR / DEBUG_INPUT_JSON_FILENAME)
+
+        dialog.set_sending_status(STATUS_PASS)
+        pump_events()
+
+        # Target output files (clean up any previous runs)
+        output_ses_path = self.routing_dir / "freerouting_output_board.ses"
+        output_json_path = self.routing_dir / "freerouting_output_board.json"
+        for p in (output_ses_path, output_json_path):
+            p.unlink(missing_ok=True)
+
+        # --- Stage 4: Auto-router is running in GUI window ---
+        dialog.set_routing_status(STATUS_IN_PROGRESS)
+        dialog.set_message(
+            "Freerouting is running in GUI mode.\n\n"
+            "Please complete routing in the Freerouting window,\n"
+            "save the result, and close Freerouting."
+        )
+        pump_events()
+
+        router.build_gui_command(input_json_path, output_ses_path)
+
+        def on_complete():
+            logger.info("IPC GUI routing process complete callback fired.")
+            wx_safe_invoke(dialog.terminate)
+
+        from .process_utils import ProcessThread
+        invoker = ProcessThread(
+            self.module_command,
+            on_complete=on_complete,
+            output_handler=None,
+        )
+        logger.info("Starting IPC GUI routing process thread...")
+        invoker.start()
+        modal_result = dialog.ShowModal()
+
+        try:
+            if modal_result == dialog.result_button:
+                logger.warning("Routing cancelled by user.")
+                invoker.terminate()
+                invoker.join(3)
+                dialog.set_routing_status(STATUS_FAIL)
+                return True, False, None
+            elif modal_result == dialog.result_terminate:
+                invoker.join(10)
+                if invoker.has_ok():
+                    logger.info("Routing process exited with success.")
+                else:
+                    logger.warning("Routing process exited with non-zero status.")
+        finally:
+            if invoker.is_alive():
+                invoker.terminate()
+                invoker.join(3)
+
+        dialog.set_routing_status(STATUS_PASS)
+        pump_events()
+
+        # --- Stage 5: Receiving the results ---
+        dialog.set_receiving_status(STATUS_IN_PROGRESS)
+        pump_events()
+
+        if output_json_path.is_file():
+            logger.info(f"Found output JSON: {output_json_path}")
+            try:
+                with open(output_json_path, "r", encoding="utf-8") as f:
+                    out_data = json.load(f)
+                if SAVE_DEBUG_JSON:
+                    self._save_debug(json.dumps(out_data, indent=2), DEBUG_JSON_DIR / DEBUG_OUTPUT_JSON_FILENAME)
+                dialog.set_receiving_status(STATUS_PASS)
+                pump_events()
+                return False, True, {"type": "json", "data": out_data}
+            except Exception as e:
+                logger.error(f"Failed to read output JSON: {e}", exc_info=True)
+
+        if output_ses_path.is_file():
+            logger.info(f"Found output SES: {output_ses_path}")
+            dialog.set_receiving_status(STATUS_PASS)
+            pump_events()
+            return False, True, {"type": "ses", "path": output_ses_path}
+
+        logger.warning("Neither output JSON nor SES file was generated.")
+        dialog.set_receiving_status(STATUS_FAIL)
+        pump_events()
+        return False, False, None
 
     def _run_json_api_stages(self, router, dialog, pump_events):
         """Execute the JSON/API routing workflow with status updates.
@@ -768,11 +963,16 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             logger.error(f"Warning: could not save debug file: {e}", exc_info=True)
 
     @staticmethod
-    def _apply_result_to_kicad(json_str):
+    def _apply_result_to_kicad(json_str, board=None):
         """Apply a KiCad JSON routing result back to the board."""
         import json
-        board_data = json.loads(json_str)
-        board = pcbnew.GetBoard()
+        if isinstance(json_str, dict):
+            board_data = json_str
+            json_str = json.dumps(board_data)
+        else:
+            board_data = json.loads(json_str)
+        if board is None:
+            board = pcbnew.GetBoard()
         if board is None:
             raise RuntimeError("No board loaded.")
 
@@ -797,87 +997,94 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         # Fallback: manual trace/via creation
         logger.info("Falling back to manual trace/via creation.")
+
+        # 1. Remove existing unlocked tracks and vias
+        try:
+            to_remove = [t for t in board.GetTracks() if not (hasattr(t, "IsLocked") and t.IsLocked())]
+            for t in to_remove:
+                board.Remove(t)
+            if to_remove:
+                logger.info(f"Removed {len(to_remove)} unlocked existing tracks/vias.")
+        except Exception as e:
+            logger.debug(f"Could not remove existing tracks: {e}")
+
+        # 2. Coordinate scaling (KiCad internal unit is nanometers: 1 mm = 1e6 nm)
         unit = board_data.get("unit", "MM").upper()
-        resolution = float(board_data.get("resolution", 1.0))
-        scale = (1e6 / resolution) if unit == "MM" else 1.0
-        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit}, resolution: {resolution})")
-
-        net_map = {}
-        for net in board_data.get("nets", []):
-            name = net.get("name", "")
-            nid = net.get("id", 0)
-            if name and nid:
-                net_map[name] = nid
-
-        def lookup_net(board, net_code):
-            if hasattr(board, "GetNetByNetCode"):
-                return board.GetNetByNetCode(net_code)
-            elif hasattr(board, "FindNet"):
-                return board.FindNet(net_code)
-            return None
-
-        has_commit = hasattr(pcbnew, "BOARD_COMMIT")
-        if has_commit:
-            commit = pcbnew.BOARD_COMMIT()
-            logger.info("Using BOARD_COMMIT for manual trace/via application.")
+        if unit == "MM":
+            scale = 1e6
+        elif unit == "MIL":
+            scale = 25400.0
+        elif unit == "UM":
+            scale = 1000.0
         else:
-            commit = None
-            logger.info("BOARD_COMMIT not available, applying changes directly.")
+            scale = 1e6
+        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit})")
+
+        # 3. Layer mapping (JSON layer index -> KiCad layer ID)
+        layer_map = {}
+        for l_json in board_data.get("layers", []):
+            l_idx = l_json.get("index")
+            l_name = l_json.get("name")
+            if l_idx is not None and l_name:
+                try:
+                    kicad_lid = board.GetLayerID(l_name)
+                    if kicad_lid != getattr(pcbnew, "UNDEFINED_LAYER", -1):
+                        layer_map[l_idx] = kicad_lid
+                except Exception:
+                    pass
+
+        top_layer = layer_map.get(0, 0)
+        bot_layer = layer_map.get(len(board_data.get("layers", [])) - 1, getattr(board, "GetCopperLayerCount", lambda: 2)() - 1)
+
+        # 4. Net lookup helper
+        def lookup_net(board, net_name):
+            if not net_name:
+                return None
+            try:
+                if hasattr(board, "FindNet"):
+                    net = board.FindNet(str(net_name))
+                    if net:
+                        return net
+            except Exception:
+                pass
+            return None
 
         for trace in board_data.get("traces", []):
             try:
-                net_code = net_map.get(trace.get("netName", ""))
-                if net_code is None:
-                    continue
-                net = lookup_net(board, net_code)
-                if net is None:
-                    continue
-                width = int(trace.get("width", 0.25) * scale)
-                layer = trace.get("layerIndex", 0)
+                net_name = trace.get("netName", "")
+                net = lookup_net(board, net_name)
+                width = int(round(trace.get("width", 0.25) * scale))
+                layer_idx = trace.get("layerIndex", 0)
+                layer = layer_map.get(layer_idx, layer_idx)
                 points = trace.get("points", [])
                 for i in range(len(points) - 1):
                     t = pcbnew.PCB_TRACK(board)
-                    t.SetStart(pcbnew.VECTOR2I(int(points[i]["x"] * scale), int(points[i]["y"] * scale)))
-                    t.SetEnd(pcbnew.VECTOR2I(int(points[i + 1]["x"] * scale), int(points[i + 1]["y"] * scale)))
+                    t.SetStart(pcbnew.VECTOR2I(int(round(points[i]["x"] * scale)), int(round(points[i]["y"] * scale))))
+                    t.SetEnd(pcbnew.VECTOR2I(int(round(points[i + 1]["x"] * scale)), int(round(points[i + 1]["y"] * scale))))
                     t.SetWidth(width)
                     t.SetLayer(layer)
-                    t.SetNet(net)
+                    if net:
+                        t.SetNet(net)
                     board.Add(t)
-                    if commit:
-                        commit.Add(t)
             except Exception as e:
                 logger.error(f"Warning: could not apply trace: {e}", exc_info=True)
 
         for via in board_data.get("vias", []):
             try:
-                net_code = net_map.get(via.get("netName", ""))
-                if net_code is None:
-                    continue
-                net = lookup_net(board, net_code)
-                if net is None:
-                    continue
+                net_name = via.get("netName", "")
+                net = lookup_net(board, net_name)
                 pos = via.get("position", {})
                 v = pcbnew.PCB_VIA(board)
-                v.SetPosition(pcbnew.VECTOR2I(int(pos.get("x", 0) * scale), int(pos.get("y", 0) * scale)))
-                v.SetWidth(int(via.get("diameter", 0.8) * scale))
-                v.SetDrill(int(via.get("drill", 0.4) * scale))
-                v.SetNet(net)
+                v.SetPosition(pcbnew.VECTOR2I(int(round(pos.get("x", 0) * scale)), int(round(pos.get("y", 0) * scale))))
+                v.SetWidth(int(round(via.get("diameter", 0.8) * scale)))
+                v.SetDrill(int(round(via.get("drill", 0.4) * scale)))
+                if hasattr(v, "SetLayerPair"):
+                    v.SetLayerPair(top_layer, bot_layer)
+                if net:
+                    v.SetNet(net)
                 board.Add(v)
-                if commit:
-                    commit.Add(v)
             except Exception as e:
                 logger.error(f"Warning: could not apply via: {e}", exc_info=True)
-
-        if commit:
-            try:
-                commit.Push()
-                logger.info("BOARD_COMMIT pushed successfully.")
-            except Exception as e:
-                logger.error(f"BOARD_COMMIT Push failed, trying commit.Push(board): {e}")
-                try:
-                    commit.Push(board)
-                except Exception as e2:
-                    logger.error(f"commit.Push(board) failed too: {e2}", exc_info=True)
 
         try:
             pcbnew.Refresh()

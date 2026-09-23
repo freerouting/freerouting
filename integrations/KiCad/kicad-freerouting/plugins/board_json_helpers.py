@@ -19,11 +19,18 @@ import pcbnew
 
 logger = logging.getLogger("freerouting")
 
-from .config import (
-    JSON_API_EXPORT_METHODS,
-    JSON_API_MIN_KICAD_MAJOR,
-    JSON_API_PROBE_ATTRIBUTES,
-)
+try:
+    from .config import (
+        JSON_API_EXPORT_METHODS,
+        JSON_API_MIN_KICAD_MAJOR,
+        JSON_API_PROBE_ATTRIBUTES,
+    )
+except (ImportError, ValueError):
+    from config import (
+        JSON_API_EXPORT_METHODS,
+        JSON_API_MIN_KICAD_MAJOR,
+        JSON_API_PROBE_ATTRIBUTES,
+    )
 
 
 _debug_logs = []

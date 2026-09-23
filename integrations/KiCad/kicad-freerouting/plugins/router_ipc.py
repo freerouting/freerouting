@@ -140,23 +140,76 @@ class IpcRouter:
             from ipc_board_reader import KiCadIpcBoardReader
             self._ipc_reader = KiCadIpcBoardReader()
             board_data = self._ipc_reader.read_board_data()
-            logger.info(
-                f"Extracted board via IPC: {len(board_data.get('layers', []))} layers, "
-                f"{len(board_data.get('components', []))} components, "
-                f"{len(board_data.get('nets', []))} nets, "
-                f"outline clearance: {board_data.get('outline', {}).get('clearance')} mm."
-            )
-            return board_data
+            if board_data:
+                logger.info(
+                    f"Extracted board via IPC: {len(board_data.get('layers', []))} layers, "
+                    f"{len(board_data.get('components', []))} components, "
+                    f"{len(board_data.get('nets', []))} nets, "
+                    f"outline clearance: {board_data.get('outline', {}).get('clearance')} mm."
+                )
+                return board_data
         except Exception as e:
-            logger.error(f"Failed to extract board via IPC: {e}", exc_info=True)
-            return None
+            logger.warning(f"IPC board extraction failed: {e}. Trying in-process fallback if available...", exc_info=True)
+
+        # In-process SWIG fallback if running inside KiCad
+        try:
+            if hasattr(self.plugin, "board") and self.plugin.board:
+                try:
+                    from plugins.board_json_helpers import _build_board_json_manually
+                except ImportError:
+                    from board_json_helpers import _build_board_json_manually
+
+                board_json_str = _build_board_json_manually(self.plugin.board)
+                board_data = json.loads(board_json_str)
+
+                # Resolve edge clearance from .kicad_pro if possible
+                try:
+                    board_path = Path(self.plugin.board.GetFileName())
+                    pro_path = board_path.with_suffix(".kicad_pro")
+                    if pro_path.is_file():
+                        with open(pro_path, "r", encoding="utf-8") as f:
+                            pro_data = json.load(f)
+                        val = (
+                            pro_data.get("board", {})
+                            .get("design_settings", {})
+                            .get("rules", {})
+                            .get("min_copper_edge_clearance")
+                        )
+                        if val is not None and isinstance(val, (int, float)) and val > 0:
+                            if "outline" in board_data:
+                                board_data["outline"]["clearance"] = float(val)
+                except Exception as pro_err:
+                    logger.debug(f"Could not inspect .kicad_pro in fallback: {pro_err}")
+
+                logger.info("Successfully extracted board using in-process SWIG fallback.")
+                return board_data
+        except Exception as fb_err:
+            logger.error(f"In-process board extraction fallback also failed: {fb_err}", exc_info=True)
+
+        return None
 
     def apply_routing_result(self, output_json_str: str, replace_unfixed: bool = True) -> bool:
         """Write routed tracks and vias back to KiCad using an atomic commit."""
-        logger.info("Writing routed board back to KiCad via IPC commit...")
+        logger.info("Writing routed board back to KiCad...")
+
+        # 1. In-process direct write-back:
+        # In KiCad 9/10 GUI sessions, an active ActionPlugin runs on KiCad's main thread.
+        # Calling IPC socket APIs from this thread causes KiCad's event loop to deadlock/timeout.
+        # Writing directly to pcbnew.GetBoard() with BOARD_COMMIT is instantaneous and native.
+        try:
+            import pcbnew
+            if hasattr(pcbnew, "GetBoard") and pcbnew.GetBoard() is not None:
+                logger.info("Applying routing result via in-process pcbnew commit...")
+                self.plugin._apply_result_to_kicad(output_json_str)
+                logger.info("Routing result applied successfully via in-process commit.")
+                return True
+        except Exception as e:
+            logger.warning(f"In-process commit unavailable or failed: {e}. Trying IPC write-back...", exc_info=True)
+
+        # 2. Out-of-process IPC write-back (for standalone runner / tests / KiCad 11+)
         try:
             here = Path(__file__).resolve().parent
-            for candidate in (here / "ipc_bridge", here.parent / "ipc_bridge"):
+            for candidate in (here, here / "ipc_bridge", here.parent / "ipc_bridge"):
                 if candidate.is_dir() and str(candidate) not in sys.path:
                     sys.path.insert(0, str(candidate))
 
@@ -177,12 +230,59 @@ class IpcRouter:
             return True
         except Exception as e:
             logger.error(f"Failed to write back routed board via IPC: {e}", exc_info=True)
+            # Final fallback: in-process commit
+            try:
+                self.plugin._apply_result_to_kicad(output_json_str)
+                logger.info("Routing result applied successfully via in-process fallback.")
+                return True
+            except Exception as fb_err:
+                logger.error(f"In-process fallback also failed: {fb_err}", exc_info=True)
             wx_show_error(f"Failed to apply routing results via KiCad IPC:\n{e}")
             return False
 
+    def apply_routing_ses(self, ses_path: Path) -> bool:
+        """Import routed tracks and vias from a Specctra SES file into KiCad."""
+        logger.info(f"Importing routed SES file into KiCad: {ses_path}...")
+        try:
+            import pcbnew
+            try:
+                ok = pcbnew.ImportSpecctraSES(str(ses_path))
+            except TypeError:
+                ok = pcbnew.ImportSpecctraSES(self.plugin.board, str(ses_path))
+            if ok:
+                logger.info("Successfully imported SES file into KiCad.")
+                return True
+            else:
+                logger.warning("pcbnew.ImportSpecctraSES returned False.")
+                return False
+        except Exception as e:
+            logger.error(f"Failed to import SES file: {e}", exc_info=True)
+            wx_show_error(f"Failed to import routing result SES:\n{e}")
+            return False
+
     # ------------------------------------------------------------------
-    # Freerouting headless API server management
+    # Freerouting headless API server & GUI process management
     # ------------------------------------------------------------------
+
+    def build_gui_command(self, input_json_path: Path, output_file_path: Path) -> None:
+        """Build the command to launch Freerouting in interactive GUI mode with board JSON."""
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        self.plugin.module_command = [
+            str(self.plugin.java_path),
+            "-jar",
+            str(self.plugin.module_path),
+            "-de",
+            str(input_json_path),
+            "-do",
+            str(output_file_path),
+            "-host",
+            "KiCad",
+            "--gui.enabled=true",
+            "--api_server.enabled=false",
+            "--mcp_server.enabled=false",
+            f"--logging.file.location={LOG_DIR}",
+        ]
+        logger.info(f"Built IPC GUI command: {' '.join(self.plugin.module_command)}")
 
     def build_api_command(self):
         """Build the command to start Freerouting as a headless API server."""
@@ -199,7 +299,7 @@ class IpcRouter:
         ]
         logger.info(f"Built API server command: {' '.join(self.plugin.module_command)}")
 
-    def start_api_server(self) -> bool:
+    def start_api_server(self, pump_callback=None) -> bool:
         """Launch the Freerouting API server and wait for health check."""
         logger.info("Starting Freerouting API server...")
         try:
@@ -219,18 +319,26 @@ class IpcRouter:
             return False
 
         client = FreeroutingApiClient()
-        for _ in range(API_SERVER_STARTUP_TIMEOUT):
-            time.sleep(1)
-            if client.health_check():
-                logger.info("Freerouting API server is ready.")
-                return True
-            if self._api_process.poll() is not None:
-                logger.error(f"Freerouting API server exited prematurely (exit code {self._api_process.returncode}).")
-                wx_show_error(textwrap.dedent(f"""
-                    Freerouting API server exited prematurely
-                    (exit code {self._api_process.returncode}).
-                """))
-                return False
+        poll_interval = 0.1
+        max_attempts = int(API_SERVER_STARTUP_TIMEOUT / poll_interval)
+        for i in range(max_attempts):
+            if pump_callback:
+                try:
+                    pump_callback()
+                except Exception:
+                    pass
+            time.sleep(poll_interval)
+            if i % 5 == 0:
+                if client.health_check():
+                    logger.info("Freerouting API server is ready.")
+                    return True
+                if self._api_process.poll() is not None:
+                    logger.error(f"Freerouting API server exited prematurely (exit code {self._api_process.returncode}).")
+                    wx_show_error(textwrap.dedent(f"""
+                        Freerouting API server exited prematurely
+                        (exit code {self._api_process.returncode}).
+                    """))
+                    return False
 
         logger.error("Freerouting API server did not become ready in time.")
         wx_show_error("Freerouting API server did not become ready in time.")

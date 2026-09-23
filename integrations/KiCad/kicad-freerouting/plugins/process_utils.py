@@ -130,6 +130,14 @@ class StatusIndicator(wx.Panel):
         self.Refresh()
         self.Update()
 
+    def pulse(self):
+        """Advance the spinner animation by one frame if currently in-progress."""
+        if self._status == STATUS_IN_PROGRESS:
+            self._spin_phase = (self._spin_phase + 1) % len(self._SPIN_CHARS)
+            self._symbol_label.SetLabel(self._SPIN_CHARS[self._spin_phase])
+            self._symbol_label.Refresh()
+            self._symbol_label.Update()
+
 
 class ProcessDialog(wx.Dialog):
     """Modal dialog shown while Freerouting is running.
@@ -323,6 +331,21 @@ class ProcessDialog(wx.Dialog):
             # Dialog may have already been closed or destroyed
             pass
 
+    def pulse(self):
+        """Advance any active in-progress indicator animation and update display."""
+        for indicator in (
+            getattr(self, "mode_indicator", None),
+            getattr(self, "java_indicator", None),
+            getattr(self, "json_api_indicator", None),
+            getattr(self, "api_indicator", None),
+            getattr(self, "sending_indicator", None),
+            getattr(self, "routing_indicator", None),
+            getattr(self, "receiving_indicator", None),
+        ):
+            if indicator and getattr(indicator, "_status", None) == STATUS_IN_PROGRESS:
+                indicator.pulse()
+        self.Update()
+
     def show_and_paint(self):
         """Show the dialog and force an immediate synchronous paint.
 
@@ -333,12 +356,17 @@ class ProcessDialog(wx.Dialog):
         """
         self.Show()
         self.Raise()
+        self.Layout()
         self.Update()    # flush pending layout synchronously
         self.Refresh()   # mark the window dirty
         # One round-trip through the event loop to dispatch the paint event
         app = wx.GetApp()
         if app:
             app.ProcessPendingEvents()
+            try:
+                wx.YieldIfNeeded()
+            except Exception:
+                pass
 
     # -- internal ---------------------------------------------------------
 
