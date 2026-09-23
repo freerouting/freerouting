@@ -347,7 +347,61 @@ class TestPluginRoutingMode(unittest.TestCase):
         finally:
             temp_ses.unlink(missing_ok=True)
 
+    def test_sanitize_ses_file_strips_placement_and_converts_vias(self):
+        """Verify that sanitize_ses_file strips component placements and normalizes polygon vias to circles."""
+        import tempfile
+        import textwrap
+        ses_raw = textwrap.dedent("""
+            (session "test_board"
+              (base_design "test")
+              (placement
+                (resolution um 10)
+                (component "R_0805"
+                  (place "R1" 12000 -34000 front 90)
+                  (place "R2" 15000 -40000 front 180)
+                )
+              )
+              (was_is
+              )
+              (routes
+                (library_out
+                  (padstack "Via[0-1]_800:400_um"
+                    (shape
+                      (polygon F.Cu 0 -400 -400 400 -400 400 400 -400 400)
+                    )
+                    (shape
+                      (polygon B.Cu 0 -400 -400 400 -400 400 400 -400 400)
+                    )
+                  )
+                )
+              )
+            )
+        """).strip()
+
+        with tempfile.NamedTemporaryFile(suffix=".ses", delete=False, mode="w", encoding="utf-8") as f:
+            f.write(ses_raw)
+            temp_ses = Path(f.name)
+
+        try:
+            router_ipc.sanitize_ses_file(temp_ses)
+            sanitized = temp_ses.read_text(encoding="utf-8")
+
+            # 1. Placement section should remain with resolution, but without component/place commands
+            self.assertIn("(placement", sanitized)
+            self.assertIn("(resolution um 10)", sanitized)
+            self.assertNotIn("component", sanitized)
+            self.assertNotIn("(place ", sanitized)
+
+            # 2. Polygon vias should be converted to circles
+            self.assertNotIn("polygon F.Cu", sanitized)
+            self.assertNotIn("polygon B.Cu", sanitized)
+            self.assertIn("(circle F.Cu 800 0 0)", sanitized)
+            self.assertIn("(circle B.Cu 800 0 0)", sanitized)
+        finally:
+            temp_ses.unlink(missing_ok=True)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

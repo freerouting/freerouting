@@ -16,6 +16,7 @@ import json
 import logging
 import os
 import platform
+import re
 import subprocess
 import sys
 import textwrap
@@ -95,6 +96,52 @@ def is_ipc_available(socket_path: Optional[str] = None, timeout_ms: int = 1500) 
         return True, f"Connected to KiCad {v} (Board: '{board.name}')"
     except Exception as e:
         return False, str(e)
+
+
+def sanitize_ses_file(ses_path: Path) -> None:
+    """Sanitize Specctra SES file for KiCad ImportSpecctraSES compatibility.
+
+    1. Removes (lock_type position) which KiCad's parser rejects.
+    2. Empties out component placements from (placement ...) block so KiCad
+       never repositions or rotates footprints during trace/via import.
+    3. Normalizes square polygon via shapes to circle shapes for KiCad via compatibility.
+    """
+    try:
+        content = ses_path.read_text(encoding="utf-8")
+        modified = False
+
+        if "(lock_type position)" in content:
+            content = content.replace("(lock_type position)", "")
+            modified = True
+
+        placement_stripped = re.sub(
+            r"(\(placement\b[\s\S]*?)(?:\s*\(\s*component[\s\S]*?\n\s*\)\s*)+(?=\))",
+            r"\1",
+            content,
+        )
+        if placement_stripped != content:
+            content = placement_stripped
+            modified = True
+
+        def _repl_via(match):
+            layer = match.group(1)
+            r = int(match.group(2))
+            return f"        (shape\n          (circle {layer} {2 * r} 0 0)\n        )"
+
+        via_normalized = re.sub(
+            r"\(shape\s+\(polygon\s+(\S+)\s+0\s+-(\d+)\s+-\2\s+\2\s+-\2\s+\2\s+\2\s+-\2\s+\2\s*\)\s*\)",
+            _repl_via,
+            content,
+        )
+        if via_normalized != content:
+            content = via_normalized
+            modified = True
+
+        if modified:
+            ses_path.write_text(content, encoding="utf-8")
+            logger.info(f"Sanitized SES file for KiCad compatibility: {ses_path}")
+    except Exception as e:
+        logger.warning(f"Could not sanitize SES file: {e}", exc_info=True)
 
 
 class IpcRouter:
@@ -247,15 +294,7 @@ class IpcRouter:
         """Import routed tracks and vias from a Specctra SES file into KiCad."""
         logger.info(f"Importing routed SES file into KiCad: {ses_path}...")
         try:
-            # KiCad's ImportSpecctraSES fails with "Unexpected 'place'" if (lock_type position) is present.
-            try:
-                content = ses_path.read_text(encoding="utf-8")
-                if "(lock_type position)" in content:
-                    content = content.replace("(lock_type position)", "")
-                    ses_path.write_text(content, encoding="utf-8")
-                    logger.info("Sanitized SES file by removing '(lock_type position)' for KiCad compatibility.")
-            except Exception as se:
-                logger.debug(f"Could not sanitize SES file: {se}")
+            sanitize_ses_file(ses_path)
 
             import pcbnew
             board = getattr(self.plugin, "board", None)

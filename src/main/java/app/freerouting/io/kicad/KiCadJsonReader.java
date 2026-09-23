@@ -397,13 +397,7 @@ public final class KiCadJsonReader {
 
       ConvexShape[] defViaShapeArr = new ConvexShape[layerCount];
       double defRadius = defViaDia * scaleFactor / 2.0;
-      ConvexShape defViaShape =
-          new IntBox(
-                  (int) Math.round(-defRadius),
-                  (int) Math.round(-defRadius),
-                  (int) Math.round(defRadius),
-                  (int) Math.round(defRadius))
-              .toSimplex();
+      ConvexShape defViaShape = new Circle(IntPoint.ZERO, (int) Math.round(defRadius));
       for (int li = 0; li < layerCount; li++) {
         defViaShapeArr[li] = defViaShape;
       }
@@ -433,13 +427,7 @@ public final class KiCadJsonReader {
 
         ConvexShape[] viaShapeArr = new ConvexShape[layerCount];
         double radius = viaDia * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
         for (int li = 0; li < layerCount; li++) {
           viaShapeArr[li] = viaShape;
         }
@@ -644,7 +632,7 @@ public final class KiCadJsonReader {
             board.components.add(
                 comp.reference,
                 position,
-                -comp.rotation,
+                comp.rotation,
                 isFront,
                 componentPackage,
                 componentPackage,
@@ -711,13 +699,7 @@ public final class KiCadJsonReader {
         // Dynamically create via padstack
         ConvexShape[] shapes = new ConvexShape[layerCount];
         double radius = vj.diameter * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           shapes[li] = viaShape;
@@ -845,13 +827,7 @@ public final class KiCadJsonReader {
 
         ConvexShape[] shapes = new ConvexShape[layerCount];
         double radius = vj.diameter * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           if (li >= 0 && li < layerCount) {
