@@ -155,9 +155,12 @@ class IpcRouter:
         try:
             if hasattr(self.plugin, "board") and self.plugin.board:
                 try:
-                    from plugins.board_json_helpers import _build_board_json_manually
-                except ImportError:
-                    from board_json_helpers import _build_board_json_manually
+                    from .board_json_helpers import _build_board_json_manually
+                except Exception:
+                    try:
+                        from plugins.board_json_helpers import _build_board_json_manually
+                    except Exception:
+                        from board_json_helpers import _build_board_json_manually
 
                 board_json_str = _build_board_json_manually(self.plugin.board)
                 board_data = json.loads(board_json_str)

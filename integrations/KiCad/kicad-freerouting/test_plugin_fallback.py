@@ -265,6 +265,67 @@ class TestPluginRoutingMode(unittest.TestCase):
             self.assertIn("-de", p.module_command)
             self.assertTrue((p.routing_dir / "freerouting_input_board.json").is_file())
 
+    def test_get_build_board_json_manually_resolution(self):
+        """Verify that _get_build_board_json_manually finds the function."""
+        from plugins.ipc_bridge.ipc_board_reader import _get_build_board_json_manually
+        fn = _get_build_board_json_manually()
+        self.assertIsNotNone(fn)
+        self.assertTrue(callable(fn))
+
+    def test_ipc_board_reader_extracts_pads_from_definition(self):
+        """Verify that KiCadIpcBoardReader extracts pads from fp.definition.pads."""
+        from plugins.ipc_bridge.ipc_board_reader import KiCadIpcBoardReader
+
+        reader = KiCadIpcBoardReader.__new__(KiCadIpcBoardReader)
+        mock_board = MagicMock()
+        mock_board.get_pads.return_value = []
+        mock_board.get_layer_name.return_value = "F.Cu"
+
+        # Footprint with pads on definition (KiCad 10 structure)
+        mock_fp = MagicMock()
+        mock_fp.id.value = "fp-uuid-1"
+        mock_fp.reference_field.text.value = "R1"
+        mock_fp.value_field.text.value = "10k"
+        mock_fp.definition.id = "R_0805"
+        mock_fp.layer = 0
+        mock_fp.position.x = 10000000  # 10 mm
+        mock_fp.position.y = 20000000  # 20 mm
+        mock_fp.orientation.value_degrees = 0.0
+        del mock_fp.pads  # FootprintInstance has no pads attribute
+
+        mock_pad = MagicMock()
+        mock_pad.number = "1"
+        mock_pad.net.name = "GND"
+        mock_pad.position.x = 11000000  # 11 mm (relative dx = 1 mm)
+        mock_pad.position.y = 20000000  # 20 mm (relative dy = 0 mm)
+        mock_pad.padstack.drill = None
+        mock_cl = MagicMock()
+        mock_cl.shape = 1  # CIRCLE
+        mock_cl.size.x = 1500000  # 1.5 mm
+        mock_cl.size.y = 1500000
+        mock_pad.padstack.copper_layers = [mock_cl]
+        mock_pad.padstack.layers = [0]
+
+        mock_fp.definition.pads = [mock_pad]
+        mock_board.get_footprints.return_value = [mock_fp]
+        reader._board = mock_board
+
+        data = {"components": []}
+        reader._collect_components(data, {0: 0})
+
+        self.assertEqual(len(data["components"]), 1)
+        comp = data["components"][0]
+        self.assertEqual(comp["reference"], "R1")
+        self.assertEqual(len(comp["pads"]), 1)
+        pad = comp["pads"][0]
+        self.assertEqual(pad["name"], "1")
+        self.assertEqual(pad["netName"], "GND")
+        self.assertEqual(pad["shape"], "circle")
+        self.assertAlmostEqual(pad["size"]["x"], 1.5)
+        self.assertAlmostEqual(pad["offset"]["x"], 1.0)
+        self.assertAlmostEqual(pad["offset"]["y"], 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()
+

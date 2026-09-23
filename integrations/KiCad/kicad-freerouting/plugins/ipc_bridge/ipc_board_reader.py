@@ -26,6 +26,47 @@ for _p in (_plugins_dir, _bridge_dir):
 logger = logging.getLogger("freerouting.ipc")
 
 
+def _get_build_board_json_manually():
+    """Dynamically resolves ``_build_board_json_manually`` across plugin loading modes."""
+    # 1. Try relative import from parent package
+    try:
+        from ..board_json_helpers import _build_board_json_manually
+        return _build_board_json_manually
+    except Exception:
+        pass
+
+    # 2. Check sys.modules for any already-loaded board_json_helpers
+    for mod_name, mod in list(sys.modules.items()):
+        if mod_name.endswith("board_json_helpers") and hasattr(mod, "_build_board_json_manually"):
+            return mod._build_board_json_manually
+
+    # 3. Try standard import names
+    for mod_name in ("board_json_helpers", "plugins.board_json_helpers"):
+        try:
+            mod = __import__(mod_name, fromlist=["_build_board_json_manually"])
+            if hasattr(mod, "_build_board_json_manually"):
+                return mod._build_board_json_manually
+        except Exception:
+            pass
+
+    # 4. Fall back to loading directly by file path
+    try:
+        import importlib.util
+        plugin_root = Path(__file__).resolve().parent.parent
+        target_file = plugin_root / "board_json_helpers.py"
+        if target_file.is_file():
+            spec = importlib.util.spec_from_file_location("_freerouting_bjh", str(target_file))
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                sys.modules["_freerouting_bjh"] = mod
+                spec.loader.exec_module(mod)
+                return getattr(mod, "_build_board_json_manually", None)
+    except Exception as e:
+        logger.debug(f"Direct file load of board_json_helpers failed: {e}")
+
+    return None
+
+
 class KiCadIpcBoardReader:
     """Reads PCB data from KiCad via Protocol Buffers IPC (kipy)."""
 
@@ -82,14 +123,9 @@ class KiCadIpcBoardReader:
             import pcbnew
             if hasattr(pcbnew, "GetBoard") and pcbnew.GetBoard() is not None:
                 pcb = pcbnew.GetBoard()
-                try:
-                    import board_json_helpers
-                    _build_board_json_manually = board_json_helpers._build_board_json_manually
-                except ImportError:
-                    try:
-                        from plugins.board_json_helpers import _build_board_json_manually
-                    except ImportError:
-                        from board_json_helpers import _build_board_json_manually
+                _build_board_json_manually = _get_build_board_json_manually()
+                if _build_board_json_manually is None:
+                    raise ImportError("Could not resolve _build_board_json_manually")
 
                 board_json_str = _build_board_json_manually(pcb)
                 board_data = json.loads(board_json_str)
@@ -183,15 +219,9 @@ class KiCadIpcBoardReader:
                 if not pcb:
                     return None
 
-                # Find board_json_helpers (parent plugin module)
-                try:
-                    import board_json_helpers
-                    _build_board_json_manually = board_json_helpers._build_board_json_manually
-                except ImportError:
-                    try:
-                        from plugins.board_json_helpers import _build_board_json_manually
-                    except ImportError:
-                        from board_json_helpers import _build_board_json_manually
+                _build_board_json_manually = _get_build_board_json_manually()
+                if _build_board_json_manually is None:
+                    raise ImportError("Could not resolve _build_board_json_manually")
 
                 board_json_str = _build_board_json_manually(pcb)
                 board_data = json.loads(board_json_str)
@@ -412,6 +442,14 @@ class KiCadIpcBoardReader:
 
                 # Attach pads
                 fp_pads = list(getattr(fp, "pads", []))
+                if not fp_pads and hasattr(fp, "definition") and hasattr(fp.definition, "pads"):
+                    fp_pads = list(fp.definition.pads)
+                if not fp_pads and hasattr(fp, "definition") and hasattr(fp.definition, "items"):
+                    try:
+                        from kipy.board_types import Pad as KipyPad
+                        fp_pads = [item for item in fp.definition.items if isinstance(item, KipyPad)]
+                    except Exception:
+                        pass
                 if not fp_pads:
                     fp_pads = pads_by_footprint.get(fp_id, [])
                 for pad in fp_pads:
@@ -443,10 +481,11 @@ class KiCadIpcBoardReader:
             # Determine shape and size from copper layers
             if ps.copper_layers:
                 first_cl = ps.copper_layers[0]
-                shape_enum = str(first_cl.shape)
-                if "CIRCLE" in shape_enum:
+                shape_val = getattr(first_cl, "shape", None)
+                shape_str = str(shape_val).upper()
+                if "CIRCLE" in shape_str or shape_val == 1:
                     shape_name = "circle"
-                elif "OVAL" in shape_enum:
+                elif "OVAL" in shape_str or shape_val == 3:
                     shape_name = "oval"
                 else:
                     shape_name = "rect"
@@ -551,8 +590,15 @@ class KiCadIpcBoardReader:
 
                 points = []
                 if hasattr(z, "outline") and z.outline:
-                    for pt in z.outline:
-                        points.append({"x": round(pt.x / 1e6, 6), "y": round(pt.y / 1e6, 6)})
+                    outline = getattr(z.outline, "outline", z.outline)
+                    nodes = getattr(outline, "nodes", outline)
+                    try:
+                        for item in nodes:
+                            pt = getattr(item, "point", item)
+                            if hasattr(pt, "x") and hasattr(pt, "y"):
+                                points.append({"x": round(pt.x / 1e6, 6), "y": round(pt.y / 1e6, 6)})
+                    except TypeError:
+                        pass
 
                 data["conductionAreas"].append({
                     "id": zone_id,
