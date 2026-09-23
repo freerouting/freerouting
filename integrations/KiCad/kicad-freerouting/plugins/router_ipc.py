@@ -258,10 +258,26 @@ class IpcRouter:
                 logger.debug(f"Could not sanitize SES file: {se}")
 
             import pcbnew
-            try:
-                ok = pcbnew.ImportSpecctraSES(str(ses_path))
-            except TypeError:
-                ok = pcbnew.ImportSpecctraSES(self.plugin.board, str(ses_path))
+            board = getattr(self.plugin, "board", None)
+            if board is None and hasattr(pcbnew, "GetBoard"):
+                try:
+                    board = pcbnew.GetBoard()
+                except Exception:
+                    pass
+
+            ok = False
+            if board is not None:
+                try:
+                    ok = pcbnew.ImportSpecctraSES(board, str(ses_path))
+                except Exception as be:
+                    logger.debug(f"pcbnew.ImportSpecctraSES(board, path) failed: {be}")
+
+            if not ok:
+                try:
+                    ok = pcbnew.ImportSpecctraSES(str(ses_path))
+                except Exception as fe:
+                    logger.debug(f"pcbnew.ImportSpecctraSES(path) failed: {fe}")
+
             if ok:
                 logger.info("Successfully imported SES file into KiCad.")
                 try:

@@ -236,30 +236,38 @@ class DsnRouter:
                 logger.error(f"Failed to copy output SES to debug dir: {e}", exc_info=True)
 
         logger.info("Importing Specctra SES into KiCad...")
+        # KiCad's ImportSpecctraSES fails with "Unexpected 'place'" if (lock_type position) is present.
         try:
-            # KiCad's ImportSpecctraSES fails with "Unexpected 'place'" if (lock_type position) is present.
-            try:
-                ses_out = Path(self.plugin.module_output)
-                content = ses_out.read_text(encoding="utf-8")
-                if "(lock_type position)" in content:
-                    content = content.replace("(lock_type position)", "")
-                    ses_out.write_text(content, encoding="utf-8")
-                    logger.info("Sanitized SES file by removing '(lock_type position)' for KiCad compatibility.")
-            except Exception as se:
-                logger.debug(f"Could not sanitize SES file: {se}")
+            ses_out = Path(self.plugin.module_output)
+            content = ses_out.read_text(encoding="utf-8")
+            if "(lock_type position)" in content:
+                content = content.replace("(lock_type position)", "")
+                ses_out.write_text(content, encoding="utf-8")
+                logger.info("Sanitized SES file by removing '(lock_type position)' for KiCad compatibility.")
+        except Exception as se:
+            logger.debug(f"Could not sanitize SES file: {se}")
 
-            logger.info("Trying standard pcbnew.ImportSpecctraSES(filename)...")
-            ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
-        except TypeError:
+        board = getattr(self.plugin, "board", None)
+        if board is None and hasattr(pcbnew, "GetBoard"):
             try:
-                logger.info("Trying pcbnew.ImportSpecctraSES(board, filename) fallback...")
-                ok = pcbnew.ImportSpecctraSES(self.plugin.board, str(self.plugin.module_output))
-            except Exception as e:
-                logger.error(f"Failed pcbnew.ImportSpecctraSES(board, filename): {e}", exc_info=True)
-                ok = False
-        except Exception as e:
-            logger.error(f"Failed pcbnew.ImportSpecctraSES(filename): {e}", exc_info=True)
-            ok = False
+                board = pcbnew.GetBoard()
+            except Exception:
+                pass
+
+        ok = False
+        if board is not None:
+            try:
+                logger.info("Trying pcbnew.ImportSpecctraSES(board, filename)...")
+                ok = pcbnew.ImportSpecctraSES(board, str(self.plugin.module_output))
+            except Exception as be:
+                logger.debug(f"pcbnew.ImportSpecctraSES(board, filename) failed: {be}")
+
+        if not ok:
+            try:
+                logger.info("Trying standard pcbnew.ImportSpecctraSES(filename)...")
+                ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
+            except Exception as fe:
+                logger.debug(f"pcbnew.ImportSpecctraSES(filename) failed: {fe}")
 
         if ok:
             logger.info("SES import succeeded.")
