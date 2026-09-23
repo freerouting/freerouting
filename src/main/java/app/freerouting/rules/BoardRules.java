@@ -47,6 +47,7 @@ public class BoardRules implements Serializable {
 
   private boolean useSlowAutorouteAlgorithm;
   private int holeClearance;
+  public double clearanceToleranceUm = 1.0;
 
   /** Creates a new instance of this class. */
   public BoardRules(LayerStructure layerStructure, ClearanceMatrix clearanceMatrix) {

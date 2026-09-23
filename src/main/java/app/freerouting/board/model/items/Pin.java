@@ -355,13 +355,58 @@ public class Pin extends DrillItem implements Serializable {
       return false;
     }
     if (!other.sharesNet(this)) {
+      if (other instanceof Pin otherPin) {
+        if (this.getComponentId() > 0
+            && this.getComponentId() == otherPin.getComponentId()
+            && this.netCount() == 0
+            && otherPin.netCount() == 0) {
+          // Check if both are netless sub-pads of the same logical pad on the same component
+          if (isSameLogicalPad(this, otherPin)) {
+            return false;
+          }
+        }
+      }
       return true;
     }
     if (other instanceof Trace) {
       return false;
     }
+    if (other instanceof Pin otherPin) {
+      if (this.getComponentId() > 0 && this.getComponentId() == otherPin.getComponentId()) {
+        // Same-net pins on the same component (e.g. composite pads, thermal vias in pad,
+        // or internally connected pins in a footprint) do not violate clearance against each other.
+        return false;
+      }
+    }
     // Same-net vias must be allowed to contact SMD pins during fanout.
     return !this.drillAllowed() || !(other instanceof Via);
+  }
+
+  private static boolean isSameLogicalPad(Pin pin1, Pin pin2) {
+    if (pin1.board == null || pin1.board.components == null) {
+      return false;
+    }
+    Component comp = pin1.board.components.get(pin1.getComponentId());
+    if (comp == null || comp.getPackage() == null) {
+      return false;
+    }
+    Package pkg = comp.getPackage();
+    if (pin1.pinIndex >= pkg.pinCount() || pin2.pinIndex >= pkg.pinCount()) {
+      return false;
+    }
+    String name1 = pkg.getPin(pin1.pinIndex).name;
+    String name2 = pkg.getPin(pin2.pinIndex).name;
+    if (name1 == null || name2 == null) {
+      return false;
+    }
+    String base1 = getBasePinName(name1);
+    String base2 = getBasePinName(name2);
+    return !base1.isEmpty() && base1.equals(base2);
+  }
+
+  private static String getBasePinName(String pinName) {
+    int atIdx = pinName.indexOf('@');
+    return atIdx >= 0 ? pinName.substring(0, atIdx) : pinName;
   }
 
   @Override

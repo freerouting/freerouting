@@ -7,6 +7,7 @@ import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
+import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.searchtree.SearchTreeObject;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.board.trace.PolylineTrace;
@@ -474,19 +475,33 @@ public abstract class Item
                 calculateClearanceBetweenTwoShapes(
                     shape1, shape2, minimumClearance, clComp1, clComp2);
 
-            if ((smallestClearance < 0) || (actualClearance < smallestClearance)) {
-              smallestClearance = actualClearance;
-            }
+            double shortfall = minimumClearance - actualClearance;
+            double boardUnitToUmFactor =
+                (this.board != null && this.board.communication != null)
+                    ? Unit.scale(1.0, this.board.communication.unit, Unit.UM)
+                        / Math.max(1, this.board.communication.resolution)
+                    : 1.0;
+            double toleranceUm =
+                (this.board != null && this.board.rules != null)
+                    ? this.board.rules.clearanceToleranceUm
+                    : 1.0;
+            double shortfallUm = shortfall * boardUnitToUmFactor;
 
-            ClearanceViolation currentViolation =
-                new ClearanceViolation(
-                    this,
-                    currentItem,
-                    intersection,
-                    shapeLayer(i),
-                    minimumClearance,
-                    actualClearance);
-            result.add(currentViolation);
+            if (shortfallUm > toleranceUm) {
+              if ((smallestClearance < 0) || (actualClearance < smallestClearance)) {
+                smallestClearance = actualClearance;
+              }
+
+              ClearanceViolation currentViolation =
+                  new ClearanceViolation(
+                      this,
+                      currentItem,
+                      intersection,
+                      shapeLayer(i),
+                      minimumClearance,
+                      actualClearance);
+              result.add(currentViolation);
+            }
           }
         }
       }

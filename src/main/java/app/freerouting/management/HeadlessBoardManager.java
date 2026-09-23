@@ -347,6 +347,7 @@ public class HeadlessBoardManager implements BoardManager {
     applyHoleClearanceOverride();
     applyPlaneNetsOverride();
     applyPlaneAsObstacleOverride();
+    applyClearanceToleranceOverride();
   }
 
   private void applyHoleClearanceOverride() {
@@ -596,6 +597,26 @@ public class HeadlessBoardManager implements BoardManager {
     FRLogger.debug("Applied plane_as_obstacle override: " + asObstacle);
   }
 
+  private void applyClearanceToleranceOverride() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.clearanceToleranceUm == null) {
+      return;
+    }
+
+    double toleranceUm = this.routingJob.routerSettings.clearanceToleranceUm;
+    if (toleranceUm < 0) {
+      FRLogger.warn(
+          "Ignoring router.clearance_tolerance_um because it is negative: " + toleranceUm);
+      return;
+    }
+
+    this.board.rules.clearanceToleranceUm = toleranceUm;
+    FRLogger.debug("Applied clearance tolerance: " + toleranceUm + " um.");
+  }
+
   /**
    * Returns the current routing job context associated with this board manager.
    *
@@ -793,6 +814,7 @@ public class HeadlessBoardManager implements BoardManager {
       applyHoleClearanceOverride();
       applyPlaneNetsOverride();
       applyPlaneAsObstacleOverride();
+      applyClearanceToleranceOverride();
     }
   }
 
