@@ -10,6 +10,7 @@ undo support (Ctrl+Z) in the KiCad GUI and automatic rollback on error.
 
 from __future__ import annotations
 
+import json
 import logging
 from typing import Any, Dict, List, Optional
 
@@ -93,7 +94,23 @@ class KiCadIpcBoardWriter:
 
         # 3. Begin atomic transaction
         logger.info("Beginning atomic commit on KiCad board...")
-        commit = self.board.begin_commit()
+        try:
+            commit = self.board.begin_commit()
+        except Exception as e:
+            if "busy" in str(e).lower():
+                logger.warning(f"KiCad IPC server is busy during begin_commit: {e}. Falling back to in-process commit if available.")
+                try:
+                    from plugins.plugin import FreeroutingPlugin
+                    FreeroutingPlugin._apply_result_to_kicad(json.dumps(board_data))
+                    return {
+                        "created_tracks": len(board_data.get("traces", [])),
+                        "created_vias": len(board_data.get("vias", [])),
+                        "removed_tracks": 0,
+                        "removed_vias": 0,
+                    }
+                except Exception as fb_err:
+                    logger.error(f"Fallback to in-process write-back also failed: {fb_err}", exc_info=True)
+            raise
 
         removed_tracks_count = 0
         removed_vias_count = 0

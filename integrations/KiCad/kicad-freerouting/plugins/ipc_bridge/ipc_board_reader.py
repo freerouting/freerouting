@@ -39,6 +39,15 @@ class KiCadIpcBoardReader:
 
     def read_board_data(self) -> Dict[str, Any]:
         """Serializes the board into KiCadBoardJson dictionary format."""
+        # 1. Fast path for live KiCad GUI session:
+        # In KiCad 10+, KiCad returns AS_BUSY for granular item queries (get_tracks, get_footprints)
+        # while an ActionPlugin is running or modal dialog is active, but SaveDocumentToString
+        # succeeds immediately. If pcbnew is available in-process, load the live string.
+        doc_json = self._try_read_via_save_document()
+        if doc_json is not None:
+            return doc_json
+
+        # 2. Granular IPC element extraction (for headless kicad-cli api-server or tests):
         design_name = Path(self.board.name).stem if self.board.name else "Untitled"
 
         data: Dict[str, Any] = {
@@ -69,6 +78,70 @@ class KiCadIpcBoardReader:
         self._collect_zones(data, layer_id_to_index)
 
         return data
+
+    def _try_read_via_save_document(self) -> Optional[Dict[str, Any]]:
+        """Attempts to read the board via SaveDocumentToString + pcbnew loader.
+
+        Bypasses KiCad's AS_BUSY state on granular item queries during ActionPlugin execution.
+        """
+        try:
+            import tempfile
+            from kipy.proto.common.commands.editor_commands_pb2 import (
+                SaveDocumentToString,
+                SavedDocumentResponse,
+            )
+            from kipy.proto.common.types.base_types_pb2 import DOCTYPE_PCB
+
+            docs = self.kicad.get_open_documents(DOCTYPE_PCB)
+            if not docs:
+                return None
+
+            resp = self.kicad._client.send(
+                SaveDocumentToString(document=docs[0]),
+                SavedDocumentResponse,
+            )
+            if not resp or not resp.contents:
+                return None
+
+            try:
+                import pcbnew
+            except ImportError:
+                return None
+
+            # Load the live board string into pcbnew via a temp file
+            with tempfile.NamedTemporaryFile(suffix=".kicad_pcb", delete=False, mode="w", encoding="utf-8") as tf:
+                tf.write(resp.contents)
+                temp_pcb_path = tf.name
+
+            try:
+                pcb = pcbnew.LoadBoard(temp_pcb_path)
+                if not pcb:
+                    return None
+
+                # Find board_json_helpers (parent plugin module)
+                try:
+                    from plugins.board_json_helpers import _build_board_json_manually
+                except ImportError:
+                    from board_json_helpers import _build_board_json_manually
+
+                board_json_str = _build_board_json_manually(pcb)
+                board_data = json.loads(board_json_str)
+
+                # Ensure outline clearance reflects .kicad_pro min_copper_edge_clearance
+                edge_clearance_mm = self._resolve_edge_clearance()
+                if "outline" in board_data:
+                    board_data["outline"]["clearance"] = edge_clearance_mm
+
+                logger.info("Successfully serialized board via SaveDocumentToString fast path.")
+                return board_data
+            finally:
+                try:
+                    os.unlink(temp_pcb_path)
+                except Exception:
+                    pass
+        except Exception as e:
+            logger.debug(f"SaveDocumentToString fast-path unavailable or failed: {e}")
+            return None
 
     def _collect_layers(self, data: Dict[str, Any], layer_id_to_index: Dict[Any, int]) -> None:
         """Enumerates copper layers and builds layer mapping."""
