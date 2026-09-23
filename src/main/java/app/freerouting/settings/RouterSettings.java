@@ -34,6 +34,14 @@ public class RouterSettings implements Serializable, Cloneable {
   public Double holeClearanceUm;
 
   /**
+   * Clearance violation shortfall tolerance in micrometers. Clearance shortfalls (expected -
+   * actual) less than or equal to this threshold are treated as floating-point
+   * rounding/discretization noise rather than electrical clearance violations.
+   */
+  @SerializedName("clearance_tolerance_um")
+  public Double clearanceToleranceUm;
+
+  /**
    * Explicit list of net names to treat as power-plane nets, enabling plane-routing mode and
    * discounted plane via costs for these nets.
    */
@@ -612,6 +620,7 @@ public class RouterSettings implements Serializable, Cloneable {
     }
     result.copperToEdgeClearanceUm = this.copperToEdgeClearanceUm;
     result.holeClearanceUm = this.holeClearanceUm;
+    result.clearanceToleranceUm = this.clearanceToleranceUm;
     result.planeNets = this.planeNets != null ? this.planeNets.clone() : null;
     result.planeAsObstacle = this.planeAsObstacle;
     result.neckWidthUm = this.neckWidthUm;
