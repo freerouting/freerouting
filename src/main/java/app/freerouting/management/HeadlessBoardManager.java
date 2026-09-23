@@ -607,13 +607,17 @@ public class HeadlessBoardManager implements BoardManager {
     }
 
     double toleranceUm = this.routingJob.routerSettings.clearanceToleranceUm;
-    if (toleranceUm < 0) {
+    if (!Double.isFinite(toleranceUm) || toleranceUm < 0) {
       FRLogger.warn(
-          "Ignoring router.clearance_tolerance_um because it is negative: " + toleranceUm);
+          "Ignoring router.clearance_tolerance_um because it is invalid (must be finite and >= 0): "
+              + toleranceUm);
       return;
     }
 
     this.board.rules.clearanceToleranceUm = toleranceUm;
+    if (this.routingJob.drcSettings != null) {
+      this.routingJob.drcSettings.clearanceToleranceUm = toleranceUm;
+    }
     FRLogger.debug("Applied clearance tolerance: " + toleranceUm + " um.");
   }
 

@@ -96,4 +96,18 @@ class PCBenchPreExistingClearanceViolationsTest {
     int count = countPreExistingViolations("roomba-ESP12E_roomba-esp");
     assertEquals(0, count, "roomba-ESP12E should have 0 pre-existing clearance violations");
   }
+
+  @Test
+  void testBasePinNameNormalization() {
+    assertEquals("21", app.freerouting.board.model.items.Pin.getBasePinName("21@1"));
+    assertEquals("21", app.freerouting.board.model.items.Pin.getBasePinName("21@2"));
+    assertEquals("pad", app.freerouting.board.model.items.Pin.getBasePinName("pad#1"));
+    assertEquals("pad_1", app.freerouting.board.model.items.Pin.getBasePinName("pad_1_1"));
+    assertEquals("pad_1", app.freerouting.board.model.items.Pin.getBasePinName("pad_1_2"));
+    assertEquals("EP", app.freerouting.board.model.items.Pin.getBasePinName("EP-1"));
+    assertEquals("EP", app.freerouting.board.model.items.Pin.getBasePinName("EP-2"));
+    assertEquals("1", app.freerouting.board.model.items.Pin.getBasePinName("1"));
+    assertEquals("GND", app.freerouting.board.model.items.Pin.getBasePinName("GND"));
+    assertEquals("", app.freerouting.board.model.items.Pin.getBasePinName(null));
+  }
 }

@@ -45,9 +45,11 @@ public class BoardRules implements Serializable {
    */
   private double pinEdgeToTurnDist;
 
+  private static final long serialVersionUID = 3029478744858107286L;
+
   private boolean useSlowAutorouteAlgorithm;
   private int holeClearance;
-  public double clearanceToleranceUm = 1.0;
+  public transient double clearanceToleranceUm = 1.0;
 
   /** Creates a new instance of this class. */
   public BoardRules(LayerStructure layerStructure, ClearanceMatrix clearanceMatrix) {
@@ -432,5 +434,6 @@ public class BoardRules implements Serializable {
     stream.defaultReadObject();
     int snapAngleNo = stream.readInt();
     this.traceAngleRestriction = AngleRestriction.valueOf(snapAngleNo);
+    this.clearanceToleranceUm = 1.0;
   }
 }

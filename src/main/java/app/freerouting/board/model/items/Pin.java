@@ -404,9 +404,47 @@ public class Pin extends DrillItem implements Serializable {
     return !base1.isEmpty() && base1.equals(base2);
   }
 
-  private static String getBasePinName(String pinName) {
+  /**
+   * Normalizes a pin name by stripping composite sub-pad suffixes (such as {@code @1}, {@code #1},
+   * {@code _1}, or {@code -1}) to identify the base logical pad.
+   */
+  public static String getBasePinName(String pinName) {
+    if (pinName == null) {
+      return "";
+    }
     int atIdx = pinName.indexOf('@');
-    return atIdx >= 0 ? pinName.substring(0, atIdx) : pinName;
+    if (atIdx >= 0) {
+      return pinName.substring(0, atIdx);
+    }
+    int hashIdx = pinName.indexOf('#');
+    if (hashIdx >= 0) {
+      return pinName.substring(0, hashIdx);
+    }
+    // Handle composite sub-pad suffixes with numeric segment, e.g. "pad_1_1", "1_1", "1-1"
+    int lastUnderscore = pinName.lastIndexOf('_');
+    if (lastUnderscore > 0 && lastUnderscore < pinName.length() - 1) {
+      String suffix = pinName.substring(lastUnderscore + 1);
+      if (isAllDigits(suffix)) {
+        return pinName.substring(0, lastUnderscore);
+      }
+    }
+    int lastHyphen = pinName.lastIndexOf('-');
+    if (lastHyphen > 0 && lastHyphen < pinName.length() - 1) {
+      String suffix = pinName.substring(lastHyphen + 1);
+      if (isAllDigits(suffix)) {
+        return pinName.substring(0, lastHyphen);
+      }
+    }
+    return pinName;
+  }
+
+  private static boolean isAllDigits(String str) {
+    for (int i = 0; i < str.length(); i++) {
+      if (!Character.isDigit(str.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override

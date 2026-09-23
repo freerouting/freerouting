@@ -485,6 +485,9 @@ public abstract class Item
                 (this.board != null && this.board.rules != null)
                     ? this.board.rules.clearanceToleranceUm
                     : 1.0;
+            if (!Double.isFinite(toleranceUm) || toleranceUm < 0) {
+              toleranceUm = 0.0;
+            }
             double shortfallUm = shortfall * boardUnitToUmFactor;
 
             if (shortfallUm > toleranceUm) {

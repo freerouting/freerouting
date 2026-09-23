@@ -48,9 +48,6 @@ public class DesignRulesChecker {
   public DesignRulesChecker(BasicBoard board, DesignRulesCheckerSettings drcSettings) {
     this.board = board;
     this.drcSettings = drcSettings;
-    if (drcSettings != null && board != null && board.rules != null) {
-      board.rules.clearanceToleranceUm = drcSettings.clearanceToleranceUm;
-    }
   }
 
   /**
