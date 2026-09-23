@@ -85,6 +85,14 @@ public class RoutingJob implements Serializable, Comparable<RoutingJob> {
   @Schema(name = "session_id", description = "The session ID the job belongs to")
   public UUID sessionId;
 
+  @SerializedName("user_id")
+  @Schema(name = "user_id", description = "The user ID the job belongs to")
+  public UUID userId;
+
+  @SerializedName("api_key_hash")
+  @Schema(name = "api_key_hash", description = "The hashed API key used to enqueue the job")
+  public String apiKeyHash;
+
   @SerializedName("input")
   @Schema(description = "Details of the uploaded input design file")
   public BoardFileDetails input;

@@ -1,0 +1,3 @@
+google-cloud-bigquery>=3.20.0
+gspread>=6.0.0
+google-auth>=2.20.0
