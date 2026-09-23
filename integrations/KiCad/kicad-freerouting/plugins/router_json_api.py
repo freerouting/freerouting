@@ -101,6 +101,8 @@ class JsonApiRouter:
             str(self.plugin.java_path),
             "-jar",
             str(self.plugin.module_path),
+            "-host",
+            "KiCad",
             "--api_server.enabled=true",
             "--api_server.endpoints=http://127.0.0.1:37864",
             "--api_server.authentication.enabled=false",

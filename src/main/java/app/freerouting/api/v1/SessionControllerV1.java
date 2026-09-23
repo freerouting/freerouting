@@ -3,6 +3,7 @@ package app.freerouting.api.v1;
 import static app.freerouting.util.gson.GsonProvider.GSON;
 
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.api.ApiUsageFilter;
 import app.freerouting.api.BaseController;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.Session;
@@ -156,9 +157,11 @@ public class SessionControllerV1 extends BaseController {
     // The EnvironmentHostValidationFilter guarantees this header is present and
     // well-formed (<name>/<version>) before the controller is reached.
     String host = httpHeaders.getHeaderString("Freerouting-Environment-Host");
+    String authHeader = httpHeaders.getHeaderString("Authorization");
+    String apiKeyHash = ApiUsageFilter.hashBearerToken(authHeader);
 
     // create a new session using the authenticated user as the owner
-    Session newSession = SessionManager.getInstance().createSession(userId, host);
+    Session newSession = SessionManager.getInstance().createSession(userId, host, apiKeyHash);
     if (newSession == null) {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{}").build();
     } else {
