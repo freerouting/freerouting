@@ -17,8 +17,11 @@ public class Session implements Serializable {
   @SerializedName("host")
   public final String host;
 
-  @SerializedName("api_key_hash")
-  public final String apiKeyHash;
+  /**
+   * Hashed API key used for internal telemetry attribution. Marked transient to avoid exposing in
+   * API responses.
+   */
+  public final transient String apiKeyHash;
 
   public transient boolean isPrimary;
 
