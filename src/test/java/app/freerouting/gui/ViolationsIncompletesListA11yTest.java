@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import app.freerouting.Freerouting;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.drc.AirLine;
 import app.freerouting.drc.ClearanceViolation;
@@ -13,11 +14,13 @@ import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
+import app.freerouting.settings.GlobalSettings;
 import java.io.FileInputStream;
 import java.util.Collection;
 import javax.accessibility.AccessibleRole;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +43,11 @@ class ViolationsIncompletesListA11yTest {
 
   private static final int EXPECTED_UNIQUE_VIOLATIONS = 2;
   private static final int EXPECTED_INCOMPLETES = 9;
+
+  @BeforeEach
+  void setUp() {
+    Freerouting.globalSettings = new GlobalSettings();
+  }
 
   /**
    * Translated list titles (mirror the {@code Common} bundle: clearance_violations/incompletes).

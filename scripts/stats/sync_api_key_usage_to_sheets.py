@@ -25,13 +25,17 @@ import sys
 from typing import Any, Dict, List, Optional
 
 try:
+    import google.auth
     from google.cloud import bigquery
     from google.oauth2 import service_account
     import gspread
 except ImportError:
+    google_auth = None
     bigquery = None
     service_account = None
     gspread = None
+else:
+    google_auth = google.auth
 
 DEFAULT_PROJECT_ID = "freerouting-analytics"
 DEFAULT_DATASET_ID = "freerouting_application"
@@ -48,19 +52,22 @@ METRIC_COLUMNS = [
 
 def get_credentials(key_path_or_json: Optional[str] = None) -> Any:
     """Resolve Google service account credentials."""
+    scopes = [
+        "https://www.googleapis.com/auth/bigquery",
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive",
+    ]
+
     raw = key_path_or_json or os.environ.get(
         "FREEROUTING__USAGE_AND_DIAGNOSTIC_DATA__BIGQUERY_SERVICE_ACCOUNT_KEY"
     ) or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
 
     if not raw:
         # Fall back to default application credentials if available
+        if google_auth is not None:
+            creds, _ = google_auth.default(scopes=scopes)
+            return creds
         return None
-
-    scopes = [
-        "https://www.googleapis.com/auth/bigquery",
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive",
-    ]
 
     if os.path.exists(raw):
         return service_account.Credentials.from_service_account_file(raw, scopes=scopes)
@@ -89,7 +96,7 @@ def query_bigquery_stats(
         profile_id,
         environment_host,
         api_route,
-        REGEXP_EXTRACT(api_path, r'v1/jobs/([a-f0-9\\-]+)/') AS job_id,
+        REGEXP_EXTRACT(api_path, r'v1/jobs/([a-f0-9\-]+)/') AS job_id,
         http_status,
         PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%E*S UTC', timestamp) AS event_time
       FROM `{project_id}.{dataset_id}.api_usage`
@@ -99,16 +106,22 @@ def query_bigquery_stats(
       SELECT DISTINCT
         job_id
       FROM `{project_id}.{dataset_id}.job_lifecycle`
-      WHERE status = 'COMPLETED'
+      WHERE status IN ('SUCCEEDED', 'COMPLETED')
     )
     SELECT
       r.api_key_hash,
-      ANY_VALUE(r.environment_host) AS last_environment_host,
-      COUNT(DISTINCT CASE WHEN r.api_route = 'POST /v1/sessions/create' AND r.http_status = 200 THEN r.event_time END) AS sessions_created,
-      COUNT(DISTINCT CASE WHEN r.api_route = 'POST /v1/jobs/{{jobId}}/start' AND r.http_status = 200 THEN r.job_id END) AS boards_started,
+      ARRAY_AGG(r.environment_host IGNORE NULLS ORDER BY r.event_time DESC LIMIT 1)[SAFE_OFFSET(0)] AS last_environment_host,
+      COUNT(DISTINCT CASE WHEN r.api_route IN ('POST v1/sessions/create', 'POST /v1/sessions/create') AND r.http_status = 200 THEN r.event_time END) AS sessions_created,
+      COUNT(DISTINCT CASE WHEN (
+        r.api_route IN ('PUT v1/jobs/{id}/start', 'POST /v1/jobs/{jobId}/start')
+        OR r.api_route IN ('POST v1/autoroute', 'POST /v1/autoroute')
+      ) AND r.http_status IN (200, 202) THEN COALESCE(r.job_id, CAST(r.event_time AS STRING)) END) AS boards_started,
       GREATEST(
-        COUNT(DISTINCT CASE WHEN r.api_route = 'POST /v1/jobs/{{jobId}}/start' AND r.http_status = 200 AND c.job_id IS NOT NULL THEN r.job_id END),
-        COUNT(DISTINCT CASE WHEN r.api_route IN ('GET /v1/jobs/{{jobId}}/output/file', 'GET /v1/jobs/{{jobId}}/output/json') AND r.http_status = 200 THEN r.job_id END)
+        COUNT(DISTINCT CASE WHEN r.api_route IN ('PUT v1/jobs/{id}/start', 'POST /v1/jobs/{jobId}/start') AND r.http_status IN (200, 202) AND c.job_id IS NOT NULL THEN r.job_id END),
+        COUNT(DISTINCT CASE WHEN (
+          r.api_route IN ('GET v1/jobs/{id}/output', 'GET v1/jobs/{id}/output/json', 'GET /v1/jobs/{jobId}/output', 'GET /v1/jobs/{jobId}/output/json', 'GET /v1/jobs/{jobId}/output/file')
+          OR r.api_route IN ('POST v1/autoroute', 'POST /v1/autoroute')
+        ) AND r.http_status = 200 THEN COALESCE(r.job_id, CAST(r.event_time AS STRING)) END)
       ) AS boards_completed,
       COUNT(*) AS total_api_calls,
       MIN(r.event_time) AS first_used_at,
