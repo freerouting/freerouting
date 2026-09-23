@@ -38,10 +38,12 @@ import org.junit.jupiter.api.Test;
 @Tag("gui")
 class ViolationsIncompletesListA11yTest {
 
-  /** Board with both incompletes and clearance violations: 9 unconnected, 2 unique violations. */
-  private static final String FIXTURE = "Issue575-drc_dev-board_4_hole_clearance_violations.dsn";
+  private static final String INCOMPLETE_FIXTURE =
+      "Issue575-drc_dev-board_4_hole_clearance_violations.dsn";
+  private static final String VIOLATION_FIXTURE =
+      "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn";
 
-  private static final int EXPECTED_UNIQUE_VIOLATIONS = 2;
+  private static final int EXPECTED_UNIQUE_VIOLATIONS = 67;
   private static final int EXPECTED_INCOMPLETES = 9;
 
   @BeforeEach
@@ -59,9 +61,9 @@ class ViolationsIncompletesListA11yTest {
   private static final ListTitles HUNGARIAN =
       new ListTitles("szigetelőtávolság-sértések", "Befejezetlen kapcsolatok");
 
-  private static BasicBoard loadBoard() throws Exception {
+  private static BasicBoard loadBoard(String filename) throws Exception {
     BoardReadResult result;
-    try (FileInputStream in = new FileInputStream("fixtures/" + FIXTURE)) {
+    try (FileInputStream in = new FileInputStream("fixtures/" + filename)) {
       result = DsnReader.readBoard(in, null, null, "test");
     }
     return switch (result) {
@@ -85,7 +87,7 @@ class ViolationsIncompletesListA11yTest {
 
   @Test
   void clearanceViolationsListIsAccessibleAndHasCorrectCount() throws Exception {
-    BasicBoard board = loadBoard();
+    BasicBoard board = loadBoard(VIOLATION_FIXTURE);
     DesignRulesChecker drc = new DesignRulesChecker(board, null);
     Collection<ClearanceViolation> violations = drc.getAllClearanceViolations();
     String[] rows =
@@ -110,7 +112,7 @@ class ViolationsIncompletesListA11yTest {
 
   @Test
   void incompletesListIsAccessibleAndHasCorrectCount() throws Exception {
-    BasicBoard board = loadBoard();
+    BasicBoard board = loadBoard(INCOMPLETE_FIXTURE);
     DesignRulesChecker drc = new DesignRulesChecker(board, null);
     AirLine[] airlines = drc.getAllAirlines();
     String[] rows =
