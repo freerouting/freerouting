@@ -2,6 +2,7 @@ package app.freerouting.gui.rendering;
 
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.geometry.planar.Area;
+import app.freerouting.geometry.planar.AwtAreas;
 import app.freerouting.geometry.planar.Circle;
 import app.freerouting.geometry.planar.Ellipse;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -376,8 +377,8 @@ public class GraphicsContext implements Serializable {
     }
     java.awt.geom.Area awtArea = new java.awt.geom.Area(borderPath);
 
-    Shape[] holes = area.getHoles();
-    for (Shape hole : holes) {
+    java.util.List<java.awt.geom.Area> holeAreas = new java.util.ArrayList<>();
+    for (Shape hole : area.getHoles()) {
       if (hole instanceof PolylineShape holePoly) {
         int holeCount = holePoly.borderLineCount();
         if (holeCount > 0) {
@@ -389,18 +390,19 @@ public class GraphicsContext implements Serializable {
             holePath.lineTo(hpi.getX(), hpi.getY());
           }
           holePath.closePath();
-          awtArea.subtract(new java.awt.geom.Area(holePath));
+          holeAreas.add(new java.awt.geom.Area(holePath));
         }
       } else if (hole instanceof Circle circle) {
         Point2D center = coordinateTransform.boardToScreen(circle.center.toFloat());
         double radius = coordinateTransform.boardToScreen(circle.radius);
         double diameter = 2 * radius;
-        awtArea.subtract(
+        holeAreas.add(
             new java.awt.geom.Area(
                 new Ellipse2D.Double(
                     center.getX() - radius, center.getY() - radius, diameter, diameter)));
       }
     }
+    AwtAreas.subtractAll(awtArea, holeAreas);
     return awtArea;
   }
 
