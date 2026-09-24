@@ -136,7 +136,7 @@ boundaries are strict ArchUnit rules; no frozen violation store is required.
 
 ### `app.freerouting`
 
-Application bootstrap and top-level wiring. Start here when you need the entry point for the program, [Freerouting.java](src/main/java/app/freerouting/Freerouting.java).
+Application bootstrap and top-level wiring. Start here when you need the entry point for the program, [Freerouting.java](../src/main/java/app/freerouting/Freerouting.java).
 
 ### `app.freerouting.io.specctra`
 
@@ -154,8 +154,8 @@ The live board model is split into cohesive subpackages. There are no remaining 
 - `board.state` — observers, communication, changed-area, coordinate transform, and comparison.
 - `board.actions` — forced routing, item inspection/selection, drill-item moves, and ID generation.
 
-Start with [BasicBoard.java](src/main/java/app/freerouting/board/facade/BasicBoard.java) and
-[RoutingBoard.java](src/main/java/app/freerouting/board/facade/RoutingBoard.java).
+Start with [BasicBoard.java](../src/main/java/app/freerouting/board/facade/BasicBoard.java) and
+[RoutingBoard.java](../src/main/java/app/freerouting/board/facade/RoutingBoard.java).
 
 ### `app.freerouting.board.searchtree`
 
@@ -285,21 +285,21 @@ GUI rendering entry points; `BasicBoard` and `autoroute` remain headless and do 
 
 Several implementation areas live one level below the top-level package grouping above:
 
-- `app.freerouting.geometry.planar` contains the actual planar primitives and helper classes; start with [Point.java](src/main/java/app/freerouting/geometry/planar/Point.java) and [Shape.java](src/main/java/app/freerouting/geometry/planar/Shape.java).
-- `app.freerouting.io.specctra` contains DSN and SES import/export; parser internals live in `parser/`. Start with [DsnReader.java](src/main/java/app/freerouting/io/specctra/DsnReader.java), [DsnWriter.java](src/main/java/app/freerouting/io/specctra/DsnWriter.java), [SesReader.java](src/main/java/app/freerouting/io/specctra/SesReader.java), and [SesWriter.java](src/main/java/app/freerouting/io/specctra/SesWriter.java).
-- `app.freerouting.analytics` contains analytics telemetry and dispatch; start with [FRAnalytics.java](src/main/java/app/freerouting/analytics/FRAnalytics.java).
-- `app.freerouting.util.gson` contains Gson adapters and JSON provider helpers; start with [GsonProvider.java](src/main/java/app/freerouting/util/gson/GsonProvider.java).
-- `app.freerouting.core.scoring` contains board statistics and scoring helpers; start with [BoardStatistics.java](src/main/java/app/freerouting/core/scoring/BoardStatistics.java).
-- `app.freerouting.core.results` contains the headless CLI routing result manifest; start with [RoutingResultManifest.java](src/main/java/app/freerouting/core/results/RoutingResultManifest.java).
-- `app.freerouting.api.v1`, `app.freerouting.api.dto`, `app.freerouting.api.security`, and `app.freerouting.api.dev` contain the public controllers, payloads, authentication, and mocked endpoints; start with [JobControllerV1.java](src/main/java/app/freerouting/api/v1/JobControllerV1.java), [BoardFilePayload.java](src/main/java/app/freerouting/api/dto/BoardFilePayload.java), and [ApiKeyValidationService.java](src/main/java/app/freerouting/api/security/ApiKeyValidationService.java).
-- `app.freerouting.autoroute.events` contains routing event callbacks; start with [BoardUpdatedEvent.java](src/main/java/app/freerouting/autoroute/events/BoardUpdatedEvent.java).
-- `app.freerouting.autoroute.pipeline` contains the shared routing sequencer; start with [RoutingPipeline.java](src/main/java/app/freerouting/autoroute/pipeline/RoutingPipeline.java).
-- `app.freerouting.board.searchtree` contains board spatial indexes; start with [SearchTreeManager.java](src/main/java/app/freerouting/board/searchtree/SearchTreeManager.java).
+- `app.freerouting.geometry.planar` contains the actual planar primitives and helper classes; start with [Point.java](../src/main/java/app/freerouting/geometry/planar/Point.java) and [Shape.java](../src/main/java/app/freerouting/geometry/planar/Shape.java).
+- `app.freerouting.io.specctra` contains DSN and SES import/export; parser internals live in `parser/`. Start with [DsnReader.java](../src/main/java/app/freerouting/io/specctra/DsnReader.java), [DsnWriter.java](../src/main/java/app/freerouting/io/specctra/DsnWriter.java), [SesReader.java](../src/main/java/app/freerouting/io/specctra/SesReader.java), and [SesWriter.java](../src/main/java/app/freerouting/io/specctra/SesWriter.java).
+- `app.freerouting.analytics` contains analytics telemetry and dispatch; start with [FRAnalytics.java](../src/main/java/app/freerouting/analytics/FRAnalytics.java).
+- `app.freerouting.util.gson` contains Gson adapters and JSON provider helpers; start with [GsonProvider.java](../src/main/java/app/freerouting/util/gson/GsonProvider.java).
+- `app.freerouting.core.scoring` contains board statistics and scoring helpers; start with [BoardStatistics.java](../src/main/java/app/freerouting/core/scoring/BoardStatistics.java).
+- `app.freerouting.core.results` contains the headless CLI routing result manifest; start with [RoutingResultManifest.java](../src/main/java/app/freerouting/core/results/RoutingResultManifest.java).
+- `app.freerouting.api.v1`, `app.freerouting.api.dto`, `app.freerouting.api.security`, and `app.freerouting.api.dev` contain the public controllers, payloads, authentication, and mocked endpoints; start with [JobControllerV1.java](../src/main/java/app/freerouting/api/v1/JobControllerV1.java), [BoardFilePayload.java](../src/main/java/app/freerouting/api/dto/BoardFilePayload.java), and [ApiKeyValidationService.java](../src/main/java/app/freerouting/api/security/ApiKeyValidationService.java).
+- `app.freerouting.autoroute.events` contains routing event callbacks; start with [BoardUpdatedEvent.java](../src/main/java/app/freerouting/autoroute/events/BoardUpdatedEvent.java).
+- `app.freerouting.autoroute.pipeline` contains the shared routing sequencer; start with [RoutingPipeline.java](../src/main/java/app/freerouting/autoroute/pipeline/RoutingPipeline.java).
+- `app.freerouting.board.searchtree` contains board spatial indexes; start with [SearchTreeManager.java](../src/main/java/app/freerouting/board/searchtree/SearchTreeManager.java).
 - `app.freerouting.board.facade` keeps board services behind the stable `BasicBoard` and `RoutingBoard`
   façades: item storage/connectivity/snapshots, routing operations/search, and routing undo/redo.
 - `app.freerouting.gui.windows.board` and `app.freerouting.gui.windows.routing` contain the Swing
-  information and routing-parameter windows; start with [WindowVisibility.java](src/main/java/app/freerouting/gui/windows/board/WindowVisibility.java) and [WindowAutorouteParameter.java](src/main/java/app/freerouting/gui/windows/routing/WindowAutorouteParameter.java).
-- `app.freerouting.gui.board` contains the board shell; start with [BoardFrame.java](src/main/java/app/freerouting/gui/board/BoardFrame.java).
+  information and routing-parameter windows; start with [WindowVisibility.java](../src/main/java/app/freerouting/gui/windows/board/WindowVisibility.java) and [WindowAutorouteParameter.java](../src/main/java/app/freerouting/gui/windows/routing/WindowAutorouteParameter.java).
+- `app.freerouting.gui.board` contains the board shell; start with [BoardFrame.java](../src/main/java/app/freerouting/gui/board/BoardFrame.java).
 
 ## How The Code Fits Together
 
@@ -478,10 +478,10 @@ To maintain clarity and consistency across the codebase, user interfaces, logs, 
 
 ## Suggested Reading Order
 
-1. [README.md](README.md) for the product overview.
-2. [docs/developer.md](docs/developer.md) for build, test, and release guidance.
-3. [docs/settings.md](docs/settings.md) for the settings merge model.
-4. [docs/scoring.md](docs/scoring.md) for V2 router and optimizer board-score equations.
+1. [README.md](../README.md) for the product overview.
+2. [docs/developer.md](developer.md) for build, test, and release guidance.
+3. [docs/settings.md](settings.md) for the settings merge model.
+4. [docs/scoring.md](scoring.md) for V2 router and optimizer board-score equations.
 5. This document again, using the package glossary above to jump directly to the relevant area.
 
 ## Practical Rules Of Thumb

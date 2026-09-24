@@ -1,112 +1,89 @@
-# Introduction
+# Contributing to Freerouting
 
-First off, thank you for considering contributing to Freerouting. It's people like you that make Freerouting such a great tool.
+Hi there! Thank you for taking the time to contribute to Freerouting. Whether you're fixing a bug, improving the routing algorithms, refining the UI, translating strings, or polishing documentation, I truly appreciate your help.
 
-Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
+---
 
-Freerouting is an open source project and we love to receive contributions from our community — you! There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code which can be incorporated into Freerouting itself.
+## Getting in Touch
 
-**UI translations:** Freerouting uses an LLM translation pipeline. Please read [`docs/translations.md`](translations.md) before changing non-English UI strings — edit glossary files and request a full-locale re-translation; do not patch `*_{locale}.properties` directly.
+If you have questions, ideas, or want to discuss an approach before writing code, feel free to reach out directly:
 
-# Ground Rules
+- **GitHub Discussions**: [Start or join a discussion](https://github.com/freerouting/freerouting/discussions) — ideal for architectural ideas, feature suggestions, and open questions.
+- **Freerouting on X (Twitter)**: [@freeroutingPCB](https://x.com/freeroutingPCB)
+- **Personal X (Twitter)**: [@andrasfuchs](https://x.com/andrasfuchs)
+- **LinkedIn**: [Andras Fuchs](https://www.linkedin.com/in/andrasfuchs/)
+- **Email**: [info@freerouting.app](mailto:info@freerouting.app)
 
-Responsibilities
-* Ensure cross-platform compatibility for every change that's accepted. Windows, Mac, Debian & Ubuntu Linux.
-* Create issues for any major changes and enhancements that you wish to make. Discuss things transparently and get community feedback.
-* Be welcoming to newcomers and encourage diverse new contributors from all backgrounds.
+---
 
-# Your First Contribution
+## Where to Start
 
-Unsure where to begin contributing to Freerouting? You can start by looking through these curated issues:
-- [Good first issues](https://github.com/freerouting/freerouting/labels/good%20first%20issue) - issues which should only require a few lines of code, and a test or two.
-- [Help wanted issues](https://github.com/freerouting/freerouting/labels/help%20wanted) - issues where community help is actively requested.
+Unsure where to begin? Check out these curated issues:
+- [Good first issues](https://github.com/freerouting/freerouting/labels/good%20first%20issue) — well-scoped tasks, typically needing just a few lines of code and a test.
+- [Help wanted issues](https://github.com/freerouting/freerouting/labels/help%20wanted) — areas where community input and contributions are actively sought.
 
-For a comprehensive guide to all issue and PR labels, see [`docs/labels.md`](labels.md).
+For a full guide to our label system, take a look at [`docs/labels.md`](labels.md).
 
-### Bonus points: Add a link to a resource for people who have never contributed to open source before.
+If you are new to open source or Git, welcome! Everyone starts somewhere. Feel free to ask questions in your PR or in Discussions if you get stuck.
 
-Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) and here are a couple of friendly tutorials you can check out: http://makeapullrequest.com/ and http://www.firsttimersonly.com/.
+---
 
-At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:
+## Ground Rules
 
-If a maintainer asks you to "rebase" your PR, they're saying that a lot of code has changed, and that you need to update your branch so it's easier to merge.
+- **Cross-platform**: Changes must work cleanly across Windows, macOS (Apple Silicon and Intel), and Linux.
+- **Discuss major changes first**: For architectural refactors or new features, please open an issue or discussion first so we can align before you spend days coding.
+- **Keep PRs focused**: Smaller, single-purpose PRs are much easier to review, test, and merge quickly.
+- **UI translations**: Freerouting uses an automated LLM translation pipeline. Please read [`docs/translations.md`](translations.md) before changing non-English UI strings — update glossary files rather than editing `*_{locale}.properties` files directly.
+- **Code of Conduct**: Please review and respect our [Code of Conduct](code_of_conduct.md).
 
-# Getting started
+---
 
-For something that is bigger than a one or two line fix:
+## Development & Pull Request Workflow
 
-1. Create your own fork of the code
-2. Do the changes in your fork
-3. If you like the change and think the project could use it:
-    * Be sure you have followed the code style for the project.
-    * Note the Freerouting Code of Conduct.
-    * Send a pull request.
+1. **Fork & Branch**: Fork the repo and create a descriptive branch for your work (e.g. `fix/via-clearance` or `feature/kicad-ipc-import`).
+2. **Make your changes**: Write clean, readable code and include unit or integration tests that verify your fix or feature.
+3. **Verify quality gates**: Make sure local checks pass before committing (see below).
+4. **Open a PR**: Submit your pull request against `master`. Describe what changed, why, and reference any relevant issue numbers.
 
-## Code quality and formatting
+---
 
-Freerouting uses Google Java Format through Spotless, Checkstyle, pre-commit hooks, and
-GitHub Actions. Formatting and validation are part of the contribution contract: a change
-that fails these checks is not ready to commit.
+## Code Quality & Formatting
 
-Install the local checks once:
+Freerouting uses **Spotless** (Google Java Format), **Checkstyle**, explicit LF line endings, and **pre-commit** hooks to keep the codebase consistent.
+
+### Set up local checks (one-time)
 
 ```bash
-python -m pip install pre-commit
+pip install pre-commit
 pre-commit install
 ```
 
-Run the same checks locally before committing:
+### Run quality checks before committing
 
 ```bash
 pre-commit run --all-files
 ./gradlew spotlessCheck checkstyleMain checkstyleTest
 python scripts/i18n/extract-context.py --check
 ```
+*(On Windows, use `.\gradlew.bat` instead of `./gradlew`)*
 
-On Windows, use `.\gradlew.bat` instead of `./gradlew`. The Gradle quality hook and
-`scripts/pre-commit` are check-only: they report failures rather than applying formatting
-to unrelated files or staging changes automatically. The generic hygiene hooks
-automatically repair trailing whitespace, final newlines, and LF line endings only in
-files selected for the current commit. Review and stage those changes, then rerun the
-hook when it reports that files were modified.
+- `spotlessCheck` verifies formatting without modifying files.
+- If you deliberately need to reformat Java sources, run `./gradlew spotlessApply`, review the diff, and commit it separately from functional changes.
+- The repository enforces LF line endings on all platforms via `.gitattributes`.
 
-`spotlessApply` is an intentional formatting operation, not a normal pre-commit step.
-It formats every configured Java source. Run it only when you explicitly intend to make
-a formatting change, then inspect the complete diff and keep that normalization separate
-from functional changes:
+---
 
-```bash
-./gradlew spotlessApply
-git diff --ignore-space-at-eol --check
-git diff --stat
-```
+## Reporting Bugs & Suggesting Features
 
-The repository uses LF for source, build, metadata, and documentation files on every
-platform through `.gitattributes`. Do not change `core.autocrlf` back and forth to fix a
-single working tree. If the repository needs one-time normalization, do it in a dedicated
-commit with no unrelated changes.
+### How to report a bug
+When filing an issue, please include:
+1. Freerouting version (e.g. `v2.5.0`)
+2. Operating system and architecture (e.g. Windows 11 x64, macOS M2, Ubuntu 24.04)
+3. Step-by-step reproduction steps
+4. Expected vs. actual behavior
+5. Sample `.dsn` design file or log output (if possible) — this saves enormous time when investigating!
 
-GitHub Actions runs the same quality gates on pull requests. A contributor should resolve
-local Checkstyle, Spotless, line-ending, or i18n-context failures before opening or
-updating a pull request.
+### Suggesting features
+Have an idea to make Freerouting better? Open an [issue](https://github.com/freerouting/freerouting/issues) or start a [discussion](https://github.com/freerouting/freerouting/discussions) explaining the problem you're trying to solve and how you envision the feature working.
 
-As a rule of thumb, changes are obvious fixes if they do not introduce any new functionality or creative thinking. As long as the change does not affect functionality, some likely examples include the following:
-* Spelling / grammar fixes
-* Typo correction, white space and formatting changes
-* Comment clean up
-* Bug fixes that change default return values or error codes stored in constants
-* Adding logging messages or debugging output
-* Changes to ‘metadata’ files like .gitignore, build scripts, etc.
-* Moving source files from one directory or package to another
-
-# How to report a bug
-
- When filing an issue, make sure to answer these five questions:
-
- 1. What version of Freerouting are you using?
- 2. What operating system and processor architecture are you using?
- 3. What did you do?
- 4. What did you expect to see?
- 5. What did you see instead?
-
-If you find yourself wishing for a feature that doesn't exist in Freerouting, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Freerouting has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.
+Thank you again for contributing to Freerouting!

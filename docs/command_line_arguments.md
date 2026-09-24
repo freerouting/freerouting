@@ -311,4 +311,4 @@ java -jar freerouting.jar -de MyBoard.dsn -do MyBoard.ses -mp 10 -mt 4
 
 By leveraging Freerouting's CLI, you can integrate advanced PCB routing into your automated workflows, scripts, or applications. The flexibility of command-line options and internal settings allows for customized routing solutions tailored to your project's requirements.
 
-For further customization and advanced configurations, refer to the [Settings Documentation](/docs/settings.md) and other resources provided with Freerouting.
+For further customization and advanced configurations, refer to the [Settings Documentation](settings.md) and other resources provided with Freerouting.

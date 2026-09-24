@@ -1,31 +1,17 @@
-<p align="center">
-<img src="https://raw.githubusercontent.com/freerouting/freerouting/master/assets/social_preview/freerouting_social_preview_1280x960_v2.png" alt="Freerouting" title="Freerouting" align="center">
-</p>
-<h1 align="center">Freerouting</h1>
-<h5 align="center">Freerouting is an advanced autorouter for all PCB programs that support the standard Specctra or Electra DSN interface.</h5>
-
-<br/>
-<br/>
-
 # EDA Integrations
+
+Freerouting integrates seamlessly with many popular EDA tools and PCB design software packages.
 
 ## [KiCad](https://www.kicad.org/)
 
 1. Open KiCad 6.0 or newer
-
 2. Start Tools / Plugin and Content Manager (Ctrl+M)
-
 ![image](https://user-images.githubusercontent.com/910321/210979489-9856712b-f5c8-497e-9bfa-3f869dae85bc.png)
-
 3. Search for the Freerouting plugin
-
 ![image](https://user-images.githubusercontent.com/910321/210980390-8bfdaeed-ea17-4e3f-b998-b5e52c04b2c0.png)
-
 4. Click on the Install button
-
 ![image](https://user-images.githubusercontent.com/910321/210980590-0e006f1c-dfb9-4fd1-994c-8e6e0b4cb56a.png)
-
-5. Open you PCB design in PCB Editor
+5. Open your PCB design in PCB Editor
 
 6. (Optional) Remove routed tracks and via from the design
 
@@ -113,35 +99,22 @@ Autodesk Fusion Electronics integrates with Freerouting via the dedicated Freero
 
 ## [pcb-rnd](http://www.repo.hu/projects/pcb-rnd)
 
-### Using the standalone freerouting application
+### Using the standalone Freerouting application
 
-1) Download the latest `freerouting-<version>.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page
-
+1) Download the latest `freerouting-<version>.jar` file from the [Releases](https://github.com/freerouting/freerouting/releases) page.
 2) Start pcb-rnd and load your layout.
-
 3) Export the layout as Specctra DSN (File / Export... / Specctra DSN).
+4) Start Freerouting by running the downloaded JAR file, click "Open Your Own Design", and select the exported `.dsn` file.
+5) Run the autorouter.
+6) When finished, export the results as a Specctra session file (File / Export Specctra Session File) to generate a `.ses` file.
+7) Return to pcb-rnd and import the results (File / Import autorouted dsn/ses file...). Track widths and clearances are based on the selected route style.
 
-4) Start the router by running the downloaded JAR file, push the "Open Your Own Design" button and select the exported .dsn file in the file chooser.
+### Using Freerouting directly from within pcb-rnd
 
-5) Do the routing.
-
-5) When you're finished, export the results into a Specctra session file (File / Export Specctra Session File). The router will generate a .ses file for you.
-
-6) Go back to pcb-rnd and import the results (File / Import autorouted dsn/ses file...). Track widths and clearances during autorouting are based on the currently selected route style during DSN export.
-
-
-### Using freerouting from within pcb-rnd
-
-1) Download the latest `freerouting-<version>-linux-x64.zip` from the [Releases](https://github.com/freerouting/freerouting/releases) page
-
-2) Unzip it and rename the top directory to `freerouting.net` (the default location is `/opt/freerouting.net`)
-
-3) Start pcb-rnd and ensure that this directory is specified in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...); the location of the executable can be customised.
-
-4) Load your layout
-
-5) Open the external autorouter window with (Connect / Automatic Routing / External autorouter...)
-
-6) Select the freerouting.net tab, and push the "Route" button.
-
-7) Go back to the layout and inspect the autorouted networks. Track widths and clearances during autorouting are based on the currently selected route style when the autorouter is started.
+1) Download the latest `freerouting-<version>-linux-x64.zip` from the [Releases](https://github.com/freerouting/freerouting/releases) page.
+2) Unzip it and rename the directory to `freerouting.net` (default location: `/opt/freerouting.net`).
+3) In pcb-rnd, verify this directory in (File / Preferences / Config Tree / Plugins / ar_extern / freerouting_net...).
+4) Load your layout.
+5) Open the external autorouter dialog via (Connect / Automatic Routing / External autorouter...).
+6) Select the `freerouting.net` tab and click "Route".
+7) Inspect the autorouted board back in pcb-rnd.

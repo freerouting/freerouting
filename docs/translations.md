@@ -40,7 +40,7 @@ Glossary entries drive **every** string that mentions a term. Fixing `clearance`
 
 ## English terminology (source language)
 
-English UI copy and glossaries adhere to a single canonical terminology standard. Translators and contributors modifying English strings must follow these conventions. For complete implementation details and history, see [`docs/issues/i18n-english-terminology-plan.md`](issues/i18n-english-terminology-plan.md).
+English UI copy and glossaries adhere to a single canonical terminology standard. Translators and contributors modifying English strings must follow these conventions:
 
 ### Feature names
 
@@ -84,11 +84,11 @@ English UI copy and glossaries adhere to a single canonical terminology standard
 When a contributor updates `scripts/i18n/glossary/{locale}.json` and requests a locale refresh:
 
 ```powershell
-cd c:\Work\freerouting
+# Navigate to the repository root
 pip install -r scripts/i18n/requirements.txt
 
-$env:GEMINI_API_KEY = "AQ...."  # restart Cursor after setting if translate fails
-$env:LLM_MODEL = "gemini-3.7-flash"   # optional; default
+$env:GEMINI_API_KEY = "AQ...."  # API key for the translation model
+$env:LLM_MODEL = "gemini-2.5-flash"   # or your preferred LLM model
 $locale = "de"                  # target locale
 
 # Full overwrite for that locale
@@ -114,7 +114,6 @@ Glossary-only changes do **not** auto-flag keys; prefer full locale regeneration
 |---|---|
 | [`scripts/i18n/README.md`](../scripts/i18n/README.md) | Pipeline setup, LLM config, validation |
 | [`docs/developer.md`](developer.md#translations-i18n) | Developer workflow after English edits |
-| [`docs/issues/`](issues/) | Per-issue i18n notes when relevant |
 
 ## Supported locales
 
