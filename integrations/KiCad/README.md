@@ -26,7 +26,7 @@ The plugin supports two routing workflows:
 ## Usage
 
 1. Open your PCB design in KiCad **PCB Editor**.
-2. *(Optional)* Remove any existing unrouted tracks or vias you want redone.
+2. *(Optional)* Remove existing routed tracks and vias if you want them rerouted.
    ![Clean](https://user-images.githubusercontent.com/910321/181244962-ccf3c688-d364-470b-bfca-03dd049919b1.png)
 3. Start Freerouting from **Tools > External Plugins > Freerouting**.
    ![Menu](https://user-images.githubusercontent.com/910321/181245125-cbf652bf-428a-4648-b455-5ebba78be920.png)

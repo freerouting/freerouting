@@ -141,7 +141,7 @@ I ❤️ all contributors — this project wouldn't be possible without you!
 
 ## Connect & Community
 
-Let's stay connected! You can reach out, follow updates, or join discussions through any of these channels:
+I'd love to stay connected! You can reach out, follow updates, or join discussions through any of these channels:
 
 - **Freerouting on X (Twitter)**: [@freeroutingPCB](https://x.com/freeroutingPCB)
 - **Personal X (Twitter)**: [@andrasfuchs](https://x.com/andrasfuchs)

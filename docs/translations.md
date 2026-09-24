@@ -88,7 +88,7 @@ When a contributor updates `scripts/i18n/glossary/{locale}.json` and requests a 
 pip install -r scripts/i18n/requirements.txt
 
 $env:GEMINI_API_KEY = "AQ...."  # API key for the translation model
-$env:LLM_MODEL = "gemini-2.5-flash"   # or your preferred LLM model
+$env:LLM_MODEL = "gemini-3.6-flash"   # optional; default is gemini-3.6-flash
 $locale = "de"                  # target locale
 
 # Full overwrite for that locale

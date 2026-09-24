@@ -143,7 +143,7 @@ Checkstyle configuration do not overwrite it.
 
 Creating a release takes about half an hour if everything goes according to the plan. Usually it doesn't, so free up ~3 hours for this.
 
-Let's suppose that the new version is `2.3.4`. You need to complete these steps:
+Let's suppose that the new version is `<version>` (e.g. `2.5.0`). You need to complete these steps:
 
 ### 1. Pre-Release (Clean & Ready `master`)
 
@@ -154,26 +154,26 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
   git pull origin master
   ```
 
-### 2. Prepare Release Branch (`release/v2.3.4`)
+### 2. Prepare Release Branch (`release/v<version>`)
 
 * Create a new release branch:
   ```bash
-  git checkout -b release/v2.3.4
+  git checkout -b release/v<version>
   ```
 * Run `gradlew wrapper --gradle-version latest` (or pass `--gradle-distribution-sha256-sum <hash>` if checksum verification is configured) to update the Gradle wrapper.
 * Run `./gradlew dependencyUpdates useLatestVersions` to check and apply dependency updates. Verify changes manually if necessary.
-* Change `ext.publishInfo.versionId` in `gradle/project-info.gradle` to `2.3.4`.
-* Set the package version in `integrations/mcp-server/package.json` to `2.3.4` (`npm version 2.3.4 --no-git-tag-version`).
+* Change `ext.publishInfo.versionId` in `gradle/project-info.gradle` to `<version>`.
+* Set the package version in `integrations/mcp-server/package.json` to `<version>` (`npm version <version> --no-git-tag-version`).
 * Build the executable JAR:
   ```powershell
   gradlew executableJar
   ```
-* Copy and rename `build/libs/freerouting-current-executable.jar` to `freerouting-2.3.4.jar`.
+* Copy and rename `build/libs/freerouting-current-executable.jar` to `freerouting-<version>.jar`.
 * Update the KiCad integration (`integrations/KiCad/`):
-    * Copy `freerouting-2.3.4.jar` into `integrations/KiCad/kicad-freerouting/plugins/jar/` (and remove the previous version JAR).
-    * Update `integrations/KiCad/kicad-freerouting/plugins/plugin.ini` with the new filename (`location = jar/freerouting-2.3.4.jar`).
+    * Copy `freerouting-<version>.jar` into `integrations/KiCad/kicad-freerouting/plugins/jar/` (and remove the previous version JAR).
+    * Update `integrations/KiCad/kicad-freerouting/plugins/plugin.ini` with the new filename (`location = jar/freerouting-<version>.jar`).
     * Update `integrations/KiCad/kicad-freerouting/metadata.json` with the new version and download URL.
-    * Create a ZIP file from the `kicad-freerouting` folder and save it as both `kicad-freerouting.zip` and `kicad-freerouting-2.3.4.zip`.
+    * Create a ZIP file from the `kicad-freerouting` folder and save it as both `kicad-freerouting.zip` and `kicad-freerouting-<version>.zip`.
     * Use KiCad Packager from [https://gitlab.com/kicad/addons/metadata/tools](https://gitlab.com/kicad/addons/metadata/-/tree/main/tools) to compute SHA-256 and file sizes.
     * Update `integrations/KiCad/metadata.json` with the new version entry, SHA-256, download size, and install size.
     * Run a full routing session from KiCad after manually installing the plugin ZIP, to make sure that the router executes properly in CLI mode and the resulting SES file imports without corruption or parser errors.
@@ -185,13 +185,13 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
 * Commit the release changes and push to GitHub:
   ```bash
   git add -A
-  git commit -m "Prepare release v2.3.4"
-  git push -u origin release/v2.3.4
+  git commit -m "Prepare release v<version>"
+  git push -u origin release/v<version>
   ```
 
 ### 3. Pull Request & Verification
 
-* Create a PR from `release/v2.3.4` → `master`.
+* Create a PR from `release/v<version>` → `master`.
 * Check if it builds successfully on GitHub Actions CI.
 * Merge the PR into `master`.
 
@@ -209,7 +209,7 @@ Let's suppose that the new version is `2.3.4`. You need to complete these steps:
     * Windows x64 installer (`freerouting-<version>-windows-x64.msi`).
     * Linux x64 distribution package (`freerouting-<version>-linux-x64.zip`).
     * macOS Apple Silicon ARM64 disk image (`freerouting-<version>-macos-arm64.dmg`).
-    * macOS Intel x86_64 disk image (`freerouting-<version>-macos-intel.dmg`).
+    * macOS Intel x86_64 disk image (`freerouting-<version>-macos-x64.dmg`).
     * Multi-architecture Docker image automatically published to GitHub Container Registry ([`ghcr.io/freerouting/freerouting`](https://github.com/freerouting/freerouting/pkgs/container/freerouting)).
   * *Note on KiCad plugin ZIP:* We do not attach the KiCad plugin ZIP directly to the GitHub release; it is hosted under `integrations/KiCad/kicad-freerouting-<version>.zip` and distributed to users through KiCad's Plugin and Content Manager (PCM).
 * Publish the library to Maven Central:

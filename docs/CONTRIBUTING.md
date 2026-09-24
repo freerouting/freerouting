@@ -10,9 +10,8 @@ If you have questions, ideas, or want to discuss an approach before writing code
 
 - **GitHub Discussions**: [Start or join a discussion](https://github.com/freerouting/freerouting/discussions) — ideal for architectural ideas, feature suggestions, and open questions.
 - **Freerouting on X (Twitter)**: [@freeroutingPCB](https://x.com/freeroutingPCB)
-- **Personal X (Twitter)**: [@andrasfuchs](https://x.com/andrasfuchs)
-- **LinkedIn**: [Andras Fuchs](https://www.linkedin.com/in/andrasfuchs/)
 - **Email**: [info@freerouting.app](mailto:info@freerouting.app)
+- **LinkedIn**: [Andras Fuchs](https://www.linkedin.com/in/andrasfuchs/)
 
 ---
 
