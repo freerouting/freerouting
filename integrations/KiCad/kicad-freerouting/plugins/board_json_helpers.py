@@ -491,17 +491,22 @@ def _collect_components(board, data, layer_id_to_index):
             }
             import math
             fp_rot = component["rotation"]
-            rot_rad = -math.radians(fp_rot)
+            rot_rad = math.radians(fp_rot)
             cos_rot = math.cos(rot_rad)
             sin_rot = math.sin(rot_rad)
             for pad in fp.Pads():
                 pad_net = pad.GetNet()
-                pad_pos = pad.GetPosition()
                 pad_size = pad.GetSize()
-                dx = (pad_pos.x - pos.x) / 1e6
-                dy = (pad_pos.y - pos.y) / 1e6
-                local_dx = dx * cos_rot - dy * sin_rot
-                local_dy = dx * sin_rot + dy * cos_rot
+                if hasattr(pad, "GetFPRelativePosition"):
+                    rel = pad.GetFPRelativePosition()
+                    local_dx = rel.x / 1e6
+                    local_dy = rel.y / 1e6
+                else:
+                    pad_pos = pad.GetPosition()
+                    dx = (pad_pos.x - pos.x) / 1e6
+                    dy = (pad_pos.y - pos.y) / 1e6
+                    local_dx = dx * cos_rot - dy * sin_rot
+                    local_dy = dx * sin_rot + dy * cos_rot
 
                 shape_val = pad.GetShape() if hasattr(pad, "GetShape") else -1
                 shape_str = "rect"

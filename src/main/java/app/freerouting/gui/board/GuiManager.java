@@ -31,10 +31,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -553,31 +551,56 @@ public class GuiManager {
       String designName = dotIdx > 0 ? filenameOnly.substring(0, dotIdx) : filenameOnly;
       String extension = dotIdx >= 0 ? filenameOnly.substring(dotIdx).toLowerCase() : "";
 
-      try (OutputStream outputStream = new FileOutputStream(filename)) {
-        switch (extension) {
-          case ".dsn" ->
-              newFrame.boardPanel.boardHandling.saveAsSpecctraDesignDsn(
-                  outputStream, designName, false);
-          case ".ses" ->
-              newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(outputStream, designName);
-          case ".scr" -> {
-            ByteArrayOutputStream sessionOutputStream = new ByteArrayOutputStream();
-            newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(
-                sessionOutputStream, filename);
-            InputStream inputStream = new ByteArrayInputStream(sessionOutputStream.toByteArray());
-            newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsFusionScriptScr(
-                inputStream, outputStream);
-          }
-          case ".json" -> {
-            String jsonContent =
-                app.freerouting.io.kicad.KiCadJsonWriter.write(
-                    newFrame.boardPanel.boardHandling.getRoutingBoard(), designName);
-            outputStream.write(jsonContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-          }
-          default -> {
-            // The output extension was validated before opening the stream.
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      boolean saved = false;
+      switch (extension) {
+        case ".dsn" ->
+            saved =
+                newFrame.boardPanel.boardHandling.saveAsSpecctraDesignDsn(baos, designName, false);
+        case ".ses" -> {
+          saved =
+              newFrame.boardPanel.boardHandling.saveHeadlessSpecctraSessionSes(baos, designName);
+          if (!saved) {
+            saved = newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(baos, designName);
           }
         }
+        case ".scr" -> {
+          ByteArrayOutputStream sessionOutputStream = new ByteArrayOutputStream();
+          saved =
+              newFrame.boardPanel.boardHandling.saveHeadlessSpecctraSessionSes(
+                  sessionOutputStream, filename);
+          if (!saved) {
+            saved =
+                newFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(
+                    sessionOutputStream, filename);
+          }
+          if (saved) {
+            InputStream inputStream = new ByteArrayInputStream(sessionOutputStream.toByteArray());
+            saved =
+                newFrame.boardPanel.boardHandling.saveSpecctraSessionSesAsFusionScriptScr(
+                    inputStream, baos);
+          }
+        }
+        case ".json" -> {
+          String jsonContent =
+              app.freerouting.io.kicad.KiCadJsonWriter.write(
+                  newFrame.boardPanel.boardHandling.getRoutingBoard(), designName);
+          if (jsonContent != null && !jsonContent.isEmpty()) {
+            baos.write(jsonContent.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            saved = true;
+          }
+        }
+        default -> {
+          // The output extension was validated before opening the stream.
+        }
+      }
+
+      if (saved && baos.size() > 0) {
+        java.nio.file.Files.write(new File(filename).toPath(), baos.toByteArray());
+        FRLogger.info("Saved " + baos.size() + " bytes to '" + filename + "'.");
+      } else {
+        FRLogger.warn(
+            "Board export produced 0 bytes or failed; not overwriting '" + filename + "'.");
       }
 
       if (exitWhenFinished) {

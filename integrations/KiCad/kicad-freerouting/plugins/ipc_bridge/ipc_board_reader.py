@@ -511,7 +511,7 @@ class KiCadIpcBoardReader:
         dy_nm = pad.position.y - fp_pos.y
 
         # Un-rotate offset by component rotation
-        angle_rad = -math.radians(fp_rot_deg)
+        angle_rad = math.radians(fp_rot_deg)
         unrot_x = (dx_nm * math.cos(angle_rad) - dy_nm * math.sin(angle_rad)) / 1e6
         unrot_y = (dx_nm * math.sin(angle_rad) + dy_nm * math.cos(angle_rad)) / 1e6
 

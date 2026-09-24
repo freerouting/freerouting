@@ -95,12 +95,19 @@ public class BoardExportActions {
     }
 
     FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-    try (OutputStream outputStream = new FileOutputStream(outputFile)) {
-      if (!boardFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(outputStream, designName)) {
-        boardFrame.screenMessages.setStatusMessage(
-            boardFrame.tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
-        return false;
-      }
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    boolean saved =
+        boardFrame.boardPanel.boardHandling.saveHeadlessSpecctraSessionSes(baos, designName);
+    if (!saved) {
+      saved = boardFrame.boardPanel.boardHandling.saveAsSpecctraSessionSes(baos, designName);
+    }
+    if (!saved || baos.size() == 0) {
+      boardFrame.screenMessages.setStatusMessage(
+          boardFrame.tm.getText("message_specctra_ses_save_failed", outputFile.getPath()));
+      return false;
+    }
+    try {
+      java.nio.file.Files.write(outputFile.toPath(), baos.toByteArray());
     } catch (IOException e) {
       FRLogger.error("unable to save Specctra session file '" + outputFile.getPath() + "'", e);
       boardFrame.screenMessages.setStatusMessage(
@@ -119,10 +126,16 @@ public class BoardExportActions {
     }
 
     FRLogger.info("Saving '" + outputFile.getPath() + "'...");
-    try (java.io.FileWriter writer = new java.io.FileWriter(outputFile)) {
+    try {
       String json =
           KiCadJsonWriter.write(boardFrame.boardPanel.boardHandling.getRoutingBoard(), designName);
-      writer.write(json);
+      if (json == null || json.isEmpty()) {
+        boardFrame.screenMessages.setStatusMessage(
+            boardFrame.tm.getText("message_kicad_session_json_save_failed", outputFile.getPath()));
+        return false;
+      }
+      java.nio.file.Files.writeString(
+          outputFile.toPath(), json, java.nio.charset.StandardCharsets.UTF_8);
     } catch (Exception e) {
       FRLogger.error("Unable to write KiCad JSON file", e);
       boardFrame.screenMessages.setStatusMessage(

@@ -639,7 +639,8 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             return False, False, None
 
         input_json_str = json.dumps(board_data, indent=2)
-        input_json_path = self.routing_dir / "freerouting_input_board.json"
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        input_json_path = LOG_DIR / "freerouting_input_board.json"
         try:
             with open(input_json_path, "w", encoding="utf-8") as f:
                 f.write(input_json_str)
@@ -656,9 +657,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         dialog.set_sending_status(STATUS_PASS)
         pump_events()
 
-        # Target output files (clean up any previous runs)
-        output_ses_path = self.routing_dir / "freerouting_output_board.ses"
-        output_json_path = self.routing_dir / "freerouting_output_board.json"
+        # Target output files in LOG_DIR (clean up any previous runs)
+        output_ses_path = LOG_DIR / "freerouting_output_board.ses"
+        output_json_path = LOG_DIR / "freerouting_output_board.json"
         for p in (output_ses_path, output_json_path):
             p.unlink(missing_ok=True)
 
@@ -712,7 +713,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         dialog.set_receiving_status(STATUS_IN_PROGRESS)
         pump_events()
 
-        if output_json_path.is_file():
+        if output_json_path.is_file() and output_json_path.stat().st_size > 0:
             logger.info(f"Found output JSON: {output_json_path}")
             try:
                 with open(output_json_path, "r", encoding="utf-8") as f:
@@ -725,13 +726,13 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             except Exception as e:
                 logger.error(f"Failed to read output JSON: {e}", exc_info=True)
 
-        if output_ses_path.is_file():
-            logger.info(f"Found output SES: {output_ses_path}")
+        if output_ses_path.is_file() and output_ses_path.stat().st_size > 0:
+            logger.info(f"Found output SES: {output_ses_path} ({output_ses_path.stat().st_size} bytes)")
             dialog.set_receiving_status(STATUS_PASS)
             pump_events()
             return False, True, {"type": "ses", "path": output_ses_path}
 
-        logger.warning("Neither output JSON nor SES file was generated.")
+        logger.warning("Neither non-empty output JSON nor SES file was generated.")
         dialog.set_receiving_status(STATUS_FAIL)
         pump_events()
         return False, False, None

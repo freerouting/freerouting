@@ -240,8 +240,9 @@ class TestPluginRoutingMode(unittest.TestCase):
         sample_board = {"layers": [{"name": "F.Cu"}], "outline": {"clearance": 0.5}}
         router.extract_board = MagicMock(return_value=sample_board)
 
+        from plugins.config import LOG_DIR
         # Simulate process thread completing and creating output SES
-        output_ses = p.routing_dir / "freerouting_output_board.ses"
+        output_ses = LOG_DIR / "freerouting_output_board.ses"
         def fake_show_modal():
             output_ses.write_text("(pcb freerouting.dsn)\n", encoding="utf-8")
             return mock_dialog.result_terminate
@@ -263,7 +264,7 @@ class TestPluginRoutingMode(unittest.TestCase):
             self.assertTrue(p.module_command)
             self.assertIn("--gui.enabled=true", p.module_command)
             self.assertIn("-de", p.module_command)
-            self.assertTrue((p.routing_dir / "freerouting_input_board.json").is_file())
+            self.assertTrue((LOG_DIR / "freerouting_input_board.json").is_file())
 
     def test_get_build_board_json_manually_resolution(self):
         """Verify that _get_build_board_json_manually finds the function."""
