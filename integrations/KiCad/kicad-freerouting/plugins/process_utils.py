@@ -367,6 +367,7 @@ class ProcessDialog(wx.Dialog):
             try:
                 wx.YieldIfNeeded()
             except Exception:
+                # YieldIfNeeded can raise if another yield is active
                 pass
 
     # -- internal ---------------------------------------------------------
@@ -472,6 +473,7 @@ class LogTailer(threading.Thread):
                                     if self.on_log_line:
                                         self.on_log_line(stripped)
             except Exception:
+                # File access error or concurrent truncation during log tailing; retry next iteration
                 pass
             self._stop_event.wait(0.2)
 

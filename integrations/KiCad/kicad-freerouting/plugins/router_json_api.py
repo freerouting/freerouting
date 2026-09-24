@@ -143,6 +143,7 @@ class JsonApiRouter:
                 try:
                     pump_callback()
                 except Exception:
+                    # Ignore UI pump exceptions if dialog is closed or destroyed
                     pass
             time.sleep(poll_interval)
             if i % 5 == 0:
@@ -423,6 +424,7 @@ class JsonApiRouter:
         try:
             pcbnew.Refresh()
         except Exception:
+            # Refresh may fail in headless mode or if UI window is not yet attached
             pass
 
     # ------------------------------------------------------------------

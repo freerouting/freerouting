@@ -11,6 +11,7 @@ from __future__ import annotations
 import sys
 import unittest
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 # Add plugins and ipc_bridge directory to sys.path
@@ -139,6 +140,7 @@ class MockBoard:
         self.zones: list[Any] = []
         self.drawings: list[Any] = []
         self.commits_pushed = []
+        self.commits_dropped = []
 
     def get_project(self):
         return self.project
@@ -209,7 +211,7 @@ class MockBoard:
         self.commits_pushed.append((commit, message))
 
     def drop_commit(self, commit):
-        pass
+        self.commits_dropped.append(commit)
 
 
 class TestMockIpcCi(unittest.TestCase):
@@ -220,11 +222,21 @@ class TestMockIpcCi(unittest.TestCase):
         # Add outline rectangle on Edge.Cuts (layer 44)
         mock_board.shapes.append(BoardRectangle((0, 0), (100000000, 80000000), layer=44))
 
-        # Add footprint and pad
+        # Add footprint and pad rotated 90 degrees
         fp = MockFootprint("fp_1", "R1", "10k", (10000000, 20000000), layer=0)
-        pad = MockPad("fp_1", "1", (10000000, 20000000), mock_board.nets[2])
+        fp.orientation.value_degrees = 90.0
+        # Pad at (10mm, 21mm) has global offset (0, 1)mm; under -90deg rotation, local offset is (1, 0)mm
+        pad = MockPad("fp_1", "1", (10000000, 21000000), mock_board.nets[2])
         mock_board.footprints.append(fp)
         mock_board.pads.append(pad)
+
+        # Add zone for GND net to verify containsPlane is set to True
+        mock_zone = MagicMock()
+        mock_zone.net = mock_board.nets[1]  # GND
+        mock_zone.is_rule_area = False
+        mock_zone.layers = [0]
+        mock_zone.outline = None
+        mock_board.zones.append(mock_zone)
 
         # Setup mock kipy hierarchy
         mock_kipy = MagicMock()
@@ -255,9 +267,16 @@ class TestMockIpcCi(unittest.TestCase):
             self.assertEqual(len(board_data["layers"]), 2)
             # Net 0 is empty string name (unconnected), nets 1 and 2 are GND and +3V3
             self.assertEqual(len(board_data["nets"]), 2)
+            gnd_net = next(n for n in board_data["nets"] if n["name"] == "GND")
+            v33_net = next(n for n in board_data["nets"] if n["name"] == "+3V3")
+            self.assertTrue(gnd_net["containsPlane"])
+            self.assertFalse(v33_net["containsPlane"])
+
             self.assertEqual(len(board_data["components"]), 1)
             self.assertEqual(board_data["components"][0]["reference"], "R1")
             self.assertEqual(len(board_data["components"][0]["pads"]), 1)
+            # Verify pad un-rotation: local offset must be (1.0, 0.0) mm
+            self.assertEqual(board_data["components"][0]["pads"][0]["offset"], {"x": 1.0, "y": 0.0})
             self.assertEqual(board_data["outline"]["clearance"], 0.5)
             self.assertEqual(len(board_data["outline"]["corners"]), 4)
 
@@ -312,6 +331,47 @@ class TestMockIpcCi(unittest.TestCase):
             self.assertEqual(mock_board.tracks[0].width, 250000)
             self.assertEqual(mock_board.vias[0].diameter, 600000)
             self.assertEqual(len(mock_board.commits_pushed), 1)
+
+    def test_mock_ipc_board_writer_rejects_missing_net(self):
+        mock_board = MockBoard()
+
+        mock_kipy = MagicMock()
+        mock_board_types = MagicMock()
+        mock_board_types.Track = MockTrack
+        mock_board_types.Via = MockVia
+        mock_board_types.ViaType = MagicMock()
+
+        mock_geometry = MagicMock()
+        mock_geometry.Vector2 = MockProtoVec2
+
+        with patch.dict(sys.modules, {
+            "kipy": mock_kipy,
+            "kipy.board_types": mock_board_types,
+            "kipy.geometry": mock_geometry,
+            "kipy.proto": MagicMock(),
+            "kipy.proto.board": MagicMock(),
+            "kipy.proto.board.board_types_pb2": MagicMock(),
+        }):
+            from ipc_board_writer import KiCadIpcBoardWriter
+            writer = KiCadIpcBoardWriter(board=mock_board)
+
+            payload = {
+                "layers": [{"index": 0, "name": "F.Cu"}],
+                "traces": [
+                    {
+                        "netName": "UnknownNet",
+                        "width": 0.25,
+                        "layerIndex": 0,
+                        "points": [{"x": 10.0, "y": 20.0}, {"x": 15.0, "y": 20.0}],
+                    }
+                ],
+            }
+
+            with self.assertRaises(ValueError):
+                writer.write_routed_board(payload)
+
+            self.assertEqual(len(mock_board.commits_dropped), 1)
+            self.assertEqual(len(mock_board.commits_pushed), 0)
 
 
 if __name__ == "__main__":

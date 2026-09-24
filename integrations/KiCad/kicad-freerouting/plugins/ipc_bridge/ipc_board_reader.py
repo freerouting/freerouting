@@ -13,6 +13,7 @@ import logging
 import math
 import os
 import sys
+import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -33,6 +34,7 @@ def _get_build_board_json_manually():
         from ..board_json_helpers import _build_board_json_manually
         return _build_board_json_manually
     except Exception:
+        # Relative import failed when running as standalone script or sibling module
         pass
 
     # 2. Check sys.modules for any already-loaded board_json_helpers
@@ -47,6 +49,7 @@ def _get_build_board_json_manually():
             if hasattr(mod, "_build_board_json_manually"):
                 return mod._build_board_json_manually
         except Exception:
+            # Absolute module import failed; try path-based loading next
             pass
 
     # 4. Fall back to loading directly by file path
@@ -118,37 +121,16 @@ class KiCadIpcBoardReader:
 
     def read_board_data(self) -> Dict[str, Any]:
         """Serializes the board into KiCadBoardJson dictionary format."""
-        # 1. In-process fast path (when running inside KiCad with pcbnew available):
-        try:
-            import pcbnew
-            if hasattr(pcbnew, "GetBoard") and pcbnew.GetBoard() is not None:
-                pcb = pcbnew.GetBoard()
-                _build_board_json_manually = _get_build_board_json_manually()
-                if _build_board_json_manually is None:
-                    raise ImportError("Could not resolve _build_board_json_manually")
-
-                board_json_str = _build_board_json_manually(pcb)
-                board_data = json.loads(board_json_str)
-
-                # Ensure outline clearance reflects .kicad_pro min_copper_edge_clearance
-                edge_clearance_mm = self._resolve_edge_clearance()
-                if "outline" in board_data:
-                    board_data["outline"]["clearance"] = edge_clearance_mm
-
-                logger.info("Successfully serialized board via in-process live board fast path.")
-                return board_data
-        except Exception as e:
-            logger.debug(f"In-process live board fast path unavailable or failed: {e}")
-
-        # 2. Fast path for live KiCad GUI session via SaveDocumentToString:
+        # 1. Fast path for live KiCad GUI session via SaveDocumentToString:
         # In KiCad 10+, KiCad returns AS_BUSY for granular item queries (get_tracks, get_footprints)
         # while an ActionPlugin is running or modal dialog is active, but SaveDocumentToString
-        # succeeds immediately. If pcbnew is available in-process, load the live string.
-        doc_json = self._try_read_via_save_document()
-        if doc_json is not None:
-            return doc_json
+        # succeeds immediately. If called on the main thread, we can parse it via SaveDocumentToString.
+        if threading.current_thread() is threading.main_thread():
+            doc_json = self._try_read_via_save_document()
+            if doc_json is not None:
+                return doc_json
 
-        # 3. Granular IPC element extraction (for headless kicad-cli api-server or tests):
+        # 2. Granular IPC element extraction (pure Protocol Buffers over socket):
         design_name = Path(self.board.name).stem if self.board.name else "Untitled"
 
         data: Dict[str, Any] = {
@@ -177,6 +159,16 @@ class KiCadIpcBoardReader:
         self._collect_traces(data, layer_id_to_index)
         self._collect_vias(data, layer_id_to_index)
         self._collect_zones(data, layer_id_to_index)
+
+        # Mark nets that have copper planes/conduction areas
+        plane_nets = {
+            ca["netName"]
+            for ca in data.get("conductionAreas", [])
+            if ca.get("netName") and not ca.get("isObstacle")
+        }
+        for net in data.get("nets", []):
+            if net.get("name") in plane_nets:
+                net["containsPlane"] = True
 
         return data
 
@@ -539,8 +531,8 @@ class KiCadIpcBoardReader:
         dx_nm = pad.position.x - fp_pos.x
         dy_nm = pad.position.y - fp_pos.y
 
-        # Un-rotate offset by component rotation
-        angle_rad = math.radians(fp_rot_deg)
+        # Un-rotate offset by component rotation (inverse rotation matrix)
+        angle_rad = -math.radians(fp_rot_deg)
         unrot_x = (dx_nm * math.cos(angle_rad) - dy_nm * math.sin(angle_rad)) / 1e6
         unrot_y = (dx_nm * math.sin(angle_rad) + dy_nm * math.cos(angle_rad)) / 1e6
 
@@ -566,7 +558,7 @@ class KiCadIpcBoardReader:
             for tr in tracks:
                 net_name = tr.net.name if tr.net and tr.net.name else ""
                 layer_idx = layer_id_to_index.get(tr.layer, 0)
-                width_mm = tr.width / 1e6 if tr.width else 0.2
+                width_mm = tr.width / 1e6 if tr.width else 0.25
                 data["traces"].append({
                     "id": tr_id,
                     "netName": net_name,
@@ -591,6 +583,20 @@ class KiCadIpcBoardReader:
                 net_name = v.net.name if v.net and v.net.name else ""
                 dia_mm = v.diameter / 1e6 if v.diameter else 0.6
                 drill_mm = v.drill_diameter / 1e6 if v.drill_diameter else 0.3
+
+                start_layer = 0
+                end_layer = max(1, total_layers - 1)
+                padstack = getattr(v, "padstack", None)
+                if padstack and hasattr(padstack, "layers") and padstack.layers:
+                    via_layer_indices = [
+                        layer_id_to_index[l]
+                        for l in padstack.layers
+                        if l in layer_id_to_index
+                    ]
+                    if via_layer_indices:
+                        start_layer = min(via_layer_indices)
+                        end_layer = max(via_layer_indices)
+
                 data["vias"].append({
                     "id": via_id,
                     "netName": net_name,
@@ -600,8 +606,8 @@ class KiCadIpcBoardReader:
                     },
                     "diameter": round(dia_mm, 6),
                     "drill": round(drill_mm, 6),
-                    "startLayerIndex": 0,
-                    "endLayerIndex": max(1, total_layers - 1),
+                    "startLayerIndex": start_layer,
+                    "endLayerIndex": end_layer,
                 })
                 via_id += 1
         except Exception as e:

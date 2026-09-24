@@ -250,22 +250,24 @@ class DsnRouter:
             try:
                 board = pcbnew.GetBoard()
             except Exception:
+                # pcbnew.GetBoard() may fail if no active board is open or in headless mode
                 pass
 
         ok = False
-        if board is not None:
+        # 1. Try standard active-frame pcbnew.ImportSpecctraSES(filename) first
+        try:
+            logger.info("Trying standard pcbnew.ImportSpecctraSES(filename)...")
+            ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
+        except Exception as fe:
+            logger.debug(f"pcbnew.ImportSpecctraSES(filename) failed: {fe}")
+
+        # 2. If not succeeded, fall back to pcbnew.ImportSpecctraSES(board, filename)
+        if not ok and board is not None:
             try:
-                logger.info("Trying pcbnew.ImportSpecctraSES(board, filename)...")
+                logger.info("Trying fallback pcbnew.ImportSpecctraSES(board, filename)...")
                 ok = pcbnew.ImportSpecctraSES(board, str(self.plugin.module_output))
             except Exception as be:
                 logger.debug(f"pcbnew.ImportSpecctraSES(board, filename) failed: {be}")
-
-        if not ok:
-            try:
-                logger.info("Trying standard pcbnew.ImportSpecctraSES(filename)...")
-                ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
-            except Exception as fe:
-                logger.debug(f"pcbnew.ImportSpecctraSES(filename) failed: {fe}")
 
         if ok:
             logger.info("SES import succeeded.")

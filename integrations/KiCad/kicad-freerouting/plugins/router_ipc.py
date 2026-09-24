@@ -173,7 +173,7 @@ class IpcRouter:
     # Main workflow
     # ------------------------------------------------------------------
 
-    def extract_board(self) -> Optional[Dict[str, Any]]:
+    def extract_board(self, allow_swig: bool = True) -> Optional[Dict[str, Any]]:
         """Extract board geometry and design rules from KiCad via IPC."""
         logger.info("Extracting board data via Protocol Buffers IPC...")
         try:
@@ -198,43 +198,44 @@ class IpcRouter:
         except Exception as e:
             logger.warning(f"IPC board extraction failed: {e}. Trying in-process fallback if available...", exc_info=True)
 
-        # In-process SWIG fallback if running inside KiCad
-        try:
-            if hasattr(self.plugin, "board") and self.plugin.board:
-                try:
-                    from .board_json_helpers import _build_board_json_manually
-                except Exception:
+        # In-process SWIG fallback if running inside KiCad on the main thread
+        if allow_swig and threading.current_thread() is threading.main_thread():
+            try:
+                if hasattr(self.plugin, "board") and self.plugin.board:
                     try:
-                        from plugins.board_json_helpers import _build_board_json_manually
+                        from .board_json_helpers import _build_board_json_manually
                     except Exception:
-                        from board_json_helpers import _build_board_json_manually
+                        try:
+                            from plugins.board_json_helpers import _build_board_json_manually
+                        except Exception:
+                            from board_json_helpers import _build_board_json_manually
 
-                board_json_str = _build_board_json_manually(self.plugin.board)
-                board_data = json.loads(board_json_str)
+                    board_json_str = _build_board_json_manually(self.plugin.board)
+                    board_data = json.loads(board_json_str)
 
-                # Resolve edge clearance from .kicad_pro if possible
-                try:
-                    board_path = Path(self.plugin.board.GetFileName())
-                    pro_path = board_path.with_suffix(".kicad_pro")
-                    if pro_path.is_file():
-                        with open(pro_path, "r", encoding="utf-8") as f:
-                            pro_data = json.load(f)
-                        val = (
-                            pro_data.get("board", {})
-                            .get("design_settings", {})
-                            .get("rules", {})
-                            .get("min_copper_edge_clearance")
-                        )
-                        if val is not None and isinstance(val, (int, float)) and val > 0:
-                            if "outline" in board_data:
-                                board_data["outline"]["clearance"] = float(val)
-                except Exception as pro_err:
-                    logger.debug(f"Could not inspect .kicad_pro in fallback: {pro_err}")
+                    # Resolve edge clearance from .kicad_pro if possible
+                    try:
+                        board_path = Path(self.plugin.board.GetFileName())
+                        pro_path = board_path.with_suffix(".kicad_pro")
+                        if pro_path.is_file():
+                            with open(pro_path, "r", encoding="utf-8") as f:
+                                pro_data = json.load(f)
+                            val = (
+                                pro_data.get("board", {})
+                                .get("design_settings", {})
+                                .get("rules", {})
+                                .get("min_copper_edge_clearance")
+                            )
+                            if val is not None and isinstance(val, (int, float)) and val > 0:
+                                if "outline" in board_data:
+                                    board_data["outline"]["clearance"] = float(val)
+                    except Exception as pro_err:
+                        logger.debug(f"Could not inspect .kicad_pro in fallback: {pro_err}")
 
-                logger.info("Successfully extracted board using in-process SWIG fallback.")
-                return board_data
-        except Exception as fb_err:
-            logger.error(f"In-process board extraction fallback also failed: {fb_err}", exc_info=True)
+                    logger.info("Successfully extracted board using in-process SWIG fallback.")
+                    return board_data
+            except Exception as fb_err:
+                logger.error(f"In-process board extraction fallback also failed: {fb_err}", exc_info=True)
 
         return None
 

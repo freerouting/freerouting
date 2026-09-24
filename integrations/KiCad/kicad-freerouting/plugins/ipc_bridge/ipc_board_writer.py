@@ -84,6 +84,7 @@ class KiCadIpcBoardWriter:
                 layer_enum = self.board.get_layer_by_name(name)
                 index_to_layer_enum[idx] = layer_enum
             except Exception:
+                # Layer name lookup by name failed; skip layer enum mapping
                 pass
 
         # Fallback defaults for 2-layer boards
@@ -151,6 +152,8 @@ class KiCadIpcBoardWriter:
             for tr in board_data.get("traces", []):
                 net_name = tr.get("netName", "")
                 net_obj = net_map.get(net_name)
+                if not net_obj:
+                    raise ValueError(f"Net '{net_name}' from routed trace does not exist on board; aborting write-back.")
                 layer_idx = tr.get("layerIndex", 0)
                 layer_enum = index_to_layer_enum.get(layer_idx, BL_F_Cu)
                 width_mm = float(tr.get("width", 0.25))
@@ -166,30 +169,43 @@ class KiCadIpcBoardWriter:
                     t.end = Vector2.from_xy_mm(float(p2["x"]), float(p2["y"]))
                     t.width = width_nm
                     t.layer = layer_enum
-                    if net_obj is not None:
-                        t.net = net_obj
-                        logger.debug(f"Assigned net to track: {t.net.name} (input: {net_name})")
-                    else:
-                        logger.warning(f"Net not found in board: '{net_name}'")
+                    t.net = net_obj
 
                     items_to_create.append(t)
                     created_tracks_count += 1
 
             # Vias
+            total_layers = len(index_to_layer_enum)
             for vj in board_data.get("vias", []):
                 net_name = vj.get("netName", "")
                 net_obj = net_map.get(net_name)
+                if not net_obj:
+                    raise ValueError(f"Net '{net_name}' for via does not exist on board; aborting write-back.")
                 pos = vj.get("position", {})
                 dia_mm = float(vj.get("diameter", 0.6))
                 drill_mm = float(vj.get("drill", 0.3))
 
                 v = Via()
-                v.type = ViaType.VT_THROUGH
+                start_idx = vj.get("startLayerIndex", 0)
+                end_idx = vj.get("endLayerIndex", max(1, total_layers - 1))
+                if start_idx == 0 and end_idx >= max(1, total_layers - 1):
+                    v.type = ViaType.VT_THROUGH
+                else:
+                    v.type = ViaType.VT_BLIND_BURIED
+
+                start_layer_enum = index_to_layer_enum.get(start_idx)
+                end_layer_enum = index_to_layer_enum.get(end_idx)
+                if start_layer_enum is not None and end_layer_enum is not None:
+                    try:
+                        v.padstack.layers.extend([start_layer_enum, end_layer_enum])
+                    except Exception:
+                        # Failed to set via layer span on padstack; defaults to through-via layers
+                        pass
+
                 v.position = Vector2.from_xy_mm(float(pos.get("x", 0.0)), float(pos.get("y", 0.0)))
                 v.diameter = int(round(dia_mm * 1e6))
                 v.drill_diameter = int(round(drill_mm * 1e6))
-                if net_obj is not None:
-                    v.net = net_obj
+                v.net = net_obj
 
                 items_to_create.append(v)
                 created_vias_count += 1

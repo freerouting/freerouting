@@ -83,6 +83,7 @@ def main():
                 logger.info(f"Connected to KiCad IPC server on attempt {attempt + 1}!")
                 break
             except Exception:
+                # Connection refused until server is fully initialized; retry
                 pass
 
         if writer is None:
@@ -211,6 +212,7 @@ def main():
         try:
             shutil.rmtree(temp_dir, ignore_errors=True)
         except Exception:
+            # Temporary directory cleanup is best-effort on Windows
             pass
 
 

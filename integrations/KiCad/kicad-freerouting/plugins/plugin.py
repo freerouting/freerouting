@@ -217,6 +217,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 if dialog:
                     dialog.pulse()
             except Exception:
+                # Event pumping may fail during teardown or recursive yield; ignore
                 pass
 
         # Check for KiCad 11+ SWIG removal fallback
@@ -417,7 +418,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                         if isinstance(output_data, dict) and output_data.get("type") == "ses":
                             logger.info("Applying routing result to KiCad via SES import...")
                             try:
-                                router.apply_routing_ses(output_data["path"])
+                                ok = router.apply_routing_ses(output_data["path"])
+                                if not ok:
+                                    raise RuntimeError("ImportSpecctraSES failed to import SES result")
                                 logger.info("Routing result applied successfully via SES import.")
                             except Exception as e:
                                 logger.error(f"Could not apply SES result: {e}", exc_info=True)
@@ -425,7 +428,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                         elif isinstance(output_data, dict) and output_data.get("type") == "json":
                             logger.info("Applying routing result to KiCad via JSON...")
                             try:
-                                router.apply_routing_result(output_data["data"])
+                                ok = router.apply_routing_result(output_data["data"])
+                                if ok is False:
+                                    raise RuntimeError("Failed to apply JSON routing result to board")
                                 logger.info("Routing result applied successfully via IPC.")
                             except Exception as e:
                                 logger.error(f"Could not apply JSON result: {e}", exc_info=True)
@@ -433,7 +438,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                         else:
                             logger.info("Applying routing result to KiCad via Protocol Buffers IPC commit...")
                             try:
-                                router.apply_routing_result(output_data)
+                                ok = router.apply_routing_result(output_data)
+                                if ok is False:
+                                    raise RuntimeError("Failed to apply IPC routing result to board")
                                 logger.info("Routing result applied successfully via IPC.")
                             except Exception as e:
                                 logger.error(f"Could not apply IPC result: {e}", exc_info=True)
@@ -496,7 +503,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         def extract_worker():
             try:
-                extraction["data"] = router.extract_board()
+                extraction["data"] = router.extract_board(allow_swig=False)
             except Exception as e:
                 extraction["error"] = e
 
@@ -510,7 +517,11 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         pump_events()
         board_data = extraction["data"]
         if not board_data:
-            logger.error(f"Failed to extract board via IPC: {extraction.get('error')}")
+            logger.warning(f"IPC board extraction worker returned no data ({extraction.get('error')}); attempting main-thread fallback...")
+            board_data = router.extract_board(allow_swig=True)
+
+        if not board_data:
+            logger.error(f"Failed to extract board via IPC or fallback: {extraction.get('error')}")
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error("Failed to extract board data from KiCad via Protocol Buffers IPC.")
             return False, False, None
@@ -656,7 +667,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         def extract_worker():
             try:
-                extraction["data"] = router.extract_board()
+                extraction["data"] = router.extract_board(allow_swig=False)
             except Exception as e:
                 extraction["error"] = e
 
@@ -670,7 +681,11 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         pump_events()
         board_data = extraction["data"]
         if not board_data:
-            logger.error(f"Failed to extract board via IPC: {extraction.get('error')}")
+            logger.warning(f"IPC board extraction worker returned no data ({extraction.get('error')}); attempting main-thread fallback...")
+            board_data = router.extract_board(allow_swig=True)
+
+        if not board_data:
+            logger.error(f"Failed to extract board via IPC or fallback: {extraction.get('error')}")
             dialog.set_sending_status(STATUS_FAIL)
             wx_show_error("Failed to extract board data from KiCad via Protocol Buffers IPC.")
             return False, False, None
@@ -742,6 +757,15 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             if invoker.is_alive():
                 invoker.terminate()
                 invoker.join(3)
+
+        if not invoker.has_ok():
+            logger.error("Freerouting process failed or exited with non-zero status.")
+            dialog.set_routing_status(STATUS_FAIL)
+            wx_show_error(textwrap.dedent("""
+                Freerouting closed unexpectedly or failed during execution.
+                Check freerouting.log for details.
+            """))
+            return False, False, None
 
         dialog.set_routing_status(STATUS_PASS)
         pump_events()
@@ -1049,97 +1073,159 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         # Fallback: manual trace/via creation
         logger.info("Falling back to manual trace/via creation.")
 
-        # 1. Remove existing unlocked tracks and vias
-        try:
-            to_remove = [t for t in board.GetTracks() if not (hasattr(t, "IsLocked") and t.IsLocked())]
-            for t in to_remove:
-                board.Remove(t)
-            if to_remove:
-                logger.info(f"Removed {len(to_remove)} unlocked existing tracks/vias.")
-        except Exception as e:
-            logger.debug(f"Could not remove existing tracks: {e}")
-
-        # 2. Coordinate scaling (KiCad internal unit is nanometers: 1 mm = 1e6 nm)
-        unit = board_data.get("unit", "MM").upper()
-        if unit == "MM":
-            scale = 1e6
-        elif unit == "MIL":
-            scale = 25400.0
-        elif unit == "UM":
-            scale = 1000.0
-        else:
-            scale = 1e6
-        logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit})")
-
-        # 3. Layer mapping (JSON layer index -> KiCad layer ID)
-        layer_map = {}
-        for l_json in board_data.get("layers", []):
-            l_idx = l_json.get("index")
-            l_name = l_json.get("name")
-            if l_idx is not None and l_name:
-                try:
-                    kicad_lid = board.GetLayerID(l_name)
-                    if kicad_lid != getattr(pcbnew, "UNDEFINED_LAYER", -1):
-                        layer_map[l_idx] = kicad_lid
-                except Exception:
-                    pass
-
-        top_layer = layer_map.get(0, 0)
-        bot_layer = layer_map.get(len(board_data.get("layers", [])) - 1, getattr(board, "GetCopperLayerCount", lambda: 2)() - 1)
-
-        # 4. Net lookup helper
-        def lookup_net(board, net_name):
-            if not net_name:
-                return None
+        has_commit = hasattr(pcbnew, "BOARD_COMMIT")
+        commit = None
+        if has_commit:
             try:
-                if hasattr(board, "FindNet"):
-                    net = board.FindNet(str(net_name))
-                    if net:
-                        return net
+                commit = pcbnew.BOARD_COMMIT(board)
             except Exception:
-                pass
-            return None
+                try:
+                    commit = pcbnew.BOARD_COMMIT()
+                except Exception:
+                    commit = None
 
-        for trace in board_data.get("traces", []):
+        try:
+            # 1. Remove existing unlocked tracks and vias
             try:
-                net_name = trace.get("netName", "")
-                net = lookup_net(board, net_name)
-                width = int(round(trace.get("width", 0.25) * scale))
-                layer_idx = trace.get("layerIndex", 0)
-                layer = layer_map.get(layer_idx, layer_idx)
-                points = trace.get("points", [])
-                for i in range(len(points) - 1):
-                    t = pcbnew.PCB_TRACK(board)
-                    t.SetStart(pcbnew.VECTOR2I(int(round(points[i]["x"] * scale)), int(round(points[i]["y"] * scale))))
-                    t.SetEnd(pcbnew.VECTOR2I(int(round(points[i + 1]["x"] * scale)), int(round(points[i + 1]["y"] * scale))))
-                    t.SetWidth(width)
-                    t.SetLayer(layer)
-                    if net:
+                to_remove = [t for t in board.GetTracks() if not (hasattr(t, "IsLocked") and t.IsLocked())]
+                for t in to_remove:
+                    board.Remove(t)
+                    if commit:
+                        try:
+                            commit.Remove(t)
+                        except Exception:
+                            # Item removal registration in commit failed or unsupported
+                            pass
+                if to_remove:
+                    logger.info(f"Removed {len(to_remove)} unlocked existing tracks/vias.")
+            except Exception as e:
+                logger.debug(f"Could not remove existing tracks: {e}")
+
+            # 2. Coordinate scaling (KiCad internal unit is nanometers: 1 mm = 1e6 nm)
+            unit = board_data.get("unit", "MM").upper()
+            if unit == "MM":
+                scale = 1e6
+            elif unit == "MIL":
+                scale = 25400.0
+            elif unit == "UM":
+                scale = 1000.0
+            else:
+                scale = 1e6
+            logger.info(f"Dynamic coordinate scaling set to: {scale} (unit: {unit})")
+
+            # 3. Layer mapping (JSON layer index -> KiCad layer ID)
+            layer_map = {}
+            for l_json in board_data.get("layers", []):
+                l_idx = l_json.get("index")
+                l_name = l_json.get("name")
+                if l_idx is not None and l_name:
+                    try:
+                        kicad_lid = board.GetLayerID(l_name)
+                        if kicad_lid != getattr(pcbnew, "UNDEFINED_LAYER", -1):
+                            layer_map[l_idx] = kicad_lid
+                    except Exception:
+                        # Layer name lookup failed; skip layer ID mapping
+                        pass
+
+            top_layer = layer_map.get(0, 0)
+            bot_layer = layer_map.get(
+                len(board_data.get("layers", [])) - 1,
+                getattr(board, "GetCopperLayerCount", lambda: 2)() - 1,
+            )
+
+            # 4. Net lookup helper
+            def lookup_net(board, net_name):
+                if not net_name:
+                    return None
+                try:
+                    if hasattr(board, "FindNet"):
+                        net = board.FindNet(str(net_name))
+                        if net:
+                            return net
+                except Exception:
+                    # Net lookup failed; return None
+                    pass
+                return None
+
+            for trace in board_data.get("traces", []):
+                try:
+                    net_name = trace.get("netName", "")
+                    net = lookup_net(board, net_name)
+                    if not net:
+                        logger.warning(
+                            f"Net '{net_name}' could not be resolved; skipping trace to prevent unassigned copper."
+                        )
+                        continue
+                    width = int(round(trace.get("width", 0.25) * scale))
+                    layer_idx = trace.get("layerIndex", 0)
+                    layer = layer_map.get(layer_idx, layer_idx)
+                    points = trace.get("points", [])
+                    for i in range(len(points) - 1):
+                        t = pcbnew.PCB_TRACK(board)
+                        t.SetStart(pcbnew.VECTOR2I(int(round(points[i]["x"] * scale)), int(round(points[i]["y"] * scale))))
+                        t.SetEnd(pcbnew.VECTOR2I(int(round(points[i + 1]["x"] * scale)), int(round(points[i + 1]["y"] * scale))))
+                        t.SetWidth(width)
+                        t.SetLayer(layer)
                         t.SetNet(net)
-                    board.Add(t)
-            except Exception as e:
-                logger.error(f"Warning: could not apply trace: {e}", exc_info=True)
+                        board.Add(t)
+                        if commit:
+                            try:
+                                commit.Add(t)
+                            except Exception:
+                                # Adding track to commit failed or unsupported
+                                pass
+                except Exception as e:
+                    logger.error(f"Warning: could not apply trace: {e}", exc_info=True)
 
-        for via in board_data.get("vias", []):
-            try:
-                net_name = via.get("netName", "")
-                net = lookup_net(board, net_name)
-                pos = via.get("position", {})
-                v = pcbnew.PCB_VIA(board)
-                v.SetPosition(pcbnew.VECTOR2I(int(round(pos.get("x", 0) * scale)), int(round(pos.get("y", 0) * scale))))
-                v.SetWidth(int(round(via.get("diameter", 0.8) * scale)))
-                v.SetDrill(int(round(via.get("drill", 0.4) * scale)))
-                if hasattr(v, "SetLayerPair"):
-                    v.SetLayerPair(top_layer, bot_layer)
-                if net:
+            for via in board_data.get("vias", []):
+                try:
+                    net_name = via.get("netName", "")
+                    net = lookup_net(board, net_name)
+                    if not net:
+                        logger.warning(
+                            f"Net '{net_name}' could not be resolved; skipping via to prevent unassigned copper."
+                        )
+                        continue
+                    pos = via.get("position", {})
+                    v = pcbnew.PCB_VIA(board)
+                    v.SetPosition(pcbnew.VECTOR2I(int(round(pos.get("x", 0) * scale)), int(round(pos.get("y", 0) * scale))))
+                    v.SetWidth(int(round(via.get("diameter", 0.8) * scale)))
+                    v.SetDrill(int(round(via.get("drill", 0.4) * scale)))
+                    if hasattr(v, "SetLayerPair"):
+                        v.SetLayerPair(top_layer, bot_layer)
                     v.SetNet(net)
-                board.Add(v)
-            except Exception as e:
-                logger.error(f"Warning: could not apply via: {e}", exc_info=True)
+                    board.Add(v)
+                    if commit:
+                        try:
+                            commit.Add(v)
+                        except Exception:
+                            # Adding via to commit failed or unsupported
+                            pass
+                except Exception as e:
+                    logger.error(f"Warning: could not apply via: {e}", exc_info=True)
+
+            if commit:
+                try:
+                    commit.Push()
+                    logger.info("BOARD_COMMIT pushed successfully in _apply_result_to_kicad.")
+                except Exception as e:
+                    try:
+                        commit.Push(board)
+                    except Exception as e2:
+                        logger.error(f"commit.Push failed: {e2}", exc_info=True)
+        except Exception:
+            if commit and hasattr(commit, "Revert"):
+                try:
+                    commit.Revert()
+                except Exception:
+                    # Commit rollback failed or already finalized
+                    pass
+            raise
 
         try:
             pcbnew.Refresh()
         except Exception:
+            # Refresh may fail in headless mode or if UI window is not yet attached
             pass
 
 

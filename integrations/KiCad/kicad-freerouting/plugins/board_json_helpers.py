@@ -97,6 +97,7 @@ def is_json_api_mode_available():
             )
             return True
     except Exception:
+        # GetBuildVersion failed or not running inside KiCad
         pass
 
     logger.info("JSON/API mode is not available for this KiCad version.")
@@ -159,6 +160,7 @@ def _build_board_json_manually(board):
         if hasattr(pcbnew, "GetBuildVersion"):
             version_str = str(pcbnew.GetBuildVersion())
     except Exception:
+        # GetBuildVersion failed or unavailable; default to 10.0
         pass
 
     data = {
@@ -206,6 +208,7 @@ def _build_board_json_manually(board):
             try:
                 return int(std_name[2:-3])
             except ValueError:
+                # Non-standard inner layer name format; fall back to layer id
                 pass
         return layer_id
 
@@ -221,6 +224,16 @@ def _build_board_json_manually(board):
     _collect_vias(board, data, layer_id_to_index)
     _collect_conduction_areas(board, data, layer_id_to_index)
     _collect_outline(board, data)
+
+    # Mark nets that have copper planes/conduction areas
+    plane_nets = {
+        ca["netName"]
+        for ca in data.get("conductionAreas", [])
+        if ca.get("netName") and not ca.get("isObstacle")
+    }
+    for net in data.get("nets", []):
+        if net.get("name") in plane_nets:
+            net["containsPlane"] = True
 
     save_debug_logs(board)
     return json.dumps(data, indent=2)
@@ -517,7 +530,8 @@ def _collect_components(board, data, layer_id_to_index):
             }
             import math
             fp_rot = component["rotation"]
-            rot_rad = math.radians(fp_rot)
+            # Inverse rotation to recover local footprint coordinates from global position delta
+            rot_rad = -math.radians(fp_rot)
             cos_rot = math.cos(rot_rad)
             sin_rot = math.sin(rot_rad)
             for pad in fp.Pads():
@@ -586,6 +600,7 @@ def _collect_traces(board, data, layer_id_to_index):
                     points.append({"x": s.x / 1e6, "y": s.y / 1e6})
                     points.append({"x": e.x / 1e6, "y": e.y / 1e6})
                 except Exception:
+                    # Track endpoint coordinate extraction failed; points will remain empty
                     pass
                 layer_id = track.GetLayer()
                 layer_idx = layer_id_to_index.get(layer_id, 0)
@@ -709,6 +724,7 @@ def _collect_outline(board, data):
                                     corners.append({"x": pt.x / 1e6, "y": pt.y / 1e6})
                                 continue
                         except Exception:
+                            # Shape outline extraction failed; fallback to standard drawing segment
                             pass
 
                     # Otherwise handle standard drawings (e.g. line segments)
@@ -717,6 +733,7 @@ def _collect_outline(board, data):
                             s = drawing.GetStart()
                             corners.append({"x": s.x / 1e6, "y": s.y / 1e6})
                     except Exception:
+                        # Drawing segment has no GetStart or endpoint lookup failed
                         pass
 
             data["outline"]["corners"] = corners

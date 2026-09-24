@@ -12,8 +12,8 @@
       "entrypoint": "ipc_entry.py",
       "scopes": ["pcb"],
       "show-button": true,
-      "icons-light": ["resources/icon_24x24.png"],
-      "icons-dark": ["resources/icon_24x24.png"]
+      "icons-light": ["resources/icon.png"],
+      "icons-dark": ["resources/icon.png"]
     }
   ]
 }
