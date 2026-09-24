@@ -41,6 +41,7 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
 
 - **PR Direct Commit Rule (Maintainer Edit Access):** When starting to work on an existing Pull Request, check whether `maintainerCanModify` is `true` (via `gh pr view <number> --json maintainerCanModify`). If `true` and the author's fork is not archived/read-only, check out the PR branch (via `gh pr checkout <number>`), use direct push access, and commit changes directly on the PR's branch rather than creating a separate branch or PR. If the fork repository has been archived or deleted, work on a dedicated branch in `origin` instead.
 - **PR Push Rule:** If a Pull Request is already open and new commits are made locally, **do not push the commits to the remote branch without explicit confirmation from the user** (pushing triggers remote CI workflows on GitHub Actions).
+- **PR Base Branch Up-to-Date Rule:** Always ensure that feature and PR branches are kept up-to-date with the base branch (e.g. `origin/master`). Before creating a PR, when continuing work on a branch, or before finalizing, fetch the latest base branch (`git fetch origin <base-branch>`), check if the branch is behind (`git log HEAD..origin/<base-branch> --oneline`), and if so, merge or rebase the base branch into the current branch (`git merge origin/<base-branch>`), cleanly resolve any conflicts, and verify that quality gates pass.
 - **GitHub Actions Polling Rate Rule:** When polling GitHub Actions status checks (e.g. `gh pr checks`, `gh run view`), wait at least 15 seconds between queries to avoid spamming the GitHub API and exhausting rate limits.
 - **PR Merge Rule:** **Never merge PRs automatically without explicit user confirmation.** Always present the PR link and check status to the user and wait for their confirmation to merge.
 - **Quality Gates:** Before creating a PR or requesting review, ensure the local verification passes:
@@ -48,7 +49,7 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
   ./gradlew spotlessCheck checkstyleMain checkstyleTest
   pre-commit run --all-files
   ```
-- **Reviewer Feedback Loop:** After creating a PR, wait a few minutes for Copilot (or other reviewer agents / bots) to review the PR (`gh pr view <pr-number> --json comments,reviews`). Read the remarks, evaluate them objectively, and fix any valid issues before considering the PR ready or moving to the next task.
+- **Reviewer Feedback Loop:** After creating a PR, wait until all automated reviewers (e.g. GitHub Code Quality bot, GitHub Copilot) have completed their reviews before addressing comments or pushing changes (`gh pr view <pr-number> --json comments,reviews`). Do not push fixes prematurely when only the first reviewer (such as the code quality bot) has responded; wait for GitHub Copilot and all other active reviewer bots to finish. Read all remarks, evaluate them objectively, address all valid issues together in local commits, verify quality gates, and only then push the fixes to the PR branch.
 
 ## 3. Standard Label Taxonomy
 

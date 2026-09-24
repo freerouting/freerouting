@@ -10,6 +10,7 @@
 #     Freerouting's log output in the terminal window.
 # ---------------------------------------------------------------------------
 
+from pathlib import Path
 import platform
 import re
 import shlex
@@ -130,6 +131,14 @@ class StatusIndicator(wx.Panel):
         self.Refresh()
         self.Update()
 
+    def pulse(self):
+        """Advance the spinner animation by one frame if currently in-progress."""
+        if self._status == STATUS_IN_PROGRESS:
+            self._spin_phase = (self._spin_phase + 1) % len(self._SPIN_CHARS)
+            self._symbol_label.SetLabel(self._SPIN_CHARS[self._spin_phase])
+            self._symbol_label.Refresh()
+            self._symbol_label.Update()
+
 
 class ProcessDialog(wx.Dialog):
     """Modal dialog shown while Freerouting is running.
@@ -169,14 +178,17 @@ class ProcessDialog(wx.Dialog):
         self.SetForegroundColour(win_fg)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-
-        # --- status indicators (vertical stack) ---
         indicator_sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # --- routing mode indicator ---
+        self.mode_indicator = StatusIndicator(self, "Plugin Mode: DSN + API (legacy)", STATUS_UNDETERMINED)
+        indicator_sizer.Add(self.mode_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
+
+        # --- status indicators (vertical stack) ---
         self.java_indicator = StatusIndicator(self, "Detecting Java 25+ JRE", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.java_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
-        self.json_api_indicator = StatusIndicator(self, "Checking JSON/API bridge availability", STATUS_UNDETERMINED)
+        self.json_api_indicator = StatusIndicator(self, "Checking IPC / API bridge availability", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.json_api_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
         self.api_indicator = StatusIndicator(self, "Starting up Freerouting API", STATUS_UNDETERMINED)
@@ -234,15 +246,29 @@ class ProcessDialog(wx.Dialog):
 
         self.bttn.Bind(wx.EVT_BUTTON, self._on_click)
 
-    # -- public API -------------------------------------------------------
+    def set_routing_mode_label(self, mode_str):
+        """Update the routing mode indicator."""
+        if hasattr(self, "mode_indicator") and self.mode_indicator:
+            # Set text on the inner label
+            if hasattr(self.mode_indicator, "_label"):
+                self.mode_indicator._label.SetLabel(mode_str)
+            self.mode_indicator.set_status(STATUS_UNDETERMINED)
+            self.mode_indicator.Layout()
+            self.Layout()
 
     def set_java_status(self, status):
         """Update the Java detection indicator."""
         self.java_indicator.set_status(status)
 
     def set_json_api_status(self, status):
-        """Update the JSON/API bridge indicator."""
+        """Update the JSON/API or IPC bridge indicator."""
         self.json_api_indicator.set_status(status)
+
+    def set_ipc_indicator_label(self, label):
+        """Update the label of the second indicator (e.g. for IPC vs JSON)."""
+        if hasattr(self.json_api_indicator, "_label"):
+            self.json_api_indicator._label.SetLabel(label)
+            self.json_api_indicator.Layout()
 
     def hide_json_api_indicator(self):
         """Hide the JSON/API indicator when running in DSN mode."""
@@ -306,6 +332,21 @@ class ProcessDialog(wx.Dialog):
             # Dialog may have already been closed or destroyed
             pass
 
+    def pulse(self):
+        """Advance any active in-progress indicator animation and update display."""
+        for indicator in (
+            getattr(self, "mode_indicator", None),
+            getattr(self, "java_indicator", None),
+            getattr(self, "json_api_indicator", None),
+            getattr(self, "api_indicator", None),
+            getattr(self, "sending_indicator", None),
+            getattr(self, "routing_indicator", None),
+            getattr(self, "receiving_indicator", None),
+        ):
+            if indicator and getattr(indicator, "_status", None) == STATUS_IN_PROGRESS:
+                indicator.pulse()
+        self.Update()
+
     def show_and_paint(self):
         """Show the dialog and force an immediate synchronous paint.
 
@@ -316,12 +357,18 @@ class ProcessDialog(wx.Dialog):
         """
         self.Show()
         self.Raise()
+        self.Layout()
         self.Update()    # flush pending layout synchronously
         self.Refresh()   # mark the window dirty
         # One round-trip through the event loop to dispatch the paint event
         app = wx.GetApp()
         if app:
             app.ProcessPendingEvents()
+            try:
+                wx.YieldIfNeeded()
+            except Exception:
+                # YieldIfNeeded can raise if another yield is active
+                pass
 
     # -- internal ---------------------------------------------------------
 
@@ -350,6 +397,85 @@ def clean_log_line(raw_line):
     if not cleaned:
         cleaned = raw_stripped
     return cleaned, raw_stripped
+
+
+class LogTailer(threading.Thread):
+    """Background thread that tails a log file and dispatches matching lines.
+
+    Used by API-based routing modes (IPC + API, JSON + API) to stream real-time
+    progress lines to the dialog's detail label.
+    """
+
+    def __init__(self, log_path, job_id=None, on_log_line=None):
+        super().__init__()
+        self.daemon = True
+        self.log_path = Path(log_path)
+        self.job_prefix = f"[{job_id[:6].upper()}]" if job_id else ""
+        self.on_log_line = on_log_line
+        self._stop_event = threading.Event()
+
+    def stop(self):
+        """Signal the tailer thread to stop."""
+        self._stop_event.set()
+
+    def run(self):
+        """Read newly appended lines from log_path and invoke on_log_line."""
+        seek_pos = 0
+        if self.log_path.is_file():
+            try:
+                seek_pos = self.log_path.stat().st_size
+            except Exception:
+                seek_pos = 0
+
+        skip_keywords = (
+            "GET v1/",
+            "POST v1/",
+            "PUT v1/",
+            "DELETE v1/",
+            "API key validation",
+            "cid=",
+            "HttpChannel",
+            "org.eclipse.jetty",
+        )
+
+        while not self._stop_event.is_set():
+            try:
+                if self.log_path.is_file():
+                    current_size = self.log_path.stat().st_size
+                    if current_size < seek_pos:
+                        seek_pos = 0
+                    if current_size > seek_pos:
+                        with open(self.log_path, "r", encoding="utf-8", errors="replace") as f:
+                            f.seek(seek_pos)
+                            while True:
+                                line_start = f.tell()
+                                line = f.readline()
+                                if not line:
+                                    break
+                                if not line.endswith("\n"):
+                                    # Incomplete line still being written; retry next cycle
+                                    seek_pos = line_start
+                                    break
+                                seek_pos = f.tell()
+                                stripped = line.strip()
+                                if not stripped:
+                                    continue
+                                if any(k in stripped for k in skip_keywords):
+                                    continue
+                                if (
+                                    (self.job_prefix and self.job_prefix in stripped)
+                                    or "Pass #" in stripped
+                                    or "items remaining" in stripped
+                                    or "Auto-routing" in stripped
+                                    or "Batch optimization" in stripped
+                                    or "completed" in stripped.lower()
+                                ):
+                                    if self.on_log_line:
+                                        self.on_log_line(stripped)
+            except Exception:
+                # File access error or concurrent truncation during log tailing; retry next iteration
+                pass
+            self._stop_event.wait(0.2)
 
 
 class ProcessThread(threading.Thread):

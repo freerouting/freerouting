@@ -52,6 +52,8 @@ import java.util.Map;
  */
 public final class KiCadJsonReader {
 
+  public static final String BOARD_EDGE_CLEARANCE_CLASS_NAME = "board_edge";
+
   private KiCadJsonReader() {}
 
   /**
@@ -123,12 +125,18 @@ public final class KiCadJsonReader {
       List<KiCadBoardJson.NetClassJson> additionalNetClasses =
           nonDefaultNetClasses(boardJson.netClasses);
 
-      int clearanceClassCount = Math.max(2, additionalNetClasses.size() + 2);
+      boolean hasEdgeClearance = boardJson.outline != null && boardJson.outline.clearance > 0;
+      int edgeClassOffset = hasEdgeClearance ? 1 : 0;
+
+      int clearanceClassCount = Math.max(2, additionalNetClasses.size() + 2 + edgeClassOffset);
       String[] clearanceClassNames = new String[clearanceClassCount];
       clearanceClassNames[0] = "null";
       clearanceClassNames[1] = "default";
       for (int i = 0; i < additionalNetClasses.size(); i++) {
         clearanceClassNames[i + 2] = additionalNetClasses.get(i).name;
+      }
+      if (hasEdgeClearance) {
+        clearanceClassNames[clearanceClassCount - 1] = BOARD_EDGE_CLEARANCE_CLASS_NAME;
       }
 
       ClearanceMatrix clearanceMatrix =
@@ -151,6 +159,15 @@ public final class KiCadJsonReader {
         int clVal = (int) Math.round(nc.clearance * scaleFactor);
         clearanceMatrix.setValue(clNo, clNo, clVal);
         clearanceMatrix.setValue(1, clNo, clVal); // spacing between default and class
+      }
+
+      if (hasEdgeClearance) {
+        int boardEdgeClassNo = clearanceMatrix.getNo(BOARD_EDGE_CLEARANCE_CLASS_NAME);
+        int edgeClVal = (int) Math.round(boardJson.outline.clearance * scaleFactor);
+        for (int c = 1; c < clearanceClassCount; c++) {
+          clearanceMatrix.setValue(boardEdgeClassNo, c, edgeClVal);
+          clearanceMatrix.setValue(c, boardEdgeClassNo, edgeClVal);
+        }
       }
 
       for (KiCadBoardJson.CustomClearanceRuleJson rule : boardJson.clearanceRules) {
@@ -307,7 +324,8 @@ public final class KiCadJsonReader {
         boundingBox = outline.boundingBox().offset(1000);
       }
 
-      final int outlineClearanceNo = 1; // Default clearance class
+      final int outlineClearanceNo =
+          hasEdgeClearance ? clearanceMatrix.getNo(BOARD_EDGE_CLEARANCE_CLASS_NAME) : 1;
 
       // 6. Communication object setup
       final CoordinateTransform coordinateTransform = new CoordinateTransform(scaleFactor, 0, 0);
@@ -379,13 +397,7 @@ public final class KiCadJsonReader {
 
       ConvexShape[] defViaShapeArr = new ConvexShape[layerCount];
       double defRadius = defViaDia * scaleFactor / 2.0;
-      ConvexShape defViaShape =
-          new IntBox(
-                  (int) Math.round(-defRadius),
-                  (int) Math.round(-defRadius),
-                  (int) Math.round(defRadius),
-                  (int) Math.round(defRadius))
-              .toSimplex();
+      ConvexShape defViaShape = new Circle(IntPoint.ZERO, (int) Math.round(defRadius));
       for (int li = 0; li < layerCount; li++) {
         defViaShapeArr[li] = defViaShape;
       }
@@ -415,13 +427,7 @@ public final class KiCadJsonReader {
 
         ConvexShape[] viaShapeArr = new ConvexShape[layerCount];
         double radius = viaDia * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
         for (int li = 0; li < layerCount; li++) {
           viaShapeArr[li] = viaShape;
         }
@@ -626,7 +632,7 @@ public final class KiCadJsonReader {
             board.components.add(
                 comp.reference,
                 position,
-                -comp.rotation,
+                comp.rotation,
                 isFront,
                 componentPackage,
                 componentPackage,
@@ -639,8 +645,7 @@ public final class KiCadJsonReader {
           Net targetNet = boardRules.nets.get(pad.netName, 1);
           int netNumber = targetNet != null ? targetNet.netNumber : 0;
           int[] netNumbers = netNumber > 0 ? new int[] {netNumber} : new int[0];
-          board.insertPin(
-              boardComp.id, padIndex, netNumbers, outlineClearanceNo, FixedState.SYSTEM_FIXED);
+          board.insertPin(boardComp.id, padIndex, netNumbers, 1, FixedState.SYSTEM_FIXED);
         }
       }
 
@@ -694,13 +699,7 @@ public final class KiCadJsonReader {
         // Dynamically create via padstack
         ConvexShape[] shapes = new ConvexShape[layerCount];
         double radius = vj.diameter * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           shapes[li] = viaShape;
@@ -828,13 +827,7 @@ public final class KiCadJsonReader {
 
         ConvexShape[] shapes = new ConvexShape[layerCount];
         double radius = vj.diameter * scaleFactor / 2.0;
-        ConvexShape viaShape =
-            new IntBox(
-                    (int) Math.round(-radius),
-                    (int) Math.round(-radius),
-                    (int) Math.round(radius),
-                    (int) Math.round(radius))
-                .toSimplex();
+        ConvexShape viaShape = new Circle(IntPoint.ZERO, (int) Math.round(radius));
 
         for (int li = vj.startLayerIndex; li <= vj.endLayerIndex; li++) {
           if (li >= 0 && li < layerCount) {

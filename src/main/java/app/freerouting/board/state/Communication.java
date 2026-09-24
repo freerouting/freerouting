@@ -66,6 +66,14 @@ public class Communication implements Serializable {
     return cad.contains("fusion") || cad.contains("cadsoft") || cad.contains("eagle");
   }
 
+  /** Checks whether the board's host CAD is KiCad. */
+  public boolean hostCadIsKiCad() {
+    if (specctraParserInfo == null || specctraParserInfo.hostCad == null) {
+      return false;
+    }
+    return specctraParserInfo.hostCad.toLowerCase().contains("kicad");
+  }
+
   /** Host is old kicad. */
   public boolean hostIsOldKicad() {
     if ((specctraParserInfo == null)

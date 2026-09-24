@@ -1,0 +1,19 @@
+{
+  "$schema": "https://go.kicad.org/api/schemas/v1",
+  "identifier": "app.freerouting.kicad-plugin",
+  "name": "Freerouting",
+  "description": "Advanced PCB autorouter for KiCad",
+  "runtime": { "type": "python" },
+  "actions": [
+    {
+      "identifier": "route_board",
+      "name": "Auto-route Board",
+      "description": "Route active PCB with Freerouting",
+      "entrypoint": "ipc_entry.py",
+      "scopes": ["pcb"],
+      "show-button": true,
+      "icons-light": ["resources/icon.png"],
+      "icons-dark": ["resources/icon.png"]
+    }
+  ]
+}
