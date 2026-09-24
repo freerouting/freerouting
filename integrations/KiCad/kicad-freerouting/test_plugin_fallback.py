@@ -462,6 +462,73 @@ class TestPluginRoutingMode(unittest.TestCase):
             self.assertEqual(layers[3]["index"], 3)
             self.assertEqual(layers[3]["type"], "signal")
 
+    def test_get_plugin_mode_label(self):
+        """Verify get_plugin_mode_label returns standardized mode text."""
+        self.assertEqual(
+            plugin.get_plugin_mode_label(config.ROUTING_MODE_DSN, gui_enabled=False),
+            "Plugin Mode: DSN + API (legacy)",
+        )
+        self.assertEqual(
+            plugin.get_plugin_mode_label(config.ROUTING_MODE_DSN, gui_enabled=True),
+            "Plugin Mode: DSN + GUI (legacy)",
+        )
+        self.assertEqual(
+            plugin.get_plugin_mode_label(config.ROUTING_MODE_IPC, gui_enabled=False),
+            "Plugin Mode: IPC + API",
+        )
+        self.assertEqual(
+            plugin.get_plugin_mode_label(config.ROUTING_MODE_IPC, gui_enabled=True),
+            "Plugin Mode: IPC + GUI",
+        )
+        self.assertEqual(
+            plugin.get_plugin_mode_label(config.ROUTING_MODE_JSON, gui_enabled=False),
+            "Plugin Mode: JSON + API (legacy)",
+        )
+        self.assertEqual(
+            plugin.get_plugin_mode_label(config.ROUTING_MODE_JSON, gui_enabled=True),
+            "Plugin Mode: JSON + GUI (legacy)",
+        )
+        self.assertEqual(
+            plugin.get_plugin_mode_label(config.ROUTING_MODE_DSN, gui_enabled=False, fallback=True),
+            "Plugin Mode: DSN + API (legacy - IPC Fallback)",
+        )
+
+    def test_log_tailer(self):
+        """Verify LogTailer tails file and filters lines correctly."""
+        import tempfile
+        import time
+        from plugins.process_utils import LogTailer
+
+        with tempfile.NamedTemporaryFile("w+", delete=False, encoding="utf-8") as f:
+            log_file = Path(f.name)
+            # Write prior logs that should NOT be picked up
+            f.write("2026-09-24 10:00:00.000 INFO   Prior log line\n")
+            f.flush()
+
+        received_lines = []
+        tailer = LogTailer(log_file, job_id="4ca35000-774c-4a69-abe2-935684aa853c", on_log_line=received_lines.append)
+        tailer.start()
+
+        try:
+            # Append new lines: some valid job lines, some API noise
+            with open(log_file, "a", encoding="utf-8") as f:
+                f.write("2026-09-24 12:07:01.137 DEBUG  [4CA350] Pass #7: Failed to route Pin on net '/PUL-' (30 items remaining, 7 failures). State: FAILED\n")
+                f.write("2026-09-24 12:07:01.461 DEBUG  [cid=ea175c27-466e-401a-9d9f-0fa2c7336936] GET v1/jobs/4ca35000-774c-4a69-abe2-935684aa853c\n")
+                f.write("2026-09-24 12:07:01.461 DEBUG  API key validation skipped: authentication is disabled for path v1/jobs/4ca35000-774c-4a69-abe2-935684aa853c\n")
+                f.write("2026-09-24 12:07:02.079 DEBUG  [4CA350] Pass #7: Failed to route Pin on net '+5VP' (28 items remaining, 7 failures). State: FAILED\n")
+                f.flush()
+
+            # Allow tailer loop to pick up lines
+            time.sleep(0.5)
+
+            self.assertEqual(len(received_lines), 2)
+            self.assertIn("Pass #7: Failed to route Pin on net '/PUL-'", received_lines[0])
+            self.assertIn("Pass #7: Failed to route Pin on net '+5VP'", received_lines[1])
+        finally:
+            tailer.stop()
+            tailer.join(timeout=2)
+            log_file.unlink(missing_ok=True)
+
 
 if __name__ == "__main__":
     unittest.main()

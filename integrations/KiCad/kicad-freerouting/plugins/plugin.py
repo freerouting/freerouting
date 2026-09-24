@@ -45,7 +45,15 @@ from .config import (
 )
 from .gui_helpers import has_pcbnew_api, wx_show_error, wx_show_warning, wx_safe_invoke
 from .board_json_helpers import is_json_api_mode_available, serialize_board_to_json
-from .process_utils import ProcessDialog, STATUS_UNDETERMINED, STATUS_IN_PROGRESS, STATUS_PASS, STATUS_FAIL
+from .process_utils import (
+    ProcessDialog,
+    STATUS_UNDETERMINED,
+    STATUS_IN_PROGRESS,
+    STATUS_PASS,
+    STATUS_FAIL,
+    clean_log_line,
+    LogTailer,
+)
 from .router_dsn import DsnRouter
 from .router_json_api import JsonApiRouter
 from .router_ipc import IpcRouter, is_ipc_available
@@ -81,6 +89,24 @@ def _setup_logger():
         return logging.getLogger("freerouting")
 
 logger = _setup_logger()
+
+
+def get_plugin_mode_label(mode, gui_enabled, fallback=False):
+    """Return standardized Plugin Mode text for display in the progress dialog.
+
+    Labels follow the standard pattern:
+      * DSN + API (legacy) / DSN + GUI (legacy)
+      * IPC + API / IPC + GUI
+      * JSON + API (legacy) / JSON + GUI (legacy)
+    """
+    suffix = "GUI" if gui_enabled else "API"
+    if mode == ROUTING_MODE_IPC:
+        return f"Plugin Mode: IPC + {suffix}"
+    elif mode == ROUTING_MODE_JSON:
+        return f"Plugin Mode: JSON + {suffix} (legacy)"
+    else:
+        fb = " - IPC Fallback" if fallback else ""
+        return f"Plugin Mode: DSN + {suffix} (legacy{fb})"
 
 
 
@@ -200,14 +226,12 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             active_mode = ROUTING_MODE_IPC
 
         # Configure dialog display for the active mode
+        dialog.set_routing_mode_label(get_plugin_mode_label(active_mode, self.gui_enabled))
         if active_mode == ROUTING_MODE_IPC:
-            dialog.set_routing_mode_label("Plugin Mode: IPC")
             dialog.set_ipc_indicator_label("Checking KiCad IPC socket")
         elif active_mode == ROUTING_MODE_JSON:
-            dialog.set_routing_mode_label("Plugin Mode: JSON/API (deprecated)")
             dialog.set_ipc_indicator_label("Checking JSON/API availability")
         else:
-            dialog.set_routing_mode_label("Plugin Mode: DSN (legacy)")
             dialog.hide_json_api_indicator()
 
         # Use a background thread for pre-flight checks so the dialog stays responsive
@@ -302,7 +326,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 # If DSN is available (KiCad 9/10), offer smooth fallback to DSN
                 if has_pcbnew_api():
                     logger.info("Falling back from IPC mode to DSN mode...")
-                    dialog.set_routing_mode_label("Plugin Mode: DSN (legacy - IPC Fallback)")
+                    dialog.set_routing_mode_label(get_plugin_mode_label(ROUTING_MODE_DSN, self.gui_enabled, fallback=True))
                     dialog.hide_json_api_indicator()
                     pump_events()
                     router = DsnRouter(self)
@@ -358,7 +382,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
             dialog.set_api_status(STATUS_PASS)
             pump_events()
         elif isinstance(router, IpcRouter) and self.gui_enabled:
-            dialog.set_routing_mode_label("Plugin Mode: Protobuf IPC (GUI)")
+            dialog.set_routing_mode_label(get_plugin_mode_label(ROUTING_MODE_IPC, self.gui_enabled))
             dialog.set_api_status(STATUS_PASS)
             pump_events()
 
@@ -533,10 +557,20 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         pump_events()
 
         # --- Stage 4: Auto-router is running ---
+        dialog.set_message("Routing in background...")
+        dialog.set_detail("")
         dialog.set_routing_status(STATUS_IN_PROGRESS)
         pump_events()
 
         result = {"success": False, "output_json": None, "cancelled": False}
+
+        def on_log_line(line):
+            clean_msg, full_msg = clean_log_line(line)
+            if clean_msg:
+                wx_safe_invoke(dialog.set_detail, clean_msg, full_msg)
+
+        log_tailer = LogTailer(LOG_DIR / "freerouting.log", job_id=job_id, on_log_line=on_log_line)
+        log_tailer.start()
 
         def poll():
             logger.info("Starting background poll thread for IPC routing...")
@@ -554,13 +588,16 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 result["success"] = False
                 result["error"] = str(e)
             finally:
+                log_tailer.stop()
                 wx_safe_invoke(dialog.terminate)
 
         poll_thread = threading.Thread(target=poll, daemon=True)
         poll_thread.start()
 
         modal_result = dialog.ShowModal()
+        log_tailer.stop()
         poll_thread.join(timeout=15)
+        log_tailer.join(timeout=2)
 
         if modal_result == dialog.result_button:
             logger.warning("Routing cancelled by user.")
@@ -807,10 +844,20 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
         pump_events()
 
         # --- Stage 4: Auto-router is running ---
+        dialog.set_message("Routing in background...")
+        dialog.set_detail("")
         dialog.set_routing_status(STATUS_IN_PROGRESS)
         pump_events()
 
         result = {"success": False, "output_json": None, "cancelled": False}
+
+        def on_log_line(line):
+            clean_msg, full_msg = clean_log_line(line)
+            if clean_msg:
+                wx_safe_invoke(dialog.set_detail, clean_msg, full_msg)
+
+        log_tailer = LogTailer(LOG_DIR / "freerouting.log", job_id=job_id, on_log_line=on_log_line)
+        log_tailer.start()
 
         def poll():
             logger.info("Starting background poll thread...")
@@ -828,6 +875,7 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                 result["success"] = False
                 result["error"] = str(e)
             finally:
+                log_tailer.stop()
                 wx_safe_invoke(dialog.terminate)
 
         poll_thread = threading.Thread(target=poll, daemon=True)
@@ -835,7 +883,9 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
 
         # Modal loop for the routing stage
         modal_result = dialog.ShowModal()
+        log_tailer.stop()
         poll_thread.join(timeout=15)
+        log_tailer.join(timeout=2)
 
         if modal_result == dialog.result_button:
             logger.warning("Routing cancelled by user.")

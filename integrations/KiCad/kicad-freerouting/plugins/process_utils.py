@@ -10,6 +10,7 @@
 #     Freerouting's log output in the terminal window.
 # ---------------------------------------------------------------------------
 
+from pathlib import Path
 import platform
 import re
 import shlex
@@ -180,7 +181,7 @@ class ProcessDialog(wx.Dialog):
         indicator_sizer = wx.BoxSizer(wx.VERTICAL)
 
         # --- routing mode indicator ---
-        self.mode_indicator = StatusIndicator(self, "Plugin Mode: DSN (legacy)", STATUS_UNDETERMINED)
+        self.mode_indicator = StatusIndicator(self, "Plugin Mode: DSN + API (legacy)", STATUS_UNDETERMINED)
         indicator_sizer.Add(self.mode_indicator, 0, wx.ALIGN_LEFT | wx.LEFT | wx.TOP | wx.RIGHT, 10)
 
         # --- status indicators (vertical stack) ---
@@ -395,6 +396,84 @@ def clean_log_line(raw_line):
     if not cleaned:
         cleaned = raw_stripped
     return cleaned, raw_stripped
+
+
+class LogTailer(threading.Thread):
+    """Background thread that tails a log file and dispatches matching lines.
+
+    Used by API-based routing modes (IPC + API, JSON + API) to stream real-time
+    progress lines to the dialog's detail label.
+    """
+
+    def __init__(self, log_path, job_id=None, on_log_line=None):
+        super().__init__()
+        self.daemon = True
+        self.log_path = Path(log_path)
+        self.job_prefix = f"[{job_id[:6].upper()}]" if job_id else ""
+        self.on_log_line = on_log_line
+        self._stop_event = threading.Event()
+
+    def stop(self):
+        """Signal the tailer thread to stop."""
+        self._stop_event.set()
+
+    def run(self):
+        """Read newly appended lines from log_path and invoke on_log_line."""
+        seek_pos = 0
+        if self.log_path.is_file():
+            try:
+                seek_pos = self.log_path.stat().st_size
+            except Exception:
+                seek_pos = 0
+
+        skip_keywords = (
+            "GET v1/",
+            "POST v1/",
+            "PUT v1/",
+            "DELETE v1/",
+            "API key validation",
+            "cid=",
+            "HttpChannel",
+            "org.eclipse.jetty",
+        )
+
+        while not self._stop_event.is_set():
+            try:
+                if self.log_path.is_file():
+                    current_size = self.log_path.stat().st_size
+                    if current_size < seek_pos:
+                        seek_pos = 0
+                    if current_size > seek_pos:
+                        with open(self.log_path, "r", encoding="utf-8", errors="replace") as f:
+                            f.seek(seek_pos)
+                            while True:
+                                line_start = f.tell()
+                                line = f.readline()
+                                if not line:
+                                    break
+                                if not line.endswith("\n"):
+                                    # Incomplete line still being written; retry next cycle
+                                    seek_pos = line_start
+                                    break
+                                seek_pos = f.tell()
+                                stripped = line.strip()
+                                if not stripped:
+                                    continue
+                                if any(k in stripped for k in skip_keywords):
+                                    continue
+                                if (
+                                    (self.job_prefix and self.job_prefix in stripped)
+                                    or "Pass #" in stripped
+                                    or "items remaining" in stripped
+                                    or "Auto-routing" in stripped
+                                    or "Batch optimization" in stripped
+                                    or "completed" in stripped.lower()
+                                ):
+                                    if self.on_log_line:
+                                        self.on_log_line(stripped)
+            except Exception:
+                pass
+            self._stop_event.wait(0.2)
 
 
 class ProcessThread(threading.Thread):
