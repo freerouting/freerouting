@@ -85,6 +85,12 @@ public class DefaultSettings implements SettingsSource {
   /** Default drill-hole-to-copper clearance in micrometres. Zero preserves legacy DSN behaviour. */
   public static final double DEFAULT_HOLE_CLEARANCE_UM = 0.0;
 
+  /**
+   * Default clearance violation shortfall tolerance in micrometres (1.0 um / 0.001 mm). Absorbs
+   * imperial-to-metric conversion drift and corner polygonal discretization noise.
+   */
+  public static final double DEFAULT_CLEARANCE_TOLERANCE_UM = 1.0;
+
   /** Current default router score formula. */
   public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
       RouterScoringVersion.V2_CONTINUOUS;
@@ -155,6 +161,7 @@ public class DefaultSettings implements SettingsSource {
     settings.autorouter.maxThreads = settings.maxThreads;
     settings.copperToEdgeClearanceUm = DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM;
     settings.holeClearanceUm = DEFAULT_HOLE_CLEARANCE_UM;
+    settings.clearanceToleranceUm = DEFAULT_CLEARANCE_TOLERANCE_UM;
     settings.planeNets = new String[0];
     settings.planeAsObstacle = false;
     settings.neckWidthUm = 0.0;

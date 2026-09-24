@@ -48,15 +48,25 @@ class KiCadDrcViolationRoutingTest extends RoutingFixtureTest {
   // unconnected components (Airlines) than KiCad does. The values below reflect Freerouting's
   // actual geometric reality for these specific .dsn files.
 
+  // Note on clearance violations:
+  // - For Mars-64, KiCad reported 6 track clearance violations and 1 hole clearance violation.
+  //   Freerouting previously reported 76 violations due to 9 false-positive same-net pad pairs.
+  //   With same-net pins on the same component exempted, the count is 67 track clearance
+  //   violations.
+  // - For dev-board, KiCad reported 4 NPTH hole clearance violations, which are not exported into
+  //   the Specctra DSN format. Freerouting previously reported 2 false-positive clearance
+  //   violations between overlapping same-net GND pads of the same footprint. With the same-net pin
+  //   exemption, dev-board cleanly reports 0 violations.
+
   @Test
   void issue5756TrackAnd1HoleClearanceViolations() throws Exception {
     assertDrcOnLoadedBoard(
-        "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 76);
+        "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn", 3, 67);
   }
 
   @Test
   void issue5754HoleClearanceViolations() throws Exception {
-    assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 9, 2);
+    assertDrcOnLoadedBoard("Issue575-drc_dev-board_4_hole_clearance_violations.dsn", 9, 0);
   }
 
   @Test

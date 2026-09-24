@@ -26,12 +26,13 @@ import org.junit.jupiter.api.Test;
  */
 class RatsnestClearanceHeadlessTest {
 
-  /** Board with both incompletes and clearance violations: 9 unconnected, 2 unique violations. */
-  private static final String VIOLATION_FIXTURE =
+  private static final String INCOMPLETE_FIXTURE =
       "Issue575-drc_dev-board_4_hole_clearance_violations.dsn";
+  private static final String VIOLATION_FIXTURE =
+      "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn";
 
   private static final int EXPECTED_UNCONNECTED = 9;
-  private static final int EXPECTED_UNIQUE_VIOLATIONS = 2;
+  private static final int EXPECTED_UNIQUE_VIOLATIONS = 67;
 
   private static BasicBoard loadBoard(String filename) throws Exception {
     BoardReadResult result;
@@ -49,7 +50,7 @@ class RatsnestClearanceHeadlessTest {
 
   @Test
   void incompletesAreComputableViaDesignRulesCheckerWithoutGuiFacade() throws Exception {
-    BasicBoard board = loadBoard(VIOLATION_FIXTURE);
+    BasicBoard board = loadBoard(INCOMPLETE_FIXTURE);
 
     DesignRulesChecker drc = new DesignRulesChecker(board, null);
     drc.calculateAllIncompletes();

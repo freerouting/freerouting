@@ -111,6 +111,9 @@ public class JobInputResource extends BaseController {
           .build();
     }
 
+    job.userId = session.userId;
+    job.apiKeyHash = session.apiKeyHash;
+
     var request = GSON.toJson(job);
     try {
       // Enqueue the job

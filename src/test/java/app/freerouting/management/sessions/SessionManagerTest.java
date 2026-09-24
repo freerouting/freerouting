@@ -99,4 +99,34 @@ public class SessionManagerTest {
     Session guiSession = sessionManager.getPrimarySession();
     assertEquals(session, guiSession, "Retrieved GUI session should match the set session.");
   }
+
+  @Test
+  void testApiKeyHashPreservedInternallyButExcludedFromSerialization() {
+    SessionManager sessionManager = SessionManager.getInstance();
+    UUID userId = UUID.randomUUID();
+    String sampleHash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+    Session session = sessionManager.createSession(userId, "Agent/1.0", sampleHash);
+
+    assertNotNull(session);
+    assertEquals(
+        sampleHash, session.apiKeyHash, "apiKeyHash should be retained in-memory for analytics.");
+
+    String sessionJson = app.freerouting.util.gson.GsonProvider.GSON.toJson(session);
+    org.junit.jupiter.api.Assertions.assertFalse(
+        sessionJson.contains("api_key_hash"),
+        "apiKeyHash must not be exposed in serialized session JSON.");
+    org.junit.jupiter.api.Assertions.assertFalse(
+        sessionJson.contains(sampleHash),
+        "Sample hash value must not be exposed in serialized session JSON.");
+
+    app.freerouting.core.RoutingJob job = new app.freerouting.core.RoutingJob(session.id);
+    job.userId = userId;
+    job.apiKeyHash = sampleHash;
+    String jobJson = app.freerouting.util.gson.GsonProvider.GSON.toJson(job);
+    org.junit.jupiter.api.Assertions.assertFalse(
+        jobJson.contains("api_key_hash"), "apiKeyHash must not be exposed in serialized job JSON.");
+    org.junit.jupiter.api.Assertions.assertFalse(
+        jobJson.contains(sampleHash),
+        "Sample hash value must not be exposed in serialized job JSON.");
+  }
 }
