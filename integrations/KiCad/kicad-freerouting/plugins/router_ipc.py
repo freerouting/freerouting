@@ -302,6 +302,7 @@ class IpcRouter:
                 try:
                     board = pcbnew.GetBoard()
                 except Exception:
+                    # pcbnew.GetBoard() may fail if no active board is open or in headless mode
                     pass
             if board is None:
                 board = getattr(self.plugin, "board", None)
@@ -331,6 +332,7 @@ class IpcRouter:
                         pcbnew.UpdateUserInterface()
                     pcbnew.Refresh()
                 except Exception:
+                    # Refreshing editor UI may fail in headless or non-interactive context
                     pass
                 return True
             else:
@@ -407,6 +409,7 @@ class IpcRouter:
                 try:
                     pump_callback()
                 except Exception:
+                    # Event pump callback may fail if GUI is shutting down
                     pass
             time.sleep(poll_interval)
             if i % 5 == 0:

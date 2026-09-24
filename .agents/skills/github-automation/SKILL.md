@@ -48,7 +48,7 @@ gh pr edit <pr-number> --body-file "path/to/pr_body.md"
   ./gradlew spotlessCheck checkstyleMain checkstyleTest
   pre-commit run --all-files
   ```
-- **Reviewer Feedback Loop:** After creating a PR, wait a few minutes for Copilot (or other reviewer agents / bots) to review the PR (`gh pr view <pr-number> --json comments,reviews`). Read the remarks, evaluate them objectively, and fix any valid issues before considering the PR ready or moving to the next task.
+- **Reviewer Feedback Loop:** After creating a PR, wait until all automated reviewers (e.g. GitHub Code Quality bot, GitHub Copilot) have completed their reviews before addressing comments or pushing changes (`gh pr view <pr-number> --json comments,reviews`). Do not push fixes prematurely when only the first reviewer (such as the code quality bot) has responded; wait for GitHub Copilot and all other active reviewer bots to finish. Read all remarks, evaluate them objectively, address all valid issues together in local commits, verify quality gates, and only then push the fixes to the PR branch.
 
 ## 3. Standard Label Taxonomy
 
