@@ -237,6 +237,7 @@ class KiCadIpcBoardReader:
                 try:
                     os.unlink(temp_pcb_path)
                 except Exception:
+                    # Temporary file may have already been cleaned up
                     pass
         except Exception as e:
             logger.debug(f"SaveDocumentToString fast-path unavailable or failed: {e}")
@@ -259,6 +260,7 @@ class KiCadIpcBoardReader:
                 try:
                     return int(name[2:-3])
                 except ValueError:
+                    # Non-standard inner layer name format; fall back to enum value
                     pass
             return int(layer_enum)
 
@@ -273,6 +275,7 @@ class KiCadIpcBoardReader:
                     if str(lt).lower() in ("power", "plane", "1"):
                         layer_type = "plane"
             except Exception:
+                # get_layer_type failed or unsupported; default to signal
                 pass
             data["layers"].append({
                 "index": idx,
@@ -357,6 +360,7 @@ class KiCadIpcBoardReader:
                             if layer_name == "Edge.Cuts":
                                 is_edge_cut = True
                         except Exception:
+                            # Layer name resolution failed; skip shape
                             pass
 
                 if not is_edge_cut:
@@ -397,6 +401,7 @@ class KiCadIpcBoardReader:
                     if fn:
                         pro_path = Path(fn).with_suffix(".kicad_pro")
             except Exception:
+                # pcbnew board filename lookup failed; fallback to project path
                 pass
             if not pro_path or not pro_path.is_file():
                 pro_path = Path(self.project.path) / f"{self.project.name}.kicad_pro"
@@ -444,6 +449,7 @@ class KiCadIpcBoardReader:
                 try:
                     layer_name = self.board.get_layer_name(fp.layer)
                 except Exception:
+                    # Layer name lookup failed; default to F.Cu
                     pass
 
                 rotation_deg = fp.orientation.value_degrees if hasattr(fp.orientation, "value_degrees") else 0.0
@@ -470,6 +476,7 @@ class KiCadIpcBoardReader:
                         from kipy.board_types import Pad as KipyPad
                         fp_pads = [item for item in fp.definition.items if isinstance(item, KipyPad)]
                     except Exception:
+                        # KipyPad type inspection failed or unavailable
                         pass
                 if not fp_pads:
                     fp_pads = pads_by_footprint.get(fp_id, [])
@@ -523,6 +530,7 @@ class KiCadIpcBoardReader:
                 try:
                     layers.append(self.board.get_layer_name(l_enum))
                 except Exception:
+                    # Layer name lookup failed for enum value; skip
                     pass
             if not layers:
                 layers = ["F.Cu"]
@@ -619,6 +627,7 @@ class KiCadIpcBoardReader:
                             if hasattr(pt, "x") and hasattr(pt, "y"):
                                 points.append({"x": round(pt.x / 1e6, 6), "y": round(pt.y / 1e6, 6)})
                     except TypeError:
+                        # Nodes collection is not iterable or structure differs across KiCad versions
                         pass
 
                 data["conductionAreas"].append({
