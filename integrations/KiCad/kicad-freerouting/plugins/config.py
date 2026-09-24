@@ -9,7 +9,6 @@
 
 import os
 import platform
-import tempfile
 from pathlib import Path
 
 

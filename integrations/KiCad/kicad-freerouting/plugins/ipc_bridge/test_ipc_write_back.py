@@ -6,9 +6,7 @@ dev-board.kicad_pcb, writes routed tracks and vias using KiCadIpcBoardWriter,
 and asserts that KiCad reflects the new geometry and nets.
 """
 
-import json
 import logging
-import os
 import shutil
 import subprocess
 import sys
@@ -20,7 +18,6 @@ from pathlib import Path
 bridge_dir = Path(__file__).parent.resolve()
 sys.path.insert(0, str(bridge_dir))
 
-from ipc_board_reader import KiCadIpcBoardReader
 from ipc_board_writer import KiCadIpcBoardWriter
 
 logging.basicConfig(
@@ -195,6 +192,7 @@ def main():
         current_tracks = board.get_tracks()
         current_vias = board.get_vias()
         assert len(current_tracks) == 1, f"Expected 1 track after replacement, got {len(current_tracks)}"
+        assert len(current_vias) == 0, f"Expected 0 vias after replacement, got {len(current_vias)}"
         logger.info(f"Replacement track net: {current_tracks[0].net}, proto={current_tracks[0].proto}")
         assert current_tracks[0].net and current_tracks[0].net.name == "D+", f"Replacement track should belong to 'D+' net, got {current_tracks[0].net}"
 

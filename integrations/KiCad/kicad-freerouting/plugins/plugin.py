@@ -22,7 +22,6 @@ import configparser
 import json
 import textwrap
 import threading
-import time
 from pathlib import Path
 
 import pcbnew
@@ -43,11 +42,10 @@ from .config import (
     DEBUG_OUTPUT_JSON_FILENAME,
     LOG_DIR,
 )
-from .gui_helpers import has_pcbnew_api, wx_show_error, wx_show_warning, wx_safe_invoke
+from .gui_helpers import has_pcbnew_api, wx_show_error, wx_safe_invoke
 from .board_json_helpers import is_json_api_mode_available, serialize_board_to_json
 from .process_utils import (
     ProcessDialog,
-    STATUS_UNDETERMINED,
     STATUS_IN_PROGRESS,
     STATUS_PASS,
     STATUS_FAIL,
@@ -1191,8 +1189,13 @@ class FreeroutingPlugin(pcbnew.ActionPlugin):
                     v.SetPosition(pcbnew.VECTOR2I(int(round(pos.get("x", 0) * scale)), int(round(pos.get("y", 0) * scale))))
                     v.SetWidth(int(round(via.get("diameter", 0.8) * scale)))
                     v.SetDrill(int(round(via.get("drill", 0.4) * scale)))
+                    start_l = layer_map.get(via.get("startLayerIndex", 0), top_layer)
+                    end_l = layer_map.get(
+                        via.get("endLayerIndex", len(board_data.get("layers", [])) - 1),
+                        bot_layer,
+                    )
                     if hasattr(v, "SetLayerPair"):
-                        v.SetLayerPair(top_layer, bot_layer)
+                        v.SetLayerPair(start_l, end_l)
                     v.SetNet(net)
                     board.Add(v)
                     if commit:

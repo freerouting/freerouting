@@ -14,7 +14,6 @@
 
 import json
 import logging
-import os
 import platform
 import re
 import subprocess
@@ -27,16 +26,10 @@ from typing import Any, Dict, Optional, Tuple
 
 from .api_client import FreeroutingApiClient
 from .config import (
-    API_JOB_TIMEOUT,
-    API_POLL_INTERVAL,
     API_SERVER_STARTUP_TIMEOUT,
-    DEBUG_INPUT_JSON_FILENAME,
-    DEBUG_JSON_DIR,
-    DEBUG_OUTPUT_JSON_FILENAME,
     LOG_DIR,
-    SAVE_DEBUG_JSON,
 )
-from .gui_helpers import wx_safe_invoke, wx_show_error, wx_show_warning
+from .gui_helpers import wx_show_error
 
 logger = logging.getLogger("freerouting.ipc_router")
 
