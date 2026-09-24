@@ -243,21 +243,42 @@ class KiCadIpcBoardReader:
             return None
 
     def _collect_layers(self, data: Dict[str, Any], layer_id_to_index: Dict[Any, int]) -> None:
-        """Enumerates copper layers and builds layer mapping."""
-        from kipy.board_types import iter_copper_layers
+        """Enumerates copper layers and builds layer mapping in physical stackup order."""
+        from kipy.board_types import iter_copper_layers, BoardLayer
 
         enabled = set(self.board.get_enabled_layers())
-        idx = 0
-        for layer_enum in iter_copper_layers():
-            if layer_enum in enabled:
-                layer_name = self.board.get_layer_name(layer_enum)
-                layer_id_to_index[layer_enum] = idx
-                data["layers"].append({
-                    "index": idx,
-                    "name": layer_name,
-                    "type": "signal"
-                })
-                idx += 1
+        copper_layers = [l for l in iter_copper_layers() if l in enabled]
+
+        def _kipy_layer_sort_key(layer_enum):
+            if layer_enum == BoardLayer.BL_F_Cu:
+                return 0
+            if layer_enum == BoardLayer.BL_B_Cu:
+                return 999999
+            name = self.board.get_layer_name(layer_enum)
+            if name.startswith("In") and name.endswith(".Cu"):
+                try:
+                    return int(name[2:-3])
+                except ValueError:
+                    pass
+            return int(layer_enum)
+
+        copper_layers.sort(key=_kipy_layer_sort_key)
+        for idx, layer_enum in enumerate(copper_layers):
+            layer_id_to_index[layer_enum] = idx
+            layer_name = self.board.get_layer_name(layer_enum)
+            layer_type = "signal"
+            try:
+                if hasattr(self.board, "get_layer_type"):
+                    lt = self.board.get_layer_type(layer_enum)
+                    if str(lt).lower() in ("power", "plane", "1"):
+                        layer_type = "plane"
+            except Exception:
+                pass
+            data["layers"].append({
+                "index": idx,
+                "name": layer_name,
+                "type": layer_type,
+            })
 
         if not data["layers"]:
             # Fallback 2-layer default

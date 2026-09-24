@@ -297,25 +297,32 @@ class IpcRouter:
             sanitize_ses_file(ses_path)
 
             import pcbnew
-            board = getattr(self.plugin, "board", None)
-            if board is None and hasattr(pcbnew, "GetBoard"):
+            board = None
+            if hasattr(pcbnew, "GetBoard"):
                 try:
                     board = pcbnew.GetBoard()
                 except Exception:
                     pass
+            if board is None:
+                board = getattr(self.plugin, "board", None)
 
             ok = False
-            if board is not None:
+            # 1. Try standard pcbnew.ImportSpecctraSES(path) which imports directly into active editor
+            try:
+                ok = pcbnew.ImportSpecctraSES(str(ses_path))
+                if ok:
+                    logger.info("Imported SES via pcbnew.ImportSpecctraSES(path).")
+            except Exception as fe:
+                logger.debug(f"pcbnew.ImportSpecctraSES(path) failed: {fe}")
+
+            # 2. If not succeeded, try pcbnew.ImportSpecctraSES(board, path)
+            if not ok and board is not None:
                 try:
                     ok = pcbnew.ImportSpecctraSES(board, str(ses_path))
+                    if ok:
+                        logger.info("Imported SES via pcbnew.ImportSpecctraSES(board, path).")
                 except Exception as be:
                     logger.debug(f"pcbnew.ImportSpecctraSES(board, path) failed: {be}")
-
-            if not ok:
-                try:
-                    ok = pcbnew.ImportSpecctraSES(str(ses_path))
-                except Exception as fe:
-                    logger.debug(f"pcbnew.ImportSpecctraSES(path) failed: {fe}")
 
             if ok:
                 logger.info("Successfully imported SES file into KiCad.")

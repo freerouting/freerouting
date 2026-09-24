@@ -178,8 +178,7 @@ def _build_board_json_manually(board):
         "conductionAreas": [],
     }
 
-    layer_id_to_index = {}
-    idx = 0
+    copper_layers = []
     layer_id_count = getattr(pcbnew, "PCB_LAYER_ID_COUNT", getattr(pcbnew, "LAYER_ID_COUNT", 128))
     enabled_layers = board.GetEnabledLayers() if hasattr(board, "GetEnabledLayers") else None
     for i in range(layer_id_count):
@@ -190,8 +189,28 @@ def _build_board_json_manually(board):
             else:
                 is_copper = (i == 0 or i == 31 or (1 <= i < board.GetCopperLayerCount() - 1))
             if is_copper:
-                layer_id_to_index[i] = idx
-                idx += 1
+                copper_layers.append(i)
+
+    def _layer_sort_key(layer_id):
+        std_name = (
+            board.GetStandardLayerName(layer_id)
+            if hasattr(board, "GetStandardLayerName")
+            else board.GetLayerName(layer_id)
+        )
+        std_name = str(std_name).strip()
+        if std_name == "F.Cu":
+            return 0
+        if std_name == "B.Cu":
+            return 999999
+        if std_name.startswith("In") and std_name.endswith(".Cu"):
+            try:
+                return int(std_name[2:-3])
+            except ValueError:
+                pass
+        return layer_id
+
+    copper_layers.sort(key=_layer_sort_key)
+    layer_id_to_index = {layer_id: idx for idx, layer_id in enumerate(copper_layers)}
 
     _collect_layers(board, data, layer_id_to_index)
     _collect_net_classes(board, data)
@@ -199,7 +218,7 @@ def _build_board_json_manually(board):
     _collect_clearance_rules(board, data)
     _collect_components(board, data, layer_id_to_index)
     _collect_traces(board, data, layer_id_to_index)
-    _collect_vias(board, data)
+    _collect_vias(board, data, layer_id_to_index)
     _collect_conduction_areas(board, data, layer_id_to_index)
     _collect_outline(board, data)
 
@@ -208,13 +227,20 @@ def _build_board_json_manually(board):
 
 
 def _collect_layers(board, data, layer_id_to_index):
-    """Populate ``data["layers"]`` from the board's layer structure."""
+    """Populate ``data["layers"]`` from the board's layer structure in physical stackup order."""
     try:
         for layer_id, idx in sorted(layer_id_to_index.items(), key=lambda x: x[1]):
+            layer_type = "signal"
+            if hasattr(board, "GetLayerType"):
+                lt = board.GetLayerType(layer_id)
+                if hasattr(pcbnew, "LT_POWER") and lt == pcbnew.LT_POWER:
+                    layer_type = "plane"
+                elif lt == 1:
+                    layer_type = "plane"
             data["layers"].append({
                 "index": idx,
                 "name": _to_str(board.GetLayerName(layer_id)),
-                "type": "signal",
+                "type": layer_type,
             })
     except Exception as e:
         logger.warning(f"Warning: could not enumerate layers: {e}", exc_info=True)
@@ -486,7 +512,7 @@ def _collect_components(board, data, layer_id_to_index):
                     if hasattr(fp, "GetOrientationDegrees")
                     else 0.0
                 ),
-                "layer": "F.Cu" if fp.GetLayer() == 0 else "B.Cu",
+                "layer": "B.Cu" if (fp.IsFlipped() if hasattr(fp, "IsFlipped") else fp.GetLayer() != 0) else "F.Cu",
                 "pads": [],
             }
             import math
@@ -575,10 +601,11 @@ def _collect_traces(board, data, layer_id_to_index):
         logger.warning(f"Warning: could not enumerate traces: {e}", exc_info=True)
 
 
-def _collect_vias(board, data):
+def _collect_vias(board, data, layer_id_to_index):
     """Populate ``data["vias"]`` from PCB_VIA items."""
     try:
         via_id = 1
+        max_layer_idx = max(layer_id_to_index.values()) if layer_id_to_index else 1
         for track in board.GetTracks():
             if track.Type() == pcbnew.PCB_VIA_T:
                 net = track.GetNet()
@@ -588,18 +615,21 @@ def _collect_vias(board, data):
                     if hasattr(track, "GetDrillValue")
                     else track.GetWidth() * 0.5
                 )
+                start_idx = 0
+                end_idx = max_layer_idx
+                if hasattr(track, "TopLayer"):
+                    start_idx = layer_id_to_index.get(track.TopLayer(), 0)
+                if hasattr(track, "BottomLayer"):
+                    end_idx = layer_id_to_index.get(track.BottomLayer(), max_layer_idx)
+
                 data["vias"].append({
                     "id": via_id,
                     "netName": _to_str(net.GetNetname()) if net else "",
                     "position": {"x": pos.x / 1e6, "y": pos.y / 1e6},
                     "diameter": track.GetWidth() / 1e6,
                     "drill": drill / 1e6,
-                    "startLayerIndex": 0,
-                    "endLayerIndex": (
-                        board.GetCopperLayerCount() - 1
-                        if hasattr(board, "GetCopperLayerCount")
-                        else 1
-                    ),
+                    "startLayerIndex": start_idx,
+                    "endLayerIndex": end_idx,
                 })
                 via_id += 1
     except Exception as e:

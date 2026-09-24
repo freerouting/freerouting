@@ -401,6 +401,67 @@ class TestPluginRoutingMode(unittest.TestCase):
         finally:
             temp_ses.unlink(missing_ok=True)
 
+    def test_copper_layer_physical_stackup_ordering(self):
+        """Verify that copper layers are ordered top-to-bottom and typed as signal/plane."""
+        import importlib
+        plugins_dir = here / "plugins"
+        if str(plugins_dir) not in sys.path:
+            sys.path.insert(0, str(plugins_dir))
+        bjh = importlib.import_module("board_json_helpers")
+
+        # Mock a 4-layer KiCad board where KiCad IDs are: F.Cu=0, B.Cu=2, In1.Cu=4, In2.Cu=6
+        mock_board = MagicMock()
+        mock_board.GetFileName.return_value = ""
+        mock_board.GetFootprints.return_value = []
+        mock_board.GetTracks.return_value = []
+        mock_board.Zones.return_value = []
+        mock_board.GetDrawings.return_value = []
+        mock_board.GetDesignSettings.return_value = None
+        mock_board.GetCopperLayerCount.return_value = 4
+
+        # Enabled copper layer IDs
+        enabled_set = {0, 2, 4, 6}
+        mock_board.GetEnabledLayers.return_value.Contains.side_effect = lambda lid: lid in enabled_set
+
+        layer_names = {0: "F.Cu", 2: "B.Cu", 4: "In1.Cu", 6: "In2.Cu"}
+        mock_board.GetLayerName.side_effect = lambda lid: layer_names.get(lid, f"Layer_{lid}")
+        mock_board.GetStandardLayerName.side_effect = lambda lid: layer_names.get(lid, f"Layer_{lid}")
+
+        # In1.Cu and In2.Cu are power planes (type 1), F.Cu and B.Cu are signal (type 0)
+        layer_types = {0: 0, 2: 0, 4: 1, 6: 1}
+        mock_board.GetLayerType.side_effect = lambda lid: layer_types.get(lid, 0)
+
+        with patch.object(bjh, "pcbnew") as mock_pcbnew:
+            mock_pcbnew.PCB_LAYER_ID_COUNT = 32
+            mock_pcbnew.IsCopperLayer.side_effect = lambda lid: lid in enabled_set
+            mock_pcbnew.LT_POWER = 1
+            mock_pcbnew.LT_SIGNAL = 0
+            mock_pcbnew.Edge_Cuts = 40
+
+            json_str = bjh._build_board_json_manually(mock_board)
+            import json
+            board_dict = json.loads(json_str)
+
+            layers = board_dict["layers"]
+            self.assertEqual(len(layers), 4)
+
+            # Check that stackup is strictly top to bottom: F.Cu -> In1.Cu -> In2.Cu -> B.Cu
+            self.assertEqual(layers[0]["name"], "F.Cu")
+            self.assertEqual(layers[0]["index"], 0)
+            self.assertEqual(layers[0]["type"], "signal")
+
+            self.assertEqual(layers[1]["name"], "In1.Cu")
+            self.assertEqual(layers[1]["index"], 1)
+            self.assertEqual(layers[1]["type"], "plane")
+
+            self.assertEqual(layers[2]["name"], "In2.Cu")
+            self.assertEqual(layers[2]["index"], 2)
+            self.assertEqual(layers[2]["type"], "plane")
+
+            self.assertEqual(layers[3]["name"], "B.Cu")
+            self.assertEqual(layers[3]["index"], 3)
+            self.assertEqual(layers[3]["type"], "signal")
+
 
 if __name__ == "__main__":
     unittest.main()
