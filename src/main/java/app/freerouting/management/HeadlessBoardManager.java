@@ -848,6 +848,9 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
     RoutingBoard loadedBoard = this.board;
+    final java.util.concurrent.CompletableFuture<Void> future =
+        new java.util.concurrent.CompletableFuture<>();
+    loadedBoard.postLoadFuture = future;
     HeadlessBoardManager manager = this;
     Thread.ofVirtual()
         .name("board-post-load")
@@ -865,8 +868,6 @@ public class HeadlessBoardManager implements BoardManager {
                 manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
                 compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
                 // Run the full-board DRC here (O(n²)) so it does not block the load path.
-                // preExistingClearanceViolationsCount defaults to 0 and is safe to read before
-                // this completes (BoardStatistics treats 0 as "not yet measured").
                 var drc = new app.freerouting.drc.DesignRulesChecker(loadedBoard, null);
                 var violations = drc.getAllClearanceViolations();
                 loadedBoard.preExistingClearanceViolationsCount = violations.size();
@@ -880,7 +881,9 @@ public class HeadlessBoardManager implements BoardManager {
                 if (!violations.isEmpty()) {
                   warnPreExistingClearanceViolations(loadedBoard, violations);
                 }
-              } catch (Exception e) {
+                future.complete(null);
+              } catch (Throwable e) {
+                future.completeExceptionally(e);
                 FRLogger.error("Deferred post-load processing failed", e);
               }
             });

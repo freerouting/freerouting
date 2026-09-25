@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Provides basic functionality of a board with geometric items. It contains functions such as
@@ -54,6 +55,8 @@ import java.util.TreeSet;
  * have one or several layers.
  */
 public class BasicBoard implements Serializable {
+
+  private static final long serialVersionUID = 4469140260760845555L;
 
   /**
    * The maximum number of outer-loop iterations in {@link #normalizeTraces}. Each legitimate
@@ -99,7 +102,8 @@ public class BasicBoard implements Serializable {
   private transient BoardConnectivityQueries connectivityQueries;
   private transient BoardSnapshotManager snapshotManager;
   public int preExistingClearanceViolationsCount = 0;
-  public int unfixableClearanceViolationsCount = 0;
+  public transient int unfixableClearanceViolationsCount = 0;
+  public transient CompletableFuture<Void> postLoadFuture;
 
   /** The rectangle, where the graphics may be not up-to-date. */
   private transient IntBox updateBox = IntBox.EMPTY;
@@ -1474,6 +1478,20 @@ public class BasicBoard implements Serializable {
       }
     }
     return count;
+  }
+
+  /**
+   * Waits for any asynchronous post-load processing (such as initial DRC scans) to complete before
+   * accessing or mutating board data.
+   */
+  public void awaitPostLoad() {
+    if (this.postLoadFuture != null) {
+      try {
+        this.postLoadFuture.join();
+      } catch (Exception e) {
+        FRLogger.warn("Exception while waiting for post-load processing: " + e.getMessage());
+      }
+    }
   }
 
   /**

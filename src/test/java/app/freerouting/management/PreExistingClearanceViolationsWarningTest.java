@@ -20,6 +20,9 @@ import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.geometry.planar.TileShape;
+import app.freerouting.io.BoardReadResult;
+import app.freerouting.io.specctra.DsnReader;
+import app.freerouting.io.specctra.DsnTestFixtures;
 import app.freerouting.rules.BoardRules;
 import app.freerouting.rules.ClearanceMatrix;
 import java.util.ArrayList;
@@ -132,18 +135,24 @@ class PreExistingClearanceViolationsWarningTest {
 
   @Test
   void testBoardStatisticsRecordsUnfixableViolationsCount() {
-    RoutingBoard board = createTestBoard();
-    board.unfixableClearanceViolationsCount = 4;
-    board.preExistingClearanceViolationsCount = 6;
+    BoardReadResult result =
+        DsnReader.readBoard(
+            DsnTestFixtures.openResource(
+                "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn"),
+            null,
+            null);
+    RoutingBoard board = (RoutingBoard) ((BoardReadResult.Success) result).board();
 
-    BoardStatistics stats = new BoardStatistics(board, null, false, false);
-    assertNotNull(stats.clearanceViolations);
-    assertEquals(0, stats.clearanceViolations.unfixableCount);
+    // When includeClearanceViolations is false, unmeasured count defaults to 0
+    BoardStatistics statsWithoutClearance = new BoardStatistics(board, null, false, false);
+    assertNotNull(statsWithoutClearance.clearanceViolations);
+    assertEquals(0, statsWithoutClearance.clearanceViolations.unfixableCount);
+    assertEquals(0, statsWithoutClearance.clearanceViolations.totalCount);
 
-    // When clearance violations are skipped in constructor, unmeasured count defaults to 0.
-    // Setting board.unfixableClearanceViolationsCount reflects in BoardStatistics when
-    // includeClearanceViolations is true.
-    stats.clearanceViolations.unfixableCount = board.unfixableClearanceViolationsCount;
-    assertEquals(4, stats.clearanceViolations.unfixableCount);
+    // When includeClearanceViolations is true, clearance violations are computed via DRC
+    BoardStatistics statsWithClearance = new BoardStatistics(board, null, true, false);
+    assertNotNull(statsWithClearance.clearanceViolations);
+    assertEquals(67, statsWithClearance.clearanceViolations.totalCount);
+    assertEquals(67, statsWithClearance.clearanceViolations.unfixableCount);
   }
 }

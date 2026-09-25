@@ -515,6 +515,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
    * Returns true if the board is completed.
    */
   public boolean runBatchLoop() {
+    this.board.awaitPostLoad();
     return batchLoop.run();
   }
 
