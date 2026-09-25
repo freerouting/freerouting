@@ -3,6 +3,7 @@ package app.freerouting.fixtures;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.io.BoardReadResult;
@@ -37,12 +38,14 @@ class PCBenchPreExistingClearanceViolationsTest {
 
       DesignRulesChecker drc = new DesignRulesChecker(board, null);
       Collection<ClearanceViolation> violations = drc.getAllClearanceViolations();
-      // Exclude physical PIN_TO_OUTLINE_OR_KEEPOUT violations (e.g. edge-overhanging connector
-      // pads)
-      // to focus on false-positive rounding errors, composite pads, and thermal via arrays.
+      // Edge-overhanging connector pads are physical board-outline contacts. Keep pin-to-component
+      // outline and pin-to-keepout violations in the count.
       return (int)
           violations.stream()
-              .filter(v -> v.getCategory() != ClearanceViolation.Category.PIN_TO_OUTLINE_OR_KEEPOUT)
+              .filter(
+                  v ->
+                      !(v.firstItem instanceof BoardOutline)
+                          && !(v.secondItem instanceof BoardOutline))
               .count();
     }
   }

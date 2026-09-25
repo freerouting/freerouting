@@ -613,6 +613,14 @@ public class BasicBoard implements Serializable {
     return getItemRepository().getOutline();
   }
 
+  /** Drops the outline's cached edge-pin net set after a pin or outline mutation. */
+  public void invalidateEdgePinNetCache() {
+    BoardOutline outline = getOutline();
+    if (outline != null) {
+      outline.invalidateEdgePinNets();
+    }
+  }
+
   /** Removes an item from the board. */
   public void removeItem(Item item) {
     getItemRepository().removeItem(item);
@@ -1325,6 +1333,7 @@ public class BasicBoard implements Serializable {
         }
       }
     }
+    invalidateEdgePinNetCache();
   }
 
   /** Makes the current board situation restorable by undo. */

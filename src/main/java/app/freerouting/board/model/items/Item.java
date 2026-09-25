@@ -304,6 +304,9 @@ public abstract class Item
     board.searchTreeManager.remove(this);
     this.translateBy(vector);
     board.searchTreeManager.insert(this);
+    if (this instanceof Pin) {
+      board.invalidateEdgePinNetCache();
+    }
 
     // let the observers synchronize the changes
     if ((board.communication != null) && (board.communication.observers != null)) {
@@ -415,18 +418,26 @@ public abstract class Item
 
         if (isObstacle) {
           if (this instanceof BoardOutline outline && currentItem instanceof Trace trace) {
-            for (int netNo : trace.netNumbers) {
-              if (!outline.isTraceObstacle(netNo)) {
-                isObstacle = false;
-                break;
-              }
+            if (!outline.blocksNets(trace.netNumbers)) {
+              isObstacle = false;
             }
           } else if (this instanceof Trace trace && currentItem instanceof BoardOutline outline) {
-            for (int netNo : trace.netNumbers) {
-              if (!outline.isTraceObstacle(netNo)) {
-                isObstacle = false;
-                break;
-              }
+            if (!outline.blocksNets(trace.netNumbers)) {
+              isObstacle = false;
+            }
+          } else if ((this instanceof BoardOutline && currentItem instanceof Pin)
+              || (this instanceof Pin && currentItem instanceof BoardOutline)) {
+            BoardOutline outline =
+                (this instanceof BoardOutline) ? (BoardOutline) this : (BoardOutline) currentItem;
+            // Use the actual pad tile-shape (not just its center) to determine containment.
+            // A pin whose center is inside but whose pad shape protrudes outside (e.g. edge
+            // connectors, castellated pads) must still be reported as an obstacle.
+            TileShape pinTileShape =
+                (this instanceof Pin)
+                    ? currentTileShape
+                    : currentItem.getTileShape(currentEntry.shapeIndexInObject);
+            if (pinTileShape != null && outlineContainsTileShape(outline, pinTileShape)) {
+              isObstacle = false;
             }
           }
         }
@@ -535,6 +546,22 @@ public abstract class Item
       }
     }
     return low;
+  }
+
+  /**
+   * Returns {@code true} if every corner of {@code tileShape} is contained within at least one of
+   * the {@link BoardOutline}'s polygon shapes. A pad whose center lies inside the outline but whose
+   * shape protrudes outside fails this check and stays a clearance obstacle.
+   */
+  private static boolean outlineContainsTileShape(BoardOutline outline, TileShape tileShape) {
+    int cornerCount = tileShape.borderLineCount();
+    for (int ci = 0; ci < cornerCount; ci++) {
+      Point corner = tileShape.corner(ci);
+      if (!outline.contains(corner)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -1021,6 +1048,9 @@ public abstract class Item
         FRLogger.warn("Item.assign_net_no: unexpected netCount > 1");
       }
       netNumbers[0] = netNumber;
+    }
+    if (this instanceof Pin) {
+      board.invalidateEdgePinNetCache();
     }
   }
 

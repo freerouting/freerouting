@@ -186,19 +186,8 @@ public class ShapeTraceEntries {
       if (currentItem instanceof ConductionArea area && (containsOwnNet || !area.getIsObstacle())) {
         continue;
       }
-      if (currentItem instanceof BoardOutline outline) {
-        boolean isObstacle = true;
-        if (this.ownNetNos != null) {
-          for (int netNo : this.ownNetNos) {
-            if (!outline.isTraceObstacle(netNo)) {
-              isObstacle = false;
-              break;
-            }
-          }
-        }
-        if (!isObstacle) {
-          continue;
-        }
+      if (currentItem instanceof BoardOutline outline && !outline.blocksNets(this.ownNetNos)) {
+        continue;
       }
       if (currentItem.isShoveFixed() && !containsOwnNet) {
         this.foundObstacle = currentItem;

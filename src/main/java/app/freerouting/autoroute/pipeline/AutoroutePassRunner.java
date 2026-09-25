@@ -351,17 +351,10 @@ final class AutoroutePassRunner {
       routerCounters.rippedCount = rippedItemCount;
       routerCounters.failedToBeRoutedCount = notRouted;
       routerCounters.routedCount = routed;
-      routerCounters.incompleteCount = router.calculateIncompleteCount(router.board);
-      router.fireBoardUpdatedEvent(boardStatistics, routerCounters, router.board);
-
       Set<Integer> currentIncompleteNets = new TreeSet<>();
-      DesignRulesChecker endDrc = new DesignRulesChecker(router.board, null);
-      endDrc.calculateAllIncompletes();
-      for (int netNumber = 1; netNumber <= router.board.rules.nets.maxNetNumber(); netNumber++) {
-        if (endDrc.getIncompleteCount(netNumber) > 0) {
-          currentIncompleteNets.add(netNumber);
-        }
-      }
+      routerCounters.incompleteCount =
+          router.calculateIncompleteCount(router.board, currentIncompleteNets);
+      router.fireBoardUpdatedEvent(boardStatistics, routerCounters, router.board);
 
       if (this.previousIncompleteCount >= 0
           && routerCounters.incompleteCount >= this.previousIncompleteCount) {

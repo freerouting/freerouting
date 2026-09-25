@@ -131,6 +131,7 @@ public class BoardOutline extends Item implements Serializable {
   /** Invalidates cached edge pin nets when board geometry or pins change. */
   public void invalidateEdgePinNets() {
     this.edgePinNets = null;
+    this.cachedItemCount = -1;
   }
 
   @Override
@@ -141,17 +142,29 @@ public class BoardOutline extends Item implements Serializable {
     return true;
   }
 
+  /**
+   * A trace may cross the outline only when every one of its nets is an edge-pin net. A tie trace
+   * that also carries an ordinary net stays blocked.
+   */
+  public boolean blocksNets(int[] netNumbers) {
+    if (netNumbers == null || netNumbers.length == 0) {
+      return true;
+    }
+    for (int netNo : netNumbers) {
+      if (isTraceObstacle(netNo)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @Override
   public boolean isObstacle(Item other) {
     if (other instanceof BoardOutline || other instanceof ObstacleArea) {
       return false;
     }
-    if (other instanceof Trace otherTrace) {
-      for (int netNo : otherTrace.netNumbers) {
-        if (!isTraceObstacle(netNo)) {
-          return false;
-        }
-      }
+    if (other instanceof Trace otherTrace && !blocksNets(otherTrace.netNumbers)) {
+      return false;
     }
     return true;
   }
