@@ -37,7 +37,8 @@ class PCBenchPreExistingClearanceViolationsTest {
 
       DesignRulesChecker drc = new DesignRulesChecker(board, null);
       Collection<ClearanceViolation> violations = drc.getAllClearanceViolations();
-      // Exclude physical PIN_TO_OUTLINE_OR_KEEPOUT violations (e.g. edge-overhanging connector pads)
+      // Exclude physical PIN_TO_OUTLINE_OR_KEEPOUT violations (e.g. edge-overhanging connector
+      // pads)
       // to focus on false-positive rounding errors, composite pads, and thermal via arrays.
       return (int)
           violations.stream()
