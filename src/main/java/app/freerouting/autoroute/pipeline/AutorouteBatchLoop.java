@@ -603,8 +603,8 @@ final class AutorouteBatchLoop {
         router.settings.getRunRouter()
             && (router.settings.autorouter.maxPasses == null
                 || router.settings.autorouter.maxPasses >= 0);
-    if (wasRouterRun) {
-      // clean up dangling tails and unused orphan fanout vias when autorouting finishes.
+    if (wasRouterRun && !router.thread.isStopAutoRouterRequested()) {
+      // clean up dangling tails and unused orphan fanout vias when autorouting finishes normally.
       removeTails(Item.StopConnectionOption.NONE);
     }
 

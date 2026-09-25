@@ -938,14 +938,16 @@ def main() -> int:
                     unr = q.get("unrouted_connections", q.get("final_unrouted"))
                     viol = q.get("clearance_violations")
                     router_viol = q.get("router_introduced_violations")
-                    effective_viol = router_viol if router_viol is not None else viol
                     sec = q.get("wall_clock_seconds", 0.0)
                     is_timeout = exit_info.get("timed_out", False)
 
                     unfixable_viol = q.get("unfixable_clearance_violations")
                     if unfixable_viol is None:
                         unfixable_viol = 0
-                    is_clean = unr == 0 and (viol == 0 or (viol is not None and viol <= unfixable_viol))
+                    if router_viol is not None:
+                        is_clean = unr == 0 and router_viol == 0
+                    else:
+                        is_clean = unr == 0 and (viol == 0 or (viol is not None and viol <= unfixable_viol))
 
                     if is_timeout:
                         timeout_count += 1

@@ -3,7 +3,6 @@ package app.freerouting.board.model.items;
 import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
-import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.LogicalPart;
@@ -352,7 +351,7 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public boolean isObstacle(Item other) {
-    if (other == this || other instanceof ObstacleArea || other instanceof BoardOutline) {
+    if (other == this || other instanceof ObstacleArea) {
       return false;
     }
     if (!other.sharesNet(this)) {
@@ -360,8 +359,9 @@ public class Pin extends DrillItem implements Serializable {
         if (this.getComponentId() > 0
             && this.getComponentId() == otherPin.getComponentId()
             && this.netCount() == 0
-            && otherPin.netCount() == 0) {
-          // Netless sub-pads, mounting tabs, or mechanical features on the same component
+            && otherPin.netCount() == 0
+            && isSameLogicalPad(this, otherPin)) {
+          // Netless sub-pads of the same logical pad (e.g. composite pads with @1, @2)
           // do not violate clearance against each other.
           return false;
         }

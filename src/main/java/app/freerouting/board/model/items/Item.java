@@ -413,15 +413,6 @@ public abstract class Item
           }
         }
 
-        if (isObstacle
-            && (this instanceof BoardOutline && currentItem instanceof Pin
-                || this instanceof Pin && currentItem instanceof BoardOutline)) {
-          // Placed component pins (such as edge connectors, card-edge contacts, USB shield
-          // pads, and castellated pads placed by the footprint author) are fixed physical items
-          // and do not constitute routing clearance violations against the board outline.
-          isObstacle = false;
-        }
-
         if (isObstacle) {
           if (this instanceof BoardOutline outline && currentItem instanceof Trace trace) {
             for (int netNo : trace.netNumbers) {

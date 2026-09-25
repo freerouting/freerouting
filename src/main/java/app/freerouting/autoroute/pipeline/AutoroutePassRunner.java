@@ -295,7 +295,8 @@ final class AutoroutePassRunner {
               List<Item> tracesToRip = new ArrayList<>();
               for (Item netItem : router.board.getConnectableItems(netNo)) {
                 if ((netItem instanceof Trace || netItem instanceof Via)
-                    && !netItem.isUserFixed()) {
+                    && !netItem.isUserFixed()
+                    && netItem.netCount() == 1) {
                   tracesToRip.add(netItem);
                 }
               }

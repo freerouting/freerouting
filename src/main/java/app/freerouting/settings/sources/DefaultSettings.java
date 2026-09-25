@@ -77,10 +77,10 @@ public class DefaultSettings implements SettingsSource {
   public static final double DEFAULT_UNDESIRED_DIRECTION_TRACE_COST = 1.0;
 
   /**
-   * Default copper-to-board-edge clearance in micrometres (0.15 mm / 150 um, standard PCB
+   * Default copper-to-board-edge clearance in micrometres (0.25 mm / 250 um, standard PCB
    * manufacturing capability).
    */
-  public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 150.0;
+  public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 250.0;
 
   /** Default drill-hole-to-copper clearance in micrometres. Zero preserves legacy DSN behaviour. */
   public static final double DEFAULT_HOLE_CLEARANCE_UM = 0.0;
@@ -92,11 +92,11 @@ public class DefaultSettings implements SettingsSource {
   public static final double DEFAULT_CLEARANCE_TOLERANCE_UM = 1.0;
 
   /**
-   * Default trace neck width in micrometres (150 um / 0.15 mm / ~6 mil). When a failed or
-   * insertion-error connection cannot enter fine-pitch pads at net-class width, the router
-   * automatically retries at this neck width. Zero disables width necking.
+   * Default trace neck width in micrometres (0 um / disabled by default). When configured, failed
+   * or insertion-error connections that cannot enter fine-pitch pads at net-class width are retried
+   * at this neck width. Zero disables width necking.
    */
-  public static final double DEFAULT_NECK_WIDTH_UM = 150.0;
+  public static final double DEFAULT_NECK_WIDTH_UM = 0.0;
 
   /** Current default router score formula. */
   public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =

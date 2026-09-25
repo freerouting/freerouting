@@ -15,6 +15,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
@@ -86,19 +87,34 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   private transient Set<Integer> edgePinNets;
+  private transient int cachedItemCount = -1;
 
   private Set<Integer> getEdgePinNets() {
-    if (this.edgePinNets == null) {
+    int currentItemCount = this.board != null ? this.board.getPins().size() : -1;
+    if (this.edgePinNets == null || this.cachedItemCount != currentItemCount) {
+      this.cachedItemCount = currentItemCount;
       Set<Integer> set = new HashSet<>();
       if (this.board != null) {
         for (Pin pin : this.board.getPins()) {
           Point center = pin.getCenter();
-          IntBox box = pin.boundingBox();
           boolean isEdgeOrOutside = false;
           if (center != null && !this.contains(center)) {
             isEdgeOrOutside = true;
-          } else if (box != null && (!this.contains(box.ll) || !this.contains(box.ur))) {
-            isEdgeOrOutside = true;
+          } else {
+            for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+              Shape shape = pin.getShape(layer - pin.firstLayer());
+              if (shape instanceof TileShape tileShape) {
+                for (int c = 0; c < tileShape.borderLineCount(); c++) {
+                  if (!this.contains(tileShape.corner(c))) {
+                    isEdgeOrOutside = true;
+                    break;
+                  }
+                }
+              }
+              if (isEdgeOrOutside) {
+                break;
+              }
+            }
           }
           if (isEdgeOrOutside) {
             for (int net : pin.netNumbers) {
@@ -127,7 +143,7 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public boolean isObstacle(Item other) {
-    if (other instanceof BoardOutline || other instanceof ObstacleArea || other instanceof Pin) {
+    if (other instanceof BoardOutline || other instanceof ObstacleArea) {
       return false;
     }
     if (other instanceof Trace otherTrace) {

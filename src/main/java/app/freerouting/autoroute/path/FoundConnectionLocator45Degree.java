@@ -267,7 +267,7 @@ public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
           nearestToDoorPointOk = nearestPoints[1].distance(nearestToDoorPoint) >= traceHalfwidthAdd;
         }
       }
-      if (nearestToDoorPointOk && currentFromInfo.nextRoom != null) {
+      if (nearestToDoorPointOk) {
         Simplex prevRoomShape = currentFromInfo.nextRoom.getShape().toSimplex();
         FloatPoint[] prevNearestPoints =
             prevRoomShape.nearestBorderPointsApprox(nearestToDoorPoint, 2);
