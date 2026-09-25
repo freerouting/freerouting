@@ -388,12 +388,22 @@ public class BoardStatistics implements Serializable {
         this.clearanceViolations.avgViolationUm = 0.0;
       }
       this.clearanceViolations.preExistingCount = board.preExistingClearanceViolationsCount;
+      int unfixable = board.unfixableClearanceViolationsCount;
+      if (unfixable == 0 && !violationsList.isEmpty()) {
+        for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
+          if (cv.isUnfixable()) {
+            unfixable++;
+          }
+        }
+      }
+      this.clearanceViolations.unfixableCount = unfixable;
       this.clearanceViolations.routerIntroducedCount =
           Math.max(
               0, this.clearanceViolations.totalCount - board.preExistingClearanceViolationsCount);
     } else {
       this.clearanceViolations.totalCount = 0;
       this.clearanceViolations.preExistingCount = 0;
+      this.clearanceViolations.unfixableCount = 0;
       this.clearanceViolations.routerIntroducedCount = 0;
       this.clearanceViolations.totalViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;

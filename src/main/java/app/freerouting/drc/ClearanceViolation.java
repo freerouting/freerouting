@@ -1,7 +1,13 @@
 package app.freerouting.drc;
 
 import app.freerouting.board.actions.ItemInfoPrinter;
+import app.freerouting.board.model.items.ComponentOutline;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.util.TextManager;
 import java.util.ArrayList;
@@ -11,6 +17,15 @@ import java.util.Locale;
 
 /** Information of a clearance violation between 2 items. */
 public class ClearanceViolation implements ItemInfoPrinter.Printable {
+
+  /** Categorization of clearance violations by item fixability and participant types. */
+  public enum Category {
+    PIN_TO_PIN,
+    PIN_TO_OUTLINE_OR_KEEPOUT,
+    FIXED_ROUTE,
+    OTHER_UNFIXABLE,
+    POTENTIALLY_FIXABLE
+  }
 
   /** The first item of the clearance violation. */
   public final Item firstItem;
@@ -41,6 +56,44 @@ public class ClearanceViolation implements ItemInfoPrinter.Printable {
     this.layer = layer;
     this.expectedClearance = expectedClearance;
     this.actualClearance = actualClearance;
+  }
+
+  /**
+   * Returns true if neither participant in this clearance violation is routable, meaning the
+   * violation cannot be resolved by ripping up or rerouting traces or vias.
+   */
+  public boolean isUnfixable() {
+    return (this.firstItem == null || !this.firstItem.isRoutable())
+        && (this.secondItem == null || !this.secondItem.isRoutable());
+  }
+
+  /** Categorizes this clearance violation based on participant item types and fixability. */
+  public Category getCategory() {
+    if (!isUnfixable()) {
+      return Category.POTENTIALLY_FIXABLE;
+    }
+    boolean firstIsPin = this.firstItem instanceof Pin;
+    boolean secondIsPin = this.secondItem instanceof Pin;
+    if (firstIsPin && secondIsPin) {
+      return Category.PIN_TO_PIN;
+    }
+    boolean firstIsOutlineOrKeepout = isOutlineOrKeepout(this.firstItem);
+    boolean secondIsOutlineOrKeepout = isOutlineOrKeepout(this.secondItem);
+    if ((firstIsPin && secondIsOutlineOrKeepout) || (secondIsPin && firstIsOutlineOrKeepout)) {
+      return Category.PIN_TO_OUTLINE_OR_KEEPOUT;
+    }
+    boolean firstIsRoute = this.firstItem instanceof Trace || this.firstItem instanceof Via;
+    boolean secondIsRoute = this.secondItem instanceof Trace || this.secondItem instanceof Via;
+    if (firstIsRoute || secondIsRoute) {
+      return Category.FIXED_ROUTE;
+    }
+    return Category.OTHER_UNFIXABLE;
+  }
+
+  private static boolean isOutlineOrKeepout(Item item) {
+    return item instanceof BoardOutline
+        || item instanceof ComponentOutline
+        || item instanceof ObstacleArea;
   }
 
   /**
