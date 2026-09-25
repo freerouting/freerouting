@@ -278,6 +278,9 @@ public class AutorouteControl {
       // or the net also connects to through-hole pins. This only relaxes the routing gate
       // for same-net fanout/escape; cross-net DRC remains governed by the padstack's attach flag.
       this.attachSmdAllowed = true;
+      for (int i = 0; i < this.viaInfos.length; i++) {
+        this.viaInfos[i] = new ViaMask(this.viaInfos[i].fromLayer, this.viaInfos[i].toLayer, true);
+      }
     }
 
     for (int j = 0; j < this.layerCount; j++) {

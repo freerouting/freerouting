@@ -616,6 +616,12 @@ public class BasicBoard implements Serializable {
   /** Removes an item from the board. */
   public void removeItem(Item item) {
     getItemRepository().removeItem(item);
+    if (item instanceof Pin || item instanceof BoardOutline) {
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
   }
 
   /**
@@ -1247,6 +1253,12 @@ public class BasicBoard implements Serializable {
   /** Inserts an item into the board database. */
   public void insertItem(Item item) {
     getItemRepository().insertItem(item);
+    if (item instanceof Pin || item instanceof BoardOutline) {
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
   }
 
   /**

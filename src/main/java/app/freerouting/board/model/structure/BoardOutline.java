@@ -189,6 +189,7 @@ public class BoardOutline extends Item implements Serializable {
       keepoutArea = keepoutArea.translateBy(vector);
     }
     keepoutLines = null;
+    invalidateEdgePinNets();
   }
 
   @Override
@@ -200,6 +201,7 @@ public class BoardOutline extends Item implements Serializable {
       keepoutArea = keepoutArea.turn90Degree(factor, pole);
     }
     keepoutLines = null;
+    invalidateEdgePinNets();
   }
 
   @Override
@@ -212,6 +214,7 @@ public class BoardOutline extends Item implements Serializable {
       keepoutArea = keepoutArea.rotateApprox(angle, pole);
     }
     keepoutLines = null;
+    invalidateEdgePinNets();
   }
 
   @Override
@@ -223,6 +226,7 @@ public class BoardOutline extends Item implements Serializable {
       keepoutArea = keepoutArea.mirrorVertical(pole);
     }
     keepoutLines = null;
+    invalidateEdgePinNets();
   }
 
   /** ShapeCount. */
