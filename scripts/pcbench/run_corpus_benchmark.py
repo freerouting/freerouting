@@ -393,6 +393,7 @@ def route_single_board(
     violations_count = violations_info.get("total_count", None)
     router_introduced_count = violations_info.get("router_introduced_count", None)
     pre_existing_count = violations_info.get("pre_existing_count", None)
+    unfixable_count = violations_info.get("unfixable_count", None)
     min_viol_um = violations_info.get("min_violation_um", violations_info.get("min_violation_mm", None))
     max_viol_um = violations_info.get("max_violation_um", violations_info.get("max_violation_mm", None))
     avg_viol_um = violations_info.get("avg_violation_um", violations_info.get("avg_violation_mm", None))
@@ -536,6 +537,7 @@ def route_single_board(
             "clearance_violations": violations_count,
             "router_introduced_violations": router_introduced_count,
             "pre_existing_violations": pre_existing_count,
+            "unfixable_clearance_violations": unfixable_count,
             "min_violation_um": min_viol_um,
             "max_violation_um": max_viol_um,
             "avg_violation_um": avg_viol_um,
@@ -940,10 +942,15 @@ def main() -> int:
                     sec = q.get("wall_clock_seconds", 0.0)
                     is_timeout = exit_info.get("timed_out", False)
 
+                    unfixable_viol = q.get("unfixable_clearance_violations")
+                    if unfixable_viol is None:
+                        unfixable_viol = 0
+                    is_clean = unr == 0 and (viol == 0 or (viol is not None and viol <= unfixable_viol))
+
                     if is_timeout:
                         timeout_count += 1
                         status = f"TIMEOUT ({sec:.1f}s)"
-                    elif unr == 0 and viol == 0:
+                    elif is_clean:
                         clean_count += 1
                         status = f"CLEAN ({sec:.1f}s)"
                     elif unr == 0:

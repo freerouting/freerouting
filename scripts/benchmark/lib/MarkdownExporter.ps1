@@ -203,9 +203,13 @@ function Export-MarkdownReport {
 
                 $score = Get-RunScoreValue $latestRun $NormalizedScores
 
+                $unfixable = if ($latestRun.quality.unfixable_clearance_violations -ne $null) {
+                    [int]$latestRun.quality.unfixable_clearance_violations
+                } else { 0 }
+
                 if (-not $failed -and $unrouted -ne $null -and $unrouted -eq 0) {
                     $allRouted++
-                    if ($violations -ne $null -and $violations -eq 0) {
+                    if ($violations -ne $null -and $violations -le $unfixable) {
                         $perfects++
                     }
                 }
