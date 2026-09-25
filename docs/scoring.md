@@ -17,8 +17,7 @@ formula; it does not implement V2.
 
 Implementation: `BoardStatistics.getRouterScore` /
 `getOptimizerScore` in `app.freerouting.core.scoring`. Defaults:
-`DefaultSettings`. Settings fields: `docs/settings.md`. Design history:
-`docs/research/scoring_revision_plan.md`.
+`DefaultSettings`. Settings fields: [`docs/settings.md`](settings.md).
 
 ---
 

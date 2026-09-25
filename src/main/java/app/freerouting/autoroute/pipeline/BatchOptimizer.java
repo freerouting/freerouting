@@ -398,7 +398,6 @@ public final class BatchOptimizer extends NamedAlgorithm {
       float scoreBeforePass = board.getStatistics().getOptimizerScore(job.routerSettings);
 
       String currentBoardHash = this.board.getHash();
-      job.setCurrentPass(currentPass);
       this.fireTaskStateChangedEvent(
           new TaskStateChangedEvent(this, TaskState.RUNNING, currentPass, currentBoardHash));
 

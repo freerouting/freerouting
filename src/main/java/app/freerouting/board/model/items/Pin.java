@@ -359,11 +359,11 @@ public class Pin extends DrillItem implements Serializable {
         if (this.getComponentId() > 0
             && this.getComponentId() == otherPin.getComponentId()
             && this.netCount() == 0
-            && otherPin.netCount() == 0) {
-          // Check if both are netless sub-pads of the same logical pad on the same component
-          if (isSameLogicalPad(this, otherPin)) {
-            return false;
-          }
+            && otherPin.netCount() == 0
+            && isSameLogicalPad(this, otherPin)) {
+          // Netless sub-pads of the same logical pad (e.g. composite pads with @1, @2)
+          // do not violate clearance against each other.
+          return false;
         }
       }
       return true;
@@ -371,12 +371,11 @@ public class Pin extends DrillItem implements Serializable {
     if (other instanceof Trace) {
       return false;
     }
-    if (other instanceof Pin otherPin) {
-      if (this.getComponentId() > 0 && this.getComponentId() == otherPin.getComponentId()) {
-        // Same-net pins on the same component (e.g. composite pads, thermal vias in pad,
-        // or internally connected pins in a footprint) do not violate clearance against each other.
-        return false;
-      }
+    if (other instanceof Pin) {
+      // Pins sharing the same electrical net (e.g. composite pads, thermal vias in pad,
+      // stitching vias, or internally connected pins across components) are electrically
+      // connected and do not violate clearance against each other.
+      return false;
     }
     // Same-net vias must be allowed to contact SMD pins during fanout.
     return !this.drillAllowed() || !(other instanceof Via);
@@ -413,12 +412,18 @@ public class Pin extends DrillItem implements Serializable {
       return "";
     }
     int atIdx = pinName.indexOf('@');
-    if (atIdx >= 0) {
+    if (atIdx > 0) {
       return pinName.substring(0, atIdx);
     }
+    if (atIdx == 0) {
+      return "@";
+    }
     int hashIdx = pinName.indexOf('#');
-    if (hashIdx >= 0) {
+    if (hashIdx > 0) {
       return pinName.substring(0, hashIdx);
+    }
+    if (hashIdx == 0) {
+      return "#";
     }
     // Handle composite sub-pad suffixes with numeric segment, e.g. "pad_1_1", "1_1", "1-1"
     int lastUnderscore = pinName.lastIndexOf('_');

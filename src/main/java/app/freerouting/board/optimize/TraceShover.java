@@ -641,6 +641,8 @@ public class TraceShover {
                   && !contactPins.contains(currentItem);
         } else if (currentItem instanceof ConductionArea area) {
           isObstacle = area.getIsObstacle();
+        } else if (currentItem instanceof BoardOutline outline) {
+          isObstacle = outline.blocksNets(netNumbers);
         } else if (currentItem instanceof ViaObstacleArea
             || currentItem instanceof ComponentObstacleArea) {
           isObstacle = false;
@@ -693,7 +695,7 @@ public class TraceShover {
     }
 
     if (recursionDepth <= 0
-        || foundObstacle instanceof BoardOutline
+        || (foundObstacle instanceof BoardOutline outline && outline.blocksNets(netNumbers))
         || (foundObstacle instanceof Trace && !foundObstacle.isShoveFixed())) {
       this.board.setShoveFailingObstacle(foundObstacle);
       return null;

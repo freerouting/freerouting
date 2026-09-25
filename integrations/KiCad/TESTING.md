@@ -1,7 +1,6 @@
 # Testing the KiCad Freerouting Plugin
 
-> **JSON/API mode is experimental in Freerouting v2.3.** DSN mode is the default and recommended for production routing.
-> Improvement backlog: [`docs/issues/kicad-json-api-mode-improvement-tracker.md`](../../docs/issues/kicad-json-api-mode-improvement-tracker.md)
+> **Note:** DSN mode is the default and recommended for production routing. JSON/API mode is an experimental bridge.
 
 ## Overview
 
