@@ -169,8 +169,8 @@ public class AutorouteControl {
     tidyRegionWidth = Integer.MAX_VALUE;
     pullTightAccuracy = 500;
     maxShoveTraceRecursionDepth = 20;
-    maxShoveViaRecursionDepth = 5;
-    maxSpringOverRecursionDepth = 5;
+    maxShoveViaRecursionDepth = 8;
+    maxSpringOverRecursionDepth = 8;
     for (int i = 0; i < layerCount; i++) {
       for (int j = 0; j < layerCount; j++) {
         addViaCosts[i].toLayer[j] = 0;

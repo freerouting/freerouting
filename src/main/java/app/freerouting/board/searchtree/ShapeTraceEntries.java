@@ -9,6 +9,7 @@ import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.model.items.Via;
 import app.freerouting.board.model.items.ViaObstacleArea;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.board.model.structure.ShapeEntrySide;
 import app.freerouting.board.trace.PolylineTrace;
@@ -184,6 +185,20 @@ public class ShapeTraceEntries {
       boolean containsOwnNet = currentItem.sharesNetNo(this.ownNetNos);
       if (currentItem instanceof ConductionArea area && (containsOwnNet || !area.getIsObstacle())) {
         continue;
+      }
+      if (currentItem instanceof BoardOutline outline) {
+        boolean isObstacle = true;
+        if (this.ownNetNos != null) {
+          for (int netNo : this.ownNetNos) {
+            if (!outline.isTraceObstacle(netNo)) {
+              isObstacle = false;
+              break;
+            }
+          }
+        }
+        if (!isObstacle) {
+          continue;
+        }
       }
       if (currentItem.isShoveFixed() && !containsOwnNet) {
         this.foundObstacle = currentItem;

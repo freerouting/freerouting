@@ -6,6 +6,7 @@ import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -21,7 +22,9 @@ import app.freerouting.util.TextManager;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /** Class describing a board outline. */
 public class BoardOutline extends Item implements Serializable {
@@ -82,11 +85,59 @@ public class BoardOutline extends Item implements Serializable {
     return result;
   }
 
+  private transient Set<Integer> edgePinNets;
+
+  private Set<Integer> getEdgePinNets() {
+    if (this.edgePinNets == null) {
+      Set<Integer> set = new HashSet<>();
+      if (this.board != null) {
+        for (Pin pin : this.board.getPins()) {
+          Point center = pin.getCenter();
+          IntBox box = pin.boundingBox();
+          boolean isEdgeOrOutside = false;
+          if (center != null && !this.contains(center)) {
+            isEdgeOrOutside = true;
+          } else if (box != null && (!this.contains(box.ll) || !this.contains(box.ur))) {
+            isEdgeOrOutside = true;
+          }
+          if (isEdgeOrOutside) {
+            for (int net : pin.netNumbers) {
+              set.add(net);
+            }
+          }
+        }
+      }
+      this.edgePinNets = set;
+    }
+    return this.edgePinNets;
+  }
+
+  /** Invalidates cached edge pin nets when board geometry or pins change. */
+  public void invalidateEdgePinNets() {
+    this.edgePinNets = null;
+  }
+
+  @Override
+  public boolean isTraceObstacle(int netNumber) {
+    if (netNumber > 0 && getEdgePinNets().contains(netNumber)) {
+      return false;
+    }
+    return true;
+  }
+
   @Override
   public boolean isObstacle(Item other) {
-    return !(other instanceof BoardOutline
-        || other instanceof ObstacleArea
-        || other instanceof Pin);
+    if (other instanceof BoardOutline || other instanceof ObstacleArea || other instanceof Pin) {
+      return false;
+    }
+    if (other instanceof Trace otherTrace) {
+      for (int netNo : otherTrace.netNumbers) {
+        if (!isTraceObstacle(netNo)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   @Override

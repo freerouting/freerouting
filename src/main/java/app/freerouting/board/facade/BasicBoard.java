@@ -91,7 +91,7 @@ public class BasicBoard implements Serializable {
   public final Communication communication;
 
   /** Bounding orthogonal rectangle of this board. */
-  public final IntBox boundingBox;
+  public IntBox boundingBox;
 
   /** Handles the search trees pointing into the items of this board. */
   public transient SearchTreeManager searchTreeManager;
@@ -583,6 +583,29 @@ public class BasicBoard implements Serializable {
     BoardOutline result = new BoardOutline(outlineShapes, clearanceClassIndex, 0, this);
     insertItem(result);
     return result;
+  }
+
+  /**
+   * Expands the board's bounding box so that all placed items (pins, obstacles, conduction areas)
+   * are fully contained within the routable bounding box, with a minimum margin.
+   */
+  public void expandBoundingBoxToIncludeAllItems() {
+    IntBox bounds = this.boundingBox;
+    boolean changed = false;
+    for (Item item : getItems()) {
+      IntBox itemBox = item.boundingBox();
+      if (itemBox != null && !itemBox.isEmpty() && !bounds.contains(itemBox)) {
+        bounds = bounds.union(itemBox);
+        changed = true;
+      }
+    }
+    if (changed) {
+      this.boundingBox = bounds.offset(1000);
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
   }
 
   /** Returns the outline of the board. */

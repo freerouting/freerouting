@@ -423,6 +423,24 @@ public abstract class Item
         }
 
         if (isObstacle) {
+          if (this instanceof BoardOutline outline && currentItem instanceof Trace trace) {
+            for (int netNo : trace.netNumbers) {
+              if (!outline.isTraceObstacle(netNo)) {
+                isObstacle = false;
+                break;
+              }
+            }
+          } else if (this instanceof Trace trace && currentItem instanceof BoardOutline outline) {
+            for (int netNo : trace.netNumbers) {
+              if (!outline.isTraceObstacle(netNo)) {
+                isObstacle = false;
+                break;
+              }
+            }
+          }
+        }
+
+        if (isObstacle) {
           // Get the two shapes the clearance is calculated between
           TileShape shape1 = currentTileShape;
           TileShape shape2 = currentItem.getTileShape(currentEntry.shapeIndexInObject);
