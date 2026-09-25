@@ -1,5 +1,6 @@
 package app.freerouting.autoroute.maze;
 
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.autoroute.drill.DrillPage;
 import app.freerouting.autoroute.drill.ExpansionDrill;
@@ -71,6 +72,27 @@ public class MazeSearchEngine {
 
   private int sectionNoOfDestinationDoor;
 
+  /**
+   * When non-null, explains why {@link #findConnection()} returned null for this attempt. Populated
+   * only at give-up time; null on success. Per-instance (not shared) so it is safe in multithreaded
+   * routing; the optimizer/batch loop aggregates and deduplicates by net.
+   */
+  private FailureReason failureReason;
+
+  /** True when {@link #init} completed successfully for this instance. */
+  private boolean initialized;
+
+  /**
+   * Number of drill-layer via expansion attempts (one per {@code expandToOtherLayers} call) and
+   * number of via expansion elements accepted into the maze expansion list. Read at give-up time to
+   * distinguish {@link FailureReason.FailureType#VIA_PLACEMENT_BLOCKED} from a plain {@link
+   * FailureReason.FailureType#CLEARANCE_WALKED_EXHAUSTED}. Two int counters only — no allocation in
+   * the expansion hot loop.
+   */
+  int viaExpansionAttempts;
+
+  int viaExpansionSuccesses;
+
   /** Creates a new instance of MazeSearchEngine. */
   MazeSearchEngine(AutorouteEngine autorouteEngine, AutorouteControl ctrl) {
     this.autorouteEngine = autorouteEngine;
@@ -130,6 +152,22 @@ public class MazeSearchEngine {
 
   /**
    * Initializes a new instance of MazeSearchEngine for searching a connection between startItems
+   * and destinationItems. Returns the instance even when initialisation failed; callers must check
+   * {@link #isInitialized()} and read {@link #getFailureReason()}. Use {@link #getInstance} for the
+   * legacy contract that returns null when initialisation failed.
+   */
+  public static MazeSearchEngine create(
+      Set<Item> startItems,
+      Set<Item> destinationItems,
+      AutorouteEngine autorouteDatabase,
+      AutorouteControl ctrl) {
+    MazeSearchEngine newInstance = new MazeSearchEngine(autorouteDatabase, ctrl);
+    newInstance.initialized = newInstance.init(startItems, destinationItems);
+    return newInstance;
+  }
+
+  /**
+   * Initializes a new instance of MazeSearchEngine for searching a connection between startItems
    * and destinationItems. Returns null, if the initialisation failed.
    */
   public static MazeSearchEngine getInstance(
@@ -137,14 +175,13 @@ public class MazeSearchEngine {
       Set<Item> destinationItems,
       AutorouteEngine autorouteDatabase,
       AutorouteControl ctrl) {
-    MazeSearchEngine newInstance = new MazeSearchEngine(autorouteDatabase, ctrl);
-    MazeSearchEngine result;
-    if (newInstance.init(startItems, destinationItems)) {
-      result = newInstance;
-    } else {
-      result = null;
-    }
-    return result;
+    MazeSearchEngine newInstance = create(startItems, destinationItems, autorouteDatabase, ctrl);
+    return newInstance.initialized ? newInstance : null;
+  }
+
+  /** Returns true, if {@link #init} completed successfully for this instance. */
+  public boolean isInitialized() {
+    return this.initialized;
   }
 
   /**
@@ -302,9 +339,35 @@ public class MazeSearchEngine {
       continue;
     }
     if (this.destinationDoor == null) {
+      // Exhausted the expansion list without reaching the destination.
+      if (this.viaExpansionAttempts > 0
+          && this.viaExpansionSuccesses == 0
+          && this.ctrl.layerCount > 1) {
+        // Vias were attempted during the search, but not a single via expansion element was ever
+        // accepted: the dominating cause is blocked via placement, not clearance walls.
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.VIA_PLACEMENT_BLOCKED,
+                "Via placement exhausted; no via could be placed at any attempted location (all"
+                    + " candidate via layers failed DRC or via-mask checks).");
+      } else {
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.CLEARANCE_WALKED_EXHAUSTED,
+                "Maze expansion list exhausted; no DRC-legal path to destination found for net #"
+                    + ctrl.netNumber);
+      }
       return null;
     }
     return new Result(this.destinationDoor, this.sectionNoOfDestinationDoor);
+  }
+
+  /**
+   * Returns the failure reason captured during {@link #findConnection()}, or null if the search
+   * succeeded. Callers should treat a null return as "no failure information available".
+   */
+  public FailureReason getFailureReason() {
+    return this.failureReason;
   }
 
   /**
@@ -321,6 +384,13 @@ public class MazeSearchEngine {
     boolean nextElementFound = false;
     while (!mazeExpansionList.isEmpty()) {
       if (this.autorouteEngine.isStopRequested()) {
+        // The routing thread requested a stop (time limit, user cancel, or global timeout).
+        this.failureReason =
+            new FailureReason(
+                FailureReason.FailureType.TIME_LIMIT_EXCEEDED,
+                "Maze expansion stopped by thread request; net #"
+                    + ctrl.netNumber
+                    + " did not reach destination");
         return false;
       }
 
@@ -994,6 +1064,11 @@ public class MazeSearchEngine {
     }
 
     if (!destinationOk) {
+      this.failureReason =
+          new FailureReason(
+              FailureReason.FailureType.NO_VALID_DESTINATION_ITEMS,
+              "Destination set has no usable items on active layers; the maze has nothing to aim"
+                  + " at.");
       FRLogger.debug(
           "MazeSearchEngine.init: Failed - no valid destination items found"
               + " (dest set size: "
@@ -1081,6 +1156,13 @@ public class MazeSearchEngine {
       }
     }
     if (!startOk) {
+      this.failureReason =
+          new FailureReason(
+              FailureReason.FailureType.START_PIN_ESCAPE_FAILED,
+              "Start items have no accessible expansion doors; the start pin cannot escape into"
+                  + " free space (ripupAllowed="
+                  + this.ctrl.ripupAllowed
+                  + ").");
       FRLogger.debug(
           "MazeSearchEngine.init: Failed - no accessible expansion doors found"
               + " (start items: "

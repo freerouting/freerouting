@@ -3,6 +3,7 @@ package app.freerouting.autoroute.maze;
 import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.AutorouteDiagnostic;
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.autoroute.ItemAutorouteInfo;
 import app.freerouting.autoroute.drill.DrillPageArray;
 import app.freerouting.autoroute.expansion.CompleteExpansionRoom;
@@ -135,7 +136,7 @@ public class AutorouteEngine {
       Map<Item, Integer> ripupCosts) {
     MazeSearchEngine mazeSearchAlgo;
     try {
-      mazeSearchAlgo = MazeSearchEngine.getInstance(startSet, destSet, this, ctrl);
+      mazeSearchAlgo = MazeSearchEngine.create(startSet, destSet, this, ctrl);
     } catch (Exception e) {
       FRLogger.error(
           "AutorouteEngine.autoroute_connection: Exception in MazeSearchEngine.get_instance", e);
@@ -147,7 +148,29 @@ public class AutorouteEngine {
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
               + describeConnection(startSet, destSet)
-              + ", because the maze search algorithm could not be created.");
+              + ", because the maze search algorithm could not be created.",
+          new FailureReason(
+              FailureReason.FailureType.INITIALIZATION_FAILED,
+              "MazeSearchEngine.getInstance returned null for net #" + ctrl.netNumber));
+    }
+
+    if (!mazeSearchAlgo.isInitialized()) {
+      // Init gave up: attach the specific reason recorded during init (e.g. the start pin cannot
+      // escape, or no valid destination items), falling back to the generic initialization
+      // failure when init was aborted by a stop request without a reason.
+      FailureReason reason = mazeSearchAlgo.getFailureReason();
+      if (reason == null) {
+        reason =
+            new FailureReason(
+                FailureReason.FailureType.INITIALIZATION_FAILED,
+                "Maze search initialization failed for net #" + ctrl.netNumber);
+      }
+      return new AutorouteAttemptResult(
+          AutorouteAttemptState.FAILED,
+          "Failed to route connection between "
+              + describeConnection(startSet, destSet)
+              + ", because the maze search algorithm could not be initialized.",
+          reason);
     }
 
     MazeSearchEngine.Result searchResult = null;
@@ -205,17 +228,33 @@ public class AutorouteEngine {
     }
 
     if (searchResult == null) {
+      FailureReason reason = (mazeSearchAlgo != null) ? mazeSearchAlgo.getFailureReason() : null;
+      if (reason == null) {
+        // findConnection threw an exception (already logged) or was aborted without recording
+        // a reason; keep the failure recorded instead of losing the diagnostic.
+        reason =
+            new FailureReason(
+                FailureReason.FailureType.UNEXPECTED_EXCEPTION,
+                "Maze search returned null without a recorded reason (possible internal error).");
+      }
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
               + describeConnection(startSet, destSet)
-              + ", because no connection was found between their nets.");
+              + ", because no connection was found between their nets.",
+          reason);
     }
 
     if (autorouteResult == null) {
+      // The maze search succeeded, so mazeSearchAlgo.getFailureReason() is necessarily null on
+      // this path; the failure is in backtracking the found connection into board items.
       return new AutorouteAttemptResult(
           AutorouteAttemptState.FAILED,
-          "Failed to route connection between " + describeConnection(startSet, destSet) + ".");
+          "Failed to route connection between " + describeConnection(startSet, destSet) + ".",
+          new FailureReason(
+              FailureReason.FailureType.CONNECTION_INSERTION_FAILED,
+              "The maze search found a connection, but it could not be backtracked into board"
+                  + " items."));
     }
 
     if (!ctrl.layerActive[autorouteResult.startLayer]
@@ -224,7 +263,11 @@ public class AutorouteEngine {
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
               + describeConnection(startSet, destSet)
-              + ", because some of their layers are disabled.");
+              + ", because some of their layers are disabled.",
+          new FailureReason(
+              FailureReason.FailureType.LAYER_RESTRICTION_CONFLICT,
+              "The connection endpoints lie on layers that are not active routing layers for this"
+                  + " net (net-class layer restriction or non-signal plane layer)."));
     }
 
     if (autorouteResult.connectionItems == null) {
@@ -273,7 +316,10 @@ public class AutorouteEngine {
           AutorouteAttemptState.FAILED,
           "Failed to route connection between "
               + describeConnection(startSet, destSet)
-              + ", because the new connection could not be inserted.");
+              + ", because the new connection could not be inserted.",
+          new FailureReason(
+              FailureReason.FailureType.CONNECTION_INSERTION_FAILED,
+              "The found connection could not be inserted into the board."));
     }
 
     return new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);

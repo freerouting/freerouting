@@ -1,5 +1,6 @@
 package app.freerouting.autoroute.pipeline;
 
+import app.freerouting.autoroute.FailureReason;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.Pin;
@@ -17,6 +18,10 @@ final class AutorouteUnroutedReport {
   private AutorouteUnroutedReport() {}
 
   static String build(RoutingBoard board) {
+    return build(board, Map.of());
+  }
+
+  static String build(RoutingBoard board, Map<String, FailureReason> netFailureReasons) {
     DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
     tempDrc.calculateAllIncompletes();
     AirLine[] airlines = tempDrc.getAllAirlines();
@@ -48,6 +53,15 @@ final class AutorouteUnroutedReport {
           .append("):\n");
       for (String line : entry.getValue()) {
         result.append(line).append('\n');
+      }
+      FailureReason reason = netFailureReasons.get(entry.getKey());
+      if (reason != null) {
+        result
+            .append("    Last failure reason (")
+            .append(reason.type())
+            .append("): ")
+            .append(reason.description())
+            .append('\n');
       }
     }
     return result.toString().stripTrailing();
