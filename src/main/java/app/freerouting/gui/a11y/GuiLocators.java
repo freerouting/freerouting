@@ -39,6 +39,9 @@ public final class GuiLocators {
   /** Current measurement unit indicator. */
   public static final String STATUS_UNIT = "status.unit";
 
+  /** Micro-survey trigger button in status bar. */
+  public static final String STATUS_SURVEY_TRIGGER = "status.survey.trigger";
+
   // ---- Toolbar ----
   /** Root panel for the component-only toolbar seam. */
   public static final String TOOLBAR_ROOT = "toolbar.root";
@@ -67,6 +70,8 @@ public final class GuiLocators {
 
   /** Common toolbar actions. */
   public static final String TOOLBAR_SETTINGS = "toolbar.settings";
+
+  public static final String TOOLBAR_SURVEY_TRIGGER = "toolbar.survey.trigger";
 
   public static final String TOOLBAR_AUTOROUTE = "toolbar.autoroute";
   public static final String TOOLBAR_CANCEL = "toolbar.cancel";

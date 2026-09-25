@@ -39,7 +39,8 @@ class ModuleBoundariesArchTest {
     "app.freerouting.util..",
     "app.freerouting.io..",
     "app.freerouting.core..",
-    "app.freerouting.analytics.."
+    "app.freerouting.analytics..",
+    "app.freerouting.surveys.."
   };
 
   private JavaClasses importMainClasses() {

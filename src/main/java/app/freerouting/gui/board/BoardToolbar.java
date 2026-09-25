@@ -581,6 +581,7 @@ public class BoardToolbar extends JPanel {
       GuiLocators.TOOLBAR_UNIT_MM,
       GuiLocators.TOOLBAR_UNIT_UM,
       GuiLocators.TOOLBAR_SETTINGS,
+      GuiLocators.TOOLBAR_SURVEY_TRIGGER,
       GuiLocators.TOOLBAR_AUTOROUTE,
       GuiLocators.TOOLBAR_CANCEL,
       GuiLocators.TOOLBAR_UNDO,

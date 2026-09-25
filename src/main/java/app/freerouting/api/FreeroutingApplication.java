@@ -5,6 +5,7 @@ import app.freerouting.api.v1.JobInputResource;
 import app.freerouting.api.v1.JobOutputResource;
 import app.freerouting.api.v1.JobProgressResource;
 import app.freerouting.api.v1.SessionControllerV1;
+import app.freerouting.api.v1.SurveyControllerV1;
 import app.freerouting.api.v1.SystemControllerV1;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
@@ -43,6 +44,7 @@ public class FreeroutingApplication extends Application {
                 JobOutputResource.class,
                 JobProgressResource.class,
                 SessionControllerV1.class,
+                SurveyControllerV1.class,
                 SystemControllerV1.class,
                 OpenApiResource.class,
                 SwaggerUIResource.class,
