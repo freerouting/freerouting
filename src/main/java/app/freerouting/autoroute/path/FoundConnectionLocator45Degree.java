@@ -249,7 +249,13 @@ public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
         return result;
       }
       FloatLine currentLineSection = lineSections[currentToInfo.sectionNoOfDoor];
-      nearestToDoorPoint = currentLineSection.nearestSegmentPoint(this.currentFromPoint);
+      double sectionLen = currentLineSection.b.distance(currentLineSection.a);
+      if (sectionLen <= 2.5 * traceHalfwidthAdd) {
+        nearestToDoorPoint = currentLineSection.a.middlePoint(currentLineSection.b);
+      } else {
+        FloatLine safeLineSection = currentLineSection.shrinkSegment(traceHalfwidthAdd);
+        nearestToDoorPoint = safeLineSection.nearestSegmentPoint(this.currentFromPoint);
+      }
 
       boolean nearestToDoorPointOk = true;
       if (currentToInfo.nextRoom != null) {
@@ -259,6 +265,15 @@ public class FoundConnectionLocator45Degree extends FoundConnectionLocator {
         FloatPoint[] nearestPoints = nextRoomShape.nearestBorderPointsApprox(nearestToDoorPoint, 2);
         if (nearestPoints.length >= 2) {
           nearestToDoorPointOk = nearestPoints[1].distance(nearestToDoorPoint) >= traceHalfwidthAdd;
+        }
+      }
+      if (nearestToDoorPointOk && currentFromInfo.nextRoom != null) {
+        Simplex prevRoomShape = currentFromInfo.nextRoom.getShape().toSimplex();
+        FloatPoint[] prevNearestPoints =
+            prevRoomShape.nearestBorderPointsApprox(nearestToDoorPoint, 2);
+        if (prevNearestPoints.length >= 2) {
+          nearestToDoorPointOk =
+              prevNearestPoints[1].distance(nearestToDoorPoint) >= traceHalfwidthAdd;
         }
       }
       if (!nearestToDoorPointOk) {

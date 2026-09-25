@@ -290,6 +290,19 @@ final class AutoroutePassRunner {
                 currentItem, passNo, autorouterResult.state, autorouterResult.details);
             router.job.logDebug("Autorouter " + autorouterResult.details);
             int failureCount = router.board.failureLog.getFailureCount(currentItem);
+            if (failureCount >= 2) {
+              int netNo = currentItem.getNetNumber(i);
+              List<Item> tracesToRip = new ArrayList<>();
+              for (Item netItem : router.board.getConnectableItems(netNo)) {
+                if ((netItem instanceof Trace || netItem instanceof Via)
+                    && !netItem.isUserFixed()) {
+                  tracesToRip.add(netItem);
+                }
+              }
+              if (!tracesToRip.isEmpty()) {
+                router.board.removeItems(tracesToRip);
+              }
+            }
             if (itemsToGoCount <= 5 || failureCount >= 3) {
               router.job.logDebug(
                   "Pass #"

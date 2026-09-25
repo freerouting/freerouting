@@ -11,6 +11,8 @@ import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
 import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
 import app.freerouting.board.trace.PolylineTrace;
 import app.freerouting.core.ProgressThrottler;
 import app.freerouting.core.RouterCounters;
@@ -382,6 +384,18 @@ public class BatchAutorouterThread extends StoppableThread {
           FRLogger.debug("Autorouter " + autorouterResult.details);
           // Log details when we're down to last few items or item has many failures
           int failureCount = board.failureLog.getFailureCount(currentItem);
+          if (failureCount >= 2) {
+            int netNo = currentItem.getNetNumber(i);
+            List<Item> tracesToRip = new ArrayList<>();
+            for (Item netItem : this.board.getConnectableItems(netNo)) {
+              if ((netItem instanceof Trace || netItem instanceof Via) && !netItem.isUserFixed()) {
+                tracesToRip.add(netItem);
+              }
+            }
+            if (!tracesToRip.isEmpty()) {
+              this.board.removeItems(tracesToRip);
+            }
+          }
           if (itemsToGoCount <= 5 || failureCount >= 3) {
             FRLogger.debug(
                 "Pass #"
