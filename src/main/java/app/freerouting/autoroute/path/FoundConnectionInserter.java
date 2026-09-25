@@ -209,7 +209,7 @@ public final class FoundConnectionInserter {
       }
       if (!neckdownInserted
           && okPoint != insertPolyline.lastCorner()
-          && ctrl.isFanout
+          && (ctrl.isFanout || ctrl.withNeckdown)
           && currentCornerArr.length == 2) {
         microNeckdownInserted =
             insertFanoutMicroNeckdown(

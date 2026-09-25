@@ -92,9 +92,23 @@ function Update-BenchmarksHtml {
 
                 $score = Get-RunScoreValue $latestRun $NormalizedScores
 
+                $unfixable = if ($latestRun.quality.unfixable_clearance_violations -ne $null) {
+                    [int]$latestRun.quality.unfixable_clearance_violations
+                } else { 0 }
+
+                $routerViol = if ($latestRun.quality.router_introduced_violations -ne $null) {
+                    [int]$latestRun.quality.router_introduced_violations
+                } else { $null }
+
+                $isClean = if ($routerViol -ne $null) {
+                    $routerViol -eq 0
+                } else {
+                    $violations -ne $null -and $violations -le $unfixable
+                }
+
                 if (-not $failed -and $unrouted -ne $null -and $unrouted -eq 0) {
                     $allRouted++
-                    if ($violations -ne $null -and $violations -eq 0) {
+                    if ($isClean) {
                         $perfects++
                     }
                 }

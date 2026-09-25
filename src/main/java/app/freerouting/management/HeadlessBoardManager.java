@@ -835,6 +835,7 @@ public class HeadlessBoardManager implements BoardManager {
     if (this.board == null) {
       return;
     }
+    this.board.expandBoundingBoxToIncludeAllItems();
     this.board.reduceNetsOfRouteItems();
     validatePowerPlanes();
     validateBoardDesignErrors();

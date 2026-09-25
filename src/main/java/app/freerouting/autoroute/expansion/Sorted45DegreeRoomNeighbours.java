@@ -620,28 +620,19 @@ public final class Sorted45DegreeRoomNeighbours {
     for (SortedRoomNeighbour nextNeighbour : this.sortedNeighbours) {
       boolean insertIncompleteRoom;
 
-      if (this.completedRoom instanceof ObstacleExpansionRoom
-          && this.sortedNeighbours.size() == 2) {
-        // check, if this site is touching or open.
-        TileShape intersection =
-            nextNeighbour.intersection.intersection(prevNeighbour.intersection);
-        if (intersection.isEmpty()) {
-          insertIncompleteRoom = true;
-        } else if (intersection.dimension() >= 1) {
-          insertIncompleteRoom = false;
-        } else { // dimension = 1
-          // touch at a corner of the room shape
-          if (prevNeighbour.lastTouchingSide == nextNeighbour.firstTouchingSide) {
-            // touch along the side of the room shape
-            insertIncompleteRoom = false;
-          } else {
-            insertIncompleteRoom =
-                prevNeighbour.lastTouchingSide != (nextNeighbour.firstTouchingSide + 1) % 8;
-          }
-        }
+      TileShape intersection = nextNeighbour.intersection.intersection(prevNeighbour.intersection);
+      if (intersection.isEmpty()) {
+        insertIncompleteRoom = true;
+      } else if (intersection.dimension() >= 1) {
+        insertIncompleteRoom = false;
       } else {
-        // the 2 neighbours do not touch
-        insertIncompleteRoom = !nextNeighbour.intersection.intersects(prevNeighbour.intersection);
+        // Point contact (dimension == 0): touch at a corner of the room shape
+        if (prevNeighbour.lastTouchingSide == nextNeighbour.firstTouchingSide) {
+          insertIncompleteRoom = false;
+        } else {
+          insertIncompleteRoom =
+              prevNeighbour.lastTouchingSide != (nextNeighbour.firstTouchingSide + 1) % 8;
+        }
       }
 
       if (insertIncompleteRoom) {

@@ -169,8 +169,8 @@ public class AutorouteControl {
     tidyRegionWidth = Integer.MAX_VALUE;
     pullTightAccuracy = 500;
     maxShoveTraceRecursionDepth = 20;
-    maxShoveViaRecursionDepth = 5;
-    maxSpringOverRecursionDepth = 5;
+    maxShoveViaRecursionDepth = 8;
+    maxSpringOverRecursionDepth = 8;
     for (int i = 0; i < layerCount; i++) {
       for (int j = 0; j < layerCount; j++) {
         addViaCosts[i].toLayer[j] = 0;
@@ -199,6 +199,16 @@ public class AutorouteControl {
     }
 
     return true;
+  }
+
+  private static boolean hasSmdPin(RoutingBoard board, int netNumber) {
+    Collection<Item> netItems = board.getConnectableItems(netNumber);
+    for (Item item : netItems) {
+      if (item instanceof Pin pin && pin.firstLayer() == pin.lastLayer()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void initNet(int netNumber, RoutingBoard board, int viaCosts) {
@@ -261,11 +271,16 @@ public class AutorouteControl {
     }
 
     boolean pureSmdNet = isPureSmdNet(board, netNumber);
-    if (!this.attachSmdAllowed && layerCount > 1 && pureSmdNet) {
-      // Pure SMD nets must still be able to escape their component layer, even if the DSN marks
-      // every padstack as attach-off. This only relaxes the routing gate for same-net fanout;
-      // cross-net DRC remains governed by the padstack's attach flag.
+    boolean hasSmd = hasSmdPin(board, netNumber);
+    if (!this.attachSmdAllowed && layerCount > 1 && hasSmd) {
+      // Nets containing SMD pins on multi-layer boards must be able to escape congested
+      // component pads via layer transitions, even if the DSN marks padstacks as attach-off
+      // or the net also connects to through-hole pins. This only relaxes the routing gate
+      // for same-net fanout/escape; cross-net DRC remains governed by the padstack's attach flag.
       this.attachSmdAllowed = true;
+      for (int i = 0; i < this.viaInfos.length; i++) {
+        this.viaInfos[i] = new ViaMask(this.viaInfos[i].fromLayer, this.viaInfos[i].toLayer, true);
+      }
     }
 
     for (int j = 0; j < this.layerCount; j++) {

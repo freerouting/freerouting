@@ -458,6 +458,12 @@ public final class BatchAutorouter extends NamedAlgorithm {
     return passRunner.runSingleThread(passNo);
   }
 
+  void resetAntiOscillationState() {
+    if (this.passRunner != null) {
+      this.passRunner.resetAntiOscillationState();
+    }
+  }
+
   @Override
   public String getId() {
     return "freerouting-router";
@@ -593,11 +599,22 @@ public final class BatchAutorouter extends NamedAlgorithm {
   }
 
   int calculateIncompleteCount(RoutingBoard board) {
+    return calculateIncompleteCount(board, null);
+  }
+
+  /**
+   * Counts incomplete connections once. When {@code incompleteNets} is non-null, also records every
+   * net that still has an incomplete connection from that same scan.
+   */
+  int calculateIncompleteCount(RoutingBoard board, Set<Integer> incompleteNets) {
     long drcStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
     DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
     tempDrc.calculateAllIncompletes();
     if (BENCHMARK_PROFILE_ENABLED) {
       this.profileIncompleteDrcNanos += System.nanoTime() - drcStart;
+    }
+    if (incompleteNets != null) {
+      incompleteNets.addAll(tempDrc.incompleteNetNumbers());
     }
     return tempDrc.getIncompleteCount();
   }

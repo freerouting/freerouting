@@ -91,7 +91,7 @@ public class BasicBoard implements Serializable {
   public final Communication communication;
 
   /** Bounding orthogonal rectangle of this board. */
-  public final IntBox boundingBox;
+  public IntBox boundingBox;
 
   /** Handles the search trees pointing into the items of this board. */
   public transient SearchTreeManager searchTreeManager;
@@ -585,14 +585,51 @@ public class BasicBoard implements Serializable {
     return result;
   }
 
+  /**
+   * Expands the board's bounding box so that all placed items (pins, obstacles, conduction areas)
+   * are fully contained within the routable bounding box, with a minimum margin.
+   */
+  public void expandBoundingBoxToIncludeAllItems() {
+    IntBox bounds = this.boundingBox;
+    boolean changed = false;
+    for (Item item : getItems()) {
+      IntBox itemBox = item.boundingBox();
+      if (itemBox != null && !itemBox.isEmpty() && !bounds.contains(itemBox)) {
+        bounds = bounds.union(itemBox);
+        changed = true;
+      }
+    }
+    if (changed) {
+      this.boundingBox = bounds.offset(1000);
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
+  }
+
   /** Returns the outline of the board. */
   public BoardOutline getOutline() {
     return getItemRepository().getOutline();
   }
 
+  /** Drops the outline's cached edge-pin net set after a pin or outline mutation. */
+  public void invalidateEdgePinNetCache() {
+    BoardOutline outline = getOutline();
+    if (outline != null) {
+      outline.invalidateEdgePinNets();
+    }
+  }
+
   /** Removes an item from the board. */
   public void removeItem(Item item) {
     getItemRepository().removeItem(item);
+    if (item instanceof Pin || item instanceof BoardOutline) {
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
   }
 
   /**
@@ -1224,6 +1261,12 @@ public class BasicBoard implements Serializable {
   /** Inserts an item into the board database. */
   public void insertItem(Item item) {
     getItemRepository().insertItem(item);
+    if (item instanceof Pin || item instanceof BoardOutline) {
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
   }
 
   /**
@@ -1290,6 +1333,7 @@ public class BasicBoard implements Serializable {
         }
       }
     }
+    invalidateEdgePinNetCache();
   }
 
   /** Makes the current board situation restorable by undo. */

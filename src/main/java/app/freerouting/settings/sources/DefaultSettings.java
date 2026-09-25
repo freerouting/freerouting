@@ -77,8 +77,8 @@ public class DefaultSettings implements SettingsSource {
   public static final double DEFAULT_UNDESIRED_DIRECTION_TRACE_COST = 1.0;
 
   /**
-   * Default copper-to-board-edge clearance in micrometres (0.25 mm / 250 um, IPC-2221 precision /
-   * CNC routing standard).
+   * Default copper-to-board-edge clearance in micrometres (0.25 mm / 250 um, standard PCB
+   * manufacturing capability).
    */
   public static final double DEFAULT_COPPER_TO_EDGE_CLEARANCE_UM = 250.0;
 
@@ -90,6 +90,13 @@ public class DefaultSettings implements SettingsSource {
    * imperial-to-metric conversion drift and corner polygonal discretization noise.
    */
   public static final double DEFAULT_CLEARANCE_TOLERANCE_UM = 1.0;
+
+  /**
+   * Default trace neck width in micrometres (0 um / disabled by default). When configured, failed
+   * or insertion-error connections that cannot enter fine-pitch pads at net-class width are retried
+   * at this neck width. Zero disables width necking.
+   */
+  public static final double DEFAULT_NECK_WIDTH_UM = 0.0;
 
   /** Current default router score formula. */
   public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
@@ -164,7 +171,7 @@ public class DefaultSettings implements SettingsSource {
     settings.clearanceToleranceUm = DEFAULT_CLEARANCE_TOLERANCE_UM;
     settings.planeNets = new String[0];
     settings.planeAsObstacle = false;
-    settings.neckWidthUm = 0.0;
+    settings.neckWidthUm = DEFAULT_NECK_WIDTH_UM;
     settings.strictDrc = false;
 
     // layers is left null intentionally –
