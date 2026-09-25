@@ -75,6 +75,7 @@ final class AutorouteBatchLoop {
     // Capture initial state for session summary
     router.sessionStartTime = Instant.now();
     router.initialUnroutedCount = calculateIncompleteCount(router.board);
+    router.resetAntiOscillationState();
 
     final BoardHistory bh = new BoardHistory(job.routerSettings);
 
@@ -368,6 +369,7 @@ final class AutorouteBatchLoop {
 
             router.board = boardToRestore;
             board = router.board;
+            router.resetAntiOscillationState();
             var boardStatistics = router.board.getStatistics();
             // Reset pass-local stagnation counter when restoring a previous board state
             consecutiveNoImprovementPasses = 0;

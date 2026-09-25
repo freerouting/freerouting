@@ -91,6 +91,13 @@ public class DefaultSettings implements SettingsSource {
    */
   public static final double DEFAULT_CLEARANCE_TOLERANCE_UM = 1.0;
 
+  /**
+   * Default trace neck width in micrometres (150 um / 0.15 mm / ~6 mil). When a failed or
+   * insertion-error connection cannot enter fine-pitch pads at net-class width, the router
+   * automatically retries at this neck width. Zero disables width necking.
+   */
+  public static final double DEFAULT_NECK_WIDTH_UM = 150.0;
+
   /** Current default router score formula. */
   public static final RouterScoringVersion DEFAULT_ROUTER_SCORING_VERSION =
       RouterScoringVersion.V2_CONTINUOUS;
@@ -164,7 +171,7 @@ public class DefaultSettings implements SettingsSource {
     settings.clearanceToleranceUm = DEFAULT_CLEARANCE_TOLERANCE_UM;
     settings.planeNets = new String[0];
     settings.planeAsObstacle = false;
-    settings.neckWidthUm = 0.0;
+    settings.neckWidthUm = DEFAULT_NECK_WIDTH_UM;
     settings.strictDrc = false;
 
     // layers is left null intentionally –

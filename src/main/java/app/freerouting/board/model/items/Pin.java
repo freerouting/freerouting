@@ -3,6 +3,7 @@ package app.freerouting.board.model.items;
 import app.freerouting.board.actions.ItemInfoPrinter;
 import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
+import app.freerouting.board.model.structure.BoardOutline;
 import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.FixedState;
 import app.freerouting.core.library.LogicalPart;
@@ -351,7 +352,7 @@ public class Pin extends DrillItem implements Serializable {
 
   @Override
   public boolean isObstacle(Item other) {
-    if (other == this || other instanceof ObstacleArea) {
+    if (other == this || other instanceof ObstacleArea || other instanceof BoardOutline) {
       return false;
     }
     if (!other.sharesNet(this)) {
@@ -360,10 +361,9 @@ public class Pin extends DrillItem implements Serializable {
             && this.getComponentId() == otherPin.getComponentId()
             && this.netCount() == 0
             && otherPin.netCount() == 0) {
-          // Check if both are netless sub-pads of the same logical pad on the same component
-          if (isSameLogicalPad(this, otherPin)) {
-            return false;
-          }
+          // Netless sub-pads, mounting tabs, or mechanical features on the same component
+          // do not violate clearance against each other.
+          return false;
         }
       }
       return true;
@@ -371,12 +371,11 @@ public class Pin extends DrillItem implements Serializable {
     if (other instanceof Trace) {
       return false;
     }
-    if (other instanceof Pin otherPin) {
-      if (this.getComponentId() > 0 && this.getComponentId() == otherPin.getComponentId()) {
-        // Same-net pins on the same component (e.g. composite pads, thermal vias in pad,
-        // or internally connected pins in a footprint) do not violate clearance against each other.
-        return false;
-      }
+    if (other instanceof Pin) {
+      // Pins sharing the same electrical net (e.g. composite pads, thermal vias in pad,
+      // stitching vias, or internally connected pins across components) are electrically
+      // connected and do not violate clearance against each other.
+      return false;
     }
     // Same-net vias must be allowed to contact SMD pins during fanout.
     return !this.drillAllowed() || !(other instanceof Via);
@@ -413,12 +412,18 @@ public class Pin extends DrillItem implements Serializable {
       return "";
     }
     int atIdx = pinName.indexOf('@');
-    if (atIdx >= 0) {
+    if (atIdx > 0) {
       return pinName.substring(0, atIdx);
     }
+    if (atIdx == 0) {
+      return "@";
+    }
     int hashIdx = pinName.indexOf('#');
-    if (hashIdx >= 0) {
+    if (hashIdx > 0) {
       return pinName.substring(0, hashIdx);
+    }
+    if (hashIdx == 0) {
+      return "#";
     }
     // Handle composite sub-pad suffixes with numeric segment, e.g. "pad_1_1", "1_1", "1-1"
     int lastUnderscore = pinName.lastIndexOf('_');

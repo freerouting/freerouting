@@ -391,6 +391,8 @@ def route_single_board(
     unrouted_count = connections.get("incomplete_count", None)
     violations_info = stats.get("clearance_violations", {})
     violations_count = violations_info.get("total_count", None)
+    router_introduced_count = violations_info.get("router_introduced_count", None)
+    pre_existing_count = violations_info.get("pre_existing_count", None)
     min_viol_um = violations_info.get("min_violation_um", violations_info.get("min_violation_mm", None))
     max_viol_um = violations_info.get("max_violation_um", violations_info.get("max_violation_mm", None))
     avg_viol_um = violations_info.get("avg_violation_um", violations_info.get("avg_violation_mm", None))
@@ -532,6 +534,8 @@ def route_single_board(
             "total_nets": b_board.get("nets", 0),
             "unrouted_connections": unrouted_count,
             "clearance_violations": violations_count,
+            "router_introduced_violations": router_introduced_count,
+            "pre_existing_violations": pre_existing_count,
             "min_violation_um": min_viol_um,
             "max_violation_um": max_viol_um,
             "avg_violation_um": avg_viol_um,
@@ -931,6 +935,8 @@ def main() -> int:
                     exit_info = rec.get("exit", {})
                     unr = q.get("unrouted_connections", q.get("final_unrouted"))
                     viol = q.get("clearance_violations")
+                    router_viol = q.get("router_introduced_violations")
+                    effective_viol = router_viol if router_viol is not None else viol
                     sec = q.get("wall_clock_seconds", 0.0)
                     is_timeout = exit_info.get("timed_out", False)
 

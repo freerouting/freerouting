@@ -458,6 +458,12 @@ public final class BatchAutorouter extends NamedAlgorithm {
     return passRunner.runSingleThread(passNo);
   }
 
+  void resetAntiOscillationState() {
+    if (this.passRunner != null) {
+      this.passRunner.resetAntiOscillationState();
+    }
+  }
+
   @Override
   public String getId() {
     return "freerouting-router";

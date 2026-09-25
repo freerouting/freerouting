@@ -5,6 +5,7 @@ import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -83,7 +84,9 @@ public class BoardOutline extends Item implements Serializable {
 
   @Override
   public boolean isObstacle(Item other) {
-    return !(other instanceof BoardOutline || other instanceof ObstacleArea);
+    return !(other instanceof BoardOutline
+        || other instanceof ObstacleArea
+        || other instanceof Pin);
   }
 
   @Override

@@ -20,9 +20,13 @@ import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.rules.Net;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -33,6 +37,9 @@ final class AutoroutePassRunner {
   private static final int TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP = 1000;
 
   private final BatchAutorouter router;
+  private Set<Integer> previousIncompleteNets = Collections.emptySet();
+  private int previousIncompleteCount = -1;
+  private int stagnationCount = 0;
 
   AutoroutePassRunner(BatchAutorouter router) {
     this.router = router;
@@ -172,6 +179,10 @@ final class AutoroutePassRunner {
       if (autorouteItemList.isEmpty()) {
         router.airLine = null;
         return false;
+      }
+
+      if (passNo > 1) {
+        reorderSingleThreadItems(autorouteItemList, passNo);
       }
 
       long initialProgressStatisticsStart =
@@ -329,6 +340,24 @@ final class AutoroutePassRunner {
       routerCounters.incompleteCount = router.calculateIncompleteCount(router.board);
       router.fireBoardUpdatedEvent(boardStatistics, routerCounters, router.board);
 
+      Set<Integer> currentIncompleteNets = new TreeSet<>();
+      DesignRulesChecker endDrc = new DesignRulesChecker(router.board, null);
+      endDrc.calculateAllIncompletes();
+      for (int netNumber = 1; netNumber <= router.board.rules.nets.maxNetNumber(); netNumber++) {
+        if (endDrc.getIncompleteCount(netNumber) > 0) {
+          currentIncompleteNets.add(netNumber);
+        }
+      }
+
+      if (this.previousIncompleteCount >= 0
+          && routerCounters.incompleteCount >= this.previousIncompleteCount) {
+        this.stagnationCount++;
+      } else {
+        this.stagnationCount = 0;
+      }
+      this.previousIncompleteCount = routerCounters.incompleteCount;
+      this.previousIncompleteNets = currentIncompleteNets;
+
       long passDuration = System.currentTimeMillis() - passStartTime;
       int currentRipupCost = router.startRipupCosts * passNo;
       PerformanceProfiler.recordPass(
@@ -342,6 +371,74 @@ final class AutoroutePassRunner {
       router.airLine = null;
       return false;
     }
+  }
+
+  private void reorderSingleThreadItems(List<Item> autorouteItemList, int passNo) {
+    List<Item> planeItems = new ArrayList<>();
+    List<Item> signalItems = new ArrayList<>();
+    for (Item item : autorouteItemList) {
+      if (router.isPlaneItem(item, router.board)) {
+        planeItems.add(item);
+      } else {
+        signalItems.add(item);
+      }
+    }
+
+    if (signalItems.isEmpty()) {
+      return;
+    }
+
+    Comparator<Item> deterministicItemComparator =
+        Comparator.comparingInt((Item item) -> item.netCount() > 0 ? item.getNetNumber(0) : 0)
+            .thenComparingInt(Item::getId);
+
+    if (this.stagnationCount >= 2) {
+      signalItems.sort(deterministicItemComparator);
+      long seed = (long) passNo * 1000003L + router.board.rules.nets.maxNetNumber();
+      shuffle(signalItems, new Random(seed));
+      router.job.logDebug(
+          "Pass #"
+              + passNo
+              + ": applied deterministic permutation to "
+              + signalItems.size()
+              + " signal items (stagnation count: "
+              + this.stagnationCount
+              + ").");
+    } else if (!this.previousIncompleteNets.isEmpty()) {
+      List<Item> persistentItems = new ArrayList<>();
+      List<Item> otherItems = new ArrayList<>();
+      for (Item item : signalItems) {
+        boolean isPersistent = false;
+        for (int i = 0; i < item.netCount(); i++) {
+          if (this.previousIncompleteNets.contains(item.getNetNumber(i))) {
+            isPersistent = true;
+            break;
+          }
+        }
+        if (isPersistent) {
+          persistentItems.add(item);
+        } else {
+          otherItems.add(item);
+        }
+      }
+      persistentItems.sort(deterministicItemComparator);
+      otherItems.sort(deterministicItemComparator);
+      signalItems.clear();
+      signalItems.addAll(persistentItems);
+      signalItems.addAll(otherItems);
+    } else {
+      signalItems.sort(deterministicItemComparator);
+    }
+
+    autorouteItemList.clear();
+    autorouteItemList.addAll(planeItems);
+    autorouteItemList.addAll(signalItems);
+  }
+
+  void resetAntiOscillationState() {
+    this.previousIncompleteNets = Collections.emptySet();
+    this.previousIncompleteCount = -1;
+    this.stagnationCount = 0;
   }
 
   private void logIncompleteDetails(
