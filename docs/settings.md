@@ -26,7 +26,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   },
   "gui": {
     "enabled": true,
-    "input_directory": "C:\\Work\\freerouting\\tests",
+    "input_directory": "",
     "dialog_confirmation_timeout": 5
   },
   "router": {
