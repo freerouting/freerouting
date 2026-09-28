@@ -87,51 +87,53 @@ public class BoardOutline extends Item implements Serializable {
   }
 
   private transient Set<Integer> edgePinNets;
-  private transient int cachedItemCount = -1;
 
+  /**
+   * Nets whose pins touch the outline. Rebuilt only after {@link #invalidateEdgePinNets()}. The
+   * previous probe called {@code getPins().size()} on every check, which copied every board item
+   * into a linked list from inside maze room expansion.
+   */
   private Set<Integer> getEdgePinNets() {
-    int currentItemCount = this.board != null ? this.board.getPins().size() : -1;
-    if (this.edgePinNets == null || this.cachedItemCount != currentItemCount) {
-      this.cachedItemCount = currentItemCount;
-      Set<Integer> set = new HashSet<>();
-      if (this.board != null) {
-        for (Pin pin : this.board.getPins()) {
-          Point center = pin.getCenter();
-          boolean isEdgeOrOutside = false;
-          if (center != null && !this.contains(center)) {
-            isEdgeOrOutside = true;
-          } else {
-            for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
-              Shape shape = pin.getShape(layer - pin.firstLayer());
-              if (shape instanceof TileShape tileShape) {
-                for (int c = 0; c < tileShape.borderLineCount(); c++) {
-                  if (!this.contains(tileShape.corner(c))) {
-                    isEdgeOrOutside = true;
-                    break;
-                  }
+    if (this.edgePinNets != null) {
+      return this.edgePinNets;
+    }
+    Set<Integer> set = new HashSet<>();
+    if (this.board != null) {
+      for (Pin pin : this.board.getPins()) {
+        Point center = pin.getCenter();
+        boolean isEdgeOrOutside = false;
+        if (center != null && !this.contains(center)) {
+          isEdgeOrOutside = true;
+        } else {
+          for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+            Shape shape = pin.getShape(layer - pin.firstLayer());
+            if (shape instanceof TileShape tileShape) {
+              for (int c = 0; c < tileShape.borderLineCount(); c++) {
+                if (!this.contains(tileShape.corner(c))) {
+                  isEdgeOrOutside = true;
+                  break;
                 }
               }
-              if (isEdgeOrOutside) {
-                break;
-              }
             }
-          }
-          if (isEdgeOrOutside) {
-            for (int net : pin.netNumbers) {
-              set.add(net);
+            if (isEdgeOrOutside) {
+              break;
             }
           }
         }
+        if (isEdgeOrOutside) {
+          for (int net : pin.netNumbers) {
+            set.add(net);
+          }
+        }
       }
-      this.edgePinNets = set;
     }
+    this.edgePinNets = set;
     return this.edgePinNets;
   }
 
   /** Invalidates cached edge pin nets when board geometry or pins change. */
   public void invalidateEdgePinNets() {
     this.edgePinNets = null;
-    this.cachedItemCount = -1;
   }
 
   @Override
