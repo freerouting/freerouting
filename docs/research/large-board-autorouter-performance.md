@@ -1,6 +1,6 @@
 # Large-board autorouter performance
 
-Status: 2.5.0-RC10 contains phases 1 and 2. Phase 3 is closed and stays off. On the 128-item Aleste slice the lookahead matches the serial score (59.35 / 1499, 48 violations) and is slower (16.62 s versus 8.08 s). A search may be committed only when every earlier item since the snapshot left the board unchanged. Those items skip the maze, so the worker has no long route to hide behind. Removing the board copy cannot put the pass under the serial time. The production pass stays single-threaded. Phases 4 and 5 are not started.
+Status: 2.5.0-RC10 contains phases 1 and 2. Phases 3 and 4 are closed and stay off. Phase 3 matched the serial score and was slower. Phase 4's copied-geometry commit on the 32-item perfplusplus slice was faster (3.67 s versus 5.18 s) and lost connections (17 unrouted versus 4), with 0 violations. The production pass stays single-threaded. Phase 5 is not started.
 
 Determinism rule for every phase: the same board produces the same routes on one thread and on many threads. Workers may search ahead, but the main thread commits in today's item order. A search is discarded and rerun serially when an earlier commit changes the board, including when the recorded corridor misses that commit. The maze reads the whole occupancy, so a path found without the earlier copper is a different route. Finish-order commit is not used. The maze still mutates the `ShapeSearchTree` on the board it searches, so a prepared route replaces the live board only when that board is unchanged.
 
@@ -77,7 +77,7 @@ Threads help only when a pass has work units that do not write the same `ShapeSe
 | Idea | Potential impact | Risk | Deterministic? |
 |---|---|---|---|
 | Snapshot search, serial commit | Does not make one search smaller. Closed: a committed search has to see every earlier copper change, so it stays valid only when those items left the board unchanged. Measured 16.62 s versus 8.08 s serial on the 128-item Aleste slice, same score. | Medium. A stale search routes through copper that an earlier item just took. | Yes, when the main thread commits in today's item order and reruns any search made before an earlier commit changed the board. Finish-order commit is not deterministic. |
-| Spatial bins with a halo | Overlaps short connections whose boxes do not meet. About 1.5–3× on the item-routing portion of boards like Keyboard and perfplusplus. Long Aleste airlines stay on the serial queue, so that pass stays close to today's time. | High. A halo smaller than clearance plus maximum trace width inserts violating traces across a bin boundary. A larger halo leaves little work that can actually run together. | Yes, if bin membership is a pure function of the board, bins that run together do not have touching halos, and items inside a bin keep the current comparator. |
+| Spatial bins with a halo | Closed. Disjoint airline boxes can be searched together, but reinserting the copied traces is not the maze result. On the 32-item perfplusplus slice that commit took 3.67 s versus 5.18 s serial and left 17 unrouted versus 4, with 0 violations. | High. A route that leaves its airline box, or a via inserted without the maze's split, drops a connection the serial pass keeps. | The bin groups are a pure function of the halos. The commit is not in the pass. |
 | Coarse assignment, then detailed corridors | The only idea that shrinks the search. A corridor that is a fraction of a 645 cm² outline can cut Aleste's per-connection maze several times, and disjoint corridors then use the bin rules. Planning range about 4–10× on that class of pass when the corridor still contains a path. | Highest. A bad corridor makes the detailed maze fail on a connection the full-board maze would have routed. Completion can drop even when each run is repeatable. | Yes, if the assignment is deterministic, the detailed maze is the current maze clipped to the corridor, and disjoint corridors follow the bin rules. The routes will not match today's full-board maze. |
 
 ### Phase 3 — Snapshot search, serial commit
@@ -95,18 +95,22 @@ The result object from a maze has no geometry. The snapshot board is still a dee
 
 ### Phase 4 — Spatial bins with a halo
 
-- [ ] Partition items by the airline bounding box, expanded by clearance and the maximum trace width.
-- [ ] Keep touching bins, and any airline that crosses a bin boundary, on one serial queue.
-- [ ] Lock or copy only the tiles a bin can touch.
-- [ ] Fix the bin order, and keep the current item comparator inside a bin.
-- [ ] Test that traces inserted from two adjacent bins cannot land closer than the clearance.
-- [ ] Measure Keyboard and perfplusplus against the serial pass. Expect little gain on Aleste.
+An item's airline box is the union of its own box and the nearest unconnected item on that net. The halo expands that box by the largest clearance plus the maximum trace width. Touching halos share one bin. A missing airline is a serial barrier. Bins stay in first-item order, and items inside a bin stay in the current comparator order. Two bins run together only when their halos do not touch. Copper from a committed route has to stay inside the airline box, which keeps it at least a clearance away from the other bin.
+
+The pass does not use this. Searching the disjoint items on board copies and inserting the new traces and vias on the live board was faster, and it dropped connections. The maze's rip-up and trace split did not survive that insert.
+
+- [x] Group halos in `SpatialBinSchedule`. Touching halos share a bin. The airline box and the clearance-plus-width margin were part of the trial commit, which is not in the pass.
+- [x] Keep touching bins, and an item with no airline, on one serial barrier.
+- [x] Do not copy only the tiles a bin can touch. The trial copied the whole board, then rejected any changed item outside the airline box.
+- [x] Fix the bin order, and keep the current item comparator inside a bin.
+- [x] `SpatialBinScheduleTest` checks that touching halos share a bin and that copper outside the airline box is rejected. The perfplusplus trial added 0 violations.
+- [x] perfplusplus, one pass, 32 items, fanout on. Serial: 5.18 s, score 993.98, 4 unrouted, 0 violations. Bin commit: 3.67 s, score 974.42, 17 unrouted, 0 violations. The commit is not in the pass. Keyboard was not run. Aleste was not run; long airlines would share one bin.
 
 ### Phase 5 — Coarse assignment, then detailed corridors
 
 - [ ] Add a serial coarse pass that assigns a corridor to each incomplete.
 - [ ] Restrict the detailed maze to that corridor.
-- [ ] Run disjoint corridors in parallel under the phase 4 rules.
+- [ ] Run disjoint corridors in parallel only when a commit preserves the maze result. The phase 4 trace insert did not.
 - [ ] If the corridor maze fails, fall back to one full-board search for that item.
 - [ ] Compare completion and full DRC on a bounded Aleste run, on si31-3, and on a small fully routed fixture against the phase 1 router.
 - [ ] Drop the corridor restriction if completion falls.
