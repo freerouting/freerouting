@@ -52,3 +52,5 @@ gha-creds-*.json
 /scripts/pcbench/cache/
 /scripts/pcbench/__pycache__/
 scripts/benchmark/results/.benchmark.lock
+scripts/benchmark/results/run-journal.jsonl
+scripts/benchmark/results/.benchmarks.json.*.tmp

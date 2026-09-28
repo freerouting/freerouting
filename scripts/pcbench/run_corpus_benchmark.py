@@ -577,6 +577,7 @@ def render_dashboard(
     cancel_requested: bool = False,
     keyboard_supported: bool = True,
     in_place: bool = True,
+    last_saved_at: float | None = None,
 ) -> None:
     """Print updated multi-worker dashboard with live logs and recent history."""
     elapsed = time.perf_counter() - t_start
@@ -595,7 +596,8 @@ def render_dashboard(
         f"{C_BWHITE}PCBench Benchmark:{C_RESET} {C_BYELLOW}{completed}/{total}{C_RESET} "
         f"({C_BGREEN}{pct:5.1f}%{C_RESET}){ver_part} | "
         f"{C_BWHITE}ETA:{C_RESET} {C_CYAN}{eta_str}{C_RESET} ({C_YELLOW}{avg_per_board:.1f}s/board{C_RESET}) | "
-        f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET}"
+        f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET} | "
+        f"{C_BWHITE}Saved:{C_RESET} {C_BYELLOW}{format_saved_age(last_saved_at, time.perf_counter())}{C_RESET}"
         f"{status_hint}"
     )
     lines.append(f"{C_CYAN}{'-' * 135}{C_RESET}")
@@ -647,6 +649,27 @@ def render_dashboard(
 
 DEFAULT_TIER_ORDER = ("A", "D", "C", "B")
 _KNOWN_TIERS = frozenset({"A", "B", "C", "D"})
+CORPUS_SAVE_INTERVAL_SECONDS = 180.0
+
+
+def corpus_save_is_due(
+    last_saved_at: float | None,
+    now: float,
+    *,
+    force: bool = False,
+    interval_seconds: float = CORPUS_SAVE_INTERVAL_SECONDS,
+) -> bool:
+    """Return whether benchmarks.json may be rewritten now."""
+    if force or last_saved_at is None:
+        return True
+    return (now - last_saved_at) >= interval_seconds
+
+
+def format_saved_age(last_saved_at: float | None, now: float) -> str:
+    """Toolbar age of the last successful benchmarks.json swap."""
+    if last_saved_at is None:
+        return "never"
+    return f"{max(0, int(now - last_saved_at))}s ago"
 
 
 def parse_tier_order(raw: str) -> list[str]:
@@ -667,6 +690,71 @@ def parse_tier_order(raw: str) -> list[str]:
         if token not in order:
             order.append(token)
     return order
+
+
+def replace_file_retrying(source: Path, destination: Path, attempts: int = 12) -> None:
+    """Replace destination with source, retrying Windows sharing violations.
+
+    WinError 5 (Access is denied) is raised when another process has the
+    destination open without delete sharing. The routed record must already be
+    durable elsewhere before this is called.
+    """
+    delay_seconds = 0.25
+    last_error: PermissionError | None = None
+    for attempt in range(attempts):
+        try:
+            source.replace(destination)
+            return
+        except PermissionError as error:
+            last_error = error
+            if attempt == attempts - 1:
+                break
+            time.sleep(delay_seconds)
+            delay_seconds = min(delay_seconds + 0.25, 1.0)
+    assert last_error is not None
+    raise last_error
+
+
+def append_jsonl_record(path: Path, record: dict[str, Any], attempts: int = 8) -> None:
+    """Append one JSON object. The last line for a cache_key is the record to keep."""
+    line = json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n"
+    delay_seconds = 0.05
+    last_error: PermissionError | None = None
+    for attempt in range(attempts):
+        try:
+            with path.open("a", encoding="utf-8", newline="\n") as handle:
+                handle.write(line)
+                handle.flush()
+                os.fsync(handle.fileno())
+            return
+        except PermissionError as error:
+            last_error = error
+            if attempt == attempts - 1:
+                break
+            time.sleep(delay_seconds)
+            delay_seconds = min(delay_seconds * 2, 0.5)
+    assert last_error is not None
+    raise last_error
+
+
+def read_jsonl_records(path: Path) -> dict[str, dict[str, Any]]:
+    """Return the latest record for each cache_key. Broken lines are skipped."""
+    records: dict[str, dict[str, Any]] = {}
+    if not path.exists():
+        return records
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(record, dict):
+            continue
+        key = record.get("cache_key")
+        if isinstance(key, str) and key:
+            records[key] = record
+    return records
 
 
 def main() -> int:
@@ -699,6 +787,7 @@ def main() -> int:
     results_dir = Path("scripts/benchmark/results")
     user_data_dir = Path("scripts/benchmark/.user_data")
     benchmarks_json = results_dir / "benchmarks.json"
+    journal_file = results_dir / "run-journal.jsonl"
 
     output_dir.mkdir(parents=True, exist_ok=True)
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -769,6 +858,10 @@ def main() -> int:
             pass
 
     existing_runs = {r.get("cache_key"): r for r in bench_data.get("runs", []) if r.get("cache_key")}
+    # A locked benchmarks.json can drop a completed swap. The journal line is the
+    # record that must win until a later swap succeeds.
+    for cache_key, journal_run in read_jsonl_records(journal_file).items():
+        existing_runs[cache_key] = journal_run
 
     tasks = []
     already_completed = 0
@@ -797,12 +890,13 @@ def main() -> int:
         flush=True,
     )
 
-    if not tasks:
-        print("All requested boards are already benchmarked in benchmarks.json! Regenerating reports...", flush=True)
-        subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"], check=False)
-        return 0
+    def save_benchmarks_atomic(attempts: int = 12) -> bool:
+        """Write benchmarks.json. Return False when Windows still denies the swap.
 
-    def save_benchmarks_atomic():
+        Callers append the run to run-journal.jsonl first. A False return leaves
+        that line in place so the next successful swap, or the next process,
+        merges the same record.
+        """
         bench_data["runs"] = list(existing_runs.values())
         bench_data["total_runs"] = len(bench_data["runs"])
         bench_data["generated_at"] = datetime.now(timezone.utc).isoformat()
@@ -811,20 +905,83 @@ def main() -> int:
         )
         try:
             tmp_file.write_text(json.dumps(bench_data, indent=2), encoding="utf-8")
-            for attempt in range(8):
-                try:
-                    tmp_file.replace(benchmarks_json)
-                    return
-                except PermissionError:
-                    if attempt == 7:
-                        raise
-                    time.sleep(0.5 * (attempt + 1))
+            replace_file_retrying(tmp_file, benchmarks_json, attempts=attempts)
+            return True
+        except PermissionError:
+            return False
         finally:
             try:
                 tmp_file.unlink(missing_ok=True)
             except OSError:
                 # Replace already consumed the temp file, or another worker removed it.
                 pass
+
+    last_corpus_save_at: list[float | None] = [None]
+
+    def clear_run_journal() -> None:
+        if not journal_file.exists():
+            return
+        with journal_file.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.flush()
+            os.fsync(handle.fileno())
+
+    def save_corpus(*, force: bool = False, attempts: int = 12) -> str:
+        """Rewrite benchmarks.json at most once per interval, or immediately when forced.
+
+        Returns saved, throttled, or locked. A forced save runs on process exit,
+        including Ctrl+C and ESC/Q, even when the interval has not elapsed.
+        """
+        if not corpus_save_is_due(last_corpus_save_at[0], time.perf_counter(), force=force):
+            return "throttled"
+        if not save_benchmarks_atomic(attempts=attempts):
+            return "locked"
+        last_corpus_save_at[0] = time.perf_counter()
+        try:
+            clear_run_journal()
+        except PermissionError:
+            # The corpus file already has the runs. The leftover journal lines
+            # match them and are merged again on the next start.
+            pass
+        return "saved"
+
+    def persist_run(record: dict[str, Any]) -> str:
+        """Append the journal line, then swap the corpus file when it is due.
+
+        Returns saved, throttled, locked, or unsaved. The fixture result is
+        already in existing_runs. A throttled return still leaves the journal line.
+        """
+        journal_saved = False
+        try:
+            append_jsonl_record(journal_file, record)
+            journal_saved = True
+        except PermissionError:
+            journal_saved = False
+        outcome = save_corpus()
+        if outcome != "saved" and not journal_saved:
+            return "unsaved"
+        return outcome
+
+    if not tasks:
+        if save_benchmarks_atomic(attempts=40):
+            try:
+                clear_run_journal()
+            except PermissionError:
+                pass
+            print(
+                "All requested boards are already benchmarked in benchmarks.json! Regenerating reports...",
+                flush=True,
+            )
+            subprocess.run(
+                ["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"],
+                check=False,
+            )
+        else:
+            print(
+                "All requested boards are already recorded, but benchmarks.json stayed locked. "
+                "Results remain in run-journal.jsonl; the report was not regenerated.",
+                flush=True,
+            )
+        return 0
 
     # Worker tracking structures
     worker_slots: queue.Queue[int] = queue.Queue()
@@ -889,6 +1046,7 @@ def main() -> int:
                     cancel_requested=cancel_event.is_set(),
                     keyboard_supported=keyboard_supported,
                     in_place=True,
+                    last_saved_at=last_corpus_save_at[0],
                 )
 
     def keyboard_listener():
@@ -935,6 +1093,7 @@ def main() -> int:
     key_thread = threading.Thread(target=keyboard_listener, daemon=True)
     key_thread.start()
 
+    corpus_ready = False
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
             future_to_board = {
@@ -998,8 +1157,15 @@ def main() -> int:
                     msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: {status}"
                     recent_messages.append(msg)
 
-                    # Real-time atomic save on every completed board
-                    save_benchmarks_atomic()
+                    try:
+                        save_outcome = persist_run(rec)
+                    except OSError:
+                        save_outcome = "unsaved"
+                    if save_outcome in ("locked", "unsaved"):
+                        kept_in = "run-journal.jsonl" if save_outcome == "locked" else "memory"
+                        recent_messages.append(
+                            f"[save] {b_name}: benchmarks.json was locked; {status} result kept in {kept_in}"
+                        )
 
                     # Render dashboard with active workers & recent 10 completed
                     render_dashboard(
@@ -1013,6 +1179,7 @@ def main() -> int:
                         cancel_requested=cancel_event.is_set(),
                         keyboard_supported=keyboard_supported,
                         in_place=True,
+                        last_saved_at=last_corpus_save_at[0],
                     )
 
                 except Exception as e:
@@ -1020,7 +1187,10 @@ def main() -> int:
                     pct = (completed / len(tasks)) * 100.0 if tasks else 0.0
                     msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: ERROR {e}"
                     recent_messages.append(msg)
-                    save_benchmarks_atomic()
+                    try:
+                        save_corpus()
+                    except OSError:
+                        pass
                     render_dashboard(
                         completed,
                         len(tasks),
@@ -1032,6 +1202,7 @@ def main() -> int:
                         cancel_requested=cancel_event.is_set(),
                         keyboard_supported=keyboard_supported,
                         in_place=True,
+                        last_saved_at=last_corpus_save_at[0],
                     )
 
     except KeyboardInterrupt:
@@ -1039,7 +1210,10 @@ def main() -> int:
     finally:
         stop_refresh.set()
         cancel_event.set()
-        save_benchmarks_atomic()
+        try:
+            corpus_ready = save_corpus(force=True, attempts=40) == "saved"
+        except OSError:
+            corpus_ready = False
         for stray_ses in Path(".").glob("*--unrouted--*.ses"):
             try:
                 stray_ses.unlink(missing_ok=True)
@@ -1050,15 +1224,30 @@ def main() -> int:
     if force_kill_event.is_set():
         print(f"\n{C_BRED}Benchmark force-terminated by user.{C_RESET}", flush=True)
     elif cancel_event.is_set():
-        print(f"\n{C_BYELLOW}Benchmark stopped gracefully. All completed board results have been saved.{C_RESET}", flush=True)
+        if corpus_ready:
+            print(f"\n{C_BYELLOW}Benchmark stopped gracefully. All completed board results have been saved.{C_RESET}", flush=True)
+        else:
+            print(
+                f"\n{C_BYELLOW}Benchmark stopped. benchmarks.json stayed locked; "
+                f"completed results remain in run-journal.jsonl.{C_RESET}",
+                flush=True,
+            )
 
     total_time = round(time.perf_counter() - t_start, 1)
     print(f"\nPCBench Corpus Benchmark finished {completed} boards in {total_time}s.", flush=True)
     print(f"Results: {clean_count} Clean, {routed_viol_count} Routed with violations, {unrouted_count} Unrouted, {timeout_count} Timeouts, {error_count} Errors.")
 
-    # Regenerate reports
-    print("Regenerating Markdown and HTML reports...", flush=True)
-    subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"], check=False)
+    # Regenerate reports only from the corpus file. A locked swap must not
+    # publish a report that is missing journaled runs.
+    if corpus_ready:
+        print("Regenerating Markdown and HTML reports...", flush=True)
+        subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", "scripts/benchmark/run-benchmarks.ps1", "-ReportOnly"], check=False)
+    else:
+        print(
+            "benchmarks.json stayed locked. Completed results remain in run-journal.jsonl. "
+            "The report was not regenerated.",
+            flush=True,
+        )
 
     return 0
 
