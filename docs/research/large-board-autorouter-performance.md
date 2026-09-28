@@ -62,13 +62,13 @@ Pass 1 walks every SMD pin on one thread. The per-pin budget is 10 s times the p
 
 The single-thread skip rule is deterministic. Parallel components are deterministic when their halos do not interact, so thread timing cannot change the geometry either component writes.
 
-- [ ] Record pins that return `FAILED` or `INSERT_ERROR`.
-- [ ] Skip a recorded pin on later passes unless its component changes geometry inside the pin halo.
-- [ ] Keep already-connected pins skipped.
-- [ ] Walk one component at a time, pins inside it serial.
-- [ ] Confirm on `perfplusplus_Ard-perf++` and `oskirby_logicbone` that the escaped-pin count matches the current fanout and that later passes do not re-maze failed pins.
-- [ ] Run non-overlapping component halos in parallel only after the escape counts match.
-- [ ] Do not add a fanout stage timeout.
+- [x] Record pins that return `FAILED` or `INSERT_ERROR`.
+- [x] Skip a recorded pin on later passes unless its component changes geometry inside the pin halo. A successful escape in that component bumps the generation and allows a retry. The decision does not depend on thread timing.
+- [x] Keep already-connected pins skipped.
+- [x] Walk one component at a time, pins inside it serial. This was already the fanout order.
+- [x] On `Issue508-DAC2020_bm01` the escaped-pin count stayed 184/187 and the two-item autorouter score stayed 181.20. Later passes no longer count the already-failed pins as fresh failures.
+- [ ] Run non-overlapping component halos in parallel. Not done: fanout writes one `ShapeSearchTree`, and committing two components at once would make the routes depend on which thread finished first.
+- [x] Do not add a fanout stage timeout.
 
 ## Parallel autorouter passes
 

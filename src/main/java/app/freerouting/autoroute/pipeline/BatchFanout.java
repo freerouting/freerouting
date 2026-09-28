@@ -12,7 +12,9 @@ import app.freerouting.geometry.planar.FloatPoint;
 import app.freerouting.logger.FRLogger;
 import app.freerouting.settings.RouterSettings;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -31,6 +33,12 @@ public final class BatchFanout {
   public int totalItemsFanouted;
   private Long deadlineMs;
   private boolean isTimedOut;
+
+  /** Pin id to the component generation observed when that pin failed. */
+  private final Map<Integer, Integer> failedPinGeneration = new HashMap<>();
+
+  /** Successful escapes in a component. A change allows a previously failed pin to be retried. */
+  private final Map<Integer, Integer> componentGeneration = new HashMap<>();
 
   private BatchFanout(RoutingBoard board, RouterSettings settings, StoppableThread thread) {
     this.thread = thread;
@@ -258,6 +266,13 @@ public final class BatchFanout {
           }
         }
 
+        if (!retryFanout(
+            failedPinGeneration.get(currentPin.boardPin.getId()),
+            componentGeneration.getOrDefault(currentComponent.boardComponent.id, 0))) {
+          --pinsToGo;
+          continue;
+        }
+
         FRLogger.trace(
             "BatchFanout.fanout_pass",
             "pin_start",
@@ -307,6 +322,7 @@ public final class BatchFanout {
           case ROUTED -> {
             ++routedCount;
             this.totalItemsFanouted++;
+            componentGeneration.merge(currentComponent.boardComponent.id, 1, Integer::sum);
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
                 "pin_routed",
@@ -340,6 +356,9 @@ public final class BatchFanout {
           case FAILED -> {
             ++notRoutedCount;
             this.totalItemsFanouted++;
+            failedPinGeneration.put(
+                currentPin.boardPin.getId(),
+                componentGeneration.getOrDefault(currentComponent.boardComponent.id, 0));
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
                 "pin_failed",
@@ -361,6 +380,9 @@ public final class BatchFanout {
           case INSERT_ERROR -> {
             ++insertErrorCount;
             this.totalItemsFanouted++;
+            failedPinGeneration.put(
+                currentPin.boardPin.getId(),
+                componentGeneration.getOrDefault(currentComponent.boardComponent.id, 0));
             FRLogger.trace(
                 "BatchFanout.fanout_pass",
                 "pin_insert_error",
@@ -523,6 +545,15 @@ public final class BatchFanout {
         passStats);
 
     return routedCount;
+  }
+
+  /**
+   * A pin is retried when it has not failed, or when its component has escaped another pin since
+   * that failure. One thread and many threads take the same decision because the generation is
+   * updated only after a successful escape on the calling thread.
+   */
+  static boolean retryFanout(Integer failedGeneration, int currentGeneration) {
+    return failedGeneration == null || failedGeneration.intValue() != currentGeneration;
   }
 
   private void maybePublishProgress(
