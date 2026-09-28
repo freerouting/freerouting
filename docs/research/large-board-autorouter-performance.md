@@ -1,6 +1,6 @@
 # Large-board autorouter performance
 
-Status: 2.5.0-RC10 contains phases 1 and 2. Phase 3 can replay a found connection onto the live board when the new corridor misses earlier commits. With `-Dfreerouting.autoroute.snapshot_commit=true`, Aleste's first eight items took 1.24 s instead of 1.55 s and kept the same score (13.64, 1612 unrouted, 48 violations): 5 snapshot boards adopted, 1 plan replayed, 1 search rerun. The production pass stays single-threaded unless that property is set. Phases 4 and 5 are not started.
+Status: 2.5.0-RC10 contains phases 1 and 2. Phase 3 lookahead stays off. On Aleste it matches the serial score for 8 items (13.64 / 1612) and 32 items (23.35 / 1588), both with 48 violations. At 128 items it is slower (11.56 s versus 8.08 s) and drops one connection (58.95 / 1500 versus 59.35 / 1499). The board copy costs more than these short mazes, and a replayed plan is not yet identical to the serial route. The production pass stays single-threaded unless `-Dfreerouting.autoroute.snapshot_commit=true`. Phases 4 and 5 are not started.
 
 Determinism rule for every phase: the same board produces the same routes on one thread and on many threads. Workers may search ahead, but the main thread commits in today's item order. A search is discarded and rerun serially when an earlier commit changes the board. Finish-order commit is not used. The maze still mutates the `ShapeSearchTree` on the board it searches, so a prepared route is a whole-board copy, not a path that can be inserted into the live board.
 
@@ -90,8 +90,8 @@ The result object from a maze has no geometry. The lookahead now copies the trac
 - [x] Discard a search and rerun it on the live board when an earlier commit touches its corridor. Otherwise replay the plan, or adopt the snapshot board when the live board has not changed.
 - [x] Require `router.autorouter.max_threads` greater than one. The pool is one worker, because each search still needs its own board copy.
 - [x] Log `snapshot_retries`, `snapshot_adopted`, `snapshot_replays`, `snapshot_copy_ms`, and `snapshot_prepared_ms` on the `BENCHMARK_PROFILE` line.
-- [x] Aleste `max_items=8` with the property on: pass 1.24 s versus 1.55 s serial. Score 13.64, 1612 unrouted, 48 violations. Five boards adopted, one plan replayed, one search rerun. Live maze time fell from 656 ms to 94 ms. `Issue508-DAC2020_bm01` with the property unset still scored 181.20 with 142 unrouted and 0 violations.
-- [x] Keep the pass serial unless `-Dfreerouting.autoroute.snapshot_commit=true`. One eight-item sample is not enough to turn the lookahead on for the nightly run.
+- [x] Aleste with the property on, one pass, same fanout. Eight items: 1.24 s versus 1.55 s, score 13.64 / 1612. Thirty-two items: 3.14 s versus 2.34 s, score 23.35 / 1588. One hundred twenty-eight items: 11.56 s versus 8.08 s, score 58.95 / 1500 versus 59.35 / 1499. Violations stayed 48. Each run adopted almost every later item after a single replay and a single rerun. `Issue508-DAC2020_bm01` with the property unset still scored 181.20 with 142 unrouted and 0 violations.
+- [x] Keep the pass serial unless `-Dfreerouting.autoroute.snapshot_commit=true`. The 128-item sample lost a connection and the copy made the cheap prefix slower, so the lookahead stays off for the nightly run.
 
 ### Phase 4 — Spatial bins with a halo
 
