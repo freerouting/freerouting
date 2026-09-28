@@ -1,6 +1,8 @@
 package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
+import app.freerouting.autoroute.AutorouteAttemptState;
+import app.freerouting.autoroute.path.PlannedConnection;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.geometry.planar.FloatLine;
@@ -39,6 +41,7 @@ final class SnapshotLookahead implements AutoCloseable {
   private IntBox committedChanges = IntBox.EMPTY;
   private int retries;
   private int adopted;
+  private int replays;
   private long copyNanos;
   private long preparedNanos;
   private boolean closed;
@@ -115,11 +118,29 @@ final class SnapshotLookahead implements AutoCloseable {
       return null;
     }
     if (!SnapshotCommitGate.adoptPreparedBoard(committedChanges)) {
-      retries++;
-      return null;
+      if (prepared.plan == null
+          || prepared.result.state != AutorouteAttemptState.ROUTED
+          || SnapshotCommitGate.corridorTouched(committedChanges, prepared.corridor)) {
+        retries++;
+        return null;
+      }
+      return prepared;
     }
     adopted++;
     return prepared;
+  }
+
+  /** True when the prepared board may replace the live board. Call before {@link #launch}. */
+  boolean canAdoptBoard() {
+    return SnapshotCommitGate.adoptPreparedBoard(committedChanges);
+  }
+
+  void noteReplay() {
+    this.replays++;
+  }
+
+  void noteUnreplayable() {
+    this.retries++;
   }
 
   /** Copies the current board and searches {@code next} on that copy. */
@@ -169,6 +190,7 @@ final class SnapshotLookahead implements AutoCloseable {
   void copyProfile(BatchAutorouter target) {
     target.profileSnapshotRetries = this.retries;
     target.profileSnapshotAdopted = this.adopted;
+    target.profileSnapshotReplays = this.replays;
     target.profileSnapshotCopyNanos = this.copyNanos;
     target.profileSnapshotPreparedNanos = this.preparedNanos;
   }
@@ -208,6 +230,7 @@ final class SnapshotLookahead implements AutoCloseable {
         ripupCosts,
         corridor,
         worker.getAirLine(),
+        worker.capturedPlan,
         System.nanoTime() - searchStart);
   }
 
@@ -248,6 +271,7 @@ final class SnapshotLookahead implements AutoCloseable {
     final Map<Item, Integer> ripupCosts;
     final IntBox corridor;
     final FloatLine airLine;
+    final PlannedConnection plan;
     final long searchNanos;
 
     private PreparedConnection(
@@ -259,6 +283,7 @@ final class SnapshotLookahead implements AutoCloseable {
         Map<Item, Integer> ripupCosts,
         IntBox corridor,
         FloatLine airLine,
+        PlannedConnection plan,
         long searchNanos) {
       this.itemId = itemId;
       this.netIndex = netIndex;
@@ -268,6 +293,7 @@ final class SnapshotLookahead implements AutoCloseable {
       this.ripupCosts = ripupCosts;
       this.corridor = corridor;
       this.airLine = airLine;
+      this.plan = plan;
       this.searchNanos = searchNanos;
     }
 
@@ -280,6 +306,7 @@ final class SnapshotLookahead implements AutoCloseable {
           new TreeSet<>(),
           new LinkedHashMap<>(),
           IntBox.EMPTY,
+          null,
           null,
           searchNanos);
     }

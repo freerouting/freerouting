@@ -135,14 +135,23 @@ final class AutoroutePassRunner {
           }
           router.totalItemsRouted++;
           int ordinal = snapshotOrdinal++;
-          SnapshotLookahead.PreparedConnection adopted =
+          SnapshotLookahead.PreparedConnection prepared =
               lookahead == null ? null : lookahead.poll(currentItem, i);
-          if (adopted != null) {
-            router.adoptBoard(adopted.board);
+          boolean adopt = prepared != null && lookahead.canAdoptBoard();
+          boolean replayed = false;
+          if (adopt) {
+            router.adoptBoard(prepared.board);
             currentItem = router.board.getItem(listedItem.getId());
             snapshotBoardReplaced = true;
-            if (adopted.airLine != null) {
-              router.setAirLine(adopted.airLine);
+            if (prepared.airLine != null) {
+              router.setAirLine(prepared.airLine);
+            }
+          } else if (prepared != null) {
+            replayed = router.replayPlan(prepared.plan, passNo);
+            if (replayed) {
+              lookahead.noteReplay();
+            } else {
+              lookahead.noteUnreplayable();
             }
           }
           boolean lastAllowedItem =
@@ -154,9 +163,8 @@ final class AutoroutePassRunner {
           }
           router.board.startMarkingChangedArea();
 
-          SortedSet<Item> rippedItemList = adopted == null ? new TreeSet<>() : adopted.rippedItems;
-          Map<Item, Integer> rippedItemCosts =
-              adopted == null ? new LinkedHashMap<>() : adopted.ripupCosts;
+          SortedSet<Item> rippedItemList = adopt ? prepared.rippedItems : new TreeSet<>();
+          Map<Item, Integer> rippedItemCosts = adopt ? prepared.ripupCosts : new LinkedHashMap<>();
           final int netItemsBefore =
               router.board.getConnectableItems(currentItem.getNetNumber(i)).size();
           if (BatchAutorouter.isBenchmarkProfileEnabled()) {
@@ -170,8 +178,10 @@ final class AutoroutePassRunner {
           long routeItemStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
           PerformanceProfiler.start("autoroute_item");
           final AutorouteAttemptResult autorouterResult;
-          if (adopted != null) {
-            autorouterResult = adopted.result;
+          if (adopt) {
+            autorouterResult = prepared.result;
+          } else if (replayed) {
+            autorouterResult = new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
           } else {
             int maxIdBefore = router.board.communication.idGenerator.maxGeneratedId();
             autorouterResult =

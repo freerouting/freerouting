@@ -15,6 +15,7 @@ import app.freerouting.autoroute.expansion.SortedRoomNeighbours;
 import app.freerouting.autoroute.expansion.TargetItemExpansionDoor;
 import app.freerouting.autoroute.path.FoundConnectionInserter;
 import app.freerouting.autoroute.path.FoundConnectionLocator;
+import app.freerouting.autoroute.path.PlannedConnection;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.SearchTreeObject;
@@ -75,6 +76,12 @@ public class AutorouteEngine {
 
   /** The count of expansion rooms created so far. */
   private int expansionRoomInstanceCount;
+
+  /** When true, {@link #autorouteConnection} stores the found geometry in {@link #capturedPlan}. */
+  private boolean capturePlan;
+
+  /** Geometry of the last routed connection, set only when {@link #capturePlan} is true. */
+  private PlannedConnection capturedPlan;
 
   /**
    * Creates a new instance of BoardAutorouteEngine. If maintainDatabase, the autorouter database.
@@ -234,34 +241,12 @@ public class AutorouteEngine {
           "No new connections were made between " + describeConnection(startSet, destSet) + ".");
     }
 
-    // Delete the ripped connections.
-    SortedSet<Item> rippedConnections = new TreeSet<>();
-    Set<Integer> changedNets = new TreeSet<>();
-    Item.StopConnectionOption stopConnectionOption;
-    if (ctrl.removeUnconnectedVias) {
-      stopConnectionOption = Item.StopConnectionOption.NONE;
-    } else {
-      stopConnectionOption = Item.StopConnectionOption.FANOUT_VIA;
-    }
-
-    for (Item currentRippedItem : rippedItemList) {
-      rippedConnections.addAll(currentRippedItem.getConnectionItems(stopConnectionOption));
-      for (int i = 0; i < currentRippedItem.netCount(); i++) {
-        changedNets.add(currentRippedItem.getNetNumber(i));
-      }
-    }
-
-    // let the observers know the changes in the board database.
+    // Delete the ripped connections while observers see the insert that follows.
     boolean observersActivated = !this.board.observersActive();
     if (observersActivated) {
       this.board.startNotifyObservers();
     }
-
-    board.removeItems(rippedConnections);
-
-    for (int currentNetNumber : changedNets) {
-      this.board.removeTraceTails(currentNetNumber, stopConnectionOption);
-    }
+    ripConnections(board, rippedItemList, ctrl.removeUnconnectedVias);
     FoundConnectionInserter insertFoundConnectionAlgo =
         FoundConnectionInserter.getInstance(autorouteResult, board, ctrl);
 
@@ -276,7 +261,48 @@ public class AutorouteEngine {
               + ", because the new connection could not be inserted.");
     }
 
+    if (this.capturePlan) {
+      this.capturedPlan = PlannedConnection.from(ctrl.netNumber, autorouteResult, rippedItemList);
+    }
     return new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
+  }
+
+  /** Enables capturing the found geometry on the next {@link #autorouteConnection} call. */
+  public void setCapturePlan(boolean capturePlan) {
+    this.capturePlan = capturePlan;
+    this.capturedPlan = null;
+  }
+
+  /** Returns the plan captured by the last successful connection, or null. */
+  public PlannedConnection capturedPlan() {
+    return this.capturedPlan;
+  }
+
+  /**
+   * Removes the connections of {@code rippedItems} the same way a commit does after the maze.
+   * Returns the nets whose tails were removed.
+   */
+  public static Set<Integer> ripConnections(
+      RoutingBoard board, Collection<Item> rippedItems, boolean removeUnconnectedVias) {
+    SortedSet<Item> rippedConnections = new TreeSet<>();
+    Set<Integer> changedNets = new TreeSet<>();
+    Item.StopConnectionOption stopConnectionOption =
+        removeUnconnectedVias
+            ? Item.StopConnectionOption.NONE
+            : Item.StopConnectionOption.FANOUT_VIA;
+    if (rippedItems != null) {
+      for (Item currentRippedItem : rippedItems) {
+        rippedConnections.addAll(currentRippedItem.getConnectionItems(stopConnectionOption));
+        for (int i = 0; i < currentRippedItem.netCount(); i++) {
+          changedNets.add(currentRippedItem.getNetNumber(i));
+        }
+      }
+    }
+    board.removeItems(rippedConnections);
+    for (int currentNetNumber : changedNets) {
+      board.removeTraceTails(currentNetNumber, stopConnectionOption);
+    }
+    return changedNets;
   }
 
   private static String describeConnection(Set<Item> startSet, Set<Item> destSet) {

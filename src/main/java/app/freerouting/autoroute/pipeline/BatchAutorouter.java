@@ -100,6 +100,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
 
   long lastBoardUpdateTimestamp;
   boolean isOptimizerAutorouter;
+  boolean captureRoutePlan;
+  app.freerouting.autoroute.path.PlannedConnection capturedPlan;
   long profileItemSelectionNanos;
   long profileIntermediateStatisticsNanos;
   long profileBoardStatisticsNanos;
@@ -112,6 +114,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
   int profilePlaneItemCount;
   int profileSnapshotRetries;
   int profileSnapshotAdopted;
+  int profileSnapshotReplays;
   long profileSnapshotCopyNanos;
   long profileSnapshotPreparedNanos;
   BoardStatistics progressStatistics;
@@ -218,6 +221,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
     this.profilePlaneItemCount = 0;
     this.profileSnapshotRetries = 0;
     this.profileSnapshotAdopted = 0;
+    this.profileSnapshotReplays = 0;
     this.profileSnapshotCopyNanos = 0;
     this.profileSnapshotPreparedNanos = 0;
   }
@@ -255,6 +259,8 @@ public final class BatchAutorouter extends NamedAlgorithm {
             + this.profileSnapshotRetries
             + ", snapshot_adopted="
             + this.profileSnapshotAdopted
+            + ", snapshot_replays="
+            + this.profileSnapshotReplays
             + ", snapshot_copy_ms="
             + AutorouteRuntimeMetrics.nanosToMillis(this.profileSnapshotCopyNanos)
             + ", snapshot_prepared_ms="
@@ -274,7 +280,13 @@ public final class BatchAutorouter extends NamedAlgorithm {
             this.tracePullTightAccuracy);
     worker.job = this.job;
     worker.isOptimizerAutorouter = this.isOptimizerAutorouter;
+    worker.captureRoutePlan = true;
     return worker;
+  }
+
+  /** Inserts a connection found on a snapshot without searching again. */
+  boolean replayPlan(app.freerouting.autoroute.path.PlannedConnection plan, int passNo) {
+    return this.connectionRouter.replay(plan, passNo);
   }
 
   /** Replaces the live board after a snapshot search that matched the single-thread result. */
