@@ -26,12 +26,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-/**
- * Executes one autoroute pass. The item loop is single-threaded unless {@code
- * -Dfreerouting.autoroute.snapshot_commit=true} and {@code router.autorouter.max_threads} is
- * greater than one. That lookahead searches the next item on a board copy that keeps the live
- * search-tree structure, and commits the copy only when the live board has not changed.
- */
+/** Executes one autoroute pass on the calling thread. */
 final class AutoroutePassRunner {
 
   private final BatchAutorouter router;
@@ -48,7 +43,6 @@ final class AutoroutePassRunner {
     if (BatchAutorouter.isBenchmarkProfileEnabled()) {
       router.resetPassProfile();
     }
-    SnapshotLookahead lookahead = null;
     try {
       long itemSelectionStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
       List<Item> autorouteItemList = router.getAutorouteItems(router.board);
@@ -64,11 +58,6 @@ final class AutoroutePassRunner {
       if (passNo > 1) {
         reorderSingleThreadItems(autorouteItemList, passNo);
       }
-
-      lookahead = SnapshotLookahead.openIfEnabled(router);
-      List<SnapshotLookahead.ConnectionAttempt> snapshotAttempts =
-          lookahead == null ? null : SnapshotLookahead.attempts(autorouteItemList);
-      int snapshotOrdinal = 0;
 
       long initialProgressStatisticsStart =
           BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
@@ -104,18 +93,9 @@ final class AutoroutePassRunner {
       int notRouted = 0;
       int routed = 0;
       int skipped = 0;
-      boolean snapshotBoardReplaced = false;
-      for (Item listedItem : autorouteItemList) {
+      for (Item currentItem : autorouteItemList) {
         if (router.thread.isStopAutoRouterRequested()) {
           break;
-        }
-        Item currentItem = listedItem;
-        if (snapshotBoardReplaced) {
-          currentItem = router.board.getItem(listedItem.getId());
-          if (currentItem == null) {
-            snapshotOrdinal += listedItem.netCount();
-            continue;
-          }
         }
 
         for (int i = 0; i < currentItem.netCount(); i++) {
@@ -134,29 +114,10 @@ final class AutoroutePassRunner {
             break;
           }
           router.totalItemsRouted++;
-          int ordinal = snapshotOrdinal++;
-          SnapshotLookahead.PreparedConnection prepared =
-              lookahead == null ? null : lookahead.poll(currentItem, i);
-          boolean adopt = prepared != null && lookahead.canAdoptBoard();
-          if (adopt) {
-            router.adoptBoard(prepared.board);
-            currentItem = router.board.getItem(listedItem.getId());
-            snapshotBoardReplaced = true;
-            if (prepared.airLine != null) {
-              router.setAirLine(prepared.airLine);
-            }
-          }
-          boolean lastAllowedItem =
-              router.settings.autorouter.maxItems != null
-                  && router.settings.autorouter.maxItems > 0
-                  && router.totalItemsRouted >= router.settings.autorouter.maxItems;
-          if (lookahead != null && !lastAllowedItem) {
-            lookahead.launch(SnapshotLookahead.next(snapshotAttempts, ordinal), passNo);
-          }
           router.board.startMarkingChangedArea();
 
-          SortedSet<Item> rippedItemList = adopt ? prepared.rippedItems : new TreeSet<>();
-          Map<Item, Integer> rippedItemCosts = adopt ? prepared.ripupCosts : new LinkedHashMap<>();
+          SortedSet<Item> rippedItemList = new TreeSet<>();
+          Map<Item, Integer> rippedItemCosts = new LinkedHashMap<>();
           final int netItemsBefore =
               router.board.getConnectableItems(currentItem.getNetNumber(i)).size();
           if (BatchAutorouter.isBenchmarkProfileEnabled()) {
@@ -169,22 +130,13 @@ final class AutoroutePassRunner {
 
           long routeItemStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
           PerformanceProfiler.start("autoroute_item");
-          final AutorouteAttemptResult autorouterResult;
-          if (adopt) {
-            autorouterResult = prepared.result;
-          } else {
-            int maxIdBefore = router.board.communication.idGenerator.maxGeneratedId();
-            autorouterResult =
-                router.autorouteItem(
-                    currentItem,
-                    currentItem.getNetNumber(i),
-                    rippedItemList,
-                    rippedItemCosts,
-                    passNo);
-            if (lookahead != null) {
-              lookahead.noteAfterRoute(autorouterResult, router.board, maxIdBefore, rippedItemList);
-            }
-          }
+          final AutorouteAttemptResult autorouterResult =
+              router.autorouteItem(
+                  currentItem,
+                  currentItem.getNetNumber(i),
+                  rippedItemList,
+                  rippedItemCosts,
+                  passNo);
           PerformanceProfiler.end("autoroute_item");
           if (BatchAutorouter.isBenchmarkProfileEnabled()) {
             router.profileAutorouteItemNanos += System.nanoTime() - routeItemStart;
@@ -223,9 +175,6 @@ final class AutoroutePassRunner {
                 }
               }
               if (!tracesToRip.isEmpty()) {
-                if (lookahead != null) {
-                  lookahead.noteRemoved(tracesToRip);
-                }
                 router.board.removeItems(tracesToRip);
               }
             }
@@ -251,11 +200,6 @@ final class AutoroutePassRunner {
           updateProgress(
               routerCounters, itemsToGoCount, rippedItemCount, notRouted, routed, skipped);
         }
-      }
-
-      if (lookahead != null) {
-        lookahead.copyProfile(router);
-        lookahead.close();
       }
 
       logTailRemoval(passNo, router.calculateIncompleteCount(router.board), true);
@@ -307,10 +251,6 @@ final class AutoroutePassRunner {
       router.job.logError("Something went wrong during the auto-routing", e);
       router.airLine = null;
       return false;
-    } finally {
-      if (lookahead != null) {
-        lookahead.close();
-      }
     }
   }
 

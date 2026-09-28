@@ -228,9 +228,9 @@ public class RouterSettings implements Serializable, Cloneable {
   }
 
   /**
-   * Worker-thread cap for a multi-thread autorouter pass. Prefers {@code autorouter.maxThreads}
-   * (canonical CLI {@code --router.autorouter.max_threads}) and falls back to the legacy flat
-   * {@code router.maxThreads}.
+   * Resolves {@code --router.autorouter.max_threads}. The autorouter pass does not read this value.
+   * Prefers {@code autorouter.maxThreads} and falls back to the legacy flat {@code
+   * router.maxThreads}.
    */
   public int getAutorouterMaxThreads() {
     Integer configured =

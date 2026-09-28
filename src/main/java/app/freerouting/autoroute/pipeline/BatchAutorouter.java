@@ -100,8 +100,6 @@ public final class BatchAutorouter extends NamedAlgorithm {
 
   long lastBoardUpdateTimestamp;
   boolean isOptimizerAutorouter;
-  boolean captureRoutePlan;
-  app.freerouting.autoroute.path.PlannedConnection capturedPlan;
   long profileItemSelectionNanos;
   long profileIntermediateStatisticsNanos;
   long profileBoardStatisticsNanos;
@@ -112,11 +110,6 @@ public final class BatchAutorouter extends NamedAlgorithm {
   long profileTailRemovalNanos;
   int profileRouteItemCount;
   int profilePlaneItemCount;
-  int profileSnapshotRetries;
-  int profileSnapshotAdopted;
-  int profileSnapshotReplays;
-  long profileSnapshotCopyNanos;
-  long profileSnapshotPreparedNanos;
   BoardStatistics progressStatistics;
   int progressItemsSinceStatistics;
 
@@ -219,11 +212,6 @@ public final class BatchAutorouter extends NamedAlgorithm {
     this.profileTailRemovalNanos = 0;
     this.profileRouteItemCount = 0;
     this.profilePlaneItemCount = 0;
-    this.profileSnapshotRetries = 0;
-    this.profileSnapshotAdopted = 0;
-    this.profileSnapshotReplays = 0;
-    this.profileSnapshotCopyNanos = 0;
-    this.profileSnapshotPreparedNanos = 0;
   }
 
   void logBenchmarkProfile(int passNo) {
@@ -254,47 +242,7 @@ public final class BatchAutorouter extends NamedAlgorithm {
             + ", board_statistics_ms="
             + AutorouteRuntimeMetrics.nanosToMillis(this.profileBoardStatisticsNanos)
             + ", incomplete_drc_ms="
-            + AutorouteRuntimeMetrics.nanosToMillis(this.profileIncompleteDrcNanos)
-            + ", snapshot_retries="
-            + this.profileSnapshotRetries
-            + ", snapshot_adopted="
-            + this.profileSnapshotAdopted
-            + ", snapshot_replays="
-            + this.profileSnapshotReplays
-            + ", snapshot_copy_ms="
-            + AutorouteRuntimeMetrics.nanosToMillis(this.profileSnapshotCopyNanos)
-            + ", snapshot_prepared_ms="
-            + AutorouteRuntimeMetrics.nanosToMillis(this.profileSnapshotPreparedNanos));
-  }
-
-  /** Router that searches one item on a snapshot board with this router's settings. */
-  BatchAutorouter forSnapshot(RoutingBoard copy) {
-    BatchAutorouter worker =
-        new BatchAutorouter(
-            this.thread,
-            copy,
-            this.settings,
-            this.removeUnconnectedVias,
-            this.preferredDirections,
-            this.startRipupCosts,
-            this.tracePullTightAccuracy);
-    worker.job = this.job;
-    worker.isOptimizerAutorouter = this.isOptimizerAutorouter;
-    worker.captureRoutePlan = true;
-    return worker;
-  }
-
-  /** Inserts a connection found on a snapshot without searching again. */
-  boolean replayPlan(app.freerouting.autoroute.path.PlannedConnection plan, int passNo) {
-    return this.connectionRouter.replay(plan, passNo);
-  }
-
-  /** Replaces the live board after a snapshot search that matched the single-thread result. */
-  void adoptBoard(RoutingBoard replacement) {
-    this.board = replacement;
-    if (this.job != null) {
-      this.job.board = replacement;
-    }
+            + AutorouteRuntimeMetrics.nanosToMillis(this.profileIncompleteDrcNanos));
   }
 
   /**

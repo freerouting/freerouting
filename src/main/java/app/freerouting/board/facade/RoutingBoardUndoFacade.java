@@ -14,13 +14,6 @@ import java.util.Set;
 /** Owns routing-board undo/redo side effects and deep-copy restoration. */
 public final class RoutingBoardUndoFacade {
 
-  /**
-   * Set on the copying thread while a snapshot copy is deserialized. {@code BasicBoard.readObject}
-   * must not rebuild the search trees in that case.
-   */
-  static final ThreadLocal<Boolean> SKIP_SEARCH_TREE_REBUILD =
-      ThreadLocal.withInitial(() -> Boolean.FALSE);
-
   private final RoutingBoard board;
 
   RoutingBoardUndoFacade(RoutingBoard board) {
@@ -46,24 +39,8 @@ public final class RoutingBoardUndoFacade {
   }
 
   synchronized RoutingBoard deepCopy() {
-    return deepCopy(false);
-  }
-
-  /**
-   * Deep copy that leaves the search trees empty. The snapshot lookahead replaces them with a clone
-   * of the live tree. Rebuilding a tree here is work the clone discards, and a rebuilt tree does
-   * not route the same way.
-   */
-  synchronized RoutingBoard deepCopySkippingSearchTrees() {
-    return deepCopy(true);
-  }
-
-  private synchronized RoutingBoard deepCopy(boolean skipSearchTreeRebuild) {
     ObjectOutputStream outputStream = null;
     ObjectInputStream inputStream = null;
-    if (skipSearchTreeRebuild) {
-      SKIP_SEARCH_TREE_REBUILD.set(true);
-    }
     try {
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
       outputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -81,9 +58,6 @@ public final class RoutingBoardUndoFacade {
       FRLogger.error("Exception in deep_copy_routing_board" + exception, exception);
       return null;
     } finally {
-      if (skipSearchTreeRebuild) {
-        SKIP_SEARCH_TREE_REBUILD.remove();
-      }
       try {
         if (outputStream != null) {
           outputStream.close();

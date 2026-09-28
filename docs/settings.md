@@ -137,15 +137,10 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`max_items`**: Maximum items attempted in the autorouter stage.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
-    - **`max_threads`**: Worker-thread cap for snapshot-commit lookahead. Canonical CLI is
-      `--router.autorouter.max_threads`. Independent of `--router.optimizer.max_threads`.
-      The batch loop reads it only when the process is started with
-      `-Dfreerouting.autoroute.snapshot_commit=true` and the cap is greater than one. The
-      lookahead searches the next item on a board copy that keeps the live search-tree structure.
-      It commits that copy only when the live board has not changed since the copy. Any earlier
-      commit discards the search, and the item is routed on the live board. With the property
-      unset, the pass stays single-threaded and does not read this value. The legacy flat `--router.max_threads` remains as a fallback / GUI
-      knob and is still copied onto the optimizer pool.
+    - **`max_threads`**: Canonical CLI is `--router.autorouter.max_threads`. The autorouter pass
+      does not read it. Fanout is also single-threaded. The optimizer pool uses
+      `--router.optimizer.max_threads`. The legacy flat `--router.max_threads` remains as a
+      fallback / GUI knob and is still copied onto both pools.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.

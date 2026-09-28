@@ -15,7 +15,6 @@ import app.freerouting.autoroute.expansion.SortedRoomNeighbours;
 import app.freerouting.autoroute.expansion.TargetItemExpansionDoor;
 import app.freerouting.autoroute.path.FoundConnectionInserter;
 import app.freerouting.autoroute.path.FoundConnectionLocator;
-import app.freerouting.autoroute.path.PlannedConnection;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.searchtree.SearchTreeObject;
@@ -76,12 +75,6 @@ public class AutorouteEngine {
 
   /** The count of expansion rooms created so far. */
   private int expansionRoomInstanceCount;
-
-  /** When true, {@link #autorouteConnection} stores the found geometry in {@link #capturedPlan}. */
-  private boolean capturePlan;
-
-  /** Geometry of the last routed connection, set only when {@link #capturePlan} is true. */
-  private PlannedConnection capturedPlan;
 
   /**
    * Creates a new instance of BoardAutorouteEngine. If maintainDatabase, the autorouter database.
@@ -261,21 +254,7 @@ public class AutorouteEngine {
               + ", because the new connection could not be inserted.");
     }
 
-    if (this.capturePlan) {
-      this.capturedPlan = PlannedConnection.from(ctrl.netNumber, autorouteResult, rippedItemList);
-    }
     return new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
-  }
-
-  /** Enables capturing the found geometry on the next {@link #autorouteConnection} call. */
-  public void setCapturePlan(boolean capturePlan) {
-    this.capturePlan = capturePlan;
-    this.capturedPlan = null;
-  }
-
-  /** Returns the plan captured by the last successful connection, or null. */
-  public PlannedConnection capturedPlan() {
-    return this.capturedPlan;
   }
 
   /**

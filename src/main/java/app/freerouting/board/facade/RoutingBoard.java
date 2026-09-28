@@ -1445,11 +1445,6 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     return getUndoFacade().deepCopy();
   }
 
-  /** Deep copy for snapshot lookahead. Search trees stay empty until the live tree is cloned. */
-  public synchronized RoutingBoard deepCopySkippingSearchTrees() {
-    return getUndoFacade().deepCopySkippingSearchTrees();
-  }
-
   private RoutingBoardOperations getOperations() {
     if (operations == null) {
       operations = new RoutingBoardOperations(this);

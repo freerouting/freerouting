@@ -4,8 +4,6 @@ import app.freerouting.autoroute.AutorouteAttemptResult;
 import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.maze.AutorouteControl;
 import app.freerouting.autoroute.maze.AutorouteEngine;
-import app.freerouting.autoroute.path.FoundConnectionInserter;
-import app.freerouting.autoroute.path.PlannedConnection;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.ConductionArea;
@@ -17,7 +15,6 @@ import app.freerouting.rules.Net;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /** Executes one autoroute connection, including necked retry and strict-DRC recovery. */
 final class AutorouteConnectionRouter {
@@ -76,7 +73,6 @@ final class AutorouteConnectionRouter {
       maxMilliseconds = Math.min(maxMilliseconds, Integer.MAX_VALUE);
       TimeLimit timeLimit = new TimeLimit((int) maxMilliseconds);
 
-      router.capturedPlan = null;
       AutorouteEngine autorouteEngine =
           router.board.initAutoroute(
               routeNetNo,
@@ -84,7 +80,6 @@ final class AutorouteConnectionRouter {
               router.thread,
               timeLimit,
               router.isRetainAutorouteDatabase());
-      autorouteEngine.setCapturePlan(router.captureRoutePlan);
       int maxItemIdBeforeRoute = router.board.communication.idGenerator.maxGeneratedId();
       // Snapshot the board state only when strict DRC is explicitly enabled; the implicit
       // per-connection serialize that previously fired for every pass ≥ 3 caused significant
@@ -94,7 +89,7 @@ final class AutorouteConnectionRouter {
       byte[] strictDrcBoardSnapshot = isStrictPass ? router.board.serialize(false) : null;
 
       long mazeSearchStart = BatchAutorouter.isBenchmarkProfileEnabled() ? System.nanoTime() : 0;
-      AutorouteAttemptResult autorouteResult =
+      final AutorouteAttemptResult autorouteResult =
           autorouteEngine.autorouteConnection(
               routeStartSet, routeDestSet, autorouteControl, rippedItemList, ripupCosts);
       if (BatchAutorouter.isBenchmarkProfileEnabled()) {
@@ -163,9 +158,6 @@ final class AutorouteConnectionRouter {
         }
       }
 
-      if (autorouteResult.state == AutorouteAttemptState.ROUTED && router.captureRoutePlan) {
-        router.capturedPlan = autorouteEngine.capturedPlan();
-      }
       return autorouteResult;
     } catch (Exception e) {
       FRLogger.error("Error during routing passes", e);
@@ -252,78 +244,6 @@ final class AutorouteConnectionRouter {
             + router.settings.getNeckWidthUm()
             + " um trace width.");
     return neckResult;
-  }
-
-  /** Rips and inserts {@code plan} on the live board, and rolls back when insertion fails. */
-  boolean replay(PlannedConnection plan, int ripupPassNo) {
-    if (plan == null || plan.segments == null) {
-      return false;
-    }
-    Item startItem = router.board.getItem(plan.startItemId);
-    Item targetItem = router.board.getItem(plan.targetItemId);
-    if (startItem == null || targetItem == null) {
-      return false;
-    }
-    SortedSet<Item> rippedItems = new TreeSet<>();
-    for (int rippedId : plan.rippedItemIds) {
-      Item rippedItem = router.board.getItem(rippedId);
-      if (rippedItem == null) {
-        return false;
-      }
-      rippedItems.add(rippedItem);
-    }
-    Net routeNet = router.board.rules.nets.get(plan.netNumber);
-    boolean containsPlane = routeNet != null && routeNet.containsPlane();
-    int viaCosts =
-        containsPlane ? router.settings.getPlaneViaCosts() : router.settings.getViaCosts();
-    AutorouteControl autorouteControl =
-        new AutorouteControl(
-            router.board, plan.netNumber, router.settings, viaCosts, router.getTraceCosts());
-    autorouteControl.ripupAllowed = true;
-    autorouteControl.ripupCosts = router.getStartRipupCosts() * ripupPassNo;
-    autorouteControl.removeUnconnectedVias = router.isRemoveUnconnectedVias();
-
-    router.board.generateSnapshot();
-    boolean observersActivated = !router.board.observersActive();
-    if (observersActivated) {
-      router.board.startNotifyObservers();
-    }
-    try {
-      AutorouteEngine.ripConnections(
-          router.board, rippedItems, autorouteControl.removeUnconnectedVias);
-      FoundConnectionInserter inserted =
-          FoundConnectionInserter.insertSegments(
-              router.board,
-              autorouteControl,
-              startItem,
-              targetItem,
-              plan.startLayer,
-              plan.targetLayer,
-              plan.segments);
-      if (observersActivated) {
-        router.board.endNotifyObservers();
-        observersActivated = false;
-      }
-      if (inserted == null) {
-        router.board.undo(null);
-        return false;
-      }
-      router.board.optChangedArea(
-          new int[0],
-          null,
-          router.getTracePullTightAccuracy(),
-          autorouteControl.traceCosts,
-          router.thread,
-          TIME_LIMIT_TO_PREVENT_ENDLESS_LOOP);
-      router.board.popSnapshot();
-      return true;
-    } catch (RuntimeException exception) {
-      if (observersActivated) {
-        router.board.endNotifyObservers();
-      }
-      router.board.undo(null);
-      return false;
-    }
   }
 
   private AutorouteAttemptResult applyStrictDrcAfterRoute(
