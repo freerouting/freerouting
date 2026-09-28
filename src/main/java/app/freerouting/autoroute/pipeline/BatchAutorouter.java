@@ -52,6 +52,11 @@ public final class BatchAutorouter extends NamedAlgorithm {
   static final int STAGNATION_PASS_LIMIT = 10;
   // Number of no-improvement passes before attempting a one-time fanout-tail cleanup.
   static final int FANOUT_RECOVERY_STAGNATION_PASSES = 3;
+  // Last-mile rip-up: when only a few connections remain, remove foreign traces and vias
+  // that cross those airlines so the next passes can escape a local blockage.
+  static final int LAST_MILE_INCOMPLETE_LIMIT = 8;
+  static final int LAST_MILE_STAGNATION_PASSES = 3;
+  static final int LAST_MILE_MAX_ATTEMPTS = 2;
   // Progress statistics are informational only; avoid rebuilding the expensive snapshot for
   // every item while keeping the GUI reasonably current on large boards.
   static final int PROGRESS_STATISTICS_ITEM_INTERVAL = 10;

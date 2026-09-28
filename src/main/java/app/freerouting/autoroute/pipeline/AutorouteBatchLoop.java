@@ -2,6 +2,9 @@ package app.freerouting.autoroute.pipeline;
 
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.BOARD_RANK_LIMIT;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.FANOUT_RECOVERY_STAGNATION_PASSES;
+import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_INCOMPLETE_LIMIT;
+import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_MAX_ATTEMPTS;
+import static app.freerouting.autoroute.pipeline.BatchAutorouter.LAST_MILE_STAGNATION_PASSES;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.MAXIMUM_TRIES_ON_THE_SAME_BOARD;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.STAGNATION_PASS_LIMIT;
 import static app.freerouting.autoroute.pipeline.BatchAutorouter.STAGNATION_SCORE_THRESHOLD;
@@ -288,6 +291,7 @@ final class AutorouteBatchLoop {
     int currentPass = 1;
     int consecutiveNoImprovementPasses = 0;
     boolean fanoutRecoveryApplied = false;
+    int lastMileAttempts = 0;
     float lastBestScore = Float.NEGATIVE_INFINITY; // score at last board-restore or improvement
     float globalBestScore = Float.NEGATIVE_INFINITY; // best score seen across all passes
     int passOfBestScore = 0; // pass where globalBestScore was achieved
@@ -500,6 +504,28 @@ final class AutorouteBatchLoop {
                     + " -> "
                     + boardStatisticsAfter.connections.incompleteCount
                     + ".");
+          }
+
+          int incompleteNow = boardStatisticsAfter.connections.incompleteCount;
+          if (incompleteNow > 0
+              && incompleteNow <= LAST_MILE_INCOMPLETE_LIMIT
+              && lastMileAttempts < LAST_MILE_MAX_ATTEMPTS
+              && consecutiveNoImprovementPasses >= LAST_MILE_STAGNATION_PASSES) {
+            int removed = LastMileBlockerRipup.ripBlockers(router.board);
+            lastMileAttempts++;
+            if (removed > 0) {
+              boardStatisticsAfter = new BoardStatistics(router.board);
+              boardScoreAfter = boardStatisticsAfter.getRouterScore(job.routerSettings);
+              lastBestScore = boardScoreAfter;
+              consecutiveNoImprovementPasses = 0;
+              alreadyRoutedBoardHashes.clear();
+              job.logInfo(
+                  "Last-mile rip-up removed "
+                      + removed
+                      + " blocking trace(s) or via(s) around "
+                      + incompleteNow
+                      + " remaining connection(s).");
+            }
           }
 
           if (consecutiveNoImprovementPasses >= STAGNATION_PASS_LIMIT) {

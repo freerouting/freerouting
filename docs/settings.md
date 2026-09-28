@@ -222,6 +222,7 @@ Configures the SMD-pin fanout pre-pass stage.
 
 - **`enabled`**: Whether to run the fanout pre-pass at all. Default is `true`.
 - **`max_passes`**: Maximum number of fanout passes. Default is `20`.
+- **`timeout`**: Optional wall-clock budget for the fanout stage (`HH:MM:SS`). When unset, fanout has no stage timeout of its own. `router.job_timeout` still covers fanout, autorouting, and optimization together.
 - **`max_milliseconds_per_pin`**: Base time budget in milliseconds per SMD pin in pass 1. Scales with pass number. Default is `10000`.
 - **`ripup_allowed`**: Whether fanout can rip up existing traces. Default is `true`.
 - **`min_escape_length_mm`**: The minimum physical escape trace length in millimeters. Default is `2.5`. Landing vias and escape stubs are not placed closer than this distance from the pin center.
