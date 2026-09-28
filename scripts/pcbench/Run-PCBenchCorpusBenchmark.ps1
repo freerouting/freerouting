@@ -17,18 +17,22 @@
     Limit execution to first N boards (default: 0 for all).
 
 .PARAMETER VersionLabel
-    Version label for the binary (default: "v2.3.1-SNAPSHOT").
+    Version label for the binary (default: "2.5.0-RC10").
 #>
 param(
     [string]$Tier = "All",
     [int]$Workers = 8,
     [int]$MaxBoards = 0,
-    [string]$VersionLabel = "v2.3.1-SNAPSHOT",
+    [string]$VersionLabel = "2.5.0-RC10",
     [string]$JarPath = "",
     [switch]$Force
 )
 
 $ErrorActionPreference = "Stop"
+
+if (-not $JarPath) {
+    $JarPath = Join-Path $PSScriptRoot "..\benchmark\binaries\freerouting-2.5.0-RC10.jar"
+}
 
 $script = Join-Path $PSScriptRoot "run_corpus_benchmark.py"
 $pyArgs = @(

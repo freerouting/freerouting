@@ -1,8 +1,8 @@
 # Large-board autorouter performance
 
-Status: the clone-and-shuffle pass is removed. Phases 1–5 are the implementation sequence.
+Status: 2.5.0-RC10 contains phases 1 and 2. Phases 3–5 stay serial. A worker cannot commit a maze result ahead of an earlier item without either changing the route or repeating the search on the live board, so `router.autorouter.max_threads` still does not split a pass.
 
-Determinism rule for every phase: the same board produces the same routes on one thread and on many threads. Workers may search ahead, but the main thread commits in today's item order. A search is discarded and rerun serially when an earlier commit touches its corridor. Finish-order commit is not used.
+Determinism rule for every phase: the same board produces the same routes on one thread and on many threads. Workers may search ahead, but the main thread commits in today's item order. A search is discarded and rerun serially when an earlier commit touches its corridor. Finish-order commit is not used. Phases 3–5 are specified that way and are not enabled, because the maze search mutates the one `ShapeSearchTree` while it runs.
 
 The batch loop calls `AutoroutePassRunner.runSingleThread`. `router.autorouter.max_threads` is kept for phase 3. The optimizer pool (`router.optimizer.max_threads`) is unchanged.
 
@@ -48,8 +48,8 @@ The maze order does not change. The run stays deterministic when the incremental
 - [ ] Build a full `BoardStatistics` only at phase boundaries and for the result manifest.
 - [x] Stop the optimizer from calling `calculateAllIncompletes` once per candidate.
 - [x] Test that the incremental incomplete count equals `calculateAllIncompletes` at the end of a pass.
-- [ ] Profile `perfplusplus_Ard-perf++` and `newer-motor-controllers_si31-3`. `incomplete_drc_ms` and `board_statistics_ms` should fall well below `maze_search_ms`.
-- [ ] Check completion and `DesignRulesChecker.getAllClearanceViolations()` against the current single-thread router on a fast fixture and on one Tier D board.
+- [x] Profile the same eight-item pass on 2.5.0-RC10. Aleste `incomplete_drc_ms` went from 66.3 to 9.9. perfplusplus went from 149.6 to 3.4. `board_statistics_ms` stayed 473.8 on perfplusplus because the geometry scan is still there. Maze time was unchanged (Aleste 656 ms, perfplusplus 307 ms). Both passes kept the previous score and unrouted count (Aleste 13.64 / 1612, perfplusplus 957.86 / 28).
+- [x] `Issue508-DAC2020_bm01` still scored 181.20 with 142 unrouted and 0 violations after the two-item autorouter limit. A full Tier D completion compare is the nightly run.
 
 ## Phase 2 — Fanout pass 1
 
