@@ -119,6 +119,9 @@ public class BoardStatistics implements Serializable {
    */
   public BoardStatistics(
       BasicBoard board, Unit unit, boolean includeClearanceViolations, boolean includeConnections) {
+    if (board != null && includeClearanceViolations) {
+      board.awaitPostLoad();
+    }
     final var bb = board.getBoundingBox();
 
     this.host =
@@ -388,12 +391,20 @@ public class BoardStatistics implements Serializable {
         this.clearanceViolations.avgViolationUm = 0.0;
       }
       this.clearanceViolations.preExistingCount = board.preExistingClearanceViolationsCount;
+      int unfixable = 0;
+      for (app.freerouting.drc.ClearanceViolation cv : violationsList) {
+        if (cv.isUnfixable()) {
+          unfixable++;
+        }
+      }
+      this.clearanceViolations.unfixableCount = unfixable;
       this.clearanceViolations.routerIntroducedCount =
           Math.max(
               0, this.clearanceViolations.totalCount - board.preExistingClearanceViolationsCount);
     } else {
       this.clearanceViolations.totalCount = 0;
       this.clearanceViolations.preExistingCount = 0;
+      this.clearanceViolations.unfixableCount = 0;
       this.clearanceViolations.routerIntroducedCount = 0;
       this.clearanceViolations.totalViolationUm = 0.0;
       this.clearanceViolations.minViolationUm = 0.0;

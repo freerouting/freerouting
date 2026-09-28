@@ -72,4 +72,20 @@ class ReflectionUtilArrayTest {
     assertTrue(settings.layers[0].routable);
     assertFalse(settings.layers[1].routable);
   }
+
+  @Test
+  void testCopyFieldsOverwritesExistingNonEmptyArray() {
+    RouterSettings source = new RouterSettings();
+    source.planeNets = new String[] {"VCC", "GND"};
+
+    RouterSettings target = new RouterSettings();
+    target.planeNets = new String[] {"DEFAULT_NET"};
+
+    int changed = ReflectionUtil.copyFields(source, target);
+    assertTrue(changed > 0);
+    assertNotNull(target.planeNets);
+    assertEquals(2, target.planeNets.length);
+    assertEquals("VCC", target.planeNets[0]);
+    assertEquals("GND", target.planeNets[1]);
+  }
 }

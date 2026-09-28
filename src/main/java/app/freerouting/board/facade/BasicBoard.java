@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Provides basic functionality of a board with geometric items. It contains functions such as
@@ -54,6 +55,8 @@ import java.util.TreeSet;
  * have one or several layers.
  */
 public class BasicBoard implements Serializable {
+
+  private static final long serialVersionUID = 4469140260760845555L;
 
   /**
    * The maximum number of outer-loop iterations in {@link #normalizeTraces}. Each legitimate
@@ -88,7 +91,7 @@ public class BasicBoard implements Serializable {
   public final Communication communication;
 
   /** Bounding orthogonal rectangle of this board. */
-  public final IntBox boundingBox;
+  public IntBox boundingBox;
 
   /** Handles the search trees pointing into the items of this board. */
   public transient SearchTreeManager searchTreeManager;
@@ -99,6 +102,8 @@ public class BasicBoard implements Serializable {
   private transient BoardConnectivityQueries connectivityQueries;
   private transient BoardSnapshotManager snapshotManager;
   public int preExistingClearanceViolationsCount = 0;
+  public transient int unfixableClearanceViolationsCount = 0;
+  public transient CompletableFuture<Void> postLoadFuture;
 
   /** The rectangle, where the graphics may be not up-to-date. */
   private transient IntBox updateBox = IntBox.EMPTY;
@@ -580,14 +585,51 @@ public class BasicBoard implements Serializable {
     return result;
   }
 
+  /**
+   * Expands the board's bounding box so that all placed items (pins, obstacles, conduction areas)
+   * are fully contained within the routable bounding box, with a minimum margin.
+   */
+  public void expandBoundingBoxToIncludeAllItems() {
+    IntBox bounds = this.boundingBox;
+    boolean changed = false;
+    for (Item item : getItems()) {
+      IntBox itemBox = item.boundingBox();
+      if (itemBox != null && !itemBox.isEmpty() && !bounds.contains(itemBox)) {
+        bounds = bounds.union(itemBox);
+        changed = true;
+      }
+    }
+    if (changed) {
+      this.boundingBox = bounds.offset(1000);
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
+  }
+
   /** Returns the outline of the board. */
   public BoardOutline getOutline() {
     return getItemRepository().getOutline();
   }
 
+  /** Drops the outline's cached edge-pin net set after a pin or outline mutation. */
+  public void invalidateEdgePinNetCache() {
+    BoardOutline outline = getOutline();
+    if (outline != null) {
+      outline.invalidateEdgePinNets();
+    }
+  }
+
   /** Removes an item from the board. */
   public void removeItem(Item item) {
     getItemRepository().removeItem(item);
+    if (item instanceof Pin || item instanceof BoardOutline) {
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
   }
 
   /**
@@ -1219,6 +1261,12 @@ public class BasicBoard implements Serializable {
   /** Inserts an item into the board database. */
   public void insertItem(Item item) {
     getItemRepository().insertItem(item);
+    if (item instanceof Pin || item instanceof BoardOutline) {
+      BoardOutline outline = getOutline();
+      if (outline != null) {
+        outline.invalidateEdgePinNets();
+      }
+    }
   }
 
   /**
@@ -1285,6 +1333,7 @@ public class BasicBoard implements Serializable {
         }
       }
     }
+    invalidateEdgePinNetCache();
   }
 
   /** Makes the current board situation restorable by undo. */
@@ -1473,6 +1522,20 @@ public class BasicBoard implements Serializable {
       }
     }
     return count;
+  }
+
+  /**
+   * Waits for any asynchronous post-load processing (such as initial DRC scans) to complete before
+   * accessing or mutating board data.
+   */
+  public void awaitPostLoad() {
+    if (this.postLoadFuture != null) {
+      try {
+        this.postLoadFuture.join();
+      } catch (Exception e) {
+        FRLogger.warn("Exception while waiting for post-load processing: " + e.getMessage());
+      }
+    }
   }
 
   /**

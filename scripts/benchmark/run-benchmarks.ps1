@@ -54,6 +54,9 @@ $null = New-Item -ItemType Directory -Force -Path $ResultsDir -ErrorAction Silen
 $null = New-Item -ItemType Directory -Force -Path $LogsDir -ErrorAction SilentlyContinue
 $null = New-Item -ItemType Directory -Force -Path $OutputsDir -ErrorAction SilentlyContinue
 
+# Clean up any stray SES files created in the repository root due to '+' filename splitting
+Get-ChildItem -Path "." -Filter "*--unrouted--*.ses" -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+
 $JsonPath = Join-Path $ResultsDir "benchmarks.json"
 $MdPath = Join-Path $ResultsDir "benchmarks.md"
 $ChartDataPath = Join-Path $ResultsDir "benchmarks-chart-data.json"

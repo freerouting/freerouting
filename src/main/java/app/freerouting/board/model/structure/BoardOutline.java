@@ -5,6 +5,8 @@ import app.freerouting.board.actions.ItemSelectionFilter;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
 import app.freerouting.board.searchtree.ShapeSearchTree;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.FloatPoint;
@@ -13,6 +15,7 @@ import app.freerouting.geometry.planar.IntPoint;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineArea;
 import app.freerouting.geometry.planar.PolylineShape;
+import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.geometry.planar.Vector;
 import app.freerouting.logger.FRLogger;
@@ -20,7 +23,9 @@ import app.freerouting.util.TextManager;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /** Class describing a board outline. */
 public class BoardOutline extends Item implements Serializable {
@@ -81,9 +86,87 @@ public class BoardOutline extends Item implements Serializable {
     return result;
   }
 
+  private transient Set<Integer> edgePinNets;
+  private transient int cachedItemCount = -1;
+
+  private Set<Integer> getEdgePinNets() {
+    int currentItemCount = this.board != null ? this.board.getPins().size() : -1;
+    if (this.edgePinNets == null || this.cachedItemCount != currentItemCount) {
+      this.cachedItemCount = currentItemCount;
+      Set<Integer> set = new HashSet<>();
+      if (this.board != null) {
+        for (Pin pin : this.board.getPins()) {
+          Point center = pin.getCenter();
+          boolean isEdgeOrOutside = false;
+          if (center != null && !this.contains(center)) {
+            isEdgeOrOutside = true;
+          } else {
+            for (int layer = pin.firstLayer(); layer <= pin.lastLayer(); layer++) {
+              Shape shape = pin.getShape(layer - pin.firstLayer());
+              if (shape instanceof TileShape tileShape) {
+                for (int c = 0; c < tileShape.borderLineCount(); c++) {
+                  if (!this.contains(tileShape.corner(c))) {
+                    isEdgeOrOutside = true;
+                    break;
+                  }
+                }
+              }
+              if (isEdgeOrOutside) {
+                break;
+              }
+            }
+          }
+          if (isEdgeOrOutside) {
+            for (int net : pin.netNumbers) {
+              set.add(net);
+            }
+          }
+        }
+      }
+      this.edgePinNets = set;
+    }
+    return this.edgePinNets;
+  }
+
+  /** Invalidates cached edge pin nets when board geometry or pins change. */
+  public void invalidateEdgePinNets() {
+    this.edgePinNets = null;
+    this.cachedItemCount = -1;
+  }
+
+  @Override
+  public boolean isTraceObstacle(int netNumber) {
+    if (netNumber > 0 && getEdgePinNets().contains(netNumber)) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * A trace may cross the outline only when every one of its nets is an edge-pin net. A tie trace
+   * that also carries an ordinary net stays blocked.
+   */
+  public boolean blocksNets(int[] netNumbers) {
+    if (netNumbers == null || netNumbers.length == 0) {
+      return true;
+    }
+    for (int netNo : netNumbers) {
+      if (isTraceObstacle(netNo)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @Override
   public boolean isObstacle(Item other) {
-    return !(other instanceof BoardOutline || other instanceof ObstacleArea);
+    if (other instanceof BoardOutline || other instanceof ObstacleArea) {
+      return false;
+    }
+    if (other instanceof Trace otherTrace && !blocksNets(otherTrace.netNumbers)) {
+      return false;
+    }
+    return true;
   }
 
   @Override
@@ -119,6 +202,7 @@ public class BoardOutline extends Item implements Serializable {
       keepoutArea = keepoutArea.translateBy(vector);
     }
     keepoutLines = null;
+    invalidateEdgePinNets();
   }
 
   @Override
@@ -130,6 +214,7 @@ public class BoardOutline extends Item implements Serializable {
       keepoutArea = keepoutArea.turn90Degree(factor, pole);
     }
     keepoutLines = null;
+    invalidateEdgePinNets();
   }
 
   @Override
@@ -142,6 +227,7 @@ public class BoardOutline extends Item implements Serializable {
       keepoutArea = keepoutArea.rotateApprox(angle, pole);
     }
     keepoutLines = null;
+    invalidateEdgePinNets();
   }
 
   @Override
@@ -153,6 +239,7 @@ public class BoardOutline extends Item implements Serializable {
       keepoutArea = keepoutArea.mirrorVertical(pole);
     }
     keepoutLines = null;
+    invalidateEdgePinNets();
   }
 
   /** ShapeCount. */

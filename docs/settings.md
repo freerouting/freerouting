@@ -26,7 +26,7 @@ The primary way to configure Freerouting is through a JSON settings file. This f
   },
   "gui": {
     "enabled": true,
-    "input_directory": "C:\\Work\\freerouting\\tests",
+    "input_directory": "",
     "dialog_confirmation_timeout": 5
   },
   "router": {
@@ -42,6 +42,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     "allowed_via_types": true,
     "via_costs": 50,
     "plane_via_costs": 5,
+    "plane_nets": ["GND", "VCC"],
+    "plane_as_obstacle": false,
     "start_ripup_costs": 100,
     "automatic_neckdown": true
   },
@@ -69,7 +71,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       "enabled": false,
       "requests_per_window": 120,
       "window_seconds": 60
-    }
+    },
+    "max_parallel_jobs": 5
   },
   "mcp_server": {
     "enabled": false,
@@ -151,6 +154,8 @@ The primary way to configure Freerouting is through a JSON settings file. This f
 - **`allowed_via_types`**: Enables or disables the use of different via types.
 - **`via_costs`**: Cost factor for using vias.
 - **`plane_via_costs`**: Cost factor for using vias on plane layers.
+- **`plane_nets`**: Explicit array of net names to treat as power-plane nets, enabling plane-routing mode and discounted plane via costs for these nets.
+- **`plane_as_obstacle`**: Boolean controlling whether conduction areas (copper pours) act as obstacles blocking foreign traces from passing through. Default is `false` (foreign traces may route through fills).
 - **`start_ripup_costs`**: Cost factor for ripping up existing traces.
 - **`automatic_neckdown`**: Enables or disables automatic neckdown of traces.
 - **`layers`**: An array of layer-specific settings (transient, typically set via CLI or loaded from board files). Each element contains:
@@ -251,13 +256,15 @@ Configures the SMD-pin fanout pre-pass stage.
 - **`endpoints`**: A list of endpoints that the API server will listen on. Each endpoint is specified as
   `[protocol]://[host]:[port]`.
   When set via CLI or environment variable, provide a **comma-separated string** of endpoint URLs:
-  - CLI: `--api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
+  - CLI: `--api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864`
   - Env var: `FREEROUTING__API_SERVER__ENDPOINTS=http://0.0.0.0:37864,http://127.0.0.1:37864`
 - *`cors_origins`*: A comma-separated list of origins for the `Access-Control-Allow-Origin` CORS header. Set to `*` to accept all origins (this can be a security risk). When CORS is enabled, the server automatically allows the following request headers in preflight responses: `Content-Type`, `Accept`, `Origin`, `X-Requested-With`, `Authorization`, `Freerouting-Profile-ID`, `Freerouting-Profile-Email`, and `Freerouting-Environment-Host`. This ensures browser-based clients (e.g. EasyEDA at `https://pro.lceda.cn`) can authenticate successfully without being blocked by CORS preflight checks.
 - **`rate_limit`**: Fixed-window throttling for API requests.
   - `enabled`: Enable/disable API-side rate limiting.
   - `requests_per_window`: Maximum accepted requests per identity in each window.
   - `window_seconds`: Window duration in seconds.
+- **`max_parallel_jobs`**: Maximum number of routing jobs the scheduler runs concurrently (default: `CPU cores - 1`, minimum `1`). Setting to `0` or omitting triggers auto-detection. Useful for self-hosted instances that size job concurrency to their hardware and JVM heap.
+  - Env var: `FREEROUTING__API_SERVER__MAX_PARALLEL_JOBS=10`
 
 #### **`mcp_server` Section**
 
@@ -304,9 +311,9 @@ java -jar freerouting.jar --gui.enabled=false --router.autorouter.max_passes=200
 **List-valued settings** (e.g. `api_server.endpoints`, `mcp_server.endpoints`) must be passed as a **comma-separated string**; whitespace around commas is ignored:
 
 ```bash
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
-java -jar freerouting.jar --mcp_server-enabled=true --mcp_server-endpoints=http://127.0.0.1:37964 --mcp_server-target_api_base_url=http://127.0.0.1:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting.jar --mcp_server.enabled=true --mcp_server.endpoints=http://127.0.0.1:37964 --mcp_server.target_api_base_url=http://127.0.0.1:37864
 java -jar freerouting.jar --api_server.rate_limit.enabled=true --api_server.rate_limit.requests_per_window=120 --api_server.rate_limit.window_seconds=60
 java -jar freerouting.jar --mcp_server.rate_limit.enabled=true --mcp_server.rate_limit.requests_per_window=60 --mcp_server.rate_limit.window_seconds=60
 ```

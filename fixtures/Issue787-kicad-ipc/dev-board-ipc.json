@@ -1,0 +1,5374 @@
+{
+  "designName": "dev-board",
+  "hostCad": "KiCad",
+  "hostVersion": "10.99.0 (10.99.0-4083-g6dd893f7d1)",
+  "unit": "MM",
+  "resolution": 1.0,
+  "layers": [
+    {
+      "index": 0,
+      "name": "F.Cu",
+      "type": "signal"
+    },
+    {
+      "index": 1,
+      "name": "B.Cu",
+      "type": "signal"
+    }
+  ],
+  "netClasses": [
+    {
+      "name": "Default",
+      "clearance": 0.2,
+      "traceWidth": 0.2,
+      "viaDiameter": 0.6,
+      "viaDrill": 0.3,
+      "netNames": [
+        "Default"
+      ]
+    },
+    {
+      "name": "Power",
+      "clearance": 0.2,
+      "traceWidth": 0.4,
+      "viaDiameter": 0.6,
+      "viaDrill": 0.3,
+      "netNames": [
+        "Power"
+      ]
+    }
+  ],
+  "nets": [
+    {
+      "id": 1,
+      "name": "+3V3",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 2,
+      "name": "+5V",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 3,
+      "name": "D+",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 4,
+      "name": "D-",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 5,
+      "name": "EN",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 6,
+      "name": "GND",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 7,
+      "name": "GPIO0",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 8,
+      "name": "GPIO1",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 9,
+      "name": "GPIO10",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 10,
+      "name": "GPIO11",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 11,
+      "name": "GPIO12",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 12,
+      "name": "GPIO13",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 13,
+      "name": "GPIO14",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 14,
+      "name": "GPIO15",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 15,
+      "name": "GPIO16",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 16,
+      "name": "GPIO17",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 17,
+      "name": "GPIO18",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 18,
+      "name": "GPIO2",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 19,
+      "name": "GPIO21",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 20,
+      "name": "GPIO3",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 21,
+      "name": "GPIO35",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 22,
+      "name": "GPIO36",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 23,
+      "name": "GPIO37",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 24,
+      "name": "GPIO38",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 25,
+      "name": "GPIO39",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 26,
+      "name": "GPIO4",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 27,
+      "name": "GPIO40",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 28,
+      "name": "GPIO41",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 29,
+      "name": "GPIO42",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 30,
+      "name": "GPIO43",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 31,
+      "name": "GPIO44",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 32,
+      "name": "GPIO45",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 33,
+      "name": "GPIO46",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 34,
+      "name": "GPIO47",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 35,
+      "name": "GPIO48",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 36,
+      "name": "GPIO5",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 37,
+      "name": "GPIO6",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 38,
+      "name": "GPIO7",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 39,
+      "name": "GPIO8",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 40,
+      "name": "GPIO9",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 41,
+      "name": "Net-(D1-A)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 42,
+      "name": "Net-(D2-A)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 43,
+      "name": "Net-(D3-A)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 44,
+      "name": "Net-(J1-CC1)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 45,
+      "name": "Net-(J1-CC2)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 46,
+      "name": "unconnected-(J1-SBU1-PadA8)",
+      "className": "Default",
+      "containsPlane": false
+    },
+    {
+      "id": 47,
+      "name": "unconnected-(J1-SBU2-PadB8)",
+      "className": "Default",
+      "containsPlane": false
+    }
+  ],
+  "clearanceRules": [],
+  "components": [
+    {
+      "reference": "R1",
+      "value": "5.1K",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": {
+        "x": 133.4,
+        "y": 85.5
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(J1-CC2)",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.825
+          },
+          "position": {
+            "x": 133.4,
+            "y": 84.675
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.825
+          },
+          "position": {
+            "x": 133.4,
+            "y": 86.325
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "SW2",
+      "value": "TS-1088-AR02016",
+      "footprint": "easyeda2kicad:SW-SMD_L3.9-W3.0-P4.45",
+      "position": {
+        "x": 135.2,
+        "y": 90.0
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.23,
+            "y": 1.36
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 2.18
+          },
+          "position": {
+            "x": 135.2,
+            "y": 92.18
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GPIO0",
+          "shape": "rect",
+          "size": {
+            "x": 1.23,
+            "y": 1.36
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -2.18
+          },
+          "position": {
+            "x": 135.2,
+            "y": 87.82
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D3",
+      "value": "BLUE",
+      "footprint": "LED_SMD:LED_0603_1608Metric",
+      "position": {
+        "x": 128.4125,
+        "y": 67.8
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.875,
+            "y": 0.95
+          },
+          "offset": {
+            "x": -0.7875,
+            "y": 0.0
+          },
+          "position": {
+            "x": 127.625,
+            "y": 67.8
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D3-A)",
+          "shape": "rect",
+          "size": {
+            "x": 0.875,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.7875,
+            "y": 0.0
+          },
+          "position": {
+            "x": 129.2,
+            "y": 67.8
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C3",
+      "value": "100n",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": {
+        "x": 120.5,
+        "y": 68.925
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.775
+          },
+          "position": {
+            "x": 120.5,
+            "y": 68.15
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.775
+          },
+          "position": {
+            "x": 120.5,
+            "y": 69.7
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "J1",
+      "value": "TYPE-C-31-M-12",
+      "footprint": "TYPE-C-31-M-12:HRO_TYPE-C-31-M-12",
+      "position": {
+        "x": 127.2,
+        "y": 91.8
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "",
+          "netName": "",
+          "shape": "rect",
+          "size": {
+            "x": 0.6,
+            "y": 0.6
+          },
+          "offset": {
+            "x": -2.89,
+            "y": -3.68
+          },
+          "position": {
+            "x": 124.31,
+            "y": 88.12
+          },
+          "drill": 0.6,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "",
+          "netName": "",
+          "shape": "rect",
+          "size": {
+            "x": 0.6,
+            "y": 0.6
+          },
+          "offset": {
+            "x": 2.89,
+            "y": -3.68
+          },
+          "position": {
+            "x": 130.09,
+            "y": 88.12
+          },
+          "drill": 0.6,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "A1_B12",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.6,
+            "y": 1.14
+          },
+          "offset": {
+            "x": -3.2,
+            "y": -4.75
+          },
+          "position": {
+            "x": 124.0,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "A4_B9",
+          "netName": "+5V",
+          "shape": "rect",
+          "size": {
+            "x": 0.6,
+            "y": 1.14
+          },
+          "offset": {
+            "x": -2.4,
+            "y": -4.75
+          },
+          "position": {
+            "x": 124.8,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "A5",
+          "netName": "Net-(J1-CC1)",
+          "shape": "rect",
+          "size": {
+            "x": 0.3,
+            "y": 1.14
+          },
+          "offset": {
+            "x": -1.25,
+            "y": -4.75
+          },
+          "position": {
+            "x": 125.95,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "A6",
+          "netName": "D+",
+          "shape": "rect",
+          "size": {
+            "x": 0.3,
+            "y": 1.14
+          },
+          "offset": {
+            "x": -0.25,
+            "y": -4.75
+          },
+          "position": {
+            "x": 126.95,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "A7",
+          "netName": "D-",
+          "shape": "rect",
+          "size": {
+            "x": 0.3,
+            "y": 1.14
+          },
+          "offset": {
+            "x": 0.25,
+            "y": -4.75
+          },
+          "position": {
+            "x": 127.45,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "A8",
+          "netName": "unconnected-(J1-SBU1-PadA8)",
+          "shape": "rect",
+          "size": {
+            "x": 0.3,
+            "y": 1.14
+          },
+          "offset": {
+            "x": 1.25,
+            "y": -4.75
+          },
+          "position": {
+            "x": 128.45,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "B1_A12",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.6,
+            "y": 1.14
+          },
+          "offset": {
+            "x": 3.2,
+            "y": -4.75
+          },
+          "position": {
+            "x": 130.4,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "B4_A9",
+          "netName": "+5V",
+          "shape": "rect",
+          "size": {
+            "x": 0.6,
+            "y": 1.14
+          },
+          "offset": {
+            "x": 2.4,
+            "y": -4.75
+          },
+          "position": {
+            "x": 129.6,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "B5",
+          "netName": "Net-(J1-CC2)",
+          "shape": "rect",
+          "size": {
+            "x": 0.3,
+            "y": 1.14
+          },
+          "offset": {
+            "x": 1.75,
+            "y": -4.75
+          },
+          "position": {
+            "x": 128.95,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "B6",
+          "netName": "D+",
+          "shape": "rect",
+          "size": {
+            "x": 0.3,
+            "y": 1.14
+          },
+          "offset": {
+            "x": 0.75,
+            "y": -4.75
+          },
+          "position": {
+            "x": 127.95,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "B7",
+          "netName": "D-",
+          "shape": "rect",
+          "size": {
+            "x": 0.3,
+            "y": 1.14
+          },
+          "offset": {
+            "x": -0.75,
+            "y": -4.75
+          },
+          "position": {
+            "x": 126.45,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "B8",
+          "netName": "unconnected-(J1-SBU2-PadB8)",
+          "shape": "rect",
+          "size": {
+            "x": 0.3,
+            "y": 1.14
+          },
+          "offset": {
+            "x": -1.75,
+            "y": -4.75
+          },
+          "position": {
+            "x": 125.45,
+            "y": 87.05
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "S1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 2.2
+          },
+          "offset": {
+            "x": -4.325,
+            "y": -4.17
+          },
+          "position": {
+            "x": 122.875,
+            "y": 87.63
+          },
+          "drill": 0.6,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "S2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 2.2
+          },
+          "offset": {
+            "x": 4.325,
+            "y": -4.17
+          },
+          "position": {
+            "x": 131.525,
+            "y": 87.63
+          },
+          "drill": 0.6,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "S3",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.9
+          },
+          "offset": {
+            "x": -4.325,
+            "y": 0.0
+          },
+          "position": {
+            "x": 122.875,
+            "y": 91.8
+          },
+          "drill": 0.6,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "S4",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.1,
+            "y": 1.9
+          },
+          "offset": {
+            "x": 4.325,
+            "y": 0.0
+          },
+          "position": {
+            "x": 131.525,
+            "y": 91.8
+          },
+          "drill": 0.6,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D2",
+      "value": "GREEN",
+      "footprint": "LED_SMD:LED_0603_1608Metric",
+      "position": {
+        "x": 128.4,
+        "y": 69.5
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.875,
+            "y": 0.95
+          },
+          "offset": {
+            "x": -0.7875,
+            "y": 0.0
+          },
+          "position": {
+            "x": 127.6125,
+            "y": 69.5
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D2-A)",
+          "shape": "rect",
+          "size": {
+            "x": 0.875,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.7875,
+            "y": 0.0
+          },
+          "position": {
+            "x": 129.1875,
+            "y": 69.5
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "U3",
+      "value": "LD1117S33TR_SOT223",
+      "footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+      "position": {
+        "x": 126.8,
+        "y": 77.3
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 1.5
+          },
+          "offset": {
+            "x": -2.3,
+            "y": 3.15
+          },
+          "position": {
+            "x": 124.5,
+            "y": 80.45
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 1.5
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 3.15
+          },
+          "position": {
+            "x": 126.8,
+            "y": 80.45
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 3.8
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -3.15
+          },
+          "position": {
+            "x": 126.8,
+            "y": 74.15
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "+5V",
+          "shape": "rect",
+          "size": {
+            "x": 2.0,
+            "y": 1.5
+          },
+          "offset": {
+            "x": 2.3,
+            "y": 3.15
+          },
+          "position": {
+            "x": 129.1,
+            "y": 80.45
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C5",
+      "value": "10u",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": {
+        "x": 128.4,
+        "y": 66.2
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "EN",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.775,
+            "y": 0.0
+          },
+          "position": {
+            "x": 129.175,
+            "y": 66.2
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": -0.775,
+            "y": 0.0
+          },
+          "position": {
+            "x": 127.625,
+            "y": 66.2
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C2",
+      "value": "22u",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": {
+        "x": 122.1,
+        "y": 68.925
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.775
+          },
+          "position": {
+            "x": 122.1,
+            "y": 68.15
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.775
+          },
+          "position": {
+            "x": 122.1,
+            "y": 69.7
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R5",
+      "value": "5.1K",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": {
+        "x": 131.8,
+        "y": 69.5
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.825,
+            "y": 0.0
+          },
+          "position": {
+            "x": 132.625,
+            "y": 69.5
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D2-A)",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": -0.825,
+            "y": 0.0
+          },
+          "position": {
+            "x": 130.975,
+            "y": 69.5
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R6",
+      "value": "5.1K",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": {
+        "x": 131.8125,
+        "y": 67.8
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GPIO21",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.825,
+            "y": 0.0
+          },
+          "position": {
+            "x": 132.6375,
+            "y": 67.8
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D3-A)",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": -0.825,
+            "y": 0.0
+          },
+          "position": {
+            "x": 130.9875,
+            "y": 67.8
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "SW1",
+      "value": "TS-1088-AR02016",
+      "footprint": "easyeda2kicad:SW-SMD_L3.9-W3.0-P4.45",
+      "position": {
+        "x": 118.9,
+        "y": 90.0
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.23,
+            "y": 1.36
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 2.18
+          },
+          "position": {
+            "x": 118.9,
+            "y": 92.18
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "EN",
+          "shape": "rect",
+          "size": {
+            "x": 1.23,
+            "y": 1.36
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -2.18
+          },
+          "position": {
+            "x": 118.9,
+            "y": 87.82
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "U2",
+      "value": "ESP32-S3-WROOM-1",
+      "footprint": "PCM_Espressif:ESP32-S3-WROOM-1",
+      "position": {
+        "x": 127.0,
+        "y": 51.25
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": -8.26
+          },
+          "position": {
+            "x": 118.25,
+            "y": 42.99
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": -6.99
+          },
+          "position": {
+            "x": 118.25,
+            "y": 44.26
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "EN",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": -5.72
+          },
+          "position": {
+            "x": 118.25,
+            "y": 45.53
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "4",
+          "netName": "GPIO4",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": -4.45
+          },
+          "position": {
+            "x": 118.25,
+            "y": 46.8
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "5",
+          "netName": "GPIO5",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": -3.18
+          },
+          "position": {
+            "x": 118.25,
+            "y": 48.07
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "6",
+          "netName": "GPIO6",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": -1.91
+          },
+          "position": {
+            "x": 118.25,
+            "y": 49.34
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "7",
+          "netName": "GPIO7",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": -0.64
+          },
+          "position": {
+            "x": 118.25,
+            "y": 50.61
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "8",
+          "netName": "GPIO15",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": 0.63
+          },
+          "position": {
+            "x": 118.25,
+            "y": 51.88
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "9",
+          "netName": "GPIO16",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": 1.9
+          },
+          "position": {
+            "x": 118.25,
+            "y": 53.15
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "10",
+          "netName": "GPIO17",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": 3.17
+          },
+          "position": {
+            "x": 118.25,
+            "y": 54.42
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "11",
+          "netName": "GPIO18",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": 4.44
+          },
+          "position": {
+            "x": 118.25,
+            "y": 55.69
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "12",
+          "netName": "GPIO8",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": 5.71
+          },
+          "position": {
+            "x": 118.25,
+            "y": 56.96
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "13",
+          "netName": "D-",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": 6.98
+          },
+          "position": {
+            "x": 118.25,
+            "y": 58.23
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "14",
+          "netName": "D+",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -8.75,
+            "y": 8.25
+          },
+          "position": {
+            "x": 118.25,
+            "y": 59.5
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "15",
+          "netName": "GPIO3",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -6.985,
+            "y": 9.5
+          },
+          "position": {
+            "x": 120.015,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "16",
+          "netName": "GPIO46",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -5.715,
+            "y": 9.5
+          },
+          "position": {
+            "x": 121.285,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "17",
+          "netName": "GPIO9",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -4.445,
+            "y": 9.5
+          },
+          "position": {
+            "x": 122.555,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "18",
+          "netName": "GPIO10",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -3.175,
+            "y": 9.5
+          },
+          "position": {
+            "x": 123.825,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "19",
+          "netName": "GPIO11",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -1.905,
+            "y": 9.5
+          },
+          "position": {
+            "x": 125.095,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "20",
+          "netName": "GPIO12",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -0.635,
+            "y": 9.5
+          },
+          "position": {
+            "x": 126.365,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "21",
+          "netName": "GPIO13",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 0.635,
+            "y": 9.5
+          },
+          "position": {
+            "x": 127.635,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "22",
+          "netName": "GPIO14",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 1.905,
+            "y": 9.5
+          },
+          "position": {
+            "x": 128.905,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "23",
+          "netName": "GPIO21",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 3.175,
+            "y": 9.5
+          },
+          "position": {
+            "x": 130.175,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "24",
+          "netName": "GPIO47",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 4.445,
+            "y": 9.5
+          },
+          "position": {
+            "x": 131.445,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "25",
+          "netName": "GPIO48",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 5.715,
+            "y": 9.5
+          },
+          "position": {
+            "x": 132.715,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "26",
+          "netName": "GPIO45",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 6.985,
+            "y": 9.5
+          },
+          "position": {
+            "x": 133.985,
+            "y": 60.75
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "27",
+          "netName": "GPIO0",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": 8.25
+          },
+          "position": {
+            "x": 135.75,
+            "y": 59.5
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "28",
+          "netName": "GPIO35",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": 6.98
+          },
+          "position": {
+            "x": 135.75,
+            "y": 58.23
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "29",
+          "netName": "GPIO36",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": 5.71
+          },
+          "position": {
+            "x": 135.75,
+            "y": 56.96
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "30",
+          "netName": "GPIO37",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": 4.44
+          },
+          "position": {
+            "x": 135.75,
+            "y": 55.69
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "31",
+          "netName": "GPIO38",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": 3.17
+          },
+          "position": {
+            "x": 135.75,
+            "y": 54.42
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "32",
+          "netName": "GPIO39",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": 1.9
+          },
+          "position": {
+            "x": 135.75,
+            "y": 53.15
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "33",
+          "netName": "GPIO40",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": 0.63
+          },
+          "position": {
+            "x": 135.75,
+            "y": 51.88
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "34",
+          "netName": "GPIO41",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": -0.64
+          },
+          "position": {
+            "x": 135.75,
+            "y": 50.61
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "35",
+          "netName": "GPIO42",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": -1.91
+          },
+          "position": {
+            "x": 135.75,
+            "y": 49.34
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "36",
+          "netName": "GPIO44",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": -3.18
+          },
+          "position": {
+            "x": 135.75,
+            "y": 48.07
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "37",
+          "netName": "GPIO43",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": -4.45
+          },
+          "position": {
+            "x": 135.75,
+            "y": 46.8
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "38",
+          "netName": "GPIO2",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": -5.72
+          },
+          "position": {
+            "x": 135.75,
+            "y": 45.53
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "39",
+          "netName": "GPIO1",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": -6.99
+          },
+          "position": {
+            "x": 135.75,
+            "y": 44.26
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "40",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.5,
+            "y": 0.9
+          },
+          "offset": {
+            "x": 8.75,
+            "y": -8.26
+          },
+          "position": {
+            "x": 135.75,
+            "y": 42.99
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -2.9,
+            "y": -1.94
+          },
+          "position": {
+            "x": 124.1,
+            "y": 49.31
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -2.9,
+            "y": -0.54
+          },
+          "position": {
+            "x": 124.1,
+            "y": 50.71
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -2.9,
+            "y": 0.86
+          },
+          "position": {
+            "x": 124.1,
+            "y": 52.11
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -2.9,
+            "y": 0.86
+          },
+          "position": {
+            "x": 124.1,
+            "y": 52.11
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -1.5,
+            "y": -1.94
+          },
+          "position": {
+            "x": 125.5,
+            "y": 49.31
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -1.5,
+            "y": -1.94
+          },
+          "position": {
+            "x": 125.5,
+            "y": 49.31
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -1.5,
+            "y": -0.54
+          },
+          "position": {
+            "x": 125.5,
+            "y": 50.71
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -1.5,
+            "y": 0.86
+          },
+          "position": {
+            "x": 125.5,
+            "y": 52.11
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -0.1,
+            "y": -1.94
+          },
+          "position": {
+            "x": 126.9,
+            "y": 49.31
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -0.1,
+            "y": -0.54
+          },
+          "position": {
+            "x": 126.9,
+            "y": 50.71
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "41",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.9
+          },
+          "offset": {
+            "x": -0.1,
+            "y": 0.86
+          },
+          "position": {
+            "x": 126.9,
+            "y": 52.11
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R4",
+      "value": "5.1K",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": {
+        "x": 131.8,
+        "y": 71.2
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+5V",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.825,
+            "y": 0.0
+          },
+          "position": {
+            "x": 132.625,
+            "y": 71.2
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D1-A)",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": -0.825,
+            "y": 0.0
+          },
+          "position": {
+            "x": 130.975,
+            "y": 71.2
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C1",
+      "value": "10u",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": {
+        "x": 123.8,
+        "y": 68.925
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.775
+          },
+          "position": {
+            "x": 123.8,
+            "y": 68.15
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.775
+          },
+          "position": {
+            "x": 123.8,
+            "y": 69.7
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R3",
+      "value": "5.1K",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": {
+        "x": 131.8,
+        "y": 66.2
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.825,
+            "y": 0.0
+          },
+          "position": {
+            "x": 132.625,
+            "y": 66.2
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "EN",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": -0.825,
+            "y": 0.0
+          },
+          "position": {
+            "x": 130.975,
+            "y": 66.2
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "D1",
+      "value": "RED",
+      "footprint": "LED_SMD:LED_0603_1608Metric",
+      "position": {
+        "x": 128.3875,
+        "y": 71.2
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.875,
+            "y": 0.95
+          },
+          "offset": {
+            "x": -0.7875,
+            "y": 0.0
+          },
+          "position": {
+            "x": 127.6,
+            "y": 71.2
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "Net-(D1-A)",
+          "shape": "rect",
+          "size": {
+            "x": 0.875,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.7875,
+            "y": 0.0
+          },
+          "position": {
+            "x": 129.175,
+            "y": 71.2
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "R2",
+      "value": "5.1K",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": {
+        "x": 120.7,
+        "y": 85.4
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "Net-(J1-CC1)",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.825
+          },
+          "position": {
+            "x": 120.7,
+            "y": 84.575
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.8,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.825
+          },
+          "position": {
+            "x": 120.7,
+            "y": 86.225
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C4",
+      "value": "10u",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": {
+        "x": 131.6,
+        "y": 79.6
+      },
+      "rotation": 0.0,
+      "layer": "F.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+5V",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.775
+          },
+          "position": {
+            "x": 131.6,
+            "y": 80.375
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 0.9,
+            "y": 0.95
+          },
+          "offset": {
+            "x": 0.0,
+            "y": -0.775
+          },
+          "position": {
+            "x": 131.6,
+            "y": 78.825
+          },
+          "drill": 0.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "F.Paste"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "J3",
+      "value": "Conn_01x20_Pin",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x20_P2.54mm_Vertical",
+      "position": {
+        "x": 139.7,
+        "y": 43.18
+      },
+      "rotation": 0.0,
+      "layer": "B.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "+5V",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "position": {
+            "x": 139.7,
+            "y": 43.18
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "GPIO1",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 2.54
+          },
+          "position": {
+            "x": 139.7,
+            "y": 45.72
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "GPIO2",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 5.08
+          },
+          "position": {
+            "x": 139.7,
+            "y": 48.26
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "4",
+          "netName": "GPIO43",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 7.62
+          },
+          "position": {
+            "x": 139.7,
+            "y": 50.8
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "5",
+          "netName": "GPIO44",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 10.16
+          },
+          "position": {
+            "x": 139.7,
+            "y": 53.34
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "6",
+          "netName": "GPIO42",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 12.7
+          },
+          "position": {
+            "x": 139.7,
+            "y": 55.88
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "7",
+          "netName": "GPIO41",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 15.24
+          },
+          "position": {
+            "x": 139.7,
+            "y": 58.42
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "8",
+          "netName": "GPIO40",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 17.78
+          },
+          "position": {
+            "x": 139.7,
+            "y": 60.96
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "9",
+          "netName": "GPIO39",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 20.32
+          },
+          "position": {
+            "x": 139.7,
+            "y": 63.5
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "10",
+          "netName": "GPIO38",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 22.86
+          },
+          "position": {
+            "x": 139.7,
+            "y": 66.04
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "11",
+          "netName": "GPIO37",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 25.4
+          },
+          "position": {
+            "x": 139.7,
+            "y": 68.58
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "12",
+          "netName": "GPIO36",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 27.94
+          },
+          "position": {
+            "x": 139.7,
+            "y": 71.12
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "13",
+          "netName": "GPIO35",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 30.48
+          },
+          "position": {
+            "x": 139.7,
+            "y": 73.66
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "14",
+          "netName": "GPIO0",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 33.02
+          },
+          "position": {
+            "x": 139.7,
+            "y": 76.2
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "15",
+          "netName": "GPIO45",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 35.56
+          },
+          "position": {
+            "x": 139.7,
+            "y": 78.74
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "16",
+          "netName": "GPIO48",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 38.1
+          },
+          "position": {
+            "x": 139.7,
+            "y": 81.28
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "17",
+          "netName": "GPIO47",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 40.64
+          },
+          "position": {
+            "x": 139.7,
+            "y": 83.82
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "18",
+          "netName": "GPIO21",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 43.18
+          },
+          "position": {
+            "x": 139.7,
+            "y": 86.36
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "19",
+          "netName": "GPIO14",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 45.72
+          },
+          "position": {
+            "x": 139.7,
+            "y": 88.9
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "20",
+          "netName": "GPIO13",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 48.26
+          },
+          "position": {
+            "x": 139.7,
+            "y": 91.44
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "J2",
+      "value": "Conn_01x20_Pin",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x20_P2.54mm_Vertical",
+      "position": {
+        "x": 114.3,
+        "y": 43.185
+      },
+      "rotation": 0.0,
+      "layer": "B.Cu",
+      "pads": [
+        {
+          "name": "1",
+          "netName": "GND",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "position": {
+            "x": 114.3,
+            "y": 43.185
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "2",
+          "netName": "+3V3",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 2.54
+          },
+          "position": {
+            "x": 114.3,
+            "y": 45.725
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "3",
+          "netName": "EN",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 5.08
+          },
+          "position": {
+            "x": 114.3,
+            "y": 48.265
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "4",
+          "netName": "GPIO4",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 7.62
+          },
+          "position": {
+            "x": 114.3,
+            "y": 50.805
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "5",
+          "netName": "GPIO5",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 10.16
+          },
+          "position": {
+            "x": 114.3,
+            "y": 53.345
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "6",
+          "netName": "GPIO6",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 12.7
+          },
+          "position": {
+            "x": 114.3,
+            "y": 55.885
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "7",
+          "netName": "GPIO7",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 15.24
+          },
+          "position": {
+            "x": 114.3,
+            "y": 58.425
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "8",
+          "netName": "GPIO15",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 17.78
+          },
+          "position": {
+            "x": 114.3,
+            "y": 60.965
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "9",
+          "netName": "GPIO16",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 20.32
+          },
+          "position": {
+            "x": 114.3,
+            "y": 63.505
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "10",
+          "netName": "GPIO17",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 22.86
+          },
+          "position": {
+            "x": 114.3,
+            "y": 66.045
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "11",
+          "netName": "GPIO18",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 25.4
+          },
+          "position": {
+            "x": 114.3,
+            "y": 68.585
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "12",
+          "netName": "GPIO8",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 27.94
+          },
+          "position": {
+            "x": 114.3,
+            "y": 71.125
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "13",
+          "netName": "D-",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 30.48
+          },
+          "position": {
+            "x": 114.3,
+            "y": 73.665
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "14",
+          "netName": "D+",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 33.02
+          },
+          "position": {
+            "x": 114.3,
+            "y": 76.205
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "15",
+          "netName": "GPIO3",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 35.56
+          },
+          "position": {
+            "x": 114.3,
+            "y": 78.745
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "16",
+          "netName": "GPIO46",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 38.1
+          },
+          "position": {
+            "x": 114.3,
+            "y": 81.285
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "17",
+          "netName": "GPIO9",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 40.64
+          },
+          "position": {
+            "x": 114.3,
+            "y": 83.825
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "18",
+          "netName": "GPIO10",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 43.18
+          },
+          "position": {
+            "x": 114.3,
+            "y": 86.365
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "19",
+          "netName": "GPIO11",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 45.72
+          },
+          "position": {
+            "x": 114.3,
+            "y": 88.905
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        },
+        {
+          "name": "20",
+          "netName": "GPIO12",
+          "shape": "rect",
+          "size": {
+            "x": 1.7,
+            "y": 1.7
+          },
+          "offset": {
+            "x": 0.0,
+            "y": 48.26
+          },
+          "position": {
+            "x": 114.3,
+            "y": 91.445
+          },
+          "drill": 1.0,
+          "layers": [
+            "F.Cu",
+            "F.Mask",
+            "B.Cu",
+            "B.Mask",
+            "In1.Cu",
+            "In2.Cu",
+            "In3.Cu",
+            "In4.Cu",
+            "In5.Cu",
+            "In6.Cu",
+            "In7.Cu",
+            "In8.Cu",
+            "In9.Cu",
+            "In10.Cu",
+            "In11.Cu",
+            "In12.Cu",
+            "In13.Cu",
+            "In14.Cu",
+            "In15.Cu",
+            "In16.Cu",
+            "In17.Cu",
+            "In18.Cu",
+            "In19.Cu",
+            "In20.Cu",
+            "In21.Cu",
+            "In22.Cu",
+            "In23.Cu",
+            "In24.Cu",
+            "In25.Cu",
+            "In26.Cu",
+            "In27.Cu",
+            "In28.Cu",
+            "In29.Cu",
+            "In30.Cu"
+          ]
+        }
+      ]
+    }
+  ],
+  "outline": {
+    "corners": [
+      {
+        "x": 112.5,
+        "y": 41.4
+      },
+      {
+        "x": 141.5,
+        "y": 41.4
+      },
+      {
+        "x": 141.5,
+        "y": 93.3
+      },
+      {
+        "x": 112.5,
+        "y": 93.3
+      }
+    ],
+    "clearance": 0.5
+  },
+  "traces": [],
+  "vias": [],
+  "conductionAreas": []
+}

@@ -98,6 +98,8 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
       FRAnalytics.autorouterStarted();
     }
 
+    String inputFormat =
+        job.input != null && job.input.format != null ? job.input.format.name() : null;
     FRAnalytics.recordJobLifecycle(
         job.id.toString(),
         job.sessionId != null ? job.sessionId.toString() : null,
@@ -114,7 +116,9 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         null,
         job.getDetectedHost(),
         null,
-        null);
+        job.userId,
+        job.apiKeyHash,
+        inputFormat);
 
     RoutingPipeline pipeline = RoutingPipeline.createForHeadless(job);
     pipeline.addBoardUpdatedEventListener(event -> setJobOutput(job));
@@ -266,7 +270,9 @@ public class RoutingJobSchedulerActionThread extends StoppableThread {
         (double) job.resourceUsage.peakMemoryUsed,
         job.getDetectedHost(),
         null,
-        null);
+        job.userId,
+        job.apiKeyHash,
+        inputFormat);
   }
 
   private void monitorCpuAndMemoryUsage(RoutingJob job) {

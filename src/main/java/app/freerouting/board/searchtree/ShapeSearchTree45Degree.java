@@ -7,6 +7,7 @@ import app.freerouting.board.model.items.DrillItem;
 import app.freerouting.board.model.items.Item;
 import app.freerouting.board.model.items.ObstacleArea;
 import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.datastructures.ArrayStack;
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import app.freerouting.geometry.planar.IntBox;
 import app.freerouting.geometry.planar.IntOctagon;
@@ -19,6 +20,7 @@ import app.freerouting.logger.FRLogger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
 
 /**
  * A special simple ShapeSearchtree, where the shapes are of class IntOctagon. It is used in the
@@ -98,6 +100,20 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
       int netNumber,
       SearchTreeObject ignoreObject,
       TileShape ignoreShape) {
+    Lock lock = readLock();
+    lock.lock();
+    try {
+      return completeShapeUnlocked(room, netNumber, ignoreObject, ignoreShape);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  private Collection<IncompleteFreeSpaceExpansionRoom> completeShapeUnlocked(
+      IncompleteFreeSpaceExpansionRoom room,
+      int netNumber,
+      SearchTreeObject ignoreObject,
+      TileShape ignoreShape) {
     TileShape containedRaw = room.getContainedShape();
     if (containedRaw == null) {
       FRLogger.warn(
@@ -145,12 +161,13 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
     int debugStep = 0;
     Collection<IncompleteFreeSpaceExpansionRoom> result = new ArrayList<>();
     result.add(new IncompleteFreeSpaceExpansionRoom(startShape, roomLayer, shapeToBeContained));
-    completeShapeStack.reset();
-    completeShapeStack.push(this.root);
+    ArrayStack<TreeNode> stack = completeShapeStack.get();
+    stack.reset();
+    stack.push(this.root);
     TreeNode currentNode;
 
     for (; ; ) {
-      currentNode = completeShapeStack.pop();
+      currentNode = stack.pop();
       if (currentNode == null) {
         break;
       }
@@ -269,8 +286,8 @@ public class ShapeSearchTree45Degree extends ShapeSearchTree {
             debugStep++;
           }
         } else {
-          completeShapeStack.push(((InnerNode) currentNode).firstChild);
-          completeShapeStack.push(((InnerNode) currentNode).secondChild);
+          stack.push(((InnerNode) currentNode).firstChild);
+          stack.push(((InnerNode) currentNode).secondChild);
         }
       }
     }

@@ -42,7 +42,7 @@ class BatchOptimizerDeterminismTest extends RoutingFixtureTest {
     loadBoard(setupJob);
 
     // Run fanout + autoroute so that the board has routed connections to optimize
-    setupJob.routerSettings.maxThreads = 1;
+    setupJob.routerSettings.setMaxThreads(1);
     new BatchAutorouter(setupJob).runBatchLoop();
     setupJob.board.finishAutoroute();
 
@@ -84,7 +84,7 @@ class BatchOptimizerDeterminismTest extends RoutingFixtureTest {
     loadBoard(job);
 
     // Route initially so the board has routed connections
-    job.routerSettings.maxThreads = 1;
+    job.routerSettings.setMaxThreads(1);
     new BatchAutorouter(job).runBatchLoop();
     job.board.finishAutoroute();
 

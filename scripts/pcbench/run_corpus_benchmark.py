@@ -193,6 +193,7 @@ def route_single_board(
     board_dir: Path,
     output_dir: Path,
     log_dir: Path,
+    user_data_dir: Path,
     timeout_budget: str,
     version_label: str,
     git_sha: str,
@@ -203,9 +204,10 @@ def route_single_board(
     active_procs: dict[int, subprocess.Popen],
     status_lock: threading.Lock,
     cancel_event: threading.Event,
+    force_kill_event: threading.Event,
 ) -> dict[str, Any] | None:
     """Execute Freerouting on a single PCBench board and return a benchmark run record."""
-    if cancel_event.is_set():
+    if cancel_event.is_set() or force_kill_event.is_set():
         return None
 
     board_id = board_dir.name
@@ -215,6 +217,10 @@ def route_single_board(
     log_path = log_dir / f"{board_id}--unrouted--{version_label}.log"
 
     wid = worker_slots.get()
+    if cancel_event.is_set() or force_kill_event.is_set():
+        worker_slots.put(wid)
+        return None
+
     t0 = time.perf_counter()
 
     with status_lock:
@@ -224,6 +230,10 @@ def route_single_board(
             "last_line": "Starting autorouter process...",
             "active": True,
         }
+
+    # Isolate per-worker user data directory to prevent concurrent write contention on freerouting.json
+    worker_user_data_dir = user_data_dir / f"worker-{wid}"
+    worker_user_data_dir.mkdir(parents=True, exist_ok=True)
 
     # Timeout calculation
     parts = timeout_budget.split(":")
@@ -240,6 +250,7 @@ def route_single_board(
         "-Dfreerouting.log.console.level=INFO",
         "-jar",
         str(jar_path),
+        f"--user_data_path={worker_user_data_dir.resolve()}",
         "--gui.enabled=false",
         "--api_server.enabled=false",
         "--mcp_server.enabled=false",
@@ -252,6 +263,7 @@ def route_single_board(
         "0",
         f"--router.result_json={manifest_path}",
         "--router.autorouter.max_passes=20",
+        "--router.fanout.enabled=true",
         f"--router.job_timeout={timeout_budget}",
         f"--logging.file.location={log_path}",
     ]
@@ -272,7 +284,13 @@ def route_single_board(
             bufsize=1,
         )
         with status_lock:
-            active_procs[wid] = proc
+            if force_kill_event.is_set():
+                try:
+                    proc.kill()
+                except (ProcessLookupError, OSError):
+                    pass
+            else:
+                active_procs[wid] = proc
 
         def stream_reader():
             if proc.stdout:
@@ -322,11 +340,34 @@ def route_single_board(
             worker_status[wid]["last_line"] = "Idle"
         worker_slots.put(wid)
 
-    if cancel_event.is_set():
+    if force_kill_event.is_set():
         return None
 
     stdout_text = "".join(stdout_lines)
     wall_time = round(time.perf_counter() - t0, 2)
+
+    # Clean up any stray SES files created in working directory if an older binary split on '+'
+    stray_suffix = f"{board_id.split('+')[-1]}--unrouted--{version_label}.ses"
+    stray_root_ses = Path(stray_suffix)
+    if stray_root_ses.exists():
+        try:
+            if not ses_path.exists():
+                stray_root_ses.replace(ses_path)
+            else:
+                stray_root_ses.unlink(missing_ok=True)
+        except OSError:
+            # Best-effort relocation or deletion of stray SES file
+            pass
+
+    # Clean up truncated prefix file in output_dir (e.g. mechkeys_MF68) if it exists
+    if "+" in board_id:
+        truncated_prefix = output_dir / board_id.split("+")[0]
+        if truncated_prefix.is_file():
+            try:
+                truncated_prefix.unlink(missing_ok=True)
+            except OSError:
+                # Best-effort deletion of truncated prefix artifact
+                pass
 
     # Read normalized metadata from fixture
     meta_path = board_dir / "metadata.normalized.json"
@@ -350,6 +391,9 @@ def route_single_board(
     unrouted_count = connections.get("incomplete_count", None)
     violations_info = stats.get("clearance_violations", {})
     violations_count = violations_info.get("total_count", None)
+    router_introduced_count = violations_info.get("router_introduced_count", None)
+    pre_existing_count = violations_info.get("pre_existing_count", None)
+    unfixable_count = violations_info.get("unfixable_count", None)
     min_viol_um = violations_info.get("min_violation_um", violations_info.get("min_violation_mm", None))
     max_viol_um = violations_info.get("max_violation_um", violations_info.get("max_violation_mm", None))
     avg_viol_um = violations_info.get("avg_violation_um", violations_info.get("avg_violation_mm", None))
@@ -491,6 +535,9 @@ def route_single_board(
             "total_nets": b_board.get("nets", 0),
             "unrouted_connections": unrouted_count,
             "clearance_violations": violations_count,
+            "router_introduced_violations": router_introduced_count,
+            "pre_existing_violations": pre_existing_count,
+            "unfixable_clearance_violations": unfixable_count,
             "min_violation_um": min_viol_um,
             "max_violation_um": max_viol_um,
             "avg_violation_um": avg_viol_um,
@@ -528,6 +575,8 @@ def render_dashboard(
     recent_messages: collections.deque[str],
     status_lock: threading.Lock,
     version_label: str = "",
+    cancel_requested: bool = False,
+    keyboard_supported: bool = True,
     in_place: bool = True,
 ) -> None:
     """Print updated multi-worker dashboard with live logs and recent history."""
@@ -539,16 +588,18 @@ def render_dashboard(
 
     ver_part = f" | {C_BWHITE}Version:{C_RESET} {C_BCYAN}{version_label}{C_RESET}" if version_label else ""
 
+    status_hint = "" if cancel_requested or not keyboard_supported else f" | {C_DIM}[ESC / Q to stop gracefully]{C_RESET}"
+
     lines = []
-    lines.append(f"{C_BCYAN}{'=' * 105}{C_RESET}")
+    lines.append(f"{C_BCYAN}{'=' * 135}{C_RESET}")
     lines.append(
         f"{C_BWHITE}PCBench Benchmark:{C_RESET} {C_BYELLOW}{completed}/{total}{C_RESET} "
         f"({C_BGREEN}{pct:5.1f}%{C_RESET}){ver_part} | "
         f"{C_BWHITE}ETA:{C_RESET} {C_CYAN}{eta_str}{C_RESET} ({C_YELLOW}{avg_per_board:.1f}s/board{C_RESET}) | "
-        f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET} | "
-        f"{C_DIM}[ESC / Q to exit]{C_RESET}"
+        f"{C_BWHITE}Workers:{C_RESET} {C_BMAGENTA}{len(worker_status)}{C_RESET}"
+        f"{status_hint}"
     )
-    lines.append(f"{C_CYAN}{'-' * 105}{C_RESET}")
+    lines.append(f"{C_CYAN}{'-' * 135}{C_RESET}")
     lines.append(f"{C_BWHITE}Active Workers:{C_RESET}")
 
     now = time.perf_counter()
@@ -571,14 +622,14 @@ def render_dashboard(
             else:
                 lines.append(f"  {C_BMAGENTA}[Worker {wid}]{C_RESET} {C_DIM}Idle{C_RESET}")
 
-    lines.append(f"{C_CYAN}{'-' * 105}{C_RESET}")
+    lines.append(f"{C_CYAN}{'-' * 135}{C_RESET}")
     lines.append(f"{C_BWHITE}Recent Completed (Last 10):{C_RESET}")
     if recent_messages:
         for msg in recent_messages:
             lines.append(f"  {colorize_status_line(msg)}")
     else:
         lines.append(f"  {C_DIM}(None completed yet){C_RESET}")
-    lines.append(f"{C_BCYAN}{'=' * 105}{C_RESET}")
+    lines.append(f"{C_BCYAN}{'=' * 135}{C_RESET}")
 
     output_text = "\n".join(lines)
     try:
@@ -613,11 +664,13 @@ def main() -> int:
     output_dir = Path("scripts/benchmark/outputs")
     log_dir = Path("scripts/benchmark/logs")
     results_dir = Path("scripts/benchmark/results")
+    user_data_dir = Path("scripts/benchmark/.user_data")
     benchmarks_json = results_dir / "benchmarks.json"
 
     output_dir.mkdir(parents=True, exist_ok=True)
     log_dir.mkdir(parents=True, exist_ok=True)
     results_dir.mkdir(parents=True, exist_ok=True)
+    user_data_dir.mkdir(parents=True, exist_ok=True)
 
     # Enforce single active benchmark instance
     lock_file = results_dir / ".benchmark.lock"
@@ -637,6 +690,14 @@ def main() -> int:
             flush=True,
         )
         return 1
+
+    # Clean up any stray SES files created in root working directory
+    for stray_ses in Path(".").glob("*--unrouted--*.ses"):
+        try:
+            stray_ses.unlink(missing_ok=True)
+        except OSError:
+            # Best-effort cleanup of stray SES files at startup
+            pass
 
     atexit.register(proc_lock.release)
 
@@ -695,7 +756,7 @@ def main() -> int:
                 continue
 
         if (b_dir / "unrouted.dsn").exists():
-            tasks.append((jar_path, b_dir, output_dir, log_dir, budget, args.version_label, git_sha, jar_sha256, jar_size))
+            tasks.append((jar_path, b_dir, output_dir, log_dir, user_data_dir, budget, args.version_label, git_sha, jar_sha256, jar_size))
 
     print(
         f"Starting PCBench Corpus Benchmark ({len(boards)} total, {already_completed} already cached, "
@@ -756,11 +817,34 @@ def main() -> int:
     tracker = {"completed": 0}
     stop_refresh = threading.Event()
     cancel_event = threading.Event()
+    force_kill_event = threading.Event()
+    keyboard_supported = sys.platform == "win32" or (hasattr(sys, "stdin") and sys.stdin.isatty())
+
+    def on_cancel_key():
+        if not cancel_event.is_set():
+            cancel_event.set()
+            with status_lock:
+                active_cnt = sum(1 for w in worker_status.values() if w.get("active"))
+                recent_messages.append(
+                    f"{C_BYELLOW}[GRACEFUL STOP] Draining {active_cnt} active worker(s). Press ESC/Q again to force kill.{C_RESET}"
+                )
+        else:
+            force_kill_event.set()
+            with status_lock:
+                recent_messages.append(
+                    f"{C_BRED}[FORCE KILL] Terminating all active processes immediately...{C_RESET}"
+                )
+                for p in list(active_procs.values()):
+                    try:
+                        p.kill()
+                    except (ProcessLookupError, OSError):
+                        # Process may have already exited
+                        pass
 
     def background_refresh():
-        while not stop_refresh.is_set() and not cancel_event.is_set():
-            stop_refresh.wait(5.0)
-            if not stop_refresh.is_set() and not cancel_event.is_set():
+        while not stop_refresh.is_set() and not force_kill_event.is_set():
+            stop_refresh.wait(1.0 if cancel_event.is_set() else 5.0)
+            if not stop_refresh.is_set() and not force_kill_event.is_set():
                 render_dashboard(
                     tracker["completed"],
                     len(tasks),
@@ -769,6 +853,8 @@ def main() -> int:
                     recent_messages,
                     status_lock,
                     version_label=args.version_label,
+                    cancel_requested=cancel_event.is_set(),
+                    keyboard_supported=keyboard_supported,
                     in_place=True,
                 )
 
@@ -776,20 +862,38 @@ def main() -> int:
         if sys.platform == "win32":
             try:
                 import msvcrt
-                while not stop_refresh.is_set() and not cancel_event.is_set():
+                while not stop_refresh.is_set() and not force_kill_event.is_set():
                     if msvcrt.kbhit():
                         ch = msvcrt.getch()
                         if ch in (b"\x1b", b"q", b"Q"):
-                            cancel_event.set()
-                            with status_lock:
-                                for p in list(active_procs.values()):
-                                    try:
-                                        p.kill()
-                                    except Exception:
-                                        pass
-                            break
+                            on_cancel_key()
+                            if force_kill_event.is_set():
+                                break
                     time.sleep(0.05)
             except Exception:
+                # Keyboard listener polling failed or terminated
+                pass
+        elif hasattr(sys, "stdin") and sys.stdin.isatty():
+            try:
+                import select
+                import termios
+                import tty
+                fd = sys.stdin.fileno()
+                old_settings = termios.tcgetattr(fd)
+                try:
+                    tty.setcbreak(fd)
+                    while not stop_refresh.is_set() and not force_kill_event.is_set():
+                        rlist, _, _ = select.select([sys.stdin], [], [], 0.05)
+                        if rlist:
+                            ch = sys.stdin.read(1)
+                            if ch in ("\x1b", "q", "Q"):
+                                on_cancel_key()
+                                if force_kill_event.is_set():
+                                    break
+                finally:
+                    termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            except Exception:
+                # POSIX keyboard listener unsupported or terminal unavailable
                 pass
 
     refresh_thread = threading.Thread(target=background_refresh, daemon=True)
@@ -809,40 +913,46 @@ def main() -> int:
                     active_procs,
                     status_lock,
                     cancel_event,
+                    force_kill_event,
                 ): task[1].name
                 for task in tasks
             }
 
             for future in concurrent.futures.as_completed(future_to_board):
-                if cancel_event.is_set():
+                if force_kill_event.is_set():
                     break
 
-                completed += 1
-                tracker["completed"] = completed
                 b_name = future_to_board[future]
-                elapsed = time.perf_counter() - t_start
-                avg_per_board = elapsed / completed if completed > 0 else 0
-                remaining_secs = avg_per_board * (len(tasks) - completed)
-                eta_str = time.strftime("%H:%M:%S", time.gmtime(remaining_secs))
-                elapsed_str = time.strftime("%H:%M:%S", time.gmtime(elapsed))
-                pct = (completed / len(tasks)) * 100.0
 
                 try:
                     rec = future.result()
                     if rec is None:
                         continue
+
+                    completed += 1
+                    tracker["completed"] = completed
+                    pct = (completed / len(tasks)) * 100.0
                     existing_runs[rec["cache_key"]] = rec
                     q = rec.get("quality", {})
                     exit_info = rec.get("exit", {})
                     unr = q.get("unrouted_connections", q.get("final_unrouted"))
                     viol = q.get("clearance_violations")
+                    router_viol = q.get("router_introduced_violations")
                     sec = q.get("wall_clock_seconds", 0.0)
                     is_timeout = exit_info.get("timed_out", False)
+
+                    unfixable_viol = q.get("unfixable_clearance_violations")
+                    if unfixable_viol is None:
+                        unfixable_viol = 0
+                    if router_viol is not None:
+                        is_clean = unr == 0 and router_viol == 0
+                    else:
+                        is_clean = unr == 0 and (viol == 0 or (viol is not None and viol <= unfixable_viol))
 
                     if is_timeout:
                         timeout_count += 1
                         status = f"TIMEOUT ({sec:.1f}s)"
-                    elif unr == 0 and viol == 0:
+                    elif is_clean:
                         clean_count += 1
                         status = f"CLEAN ({sec:.1f}s)"
                     elif unr == 0:
@@ -852,7 +962,7 @@ def main() -> int:
                         unrouted_count += 1
                         status = f"UNROUTED (unr={unr}, viol={viol}, {sec:.1f}s)"
 
-                    msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] [Elapsed:{elapsed_str} ETA:{eta_str} ({avg_per_board:.1f}s/board)] {b_name}: {status}"
+                    msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: {status}"
                     recent_messages.append(msg)
 
                     # Real-time atomic save on every completed board
@@ -867,11 +977,14 @@ def main() -> int:
                         recent_messages,
                         status_lock,
                         version_label=args.version_label,
+                        cancel_requested=cancel_event.is_set(),
+                        keyboard_supported=keyboard_supported,
                         in_place=True,
                     )
 
                 except Exception as e:
                     error_count += 1
+                    pct = (completed / len(tasks)) * 100.0 if tasks else 0.0
                     msg = f"[{completed:4d}/{len(tasks)} {pct:5.1f}%] {b_name}: ERROR {e}"
                     recent_messages.append(msg)
                     save_benchmarks_atomic()
@@ -883,6 +996,8 @@ def main() -> int:
                         recent_messages,
                         status_lock,
                         version_label=args.version_label,
+                        cancel_requested=cancel_event.is_set(),
+                        keyboard_supported=keyboard_supported,
                         in_place=True,
                     )
 
@@ -892,8 +1007,16 @@ def main() -> int:
         stop_refresh.set()
         cancel_event.set()
         save_benchmarks_atomic()
+        for stray_ses in Path(".").glob("*--unrouted--*.ses"):
+            try:
+                stray_ses.unlink(missing_ok=True)
+            except OSError:
+                # Best-effort cleanup of stray SES files on exit
+                pass
 
-    if cancel_event.is_set():
+    if force_kill_event.is_set():
+        print(f"\n{C_BRED}Benchmark force-terminated by user.{C_RESET}", flush=True)
+    elif cancel_event.is_set():
         print(f"\n{C_BYELLOW}Benchmark stopped gracefully. All completed board results have been saved.{C_RESET}", flush=True)
 
     total_time = round(time.perf_counter() - t_start, 1)

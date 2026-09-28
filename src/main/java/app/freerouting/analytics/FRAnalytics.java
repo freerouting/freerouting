@@ -898,6 +898,69 @@ public final class FRAnalytics {
       String integrationTool,
       String integrationVersion,
       UUID userId) {
+    recordJobLifecycle(
+        jobId,
+        sessionId,
+        status,
+        pipeline,
+        actorType,
+        failureReason,
+        netsTotal,
+        netsIncomplete,
+        clearanceViolations,
+        normalizedScore,
+        runtimeSeconds,
+        cpuSeconds,
+        peakHeapMb,
+        integrationTool,
+        integrationVersion,
+        userId,
+        null,
+        null);
+  }
+
+  /**
+   * Emits a normalized job lifecycle event across GUI, CLI, API, and MCP pipelines, including API
+   * key hash and input format attribution.
+   *
+   * @param jobId the routing job identifier
+   * @param sessionId the routing session identifier
+   * @param status current lifecycle status
+   * @param pipeline execution pipeline, or {@code null} to use default
+   * @param actorType actor classification, or {@code null} to use default
+   * @param failureReason failure explanation if failed, or {@code null}
+   * @param netsTotal total net count, or {@code null}
+   * @param netsIncomplete incomplete net count, or {@code null}
+   * @param clearanceViolations clearance violations count, or {@code null}
+   * @param normalizedScore normalized score, or {@code null}
+   * @param runtimeSeconds runtime duration in seconds, or {@code null}
+   * @param cpuSeconds CPU seconds used, or {@code null}
+   * @param peakHeapMb peak heap memory in MB, or {@code null}
+   * @param integrationTool originating EDA tool, or {@code null}
+   * @param integrationVersion originating EDA tool version, or {@code null}
+   * @param userId caller user identifier, or {@code null}
+   * @param apiKeyHash hashed API key, or {@code null}
+   * @param inputFormat design file format (e.g. DSN, JSON), or {@code null}
+   */
+  public static void recordJobLifecycle(
+      String jobId,
+      String sessionId,
+      JobLifecycleStatus status,
+      PipelineType pipeline,
+      ActorType actorType,
+      String failureReason,
+      Integer netsTotal,
+      Integer netsIncomplete,
+      Integer clearanceViolations,
+      Float normalizedScore,
+      Double runtimeSeconds,
+      Double cpuSeconds,
+      Double peakHeapMb,
+      String integrationTool,
+      String integrationVersion,
+      UUID userId,
+      String apiKeyHash,
+      String inputFormat) {
     Map<String, String> properties = new HashMap<>();
     if (jobId != null) {
       properties.put("job_id", jobId);
@@ -937,6 +1000,12 @@ public final class FRAnalytics {
     if (integrationVersion != null && !integrationVersion.isBlank()) {
       properties.put("integration_version", integrationVersion);
     }
+    if (apiKeyHash != null && !apiKeyHash.isBlank()) {
+      properties.put("api_key_hash", apiKeyHash);
+    }
+    if (inputFormat != null && !inputFormat.isBlank()) {
+      properties.put("input_format", inputFormat);
+    }
     properties.put("app_version", Constants.FREEROUTING_VERSION);
 
     String effectiveUserId = userId != null ? userId.toString() : permanentUserId;
@@ -961,6 +1030,30 @@ public final class FRAnalytics {
       ActorType actorType,
       String integrationTool,
       UUID userId) {
+    recordSessionLifecycle(
+        sessionId, eventType, pipeline, actorType, integrationTool, userId, null);
+  }
+
+  /**
+   * Emits a session lifecycle event with API key hash attribution.
+   *
+   * @param sessionId the session identifier
+   * @param eventType the lifecycle action (e.g. {@code "SESSION_CREATED"}, {@code
+   *     "SESSION_CLOSED"})
+   * @param pipeline execution pipeline, or {@code null} to use default
+   * @param actorType actor classification, or {@code null} to use default
+   * @param integrationTool originating EDA tool or client
+   * @param userId caller user identifier, or {@code null}
+   * @param apiKeyHash hashed API key, or {@code null}
+   */
+  public static void recordSessionLifecycle(
+      String sessionId,
+      String eventType,
+      PipelineType pipeline,
+      ActorType actorType,
+      String integrationTool,
+      UUID userId,
+      String apiKeyHash) {
     Map<String, String> properties = new HashMap<>();
     if (sessionId != null) {
       properties.put("session_id", sessionId);
@@ -970,6 +1063,9 @@ public final class FRAnalytics {
     properties.put("actor_type", actorType != null ? actorType.name() : currentActorType.name());
     properties.put(
         "integration_tool", integrationTool != null ? integrationTool : currentIntegrationTool);
+    if (apiKeyHash != null && !apiKeyHash.isBlank()) {
+      properties.put("api_key_hash", apiKeyHash);
+    }
     properties.put("app_version", Constants.FREEROUTING_VERSION);
 
     String effectiveUserId = userId != null ? userId.toString() : permanentUserId;

@@ -75,6 +75,7 @@ final class AutorouteBatchLoop {
     // Capture initial state for session summary
     router.sessionStartTime = Instant.now();
     router.initialUnroutedCount = calculateIncompleteCount(router.board);
+    router.resetAntiOscillationState();
 
     final BoardHistory bh = new BoardHistory(job.routerSettings);
 
@@ -368,6 +369,7 @@ final class AutorouteBatchLoop {
 
             router.board = boardToRestore;
             board = router.board;
+            router.resetAntiOscillationState();
             var boardStatistics = router.board.getStatistics();
             // Reset pass-local stagnation counter when restoring a previous board state
             consecutiveNoImprovementPasses = 0;
@@ -601,11 +603,8 @@ final class AutorouteBatchLoop {
         router.settings.getRunRouter()
             && (router.settings.autorouter.maxPasses == null
                 || router.settings.autorouter.maxPasses >= 0);
-    if (wasRouterRun
-        && !(router.removeUnconnectedVias
-            || continueAutorouting
-            || router.thread.isStopAutoRouterRequested())) {
-      // clean up the route if the board is completed and if fanout is used.
+    if (wasRouterRun && !router.thread.isStopAutoRouterRequested()) {
+      // clean up dangling tails and unused orphan fanout vias when autorouting finishes normally.
       removeTails(Item.StopConnectionOption.NONE);
     }
 

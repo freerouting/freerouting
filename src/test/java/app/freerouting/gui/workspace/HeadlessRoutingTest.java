@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +44,12 @@ class HeadlessRoutingTest {
     synchronized (scheduler.jobs) {
       scheduler.jobs.clear();
     }
+  }
+
+  @AfterEach
+  void tearDown() {
+    Freerouting.globalSettings = new GlobalSettings();
+    WorkspaceSettings.resetForTesting();
   }
 
   /**

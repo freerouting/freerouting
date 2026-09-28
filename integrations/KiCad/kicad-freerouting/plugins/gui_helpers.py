@@ -33,9 +33,28 @@ def wx_safe_invoke(function, *args, **kwargs):
     """Schedule *function* to run on the main GUI thread.
 
     Use this from background threads to safely update UI elements or
-    close dialogs.  Wraps ``wx.CallAfter`` for a simpler signature.
+    close dialogs.  Wraps ``wx.CallAfter`` with safety guards so that calls
+    on destroyed C++ wx objects are cleanly dropped instead of crashing KiCad.
     """
-    wx.CallAfter(function, *args, **kwargs)
+    def _safe_wrapper():
+        target = getattr(function, "__self__", None)
+        if target is not None:
+            try:
+                if hasattr(target, "IsBeingDeleted") and target.IsBeingDeleted():
+                    return
+                if not bool(target):
+                    return
+            except (RuntimeError, TypeError):
+                return
+        try:
+            function(*args, **kwargs)
+        except (RuntimeError, TypeError):
+            # Dropped cleanly if target wx object was destroyed concurrently
+            pass
+
+    wx.CallAfter(_safe_wrapper)
+
+
 
 
 # ------------------------------------------------------------------
