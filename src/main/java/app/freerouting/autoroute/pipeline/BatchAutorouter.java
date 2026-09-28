@@ -451,10 +451,6 @@ public final class BatchAutorouter extends NamedAlgorithm {
     return false;
   }
 
-  boolean autoroutePassMultiThread(int passNo) {
-    return passRunner.runMultiThread(passNo);
-  }
-
   /**
    * Auto-routes one ripup pass of all items of the board. Returns false, if the board is already
    * completely routed.
@@ -574,33 +570,6 @@ public final class BatchAutorouter extends NamedAlgorithm {
       return null;
     }
     return this.airLine;
-  }
-
-  /**
-   * Return an uppercase one-letter, two-letter or three-letter string based on the thread index (0
-   * = A, 1 = B, 2 = C, ..., 26 = AA, 27 = AB, ...).
-   *
-   * @param threadIndex the thread index.
-   * @return the letter label for the thread index.
-   */
-  String threadIndexToLetter(int threadIndex) {
-    if (threadIndex < 0) {
-      return "";
-    }
-    if (threadIndex < 26) {
-      return String.valueOf((char) ('A' + threadIndex));
-    } else if (threadIndex < 26 * 26) {
-      int firstLetterIndex = threadIndex / 26;
-      int secondLetterIndex = threadIndex % 26;
-      return String.valueOf((char) ('A' + firstLetterIndex)) + (char) ('A' + secondLetterIndex);
-    } else {
-      int firstLetterIndex = threadIndex / (26 * 26);
-      int secondLetterIndex = (threadIndex / 26) % 26;
-      int thirdLetterIndex = threadIndex % 26;
-      return String.valueOf((char) ('A' + firstLetterIndex))
-          + (char) ('A' + secondLetterIndex)
-          + (char) ('A' + thirdLetterIndex);
-    }
   }
 
   int calculateIncompleteCount(RoutingBoard board) {

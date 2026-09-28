@@ -137,11 +137,11 @@ The primary way to configure Freerouting is through a JSON settings file. This f
     - **`max_items`**: Maximum items attempted in the autorouter stage.
     - **`save_intermediate_stages`**: Save board snapshots between passes.
     - **`ignore_net_classes`**: Net class names the autorouter should skip.
-    - **`max_threads`**: Worker-thread cap for a multi-thread autorouter pass. Canonical CLI is
-      `--router.autorouter.max_threads`. Independent of `--router.optimizer.max_threads`. The
-      production batch loop still runs a single-thread pass; this value is what
-      `AutoroutePassRunner.runMultiThread` would use. The legacy flat `--router.max_threads`
-      remains as a fallback / GUI knob.
+    - **`max_threads`**: Worker-thread cap reserved for a future parallel autorouter pass.
+      Canonical CLI is `--router.autorouter.max_threads`. Independent of
+      `--router.optimizer.max_threads`. The production batch loop routes one item at a time
+      and does not read this value. The legacy flat `--router.max_threads` remains as a
+      fallback / GUI knob and is still copied onto the optimizer pool.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI
   flag: `--router.result_json=<path>`.
