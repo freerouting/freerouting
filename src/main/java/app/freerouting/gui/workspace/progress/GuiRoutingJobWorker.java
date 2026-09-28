@@ -3,13 +3,13 @@ package app.freerouting.gui.workspace.progress;
 import static app.freerouting.Freerouting.globalSettings;
 
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.analytics.model.JobLifecycleStatus;
 import app.freerouting.autoroute.events.BoardUpdatedEvent;
 import app.freerouting.autoroute.events.BoardUpdatedEventListener;
 import app.freerouting.autoroute.events.TaskStateChangedEvent;
 import app.freerouting.autoroute.events.TaskStateChangedEventListener;
 import app.freerouting.autoroute.pipeline.BatchAutorouter;
 import app.freerouting.autoroute.pipeline.BatchOptimizer;
-import app.freerouting.autoroute.pipeline.BatchOptimizerMultiThreaded;
 import app.freerouting.autoroute.pipeline.RoutingPipeline;
 import app.freerouting.autoroute.pipeline.TaskState;
 import app.freerouting.board.model.structure.AngleRestriction;
@@ -65,7 +65,7 @@ import java.time.Instant;
  * <pre>
  * 1. Initialize the BatchAutorouter
  * 2. Set up event listeners for GUI updates
- * 3. Initialize optimizer if enabled (BatchOptimizer or BatchOptimizerMultiThreaded)
+ * 3. Initialize optimizer if enabled (BatchOptimizer)
  * 4. Run autorouting passes until completion or interruption
  * 5. Run optimization passes if enabled and not interrupted
  * 6. Update job output with SES file data
@@ -88,12 +88,10 @@ import java.time.Instant;
  *   <li><strong>Current Algorithm:</strong> Modern routing algorithm with the latest improvements
  * </ul>
  *
- * <p><strong>Optimization Modes:</strong>
+ * <p><strong>Optimization:</strong>
  *
  * <ul>
- *   <li><strong>Single-threaded:</strong> Safe, reliable optimization using {@link BatchOptimizer}
- *   <li><strong>Multi-threaded:</strong> Faster but may generate violations ({@link
- *       BatchOptimizerMultiThreaded})
+ *   <li>Unified deterministic optimization using {@link BatchOptimizer}
  * </ul>
  *
  * <p><strong>Event Handling:</strong> The thread registers listeners for:
@@ -120,20 +118,12 @@ import java.time.Instant;
  *   <li>Logs detailed session summaries
  * </ul>
  *
- * <p><strong>Known Issues:</strong>
- *
- * <ul>
- *   <li>Multi-threaded optimization may generate clearance violations
- *   <li>Single-threaded optimization recommended for production use
- * </ul>
- *
  * <p><strong>TODO:</strong> This class should be deprecated in favor of a more modern job scheduler
  * architecture for better job management.
  *
  * @see InteractiveActionThread
  * @see BatchAutorouter
  * @see BatchOptimizer
- * @see BatchOptimizerMultiThreaded
  * @see RoutingJob
  */
 public class GuiRoutingJobWorker extends InteractiveActionThread {
@@ -149,13 +139,6 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
 
   /**
    * The batch optimizer instance for post-routing optimization, or null if disabled.
-   *
-   * <p>Can be either:
-   *
-   * <ul>
-   *   <li>{@link BatchOptimizer}: Single-threaded, safe optimization
-   *   <li>{@link BatchOptimizerMultiThreaded}: Multi-threaded, faster but may create violations
-   * </ul>
    *
    * <p>Set to null if optimization is disabled in router settings.
    */
@@ -175,7 +158,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
    *   <li>Configures board references in routing job
    *   <li>Registers event listeners for GUI updates
    *   <li>Sets up SES file generation on routing updates
-   *   <li>Initializes optimizer if enabled (single or multi-threaded)
+   *   <li>Initializes optimizer if enabled
    * </ol>
    *
    * <p><strong>Event Listeners:</strong> Sets up listeners for:
@@ -186,21 +169,11 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
    *   <li>Task state changes: Updates status messages for stage transitions
    * </ul>
    *
-   * <p><strong>Optimizer Setup:</strong> If optimization is enabled:
-   *
-   * <ul>
-   *   <li>Single thread or multi-threading disabled: Uses {@link BatchOptimizer}
-   *   <li>Multiple threads enabled: Uses {@link BatchOptimizerMultiThreaded}
-   * </ul>
-   *
-   * <p><strong>Warning:</strong> Multi-threaded optimization is known to potentially generate
-   * clearance violations. Single-threaded mode is recommended for production.
-   *
-   * @param boardHandling the GUI board manager for display updates
+   * @param sessionPort workspace port for GUI interactions and display updates
+   * @param generation execution generation
    * @param routingJob the routing job containing configuration and board data
    * @see BatchAutorouter
    * @see BatchOptimizer
-   * @see BatchOptimizerMultiThreaded
    */
   public GuiRoutingJobWorker(
       WorkspacePort sessionPort, RunGeneration generation, RoutingJob routingJob) {
@@ -218,8 +191,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         new BoardUpdatedEventListener() {
           @Override
           public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
-            float boardScore =
-                event.getBoardStatistics().getNormalizedScore(routingJob.routerSettings.scoring);
+            float boardScore = event.getBoardStatistics().getRouterScore(routingJob.routerSettings);
 
             if (event.getRouterCounters() != null
                 && "fanout".equals(event.getRouterCounters().phase)) {
@@ -302,7 +274,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
             @Override
             public void onBoardUpdatedEvent(BoardUpdatedEvent event) {
               BoardStatistics boardStatistics = event.getBoardStatistics();
-              if (batchOptimizer instanceof BatchOptimizerMultiThreaded) {
+              if (event.getBoard() != null && event.getBoard() != routingJob.board) {
                 routingJob.board = event.getBoard();
                 sessionPort.replaceBoard(new BoardReplacement(generation, event.getBoard()));
               }
@@ -311,7 +283,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
                       generation,
                       null,
                       null,
-                      boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring),
+                      boardStatistics.getRouterScore(routingJob.routerSettings),
                       boardStatistics.connections.incompleteCount,
                       boardStatistics.clearanceViolations.totalCount,
                       boardStatistics.items.viaCount,
@@ -353,8 +325,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
 
   private void handleRoutingStageFinished(BatchAutorouter autorouter) {
     var boardStatistics = new BoardStatistics(routingJob.board);
-    this.scoreBeforeOptimization =
-        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring);
+    this.scoreBeforeOptimization = boardStatistics.getRouterScore(routingJob.routerSettings);
     this.autoroutingSecondsToComplete =
         FRLogger.traceExit("BatchAutorouterThread.thread_action()-autorouting");
 
@@ -363,9 +334,9 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     if (this.routerEnabledForRun) {
       if (sessionStartTime != null) {
         String completionStatus = this.isStopRequested() ? "interrupted:" : "completed:";
-        if (routingJob.routerSettings.maxPasses != null
-            && routingJob.routerSettings.maxPasses > 0
-            && routingJob.getCurrentPass() > routingJob.routerSettings.maxPasses) {
+        if (routingJob.routerSettings.autorouter.maxPasses != null
+            && routingJob.routerSettings.autorouter.maxPasses > 0
+            && routingJob.getCurrentPass() > routingJob.routerSettings.autorouter.maxPasses) {
           completionStatus = "completed with pass number limit hit:";
         }
 
@@ -418,13 +389,6 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
         "Starting optimization on "
             + (numThreads == 1 ? "1 thread" : numThreads + " threads")
             + "...");
-    if (numThreads > 1) {
-      routingJob.logWarning(
-          "Multi-threaded route optimization is broken and it is known to generate clearance "
-              + "violations. It is highly recommended to use the single-threaded route "
-              + "optimization instead by setting the number of threads to 1 with the '-mt 1' "
-              + "command line argument.");
-    }
 
     FRLogger.traceEntry("BatchAutorouterThread.thread_action()-routeoptimization");
     FRAnalytics.routeOptimizerStarted();
@@ -435,8 +399,7 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
 
   private void handleOptimizationStageFinished() {
     var boardStatistics = new BoardStatistics(routingJob.board);
-    var scoreAfterOptimization =
-        boardStatistics.getNormalizedScore(routingJob.routerSettings.scoring);
+    var scoreAfterOptimization = boardStatistics.getRouterScore(routingJob.routerSettings);
     double percentageImprovement =
         ((scoreAfterOptimization / this.scoreBeforeOptimization) * 100.0) - 100.0;
     double routeOptimizationSecondsToComplete =
@@ -597,8 +560,8 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
     try {
       this.routerEnabledForRun =
           routingJob.routerSettings.getRunRouter()
-              && (routingJob.routerSettings.maxPasses == null
-                  || routingJob.routerSettings.maxPasses >= 0);
+              && (routingJob.routerSettings.autorouter.maxPasses == null
+                  || routingJob.routerSettings.autorouter.maxPasses >= 0);
       if (this.routerEnabledForRun) {
         int threadCount = routingJob.routerSettings.maxThreads;
         routingJob.logInfo(
@@ -614,6 +577,30 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
 
       globalSettings.statistics.incrementJobsCompleted();
       FRAnalytics.autorouterStarted();
+
+      String inputFormat =
+          routingJob.input != null && routingJob.input.format != null
+              ? routingJob.input.format.name()
+              : null;
+      FRAnalytics.recordJobLifecycle(
+          routingJob.id.toString(),
+          routingJob.sessionId != null ? routingJob.sessionId.toString() : null,
+          JobLifecycleStatus.STARTED,
+          FRAnalytics.getCurrentPipeline(),
+          FRAnalytics.getCurrentActorType(),
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          routingJob.getDetectedHost(),
+          null,
+          routingJob.userId,
+          routingJob.apiKeyHash,
+          inputFormat);
 
       TextManager tm = new TextManager(ScreenMessages.class, sessionPort.locale());
       String startMessage = tm.getText("batch_autorouter_start_message");
@@ -696,6 +683,64 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
       }
     }
 
+    // Record job lifecycle event for GUI execution
+    JobLifecycleStatus lifecycleStatus =
+        switch (routingJob.state) {
+          case COMPLETED -> JobLifecycleStatus.SUCCEEDED;
+          case TIMED_OUT -> JobLifecycleStatus.TIMED_OUT;
+          case CANCELLED -> JobLifecycleStatus.CANCELLED;
+          default -> JobLifecycleStatus.FAILED;
+        };
+
+    long durationMs =
+        routingJob.startedAt != null && routingJob.finishedAt != null
+            ? java.time.Duration.between(routingJob.startedAt, routingJob.finishedAt).toMillis()
+            : 0;
+    double durationSec = durationMs / 1000.0;
+
+    var finalBoardStats = routingJob.board != null ? routingJob.board.getStatistics() : null;
+    Integer netsTotal =
+        finalBoardStats != null && finalBoardStats.nets != null
+            ? finalBoardStats.nets.totalCount
+            : null;
+    Integer netsIncomplete =
+        finalBoardStats != null && finalBoardStats.connections != null
+            ? finalBoardStats.connections.incompleteCount
+            : null;
+    Integer clearanceViolations =
+        finalBoardStats != null && finalBoardStats.clearanceViolations != null
+            ? finalBoardStats.clearanceViolations.totalCount
+            : null;
+    Float normalizedScore =
+        finalBoardStats != null && routingJob.routerSettings != null
+            ? finalBoardStats.getRouterScore(routingJob.routerSettings)
+            : null;
+
+    String inputFormat =
+        routingJob.input != null && routingJob.input.format != null
+            ? routingJob.input.format.name()
+            : null;
+
+    FRAnalytics.recordJobLifecycle(
+        routingJob.id.toString(),
+        routingJob.sessionId != null ? routingJob.sessionId.toString() : null,
+        lifecycleStatus,
+        FRAnalytics.getCurrentPipeline(),
+        FRAnalytics.getCurrentActorType(),
+        this.isStopRequested() ? "User interrupted autorouter in GUI" : null,
+        netsTotal,
+        netsIncomplete,
+        clearanceViolations,
+        normalizedScore,
+        durationSec,
+        (double) routingJob.resourceUsage.cpuTimeUsed,
+        (double) routingJob.resourceUsage.peakMemoryUsed,
+        routingJob.getDetectedHost(),
+        null,
+        routingJob.userId,
+        routingJob.apiKeyHash,
+        inputFormat);
+
     FRLogger.traceExit("BatchAutorouterThread.thread_action()");
   }
 
@@ -751,10 +796,10 @@ public class GuiRoutingJobWorker extends InteractiveActionThread {
                 stats.clearanceViolations.maxViolationUm, Unit.UM, sessionPort.displayUnit())
             : 0.0;
     float score =
-        stats.getNormalizedScore(
-            routingJob.routerSettings != null
-                ? routingJob.routerSettings.scoring
-                : new app.freerouting.settings.ScoringSettings());
+        routingJob.routerSettings != null
+            ? stats.getRouterScore(routingJob.routerSettings)
+            : stats.getRouterScore(
+                new app.freerouting.settings.sources.DefaultSettings().getSettings());
 
     return new RoutingSummaryData(
         stats.nets.totalCount,

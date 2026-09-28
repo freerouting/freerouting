@@ -218,8 +218,12 @@ If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<V
 
   ```json
   {
-    "max_passes": 5,
-    "via_costs": 42
+    "autorouter": {
+      "max_passes": 5
+    },
+    "scoring": {
+      "via_costs": 42
+    }
   }
   ```
 
@@ -418,8 +422,12 @@ If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<V
     "router_settings": {
         "default_preferred_direction_trace_cost": 1.0,
         "default_undesired_direction_trace_cost": 1.0,
-        "max_passes": 100,
-        "fanout_max_passes": 20,
+        "autorouter": {
+            "max_passes": 100
+        },
+        "fanout": {
+            "max_passes": 20
+        },
         "max_threads": 1,
         "improvement_threshold": 0.01,
         "trace_pull_tight_accuracy": 500,
@@ -458,6 +466,72 @@ If `Freerouting-Environment-Host` is absent or does not match the `<ToolName>/<V
     "schematic_parity": []
   }
   ```
+
+  *Note: Pass `?compact=true` to retrieve a token-saving concise summary including `unconnected_count`, `clearance_violation_count`, and top violation samples.*
+
+- **Get DRC Diagnostic Summary (`GET /jobs/{jobId}/drc/summary`)**
+
+  ```http
+  GET /jobs/{jobId}/drc/summary
+  ```
+
+  **Parameters:**
+    - `jobId` *(required)*: The unique identifier of the job.
+
+  **Description:** Generates a structured root-cause diagnostic summary designed for AI agents and developer dashboards, clustering violations into spatial congestion hotspots and offering layout auto-correction hints.
+
+---
+
+### Single-Turn Composite Autorouting (`POST /v1/autoroute`)
+
+```http
+POST /v1/autoroute
+```
+
+**Description:** Performs end-to-end autorouting in a single synchronous HTTP turn. Accepts multi-file inputs (primary `.dsn` or `.json`, optional `.rules`, and optional initial `.ses`), executes routing within the requested `timeout_seconds` budget, and returns all requested output representations (`SES`, `KICAD_JSON`, `SCR`, `DRC_JSON`, `DRC_SUMMARY`) along with board statistics in a single turn. `normalized_score` is the V2 router score (completion and DRC). `optimizer_score` is the V2 optimizer score (excess length, vias, and bends versus lower bounds).
+
+**Request body:**
+
+```json
+{
+  "file_content": "(pcb ...)",
+  "rules_content": "(rules ...)",
+  "session_content": "(session ...)",
+  "output_formats": ["SES", "DRC_SUMMARY"],
+  "timeout_seconds": 120,
+  "router_settings": {
+    "autorouter": {
+      "max_passes": 10
+    }
+  }
+}
+```
+
+**Response body:**
+
+```json
+{
+  "job_id": "a4155510-4db2-412d-ad58-70b7c58c031d",
+  "session_id": "2703e30e-e891-422d-ad4e-efefd6d4a3ce",
+  "status": "COMPLETED",
+  "duration_seconds": 12.34,
+  "unrouted_connections": 0,
+  "clearance_violations": 0,
+  "normalized_score": 980.5,
+  "optimizer_score": 779.2,
+  "outputs": {
+    "SES": "(session ...)"
+  },
+  "drc_summary": {
+    "clearance_violations_count": 0,
+    "unconnected_nets_count": 0,
+    "violations": [],
+    "congestion_zones": [],
+    "hints": ["Routing completed with 0 violations and 0 unconnected nets."]
+  },
+  "message": "Routing completed successfully in 12.34s."
+}
+```
 
 ---
 
@@ -556,4 +630,8 @@ You will receive a unique API key that you can use to authenticate your requests
 
 I also send you a detailed getting started guide to help you integrate the API into your workflows.
 
-If you have any questions or need further assistance, please don't hesitate to contact me at [info@freerouting.app](mailto:info@freerouting.app).
+If you have any questions or need further assistance, please don't hesitate to reach out:
+- **Email**: [info@freerouting.app](mailto:info@freerouting.app)
+- **Twitter/X**: [@freeroutingPCB](https://x.com/freeroutingPCB) or [@andrasfuchs](https://x.com/andrasfuchs)
+- **LinkedIn**: [Andras Fuchs](https://www.linkedin.com/in/andrasfuchs/)
+- **Discussions**: [GitHub Discussions](https://github.com/freerouting/freerouting/discussions)

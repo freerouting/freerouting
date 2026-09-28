@@ -373,6 +373,10 @@ public final class OpenApiMcpToolRegistry {
       return "get_session_details";
     }
 
+    if ("/v1/autoroute".equals(cleanPath) && "POST".equalsIgnoreCase(method)) {
+      return "autoroute_board";
+    }
+
     if ("/v1/jobs/enqueue".equals(cleanPath) && "POST".equalsIgnoreCase(method)) {
       return "enqueue_job";
     }
@@ -380,6 +384,11 @@ public final class OpenApiMcpToolRegistry {
       return "list_jobs";
     }
 
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/drc/summary")
+        && "GET".equalsIgnoreCase(method)) {
+      return "get_job_drc_summary";
+    }
     if (cleanPath.startsWith("/v1/jobs/")
         && cleanPath.endsWith("/drc")
         && "GET".equalsIgnoreCase(method)) {
@@ -426,6 +435,11 @@ public final class OpenApiMcpToolRegistry {
         && cleanPath.endsWith("/input")
         && "POST".equalsIgnoreCase(method)) {
       return "upload_job_input_file";
+    }
+    if (cleanPath.startsWith("/v1/jobs/")
+        && cleanPath.endsWith("/settings")
+        && "GET".equalsIgnoreCase(method)) {
+      return "get_effective_settings";
     }
     if (cleanPath.startsWith("/v1/jobs/")
         && cleanPath.endsWith("/settings")

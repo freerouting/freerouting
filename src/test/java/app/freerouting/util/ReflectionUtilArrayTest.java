@@ -13,11 +13,11 @@ class ReflectionUtilArrayTest {
   @Test
   void setSimpleProperty() throws Exception {
     RouterSettings settings = new RouterSettings();
-    ReflectionUtil.setFieldValue(settings, "enabled", "false");
-    assertFalse(settings.enabled);
+    ReflectionUtil.setFieldValue(settings, "autorouter.enabled", "false");
+    assertFalse(settings.autorouter.enabled);
 
-    ReflectionUtil.setFieldValue(settings, "enabled", "true");
-    assertTrue(settings.enabled);
+    ReflectionUtil.setFieldValue(settings, "autorouter.enabled", "true");
+    assertTrue(settings.autorouter.enabled);
   }
 
   @Test
@@ -71,5 +71,21 @@ class ReflectionUtilArrayTest {
     ReflectionUtil.setFieldValue(settings, "layers.routable", "true,false");
     assertTrue(settings.layers[0].routable);
     assertFalse(settings.layers[1].routable);
+  }
+
+  @Test
+  void testCopyFieldsOverwritesExistingNonEmptyArray() {
+    RouterSettings source = new RouterSettings();
+    source.planeNets = new String[] {"VCC", "GND"};
+
+    RouterSettings target = new RouterSettings();
+    target.planeNets = new String[] {"DEFAULT_NET"};
+
+    int changed = ReflectionUtil.copyFields(source, target);
+    assertTrue(changed > 0);
+    assertNotNull(target.planeNets);
+    assertEquals(2, target.planeNets.length);
+    assertEquals("VCC", target.planeNets[0]);
+    assertEquals("GND", target.planeNets[1]);
   }
 }

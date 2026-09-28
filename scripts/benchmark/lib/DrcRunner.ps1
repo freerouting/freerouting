@@ -81,6 +81,7 @@ function Invoke-DrcCheck {
             dangling_tracks     = $null
             dangling_vias       = $null
             final_quality_score = $null
+            final_optimizer_score = $null
             error               = "SES file not found"
         }
     }
@@ -116,6 +117,7 @@ function Invoke-DrcCheck {
                 dangling_tracks      = $null
                 dangling_vias        = $null
                 final_quality_score  = $null
+                final_optimizer_score = $null
                 error                = "DRC process exceeded timeout"
             }
         }
@@ -127,10 +129,16 @@ function Invoke-DrcCheck {
             $drcMetrics = Get-DrcReportMetrics $report
 
             $score = $null
+            $optimizerScore = $null
             if ($report.qualityScore -ne $null) {
                 $score = [double]$report.qualityScore
             } elseif ($report.quality_score -ne $null) {
                 $score = [double]$report.quality_score
+            }
+            if ($report.optimizerScore -ne $null) {
+                $optimizerScore = [double]$report.optimizerScore
+            } elseif ($report.optimizer_score -ne $null) {
+                $optimizerScore = [double]$report.optimizer_score
             }
 
             return [PSCustomObject]@{
@@ -149,6 +157,7 @@ function Invoke-DrcCheck {
                 dangling_tracks      = $drcMetrics.dangling_tracks
                 dangling_vias        = $drcMetrics.dangling_vias
                 final_quality_score  = $score
+                final_optimizer_score = $optimizerScore
             }
         }
     } catch {
@@ -171,6 +180,7 @@ function Invoke-DrcCheck {
         dangling_tracks      = $null
         dangling_vias        = $null
         final_quality_score  = $null
+        final_optimizer_score = $null
         error                = "DRC execution failed or did not generate report"
     }
 }

@@ -108,6 +108,12 @@ public class GlobalSettings implements Serializable {
   public transient String initialOutputFile;
 
   /**
+   * Additional output file paths provided via command line arguments (-do file1+file2 or -do file1
+   * -do file2).
+   */
+  public transient java.util.List<String> additionalOutputFiles = new java.util.ArrayList<>();
+
+  /**
    * The initial rules file path provided via command line arguments. This is used for
    * initialization.
    */
@@ -121,6 +127,15 @@ public class GlobalSettings implements Serializable {
 
   /** Exit code from the most recent headless CLI routing run (for harness consumption). */
   public transient int cliExitCode = 0;
+
+  /** If true, recalculates benchmark scores from a benchmark JSON file and exits. */
+  public transient boolean calculateBenchmarkScores = false;
+
+  /** Input benchmark JSON file for score calculation. */
+  public transient String benchmarkScoresInput;
+
+  /** Output JSON file for recalculated benchmark scores. */
+  public transient String benchmarkScoresOutput;
 
   /**
    * The current locale for the application. It is initialized based on the system default locale,
@@ -194,7 +209,7 @@ public class GlobalSettings implements Serializable {
    * static path fields and the lock flag so that {@link #setUserDataPath(Path)} can be exercised in
    * isolated unit tests.
    */
-  static void resetForTesting() {
+  public static void resetForTesting() {
     isUserDataPathLocked = false;
     userDataPath = AppPaths.getDefaultUserDataPath();
     configurationFilePath = userDataPath.resolve("freerouting.json");
@@ -339,7 +354,8 @@ public class GlobalSettings implements Serializable {
                   + ", current: "
                   + currentVersion
                   + "). "
-                  + "Some settings from the newer version may not be understood or may be ignored.");
+                  + "Some settings from the newer version may not be understood or may be"
+                  + " ignored.");
         }
       }
 
@@ -492,6 +508,15 @@ public class GlobalSettings implements Serializable {
    */
   public Boolean setValue(String propertyName, String newValue) {
     try {
+      if (propertyName.startsWith("router.")) {
+        String relative = propertyName.substring("router.".length());
+        String canonical = LegacyRouterSettingsBridge.canonicalCliPath(relative);
+        if (LegacyRouterSettingsBridge.isDeprecatedFlatAutorouterPath(relative)) {
+          LegacyRouterSettingsBridge.warnDeprecatedPath(
+              "router." + relative, "router." + canonical);
+        }
+        propertyName = "router." + canonical;
+      }
       ReflectionUtil.setFieldValue(this, propertyName, newValue);
       return true;
     } catch (NoSuchFieldException e) {
@@ -520,6 +545,30 @@ public class GlobalSettings implements Serializable {
             || "--help".equalsIgnoreCase(args[i])
             || "-h".equalsIgnoreCase(args[i])) {
           showHelpOption = true;
+          continue;
+        }
+        if ("--calculate-benchmark-scores".equalsIgnoreCase(args[i])) {
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--calculate-benchmark-scores.input=")) {
+          benchmarkScoresInput =
+              args[i].substring("--calculate-benchmark-scores.input=".length()).trim();
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--calculate-benchmark-scores.output=")) {
+          benchmarkScoresOutput =
+              args[i].substring("--calculate-benchmark-scores.output=".length()).trim();
+          calculateBenchmarkScores = true;
+          continue;
+        }
+        if (args[i].startsWith("--input=")) {
+          benchmarkScoresInput = args[i].substring("--input=".length()).trim();
+          continue;
+        }
+        if (args[i].startsWith("--output=")) {
+          benchmarkScoresOutput = args[i].substring("--output=".length()).trim();
           continue;
         }
         if (args[i].startsWith("--compare-boards=")) {
@@ -565,7 +614,7 @@ public class GlobalSettings implements Serializable {
               String rawArg = args[j].trim();
               if (new java.io.File(rawArg).exists()) {
                 files.add(rawArg);
-              } else if (rawArg.contains("+")) {
+              } else if (isMultiFileConcatenation(rawArg, DE_VALID_EXTENSIONS)) {
                 // Split each argument by '+' to support legacy concatenation (e.g.
                 // file1.dsn+file2.rules)
                 String[] parts = rawArg.split("\\+");
@@ -649,12 +698,37 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-do")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            initialOutputFile = args[i + 1];
-            i++;
+            java.util.List<String> outFiles = new java.util.ArrayList<>();
+            int j = i + 1;
+            while (j < args.length && !args[j].startsWith("-")) {
+              String rawArg = args[j].trim();
+              if (isMultiFileConcatenation(rawArg, DO_VALID_EXTENSIONS)) {
+                String[] parts = rawArg.split("\\+");
+                for (String part : parts) {
+                  if (!part.trim().isEmpty()) {
+                    outFiles.add(part.trim());
+                  }
+                }
+              } else if (!rawArg.isEmpty()) {
+                outFiles.add(rawArg);
+              }
+              j++;
+            }
+            if (!outFiles.isEmpty()) {
+              if (initialOutputFile == null) {
+                initialOutputFile = outFiles.get(0);
+                for (int k = 1; k < outFiles.size(); k++) {
+                  additionalOutputFiles.add(outFiles.get(k));
+                }
+              } else {
+                additionalOutputFiles.addAll(outFiles);
+              }
+            }
+            i = j - 1;
           }
         } else if (args[i].startsWith("-drc")) {
           // DRC-only mode (must be checked before -dr)
-          routerSettings.enabled = false;
+          routerSettings.autorouter.enabled = false;
           drcSettings.enabled = true;
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             drcReportFile = new BoardFileDetails();
@@ -669,13 +743,15 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-mp")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.maxPasses = Integer.decode(args[i + 1]);
+            LegacyRouterSettingsBridge.warnDeprecatedPath(
+                "-mp / --router.max_passes", "--router.autorouter.max_passes");
+            routerSettings.autorouter.maxPasses = Integer.decode(args[i + 1]);
 
-            if (routerSettings.maxPasses < 0) {
-              routerSettings.maxPasses = 0;
+            if (routerSettings.autorouter.maxPasses < 0) {
+              routerSettings.autorouter.maxPasses = 0;
             }
-            if (routerSettings.maxPasses > 9999) {
-              routerSettings.maxPasses = 9999;
+            if (routerSettings.autorouter.maxPasses > 9999) {
+              routerSettings.autorouter.maxPasses = 9999;
             }
             // Note: 0 is allowed and means no limit
             i++;
@@ -694,39 +770,27 @@ public class GlobalSettings implements Serializable {
           }
         } else if (args[i].startsWith("-oit")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.optimizationImprovementThreshold =
-                Float.parseFloat(args[i + 1]) / 100;
-
-            if (routerSettings.optimizer.optimizationImprovementThreshold <= 0) {
-              routerSettings.optimizer.optimizationImprovementThreshold = 0.0f;
+            try {
+              float val = Float.parseFloat(args[i + 1]);
+              routerSettings.optimizer.optimizationImprovementThreshold =
+                  (val > 0.0f && val < 1.0f) ? val * 100.0f : val;
+            } catch (NumberFormatException ignored) {
+              // Fall back to existing settings if parsing fails
             }
             i++;
           }
         } else if (args[i].startsWith("-us")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            String op = args[i + 1].toLowerCase().trim();
-            routerSettings.optimizer.boardUpdateStrategy =
-                "global".equals(op)
-                    ? BoardUpdateStrategy.GLOBAL_OPTIMAL
-                    : ("hybrid".equals(op)
-                        ? BoardUpdateStrategy.HYBRID
-                        : BoardUpdateStrategy.GREEDY);
+            routerSettings.optimizer.boardUpdateStrategy = BoardUpdateStrategy.GLOBAL_OPTIMAL;
             i++;
           }
         } else if (args[i].startsWith("-is")) {
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
             String op = args[i + 1].toLowerCase().trim();
             routerSettings.optimizer.itemSelectionStrategy =
-                op.indexOf("seq") == 0
-                    ? ItemSelectionStrategy.SEQUENTIAL
-                    : (op.indexOf("rand") == 0
-                        ? ItemSelectionStrategy.RANDOM
-                        : ItemSelectionStrategy.PRIORITIZED);
-            i++;
-          }
-        } else if (args[i].startsWith("-hr")) { // hybrid ratio
-          if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.optimizer.hybridRatio = args[i + 1].trim();
+                op.startsWith("prio")
+                    ? ItemSelectionStrategy.PRIORITIZED
+                    : ItemSelectionStrategy.SEQUENTIAL;
             i++;
           }
         } else if ("-l".equals(args[i])) {
@@ -825,7 +889,9 @@ public class GlobalSettings implements Serializable {
         } else if (args[i].startsWith("-inc")) {
           // ignore net class(es)
           if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
-            routerSettings.ignoreNetClasses = args[i + 1].split(",");
+            LegacyRouterSettingsBridge.warnDeprecatedPath(
+                "-inc / --router.ignore_net_classes", "--router.autorouter.ignore_net_classes");
+            routerSettings.autorouter.ignoreNetClasses = args[i + 1].split(",");
             i++;
           }
         } else if (args[i].startsWith("-dct")) {
@@ -860,17 +926,14 @@ public class GlobalSettings implements Serializable {
 
   /** Returns the configured maximum router passes. */
   public int getMaxPasses() {
-    return routerSettings.maxPasses;
+    Integer maxPasses =
+        routerSettings.autorouter != null ? routerSettings.autorouter.maxPasses : null;
+    return maxPasses != null ? maxPasses : 0;
   }
 
   /** Returns the configured optimizer thread count. */
   public int getNumThreads() {
     return routerSettings.optimizer.maxThreads;
-  }
-
-  /** Returns the configured optimizer hybrid ratio. */
-  public String getHybridRatio() {
-    return routerSettings.optimizer.hybridRatio;
   }
 
   /** Returns the configured optimizer board-update strategy. */
@@ -881,5 +944,53 @@ public class GlobalSettings implements Serializable {
   /** Returns the configured optimizer item-selection strategy. */
   public ItemSelectionStrategy getItemSelectionStrategy() {
     return routerSettings.optimizer.itemSelectionStrategy;
+  }
+
+  public static final java.util.Set<String> DE_VALID_EXTENSIONS =
+      java.util.Set.of(".dsn", ".json", ".ses", ".rules");
+
+  public static final java.util.Set<String> DO_VALID_EXTENSIONS =
+      java.util.Set.of(".ses", ".dsn", ".scr", ".rules", ".json", ".drc", ".frb", ".kicad_pcb");
+
+  /**
+   * Checks if a command line argument string represents a '+' concatenated list of multiple file
+   * paths (e.g. "file1.dsn+file2.rules" or "out.ses+out.kicad_pcb"), rather than a single file path
+   * that happens to contain a '+' character in its name or directory (e.g. "board+rev1.dsn",
+   * "board.v1+final.dsn", or "mechkeys_MF68+10--unrouted.ses").
+   */
+  public static boolean isMultiFileConcatenation(
+      String rawArg, java.util.Set<String> validExtensions) {
+    if (rawArg == null || !rawArg.contains("+")) {
+      return false;
+    }
+    String[] parts = rawArg.split("\\+", -1);
+    if (parts.length < 2) {
+      return false;
+    }
+    for (String part : parts) {
+      String trimmed = part.trim();
+      if (trimmed.isEmpty()) {
+        return false;
+      }
+      // Each file in a '+' concatenation must have a file extension
+      int lastSlash = Math.max(trimmed.lastIndexOf('/'), trimmed.lastIndexOf('\\'));
+      int lastDot = trimmed.lastIndexOf('.');
+      if (lastDot <= lastSlash || lastDot == trimmed.length() - 1) {
+        return false;
+      }
+      String ext = trimmed.substring(lastDot).toLowerCase(java.util.Locale.ROOT);
+      if (validExtensions != null && !validExtensions.contains(ext)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Checks if a command line argument string represents a '+' concatenated list of multiple file
+   * paths with any valid file extension.
+   */
+  public static boolean isMultiFileConcatenation(String rawArg) {
+    return isMultiFileConcatenation(rawArg, null);
   }
 }

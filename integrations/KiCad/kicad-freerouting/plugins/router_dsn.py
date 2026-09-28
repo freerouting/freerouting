@@ -15,7 +15,8 @@ import pcbnew
 
 from .config import LOG_DIR
 from .gui_helpers import wx_show_error, wx_safe_invoke
-from .process_utils import ProcessDialog, ProcessThread
+from .process_utils import ProcessDialog, ProcessThread, clean_log_line
+
 
 logger = logging.getLogger("freerouting")
 
@@ -138,6 +139,9 @@ class DsnRouter:
         """Build the command line for running Freerouting in DSN mode."""
         LOG_DIR.mkdir(parents=True, exist_ok=True)
 
+        gui_enabled = getattr(self.plugin, "gui_enabled", True)
+        gui_flag = f"--gui.enabled={'true' if gui_enabled else 'false'}"
+
         self.plugin.module_command = [
             str(self.plugin.java_path),
             "-jar",
@@ -148,7 +152,7 @@ class DsnRouter:
             str(self.plugin.module_output),
             "-host",
             str(self.plugin.host),
-            "--gui.enabled=false",
+            gui_flag,
             "--api_server.enabled=false",
             "--mcp_server.enabled=false",
             f"--logging.file.location={LOG_DIR}",
@@ -161,20 +165,34 @@ class DsnRouter:
         Returns:
             ``True`` if Freerouting exited successfully.
         """
-        dialog = ProcessDialog(
-            None,
+        gui_enabled = getattr(self.plugin, "gui_enabled", True)
+        msg = (
             textwrap.dedent("""
-                Routing board with Freerouting...
-                Press Terminate to cancel.
-            """),
+                Freerouting GUI is running...
+                Complete routing and close the window,
+                or press Terminate to cancel.
+            """)
+            if gui_enabled
+            else "Routing in background..."
         )
+        dialog = ProcessDialog(None, msg)
 
         def on_complete():
             logger.info("DSN routing process complete callback fired.")
             wx_safe_invoke(dialog.terminate)
 
-        invoker = ProcessThread(self.plugin.module_command, on_complete)
-        dialog.Show()
+        def output_handler(line):
+            if not gui_enabled:
+                clean_msg, full_msg = clean_log_line(line)
+                if clean_msg:
+                    wx_safe_invoke(dialog.set_detail, clean_msg, full_msg)
+
+        invoker = ProcessThread(
+
+            self.plugin.module_command,
+            on_complete=on_complete,
+            output_handler=output_handler if not gui_enabled else None,
+        )
         logger.info("Starting DSN routing process thread...")
         invoker.start()
         result = dialog.ShowModal()
@@ -184,8 +202,10 @@ class DsnRouter:
             if result == dialog.result_button:
                 logger.warning("Routing cancelled by user.")
                 invoker.terminate()
+                invoker.join(3)
                 return False
             elif result == dialog.result_terminate:
+                invoker.join(10)
                 if invoker.has_ok():
                     logger.info("Routing process exited with success.")
                     return True
@@ -194,7 +214,10 @@ class DsnRouter:
                 return False
             return False
         finally:
-            invoker.join(10)
+            if invoker.is_alive():
+                invoker.terminate()
+                invoker.join(3)
+
 
     def import_ses(self):
         """Import the generated SES file back into KiCad.
@@ -214,18 +237,37 @@ class DsnRouter:
 
         logger.info("Importing Specctra SES into KiCad...")
         try:
+            try:
+                from .router_ipc import sanitize_ses_file
+            except ImportError:
+                from router_ipc import sanitize_ses_file
+            sanitize_ses_file(Path(self.plugin.module_output))
+        except Exception as se:
+            logger.debug(f"Could not sanitize SES file: {se}")
+
+        board = getattr(self.plugin, "board", None)
+        if board is None and hasattr(pcbnew, "GetBoard"):
+            try:
+                board = pcbnew.GetBoard()
+            except Exception:
+                # pcbnew.GetBoard() may fail if no active board is open or in headless mode
+                pass
+
+        ok = False
+        # 1. Try standard active-frame pcbnew.ImportSpecctraSES(filename) first
+        try:
             logger.info("Trying standard pcbnew.ImportSpecctraSES(filename)...")
             ok = pcbnew.ImportSpecctraSES(str(self.plugin.module_output))
-        except TypeError:
+        except Exception as fe:
+            logger.debug(f"pcbnew.ImportSpecctraSES(filename) failed: {fe}")
+
+        # 2. If not succeeded, fall back to pcbnew.ImportSpecctraSES(board, filename)
+        if not ok and board is not None:
             try:
-                logger.info("Trying pcbnew.ImportSpecctraSES(board, filename) fallback...")
-                ok = pcbnew.ImportSpecctraSES(self.plugin.board, str(self.plugin.module_output))
-            except Exception as e:
-                logger.error(f"Failed pcbnew.ImportSpecctraSES(board, filename): {e}", exc_info=True)
-                ok = False
-        except Exception as e:
-            logger.error(f"Failed pcbnew.ImportSpecctraSES(filename): {e}", exc_info=True)
-            ok = False
+                logger.info("Trying fallback pcbnew.ImportSpecctraSES(board, filename)...")
+                ok = pcbnew.ImportSpecctraSES(board, str(self.plugin.module_output))
+            except Exception as be:
+                logger.debug(f"pcbnew.ImportSpecctraSES(board, filename) failed: {be}")
 
         if ok:
             logger.info("SES import succeeded.")

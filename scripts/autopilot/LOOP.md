@@ -63,7 +63,7 @@ If G1/G2 fails with behavioral divergence:
 ## Failure triage
 
 - OOM on a large fixture: halve the fixture set / apply `max_items` from `metadata.yaml` and retry.
-- Repeated G0 failure: stop the nightly loop and file an entry under `docs/issues/`.
+- Repeated G0 failure: stop the nightly loop and file a GitHub issue.
 - PCBench conversion failure: log and skip that board; do not fail the whole corpus import.
 
 ## PCBench / KiCad

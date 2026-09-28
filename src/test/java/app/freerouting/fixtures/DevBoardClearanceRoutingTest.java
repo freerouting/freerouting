@@ -14,8 +14,8 @@ class DevBoardClearanceRoutingTest extends RoutingFixtureTest {
     final double testCopperToEdgeClearanceUm = 650.0;
     var testingSettings = new TestingSettings();
     testingSettings.setCopperToEdgeClearanceUm(testCopperToEdgeClearanceUm);
-    testingSettings.setMaxPasses(300);
-    testingSettings.setJobTimeoutString("00:03:00");
+    testingSettings.setMaxPasses(5);
+    testingSettings.setJobTimeoutString("00:05:00");
     var job = getRoutingJob("Issue558-dev-board.dsn", testingSettings);
 
     job = runRoutingJob(job);

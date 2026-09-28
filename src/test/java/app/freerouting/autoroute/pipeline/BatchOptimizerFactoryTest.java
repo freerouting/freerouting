@@ -1,35 +1,25 @@
 package app.freerouting.autoroute.pipeline;
 
-import static app.freerouting.Freerouting.globalSettings;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import app.freerouting.Freerouting;
 import app.freerouting.core.RoutingJob;
-import app.freerouting.settings.GlobalSettings;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Verifies that adapter-specific optimizer construction preserves the expected threading policies.
- */
+/** Verifies that the unified optimizer factory constructs the canonical BatchOptimizer instance. */
 class BatchOptimizerFactoryTest {
 
-  private GlobalSettings originalGlobalSettings;
+  @Test
+  void canonicalFactoryCreatesBatchOptimizer() {
+    RoutingJob job = new RoutingJob();
+    job.routerSettings.optimizer.maxThreads = 8;
 
-  @BeforeEach
-  void setUp() {
-    originalGlobalSettings = globalSettings;
-    Freerouting.globalSettings = new GlobalSettings();
-  }
+    BatchOptimizer optimizer = BatchOptimizer.create(job);
 
-  @AfterEach
-  void tearDown() {
-    Freerouting.globalSettings = originalGlobalSettings;
+    assertEquals(BatchOptimizer.class, optimizer.getClass());
   }
 
   @Test
-  void headlessFactoryAlwaysCreatesSingleThreadedOptimizer() {
+  void headlessFactoryCreatesBatchOptimizer() {
     RoutingJob job = new RoutingJob();
     job.routerSettings.optimizer.maxThreads = 8;
 
@@ -39,32 +29,9 @@ class BatchOptimizerFactoryTest {
   }
 
   @Test
-  void guiFactoryDefaultsToSingleThreadedOptimizerWhenMultiThreadingDisabled() {
-    globalSettings.featureFlags.multiThreading = false;
-    RoutingJob job = new RoutingJob();
-    job.routerSettings.optimizer.maxThreads = 8;
-
-    BatchOptimizer optimizer = BatchOptimizer.createForGui(job);
-
-    assertEquals(BatchOptimizer.class, optimizer.getClass());
-  }
-
-  @Test
-  void guiFactoryCreatesMultiThreadedOptimizerWhenMultiThreadingEnabledAndThreadsGreaterThanOne() {
-    globalSettings.featureFlags.multiThreading = true;
+  void guiFactoryCreatesBatchOptimizer() {
     RoutingJob job = new RoutingJob();
     job.routerSettings.optimizer.maxThreads = 4;
-
-    BatchOptimizer optimizer = BatchOptimizer.createForGui(job);
-
-    assertEquals(BatchOptimizerMultiThreaded.class, optimizer.getClass());
-  }
-
-  @Test
-  void guiFactoryCreatesSingleThreadedOptimizerWhenMultiThreadingEnabledButMaxThreadsIsOne() {
-    globalSettings.featureFlags.multiThreading = true;
-    RoutingJob job = new RoutingJob();
-    job.routerSettings.optimizer.maxThreads = 1;
 
     BatchOptimizer optimizer = BatchOptimizer.createForGui(job);
 

@@ -2,6 +2,8 @@ package app.freerouting.api.mcp;
 
 import app.freerouting.Freerouting;
 import app.freerouting.analytics.FRAnalytics;
+import app.freerouting.analytics.model.ActorType;
+import app.freerouting.analytics.model.PipelineType;
 import app.freerouting.api.BaseController;
 import app.freerouting.api.CorrelationIdFilter;
 import app.freerouting.constants.Constants;
@@ -36,6 +38,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -48,6 +51,11 @@ import java.util.UUID;
 public class McpControllerV1 extends BaseController {
 
   private static final String JSONRPC_VERSION = "2.0";
+  private static final HttpClient HTTP_CLIENT =
+      HttpClient.newBuilder()
+          .version(HttpClient.Version.HTTP_1_1)
+          .connectTimeout(Duration.ofSeconds(10))
+          .build();
   private static volatile String detectedClientInfo = "MCP-Client/1.0";
 
   @Context private Application application;
@@ -141,7 +149,7 @@ public class McpControllerV1 extends BaseController {
         CorrelationIdFilter.resolveOrCreate(
             headers.getHeaderString(CorrelationIdFilter.HEADER_NAME));
 
-    FRLogger.info("[mcp][cid=" + correlationId + "] request=" + requestBody);
+    FRLogger.trace("[mcp][cid=" + correlationId + "] request=" + requestBody);
 
     JsonObject request;
     try {
@@ -184,7 +192,7 @@ public class McpControllerV1 extends BaseController {
 
     JsonObject response;
     try {
-      FRLogger.info("[mcp][cid=" + correlationId + "] method=" + method);
+      FRLogger.trace("[mcp][cid=" + correlationId + "] method=" + method);
       response =
           switch (method == null ? "" : method) {
             case "initialize" -> handleInitialize(id, params);
@@ -196,11 +204,13 @@ public class McpControllerV1 extends BaseController {
             case "tools/call" -> handleToolsCall(id, params, correlationId);
             default -> error(id, -32601, "Unknown method: " + method);
           };
-      FRLogger.info("[mcp][cid=" + correlationId + "] response=" + response.toString());
+      FRLogger.trace("[mcp][cid=" + correlationId + "] response=" + response.toString());
     } catch (Exception e) {
       FRLogger.error("MCP RPC execution failed", e);
       response = error(id, -32603, "Internal error");
-      FRLogger.info("[mcp][cid=" + correlationId + "] response (error)=" + response.toString());
+      FRLogger.trace("[mcp][cid=" + correlationId + "] response (error)=" + response.toString());
+      FRAnalytics.recordStructuredError(
+          "MCP", "INTERNAL_RPC_ERROR", e.getMessage(), e, correlationId);
     }
 
     String envHost = headers.getHeaderString("Freerouting-Environment-Host");
@@ -269,6 +279,7 @@ public class McpControllerV1 extends BaseController {
         String version =
             clientInfo.has("version") ? clientInfo.get("version").getAsString() : "1.0";
         detectedClientInfo = name + "/" + version;
+        FRAnalytics.setExecutionContext(PipelineType.MCP, ActorType.AGENT, name, version);
       } catch (Exception e) {
         FRLogger.warn("Failed to parse clientInfo from initialize params: " + e.getMessage());
       }
@@ -316,6 +327,8 @@ public class McpControllerV1 extends BaseController {
     OpenApiMcpToolRegistry.ToolOperation tool = registry.get(toolName);
 
     if (tool == null) {
+      FRAnalytics.recordStructuredError(
+          "MCP", "UNKNOWN_TOOL", "Unknown tool: " + toolName, null, correlationId);
       return error(id, -32601, "Unknown tool: " + toolName);
     }
 
@@ -327,6 +340,8 @@ public class McpControllerV1 extends BaseController {
     try {
       response = invokeTool(tool, arguments, correlationId);
     } catch (IllegalArgumentException ex) {
+      FRAnalytics.recordStructuredError(
+          "MCP", "INVALID_TOOL_ARGUMENTS", ex.getMessage(), ex, correlationId);
       return error(id, -32602, ex.getMessage());
     }
 
@@ -349,9 +364,19 @@ public class McpControllerV1 extends BaseController {
     text.addProperty("text", GsonProvider.GSON.toJson(payload));
     content.add(text);
 
+    boolean isError = response.statusCode() >= 400;
     JsonObject result = new JsonObject();
     result.add("content", content);
-    result.addProperty("isError", response.statusCode() >= 400);
+    result.addProperty("isError", isError);
+
+    if (isError) {
+      FRAnalytics.recordStructuredError(
+          "MCP",
+          "TOOL_EXECUTION_FAILED",
+          "Tool '" + toolName + "' returned HTTP " + response.statusCode(),
+          null,
+          correlationId);
+    }
 
     return success(id, result);
   }
@@ -360,9 +385,14 @@ public class McpControllerV1 extends BaseController {
       OpenApiMcpToolRegistry.ToolOperation tool, JsonObject arguments, String correlationId)
       throws IOException, InterruptedException {
     String resolvedPath = resolvePath(tool.path(), getObject(arguments, "path"));
-    URI uri = buildUriWithQuery(resolvedPath, getObject(arguments, "query"));
+    JsonObject query = getObject(arguments, "query");
+    if (("get_job_details".equals(tool.toolName()) || "get_job_drc_report".equals(tool.toolName()))
+        && !query.has("compact")) {
+      query.addProperty("compact", "true");
+    }
+    URI uri = buildUriWithQuery(resolvedPath, query);
 
-    HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+    HttpRequest.Builder builder = HttpRequest.newBuilder(uri).version(HttpClient.Version.HTTP_1_1);
     forwardHeaders(builder, correlationId);
 
     JsonElement bodyElement = arguments.get("body");
@@ -378,7 +408,28 @@ public class McpControllerV1 extends BaseController {
       builder.method(method, HttpRequest.BodyPublishers.noBody());
     }
 
-    return HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+    return sendLoopbackRequest(builder.build());
+  }
+
+  private static HttpResponse<String> sendLoopbackRequest(HttpRequest request)
+      throws IOException, InterruptedException {
+    try {
+      return HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (IOException e) {
+      FRLogger.warn(
+          "Initial loopback HTTP request to "
+              + request.uri()
+              + " failed ("
+              + e.getMessage()
+              + "); retrying with a fresh HttpClient");
+      try (HttpClient freshClient =
+          HttpClient.newBuilder()
+              .version(HttpClient.Version.HTTP_1_1)
+              .connectTimeout(Duration.ofSeconds(10))
+              .build()) {
+        return freshClient.send(request, HttpResponse.BodyHandlers.ofString());
+      }
+    }
   }
 
   private void forwardHeaders(HttpRequest.Builder builder, String correlationId) {
@@ -570,14 +621,14 @@ public class McpControllerV1 extends BaseController {
         requestBodyObj.addProperty("job_id", jobId);
         requestBodyObj.addProperty("data", base64Data);
 
-        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        HttpRequest.Builder builder =
+            HttpRequest.newBuilder(uri).version(HttpClient.Version.HTTP_1_1);
         forwardHeaders(builder, correlationId);
         builder.header("Content-Type", MediaType.APPLICATION_JSON);
         builder.POST(
             HttpRequest.BodyPublishers.ofString(requestBodyObj.toString(), StandardCharsets.UTF_8));
 
-        HttpResponse<String> response =
-            HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = sendLoopbackRequest(builder.build());
         payload.addProperty("status", response.statusCode());
         payload.addProperty("contentType", "application/json");
         isError = response.statusCode() >= 400;
@@ -603,12 +654,12 @@ public class McpControllerV1 extends BaseController {
       try {
         final java.nio.file.Path outputPath = validateSandboxPath(filePath);
         URI uri = buildUriWithQuery("/v1/jobs/" + jobId + "/output", new JsonObject());
-        HttpRequest.Builder builder = HttpRequest.newBuilder(uri);
+        HttpRequest.Builder builder =
+            HttpRequest.newBuilder(uri).version(HttpClient.Version.HTTP_1_1);
         forwardHeaders(builder, correlationId);
         builder.GET();
 
-        HttpResponse<String> response =
-            HttpClient.newHttpClient().send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = sendLoopbackRequest(builder.build());
         payload.addProperty("status", response.statusCode());
         payload.addProperty("contentType", "application/json");
         isError = response.statusCode() >= 400;

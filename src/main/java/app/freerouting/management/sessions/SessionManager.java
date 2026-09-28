@@ -2,6 +2,7 @@ package app.freerouting.management.sessions;
 
 import static app.freerouting.Freerouting.globalSettings;
 
+import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.core.Session;
 import java.util.Arrays;
 import java.util.Map;
@@ -81,7 +82,19 @@ public final class SessionManager {
    * @return the newly created session
    */
   public Session createSession(UUID userId, String host) {
-    Session session = new Session(userId, host);
+    return createSession(userId, host, null);
+  }
+
+  /**
+   * Creates and registers a session for a user with an associated API key hash.
+   *
+   * @param userId the session owner's identifier
+   * @param host the client host identifier
+   * @param apiKeyHash the SHA-256 hash of the caller's API key, or {@code null}
+   * @return the newly created session
+   */
+  public Session createSession(UUID userId, String host, String apiKeyHash) {
+    Session session = new Session(userId, host, apiKeyHash);
     if (sessions.size() >= MAX_SESSIONS) {
       var iterator = sessions.keySet().iterator();
       if (iterator.hasNext()) {
@@ -91,6 +104,14 @@ public final class SessionManager {
     }
     sessions.put(session.id.toString(), session);
     globalSettings.statistics.incrementSessionsTotal();
+    FRAnalytics.recordSessionLifecycle(
+        session.id.toString(),
+        "SESSION_CREATED",
+        FRAnalytics.getCurrentPipeline(),
+        FRAnalytics.getCurrentActorType(),
+        host,
+        userId,
+        apiKeyHash);
     return session;
   }
 
@@ -101,6 +122,13 @@ public final class SessionManager {
    */
   public void removeSession(String sessionId) {
     sessions.remove(sessionId);
+    FRAnalytics.recordSessionLifecycle(
+        sessionId,
+        "SESSION_CLOSED",
+        FRAnalytics.getCurrentPipeline(),
+        FRAnalytics.getCurrentActorType(),
+        null,
+        null);
   }
 
   /** Returns the number of currently registered sessions. */

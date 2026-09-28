@@ -99,27 +99,28 @@ Click **+ New MCP Server** and enter:
 
 When executing routing tasks, LLMs must invoke the Freerouting MCP tools in a structured state-machine sequence to complete the routing job correctly.
 
-### Workflow Sequence
+### Preferred 1-Turn Workflow: `autoroute_board`
+
+For modern AI coding assistants (e.g. Cursor, Claude Desktop), Freerouting provides a composite single-turn tool:
 
 ```mermaid
 graph TD
-    A[create_session] -->|Step 1| B[enqueue_job]
-    B -->|Step 2 (Recommended)| C[upload_job_input_from_local_file]
-    B -->|Step 2 (Alternative)| D[encode_base64]
-    D -->|Local Encode| E[upload_job_input_file]
-    C -->|Step 3| F[update_job_settings]
-    E -->|Step 3| F
-    C -->|Step 3 (Optional)| G[start_job]
-    E -->|Step 3 (Optional)| G
-    F -->|Step 4| G
-    G -->|Step 4| H[get_job_details]
-    H -->|Poll: State != COMPLETED| H
-    H -->|State == COMPLETED (Recommended)| I[download_job_output_to_local_file]
-    H -->|State == COMPLETED (Alternative)| J[download_job_output_file]
-    J -->|Step 5| K[decode_base64]
+    Agent[AI Agent] -->|autoroute_board (filePath or fileContent)| Freerouting[Freerouting Engine]
+    Freerouting -->|1 Turn: Routed SES + DRC Diagnostics + Stats| Agent
 ```
 
-#### Step 1: Create Session (`create_session`)
+- **Tool:** `autoroute_board`
+- **Arguments:**
+  - `filePath` (or `fileContent`): Primary design file path or text.
+  - `rulesPath` (or `rulesContent`): Optional custom `.rules` file path or text.
+  - `sessionPath` (or `sessionContent`): Optional initial routing `.ses` or KiCad `.json`.
+  - `outputFormats`: List of desired output representations (`["SES", "DRC_SUMMARY"]`).
+  - `timeoutSeconds`: Routing budget limit.
+- **Benefit:** Reduces conversational turn latency from 6-7 round-trips to **1 single turn**, while automatically retrieving diagnostic DRC summaries without polluting context with raw trace coordinate blobs.
+
+---
+
+### Step-by-Step Multi-Turn Workflow (Alternative)
 - Call `create_session` to initialize a routing session.
 - Returns a `sessionId` (e.g. `123e4567-e89b-12d3-a456-426614174000`).
 

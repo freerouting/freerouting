@@ -70,7 +70,7 @@ if ((Test-Path $smallDsn) -and $kicadPython -and $kicadCli) {
 
     & java -jar $jarPath --gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false `
         -de $smallDsn -do $ses `
-        --router.max_passes=1 --router.job_timeout="00:03:00" `
+        --router.autorouter.max_passes=1 --router.job_timeout="00:03:00" `
         --router.result_json="$manifest"
 
     $importOk = $false

@@ -905,6 +905,18 @@ public class RoutingBoard extends BasicBoard implements Serializable {
   }
 
   /**
+   * Drops maze/search scratch that snapshot undo does not restore. Optimizer worker-board reuse
+   * must call this after each candidate so later items are not evaluated against a leftover engine.
+   */
+  public void clearTransientAutorouteState() {
+    finishAutoroute();
+    clearAllItemTemporaryAutorouteData();
+    changedArea = null;
+    shoveFailingObstacle = null;
+    shoveFailingLayer = -1;
+  }
+
+  /**
    * Routes automatically item to another item of the same net, to which it is not yet electrically
    * connected. Returns an enum of type AutorouteAttemptState
    */
@@ -1249,11 +1261,12 @@ public class RoutingBoard extends BasicBoard implements Serializable {
     }
   }
 
-  /** Sets, if all conduction areas on the board are obstacles for route of foreign nets. */
-  public void changeConductionIsObstacle(boolean value) {
-    if (this.rules.getIgnoreConduction() != value) {
-      return; // no multiply
-    }
+  /**
+   * Sets, if all conduction areas (power planes) on the board are obstacles for route of foreign
+   * nets.
+   */
+  public void changePlaneAsObstacle(boolean value) {
+    boolean targetIgnore = !value;
     boolean somethingChanged = false;
     // Change the isObstacle property of all conduction areas of the board.
     Iterator<UndoableObjects.UndoableObjectNode> it = itemList.startReadObject();
@@ -1270,10 +1283,23 @@ public class RoutingBoard extends BasicBoard implements Serializable {
         }
       }
     }
-    this.rules.setIgnoreConduction(!value);
+    if (this.rules.getIgnoreConduction() != targetIgnore) {
+      this.rules.setIgnoreConduction(targetIgnore);
+      somethingChanged = true;
+    }
     if (somethingChanged) {
       this.searchTreeManager.reinsertTreeItems();
     }
+  }
+
+  /**
+   * Sets, if all conduction areas on the board are obstacles for route of foreign nets.
+   *
+   * @deprecated Use {@link #changePlaneAsObstacle(boolean)} instead.
+   */
+  @Deprecated
+  public void changeConductionIsObstacle(boolean value) {
+    changePlaneAsObstacle(value);
   }
 
   /**

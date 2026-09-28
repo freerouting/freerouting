@@ -43,12 +43,13 @@
   },
   "tags": [
     "2-layer",
+    "canary",
+    "golden-canary",
     "plane",
-    "routine",
     "small",
-    "tier-b"
+    "tier-a"
   ],
-  "tier": "B",
+  "tier": "A",
   "expected_outcome": "complete",
   "timeout_budget": "00:05:00"
 }

@@ -537,6 +537,16 @@ public final class IntOctagon extends RegularTileShape implements Serializable {
     if (newLx > newRx || newLy > newUy || newLlx > newUrx || newUlx > newLrx) {
       return EMPTY;
     }
+    if (leftX == newLx
+        && rightX == newRx
+        && bottomY == newLy
+        && topY == newUy
+        && lowerLeftDiagonalX == newLlx
+        && upperLeftDiagonalX == newUlx
+        && lowerRightDiagonalX == newLrx
+        && upperRightDiagonalX == newUrx) {
+      return this;
+    }
     return new IntOctagon(newLx, newLy, newRx, newUy, newUlx, newLrx, newLlx, newUrx);
   }
 

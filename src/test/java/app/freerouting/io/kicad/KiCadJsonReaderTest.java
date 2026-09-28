@@ -478,4 +478,81 @@ class KiCadJsonReaderTest {
     assertEquals("KiCadNightly", board.communication.specctraParserInfo.hostCad);
     assertEquals("11.0.0-rc1", board.communication.specctraParserInfo.hostVersion);
   }
+
+  @Test
+  void testBoardEdgeClearanceClassConfiguredFromOutline() {
+    String json =
+        """
+        {
+          "designName": "EdgeClearanceBoard",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"},
+            {"index": 1, "name": "B.Cu", "type": "signal"}
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 50.0, "y": 0.0},
+              {"x": 50.0, "y": 50.0},
+              {"x": 0.0, "y": 50.0}
+            ],
+            "clearance": 0.5
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertNotNull(board);
+    var outline = board.getOutline();
+    assertNotNull(outline);
+
+    int edgeClassNo =
+        board.rules.clearanceMatrix.getNo(KiCadJsonReader.BOARD_EDGE_CLEARANCE_CLASS_NAME);
+    assertTrue(edgeClassNo > 1, "board_edge class should have index > 1");
+    assertEquals(edgeClassNo, outline.clearanceClassIndex());
+
+    // 0.5 mm * 1000.0 resolution = 500 board units
+    assertEquals(500, board.rules.clearanceMatrix.getValue(edgeClassNo, 1, 0, false));
+    assertEquals(500, board.rules.clearanceMatrix.getValue(1, edgeClassNo, 0, false));
+  }
+
+  @Test
+  void testBoardEdgeClearanceDefaultWhenUnset() {
+    String json =
+        """
+        {
+          "designName": "DefaultEdgeBoard",
+          "unit": "MM",
+          "resolution": 1000.0,
+          "layers": [
+            {"index": 0, "name": "F.Cu", "type": "signal"}
+          ],
+          "outline": {
+            "corners": [
+              {"x": 0.0, "y": 0.0},
+              {"x": 20.0, "y": 0.0},
+              {"x": 20.0, "y": 20.0},
+              {"x": 0.0, "y": 20.0}
+            ]
+          }
+        }
+        """;
+
+    BoardReadResult result = KiCadJsonReader.readBoard(new StringReader(json), null, null);
+    assertInstanceOf(BoardReadResult.Success.class, result);
+    BoardReadResult.Success success = (BoardReadResult.Success) result;
+    RoutingBoard board = (RoutingBoard) success.board();
+
+    assertNotNull(board);
+    var outline = board.getOutline();
+    assertNotNull(outline);
+
+    assertEquals(1, outline.clearanceClassIndex(), "Outline should use default clearance class 1");
+  }
 }

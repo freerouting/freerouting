@@ -2,7 +2,8 @@ function Update-BenchmarksHtml {
     param(
         [Hashtable]$Cache,
         [string]$HtmlPath,
-        [string]$FixturesDir = (Get-BenchmarkFixturesDir)
+        [string]$FixturesDir = (Get-BenchmarkFixturesDir),
+        [hashtable]$NormalizedScores = $null
     )
 
     if (-not (Test-Path $HtmlPath)) {
@@ -16,6 +17,7 @@ function Update-BenchmarksHtml {
     # Build premium styled HTML
     $sb = [System.Text.StringBuilder]::new()
     $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    $sysInfo = Get-SystemInfo
     [void]$sb.AppendLine("<div class='benchmark-container'>")
     [void]$sb.AppendLine("  <div class='benchmark-report-info'>Generated on: $ts &middot; System: $($sysInfo.cpu_name) ($($sysInfo.cpu_physical_cores) Cores, $($sysInfo.total_ram_gb) GB RAM)</div>")
 
@@ -73,7 +75,7 @@ function Update-BenchmarksHtml {
 
                 $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
                 $fixtureCount++
-                $failed = Test-RunIsFailed $latestRun
+                $failed = Test-RunIsFailed $latestRun $NormalizedScores
                 $isTimeout = $latestRun.exit.timed_out -eq $true
                 if ($isTimeout) { $timeouts++ }
                 if ($failed) { $failures++ }
@@ -88,11 +90,25 @@ function Update-BenchmarksHtml {
                     [int]$latestRun.quality.clearance_violations
                 } else { $null }
 
-                $score = Get-RunScoreValue $latestRun
+                $score = Get-RunScoreValue $latestRun $NormalizedScores
+
+                $unfixable = if ($latestRun.quality.unfixable_clearance_violations -ne $null) {
+                    [int]$latestRun.quality.unfixable_clearance_violations
+                } else { 0 }
+
+                $routerViol = if ($latestRun.quality.router_introduced_violations -ne $null) {
+                    [int]$latestRun.quality.router_introduced_violations
+                } else { $null }
+
+                $isClean = if ($routerViol -ne $null) {
+                    $routerViol -eq 0
+                } else {
+                    $violations -ne $null -and $violations -le $unfixable
+                }
 
                 if (-not $failed -and $unrouted -ne $null -and $unrouted -eq 0) {
                     $allRouted++
-                    if ($violations -ne $null -and $violations -eq 0) {
+                    if ($isClean) {
                         $perfects++
                     }
                 }

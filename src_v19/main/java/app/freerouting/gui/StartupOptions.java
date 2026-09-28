@@ -86,27 +86,33 @@ public class StartupOptions {
   public void parseCommandLineArguments(String[] p_args) {
     for (int i = 0; i < p_args.length; ++i) {
       try {
-        if (p_args[i].startsWith("-de")) {
+        // Current builds nest autorouter knobs under router.autorouter.*. Accept those
+        // keys here so shared benchmark CLI can target v1.9 and current with one flag set.
+        String arg = p_args[i];
+        if (arg.startsWith("--router.autorouter.")) {
+          arg = "--router." + arg.substring("--router.autorouter.".length());
+        }
+        if (arg.startsWith("-de")) {
           // the design file is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             single_design_option = true;
             design_input_filename = p_args[i + 1];
           }
-        } else if (p_args[i].startsWith("-di")) {
+        } else if (arg.startsWith("-di")) {
           // the design directory is provided
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             input_directory = p_args[i + 1];
           }
-        } else if (p_args[i].startsWith("-do")) {
+        } else if (arg.startsWith("-do")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             design_output_filename = p_args[i + 1];
           }
-        } else if (p_args[i].startsWith("-dr")) {
+        } else if (arg.startsWith("-dr")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             design_rules_filename = p_args[i + 1];
           }
-        } else if (p_args[i].startsWith("-mp")) {
-        } else if (p_args[i].startsWith("-mp")) {
+        } else if (arg.startsWith("-mp")) {
+        } else if (arg.startsWith("-mp")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             max_passes = Integer.decode(p_args[i + 1]);
             if (max_passes < 0) {
@@ -117,7 +123,7 @@ public class StartupOptions {
             }
             // Note: 0 is allowed and means no limit
           }
-        } else if (p_args[i].startsWith("-mt")) {
+        } else if (arg.startsWith("-mt")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             num_threads = Integer.decode(p_args[i + 1]);
 
@@ -128,7 +134,7 @@ public class StartupOptions {
               num_threads = 1024;
             }
           }
-        } else if (p_args[i].startsWith("-oit")) {
+        } else if (arg.startsWith("-oit")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             optimization_improvement_threshold = Float.parseFloat(p_args[i + 1]) / 100;
 
@@ -136,7 +142,7 @@ public class StartupOptions {
               optimization_improvement_threshold = 0;
             }
           }
-        } else if (p_args[i].startsWith("-us")) {
+        } else if (arg.startsWith("-us")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             String op = p_args[i + 1].toLowerCase().trim();
             board_update_strategy = op.equals("global")
@@ -145,7 +151,7 @@ public class StartupOptions {
                     ? BoardUpdateStrategy.HYBRID
                     : BoardUpdateStrategy.GREEDY);
           }
-        } else if (p_args[i].startsWith("-is")) {
+        } else if (arg.startsWith("-is")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             String op = p_args[i + 1].toLowerCase().trim();
             item_selection_strategy = op.indexOf("seq") == 0
@@ -154,11 +160,11 @@ public class StartupOptions {
                     ? ItemSelectionStrategy.RANDOM
                     : ItemSelectionStrategy.PRIORITIZED);
           }
-        } else if (p_args[i].startsWith("-hr")) { // hybrid ratio
+        } else if (arg.startsWith("-hr")) { // hybrid ratio
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             hybrid_ratio = p_args[i + 1].trim();
           }
-        } else if (p_args[i].startsWith("-l")) {
+        } else if (arg.startsWith("-l")) {
           // the locale is provided
           if (p_args.length > i + 1 && p_args[i + 1].startsWith("en")) {
             current_locale = Locale.ENGLISH;
@@ -185,31 +191,31 @@ public class StartupOptions {
           } else if (p_args.length > i + 1 && p_args[i + 1].startsWith("ko")) {
             current_locale = Locale.KOREAN;
           }
-        } else if (p_args[i].startsWith("-s")) {
+        } else if (arg.startsWith("-s")) {
           session_file_option = true;
-        } else if (p_args[i].startsWith("-im")) {
+        } else if (arg.startsWith("-im")) {
           save_intermediate_stages = true;
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             save_intermediate_stages = !(Objects.equals(p_args[i + 1], "0"));
           }
-        } else if (p_args[i].startsWith("-w")) {
+        } else if (arg.startsWith("-w")) {
           webstart_option = true;
-        } else if (p_args[i].startsWith("-test")) {
+        } else if (arg.startsWith("-test")) {
           test_version_option = true;
-        } else if (p_args[i].startsWith("-dl")) {
+        } else if (arg.startsWith("-dl")) {
           disable_logging = true;
-        } else if (p_args[i].startsWith("-da")) {
+        } else if (arg.startsWith("-da")) {
           disable_analytics = true;
-        } else if (p_args[i].startsWith("-host")) {
+        } else if (arg.startsWith("-host")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             host = p_args[i + 1].trim();
           }
-        } else if (p_args[i].startsWith("-help")) {
+        } else if (arg.startsWith("-help")) {
           show_help_option = true;
-        } else if (p_args[i].startsWith("-inc")) {
+        } else if (arg.startsWith("-inc")) {
           // ignore net class(es)
           ignore_net_classes_by_autorouter = p_args[i + 1].split(",");
-        } else if (p_args[i].startsWith("-dct")) {
+        } else if (arg.startsWith("-dct")) {
           if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-")) {
             dialog_confirmation_timeout = Integer.parseInt(p_args[i + 1]);
 
@@ -217,33 +223,33 @@ public class StartupOptions {
               dialog_confirmation_timeout = 0;
             }
           }
-        } else if (p_args[i].startsWith("--router.result_json") || p_args[i].startsWith("--router.output_json")) {
-          String[] parts = p_args[i].split("=", 2);
+        } else if (arg.startsWith("--router.result_json") || arg.startsWith("--router.output_json")) {
+          String[] parts = arg.split("=", 2);
           if (parts.length == 2) {
             result_json_path = parts[1].replace("\"", "").trim();
           }
-        } else if (p_args[i].startsWith("--router.optimizer.enabled")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--router.optimizer.enabled")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             optimizer_enabled = Boolean.parseBoolean(parts[1]);
           }
-        } else if (p_args[i].startsWith("--router.enabled")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--router.enabled")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             router_enabled = Boolean.parseBoolean(parts[1]);
           }
-        } else if (p_args[i].startsWith("--router.fanout.enabled")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--router.fanout.enabled")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             fanout_enabled = Boolean.parseBoolean(parts[1]);
           }
-        } else if (p_args[i].startsWith("--router.job_timeout")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--router.job_timeout")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             job_timeout = parts[1].replace("\"", "");
           }
-        } else if (p_args[i].startsWith("--router.max_passes")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--router.max_passes")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             max_passes = Integer.decode(parts[1]);
             if (max_passes < 0) {
@@ -254,8 +260,8 @@ public class StartupOptions {
             }
             // Note: 0 is allowed and means no limit
           }
-        } else if (p_args[i].startsWith("--router.max_items")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--router.max_items")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             max_items = Integer.decode(parts[1]);
             if (max_items < 0) {
@@ -263,8 +269,18 @@ public class StartupOptions {
             }
             // Note: 0 is allowed and means no limit
           }
-        } else if (p_args[i].startsWith("--router.max_threads")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--router.save_intermediate_stages")) {
+          String[] parts = arg.split("=", 2);
+          if (parts.length == 2) {
+            save_intermediate_stages = Boolean.parseBoolean(parts[1]);
+          }
+        } else if (arg.startsWith("--router.ignore_net_classes")) {
+          String[] parts = arg.split("=", 2);
+          if (parts.length == 2) {
+            ignore_net_classes_by_autorouter = parts[1].split(",");
+          }
+        } else if (arg.startsWith("--router.max_threads")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             num_threads = Integer.decode(parts[1]);
             if (num_threads < 0) {
@@ -274,29 +290,29 @@ public class StartupOptions {
               num_threads = 1024;
             }
           }
-        } else if (p_args[i].startsWith("--logging.file.level")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--logging.file.level")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             logging_file_level = parts[1];
           }
-        } else if (p_args[i].startsWith("--logging.console.level")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--logging.console.level")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             logging_console_level = parts[1];
           }
-        } else if (p_args[i].startsWith("--logging.file.location")) {
-          String[] parts = p_args[i].split("=");
+        } else if (arg.startsWith("--logging.file.location")) {
+          String[] parts = arg.split("=");
           if (parts.length == 2) {
             logging_file_location = parts[1];
           }
-        } else if (p_args[i].startsWith("--debug.enable_detailed_logging")) {
-          String[] parts = p_args[i].split("=", 2);
+        } else if (arg.startsWith("--debug.enable_detailed_logging")) {
+          String[] parts = arg.split("=", 2);
           if (parts.length == 2) {
             DebugControl.debugSettings.enableDetailedLogging = Boolean.parseBoolean(parts[1]);
             FRLogger.granularTraceEnabled = DebugControl.debugSettings.enableDetailedLogging;
           }
-        } else if (p_args[i].startsWith("--debug.filter_by_net")) {
-          String[] parts = p_args[i].split("=", 2);
+        } else if (arg.startsWith("--debug.filter_by_net")) {
+          String[] parts = arg.split("=", 2);
           if (parts.length == 2) {
             DebugControl.debugSettings.filterByNet.clear();
             String[] nets = parts[1].split(",");
@@ -307,8 +323,8 @@ public class StartupOptions {
               }
             }
           }
-        } else if (p_args[i].startsWith("--debug.operation_filters")) {
-          String[] parts = p_args[i].split("=", 2);
+        } else if (arg.startsWith("--debug.operation_filters")) {
+          String[] parts = arg.split("=", 2);
           if (parts.length == 2) {
             DebugControl.debugSettings.operationFilters = Arrays
                 .stream(parts[1].split(","))

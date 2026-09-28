@@ -4,6 +4,14 @@ import static app.freerouting.util.gson.GsonProvider.GSON;
 
 import app.freerouting.analytics.FRAnalytics;
 import app.freerouting.board.facade.RoutingBoard;
+import app.freerouting.board.model.items.ComponentOutline;
+import app.freerouting.board.model.items.Item;
+import app.freerouting.board.model.items.ObstacleArea;
+import app.freerouting.board.model.items.Pin;
+import app.freerouting.board.model.items.Trace;
+import app.freerouting.board.model.items.Via;
+import app.freerouting.board.model.structure.BoardOutline;
+import app.freerouting.board.model.structure.Component;
 import app.freerouting.board.model.structure.LayerStructure;
 import app.freerouting.board.model.structure.Unit;
 import app.freerouting.board.state.BoardObservers;
@@ -12,7 +20,9 @@ import app.freerouting.core.BoardFileDetails;
 import app.freerouting.core.RoutingJob;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.IdGenerator;
+import app.freerouting.drc.ClearanceViolation;
 import app.freerouting.geometry.planar.IntBox;
+import app.freerouting.geometry.planar.Point;
 import app.freerouting.geometry.planar.PolylineShape;
 import app.freerouting.gui.workspace.WorkspaceSettings;
 import app.freerouting.gui.workspace.session.InteractiveActionThread;
@@ -31,6 +41,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Manages routing board operations in headless (non-GUI) mode for automated processing.
@@ -341,6 +354,9 @@ public class HeadlessBoardManager implements BoardManager {
             boardCommunication);
     applyCopperToEdgeClearanceOverride();
     applyHoleClearanceOverride();
+    applyPlaneNetsOverride();
+    applyPlaneAsObstacleOverride();
+    applyClearanceToleranceOverride();
   }
 
   private void applyHoleClearanceOverride() {
@@ -551,6 +567,69 @@ public class HeadlessBoardManager implements BoardManager {
             + " board units).");
   }
 
+  private void applyPlaneNetsOverride() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.board.rules.nets == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.planeNets == null) {
+      return;
+    }
+
+    for (String netName : this.routingJob.routerSettings.planeNets) {
+      if (netName == null || netName.isBlank()) {
+        continue;
+      }
+      java.util.Collection<app.freerouting.rules.Net> matchingNets =
+          this.board.rules.nets.get(netName.trim());
+      for (app.freerouting.rules.Net net : matchingNets) {
+        if (!net.containsPlane()) {
+          net.setContainsPlane(true);
+          FRLogger.info(
+              "Configured net '" + net.name + "' as a power plane net via router.plane_nets.");
+        }
+      }
+    }
+  }
+
+  private void applyPlaneAsObstacleOverride() {
+    if (this.board == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.planeAsObstacle == null) {
+      return;
+    }
+
+    boolean asObstacle = this.routingJob.routerSettings.planeAsObstacle;
+    this.board.changePlaneAsObstacle(asObstacle);
+    FRLogger.debug("Applied plane_as_obstacle override: " + asObstacle);
+  }
+
+  private void applyClearanceToleranceOverride() {
+    if (this.board == null
+        || this.board.rules == null
+        || this.routingJob == null
+        || this.routingJob.routerSettings == null
+        || this.routingJob.routerSettings.clearanceToleranceUm == null) {
+      return;
+    }
+
+    double toleranceUm = this.routingJob.routerSettings.clearanceToleranceUm;
+    if (!Double.isFinite(toleranceUm) || toleranceUm < 0) {
+      FRLogger.warn(
+          "Ignoring router.clearance_tolerance_um because it is invalid (must be finite and >= 0): "
+              + toleranceUm);
+      return;
+    }
+
+    this.board.rules.clearanceToleranceUm = toleranceUm;
+    if (this.routingJob.drcSettings != null) {
+      this.routingJob.drcSettings.clearanceToleranceUm = toleranceUm;
+    }
+    FRLogger.debug("Applied clearance tolerance: " + toleranceUm + " um.");
+  }
+
   /**
    * Returns the current routing job context associated with this board manager.
    *
@@ -736,15 +815,19 @@ public class HeadlessBoardManager implements BoardManager {
     return dsnResult;
   }
 
-  private void applyRouterSettingsForLoadedBoard() {
+  void applyRouterSettingsForLoadedBoard() {
     if (this.board != null && this.routingJob != null) {
       int boardLayerCount = this.board.getLayerCount();
       if (this.routingJob.routerSettings.getLayerCount() != boardLayerCount) {
         this.routingJob.routerSettings.setLayerCount(boardLayerCount);
       }
       this.routingJob.routerSettings.applyBoardSpecificOptimizations(this.board);
+      this.routingJob.routerSettings.applyNetClassExclusions(this.board);
       applyCopperToEdgeClearanceOverride();
       applyHoleClearanceOverride();
+      applyPlaneNetsOverride();
+      applyPlaneAsObstacleOverride();
+      applyClearanceToleranceOverride();
     }
   }
 
@@ -752,8 +835,13 @@ public class HeadlessBoardManager implements BoardManager {
     if (this.board == null) {
       return;
     }
+    this.board.expandBoundingBoxToIncludeAllItems();
     this.board.reduceNetsOfRouteItems();
     validatePowerPlanes();
+    validateBoardDesignErrors();
+    // NOTE: The full-board DRC (getAllClearanceViolations) is O(n²) and is deferred to the
+    // background thread in scheduleDeferredPostLoadProcessing() to avoid blocking every board
+    // load (including GUI loads) on large designs.
   }
 
   private void scheduleDeferredPostLoadProcessing(String inputFilename, String analyticsFormat) {
@@ -761,6 +849,9 @@ public class HeadlessBoardManager implements BoardManager {
       return;
     }
     RoutingBoard loadedBoard = this.board;
+    final java.util.concurrent.CompletableFuture<Void> future =
+        new java.util.concurrent.CompletableFuture<>();
+    loadedBoard.postLoadFuture = future;
     HeadlessBoardManager manager = this;
     Thread.ofVirtual()
         .name("board-post-load")
@@ -777,7 +868,23 @@ public class HeadlessBoardManager implements BoardManager {
                     loadedBoard.rules.nets.maxNetNumber());
                 manager.originalBoardChecksum = manager.calculateCrc32ForBoard(loadedBoard);
                 compareCounterpartBoardIfPresent(loadedBoard, inputFilename);
-              } catch (Exception e) {
+                // Run the full-board DRC here (O(n²)) so it does not block the load path.
+                var drc = new app.freerouting.drc.DesignRulesChecker(loadedBoard, null);
+                var violations = drc.getAllClearanceViolations();
+                loadedBoard.preExistingClearanceViolationsCount = violations.size();
+                int unfixable = 0;
+                for (var v : violations) {
+                  if (v.isUnfixable()) {
+                    unfixable++;
+                  }
+                }
+                loadedBoard.unfixableClearanceViolationsCount = unfixable;
+                if (!violations.isEmpty()) {
+                  warnPreExistingClearanceViolations(loadedBoard, violations);
+                }
+                future.complete(null);
+              } catch (Throwable e) {
+                future.completeExceptionally(e);
                 FRLogger.error("Deferred post-load processing failed", e);
               }
             });
@@ -1029,6 +1136,219 @@ public class HeadlessBoardManager implements BoardManager {
                   + "and voltage drops.\n");
 
       FRLogger.warn(sb.toString());
+    }
+  }
+
+  /**
+   * Emits a WARNING that categorises all pre-existing clearance violations found in the loaded
+   * board. The message distinguishes between unfixable violations (such as pin-to-pin,
+   * pin-to-outline/keepout, and fixed traces/vias which Freerouting cannot resolve) and potentially
+   * fixable violations (involving unfixed traces/vias). For each category, up to 5 violation pairs
+   * are listed.
+   */
+  static void warnPreExistingClearanceViolations(
+      RoutingBoard board, Collection<ClearanceViolation> violations) {
+    FRLogger.warn(formatPreExistingClearanceViolationsWarning(board, violations));
+  }
+
+  /**
+   * Formats the warning message for pre-existing clearance violations. Package-private for testing.
+   */
+  static String formatPreExistingClearanceViolationsWarning(
+      RoutingBoard board, Collection<ClearanceViolation> violations) {
+    List<ClearanceViolation> pinToPin = new ArrayList<>();
+    List<ClearanceViolation> pinToOutline = new ArrayList<>();
+    List<ClearanceViolation> fixedRoute = new ArrayList<>();
+    List<ClearanceViolation> otherUnfixable = new ArrayList<>();
+    List<ClearanceViolation> potentiallyFixable = new ArrayList<>();
+
+    for (var v : violations) {
+      switch (v.getCategory()) {
+        case PIN_TO_PIN -> pinToPin.add(v);
+        case PIN_TO_OUTLINE_OR_KEEPOUT -> pinToOutline.add(v);
+        case FIXED_ROUTE -> fixedRoute.add(v);
+        case OTHER_UNFIXABLE -> otherUnfixable.add(v);
+        case POTENTIALLY_FIXABLE -> potentiallyFixable.add(v);
+        default -> {}
+      }
+    }
+
+    int totalUnfixable =
+        pinToPin.size() + pinToOutline.size() + fixedRoute.size() + otherUnfixable.size();
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(
+        String.format(
+            "Design Warning: Board has %d pre-existing clearance violation(s) in the loaded"
+                + " design (before routing):%n",
+            violations.size()));
+
+    if (totalUnfixable > 0) {
+      sb.append(
+          String.format(
+              "  - %d unfixable violation(s) (cannot be resolved by Freerouting):%n",
+              totalUnfixable));
+      appendCategoryViolations(sb, board, "pin-to-pin clearance violations", pinToPin);
+      appendCategoryViolations(
+          sb, board, "pin-to-keepout / board-outline clearance violations", pinToOutline);
+      appendCategoryViolations(sb, board, "fixed trace/via clearance violations", fixedRoute);
+      appendCategoryViolations(sb, board, "other unfixable clearance violations", otherUnfixable);
+    } else {
+      sb.append(String.format("  - 0 unfixable violation(s)%n"));
+    }
+
+    if (!potentiallyFixable.isEmpty()) {
+      int count = potentiallyFixable.size();
+      if (count <= 5) {
+        sb.append(
+            String.format(
+                "  - %d potentially fixable violation(s) (involving unfixed traces/vias):%n",
+                count));
+      } else {
+        sb.append(
+            String.format(
+                "  - %d potentially fixable violation(s) (involving unfixed traces/vias, first 5"
+                    + " shown):%n",
+                count));
+      }
+      appendViolationList(sb, board, potentiallyFixable, "      ");
+    } else {
+      sb.append(String.format("  - 0 potentially fixable violations%n"));
+    }
+
+    if (totalUnfixable > 0) {
+      sb.append(
+          String.format(
+              "Notice: Freerouting does not modify component placement, board outlines, or fixed"
+                  + " items.%nResolving these %d unfixable violation(s) is the responsibility of"
+                  + " the board author in their EDA tool (e.g. KiCad).",
+              totalUnfixable));
+    } else {
+      sb.append(
+          "Notice: Freerouting will attempt to resolve potentially fixable violations by ripping"
+              + " up and rerouting traces/vias.");
+    }
+
+    return sb.toString();
+  }
+
+  private static void appendCategoryViolations(
+      StringBuilder sb,
+      RoutingBoard board,
+      String categoryTitle,
+      List<ClearanceViolation> categoryViolations) {
+    if (categoryViolations.isEmpty()) {
+      return;
+    }
+    int count = categoryViolations.size();
+    if (count <= 5) {
+      sb.append(String.format("      * %d %s:%n", count, categoryTitle));
+    } else {
+      sb.append(String.format("      * %d %s (first 5 shown):%n", count, categoryTitle));
+    }
+    appendViolationList(sb, board, categoryViolations, "          ");
+  }
+
+  private static void appendViolationList(
+      StringBuilder sb, RoutingBoard board, List<ClearanceViolation> violations, String indent) {
+    int shown = Math.min(5, violations.size());
+    for (int i = 0; i < shown; i++) {
+      var v = violations.get(i);
+      sb.append(
+          String.format(
+              "%s- %s <-> %s%n",
+              indent,
+              describeViolationItem(board, v.firstItem),
+              describeViolationItem(board, v.secondItem)));
+    }
+    if (violations.size() > 5) {
+      sb.append(String.format("%s... and %d more%n", indent, violations.size() - 5));
+    }
+  }
+
+  /**
+   * Builds a human-readable descriptor for an item involved in a clearance violation, including its
+   * net name if available.
+   */
+  private static String describeViolationItem(RoutingBoard board, Item item) {
+    if (item == null) {
+      return "(none)";
+    }
+    String name;
+    if (item instanceof Pin pin) {
+      Component comp =
+          (board != null && board.components != null)
+              ? board.components.get(pin.getComponentId())
+              : null;
+      String compName = comp != null ? comp.name : "?";
+      String pinName =
+          (comp != null && comp.getPackage() != null && pin.pinIndex < comp.getPackage().pinCount())
+              ? comp.getPackage().getPin(pin.pinIndex).name
+              : String.valueOf(pin.pinIndex);
+      name = compName + "." + pinName;
+    } else if (item instanceof BoardOutline) {
+      name = "BoardOutline";
+    } else if (item instanceof ComponentOutline co) {
+      Component comp =
+          (board != null && board.components != null)
+              ? board.components.get(co.getComponentId())
+              : null;
+      name = "ComponentOutline(" + (comp != null ? comp.name : "?") + ")";
+    } else if (item instanceof ObstacleArea) {
+      name = "ObstacleArea#" + item.getId();
+    } else if (item instanceof Trace) {
+      name = (item.isUserFixed() ? "FixedTrace#" : "Trace#") + item.getId();
+    } else if (item instanceof Via) {
+      name = (item.isUserFixed() ? "FixedVia#" : "Via#") + item.getId();
+    } else {
+      name = item.getClass().getSimpleName() + "#" + item.getId();
+    }
+
+    String netName = null;
+    if (board != null
+        && board.rules != null
+        && board.rules.nets != null
+        && item.netNumbers != null
+        && item.netNumbers.length > 0) {
+      for (int netNo : item.netNumbers) {
+        app.freerouting.rules.Net net = board.rules.nets.get(netNo);
+        if (net != null && net.name != null && !net.name.isBlank()) {
+          netName = net.name;
+          break;
+        }
+      }
+    }
+    return netName != null ? name + " [net " + netName + "]" : name;
+  }
+
+  void validateBoardDesignErrors() {
+    if (this.board == null) {
+      return;
+    }
+    BoardOutline outline = this.board.getOutline();
+    if (outline == null || outline.shapeCount() == 0) {
+      FRLogger.warn(
+          "Design Error: Board outline is missing. Routing without a defined board boundary may"
+              + " lead to unconstrained routing or DRC issues.");
+      return;
+    }
+
+    for (Pin pin : this.board.getPins()) {
+      Point center = pin.getCenter();
+      if (center != null && !outline.contains(center)) {
+        Component comp = this.board.components.get(pin.getComponentId());
+        String compName = comp != null ? comp.name : "Unknown";
+        String pinName =
+            (comp != null
+                    && comp.getPackage() != null
+                    && pin.pinIndex < comp.getPackage().pinCount())
+                ? comp.getPackage().getPin(pin.pinIndex).name
+                : String.valueOf(pin.pinIndex);
+        FRLogger.warn(
+            String.format(
+                "Design Error: Component '%s' pin '%s' (ID %d) is outside board outline at %s.",
+                compName, pinName, pin.getId(), center));
+      }
     }
   }
 }

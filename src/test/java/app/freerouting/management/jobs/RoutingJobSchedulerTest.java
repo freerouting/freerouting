@@ -1,5 +1,6 @@
 package app.freerouting.management.jobs;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -12,19 +13,26 @@ import app.freerouting.core.RoutingJobState;
 import app.freerouting.core.Session;
 import app.freerouting.management.sessions.SessionManager;
 import app.freerouting.settings.GlobalSettings;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /** RoutingJobSchedulerTest. */
 public class RoutingJobSchedulerTest {
 
+  @TempDir Path tempDir;
   private RoutingJobScheduler scheduler;
 
   @BeforeEach
   void setUp() {
+    GlobalSettings.resetForTesting();
+    GlobalSettings.setUserDataPath(tempDir);
     Freerouting.globalSettings = new GlobalSettings();
     scheduler = RoutingJobScheduler.getInstance();
     // Ensure a clean queue before each test; synchronize to avoid racing with the scheduler thread.
@@ -39,6 +47,8 @@ public class RoutingJobSchedulerTest {
     synchronized (scheduler.jobs) {
       scheduler.jobs.clear();
     }
+    GlobalSettings.resetForTesting();
+    Freerouting.globalSettings = new GlobalSettings();
   }
 
   @Test
@@ -265,5 +275,89 @@ public class RoutingJobSchedulerTest {
     assertFalse(
         completedJob.isCancelledByUser(),
         "isCancelledByUser should remain false for COMPLETED job.");
+  }
+
+  @Test
+  void testGetMaxParallelJobsDefault() {
+    int expectedDefault = RoutingJobScheduler.defaultMaxParallelJobs();
+    assertTrue(expectedDefault >= 1, "Default max parallel jobs must be at least 1.");
+    assertEquals(
+        expectedDefault,
+        scheduler.getMaxParallelJobs(),
+        "Default max parallel jobs should equal defaultMaxParallelJobs().");
+  }
+
+  @Test
+  void testGetMaxParallelJobsConfigured() {
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = 12;
+    assertEquals(
+        12, scheduler.getMaxParallelJobs(), "Should return configured maxParallelJobs value.");
+  }
+
+  @Test
+  void testGetMaxParallelJobsFallbackOnInvalidValues() {
+    int expectedDefault = RoutingJobScheduler.defaultMaxParallelJobs();
+
+    // Zero should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = 0;
+    assertEquals(expectedDefault, scheduler.getMaxParallelJobs(), "0 should fall back to default.");
+
+    // Negative should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = -5;
+    assertEquals(
+        expectedDefault,
+        scheduler.getMaxParallelJobs(),
+        "Negative value should fall back to default.");
+
+    // Null should fall back to default
+    Freerouting.globalSettings.apiServerSettings.maxParallelJobs = null;
+    assertEquals(
+        expectedDefault, scheduler.getMaxParallelJobs(), "Null value should fall back to default.");
+
+    // Null globalSettings should fall back to default
+    Freerouting.globalSettings = null;
+    assertEquals(
+        expectedDefault,
+        scheduler.getMaxParallelJobs(),
+        "Null globalSettings should fall back to default.");
+  }
+
+  @Test
+  void testSaveJobClosesDirectoryStreams() {
+    Freerouting.globalSettings.featureFlags.saveJobs = true;
+    RoutingJob job = createTestJob();
+    scheduler.enqueueJob(job);
+
+    // Call saveJob multiple times in the same session to exercise both session folder
+    // lookup and job folder count listing paths, ensuring no directory streams leak.
+    scheduler.saveJob(job);
+    scheduler.saveJob(job);
+
+    assertEquals(RoutingJobState.QUEUED, job.state);
+
+    Path dataDir = tempDir.resolve("data");
+    assertTrue(Files.exists(dataDir), "Job data directory should exist");
+
+    // If directory streams are not closed, the directory remains locked by open handles.
+    // Verifying that all created files and directories can be immediately deleted ensures
+    // that no unclosed DirectoryStream file descriptors or locks are lingering.
+    assertDoesNotThrow(
+        () -> {
+          try (var stream = Files.walk(dataDir)) {
+            stream
+                .sorted((a, b) -> b.compareTo(a)) // delete children before parents
+                .forEach(
+                    p -> {
+                      try {
+                        Files.delete(p);
+                      } catch (IOException e) {
+                        throw new RuntimeException(
+                            "Failed to delete " + p + " due to open handle lock", e);
+                      }
+                    });
+          }
+        },
+        "Deleting saved job files and directories must succeed without open handle locks");
+    assertFalse(Files.exists(dataDir), "Data directory should be deleted");
   }
 }

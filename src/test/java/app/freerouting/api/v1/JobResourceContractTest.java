@@ -53,6 +53,7 @@ class JobResourceContractTest {
             "GET /v1/jobs/{jobId}",
             "PUT /v1/jobs/{jobId}/start",
             "PUT /v1/jobs/{jobId}/cancel",
+            "GET /v1/jobs/{jobId}/settings",
             "POST /v1/jobs/{jobId}/settings",
             "POST /v1/jobs/{jobId}/input",
             "POST /v1/jobs/{jobId}/input/json",
@@ -63,7 +64,8 @@ class JobResourceContractTest {
             "GET /v1/jobs/{jobId}/output/json/stream",
             "GET /v1/jobs/{jobId}/logs",
             "GET /v1/jobs/{jobId}/logs/stream",
-            "GET /v1/jobs/{jobId}/drc"),
+            "GET /v1/jobs/{jobId}/drc",
+            "GET /v1/jobs/{jobId}/drc/summary"),
         actual);
   }
 

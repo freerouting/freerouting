@@ -1,6 +1,7 @@
 package app.freerouting.util.gson;
 
 import app.freerouting.settings.LayerSettings;
+import app.freerouting.settings.LegacyRouterSettingsBridge;
 import app.freerouting.settings.RouterSettings;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -41,6 +42,9 @@ public class RouterSettingsTypeAdapterFactory implements TypeAdapterFactory {
 
             // Serialize using default delegate adapter
             JsonElement tree = delegate.toJsonTree(value);
+            if (value.layers != null && tree.isJsonObject()) {
+              tree.getAsJsonObject().add("layers", gson.toJsonTree(value.layers));
+            }
 
             elementAdapter.write(out, tree);
           }
@@ -58,6 +62,7 @@ public class RouterSettingsTypeAdapterFactory implements TypeAdapterFactory {
             // Explicitly extract the transient layers array if present
             if (tree.isJsonObject() && settings != null) {
               JsonObject jsonObject = tree.getAsJsonObject();
+              LegacyRouterSettingsBridge.absorbLegacyJson(jsonObject, settings);
               if (jsonObject.has("layers")) {
                 settings.layers = gson.fromJson(jsonObject.get("layers"), LayerSettings[].class);
               }

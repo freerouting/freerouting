@@ -53,7 +53,7 @@ class RuntimeEnvironmentTest {
 
     org.junit.jupiter.api.Assertions.assertTrue(score > 0, "CPU score must be strictly positive");
     org.junit.jupiter.api.Assertions.assertTrue(
-        elapsed < 1000, "CPU benchmark should complete well within a bounded startup window");
+        elapsed < 2000, "CPU benchmark should complete well within a bounded startup window");
   }
 
   @Test

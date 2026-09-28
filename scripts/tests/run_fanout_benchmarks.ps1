@@ -18,7 +18,7 @@ foreach ($strategy in $strategies) {
             --router.optimizer.enabled=false `
             --gui.enabled=false `
             --api_server.enabled=false `
-            --router.max_passes=10 `
+            --router.autorouter.max_passes=10 `
             --router.fanout.pin_sorting_order=$strategy `
             --logging.console.level=INFO `
             *>&1 | Out-File -FilePath $logFile -Encoding utf8

@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * This singleton class is responsible for managing the jobs that will be processed by the router.
@@ -42,7 +43,6 @@ public final class RoutingJobScheduler {
   private static final int MAX_QUEUED_JOBS = 5_000;
   private static final RoutingJobScheduler instance = new RoutingJobScheduler();
   public final LinkedList<RoutingJob> jobs = new LinkedList<>();
-  private final int maxParallelJobs = 5;
 
   // Private constructor to prevent instantiation
   private RoutingJobScheduler() {
@@ -77,7 +77,7 @@ public final class RoutingJobScheduler {
                                     .filter(j -> j.state == RoutingJobState.RUNNING)
                                     .count();
 
-                        if (parallelJobs < maxParallelJobs) {
+                        if (parallelJobs < getMaxParallelJobs()) {
                           if ((job.input == null) || (job.input.getData() == null)) {
                             FRLogger.warn("RoutingJob input is null, it is skipped.");
                             job.state = RoutingJobState.INVALID;
@@ -184,52 +184,75 @@ public final class RoutingJobScheduler {
                               }
 
                               job.routerSettings.applyBoardSpecificOptimizations(job.board);
+                              job.routerSettings.applyNetClassExclusions(job.board);
 
-                              // Load session file if specified
-                              if (globalSettings.designSessionFilename != null) {
+                              // Load session file if specified in job or globally
+                              byte[] sessionBytesToLoad = null;
+                              String sessionFilenameToLoad = null;
+
+                              if (job.initialSession != null
+                                  && job.initialSession.getData() != null) {
+                                sessionBytesToLoad = job.initialSession.getData().readAllBytes();
+                                sessionFilenameToLoad = job.initialSession.getFilename();
+                              } else if (globalSettings.designSessionFilename != null) {
+                                java.io.File sessionFile =
+                                    new java.io.File(globalSettings.designSessionFilename);
+                                if (sessionFile.exists()) {
+                                  try {
+                                    sessionBytesToLoad = Files.readAllBytes(sessionFile.toPath());
+                                    sessionFilenameToLoad = sessionFile.getName();
+                                  } catch (IOException e) {
+                                    FRLogger.warn(
+                                        "Failed to read session file: " + sessionFile.getPath());
+                                  }
+                                } else {
+                                  FRLogger.warn(
+                                      "Session file not found: "
+                                          + globalSettings.designSessionFilename);
+                                }
+                              }
+
+                              if (sessionBytesToLoad != null && job.board != null) {
                                 try {
-                                  java.io.File sessionFile =
-                                      new java.io.File(globalSettings.designSessionFilename);
-                                  if (sessionFile.exists()) {
-                                    if (globalSettings
-                                        .designSessionFilename
-                                        .toLowerCase()
-                                        .endsWith(".json")) {
-                                      FRLogger.info(
-                                          "Loading KiCad JSON session file: "
-                                              + globalSettings.designSessionFilename);
-                                      try (java.io.FileReader jsonReader =
-                                          new java.io.FileReader(sessionFile)) {
-                                        app.freerouting.io.kicad.KiCadJsonReader.importSession(
-                                            jsonReader, job.board);
-                                        FRLogger.info(
-                                            "KiCad JSON session file loaded successfully");
-                                      }
-                                    } else {
-                                      FRLogger.info(
-                                          "Loading SES file: "
-                                              + globalSettings.designSessionFilename);
-                                      java.io.FileInputStream sesStream =
-                                          new java.io.FileInputStream(sessionFile);
-                                      SesImportSummary summary =
-                                          SesReader.read(sesStream, job.board);
-                                      FRLogger.info(
-                                          "SES file loaded: "
-                                              + summary.wiresImported()
-                                              + " wires, "
-                                              + summary.viasImported()
-                                              + " vias imported"
-                                              + (summary.errorsEncountered() > 0
-                                                  ? " (" + summary.errorsEncountered() + " errors)"
-                                                  : ""));
+                                  boolean isJsonSession =
+                                      (sessionFilenameToLoad != null
+                                              && sessionFilenameToLoad
+                                                  .toLowerCase()
+                                                  .endsWith(".json"))
+                                          || RoutingJob.getFileFormat(sessionBytesToLoad)
+                                              == FileFormat.KICAD_DESIGN_JSON;
+
+                                  if (isJsonSession) {
+                                    FRLogger.info(
+                                        "Loading KiCad JSON session data: "
+                                            + sessionFilenameToLoad);
+                                    try (java.io.Reader jsonReader =
+                                        new java.io.InputStreamReader(
+                                            new ByteArrayInputStream(sessionBytesToLoad),
+                                            StandardCharsets.UTF_8)) {
+                                      app.freerouting.io.kicad.KiCadJsonReader.importSession(
+                                          jsonReader, job.board);
+                                      FRLogger.info("KiCad JSON session loaded successfully");
                                     }
                                   } else {
-                                    FRLogger.warn(
-                                        "Session file not found: "
-                                            + globalSettings.designSessionFilename);
+                                    FRLogger.info(
+                                        "Loading SES session data: " + sessionFilenameToLoad);
+                                    SesImportSummary summary =
+                                        SesReader.read(
+                                            new ByteArrayInputStream(sessionBytesToLoad),
+                                            job.board);
+                                    FRLogger.info(
+                                        "SES session loaded: "
+                                            + summary.wiresImported()
+                                            + " wires, "
+                                            + summary.viasImported()
+                                            + " vias imported"
+                                            + (summary.errorsEncountered() > 0
+                                                ? " (" + summary.errorsEncountered() + " errors)"
+                                                : ""));
                                   }
                                 } catch (Exception e) {
-                                  FRLogger.error("Failed to load session file", e);
+                                  FRLogger.error("Failed to load session data", e);
                                 }
                               }
 
@@ -288,6 +311,33 @@ public final class RoutingJobScheduler {
    */
   public static RoutingJobScheduler getInstance() {
     return instance;
+  }
+
+  /**
+   * Returns the default maximum number of routing jobs that may run concurrently, calculated
+   * dynamically as {@code max(1, CPU cores - 1)}.
+   *
+   * @return The default maximum number of parallel jobs.
+   */
+  public static int defaultMaxParallelJobs() {
+    return Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+  }
+
+  /**
+   * Returns the maximum number of routing jobs that may run concurrently, taken from the
+   * api_server.max_parallel_jobs setting. Falls back to {@link #defaultMaxParallelJobs()} when the
+   * settings are not loaded yet or the configured value is not positive.
+   *
+   * @return The maximum number of parallel jobs.
+   */
+  public int getMaxParallelJobs() {
+    if ((globalSettings != null)
+        && (globalSettings.apiServerSettings != null)
+        && (globalSettings.apiServerSettings.maxParallelJobs != null)
+        && (globalSettings.apiServerSettings.maxParallelJobs > 0)) {
+      return globalSettings.apiServerSettings.maxParallelJobs;
+    }
+    return defaultMaxParallelJobs();
   }
 
   private String uuidToShortCode(UUID uuid) {
@@ -386,28 +436,32 @@ public final class RoutingJobScheduler {
     Files.createDirectories(userFolderPath);
 
     // Check if we already have a directory that has a name with the ending of
-    // sessionFolder
-    Path sessionFolderPath =
-        Files.list(userFolderPath)
-            .filter(Files::isDirectory)
-            .filter(p -> p.getFileName().toString().endsWith(sessionFolder))
-            .findFirst()
-            .orElse(null);
+    // sessionFolder. Streams over directories must be closed to prevent FD leaks.
+    Path sessionFolderPath;
+    try (Stream<Path> dirs = Files.list(userFolderPath)) {
+      sessionFolderPath =
+          dirs.filter(Files::isDirectory)
+              .filter(p -> p.getFileName().toString().endsWith(sessionFolder))
+              .findFirst()
+              .orElse(null);
+    }
 
     if (sessionFolderPath == null) {
       // List all directories in the user folder and check if they start with a number
       // If they do, then they are job folders, and we can get the highest number and
       // increment it
-      int jobFolderCount =
-          Files.list(userFolderPath)
-              .filter(Files::isDirectory)
-              .map(Path::getFileName)
-              .map(Path::toString)
-              .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
-              .filter(s -> s.matches("\\d+")) // Ensure it is numeric
-              .mapToInt(Integer::parseInt)
-              .max()
-              .orElse(0);
+      int jobFolderCount;
+      try (Stream<Path> dirs = Files.list(userFolderPath)) {
+        jobFolderCount =
+            dirs.filter(Files::isDirectory)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .map(s -> s.split("_")[0]) // Extract the numeric prefix before the underscore
+                .filter(s -> s.matches("\\d+")) // Ensure it is numeric
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
+      }
 
       sessionFolderPath =
           userFolderPath.resolve("%04d".formatted(jobFolderCount + 1) + "_" + sessionFolder);

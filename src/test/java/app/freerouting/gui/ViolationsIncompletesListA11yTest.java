@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import app.freerouting.Freerouting;
 import app.freerouting.board.facade.BasicBoard;
 import app.freerouting.drc.AirLine;
 import app.freerouting.drc.ClearanceViolation;
@@ -13,11 +14,13 @@ import app.freerouting.gui.a11y.GuiA11yHarness;
 import app.freerouting.gui.a11y.GuiLocators;
 import app.freerouting.io.BoardReadResult;
 import app.freerouting.io.specctra.DsnReader;
+import app.freerouting.settings.GlobalSettings;
 import java.io.FileInputStream;
 import java.util.Collection;
 import javax.accessibility.AccessibleRole;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -35,11 +38,18 @@ import org.junit.jupiter.api.Test;
 @Tag("gui")
 class ViolationsIncompletesListA11yTest {
 
-  /** Board with both incompletes and clearance violations: 9 unconnected, 2 unique violations. */
-  private static final String FIXTURE = "Issue575-drc_dev-board_4_hole_clearance_violations.dsn";
+  private static final String INCOMPLETE_FIXTURE =
+      "Issue575-drc_dev-board_4_hole_clearance_violations.dsn";
+  private static final String VIOLATION_FIXTURE =
+      "Issue575-drc_BBD_Mars-64_6_track_1_hole_clearance_violations.dsn";
 
-  private static final int EXPECTED_UNIQUE_VIOLATIONS = 2;
+  private static final int EXPECTED_UNIQUE_VIOLATIONS = 67;
   private static final int EXPECTED_INCOMPLETES = 9;
+
+  @BeforeEach
+  void setUp() {
+    Freerouting.globalSettings = new GlobalSettings();
+  }
 
   /**
    * Translated list titles (mirror the {@code Common} bundle: clearance_violations/incompletes).
@@ -51,9 +61,9 @@ class ViolationsIncompletesListA11yTest {
   private static final ListTitles HUNGARIAN =
       new ListTitles("szigetelőtávolság-sértések", "Befejezetlen kapcsolatok");
 
-  private static BasicBoard loadBoard() throws Exception {
+  private static BasicBoard loadBoard(String filename) throws Exception {
     BoardReadResult result;
-    try (FileInputStream in = new FileInputStream("fixtures/" + FIXTURE)) {
+    try (FileInputStream in = new FileInputStream("fixtures/" + filename)) {
       result = DsnReader.readBoard(in, null, null, "test");
     }
     return switch (result) {
@@ -77,7 +87,7 @@ class ViolationsIncompletesListA11yTest {
 
   @Test
   void clearanceViolationsListIsAccessibleAndHasCorrectCount() throws Exception {
-    BasicBoard board = loadBoard();
+    BasicBoard board = loadBoard(VIOLATION_FIXTURE);
     DesignRulesChecker drc = new DesignRulesChecker(board, null);
     Collection<ClearanceViolation> violations = drc.getAllClearanceViolations();
     String[] rows =
@@ -102,7 +112,7 @@ class ViolationsIncompletesListA11yTest {
 
   @Test
   void incompletesListIsAccessibleAndHasCorrectCount() throws Exception {
-    BasicBoard board = loadBoard();
+    BasicBoard board = loadBoard(INCOMPLETE_FIXTURE);
     DesignRulesChecker drc = new DesignRulesChecker(board, null);
     AirLine[] airlines = drc.getAllAirlines();
     String[] rows =

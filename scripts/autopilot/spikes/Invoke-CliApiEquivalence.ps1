@@ -90,7 +90,7 @@ try {
         $cliSw = [System.Diagnostics.Stopwatch]::StartNew()
         & java -jar $JarPath --gui.enabled=false --api_server.enabled=false --mcp_server.enabled=false `
             -de $dsn -do $ses `
-            --router.max_passes=5 --router.job_timeout="00:05:00" `
+            --router.autorouter.max_passes=5 --router.job_timeout="00:05:00" `
             --router.result_json="$manifest"
         $cliSw.Stop()
 

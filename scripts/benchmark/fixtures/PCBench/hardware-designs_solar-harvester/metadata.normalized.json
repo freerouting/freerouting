@@ -46,12 +46,14 @@
   },
   "tags": [
     "2-layer",
+    "canary",
+    "golden-canary",
     "plane",
     "small",
-    "tier-b"
+    "tier-a"
   ],
-  "tier": "B",
-  "expected_outcome": "baseline_violations",
+  "tier": "A",
+  "expected_outcome": "complete",
   "timeout_budget": "00:01:00",
   "baseline_routing": {
     "calibrated_at": "2026-08-18T20:56:32.942282+00:00",

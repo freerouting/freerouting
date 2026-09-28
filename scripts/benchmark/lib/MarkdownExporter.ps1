@@ -70,20 +70,39 @@ function Format-MarkdownTable {
     return $sb.ToString()
 }
 
-function Get-RunScoreValue {
-    param($Run)
+function Get-NormalizedScoreEntry {
+    param($Run, [hashtable]$NormalizedScores = $null)
 
+    if (-not $NormalizedScores -or -not $Run) { return $null }
+    $cacheKey = if ($Run.cache_key) { [string]$Run.cache_key } else { $null }
+    if ($cacheKey -and $NormalizedScores.ContainsKey($cacheKey)) {
+        return $NormalizedScores[$cacheKey]
+    }
+    return $null
+}
+
+function Get-RunScoreValue {
+    param($Run, [hashtable]$NormalizedScores = $null)
+
+    $entry = Get-NormalizedScoreEntry $Run $NormalizedScores
+    if ($entry -and $entry.router_score -ne $null) {
+        return [double]$entry.router_score
+    }
     if ($Run.quality.quality_score -ne $null) { return [double]$Run.quality.quality_score }
     return $null
 }
 
 function Test-RunIsFailed {
-    param($Run)
+    param($Run, [hashtable]$NormalizedScores = $null)
 
+    $entry = Get-NormalizedScoreEntry $Run $NormalizedScores
+    if ($entry -and $entry.is_failed -eq $true) {
+        return $true
+    }
     if ($Run.exit.crashed -eq $true) { return $true }
     if ($Run.exit.code -ne $null -and $Run.exit.code -ne 0) { return $true }
     if ($Run.exit.state -and $Run.exit.state -eq "FAILED") { return $true }
-    $score = Get-RunScoreValue $Run
+    $score = Get-RunScoreValue $Run $NormalizedScores
     if ($score -eq $null) { return $true }
     return $false
 }
@@ -93,7 +112,8 @@ function Export-MarkdownReport {
         [Hashtable]$Cache,
         [string]$MdPath,
         [string]$ChartDataPath,
-        [string]$FixturesDir = (Get-BenchmarkFixturesDir)
+        [string]$FixturesDir = (Get-BenchmarkFixturesDir),
+        [hashtable]$NormalizedScores = $null
     )
 
     $runs = Get-ActiveBenchmarkRuns $Cache $FixturesDir
@@ -166,7 +186,7 @@ function Export-MarkdownReport {
                 $latestRun = $versionRuns | Sort-Object -Property { $_.run_at } -Descending | Select-Object -First 1
                 $fixtureCount++
 
-                $failed = Test-RunIsFailed $latestRun
+                $failed = Test-RunIsFailed $latestRun $NormalizedScores
                 $isTimeout = $latestRun.exit.timed_out -eq $true
                 if ($isTimeout) { $timeouts++ }
                 if ($failed) { $failures++ }
@@ -181,11 +201,25 @@ function Export-MarkdownReport {
                     [int]$latestRun.quality.clearance_violations
                 } else { $null }
 
-                $score = Get-RunScoreValue $latestRun
+                $score = Get-RunScoreValue $latestRun $NormalizedScores
+
+                $unfixable = if ($latestRun.quality.unfixable_clearance_violations -ne $null) {
+                    [int]$latestRun.quality.unfixable_clearance_violations
+                } else { 0 }
+
+                $routerViol = if ($latestRun.quality.router_introduced_violations -ne $null) {
+                    [int]$latestRun.quality.router_introduced_violations
+                } else { $null }
+
+                $isClean = if ($routerViol -ne $null) {
+                    $routerViol -eq 0
+                } else {
+                    $violations -ne $null -and $violations -le $unfixable
+                }
 
                 if (-not $failed -and $unrouted -ne $null -and $unrouted -eq 0) {
                     $allRouted++
-                    if ($violations -ne $null -and $violations -eq 0) {
+                    if ($isClean) {
                         $perfects++
                     }
                 }
@@ -389,7 +423,7 @@ function Export-MarkdownReport {
                 } else {
                     $null
                 }
-                $scoreVal = Get-RunScoreValue $run
+                $scoreVal = Get-RunScoreValue $run $NormalizedScores
 
                 # Compute unrouted cell string
                 $unroutedStr = if ($unroutedVal -ne $null) { "$unroutedVal" } else { "N/A" }
@@ -421,8 +455,14 @@ function Export-MarkdownReport {
                     $logTimedOut = $run.log_analysis.timed_out
                 }
 
-                if (($loadError -eq $null -or $exceptions -eq $null -or $logTimedOut -eq $null) -and $run.log_file -and (Test-Path $run.log_file)) {
-                    $logMetrics = Get-PhaseMetrics $run.log_file $run.binary.version_label
+                $storedLogPath = if ($run.log_file) {
+                    Resolve-BenchmarkStoredPath ([string]$run.log_file)
+                } else {
+                    $null
+                }
+                if (($loadError -eq $null -or $exceptions -eq $null -or $logTimedOut -eq $null) -and
+                    $storedLogPath -and (Test-Path $storedLogPath)) {
+                    $logMetrics = Get-PhaseMetrics $storedLogPath $run.binary.version_label
                     $loadError = $logMetrics.load_error
                     $exceptions = $logMetrics.exceptions
                     $logTimedOut = $logMetrics.timed_out
@@ -480,7 +520,8 @@ function Export-MarkdownReport {
     # --- 3. Chart Data JSON Export ---
     $chartData = @()
     foreach ($run in $runs) {
-        $chartScore = if ($run.quality.quality_score -ne $null) { $run.quality.quality_score } else { 0.0 }
+        $scoreNullable = Get-RunScoreValue $run $NormalizedScores
+        $chartScore = if ($scoreNullable -ne $null) { $scoreNullable } else { 0.0 }
         $chartUnrouted = if ($run.quality.unrouted_connections -ne $null) { $run.quality.unrouted_connections } elseif ($run.quality.final_unrouted -ne $null) { $run.quality.final_unrouted } else { 0 }
 
         $chartData += @{

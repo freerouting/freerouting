@@ -19,7 +19,6 @@ public final class GuiBoardSessionState {
   private final RoutingJob routingJob;
   private int numThreads;
   private BoardUpdateStrategy boardUpdateStrategy;
-  private String hybridRatio;
   private ItemSelectionStrategy itemSelectionStrategy;
 
   public GuiBoardSessionState(GlobalSettings globalSettings, RoutingJob routingJob) {
@@ -35,16 +34,6 @@ public final class GuiBoardSessionState {
   /** Sets the board update strategy for batch operations. */
   public void setBoardUpdateStrategy(BoardUpdateStrategy boardUpdateStrategy) {
     this.boardUpdateStrategy = boardUpdateStrategy;
-  }
-
-  /** Returns the hybrid routing ratio configuration. */
-  public String getHybridRatio() {
-    return hybridRatio;
-  }
-
-  /** Sets the hybrid routing ratio configuration. */
-  public void setHybridRatio(String hybridRatio) {
-    this.hybridRatio = hybridRatio;
   }
 
   /** Returns the item selection strategy for batch autorouting. */

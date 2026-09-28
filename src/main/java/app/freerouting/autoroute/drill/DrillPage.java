@@ -78,7 +78,7 @@ public class DrillPage implements ExpandableObject {
           continue;
         }
         if (currentItem instanceof Pin pin) {
-          if (attachSmd && pin.drillAllowed()) {
+          if (attachSmd && pin.drillAllowed() && pin.containsNet(this.netNumber)) {
             continue;
           }
         }
@@ -101,6 +101,9 @@ public class DrillPage implements ExpandableObject {
       }
       PolylineArea shapeWithHoles = new PolylineArea(this.shape, holes);
       TileShape[] drillShapes = shapeWithHoles.splitToConvex(autorouteEngine.stoppableThread);
+      if (drillShapes == null) {
+        return this.drills;
+      }
 
       // Use the center points of these drill shapes to try making a via.
       int drillFirstLayer = 0;

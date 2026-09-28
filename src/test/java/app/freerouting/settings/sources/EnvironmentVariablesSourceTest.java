@@ -45,7 +45,19 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertEquals(100, settings.maxPasses);
+    assertEquals(100, settings.autorouter.maxPasses);
+    assertEquals(1, source.getParsedCount());
+  }
+
+  @Test
+  void nestedAutorouterMaxPasses() {
+    Map<String, String> env = new HashMap<>();
+    env.put("FREEROUTING__ROUTER__AUTOROUTER__MAX_PASSES", "33");
+
+    EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
+    RouterSettings settings = source.getSettings();
+
+    assertEquals(33, settings.autorouter.maxPasses);
     assertEquals(1, source.getParsedCount());
   }
 
@@ -88,7 +100,7 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertEquals(50, settings.maxPasses);
+    assertEquals(50, settings.autorouter.maxPasses);
     assertEquals(4, settings.optimizer.maxThreads);
     assertTrue(settings.viasAllowed);
     assertEquals(3, source.getParsedCount());
@@ -108,7 +120,7 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertEquals(100, settings.maxPasses);
+    assertEquals(100, settings.autorouter.maxPasses);
     // Only router settings should be parsed
     assertEquals(1, source.getParsedCount());
   }
@@ -126,7 +138,7 @@ class EnvironmentVariablesSourceTest {
 
     assertNotNull(settings);
     // Null value should remain since no valid env vars were found
-    assertNull(settings.maxPasses);
+    assertNull(settings.autorouter.maxPasses);
     assertEquals(0, source.getParsedCount());
   }
 
@@ -142,7 +154,7 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertEquals(100, settings.maxPasses);
+    assertEquals(100, settings.autorouter.maxPasses);
     // Only valid property should be parsed
     assertEquals(1, source.getParsedCount());
   }
@@ -157,7 +169,7 @@ class EnvironmentVariablesSourceTest {
 
     assertNotNull(settings);
     // Should keep null value since parsing failed
-    assertNull(settings.maxPasses);
+    assertNull(settings.autorouter.maxPasses);
     assertEquals(0, source.getParsedCount());
   }
 
@@ -189,7 +201,7 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertEquals(100, settings.maxPasses);
+    assertEquals(100, settings.autorouter.maxPasses);
   }
 
   @Test
@@ -201,7 +213,7 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertEquals("freerouting-router-v19", settings.algorithm);
+    assertEquals("freerouting-router-v19", settings.autorouter.algorithm);
     assertEquals(1, source.getParsedCount());
   }
 
@@ -214,7 +226,7 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertTrue(settings.saveIntermediateStages);
+    assertTrue(settings.autorouter.saveIntermediateStages);
     assertEquals(1, source.getParsedCount());
   }
 
@@ -223,8 +235,7 @@ class EnvironmentVariablesSourceTest {
     Map<String, String> env =
         new HashMap<>(
             Map.of(
-                "FREEROUTING__ROUTER__OPTIMIZER__BOARD_UPDATE_STRATEGY", "GREEDY",
-                "FREEROUTING__ROUTER__OPTIMIZER__HYBRID_RATIO", "1:1",
+                "FREEROUTING__ROUTER__OPTIMIZER__BOARD_UPDATE_STRATEGY", "GLOBAL_OPTIMAL",
                 "FREEROUTING__ROUTER__OPTIMIZER__ITEM_SELECTION_STRATEGY", "SEQUENTIAL"));
 
     EnvironmentVariablesSource source = new EnvironmentVariablesSource(env);
@@ -232,13 +243,12 @@ class EnvironmentVariablesSourceTest {
 
     assertNotNull(settings);
     assertEquals(
-        app.freerouting.autoroute.BoardUpdateStrategy.GREEDY,
+        app.freerouting.autoroute.BoardUpdateStrategy.GLOBAL_OPTIMAL,
         settings.optimizer.boardUpdateStrategy);
-    assertEquals("1:1", settings.optimizer.hybridRatio);
     assertEquals(
         app.freerouting.autoroute.ItemSelectionStrategy.SEQUENTIAL,
         settings.optimizer.itemSelectionStrategy);
-    assertEquals(3, source.getParsedCount());
+    assertEquals(2, source.getParsedCount());
   }
 
   @Test
@@ -251,8 +261,8 @@ class EnvironmentVariablesSourceTest {
     RouterSettings settings = source.getSettings();
 
     assertNotNull(settings);
-    assertEquals(100, settings.maxPasses);
-    assertTrue(settings.saveIntermediateStages);
+    assertEquals(100, settings.autorouter.maxPasses);
+    assertTrue(settings.autorouter.saveIntermediateStages);
     assertEquals(2, source.getParsedCount());
   }
 

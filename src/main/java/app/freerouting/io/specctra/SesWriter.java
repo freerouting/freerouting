@@ -173,7 +173,7 @@ public final class SesWriter {
       file.write(" back ");
     }
     file.write(formatPlacementRotation(component.getRotationInDegree()));
-    if (component.positionFixed) {
+    if (component.positionFixed && !board.communication.hostCadIsKiCad()) {
       file.newLine();
       file.write(" (lock_type position)");
     }

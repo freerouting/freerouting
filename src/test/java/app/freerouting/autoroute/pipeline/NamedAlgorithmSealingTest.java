@@ -17,7 +17,7 @@ class NamedAlgorithmSealingTest {
     assertEquals(
         Set.of(BatchAutorouter.class, BatchOptimizer.class),
         permittedClasses(NamedAlgorithm.class));
-    assertTrue(BatchOptimizerMultiThreaded.class.getSuperclass() == BatchOptimizer.class);
+    assertTrue(java.lang.reflect.Modifier.isFinal(BatchOptimizer.class.getModifiers()));
   }
 
   private static Set<Class<?>> permittedClasses(Class<?> type) {

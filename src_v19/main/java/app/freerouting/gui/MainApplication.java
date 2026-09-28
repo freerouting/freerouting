@@ -495,7 +495,7 @@ public class MainApplication extends WindowBase {
                     outputWritten,
                     exitCode,
                     finalState,
-                    null,
+                    new_frame.board_panel.board_handling.resultPhaseMetrics,
                     usage
                 );
                 RoutingResultManifest.write(Path.of(startupOptions.result_json_path), manifest);

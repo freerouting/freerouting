@@ -59,11 +59,16 @@ Below is a comprehensive list of command-line options available in Freerouting, 
   - Set to `0` to disable route optimization.
   - Increasing the number may improve performance on multi-core systems.
 
-- **`-oit [percentage]`**
-  Specifies the optimizer improvement threshold per pass:
-  - Default: `0.1%`
-  - The optimizer stops if the improvement falls below this threshold.
-  - Setting `-oit 0` continues optimization until manually stopped or no further improvements are possible.
+- **`--router.optimizer.improvement_threshold=[percentage]`**
+  Specifies the relative optimizer pass-improvement stopping threshold directly as a percentage (e.g. `2.5` = 2.5%, `5.5` = 5.5%):
+  - Default: `2.5` (2.5%)
+  - Practical ranges and tradeoffs:
+    - `0.5 – 1.0` (0.5% – 1.0%): Precision mode. Maximizes via elimination on complex boards, but runs significantly longer with diminishing-return tail passes.
+    - `2.0 – 2.5` (2.0% – 2.5%): Balanced default. Retains >80% of via reductions while cutting optimizer runtime by ~25%.
+    - `3.5 – 5.0` (3.5% – 5.0%): Fast mode. Cuts optimizer runtime by ~45%, retaining ~65% of via reductions.
+    - `> 5.5` (> 5.5%): Rapid prototyping. Stops after 1–2 passes; not recommended for production boards where via minimization matters.
+  - Setting `0.0` continues optimization until `max_passes` is reached or no further improvements are possible.
+  - *Note:* The legacy `-oit` flag is deprecated and no longer supported. A warning will be logged if used.
 
 - **`-inc [net class names]`**
   Lists net classes to ignore during autorouting:
@@ -208,10 +213,10 @@ Settings whose value is a list (e.g. `api_server.endpoints`) accept a **comma-se
 
 ```bash
 # Single endpoint
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864
 
 # Multiple endpoints (comma-separated)
-java -jar freerouting.jar --api_server-endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
+java -jar freerouting.jar --api_server.endpoints=http://0.0.0.0:37864,http://127.0.0.1:37864
 ```
 
 The equivalent environment-variable syntax is:
@@ -248,7 +253,7 @@ FREEROUTING__ROUTER__LAYERS__PREFERRED_DIRECTION_HORIZONTAL=true,false
 |---------|------|-------------|
 | `api_server.enabled` | Boolean | Enable or disable the built-in REST API server. |
 | `api_server.http_allowed` | Boolean | Allow plain HTTP connections (in addition to HTTPS). |
-| `api_server-endpoints` | String list | Comma-separated list of `protocol://host:port` endpoints the server will bind to. Default: `http://127.0.0.1:37864`. |
+| `api_server.endpoints` | String list | Comma-separated list of `protocol://host:port` endpoints the server will bind to. Default: `http://127.0.0.1:37864`. |
 | `api_server.authentication.enabled` | Boolean | Require API-key authentication. Default: `true`. |
 | `api_server.cors_origins` | String | Comma-separated CORS origin allowlist (use `*` for all origins). |
 
@@ -259,7 +264,7 @@ java -jar freerouting-executable.jar \
   --gui.enabled=false \
   --api_server.enabled=true \
   --api_server.authentication.enabled=false \
-  --api_server-endpoints=http://0.0.0.0:37864
+  --api_server.endpoints=http://0.0.0.0:37864
 ```
 
 For a complete self-hosting walkthrough — including Docker Compose, systemd, and platform-specific notes — see the [Self-Hosting Guide](self-hosting.md).
@@ -306,4 +311,4 @@ java -jar freerouting.jar -de MyBoard.dsn -do MyBoard.ses -mp 10 -mt 4
 
 By leveraging Freerouting's CLI, you can integrate advanced PCB routing into your automated workflows, scripts, or applications. The flexibility of command-line options and internal settings allows for customized routing solutions tailored to your project's requirements.
 
-For further customization and advanced configurations, refer to the [Settings Documentation](/docs/settings.md) and other resources provided with Freerouting.
+For further customization and advanced configurations, refer to the [Settings Documentation](settings.md) and other resources provided with Freerouting.

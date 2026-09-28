@@ -62,7 +62,7 @@ public class McpApiKeyValidationFilter implements ContainerRequestFilter {
     }
 
     if (apiKey == null || apiKey.isEmpty() || !validationService.validateApiKey(apiKey)) {
-      FRLogger.warn(
+      FRLogger.debug(
           "MCP API key validation failed for path " + requestContext.getUriInfo().getPath());
       String jsonBody = "{\"error\":\"Invalid or missing API key.\"}";
       requestContext.abortWith(
