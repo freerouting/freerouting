@@ -177,6 +177,8 @@ def open_worksheet(credentials: Any, google_api_key: Optional[str], spreadsheet_
             return client.open_by_key(spreadsheet_id_or_url).sheet1
         except Exception as exc:
             last_error = exc
+    if last_error is None:
+        raise RuntimeError("Failed to open the Google Sheet.")
     raise last_error
 
 
