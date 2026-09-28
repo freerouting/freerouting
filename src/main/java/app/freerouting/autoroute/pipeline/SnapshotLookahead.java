@@ -1,7 +1,6 @@
 package app.freerouting.autoroute.pipeline;
 
 import app.freerouting.autoroute.AutorouteAttemptResult;
-import app.freerouting.autoroute.AutorouteAttemptState;
 import app.freerouting.autoroute.path.PlannedConnection;
 import app.freerouting.board.facade.RoutingBoard;
 import app.freerouting.board.model.items.Item;
@@ -22,11 +21,10 @@ import java.util.concurrent.Future;
 /**
  * Searches the next autoroute item on a deep copy while the main thread routes the current item.
  *
- * <p>The copy is committed only when {@link SnapshotCommitGate} says the live board has not changed
- * since the snapshot. Otherwise the search is discarded and the main thread routes the item itself,
- * which keeps the same routes as the single-thread pass. Enabled with {@code
+ * <p>The worker result is discarded. Committing the deserialized board dropped one Aleste
+ * connection. The item is routed on the live board. Enabled with {@code
  * -Dfreerouting.autoroute.snapshot_commit=true} when {@code router.autorouter.max_threads} is
- * greater than one. The pool is one worker: a wider window cannot be merged into the live board.
+ * greater than one. The pool is one worker.
  */
 final class SnapshotLookahead implements AutoCloseable {
 
@@ -118,16 +116,13 @@ final class SnapshotLookahead implements AutoCloseable {
       return null;
     }
     if (!SnapshotCommitGate.adoptPreparedBoard(committedChanges)) {
-      if (prepared.plan == null
-          || prepared.result.state != AutorouteAttemptState.ROUTED
-          || SnapshotCommitGate.corridorTouched(committedChanges, prepared.corridor)) {
-        retries++;
-        return null;
-      }
-      return prepared;
+      retries++;
+      return null;
     }
-    adopted++;
-    return prepared;
+    // Committing this copy dropped one Aleste connection (58.95 / 1500 versus 59.35 / 1499) after
+    // 58 adopts. Keep the search for timing, and route the item on the live board.
+    retries++;
+    return null;
   }
 
   /** True when the prepared board may replace the live board. Call before {@link #launch}. */

@@ -29,8 +29,8 @@ import java.util.TreeSet;
 /**
  * Executes one autoroute pass. The item loop is single-threaded unless {@code
  * -Dfreerouting.autoroute.snapshot_commit=true} and {@code router.autorouter.max_threads} is
- * greater than one. That lookahead searches the next item on a board copy and commits the copy only
- * when the live board has not changed, so one thread and many threads keep the same routes.
+ * greater than one. That lookahead searches the next item on a board copy and discards the copy.
+ * The item is routed on the live board, so one thread and many threads keep the same routes.
  */
 final class AutoroutePassRunner {
 
@@ -138,20 +138,12 @@ final class AutoroutePassRunner {
           SnapshotLookahead.PreparedConnection prepared =
               lookahead == null ? null : lookahead.poll(currentItem, i);
           boolean adopt = prepared != null && lookahead.canAdoptBoard();
-          boolean replayed = false;
           if (adopt) {
             router.adoptBoard(prepared.board);
             currentItem = router.board.getItem(listedItem.getId());
             snapshotBoardReplaced = true;
             if (prepared.airLine != null) {
               router.setAirLine(prepared.airLine);
-            }
-          } else if (prepared != null) {
-            replayed = router.replayPlan(prepared.plan, passNo);
-            if (replayed) {
-              lookahead.noteReplay();
-            } else {
-              lookahead.noteUnreplayable();
             }
           }
           boolean lastAllowedItem =
@@ -180,8 +172,6 @@ final class AutoroutePassRunner {
           final AutorouteAttemptResult autorouterResult;
           if (adopt) {
             autorouterResult = prepared.result;
-          } else if (replayed) {
-            autorouterResult = new AutorouteAttemptResult(AutorouteAttemptState.ROUTED);
           } else {
             int maxIdBefore = router.board.communication.idGenerator.maxGeneratedId();
             autorouterResult =

@@ -1,8 +1,8 @@
 # Large-board autorouter performance
 
-Status: 2.5.0-RC10 contains phases 1 and 2. Phase 3 lookahead stays off. On Aleste it matches the serial score for 8 items (13.64 / 1612) and 32 items (23.35 / 1588), both with 48 violations. At 128 items it is slower (11.56 s versus 8.08 s) and drops one connection (58.95 / 1500 versus 59.35 / 1499). The board copy costs more than these short mazes, and a replayed plan is not yet identical to the serial route. The production pass stays single-threaded unless `-Dfreerouting.autoroute.snapshot_commit=true`. Phases 4 and 5 are not started.
+Status: 2.5.0-RC10 contains phases 1 and 2. Phase 3 lookahead stays off. Replaying a stale plan, and adopting the deserialized board, each scored 58.95 / 1500 on the 128-item Aleste slice against the serial 59.35 / 1499, with 48 violations. Discarding every worker result restores 59.35 / 1499 and makes the pass slower (20.50 s versus 8.08 s) because the copy still runs. The production pass stays single-threaded unless `-Dfreerouting.autoroute.snapshot_commit=true`. Phases 4 and 5 are not started.
 
-Determinism rule for every phase: the same board produces the same routes on one thread and on many threads. Workers may search ahead, but the main thread commits in today's item order. A search is discarded and rerun serially when an earlier commit changes the board. Finish-order commit is not used. The maze still mutates the `ShapeSearchTree` on the board it searches, so a prepared route is a whole-board copy, not a path that can be inserted into the live board.
+Determinism rule for every phase: the same board produces the same routes on one thread and on many threads. Workers may search ahead, but the main thread commits in today's item order. A search is discarded and rerun serially when an earlier commit changes the board, including when the recorded corridor misses that commit. The maze reads the whole occupancy, so a path found without the earlier copper is a different route. Finish-order commit is not used. The maze still mutates the `ShapeSearchTree` on the board it searches, so a prepared route replaces the live board only when that board is unchanged.
 
 The batch loop calls `AutoroutePassRunner.runSingleThread`. `router.autorouter.max_threads` is kept for phase 3. The optimizer pool (`router.optimizer.max_threads`) is unchanged.
 
@@ -82,16 +82,16 @@ Threads help only when a pass has work units that do not write the same `ShapeSe
 
 ### Phase 3 — Snapshot search, serial commit
 
-The result object from a maze has no geometry. The lookahead now copies the trace corners and the ripped item ids into a `PlannedConnection` and, when that corridor misses what earlier items committed, rips and inserts those corners on the live board. Replacing the whole board is still used when nothing has been committed since the snapshot. A touching corridor is searched again on the live board.
+The result object from a maze has no geometry. `PlannedConnection` still records corners, and the pass can still replace the live board with the worker copy, but `SnapshotLookahead.poll` does not return that copy. Both commits lost a connection on the 128-item Aleste slice. The worker search still runs when the property is set, and the main thread routes every item itself.
 
 - [ ] Maze against a read-only occupancy snapshot. Not done: each lookahead still owns a deep-copied board, and the maze still expands in that copy's search tree.
-- [x] Move rip-up of a replayed connection to commit time. The live board rips the planned items and inserts the planned corners. The copy still rips during its own search.
+- [x] Move rip-up of a replayed connection to commit time. The inserter exists. The pass does not call it, because that insert is not the serial route.
 - [x] Commit on the main thread in the current item order.
-- [x] Discard a search and rerun it on the live board when an earlier commit touches its corridor. Otherwise replay the plan, or adopt the snapshot board when the live board has not changed.
+- [x] Discard every worker result and route the item on the live board. Adopting the snapshot, including when the live board has not changed, lost a connection on Aleste.
 - [x] Require `router.autorouter.max_threads` greater than one. The pool is one worker, because each search still needs its own board copy.
 - [x] Log `snapshot_retries`, `snapshot_adopted`, `snapshot_replays`, `snapshot_copy_ms`, and `snapshot_prepared_ms` on the `BENCHMARK_PROFILE` line.
-- [x] Aleste with the property on, one pass, same fanout. Eight items: 1.24 s versus 1.55 s, score 13.64 / 1612. Thirty-two items: 3.14 s versus 2.34 s, score 23.35 / 1588. One hundred twenty-eight items: 11.56 s versus 8.08 s, score 58.95 / 1500 versus 59.35 / 1499. Violations stayed 48. Each run adopted almost every later item after a single replay and a single rerun. `Issue508-DAC2020_bm01` with the property unset still scored 181.20 with 142 unrouted and 0 violations.
-- [x] Keep the pass serial unless `-Dfreerouting.autoroute.snapshot_commit=true`. The 128-item sample lost a connection and the copy made the cheap prefix slower, so the lookahead stays off for the nightly run.
+- [x] Aleste with the property on, one pass, same fanout. Replay-and-adopt at 128 items: 11.56 s, score 58.95 / 1500. Adopt-only: 16.28 s, 58 adopts, same 58.95 / 1500. No commit: 20.50 s, 127 retries, 0 adopts, score 59.35 / 1499, matching the serial 8.08 s pass. Violations stayed 48. `Issue508-DAC2020_bm01` with the property unset still scored 181.20 with 142 unrouted and 0 violations.
+- [x] Keep the pass serial unless `-Dfreerouting.autoroute.snapshot_commit=true`. With the property set, the worker result is still discarded. The lookahead stays off for the nightly run.
 
 ### Phase 4 — Spatial bins with a halo
 
