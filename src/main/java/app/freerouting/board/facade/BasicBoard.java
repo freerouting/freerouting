@@ -26,6 +26,7 @@ import app.freerouting.core.library.BoardLibrary;
 import app.freerouting.core.library.Padstack;
 import app.freerouting.datastructures.ShapeTree.TreeEntry;
 import app.freerouting.datastructures.UndoableObjects;
+import app.freerouting.drc.NetRoutingLedger;
 import app.freerouting.geometry.planar.Area;
 import app.freerouting.geometry.planar.ConvexShape;
 import app.freerouting.geometry.planar.IntBox;
@@ -96,6 +97,8 @@ public class BasicBoard implements Serializable {
   /** Handles the search trees pointing into the items of this board. */
   public transient SearchTreeManager searchTreeManager;
 
+  private transient NetRoutingLedger routingLedger;
+
   private transient Set<Integer> normalizeSuppressedNetNos = new HashSet<>();
   private transient int revision;
   private transient BoardItemRepository itemRepository;
@@ -144,6 +147,17 @@ public class BasicBoard implements Serializable {
   /** Deserialize. */
   public static BasicBoard deserialize(byte[] objectByteArray) {
     return BoardSnapshotManager.deserialize(objectByteArray);
+  }
+
+  /**
+   * Incomplete-connection counts maintained across inserts and removals. The counts match {@link
+   * app.freerouting.drc.DesignRulesChecker#calculateAllIncompletes()}.
+   */
+  public NetRoutingLedger routingLedger() {
+    if (routingLedger == null) {
+      routingLedger = new NetRoutingLedger(this);
+    }
+    return routingLedger;
   }
 
   public int getRevision() {

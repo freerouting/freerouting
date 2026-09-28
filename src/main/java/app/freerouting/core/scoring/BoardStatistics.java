@@ -294,10 +294,9 @@ public class BoardStatistics implements Serializable {
 
     // Connections
     if (includeConnections) {
-      var drc = new app.freerouting.drc.DesignRulesChecker(board, null);
-      drc.calculateAllIncompletes();
-      this.connections.maximumCount = drc.maxConnections;
-      this.connections.incompleteCount = drc.getIncompleteCount();
+      app.freerouting.drc.NetRoutingLedger ledger = board.routingLedger();
+      this.connections.maximumCount = ledger.maximumConnections();
+      this.connections.incompleteCount = ledger.incompleteCount();
     }
 
     // Bends

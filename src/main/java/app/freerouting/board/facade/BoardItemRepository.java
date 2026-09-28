@@ -164,6 +164,7 @@ public final class BoardItemRepository {
     }
     board.additionalUpdateAfterChange(item);
     board.incrementRevision();
+    board.routingLedger().noteInserted(item);
   }
 
   /** Removes an item and performs the existing tree, observer, and revision updates. */
@@ -196,6 +197,7 @@ public final class BoardItemRepository {
       board.communication.observers.notifyDeleted(item);
     }
     board.incrementRevision();
+    board.routingLedger().noteRemoved(item);
   }
 
   /** Removes all removable items and reports whether every requested item was removed. */
@@ -213,6 +215,7 @@ public final class BoardItemRepository {
 
   /** Deletes all traces and vias from the undoable item list. */
   void deleteAllTracksAndVias() {
+    board.routingLedger().invalidate();
     Iterator<UndoableObjects.UndoableObjectNode> iterator = board.itemList.startReadObject();
     for (; ; ) {
       UndoableObjects.Storable currentItem = board.itemList.readObject(iterator);

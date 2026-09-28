@@ -41,13 +41,13 @@ Full `BoardStatistics` and `DesignRulesChecker.calculateAllIncompletes()` stay a
 
 The maze order does not change. The run stays deterministic when the incremental incomplete count matches a full scan. A mismatch would move stagnation and board-history restores, which changes later passes.
 
-- [ ] Add the per-net component index on `RoutingBoard`, updated when a trace or via is inserted.
-- [ ] On remove, recompute only the touched net.
-- [ ] Keep running totals for trace length and via count.
-- [ ] Point stagnation, board history, and the optimizer score at that snapshot.
+- [x] Add the per-net component index on `RoutingBoard`, updated when a trace or via is inserted.
+- [x] On remove, recompute only the touched net.
+- [ ] Keep running totals for trace length and via count. Weighted length stays a full scan: adding and subtracting floats does not match the scan's accumulation order, and that would change optimizer decisions.
+- [x] Point stagnation, board history, and the optimizer incomplete count at the ledger. `BoardStatistics` still scans geometry for length, bends, and vias.
 - [ ] Build a full `BoardStatistics` only at phase boundaries and for the result manifest.
-- [ ] Stop the optimizer from calling `calculateAllIncompletes` once per candidate.
-- [ ] Test that the incremental incomplete count equals `calculateAllIncompletes` at the end of a pass.
+- [x] Stop the optimizer from calling `calculateAllIncompletes` once per candidate.
+- [x] Test that the incremental incomplete count equals `calculateAllIncompletes` at the end of a pass.
 - [ ] Profile `perfplusplus_Ard-perf++` and `newer-motor-controllers_si31-3`. `incomplete_drc_ms` and `board_statistics_ms` should fall well below `maze_search_ms`.
 - [ ] Check completion and `DesignRulesChecker.getAllClearanceViolations()` against the current single-thread router on a fast fixture and on one Tier D board.
 

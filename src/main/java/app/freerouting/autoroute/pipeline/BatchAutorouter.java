@@ -16,7 +16,6 @@ import app.freerouting.core.RoutingJob;
 import app.freerouting.core.StoppableThread;
 import app.freerouting.core.scoring.BoardStatistics;
 import app.freerouting.datastructures.UndoableObjects;
-import app.freerouting.drc.DesignRulesChecker;
 import app.freerouting.geometry.planar.FloatLine;
 import app.freerouting.geometry.planar.Point;
 import app.freerouting.logger.FRLogger;
@@ -582,14 +581,13 @@ public final class BatchAutorouter extends NamedAlgorithm {
    */
   int calculateIncompleteCount(RoutingBoard board, Set<Integer> incompleteNets) {
     long drcStart = BENCHMARK_PROFILE_ENABLED ? System.nanoTime() : 0;
-    DesignRulesChecker tempDrc = new DesignRulesChecker(board, null);
-    tempDrc.calculateAllIncompletes();
+    int incompleteCount = board.routingLedger().incompleteCount();
     if (BENCHMARK_PROFILE_ENABLED) {
       this.profileIncompleteDrcNanos += System.nanoTime() - drcStart;
     }
     if (incompleteNets != null) {
-      incompleteNets.addAll(tempDrc.incompleteNetNumbers());
+      incompleteNets.addAll(board.routingLedger().incompleteNetNumbers());
     }
-    return tempDrc.getIncompleteCount();
+    return incompleteCount;
   }
 }
