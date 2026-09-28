@@ -1,6 +1,6 @@
 # Large-board autorouter performance
 
-Status: 2.5.0-RC10 contains phases 1 and 2. Phase 3 lookahead stays off. Replaying a stale plan, and adopting the deserialized board, each scored 58.95 / 1500 on the 128-item Aleste slice against the serial 59.35 / 1499, with 48 violations. Discarding every worker result restores 59.35 / 1499 and makes the pass slower (20.50 s versus 8.08 s) because the copy still runs. The production pass stays single-threaded unless `-Dfreerouting.autoroute.snapshot_commit=true`. Phases 4 and 5 are not started.
+Status: 2.5.0-RC10 contains phases 1 and 2. Phase 3 is closed and stays off. On the 128-item Aleste slice the lookahead matches the serial score (59.35 / 1499, 48 violations) and is slower (16.62 s versus 8.08 s). A search may be committed only when every earlier item since the snapshot left the board unchanged. Those items skip the maze, so the worker has no long route to hide behind. Removing the board copy cannot put the pass under the serial time. The production pass stays single-threaded. Phases 4 and 5 are not started.
 
 Determinism rule for every phase: the same board produces the same routes on one thread and on many threads. Workers may search ahead, but the main thread commits in today's item order. A search is discarded and rerun serially when an earlier commit changes the board, including when the recorded corridor misses that commit. The maze reads the whole occupancy, so a path found without the earlier copper is a different route. Finish-order commit is not used. The maze still mutates the `ShapeSearchTree` on the board it searches, so a prepared route replaces the live board only when that board is unchanged.
 
@@ -76,22 +76,22 @@ Threads help only when a pass has work units that do not write the same `ShapeSe
 
 | Idea | Potential impact | Risk | Deterministic? |
 |---|---|---|---|
-| Snapshot search, serial commit | Overlaps the maze, which is almost all of Aleste's item time. Does not make one search smaller. About 2–4× on a sparse pass at 4–8 threads if most commits succeed; about 1–1.5× on a dense board, where retries serialize the pass. | Medium. Rip-up moves from search time to commit time. A stale search must be thrown away or it will route through copper that an earlier item just took. | Yes, if the main thread commits in today's item order and reruns any search whose corridor an earlier commit touched. Committing in finish order is faster and is not deterministic. |
+| Snapshot search, serial commit | Does not make one search smaller. Closed: a committed search has to see every earlier copper change, so it stays valid only when those items left the board unchanged. Measured 16.62 s versus 8.08 s serial on the 128-item Aleste slice, same score. | Medium. A stale search routes through copper that an earlier item just took. | Yes, when the main thread commits in today's item order and reruns any search made before an earlier commit changed the board. Finish-order commit is not deterministic. |
 | Spatial bins with a halo | Overlaps short connections whose boxes do not meet. About 1.5–3× on the item-routing portion of boards like Keyboard and perfplusplus. Long Aleste airlines stay on the serial queue, so that pass stays close to today's time. | High. A halo smaller than clearance plus maximum trace width inserts violating traces across a bin boundary. A larger halo leaves little work that can actually run together. | Yes, if bin membership is a pure function of the board, bins that run together do not have touching halos, and items inside a bin keep the current comparator. |
 | Coarse assignment, then detailed corridors | The only idea that shrinks the search. A corridor that is a fraction of a 645 cm² outline can cut Aleste's per-connection maze several times, and disjoint corridors then use the bin rules. Planning range about 4–10× on that class of pass when the corridor still contains a path. | Highest. A bad corridor makes the detailed maze fail on a connection the full-board maze would have routed. Completion can drop even when each run is repeatable. | Yes, if the assignment is deterministic, the detailed maze is the current maze clipped to the corridor, and disjoint corridors follow the bin rules. The routes will not match today's full-board maze. |
 
 ### Phase 3 — Snapshot search, serial commit
 
-The result object from a maze has no geometry. `PlannedConnection` still records corners, and the pass can still replace the live board with the worker copy, but `SnapshotLookahead.poll` does not return that copy. Both commits lost a connection on the 128-item Aleste slice. The worker search still runs when the property is set, and the main thread routes every item itself.
+The result object from a maze has no geometry. The snapshot board is still a deep copy, and the copy clones the live search-tree child order and cached shapes. The 45-degree completion walk visits that order and shrinks the search as it goes, so a rebuilt tree drops obstacles the incremental tree still visits. The lookahead commits the copy only when nothing has changed since the snapshot. Any earlier commit discards the search.
 
-- [ ] Maze against a read-only occupancy snapshot. Not done: each lookahead still owns a deep-copied board, and the maze still expands in that copy's search tree.
+- [x] Do not add a read-only occupancy snapshot. The 16.62 s pass spends 2.46 s copying the board and the rest waiting on the worker. The wait remains when the copy is free: `poll` blocks before the item is routed, and the prepared search is still valid only when the previous item did not change the board. That previous item then skipped its own maze, which is the time the worker would have needed.
 - [x] Move rip-up of a replayed connection to commit time. The inserter exists. The pass does not call it, because that insert is not the serial route.
 - [x] Commit on the main thread in the current item order.
-- [x] Discard every worker result and route the item on the live board. Adopting the snapshot, including when the live board has not changed, lost a connection on Aleste.
+- [x] Discard a search and rerun it on the live board when an earlier commit changed the board. Adopt the snapshot board only when the live board has not changed. The adopted board keeps the incremental search tree.
 - [x] Require `router.autorouter.max_threads` greater than one. The pool is one worker, because each search still needs its own board copy.
 - [x] Log `snapshot_retries`, `snapshot_adopted`, `snapshot_replays`, `snapshot_copy_ms`, and `snapshot_prepared_ms` on the `BENCHMARK_PROFILE` line.
-- [x] Aleste with the property on, one pass, same fanout. Replay-and-adopt at 128 items: 11.56 s, score 58.95 / 1500. Adopt-only: 16.28 s, 58 adopts, same 58.95 / 1500. No commit: 20.50 s, 127 retries, 0 adopts, score 59.35 / 1499, matching the serial 8.08 s pass. Violations stayed 48. `Issue508-DAC2020_bm01` with the property unset still scored 181.20 with 142 unrouted and 0 violations.
-- [x] Keep the pass serial unless `-Dfreerouting.autoroute.snapshot_commit=true`. With the property set, the worker result is still discarded. The lookahead stays off for the nightly run.
+- [x] Aleste with the property on, one pass, same fanout. A rebuilt tree scored 58.95 / 1500. Cloning the live search tree scores 59.35 / 1499, matching serial, in 19.13 s versus 8.08 s, with 58 adopts and 69 retries. Skipping the discarded tree rebuild inside that copy scores the same 59.35 / 1499 in 16.62 s, with the same 58 adopts and 69 retries. `snapshot_copy_ms` fell from 3000 to 2465. Violations stayed 48. `Issue508-DAC2020_bm01` with the property unset still scored 181.20 with 142 unrouted and 0 violations.
+- [x] Keep the pass serial. `-Dfreerouting.autoroute.snapshot_commit=true` still enables the lookahead for a comparison run. It stays unset for the nightly run.
 
 ### Phase 4 — Spatial bins with a halo
 
@@ -100,7 +100,7 @@ The result object from a maze has no geometry. `PlannedConnection` still records
 - [ ] Lock or copy only the tiles a bin can touch.
 - [ ] Fix the bin order, and keep the current item comparator inside a bin.
 - [ ] Test that traces inserted from two adjacent bins cannot land closer than the clearance.
-- [ ] Measure Keyboard and perfplusplus against phase 3. Expect little gain on Aleste.
+- [ ] Measure Keyboard and perfplusplus against the serial pass. Expect little gain on Aleste.
 
 ### Phase 5 — Coarse assignment, then detailed corridors
 
@@ -115,5 +115,5 @@ The result object from a maze has no geometry. `PlannedConnection` still records
 
 - No new clearance violations from `DesignRulesChecker.getAllClearanceViolations()`.
 - Completion on the fast fixture and on si31-3 does not fall.
-- Aleste's profiled pass gets cheaper in maze time, or in wall time once phase 3 is on, without a drop in connections completed per item attempted.
+- Aleste's profiled pass gets cheaper in maze time without a drop in connections completed per item attempted. Phase 3 did not: with the lookahead on, the 128-item slice matched the serial connection count and took 16.62 s against 8.08 s serial. Later phases have to make one search smaller.
 - `router.fanout.timeout` and `router.optimizer.timeout` stay unset. The job clock remains the only stage limit.

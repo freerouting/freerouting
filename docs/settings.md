@@ -141,9 +141,10 @@ The primary way to configure Freerouting is through a JSON settings file. This f
       `--router.autorouter.max_threads`. Independent of `--router.optimizer.max_threads`.
       The batch loop reads it only when the process is started with
       `-Dfreerouting.autoroute.snapshot_commit=true` and the cap is greater than one. The
-      lookahead searches the next item on a board copy and discards that copy. The item is
-      routed on the live board. With the property unset, the pass stays single-threaded and
-      does not read this value. The legacy flat `--router.max_threads` remains as a fallback / GUI
+      lookahead searches the next item on a board copy that keeps the live search-tree structure.
+      It commits that copy only when the live board has not changed since the copy. Any earlier
+      commit discards the search, and the item is routed on the live board. With the property
+      unset, the pass stays single-threaded and does not read this value. The legacy flat `--router.max_threads` remains as a fallback / GUI
       knob and is still copied onto the optimizer pool.
 - **`result_json`**: Optional path for a machine-readable routing result manifest written at the
   end of a headless `-de`/`-do` run. Used by the benchmark and autopilot harnesses. Equivalent CLI

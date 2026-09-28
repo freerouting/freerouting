@@ -29,8 +29,8 @@ import java.util.TreeSet;
 /**
  * Executes one autoroute pass. The item loop is single-threaded unless {@code
  * -Dfreerouting.autoroute.snapshot_commit=true} and {@code router.autorouter.max_threads} is
- * greater than one. That lookahead searches the next item on a board copy and discards the copy.
- * The item is routed on the live board, so one thread and many threads keep the same routes.
+ * greater than one. That lookahead searches the next item on a board copy that keeps the live
+ * search-tree structure, and commits the copy only when the live board has not changed.
  */
 final class AutoroutePassRunner {
 

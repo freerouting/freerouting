@@ -21,8 +21,9 @@ import java.util.concurrent.Future;
 /**
  * Searches the next autoroute item on a deep copy while the main thread routes the current item.
  *
- * <p>The worker result is discarded. Committing the deserialized board dropped one Aleste
- * connection. The item is routed on the live board. Enabled with {@code
+ * <p>The copy keeps the live search-tree structure. A rebuilt tree does not route the same way. The
+ * copy replaces the live board only when nothing has been committed since the snapshot. Any other
+ * search is discarded and the item is routed on the live board. Enabled with {@code
  * -Dfreerouting.autoroute.snapshot_commit=true} when {@code router.autorouter.max_threads} is
  * greater than one. The pool is one worker.
  */
@@ -119,10 +120,8 @@ final class SnapshotLookahead implements AutoCloseable {
       retries++;
       return null;
     }
-    // Committing this copy dropped one Aleste connection (58.95 / 1500 versus 59.35 / 1499) after
-    // 58 adopts. Keep the search for timing, and route the item on the live board.
-    retries++;
-    return null;
+    adopted++;
+    return prepared;
   }
 
   /** True when the prepared board may replace the live board. Call before {@link #launch}. */
@@ -144,16 +143,18 @@ final class SnapshotLookahead implements AutoCloseable {
       return;
     }
     long copyStart = System.nanoTime();
-    RoutingBoard copy = router.board.deepCopy();
-    copyNanos += System.nanoTime() - copyStart;
+    RoutingBoard copy = router.board.deepCopySkippingSearchTrees();
     committedChanges = IntBox.EMPTY;
-    if (copy == null) {
+    if (copy == null
+        || !copy.searchTreeManager.adoptStructureFrom(router.board.searchTreeManager)) {
+      copyNanos += System.nanoTime() - copyStart;
       retries++;
       return;
     }
     int itemId = next.item.getId();
     int netIndex = next.netIndex;
     pending = workers.submit(() -> prepare(copy, itemId, netIndex, passNo));
+    copyNanos += System.nanoTime() - copyStart;
   }
 
   void noteAfterRoute(

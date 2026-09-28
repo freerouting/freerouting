@@ -5,8 +5,12 @@ import app.freerouting.geometry.planar.Shape;
 import app.freerouting.geometry.planar.ShapeBoundingDirections;
 import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import java.util.ArrayDeque;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
 
 /**
  * Abstract binary search tree for shapes in the plane. The shapes are stored in the leafs of the
@@ -89,6 +93,79 @@ public abstract class ShapeTree {
   abstract void insert(Leaf leaf);
 
   public abstract void removeLeaf(Leaf leaf);
+
+  /**
+   * Replaces this tree with a structural copy of {@code source}. Leaf objects are passed through
+   * {@code mapObject}. The child order and bounding shapes are kept, because the 45-degree and
+   * 90-degree completion walks visit that order and shrink the search as they go.
+   */
+  public final void copyStructureFrom(ShapeTree source, Function<Storable, Storable> mapObject) {
+    if (source == null || mapObject == null) {
+      throw new IllegalArgumentException("source and mapObject must be non-null");
+    }
+    Lock sourceLock = source.readLock();
+    Lock destLock = writeLock();
+    sourceLock.lock();
+    destLock.lock();
+    try {
+      if (source.root == null) {
+        this.root = null;
+        this.leafCount = 0;
+        return;
+      }
+      Map<TreeNode, TreeNode> clones = new IdentityHashMap<>();
+      ArrayDeque<TreeNode> pending = new ArrayDeque<>();
+      pending.push(source.root);
+      int leaves = 0;
+      while (!pending.isEmpty()) {
+        TreeNode node = pending.pop();
+        if (node instanceof Leaf leaf) {
+          Storable mapped = mapObject.apply(leaf.object);
+          if (mapped == null) {
+            throw new IllegalStateException("unmapped search-tree object");
+          }
+          clones.put(node, new Leaf(mapped, leaf.shapeIndexInObject, null, leaf.boundingShape));
+          leaves++;
+        } else {
+          InnerNode inner = (InnerNode) node;
+          clones.put(node, new InnerNode(inner.boundingShape, null));
+          if (inner.firstChild != null) {
+            pending.push(inner.firstChild);
+          }
+          if (inner.secondChild != null) {
+            pending.push(inner.secondChild);
+          }
+        }
+      }
+      pending.push(source.root);
+      while (!pending.isEmpty()) {
+        TreeNode node = pending.pop();
+        if (node instanceof InnerNode inner) {
+          InnerNode copy = (InnerNode) clones.get(node);
+          copy.firstChild = clones.get(inner.firstChild);
+          copy.secondChild = clones.get(inner.secondChild);
+          if (copy.firstChild != null) {
+            copy.firstChild.parent = copy;
+          }
+          if (copy.secondChild != null) {
+            copy.secondChild.parent = copy;
+          }
+          if (inner.firstChild != null) {
+            pending.push(inner.firstChild);
+          }
+          if (inner.secondChild != null) {
+            pending.push(inner.secondChild);
+          }
+        }
+      }
+      this.root = clones.get(source.root);
+      this.root.parent = null;
+      this.leafCount = leaves;
+    } finally {
+      destLock.unlock();
+      sourceLock.unlock();
+    }
+  }
 
   /** Inserts the leaves of this tree into an array. */
   public Leaf[] toArray() {

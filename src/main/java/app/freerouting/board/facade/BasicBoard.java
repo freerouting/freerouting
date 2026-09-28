@@ -1457,9 +1457,12 @@ public class BasicBoard implements Serializable {
     itemRepository = null;
     connectivityQueries = null;
     snapshotManager = null;
+    boolean skipSearchTreeRebuild = RoutingBoardUndoFacade.SKIP_SEARCH_TREE_REBUILD.get();
     for (Item currentItem : this.getItems()) {
       currentItem.board = this;
-      searchTreeManager.insert(currentItem);
+      if (!skipSearchTreeRebuild) {
+        searchTreeManager.insert(currentItem);
+      }
     }
   }
 

@@ -8,10 +8,15 @@ import app.freerouting.datastructures.ShapeTree;
 import app.freerouting.datastructures.UndoableObjects;
 import app.freerouting.geometry.planar.FortyfiveDegreeBoundingDirections;
 import app.freerouting.geometry.planar.Polyline;
+import app.freerouting.geometry.planar.TileShape;
 import app.freerouting.logger.FRLogger;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The SearchTreeManager manages the search trees used in the auto-router. It is responsible for the
@@ -280,6 +285,134 @@ public class SearchTreeManager {
     for (ShapeSearchTree currentTree : compensatedSearchTrees) {
 
       currentTree.reuseEntriesAfterCutout(fromTrace, startPiece, endPiece);
+    }
+  }
+
+  /**
+   * Replaces this board's search trees with the child order and cached shapes of {@code source}. A
+   * deep copy otherwise inserts every item into an empty tree, and that fresh tree does not route
+   * the same way as the incremental tree. Returns false when a leaf cannot be mapped, leaving the
+   * rebuilt trees in place.
+   */
+  public boolean adoptStructureFrom(SearchTreeManager source) {
+    if (source == null || source.board == null || this.board == null) {
+      return false;
+    }
+    Map<Integer, Item> destById = new HashMap<>();
+    for (Item item : this.board.getItems()) {
+      destById.put(item.getId(), item);
+    }
+    List<ShapeSearchTree> adoptedTrees = new ArrayList<>();
+    List<Map<Integer, TileShape[]>> adoptedShapes = new ArrayList<>();
+    ShapeSearchTree adoptedDefault = null;
+    try {
+      for (ShapeSearchTree sourceTree : source.compensatedSearchTrees) {
+        ShapeSearchTree destTree = createEmptyLike(sourceTree);
+        Map<Integer, TileShape[]> shapesById = cachedShapes(source, sourceTree);
+        destTree.copyStructureFrom(
+            sourceTree,
+            object -> {
+              if (!(object instanceof Item item)) {
+                return null;
+              }
+              return destById.get(item.getId());
+            });
+        adoptedTrees.add(destTree);
+        adoptedShapes.add(shapesById);
+        if (sourceTree == source.defaultTree) {
+          adoptedDefault = destTree;
+        }
+      }
+    } catch (RuntimeException exception) {
+      FRLogger.warn("SearchTreeManager.adopt_structure_from failed: " + exception.getMessage());
+      return false;
+    }
+    if (adoptedDefault == null) {
+      return false;
+    }
+    for (Item item : destById.values()) {
+      item.clearSearchTreeEntries();
+    }
+    this.compensatedSearchTrees.clear();
+    this.compensatedSearchTrees.addAll(adoptedTrees);
+    this.defaultTree = adoptedDefault;
+    this.clearanceCompensationUsed = source.clearanceCompensationUsed;
+    for (int index = 0; index < adoptedTrees.size(); index++) {
+      bindClonedLeaves(adoptedTrees.get(index), adoptedShapes.get(index));
+    }
+    return true;
+  }
+
+  private ShapeSearchTree createEmptyLike(ShapeSearchTree sourceTree) {
+    int clearance = sourceTree.compensatedClearanceClassNo;
+    if (sourceTree instanceof ShapeSearchTree90Degree) {
+      return new ShapeSearchTree90Degree(this.board, clearance);
+    }
+    if (sourceTree instanceof ShapeSearchTree45Degree) {
+      return new ShapeSearchTree45Degree(this.board, clearance);
+    }
+    return new ShapeSearchTree(FortyfiveDegreeBoundingDirections.INSTANCE, this.board, clearance);
+  }
+
+  private static Map<Integer, TileShape[]> cachedShapes(
+      SearchTreeManager source, ShapeSearchTree sourceTree) {
+    Map<Integer, TileShape[]> shapesById = new HashMap<>();
+    for (Item item : source.board.getItems()) {
+      ShapeTree.Leaf[] entries = item.getSearchTreeEntries(sourceTree);
+      if (entries == null || entries.length == 0) {
+        continue;
+      }
+      TileShape[] shapes = new TileShape[entries.length];
+      for (int index = 0; index < entries.length; index++) {
+        shapes[index] = item.getTreeShape(sourceTree, index);
+      }
+      shapesById.put(item.getId(), shapes);
+    }
+    return shapesById;
+  }
+
+  private static void bindClonedLeaves(
+      ShapeSearchTree destTree, Map<Integer, TileShape[]> shapesById) {
+    Map<Integer, ShapeTree.Leaf[]> leavesById = new HashMap<>();
+    for (ShapeTree.Leaf leaf : destTree.toArray()) {
+      if (!(leaf.object instanceof Item item)) {
+        continue;
+      }
+      int index = leaf.shapeIndexInObject;
+      ShapeTree.Leaf[] existing = leavesById.get(item.getId());
+      int length = existing == null ? 0 : existing.length;
+      if (index >= length) {
+        ShapeTree.Leaf[] grown = new ShapeTree.Leaf[index + 1];
+        if (existing != null) {
+          System.arraycopy(existing, 0, grown, 0, existing.length);
+        }
+        existing = grown;
+        leavesById.put(item.getId(), existing);
+      }
+      existing[index] = leaf;
+    }
+    for (Map.Entry<Integer, ShapeTree.Leaf[]> entry : leavesById.entrySet()) {
+      ShapeTree.Leaf[] leaves = entry.getValue();
+      Item item = null;
+      for (ShapeTree.Leaf leaf : leaves) {
+        if (leaf != null && leaf.object instanceof Item found) {
+          item = found;
+          break;
+        }
+      }
+      if (item == null) {
+        continue;
+      }
+      TileShape[] shapes = shapesById.get(entry.getKey());
+      if (shapes != null && shapes.length > leaves.length) {
+        ShapeTree.Leaf[] grown = new ShapeTree.Leaf[shapes.length];
+        System.arraycopy(leaves, 0, grown, 0, leaves.length);
+        leaves = grown;
+      }
+      item.setSearchTreeEntries(leaves, destTree);
+      if (shapes != null) {
+        item.setPrecalculatedTreeShapes(shapes, destTree);
+      }
     }
   }
 }
