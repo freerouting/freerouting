@@ -8,7 +8,8 @@
     writes records to benchmarks.json, and regenerates Markdown & HTML summaries.
 
 .PARAMETER Tier
-    Filter by tier: "A", "B", "C", "D", or "All" (default: "All").
+    Filter by tier. Default "All" runs A, then D, then C, then B.
+    A comma-separated list keeps that order, for example "C,A".
 
 .PARAMETER Workers
     Number of parallel routing workers (default: 4).

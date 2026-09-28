@@ -645,17 +645,51 @@ def render_dashboard(
             pass
 
 
+DEFAULT_TIER_ORDER = ("A", "D", "C", "B")
+_KNOWN_TIERS = frozenset({"A", "B", "C", "D"})
+
+
+def parse_tier_order(raw: str) -> list[str]:
+    """Return the tier run order.
+
+    An empty value or ``All`` uses A, then D, then C, then B. A comma-separated
+    list runs those tiers in the given order. ``--tier C,A`` runs C before A.
+    """
+    tokens = [part.strip().upper() for part in (raw or "").split(",") if part.strip()]
+    if not tokens or tokens == ["ALL"]:
+        return list(DEFAULT_TIER_ORDER)
+    order: list[str] = []
+    for token in tokens:
+        if token == "ALL":
+            raise ValueError("'All' cannot be combined with named tiers")
+        if token not in _KNOWN_TIERS:
+            raise ValueError(f"Unknown tier '{token}'. Use A, B, C, D, or a comma-separated list.")
+        if token not in order:
+            order.append(token)
+    return order
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--jar", default="scripts/benchmark/binaries/freerouting-current.jar", type=Path)
     parser.add_argument("--fixtures-dir", default="scripts/benchmark/fixtures/PCBench", type=Path)
-    parser.add_argument("--tier", default="All", help="Filter by tier: 'A', 'B', 'C', 'D', or 'All'")
+    parser.add_argument(
+        "--tier",
+        default="All",
+        help="Tier filter and run order. Default All runs A, D, C, then B. "
+        "A comma-separated list runs those tiers in that order, for example C,A.",
+    )
     parser.add_argument("--workers", default=8, type=int)
     parser.add_argument("--max-boards", default=0, type=int)
     parser.add_argument("--version-label", default="v2.3.1-SNAPSHOT")
     parser.add_argument("--filter", default="", help="Filter fixtures by substring/pattern")
     parser.add_argument("--force", action="store_true", help="Force rerun even if already in benchmarks.json")
     args = parser.parse_args()
+    try:
+        tier_order = parse_tier_order(args.tier)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
 
     fixtures_dir = args.fixtures_dir
     catalog_path = fixtures_dir / "catalog.json"
@@ -706,9 +740,9 @@ def main() -> int:
 
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     boards = catalog.get("boards", [])
-
-    if args.tier != "All":
-        boards = [b for b in boards if b.get("tier") == args.tier]
+    tier_rank = {tier: index for index, tier in enumerate(tier_order)}
+    boards = [b for b in boards if b.get("tier") in tier_rank]
+    boards.sort(key=lambda board: tier_rank[board.get("tier")])
 
     if args.filter:
         filter_terms = [f.strip().lower() for f in args.filter.split(",") if f.strip()]
@@ -759,7 +793,7 @@ def main() -> int:
 
     print(
         f"Starting PCBench Corpus Benchmark ({len(boards)} total, {already_completed} already cached, "
-        f"{len(tasks)} remaining to run, Tier={args.tier}, Workers={args.workers})...\n",
+        f"{len(tasks)} remaining to run, Tier={",".join(tier_order)}, Workers={args.workers})...\n",
         flush=True,
     )
 

@@ -53,7 +53,7 @@ The maze order does not change. The run stays deterministic when the incremental
 
 ## Phase 2 — Fanout pass 1
 
-Pass 1 walks every SMD pin on one thread. The per-pin budget is 10 s times the pass number, and later passes walk the same pins again at higher rip-up cost. Do not add `router.fanout.timeout`. The job clock still covers the stage.
+Pass 1 walks every SMD pin on one thread. The per-pin budget is 10 s times the pass number, and later passes walk the same pins again at higher rip-up cost. `router.fanout.timeout` is a real setting and stays unset in the defaults. Set `--router.fanout.timeout` only when a fanout stage budget is wanted. When it is unset, `router.job_timeout` still covers fanout, autorouting, and optimization together.
 
 - Attempt each pin once. A `FAILED` or `INSERT_ERROR` pin is not retried unless a later fanout in its component inserts or rips geometry inside that pin's halo.
 - Pins that are already connected stay skipped.
@@ -68,7 +68,7 @@ The single-thread skip rule is deterministic. Parallel components are determinis
 - [x] Walk one component at a time, pins inside it serial. This was already the fanout order.
 - [x] On `Issue508-DAC2020_bm01` the escaped-pin count stayed 184/187 and the two-item autorouter score stayed 181.20. Later passes no longer count the already-failed pins as fresh failures.
 - [x] Do not run non-overlapping component halos in parallel. Fanout writes one `ShapeSearchTree`, and committing two components at once would make the routes depend on which thread finished first.
-- [x] Do not add a fanout stage timeout.
+- [x] Leave `router.fanout.timeout` unset by default. The setting stays available when a fanout stage budget is wanted.
 
 ## Rejected parallel autorouter passes
 
@@ -85,4 +85,4 @@ Threads help only when a pass has work units that do not write the same `ShapeSe
 - No new clearance violations from `DesignRulesChecker.getAllClearanceViolations()`.
 - Phase 1 keeps the incremental incomplete count. On the eight-item profile, Aleste `incomplete_drc_ms` went from 66.3 to 9.9 and perfplusplus from 149.6 to 3.4, with the previous score and unrouted count.
 - Phase 2 keeps the serial fanout skip. bm01 escape stayed 184/187 and the two-item autorouter score stayed 181.20. Parallel fanout is not added.
-- `router.fanout.timeout` and `router.optimizer.timeout` stay unset. The job clock remains the only stage limit.
+- `router.fanout.timeout` and `router.optimizer.timeout` stay unset in the defaults. Both remain configurable. When they are unset, the job clock is the only stage limit.
